@@ -1,0 +1,27 @@
+﻿{
+  "context": "",
+  "translations": {
+    "Product Editor": "",
+    "Add Product": "",
+    "Edit Product": "",
+    "Product Name": "Name",
+    "Product Summary": "Summary",
+    "Product Description": "Description",
+    "Sku": "",
+    "Gtin": "",
+    "Mpn": "",
+    "Is Shippable?": "",
+    "Is Downloadable?": "",
+    "Is Featured?": "",
+    "Track Inventory?": "",
+    "Stock Quantity": "",
+    "Minimum Purchase Quantity": "",
+    "Maximum Purchase Quantity": "",
+    "Can order when out of stock?": "",
+    "Price": "",
+    "Compare Price": "",
+    "Charge Tax": "",
+    "Save Product": "",
+    "Cancel":  "" 
+  }
+}

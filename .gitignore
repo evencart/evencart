@@ -1,0 +1,17 @@
+RoastedMarketplace.Services/bin/
+RoastedMarketplace.Data/obj/
+RoastedMarketplace.Data/bin/
+RoastedMarketplace.Services/obj/
+RoastedMarketplace.Core/obj/
+RoastedMarketplace.Core/bin/
+RoastedMarketplace.Infrastructure/obj/
+RoastedMarketplace/obj/
+Tests/RoastedMarketplace.Core.Tests/obj/
+Tests/RoastedMarketplace.Core.Tests/bin/
+Tests/RoastedMarketplace.Services.Tests/bin/
+Tests/RoastedMarketplace.Services.Tests/obj/
+Tests/RoastedMarketplace.Tests.Data/bin/
+Tests/RoastedMarketplace.Tests.Data/obj/
+RoastedMarketplace.Infrastructure/bin/
+RoastedMarketplace/bin/
+.vs/

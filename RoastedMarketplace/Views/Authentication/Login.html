@@ -1,0 +1,7 @@
+﻿{% layout "_Layout" %}
+
+{% for product in products %}
+{% partial "Authentication/Product" %}
+{% endfor %}
+
+{% partial "Authentication/Category" %}

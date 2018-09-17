@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <Content Remove="Pages\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="App_Data\database.configex" />
+    <None Remove="Views\Authentication\Login.html" />
+    <None Remove="Views\Authentication\Product - Copy.html" />
+    <None Remove="Views\Authentication\Product.html" />
+    <None Remove="Views\_Layout.liquid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\administration\assets\lib\trumbowyg\ui\sass\trumbowyg.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Authentication\Product.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Views\Authentication\Login.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Views\Layout\_Layout.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Content\SecureData\" />
+    <Folder Include="Content\Ui\assets\" />
+    <Folder Include="Content\Uploads\" />
+    <Folder Include="Content\Themes\Default\" />
+    <Folder Include="Models\Installation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\administration\assets\css\style.css" />
+    <None Include="wwwroot\administration\assets\css\style.min.css" />
+    <None Include="wwwroot\administration\assets\css\style.scss" />
+    <None Include="wwwroot\administration\assets\lib\bootstrap-tagsinput\bootstrap-tagsinput.css" />
+    <None Include="wwwroot\administration\assets\lib\bootstrap-tagsinput\bootstrap-tagsinput.js" />
+    <None Include="wwwroot\administration\assets\lib\rbicon\fonts\rbicon.eot" />
+    <None Include="wwwroot\administration\assets\lib\rbicon\fonts\rbicon.svg" />
+    <None Include="wwwroot\administration\assets\lib\rbicon\fonts\rbicon.ttf" />
+    <None Include="wwwroot\administration\assets\lib\rbicon\fonts\rbicon.woff" />
+    <None Include="wwwroot\administration\assets\lib\rbicon\style.css" />
+    <None Include="wwwroot\administration\assets\lib\simple-mde\css\simplemde.css" />
+    <None Include="wwwroot\administration\assets\lib\simple-mde\js\codemirror\tablist.js" />
+    <None Include="wwwroot\administration\assets\lib\simple-mde\js\simplemde.js" />
+    <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.css" />
+    <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.js" />
+    <None Include="wwwroot\administration\assets\lib\typeahead\typeahead.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

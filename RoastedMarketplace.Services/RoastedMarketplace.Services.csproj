@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Emails\**" />
+    <Compile Remove="Formatter\**" />
+    <Compile Remove="MediaServices\**" />
+    <EmbeddedResource Remove="Emails\**" />
+    <EmbeddedResource Remove="Formatter\**" />
+    <EmbeddedResource Remove="MediaServices\**" />
+    <None Remove="Emails\**" />
+    <None Remove="Formatter\**" />
+    <None Remove="MediaServices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Configuration\Mvc\IRouteMapperService.cs" />
+    <Compile Remove="Configuration\Mvc\RouteMapperService.cs" />
+    <Compile Remove="Logger\RollingFileLogger.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="MediaServices\IMediaAccountant.cs" />
+    <Compile Include="MediaServices\IMediaService.cs" />
+    <Compile Include="MediaServices\MediaAccountant.cs" />
+    <Compile Include="MediaServices\MediaService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
+    <ProjectReference Include="..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\Mvc\" />
+  </ItemGroup>
+
+</Project>

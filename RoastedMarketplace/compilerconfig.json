@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "wwwroot/administration/assets/css/style.css",
+    "inputFile": "wwwroot/administration/assets/css/style.scss"
+  },
+  {
+    "outputFile": "wwwroot/administration/assets/lib/trumbowyg/ui/sass/trumbowyg.css",
+    "inputFile": "wwwroot/administration/assets/lib/trumbowyg/ui/sass/trumbowyg.scss"
+  }
+]

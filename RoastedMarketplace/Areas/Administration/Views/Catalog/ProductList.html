@@ -1,0 +1,7 @@
+﻿{%layout "_Layout"%}
+{%global page_title=@t"admin.product.edit" active_menu="admin.catalog.products" parent_active_menu="admin.products"%}
+
+<div>
+    <a class="btn btn-primary" href='{% route GetProduct productId="0" %}'>{{"Add New" | t}}</a>
+    {% partial Catalog/CategoriesList %}
+</div>

@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Infrastructure\AppEngine\**" />
+    <Compile Remove="oAuth\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Infrastructure\AppEngine\**" />
+    <EmbeddedResource Remove="oAuth\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="Infrastructure\AppEngine\**" />
+    <None Remove="oAuth\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Caching\HttpCacheProvider.cs" />
+    <Compile Remove="Caching\MemoryCacheProvider.cs" />
+    <Compile Remove="Dummy\DummyHttpContext.cs" />
+    <Compile Remove="Startup\IOwinStartupTask.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dummy\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
