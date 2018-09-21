@@ -1,7 +1,49 @@
-﻿{%layout "_Layout"%}
-{%global page_title=@t"admin.product.edit" active_menu="admin.catalog.products" parent_active_menu="admin.products"%}
+﻿{% layout "_Layout" %}
+{% global page_title=@t"admin.product.edit" active_menu="admin.catalog.products" parent_active_menu="admin.products" %}
 
-<div>
-    <a class="btn btn-primary" href='{% route GetProduct productId="0" %}'>{{"Add New" | t}}</a>
-    {% partial Catalog/CategoriesList %}
+<div class="row">
+    <div class="col-md-6">
+        <h3>{{"Products" | t}}</h3>
+    </div>
+    <div class="col-md-3 col-offset-3">
+        <a class="btn btn-primary float-right" href='{% route GetProduct productId="0" %}'>{{"Add New" | t}}</a>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-9">
+        <table id="grid-selection" class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                    <th data-column-id="name">{{"Product" | t}}</th>
+                    <th data-column-id="sku">{{"Sku" | t}}</th>
+                    <th data-column-id="price">{{"Price" | t}}</th>
+                    <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                </tr>
+            </thead>
+        </table>
+        <script type="text/javascript">
+            var editProduct = function (id) {
+                var url = '{% route GetProduct productId="product_id" %}';
+                window.location.href = url.replace("product_id", id);
+            }
+            jQuery(document).ready(function () {
+                generateGrid({
+                        element: "grid-selection",
+                        method: "GET",
+                        url: "{% route api_GetProducts %}",
+                        responseObject: "products",
+                        formatters: {
+                            "commands": function (column, row) {
+                                return "<button type=\"button\" class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" + row.id + "\" onclick='editProduct(" + row.id + ")'><span class=\"rbicon-edit\"></span></button> " +
+                                    "<button type=\"button\" class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" + row.id + "\"><span class=\"rbicon-external-link\"></span></button>";
+                            }
+                        }
+                    });
+            });
+
+        </script>
+    </div>
+</div>
+
+

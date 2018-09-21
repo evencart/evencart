@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.FileProviders;
 
-namespace RoastedMarketplace.Infrastructure.Providers
+namespace RoastedMarketplace.Core.Infrastructure.Providers
 {
     public interface ILocalFileProvider : IFileProvider
     {
@@ -16,5 +16,17 @@ namespace RoastedMarketplace.Infrastructure.Providers
         string CombinePaths(params string[] paths);
 
         DateTime GetLastModifiedDateTime(string fileName);
+
+        byte[] ReadBytes(string fileName);
+
+        void WriteBytes(string fileName, byte[] bytes);
+
+        void GetSafeFileName(string fileName, string directoryName, out string saveFileName, out string saveFileNameWithPath);
+
+        string GetExtension(string fileName);
+
+        string GetFileNameWithoutExtension(string fileName);
+
+        string GetFileName(string filePath);
     }
 }

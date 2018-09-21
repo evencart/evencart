@@ -23,8 +23,10 @@ namespace RoastedMarketplace.Data.Entity.MediaEntities
 
         public MediaType MediaType { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public int UserId { get; set; }
+
+        public int DisplayOrder { get; set; }
     }
 }

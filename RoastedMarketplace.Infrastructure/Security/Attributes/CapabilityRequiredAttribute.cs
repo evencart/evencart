@@ -28,7 +28,7 @@ namespace RoastedMarketplace.Infrastructure.Security.Attributes
                 base.OnActionExecuting(context);
                 return;
             }
-
+            return; //todo: enable the code below
             //get the current user
             var currentUser = ApplicationEngine.CurrentUser;
 

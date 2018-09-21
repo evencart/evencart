@@ -7,9 +7,9 @@ namespace RoastedMarketplace.Services.Products
 {
     public class ProductAttributeService : FoundationEntityService<ProductAttribute>, IProductAttributeService
     {
-        public override void Insert(ProductAttribute entity)
+        public override void Insert(ProductAttribute entity, Transaction transaction = null)
         {
-            base.Insert(entity);
+            base.Insert(entity, transaction);
 
             //add other attributes
             foreach (var ppav in entity.ProductAttributeValues)

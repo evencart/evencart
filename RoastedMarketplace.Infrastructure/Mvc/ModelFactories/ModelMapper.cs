@@ -1,31 +1,30 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Reflection;
 
 namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
 {
     public class ModelMapper : IModelMapper
     {
-        private readonly ConcurrentDictionary<TypePair, Func<object>> _mappingCache = new ConcurrentDictionary<TypePair, Func<object>>();
+        private readonly ConcurrentDictionary<TypePair, Func<object, object, object>> _mappingCache = new ConcurrentDictionary<TypePair, Func<object, object, object>>();
 
-        public T Map<T>(object entity)
+        public T Map<T>(object entity, T existingTEntity = default(T))
         {
             if (entity == null)
                 return default(T);
             var typeOfObject = entity.GetType();
             var typePair = TypePair.Create(entity.GetType(), typeof(T));
-            if (!_mappingCache.TryGetValue(typePair, out Func<object> action))
+            if (!_mappingCache.TryGetValue(typePair, out Func<object, object, object> action))
             {
                 var typeOfT = typeof(T);
-                action = () =>
+                action = (givenObject, existingTObject) =>
                 {
                     //get properties of T which have get 
                     var entityProperties = typeOfObject.GetProperties();
                     var modelProperties = typeOfT.GetProperties();
 
                     //create model
-                    var model = Activator.CreateInstance<T>();
+                    var model = existingTObject != null ? (T) existingTObject : Activator.CreateInstance<T>();
                     foreach (var modelProperty in modelProperties)
                     {
                         //are there any matching properties
@@ -34,14 +33,14 @@ namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
                             continue;
                         //get instance value for the property
 
-                        var epValue = ep.GetValue(entity);
+                        var epValue = ep.GetValue(givenObject);
                         modelProperty.SetValue(model, epValue);
                     }
                     return model;
                 };
                 _mappingCache.TryAdd(typePair, action);
             }
-            return (T) action();
+            return (T) action(entity, existingTEntity);
         }
     }
 }

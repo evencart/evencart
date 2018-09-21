@@ -15,5 +15,7 @@ namespace RoastedMarketplace.Data.Entity.Page
         public string EntityName { get; set; }
 
         public string Slug { get; set; }
+
+        public string LanguageCultureCode { get; set; }
     }
 }

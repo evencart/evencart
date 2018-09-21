@@ -6,9 +6,13 @@
 
   <ItemGroup>
     <Compile Remove="Pages\**" />
+    <Compile Remove="wwwroot\administration\assets\lib\NewFolder\**" />
     <Content Remove="Pages\**" />
+    <Content Remove="wwwroot\administration\assets\lib\NewFolder\**" />
     <EmbeddedResource Remove="Pages\**" />
+    <EmbeddedResource Remove="wwwroot\administration\assets\lib\NewFolder\**" />
     <None Remove="Pages\**" />
+    <None Remove="wwwroot\administration\assets\lib\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +43,6 @@
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Ui\assets\" />
-    <Folder Include="Content\Uploads\" />
     <Folder Include="Content\Themes\Default\" />
     <Folder Include="Models\Installation\" />
   </ItemGroup>
@@ -61,6 +64,15 @@
     <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.css" />
     <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.js" />
     <None Include="wwwroot\administration\assets\lib\typeahead\typeahead.js" />
+    <None Include="wwwroot\content\Uploads\download.png" />
+    <None Include="wwwroot\content\Uploads\downloadDVVJSIJEAA.png" />
+    <None Include="wwwroot\content\Uploads\download_PRFVPFZQXN.png" />
+    <None Include="wwwroot\content\Uploads\download_VPQPVEFXPK.png" />
+    <None Include="wwwroot\content\Uploads\Serves\downloadDVVJSIJEAA_150_150..png" />
+    <None Include="wwwroot\content\Uploads\Serves\download_PRFVPFZQXN_0_0..png" />
+    <None Include="wwwroot\content\Uploads\Serves\download_PRFVPFZQXN_150_150..png" />
+    <None Include="wwwroot\content\Uploads\Serves\download_VPQPVEFXPK_0_0..png" />
+    <None Include="wwwroot\content\Uploads\Serves\download_VPQPVEFXPK_150_150..png" />
   </ItemGroup>
 
   <ItemGroup>

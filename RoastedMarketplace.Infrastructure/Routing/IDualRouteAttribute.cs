@@ -2,6 +2,6 @@
 {
     public interface IDualRouteAttribute
     {
-        
+        bool OnlyApi { get; set; }
     }
 }

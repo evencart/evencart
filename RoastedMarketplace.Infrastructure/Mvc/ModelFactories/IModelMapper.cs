@@ -4,6 +4,6 @@ namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
 {
     public interface IModelMapper
     {
-        T Map<T>(object entity);
+        T Map<T>(object entity, T existingEntity = default(T));
     }
 }

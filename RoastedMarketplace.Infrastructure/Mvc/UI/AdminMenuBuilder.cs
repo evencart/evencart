@@ -21,7 +21,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc.UI
             productsMenu.AddMenuItem(new MenuItem()
             {
                 Text = "All Products",
-                Url = ApplicationEngine.RouteUrl(AdminRouteNames.GetProducts),
+                Url = ApplicationEngine.RouteUrl(AdminRouteNames.ProductsList),
                 SystemName = "admin.catalog.products"
             }, new MenuItem()
             {

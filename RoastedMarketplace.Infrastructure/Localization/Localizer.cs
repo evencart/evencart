@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RoastedMarketplace.Infrastructure.Providers;
+using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Services.Serializers;
 
 namespace RoastedMarketplace.Infrastructure.Localization

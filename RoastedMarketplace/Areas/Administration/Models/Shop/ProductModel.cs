@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Collections.Generic;
+using FluentValidation;
+using RoastedMarketplace.Areas.Administration.Models.Media;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
@@ -51,6 +53,10 @@ namespace RoastedMarketplace.Areas.Administration.Models.Shop
         public int? ManufacturerId { get; set; }
 
         public int? TaxId { get; set; }
+
+        public IList<MediaModel> Media { get; set; }
+
+        public IList<CategoryModel> Categories { get; set; }
 
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {

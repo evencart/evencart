@@ -24,18 +24,18 @@ namespace RoastedMarketplace.Services.Promotions
                 .SelectSingle();
         }
 
-        public override void Insert(DiscountCoupon entity)
+        public override void Insert(DiscountCoupon entity, Transaction transaction = null)
         {
             //always save in lower case
             entity.CouponCode = entity.CouponCode.ToLower();
-            base.Insert(entity);
+            base.Insert(entity, transaction);
         }
 
-        public override void Update(DiscountCoupon entity)
+        public override void Update(DiscountCoupon entity, Transaction transaction = null)
         {
             //always save in lower case
             entity.CouponCode = entity.CouponCode.ToLower();
-            base.Update(entity);
+            base.Update(entity, transaction);
         }
     }
 }

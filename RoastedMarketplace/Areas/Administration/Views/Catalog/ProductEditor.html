@@ -1,95 +1,257 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Product Editor" active_menu="admin.products.edit" parent_active_menu="admin.products"%}
-
-<h3>
+<h3 class="page-title">
     {% if product.id != 0 %}
     {{ product.name }}
     {% else %}
     {{"Add Product" | t }}
     {% endif %}
+    <a class="btn btn-outline-secondary btn-sm" href="{% route ProductsList %}">
+        <span class="rbicon-chevron-left"></span> {{"Back to products" | t}}
+    </a>
 </h3>
-
-<form action="{% route SaveProduct %}" method="post">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="form-group">
-                {% control label text=@t"Product Name" for="name" %}
-                {% control text name="name" placeholder=@t"e.g. Blue Denim Shirt" value="{{product.name}}"%}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Product Summary" for="summary" %}
-                {% control textarea name="summary" value="{{product.summary}}" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Description" for="description" %}
-                {% control textarea name="description" value="{{product.description}}" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Sku" for="sku" %}
-                {% control text name="sku" value="{{product.sku}}" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Gtin" for="gtin" %}
-                {% control text name="gtin" value="{{product.gtin}}" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Mpn" for="mpn" %}
-                {% control text name="mpn" value="{{product.mpn}}" %}
-            </div>
-            <div class="form-group">
-                {% control checkbox name="isShippable" text=@t"Is Shippable?" value="{{product.is_shippable}}" %}
-            </div>
-            <div class="form-group">
-                {% control checkbox name="isDownloadable" text=@t"Is Downloadable?" value="{{product.is_downloadable}}" %}
-            </div>
-            <div class="form-group">
-                {% control checkbox name="isFeatured" text=@t"Is Featured?" value="{{product.is_featured}}" %}
-            </div>
-            <div class="form-group">
-                {% control checkbox name="trackInventory" text=@t"Track Inventory" value="{{product.track_inventory}}" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Stock Quantity" for="stockQuantity" %}
-                {% control number name="stockQuantity" value="{{product.stock_quantity}}" min="0" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Minimum Purchase Quantity" for="minPurchaseQuantity" %}
-                {% control number name="minPurchaseQuantity" value="{{product.minimum_purchase_quantity}}" min="0" %}
-            </div>
-            <div class="form-group">
-                {% control label text=@t"Maximum Purchase Quantity" for="maxPurchaseQuantity" %}
-                {% control number name="maxPurchaseQuantity" value="{{product.maximum_purchase_quantity}}" min="0" %}
-            </div>
-            <div class="form-group">
-                {% control checkbox name="canOrderWhenOutOfStock" value="{{product.can_order_when_out_of_stock}}" text=@t"Can order when out of stock?" %}
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-body">
+                <form action="{% route SaveProduct %}" method="post">
                     <div class="form-group">
-                        {% control label text=@t"Price" for="price" %}
-                        {% control currency name="price" value="{{product.price}}" min="0" step="0.01" %}
+                        {% control label text=@t"Product Name" for="name" %}
+                        {% control text name="name" placeholder=@t"e.g. Blue Denim Shirt" value="{{product.name}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Product Summary" for="summary" %}
+                        {% control textarea name="summary" value="{{product.summary}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Description" for="description" %}
+                        {% control textarea name="description" value="{{product.description}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="published" value="{{product.published}}" text=@t"Published" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                {{"Price" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            {% control label text=@t"Price" for="price" %}
+                            {% control currency name="price" value="{{product.price}}" min="0" step="0.01" %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            {% control label text=@t"Compare Price" for="comparePrice" %}
+                            {% control currency name="comparePrice" value="{{product.compare_price}}" min="0" step="0.01" %}
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        {% control label text=@t"Compare Price" for="comparePrice" %}
-                        {% control currency name="comparePrice" value="{{product.compare_price}}" min="0" step="0.01" %}
-                    </div>
+                <div class="form-group">
+                    {% control checkbox name="chargeTaxes" value="{{product.charge_taxes}}" text=@t"Charge Tax" %}
                 </div>
             </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Product Type" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control checkbox name="isShippable" text=@t"Is Shippable?" value="{{product.is_shippable}}" %}
+                </div>
+                <div class="form-group">
+                    {% control checkbox name="isDownloadable" text=@t"Is Downloadable?" value="{{product.is_downloadable}}" %}
+                </div>
+                <div class="form-group">
+                    {% control checkbox name="isFeatured" text=@t"Is Featured?" value="{{product.is_featured}}" %}
+                </div>
 
-            <div class="form-group">
-                {% control checkbox name="chargeTaxes" value="{{product.charge_taxes}}" text=@t"Charge Tax" %}
             </div>
-            <div class="form-group">
-                {% control checkbox name="published" value="{{product.published}}" text=@t"Published" %}
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Inventory" | t}}
             </div>
-            {% control hidden name="id" value="{{product.id}}" %}
-            <div class="save-button-container">
-                <button type="submit" class="btn btn-success">{{"Save Product" | t}}</button>
-                <button type="reset" class="btn btn-default">{{"Cancel" | t}}</button>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control label text=@t"Sku" for="sku" %}
+                    {% control text name="sku" value="{{product.sku}}" %}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Gtin" for="gtin" %}
+                    {% control text name="gtin" value="{{product.gtin}}" %}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Mpn" for="mpn" %}
+                    {% control text name="mpn" value="{{product.mpn}}" %}
+                </div>
+                <div class="form-group">
+                    {% control checkbox name="trackInventory" text=@t"Track Inventory" value="{{product.track_inventory}}" %}
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {% control label text=@t"Stock Quantity" for="stockQuantity" %}
+                            {% control number name="stockQuantity" value="{{product.stock_quantity}}" min="0" %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {% control label text=@t"Min. Purchase Qty." for="minPurchaseQuantity" %}
+                            {% control number name="minPurchaseQuantity" value="{{product.minimum_purchase_quantity}}" min="0" %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {% control label text=@t"Max. Purchase Qty." for="maxPurchaseQuantity" %}
+                            {% control number name="maxPurchaseQuantity" value="{{product.maximum_purchase_quantity}}" min="0" %}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    {% control checkbox name="canOrderWhenOutOfStock" value="{{product.can_order_when_out_of_stock}}" text=@t"Can order when out of stock?" %}
+                </div>
             </div>
-            
+        </div>
+        {% control hidden name="id" value="{{product.id}}" %}
+        <div class="save-button-container">
+            <button type="submit" class="btn btn-success">{{"Save Product" | t}}</button>
+            <button type="reset" class="btn btn-default">{{"Cancel" | t}}</button>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Images" | t}}
+                <span class="btn btn-default fileinput-button btn-sm float-right">
+                    <i class="rbicon-plus-circle"></i>
+                    <span>{{"Add Image" | t}}</span>
+                    <input id="imageFile" type="file" name="mediaFile" />
+                </span>
+            </div>
+            <div class="panel-body" id="file-dragger">
+                <div id="image-container"></div>
+                {% if product.media.size == 0 %}
+                <div class="drag-area">
+                    <div class="msg">
+                        <div>
+                            {{"Drag your image file here" | t}}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <script id="image-block-template" type="text/html">
+                    <div class="image-block">
+                        <img src="image_url" />
+                        <input type="hidden" data-type="id" name="media[index].id" value="media_id" />
+                        <input type="hidden" data-type="displayorder" name="media[index].displayorder" value="media_displayorder" />
+                    </div>
+                </script>
+                <script type="text/javascript">
+                    jQuery(document).ready(function() {
+                        initFileUploader({
+                            element: "imageFile",
+                            dropZone: jQuery("#file-dragger"),
+                            url: "{% route api_UploadMedia %}",
+                            done: function(e, data) {
+                                var result = data.result;
+                                addMedia(result.media);
+                            },
+                            formData: {
+                                entityName: "product",
+                                entityId: "{{product.id}}"
+                            }
+                        });
+                        //update sortable
+                        displayOrderSortable({
+                            container: "image-container",
+                            itemSelector: ".image-block",
+                            update: function() {
+                                post({
+                                    url: "{% route api_UpdateMediaDisplayOrder %}",
+                                    data: jQuery("#image-container input").serialize()
+                                });
+                            }
+                        });
+                        //add existing images
+                        //{% comment %} putting the for loop below between /**/ ensures that formatting is not lost{% endcomment %}
+                        /*{% for media in product.media %}*/
+                        addMedia({
+                            id: "{{media.id}}",
+                            thumbnailUrl: "{{media.thumbnail_url}}",
+                            displayOrder: "{{media.display_order}}"
+                        });
+                        /*{% endfor %}*/
+                    });
+
+                    var addMedia = function(media) {
+                        var imageBlock = jQuery("#image-block-template").html();
+                        var index = jQuery("#image-container .image-block").length;
+                        imageBlock = imageBlock.replaceAll("image_url", media.thumbnailUrl);
+                        imageBlock = imageBlock.replaceAll("index", index);
+                        imageBlock = imageBlock.replaceAll("media_id", media.id);
+                        imageBlock = imageBlock.replaceAll("media_displayorder", media.displayOrder);
+                        jQuery("#image-container").append(imageBlock);
+                        //update sortable
+                        displayOrderSortable({
+                            container: "image-container",
+                            itemSelector: "image-block",
+                            refresh: true
+                        });;
+                    }
+
+                </script>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Categories" | t}}
+            </div>
+            <div class="panel-body">
+                {% control text id="category-selector" placeholder=@t"Start typing category name..." %}
+                <table id="table-categories" class="table table-bordered table-hover"></table>
+                <script type="text/javascript">
+                    ready(function () {
+                        inputTypeahead({
+                            element: "category-selector",
+                            initialData: null,
+                            url: "{% route api_GetCategorySuggestions %}",
+                            preserveAfterFirstCall: true,
+                            clearAfterSelect: true,
+                            select: function (item) {
+                                jQuery("#table-categories").append("<tr><td>" + item.text + "</td></tr>");
+                                displayOrderSortable({
+                                    container: "table-categories",
+                                    itemSelector: "tr",
+                                    refresh: true
+                                });
+                            }
+                        });
+
+                        displayOrderSortable({
+                            container: "table-categories",
+                            itemSelector: "tr",
+                            update: function () {
+
+                            }
+                        });
+                    });
+                </script>
+            </div>
         </div>
     </div>
-</form>
+</div>
+
+
+

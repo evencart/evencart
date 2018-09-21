@@ -26,6 +26,15 @@ namespace RoastedMarketplace.Infrastructure.Routing
             {
                 if (ar.AttributeRouteModel.Attribute is IDualRouteAttribute)
                 {
+                    var dualRouteAttribute = (IDualRouteAttribute) ar.AttributeRouteModel.Attribute;
+                    if (dualRouteAttribute.OnlyApi)
+                    {
+                        var currentTemplate = ar.AttributeRouteModel.Template;
+                        ar.AttributeRouteModel.Template = area + "/" + ApplicationConfig.ApiEndpointName + "/[controller]/" + currentTemplate;
+                        ar.AttributeRouteModel.Name = $"{ApplicationConfig.ApiEndpointName}_" +
+                                                      ar.AttributeRouteModel.Name;
+                        continue; //skip adding anything else
+                    }
                     //add another oute
                     var selectorModel = new SelectorModel(ar);
                     var newAm = selectorModel.AttributeRouteModel;

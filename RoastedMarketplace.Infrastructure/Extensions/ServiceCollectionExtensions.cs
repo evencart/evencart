@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Routing;
-using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Infrastructure.ViewEngines;
 
 namespace RoastedMarketplace.Infrastructure.Extensions
@@ -42,6 +40,11 @@ namespace RoastedMarketplace.Infrastructure.Extensions
                 .AddControllersAsServices();
         }
 
+        public static void AddAppRouting(this IServiceCollection services)
+        {
+            //use lowercase urls
+            services.AddRouting(options => options.LowercaseUrls = true);
+        }
         public static void AddGlobalSingletons(this IServiceCollection services)
         {
             //add httpcontext accessor

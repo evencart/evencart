@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using RoastedMarketplace.Core.Infrastructure.Media;
 
 namespace RoastedMarketplace.Data.Helpers

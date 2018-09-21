@@ -4,6 +4,7 @@ using DryIoc;
 using RoastedMarketplace.Core.Caching;
 using RoastedMarketplace.Core.Config;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Modules;
 using RoastedMarketplace.Core.Services.Events;
@@ -11,8 +12,8 @@ using RoastedMarketplace.Data.Database;
 using RoastedMarketplace.Infrastructure.Authentication;
 using RoastedMarketplace.Infrastructure.Database;
 using RoastedMarketplace.Infrastructure.Localization;
+using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
-using RoastedMarketplace.Infrastructure.Providers;
 using RoastedMarketplace.Infrastructure.ViewEngines;
 using RoastedMarketplace.Services.Authentication;
 using RoastedMarketplace.Services.Settings;
@@ -36,6 +37,9 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             //view engine & friends
             registrar.Register<IViewAccountant, ViewAccountant>(reuse: Reuse.Singleton);
             registrar.Register<IAppViewEngine, DefaultAppViewEngine>(reuse: Reuse.Singleton);
+            //media
+            registrar.Register<IImageProcessor, ImageProcessor>(reuse: Reuse.Singleton);
+            registrar.Register<IMediaAccountant, MediaAccountant>(reuse: Reuse.Singleton);
 
             //model mapper
             registrar.Register<IModelMapper, ModelMapper>(reuse: Reuse.Singleton);

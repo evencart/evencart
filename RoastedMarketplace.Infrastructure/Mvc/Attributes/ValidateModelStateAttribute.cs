@@ -33,7 +33,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Attributes
                 if (ModelType == null)
                     return;
                 //let's perform some fluent validation
-                var typeObject = actionContext.ActionArguments.Select(x => x.Value).FirstOrDefault(x => x.GetType() == ModelType);
+                var typeObject = actionContext.ActionArguments.Select(x => x.Value).FirstOrDefault(x => ModelType.IsInstanceOfType(x));
                 if (typeObject == null)
                     return; //nothing to validate
 

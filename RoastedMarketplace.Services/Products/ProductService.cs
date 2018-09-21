@@ -8,28 +8,37 @@ using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.MediaEntities;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Products
 {
     public class ProductService : FoundationEntityService<Product>, IProductService
     {
-        public IEnumerable<Product> GetProducts(string searchText = null, bool onlyPublished = true, int[] manufacturerIds = null, int[] vendorIds = null, int[] categoryids = null, int page = 1, int count = int.MaxValue)
+        public IEnumerable<Product> GetProducts(out int totalResults, string searchText = null, bool? published = true, int[] manufacturerIds = null,
+            int[] vendorIds = null, int[] categoryids = null, Expression<Func<Product, object>> orderByExpression = null, SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
         {
             var query = Repository;
             if (!string.IsNullOrEmpty(searchText))
             {
-                query = query.Where(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(x => x.Name.Contains(searchText));
             }
-            if (onlyPublished)
+            if (published.HasValue)
             {
-                query = query.Where(x => x.Published);
+                query = query.Where(x => x.Published == published.Value);
             }
             if (manufacturerIds != null && manufacturerIds.Any())
             {
                 query = query.Where(x => x.ManufacturerId != null && manufacturerIds.Contains(x.ManufacturerId.Value));
             }
-            return query.Select(page, count);
+            if (orderByExpression == null)
+            {
+                orderByExpression = product => product.Id;
+                query = query.OrderBy(orderByExpression,
+                    sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+            }
+
+            return query.SelectWithTotalMatches(out totalResults, page, count);
         }
 
         public IList<Product> GetProductsByVendorIds(int[] vendorIds)
@@ -90,20 +99,35 @@ namespace RoastedMarketplace.Services.Products
                 .ToArray();
         }
 
-        public void LinkCategoryWithProduct(int categoryId, int productId)
+        public void LinkCategoryWithProduct(int categoryId, int productId, int displayOrder)
         {
             //check if already linked?
             var pc = RepositoryExplorer<ProductCategory>()
                 .Where(x => x.CategoryId == categoryId && x.ProductId == productId)
                 .SelectSingle();
             if (pc != null)
+            {
+                if (pc.DisplayOrder == displayOrder)
+                    return;
+                pc.DisplayOrder = displayOrder;
+                EntitySet<ProductCategory>.Update(pc);
                 return;
-            EntitySet<ProductCategory>.Insert(new ProductCategory() {ProductId = productId, CategoryId = categoryId});
+            }
+            EntitySet<ProductCategory>.Insert(
+                new ProductCategory() {ProductId = productId, CategoryId = categoryId, DisplayOrder = displayOrder});
         }
 
         public void RemoveProductCategory(int productCategoryId)
         {
             EntitySet<ProductCategory>.Delete(x => x.Id == productCategoryId);
+        }
+
+        public void LinkMediaWithProduct(int mediaId, int productId)
+        {
+            var productMediaCount = EntitySet<ProductMedia>.Where(x => x.MediaId == mediaId && x.ProductId == productId).Count();
+            if (productMediaCount != 0)
+                return;
+            EntitySet<ProductMedia>.Insert(new ProductMedia() {ProductId = productId, MediaId = mediaId});
         }
 
         public override Product Get(int id)

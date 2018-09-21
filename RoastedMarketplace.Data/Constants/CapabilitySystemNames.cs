@@ -10,6 +10,8 @@ namespace RoastedMarketplace.Data.Constants
     {
         public const string EditProduct = "EditProduct";
 
+        public const string ViewProducts = "ViewProducts";
+
         public const string ManageUsers = "ManageUsers";
 
         public const string ManageRoles = "ManageRoles";
@@ -23,6 +25,10 @@ namespace RoastedMarketplace.Data.Constants
         public const string CommentDelete = "CommentDelete";
 
         public const string ExtraFieldsManage = "ExtraFieldsManage";
+
+        public const string UploadMedia = "UploadMedia";
+
+        public const string ViewCategories = "ViewCategories";
 
     }
 }

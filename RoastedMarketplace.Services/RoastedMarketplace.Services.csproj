@@ -23,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="MediaServices\IMediaAccountant.cs" />
     <Compile Include="MediaServices\IMediaService.cs" />
-    <Compile Include="MediaServices\MediaAccountant.cs" />
     <Compile Include="MediaServices\MediaService.cs" />
   </ItemGroup>
 

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Modules;
@@ -35,6 +34,7 @@ namespace RoastedMarketplace.Infrastructure
 
             //add MVC and routing convention for api access
             services.AddAppMvc();
+            services.AddAppRouting();
 
             //fire up dependency injector
             var serviceProvider = new Container()
@@ -95,6 +95,15 @@ namespace RoastedMarketplace.Infrastructure
 
             return relativePath.Replace("~",
                 isWebRootPath ? _hostingEnvironment.WebRootPath : _hostingEnvironment.ContentRootPath).Replace("/", "\\");
+        }
+
+        public static string MapUrl(string path, bool isWebRootPath = true)
+        {
+            // path = c:\\www\\Content\\...
+            // content root = c:\\www
+            var contentRootPath = isWebRootPath ? _hostingEnvironment.WebRootPath : _hostingEnvironment.ContentRootPath;
+            var relativePath = path.Replace(contentRootPath, "");
+            return relativePath.Replace("\\", "/");
         }
 
         public static bool IsAdmin()

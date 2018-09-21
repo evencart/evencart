@@ -12,8 +12,16 @@
     <link href="{{store.url}}/administration/assets/lib/simplebar/simplebar.css" rel="stylesheet" />
     <link href="{{store.url}}/administration/assets/lib/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
     <link href="{{store.url}}/administration/assets/lib/trumbowyg/ui/sass/trumbowyg.min.css" rel="stylesheet" />
+    <link href="{{store.url}}/administration/assets/lib/jquery-bootgrid/jquery.bootgrid.min.css" rel="stylesheet" />
     <link href="{{store.url}}/administration/assets/css/style.min.css" rel="stylesheet" />
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        //helper for quick calls
+        var ready = function(callback) {
+            jQuery(document).ready(callback);
+        }
+    </script>
     <title>{{ page_title }}</title>
 </head>
 <body>
@@ -76,7 +84,6 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
@@ -85,10 +92,15 @@
     <script src="{{store.url}}/administration/assets/lib/typeahead/typeahead.js"></script>
     <script src="{{store.url}}/administration/assets/lib/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
     <script src="{{store.url}}/administration/assets/lib/trumbowyg/trumbowyg.js"></script>
-
+    <script src="{{store.url}}/administration/assets/lib/jquery-bootgrid/jquery.bootgrid.min.js"></script>
+    <script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.ui.widget.js"></script>
+    <script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.fileupload.js"></script>
+    <script src="{{store.url}}/administration/assets/js/helpers.js"></script>
+    <script src="{{store.url}}/administration/assets/lib/sortable.js"></script>
+    <script src="{{store.url}}/administration/assets/js/script.js"></script>
     <script>
         //typeahead
-        var tags = ["Development", "Testing", "Designing", "Business"];
+        var tags = ["Clothing", "Clothing > Shirts", "Clothing > Shirts > T-Shirts", "Clothing > Pants"];
         // constructs the suggestion engine
         var bloodHoundTagsEngine = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -98,12 +110,8 @@
         });
         bloodHoundTagsEngine.initialize();
 
-        $('#select-tag-filter').tagsinput({
-            typeaheadjs: {
-                name: 'tags',
-                source: bloodHoundTagsEngine
-            }
-        });
+       
+       
     </script>
     <script type="text/javascript">
         jQuery(document).ready(function () {

@@ -26,8 +26,9 @@ namespace RoastedMarketplace.Services.Installation
 
         public void Install()
         {
-           DatabaseManager.InitDatabase(_databaseSettings);
-           DatabaseManager.UpgradeDatabase();
+            DatabaseManager.InitDatabase(_databaseSettings);
+            DatabaseManager.ClearVersions();
+            DatabaseManager.UpgradeDatabase();
         }
 
 
@@ -193,7 +194,7 @@ namespace RoastedMarketplace.Services.Installation
 
             //media settings
             settingService.Save(new MediaSettings() {
-              
+
             });
 
             //system settings

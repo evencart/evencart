@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RoastedMarketplace.Core.Infrastructure;
-using RoastedMarketplace.Infrastructure.Providers;
+using RoastedMarketplace.Core.Infrastructure.Providers;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {

@@ -28,9 +28,12 @@ namespace RoastedMarketplace.Core.Services
             _eventPublisherService = DependencyResolver.Resolve<IEventPublisherService>();
         }
 
-        public virtual void Insert(T entity)
+        public virtual void Insert(T entity, Transaction transaction = null)
         {
-            EntitySet<T>.Insert(entity);
+            if (transaction == null)
+                EntitySet<T>.Insert(entity);
+            else
+                EntitySet<T>.Insert(entity, transaction.Value);
             //publish the event so they can be handled
             _eventPublisherService.Publish(entity, EventType.Insert);
         }
@@ -62,12 +65,28 @@ namespace RoastedMarketplace.Core.Services
             EntitySet<T>.Delete(where);
         }
 
-        public virtual void Update(T entity)
+        public virtual void Update(T entity, Transaction transaction = null)
         {
-            EntitySet<T>.Update(entity);
+            if (transaction == null)
+                EntitySet<T>.Update(entity);
+            else
+                EntitySet<T>.Update(entity, transaction.Value);
 
             //publish the event so they can be handled
             _eventPublisherService.Publish(entity, EventType.Update);
+        }
+
+        public void Update(object entity, Expression<Func<T, bool>> @where, Transaction transaction, Func<T, bool> action = null)
+        {
+            EntitySet<T>.Update(entity, where, transaction?.Value, action);
+        }
+
+        public void InsertOrUpdate(T entity, Transaction transaction = null)
+        {
+            if (entity.Id > 0)
+                Update(entity, transaction);
+            else
+                Insert(entity, transaction);
         }
 
         public virtual T Get(int id)
@@ -92,6 +111,21 @@ namespace RoastedMarketplace.Core.Services
         public IEnumerable<T> Query(string query, object parameters = null)
         {
             return EntitySet<T>.Query(query, parameters);
+        }
+
+        public int Count(Expression<Func<T, bool>> @where = null)
+        {
+            return @where == null ? EntitySet<T>.Count() : EntitySet<T>.Where(@where).Count();
+        }
+
+        public void BatchOperation(Action<Transaction> operationAction)
+        {
+            using (var t = EntitySet.BeginTransaction())
+            {
+                var transaction = new Transaction() { Value = t };
+                operationAction(transaction);
+                t.Commit();
+            }
         }
     }
 }

@@ -8,5 +8,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
         {
 
         }
+
+        public bool OnlyApi { get; set; }
     }
 }

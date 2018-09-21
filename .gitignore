@@ -15,3 +15,4 @@ Tests/RoastedMarketplace.Tests.Data/obj/
 RoastedMarketplace.Infrastructure/bin/
 RoastedMarketplace/bin/
 .vs/
+RoastedMarketplace/wwwroot/content/Uploads/

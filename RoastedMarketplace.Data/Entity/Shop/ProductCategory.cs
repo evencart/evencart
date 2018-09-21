@@ -7,5 +7,7 @@ namespace RoastedMarketplace.Data.Entity.Shop
         public int ProductId { get; set; }
 
         public int CategoryId { get; set; }
+
+        public int DisplayOrder { get; set; }
     }
 }
