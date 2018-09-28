@@ -43,26 +43,34 @@ namespace RoastedMarketplace.Core.Services
             EntitySet<T>.Insert(entity);
         }
 
-        public virtual void Delete(T entity)
+        public virtual void Delete(T entity, Transaction transaction = null)
         {
             var deletable = entity as ISoftDeletable;
             if (deletable != null)
             {
                 var entityAsSoftDeletable = deletable;
                 entityAsSoftDeletable.Deleted = true;
-                Update(entity);
+                Update(entity, transaction);
             }
             else
             {
                 //publish the event so they can be handled
                 _eventPublisherService.Publish(entity, EventType.Delete);
-                EntitySet<T>.Delete(entity);
+                if (transaction == null)
+                    EntitySet<T>.Delete(entity);
+                else
+                {
+                    EntitySet<T>.Delete(entity, transaction.Value);
+                }
             }
         }
 
-        public virtual void Delete(Expression<Func<T, bool>> where)
+        public virtual void Delete(Expression<Func<T, bool>> where, Transaction transaction = null)
         {
-            EntitySet<T>.Delete(where);
+            if (transaction == null)
+                EntitySet<T>.Delete(where);
+            else
+                EntitySet<T>.Delete(where, transaction.Value);
         }
 
         public virtual void Update(T entity, Transaction transaction = null)
@@ -78,7 +86,10 @@ namespace RoastedMarketplace.Core.Services
 
         public void Update(object entity, Expression<Func<T, bool>> @where, Transaction transaction, Func<T, bool> action = null)
         {
-            EntitySet<T>.Update(entity, where, transaction?.Value, action);
+            if (transaction == null)
+                EntitySet<T>.Update(entity, where);
+            else
+                EntitySet<T>.Update(entity, where, transaction?.Value, action);
         }
 
         public void InsertOrUpdate(T entity, Transaction transaction = null)
@@ -116,16 +127,6 @@ namespace RoastedMarketplace.Core.Services
         public int Count(Expression<Func<T, bool>> @where = null)
         {
             return @where == null ? EntitySet<T>.Count() : EntitySet<T>.Where(@where).Count();
-        }
-
-        public void BatchOperation(Action<Transaction> operationAction)
-        {
-            using (var t = EntitySet.BeginTransaction())
-            {
-                var transaction = new Transaction() { Value = t };
-                operationAction(transaction);
-                t.Commit();
-            }
         }
     }
 }

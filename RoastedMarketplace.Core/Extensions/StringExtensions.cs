@@ -4,6 +4,7 @@
     {
         public static bool IsNullEmptyOrWhitespace(this string s)
         {
+            s = s?.Trim();
             return string.IsNullOrWhiteSpace(s) || string.IsNullOrWhiteSpace(s);
         }
     }

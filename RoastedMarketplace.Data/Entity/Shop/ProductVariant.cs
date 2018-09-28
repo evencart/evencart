@@ -15,7 +15,7 @@ namespace RoastedMarketplace.Data.Entity.Shop
 
         public decimal? Price { get; set; }
 
-        public int StockQuantity { get; set; }
+        public int? StockQuantity { get; set; }
 
         public bool TrackInventory { get; set; }
 

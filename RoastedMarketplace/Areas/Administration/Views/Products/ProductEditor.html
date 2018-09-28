@@ -1,0 +1,171 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Product Editor" active_menu="GetProduct" parent_active_menu="ProductsList"%}
+{% partial "Navigation/ProductEditSecondaryNavigation" %}
+
+<h3 class="page-title">
+    {% if product.id != 0 %}
+    {{ product.name }}
+    {% else %}
+    {{"Add Product" | t }}
+    {% endif %}
+</h3>
+<form action="{% route SaveProduct %}" method="post">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="form-group">
+                        
+                        {% control label text=@t"Product Name" for="name" %}
+                        {% control text name="name" placeholder=@t"e.g. Blue Denim Shirt" value="{{product.name}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Product Summary" for="summary" %}
+                        {% control textarea name="summary" value="{{product.summary}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Description" for="description" %}
+                        {% control textarea name="description" value="{{product.description}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="published" value="product.published" text=@t"Published" %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Price" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Price" for="price" %}
+                                {% control currency name="price" value="{{product.price}}" min="0" step="0.01" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Compare Price" for="comparePrice" %}
+                                {% control currency name="comparePrice" value="{{product.comparePrice}}" min="0" step="0.01" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="chargeTaxes" value="product.chargeTaxes" text=@t"Charge Tax" %}
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Product Type" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control checkbox name="isShippable" text=@t"Is Shippable?" value="product.isShippable" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="isDownloadable" text=@t"Is Downloadable?" value="product.isDownloadable" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="isFeatured" text=@t"Is Featured?" value="product.isFeatured" %}
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Inventory" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Sku" for="sku" %}
+                        {% control text name="sku" value="{{product.sku}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Gtin" for="gtin" %}
+                        {% control text name="gtin" value="{{product.gtin}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Mpn" for="mpn" %}
+                        {% control text name="mpn" value="{{product.mpn}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="trackInventory" text=@t"Track Inventory" value="product.track_inventory" %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Stock Quantity" for="stockQuantity" %}
+                                {% control number name="stockQuantity" value="{{product.stockQuantity}}" min="0" %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Min. Purchase Qty." for="minPurchaseQuantity" %}
+                                {% control number name="minPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="0" %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Max. Purchase Qty." for="maxPurchaseQuantity" %}
+                                {% control number name="maxPurchaseQuantity" value="{{product.maximumPurchaseQuantity}}" min="0" %}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        {% control checkbox name="canOrderWhenOutOfStock" value="product.canOrderWhenOutIfStock" text=@t"Can order when out of stock?" %}
+                    </div>
+                </div>
+            </div>
+            {% control hidden name="id" value="{{product.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save Product" | t}}</button>
+                <button type="reset" class="btn btn-default">{{"Cancel" | t}}</button>
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+            {% partial "Products/ProductEditor.ImagePanel" %}
+            {% partial "Products/ProductEditor.CategoryPanel" %}
+
+
+        </div>
+    </div>
+</form>
+
+<div class="panel">
+   
+    <script type="text/html" id="attribute-header-row-template">
+        <tr>
+            <td rowspan="row_span">
+                <span>
+                    attribute.name
+                </span>
+                <input type="hidden" name="attributes[index].name" />
+            </td>
+            <td>
+                <span>
+                    attribute.value
+                </span>
+                <input type="hidden" name="attributes[index].value" />
+            </td>
+        </tr>
+    </script>
+    <script type="text/html" id="attribute-row-template">
+        <tr>
+            <td>
+                <span>
+                    attribute_value
+                </span>
+                <input type="hidden" name="attributes[index].value" />
+            </td>
+        </tr>
+    </script>
+
+   
+</div>

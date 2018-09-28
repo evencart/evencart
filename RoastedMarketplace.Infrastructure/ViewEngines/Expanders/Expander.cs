@@ -20,11 +20,21 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
         private static readonly List<Expander> Expanders = new List<Expander>()
         {
-            new LayoutExpander() { TagName = "layout"},
-            new PartialExpander() { TagName = "partial"},
-            new ControlExpander() { TagName = "control"},
-            new UrlRouteExpander() { TagName = "route"},
-            new GlobalExpander() { TagName = "global"}
+            new LayoutExpander() {TagName = "layout"},
+            new PartialExpander() {TagName = "partial"},
+            new ControlExpander() {TagName = "control"},
+            new NavigationExpander()
+            {
+                TagName = ApplicationConfig.PrimaryNavigationName,
+                NavigationType = ApplicationConfig.PrimaryNavigationName
+            },
+            new NavigationExpander()
+            {
+                TagName = ApplicationConfig.SecondaryNavigationName,
+                NavigationType = ApplicationConfig.SecondaryNavigationName
+            },
+            new UrlRouteExpander() {TagName = "route"},
+            new GlobalExpander() {TagName = "global"},
         };
 
         private const string TagMatcherPattern =
@@ -37,19 +47,26 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         public static void ExpandView(string viewName, out string expandedContent)
         {
             var readFile = ReadFile.From(viewName);
-            SafeExpandView(readFile);
+            SafeExpandView(readFile, true);
             expandedContent = readFile.Content;
         }
 
-        private static void SafeExpandView(ReadFile readFile)
+        private static void SafeExpandView(ReadFile readFile, bool prePostRun = false)
         {
             foreach (var e in Expanders)
             {
                 var tagRegex = e.AssociatedRegEx ?? GetTagRegex(e.TagName);
                 e.AssociatedRegEx = tagRegex;
+                if (prePostRun)
+                    //run before expansion
+                    e.PreRun(readFile);
+                //run the expansion
                 e.Expand(readFile, tagRegex);
+                if (prePostRun)
+                    //run the post expansion
+                    e.PostRun(readFile);
             }
-            
+
             //run the matchers again if required after expansion
             foreach (var e in Expanders)
             {
@@ -86,5 +103,15 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         }
 
         public abstract string Expand(ReadFile readFile, Regex regEx);
+
+        public virtual void PreRun(ReadFile readFile)
+        {
+            //execute anything that needs to be done before expansion
+        }
+        public virtual void PostRun(ReadFile readFile)
+        {
+            //execute anything that needs to be done before expansion
+        }
+
     }
 }

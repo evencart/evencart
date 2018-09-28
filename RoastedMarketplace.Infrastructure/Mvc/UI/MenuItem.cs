@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 
 namespace RoastedMarketplace.Infrastructure.Mvc.UI
@@ -17,11 +18,31 @@ namespace RoastedMarketplace.Infrastructure.Mvc.UI
 
         public bool OpenInNewWindow { get; set; }
 
+        private MenuItem Parent { get; set; }
+
         public MenuItem AddMenuItem(params MenuItem[] menuItem)
         {
             foreach (var mi in menuItem)
+            {
+                mi.Parent = this;
                 ChildItems.Add(mi);
+            }
             return this;
+        }
+
+        public MenuItem GetParent()
+        {
+            return Parent;
+        }
+
+        public MenuItem this[int index]
+        {
+            get
+            {
+                if (ChildItems.Any())
+                    return ChildItems[index];
+                return null;
+            }
         }
     }
 }

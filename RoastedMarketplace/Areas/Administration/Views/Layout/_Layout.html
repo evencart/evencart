@@ -1,12 +1,12 @@
-﻿<!doctype html>
+﻿{% partial "Navigation/PrimaryNavigation" %}
+<!doctype html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{store.url}}/administration/assets/lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{store.url}}/administration/assets/lib/rbicon/style.css">
     <link href="{{store.url}}/administration/assets/lib/simple-mde/css/simplemde.css" rel="stylesheet" />
     <link href="{{store.url}}/administration/assets/lib/simplebar/simplebar.css" rel="stylesheet" />
@@ -15,109 +15,112 @@
     <link href="{{store.url}}/administration/assets/lib/jquery-bootgrid/jquery.bootgrid.min.css" rel="stylesheet" />
     <link href="{{store.url}}/administration/assets/css/style.min.css" rel="stylesheet" />
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{{store.url}}/administration/assets/lib/jquery-3.2.1.min.js"></script>
     <script type="text/javascript">
         //helper for quick calls
-        var ready = function(callback) {
+        var ready = function (callback) {
             jQuery(document).ready(callback);
         }
     </script>
     <title>{{ page_title }}</title>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="sidenav">
-            <div class="user-menu dropdown">
-                <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="workspace">{{store.name}}</div>
-                    <div class="user-info">
-                        <span class="user-name margin-r-5">Anshul S.</span>
-                        <span class="rbicon-chevron-down"></span>
+<div class="page-wrapper">
+    <div class="sidenav">
+        <div class="user-menu dropdown">
+            <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="workspace">{{store.name}}</div>
+                <div class="user-info">
+                    <span class="user-name margin-r-5">Anshul S.</span>
+                    <span class="rbicon-chevron-down"></span>
+                </div>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <h6 class="dropdown-header">Personal</h6>
+                <a class="dropdown-item" href="#">Edit Profile</a>
+                <a class="dropdown-item" href="#">Preferences</a>
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Workspace</h6>
+                <a class="dropdown-item" href="#">Teams</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">Billing</h6>
+                <a class="dropdown-item" href="#">Account Status</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Signout of <strong>Apexol</strong></a>
+            </div>
+        </div>
+        <ul class="sidenav-links">
+            {% for menu_item in primary_navigation %}
+            {% assign mItem = menu_item | split : "::::" %}
+            <li class="{% if mItem[2] == parent_active_menu %}active{% endif %}">
+                <a href="{{mItem[1]}}">
+                    <div>
+                        {{mItem[0]}}
                     </div>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <h6 class="dropdown-header">Personal</h6>
-                    <a class="dropdown-item" href="#">Edit Profile</a>
-                    <a class="dropdown-item" href="#">Preferences</a>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="dropdown-header">Workspace</h6>
-                    <a class="dropdown-item" href="#">Teams</a>
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="dropdown-header">Billing</h6>
-                    <a class="dropdown-item" href="#">Account Status</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Signout of <strong>Apexol</strong></a>
-                </div>
-            </div>
-            <ul class="sidenav-links">
-                {% for menu_item in navigation %}
-                <li class="{% if menu_item.system_name == parent_active_menu %}{%assign active_item = menu_item %}active{% endif %}">
-                    <a href="{{menu_item.url}}">
+            </li>
+            {% endfor %}
+              
+        </ul>
+    </div>
+    <div class="client-main">
+        <div class="client-main-navlinks">
+            <ul class="list-inline">
+                {% if back_page %}
+                <li>
+                    <a href="{{ back_page }}">
+                        <span class="rbicon-chevron-left"></span> {{ back_link_title }}
+                    </a>
+                </li>
+                {% endif %}
+                {% for menu_item in secondary_navigation %}
+                {% assign mItem = menu_item | split : "::::" %}
+                <li class="{% if mItem[2] == active_menu %}active{% endif %}">
+                    <a href="{{mItem[1]}}">
                         <div>
-                            {{menu_item.text}}
+                            {{mItem[0]}}
                         </div>
                     </a>
                 </li>
                 {% endfor %}
+
             </ul>
         </div>
-        <div class="client-main">
-            <div class="client-main-navlinks">
-                <ul class="list-inline">
-                    {% for child_menu_item in active_item.child_items %}
-                    <li class="{% if child_menu_item.system_name == active_menu %}active{% endif %}">
-                        <a href="{{child_menu_item.url}}">
-                            {{child_menu_item.text}}
-                        </a>
-                    </li>
-                    {% endfor %}
-
-                </ul>
-            </div>
-            <div class="client-main-content">
-                {% bodyContent %}
-            </div>
+        <div class="client-main-content">
+            {% bodyContent %}
         </div>
     </div>
+</div>
 
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="{{store.url}}/administration/assets/lib/popper.min.js"></script>
+<script src="{{store.url}}/administration/assets/lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-    <script src="{{store.url}}/administration/assets/lib/simple-mde/js/simplemde.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/simplebar/simplebar.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/typeahead/typeahead.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/trumbowyg/trumbowyg.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/jquery-bootgrid/jquery.bootgrid.min.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.ui.widget.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.fileupload.js"></script>
-    <script src="{{store.url}}/administration/assets/js/helpers.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/sortable.js"></script>
-    <script src="{{store.url}}/administration/assets/js/script.js"></script>
-    <script>
-        //typeahead
-        var tags = ["Clothing", "Clothing > Shirts", "Clothing > Shirts > T-Shirts", "Clothing > Pants"];
-        // constructs the suggestion engine
-        var bloodHoundTagsEngine = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.whitespace,
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            // `states` is an array of state names defined in "The Basics"
-            local: tags
-        });
-        bloodHoundTagsEngine.initialize();
+<script src="{{store.url}}/administration/assets/lib/simple-mde/js/simplemde.js"></script>
+<script src="{{store.url}}/administration/assets/lib/simplebar/simplebar.js"></script>
+<script src="{{store.url}}/administration/assets/lib/typeahead/typeahead.js"></script>
+<script src="{{store.url}}/administration/assets/lib/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<script src="{{store.url}}/administration/assets/lib/trumbowyg/trumbowyg.js"></script>
+<script src="{{store.url}}/administration/assets/lib/jquery-bootgrid/jquery.bootgrid.js"></script>
+<script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.ui.widget.js"></script>
+<script src="{{store.url}}/administration/assets/lib/jquery-fileupload/jquery.fileupload.js"></script>
+<script src="{{store.url}}/administration/assets/lib/jquery-validator/jquery.validate.min.js"></script>
+<script src="{{store.url}}/administration/assets/lib/jquery-validator/additional-methods.js"></script>
+<script src="{{store.url}}/administration/assets/lib/navigo/navigo.js"></script>
+<script src="{{store.url}}/administration/assets/lib/liquidjs/liquid.min.js"></script>
+<script src="{{store.url}}/administration/assets/lib/sortable.js"></script>
+<script src="{{store.url}}/administration/assets/js/router.js"></script>
+<script src="{{store.url}}/administration/assets/js/helpers.js"></script>
+<script src="{{store.url}}/administration/assets/js/script.js"></script>
 
-       
-       
-    </script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            jQuery('textarea[rel="wyswyg"]').trumbowyg();
-        });
-    </script>
+<script type="text/javascript">
+    ready(function () {
+        useContext("{{ context }}", "{% route api_GetTemplates %}");
+    });
+</script>
 </body>
 
 

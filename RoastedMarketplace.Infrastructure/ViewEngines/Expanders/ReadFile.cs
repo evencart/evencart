@@ -15,10 +15,36 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
         public string Content { get; set; }
 
-        public List<ReadFile> Children { get; } = new List<ReadFile>();
+        private List<ReadFile> Children { get; } = new List<ReadFile>();
+
+        private List<ReadFile> Parents { get; } = new List<ReadFile>();
+
+        private bool IsDirty { get; set; }
+
+        public void AddChild(ReadFile readFile)
+        {
+            if(!Children.Contains(readFile))
+                Children.Add(readFile);
+            //interlink
+            readFile.AddParent(this);
+        }
+
+        private void AddParent(ReadFile readFile)
+        {
+            if(!Parents.Contains(readFile))
+                Parents.Add(readFile);
+        }
+
+        private void MarkAllParentsDirty()
+        {
+            foreach (var parent in Parents)
+                parent.IsDirty = true;
+        }
 
         public bool IsModified()
         {
+            if (IsDirty)
+                return true;
             var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
             var lastModified = localFileProvider.GetLastModifiedDateTime(FileName);
             return LastModified != lastModified || Children.Any(x => x.IsModified());
@@ -41,6 +67,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 readFile.Content = localFileProvider.ReadAllText(fileName);
                 readFile.LastModified = lastModified;
                 readFile.FileName = fileName;
+                readFile.IsDirty = false;
+                readFile.MarkAllParentsDirty();
             }
             return readFile;
         }

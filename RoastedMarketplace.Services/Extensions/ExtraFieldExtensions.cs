@@ -88,17 +88,11 @@ namespace RoastedMarketplace.Services.Extensions
                     if(!fieldValue.IsColor())
                         return ExtraFieldValidationResult.InvalidValueForFieldType;
                     break;
-                case InputFieldType.Captcha:
-                    break;
                 case InputFieldType.Dropdown:
-                    break;
-                case InputFieldType.NestedDropdown:
                     break;
                 case InputFieldType.ImageUpload:
                     break;
                 case InputFieldType.FileUpload:
-                    break;
-                case InputFieldType.Duration:
                     break;
                 default:
                     return ExtraFieldValidationResult.UnknownError;

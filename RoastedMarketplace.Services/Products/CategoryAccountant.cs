@@ -35,7 +35,7 @@ namespace RoastedMarketplace.Services.Products
             Category resultantCategory = null;
             foreach (var categoryName in categoryParts) {
                 var expectedParentId = previousId;
-                var category = allCategories.FirstOrDefault(x => x.ParentCategoryId == expectedParentId && x.Name == categoryName);
+                var category = allCategories.FirstOrDefault(x => x.ParentCategoryId == expectedParentId && x.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase));
 
                 // we didn't find this category, so it's a new category that needs to be created
                 if (category == null)

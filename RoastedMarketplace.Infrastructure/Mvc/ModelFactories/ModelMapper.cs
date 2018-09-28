@@ -28,7 +28,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
                     foreach (var modelProperty in modelProperties)
                     {
                         //are there any matching properties
-                        var ep = entityProperties.FirstOrDefault(x => x.Name == modelProperty.Name);
+                        var ep = entityProperties.FirstOrDefault(x => x.Name == modelProperty.Name && x.PropertyType == modelProperty.PropertyType);
                         if (ep == null)
                             continue;
                         //get instance value for the property

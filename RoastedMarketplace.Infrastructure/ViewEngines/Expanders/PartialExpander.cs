@@ -31,7 +31,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     throw new Exception($"Can't find partial view {partialFile} in view {readFile.FileName}");
 
                 var viewFile = ReadFile.From(viewPath);
-                readFile.Children.Add(viewFile);
+                readFile.AddChild(viewFile);
 
                 //expand the view file
                 var partialViewExpanded = Expand(viewFile, regEx);

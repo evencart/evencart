@@ -30,7 +30,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 throw new Exception($"Can't find layout {layoutValue} in view {readFile.FileName}");
 
             var layoutFile = ReadFile.From(layoutPath);
-            readFile.Children.Add(layoutFile);
+            readFile.AddChild(layoutFile);
 
             //expand the layout file
             var layoutExpanded = Expand(layoutFile, regEx);

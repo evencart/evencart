@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
@@ -16,7 +18,7 @@ namespace RoastedMarketplace.Services.Products
             _productService = productService;
         }
 
-        public void DeleteVariantsByProductAttributeValueId(int productAttributeValueId)
+        public void DeleteVariantsByProductAttributeValueId(int productAttributeValueId, Transaction transaction = null)
         {
             //first get product variant attributes
             var productVariantAttributes = EntitySet<ProductVariantAttribute>
@@ -25,26 +27,34 @@ namespace RoastedMarketplace.Services.Products
 
             //get all variants ids
             var productVariantIds = productVariantAttributes.Select(x => x.ProductVariantId).Distinct().ToList();
-
-            //delete attributes
-            EntitySet<ProductVariantAttribute>.Delete(x => productVariantIds.Contains(x.ProductVariantId));
-            Delete(x => productVariantIds.Contains(x.Id));
+            if (productVariantIds.Any())
+                //delete attributes
+                Delete(x => productVariantIds.Contains(x.Id));
         }
 
-        public ProductVariant AddVariant(Product product, IList<ProductVariantAttribute> variantAttributes)
+        public void DeleteVariantsByProductAttributeId(int productAttributeId, Transaction transaction = null)
         {
-            var productVariant = new ProductVariant()
-            {
-                ProductId = product.Id,
-                TrackInventory = product.TrackInventory
-            };
-            Insert(productVariant);
+            Expression<Func<ProductAttribute, bool>> where = attribute => attribute.Id == productAttributeId;
 
-            foreach (var variantAttribute in variantAttributes)
+            var productVariants = Repository.Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
+                .Join<ProductAttribute>("ProductAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Where(where)
+                .SelectNested()
+                .ToList();
+
+            foreach(var variant in productVariants)
+                Delete(variant, transaction);
+        }
+
+        public ProductVariant AddVariant(Product product, ProductVariant productVariant, Transaction transaction = null)
+        {
+          
+            Insert(productVariant, transaction);
+
+            foreach (var variantAttribute in productVariant.ProductVariantAttributes)
                 variantAttribute.ProductVariantId = productVariant.Id;
 
-            EntitySet<ProductVariantAttribute>.Insert(variantAttributes.ToArray());
-            productVariant.ProductVariantAttributes = variantAttributes;
+            EntitySet<ProductVariantAttribute>.Insert(productVariant.ProductVariantAttributes.ToArray());
 
             //update product
             if (!product.HasVariants)
@@ -88,13 +98,62 @@ namespace RoastedMarketplace.Services.Products
             return variant;
         }
 
+        public override ProductVariant Get(int id)
+        {
+            return GetQuery(x => x.Id == id)
+                .SelectNested()
+                .FirstOrDefault();
+        }
+
         public IList<ProductVariant> GetByProductId(int productId)
         {
-            return Repository.Where(x => x.ProductId == productId)
-                .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToMany<ProductVariant, ProductVariantAttribute>())
+            return GetQuery(x => x.ProductId == productId)
                 .SelectNested()
                 .ToList();
+        }
+
+        private IEntitySet<ProductVariant> GetQuery(Expression<Func<ProductVariant, bool>> where)
+        {
+            return Repository.Where(where)
+                .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
+                .Join<ProductAttributeValue>("ProductAttributeValueId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductAttribute>("ProductAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Join<AvailableAttributeValue>("Id", "AvailableAttributeId", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<ProductVariant, ProductVariantAttribute>())
+                .Relate<ProductAttributeValue>((variant, value) =>
+                {
+                    var productVariantAttribute =
+                        variant.ProductVariantAttributes.FirstOrDefault(x => x.ProductAttributeValueId == value.Id);
+                    if (productVariantAttribute != null)
+                        productVariantAttribute.ProductAttributeValue = value;
+
+                })
+                .Relate<ProductAttribute>((variant, attribute) =>
+                {
+                    var productVariantAttribute =
+                        variant.ProductVariantAttributes.FirstOrDefault(x => x.ProductAttributeId == attribute.Id);
+                    if (productVariantAttribute != null && productVariantAttribute.ProductAttribute == null)
+                        productVariantAttribute.ProductAttribute = attribute;
+
+                })
+                .Relate<AvailableAttribute>((variant, attribute) =>
+                {
+                    var productVariantAttribute =
+                        variant.ProductVariantAttributes.FirstOrDefault(
+                            x => x.ProductAttribute.AvailableAttribute == null &&
+                                 x.ProductAttribute.AvailableAttributeId == attribute.Id);
+                    if (productVariantAttribute != null)
+                        productVariantAttribute.ProductAttribute.AvailableAttribute = attribute;
+
+                })
+                .Relate<AvailableAttributeValue>((variant, attributeValue) =>
+                {
+                    var pav = variant.ProductVariantAttributes.Select(x => x.ProductAttributeValue)
+                        .FirstOrDefault(x => x.AvailableAttributeValueId == attributeValue.Id);
+                    if (pav != null && pav.AvailableAttributeValue == null)
+                        pav.AvailableAttributeValue = attributeValue;
+                });
         }
     }
 }

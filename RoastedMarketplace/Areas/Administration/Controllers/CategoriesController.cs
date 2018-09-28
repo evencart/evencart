@@ -34,7 +34,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                     Text = _categoryAccountant.GetFullBreadcrumb(c)
                 });
             }
-            return Result(new {success = true, suggestions = model.OrderBy(x => x.Text)});
+            return R.Success.With("suggestions", model.OrderBy(x => x.Text)).Result;
         }
     }
 }

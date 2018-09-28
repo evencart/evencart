@@ -122,6 +122,12 @@ namespace RoastedMarketplace.Services.Products
             EntitySet<ProductCategory>.Delete(x => x.Id == productCategoryId);
         }
 
+        public void RemoveProductCategories(int productId, int[] categoryIds)
+        {
+            var categoryIdsAsList = categoryIds.ToList();
+            EntitySet<ProductCategory>.Delete(x => x.ProductId == productId && categoryIdsAsList.Contains(x.CategoryId));
+        }
+
         public void LinkMediaWithProduct(int mediaId, int productId)
         {
             var productMediaCount = EntitySet<ProductMedia>.Where(x => x.MediaId == mediaId && x.ProductId == productId).Count();
@@ -144,14 +150,34 @@ namespace RoastedMarketplace.Services.Products
                 .Join<Manufacturer>("ManufacturerId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToMany<Product, Category>())
+                .Relate(RelationTypes.OneToMany<Product, Category>((product1, category) =>
+                {
+                    //we need to est display order of category appropriately from product1 object's tag property
+                    //see the relation ProductCategory below
+                    if (product1.Tag == null)
+                        return;
+                    var dictionary = (Dictionary<int, int>)product1.Tag;
+                    if (dictionary.ContainsKey(category.Id))
+                        category.DisplayOrder = dictionary[category.Id];
+                }))
                 .Relate(RelationTypes.OneToMany<Product, Media>())
                 .Relate(RelationTypes.OneToOne<Product, Manufacturer>())
                 .Relate(RelationTypes.OneToMany<Product, Vendor>())
                 .Relate(RelationTypes.OneToMany<Product, ProductAttribute>())
+                .Relate<ProductCategory>((product1, category) =>
+                {
+                    //we don't have categories as yet, so we'll have to preserve display order
+                    product1.Tag = product1.Tag ?? new Dictionary<int, int>();
+                    var dictionary = (Dictionary<int, int>) product1.Tag;
+                    if (dictionary.ContainsKey(category.CategoryId))
+                        return;
+                    dictionary.Add(category.CategoryId, category.DisplayOrder);
+                })
                 .Relate<ProductAttributeValue>((product1, value) =>
                 {
-                    var pa = product1.ProductAttributes.First(x => x.Id == value.ProductAttributeId);
+                    var pa = product1.ProductAttributes.FirstOrDefault(x => x.Id == value.ProductAttributeId);
+                    if (pa == null)
+                        return;
                     pa.ProductAttributeValues = pa.ProductAttributeValues ?? new List<ProductAttributeValue>();
                     if (!pa.ProductAttributeValues.Contains(value))
                         pa.ProductAttributeValues.Add(value);

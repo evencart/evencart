@@ -25,6 +25,13 @@ $node-meta-color: #999;
     margin-right: 10px;
 }
 
+.no-padding{
+    padding:0px!important;
+}
+.no-margin
+{
+    margin:0px!important;
+}
 body {
     letter-spacing: 0.02rem;
     
@@ -98,7 +105,7 @@ a {
     top: 0;
     left: 120px;
     right: 0;
-    padding: 15px 15px 0;
+    padding: 0px 15px 0;
     box-shadow: 0 1px 0 rgba(0,0,0,.1);
     font-size: 14px;
 
@@ -110,7 +117,8 @@ a {
         color: $primary-dark;
         display: inline-block;
         margin: 0 15px;
-        padding-bottom: 5px;
+        padding-bottom: 10px;
+        padding-top: 10px;
 
         &:hover {
             text-decoration: none;
@@ -484,7 +492,6 @@ input:focus, textarea:focus {
 }
 
 .save-button-container {
-    position: fixed;
     top: 0;
     left: 120px;
     right: 0;
@@ -569,4 +576,85 @@ h3.page-title
 
 .draggable, .ui-sortable-handle {
     cursor: grabbing;
+}
+
+.trash-link
+{
+    cursor:pointer;
+    &:hover{
+        text-decoration:none;
+    }
+}
+
+#categories-container{
+    margin-top:5px;
+}
+
+.bootstrap-tagsinput {
+    border: 1px solid #eee;
+    input[type='text'] {
+        border: solid 1px transparent !important;
+    }
+
+}
+
+.overlay
+{
+    background-color:rgba(0,0,0,0.3);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:1;
+}
+
+.popup {
+    position: absolute;
+    z-index: 2;
+    min-width: 330px;
+    box-shadow: 0 0 1px rgba(0,0,0,0.5);
+    display: none;
+
+    .panel {
+        margin-bottom: 0;
+    }
+
+    .popup-close, .close-popup {
+        cursor: pointer;
+    }
+
+    .popup-actions {
+        padding-bottom: 15px;
+        background-color: #f2f2f2;
+        padding-top: 15px;
+        border-top: solid 1px #ddd;
+    }
+}
+
+select {
+    border: solid 1px #eee;
+    border-radius: 3px;
+    padding: .5em;
+    display: block;
+    width: 100%;
+}
+
+.notification {
+    position: fixed;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    top: 10px;
+    border-radius: 15px;
+    display: none;
+    z-index: 2;
+    cursor:pointer;
+    ul{
+
+    }
+}
+.clickable
+{
+    cursor:pointer;
 }

@@ -2,6 +2,10 @@
 {
     public interface IMenuBuilder
     {
-        void BuildMenu(Menu menu);
+        Menu BuildMenu();
+
+        void Clear();
+
+        void Add(MenuItem menuItem);
     }
 }

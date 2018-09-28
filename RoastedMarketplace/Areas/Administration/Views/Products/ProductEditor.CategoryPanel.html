@@ -1,0 +1,100 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Categories" | t}}
+    </div>
+    <div class="panel-body">
+        {% control text id="category-selector" placeholder=@t"Start typing category name..." %}
+        <div id="categories-container">
+            <table id="table-categories" class="table table-bordered table-hover"></table>
+            <input type="hidden" name="productid" value="{{product.id}}" />
+        </div>
+
+        <script type="text/html" id="category-item-template">
+            <tr>
+                <td>
+                    <span>category_name</span>
+                    <input type="hidden" name="categories[index].id" value="category_id" data-type="id" />
+                    <input type="hidden" name="categories[index].displayorder" value="category_displayorder" data-type="displayorder" />
+                    <input type="hidden" name="categories[index].fullcategorypath" value="category_name" />
+                </td>
+                <td style="width: 20px;" class="text-center">
+                    <a class="trash-link" onclick="deleteCategory(this, '{{product.id}}', category_id)">
+                        <span class="rbicon-trash-2"></span>
+                    </a>
+                </td>
+            </tr>
+        </script>
+        <script type="text/javascript">
+            var addCategory = function (category) {
+                var template = jQuery("#category-item-template").html();
+                template = template.replaceAll("category_name", category.name);
+                template = template.replaceAll("index", jQuery("#table-categories tr").length);
+                template = template.replaceAll("category_displayorder", category.displayOrder);
+                template = template.replaceAll("category_id", category.id);
+                jQuery("#table-categories").append(template);
+            }
+            var deleteCategory = function (link, productId, categoryId) {
+                confirm('{{"Are you sure you want to delete this category?" | t}}',
+                    function() {
+                        var url = '{% route api_DeleteProductCategories %}';
+                        post({
+                            url: url,
+                            data: {
+                                productId: productId,
+                                categories: [
+                                    {
+                                        id: categoryId
+                                    }
+                                ]
+                            },
+                            done: function() {
+                                jQuery(link).closest("tr").remove();
+                            }
+                        });
+                    });
+
+            }
+            ready(function () {
+                inputTypeahead({
+                    element: "category-selector",
+                    initialData: null,
+                    url: "{% route api_GetCategorySuggestions %}",
+                    preserveAfterFirstCall: true,
+                    clearAfterSelect: true,
+                    select: function (item) {
+                        addCategory({
+                            name: item.text,
+                            id: item.id,
+                            displayOrder: jQuery("#table-categories tr").length
+                        });
+                        displayOrderSortable({
+                            container: "table-categories",
+                            itemSelector: "tr",
+                            refresh: true
+                        });
+                    }
+                });
+                //add existing categories
+                //{% for category in product.categories %}
+                addCategory({
+                    name: "{{category.fullCategoryPath}}",
+                    id: "{{category.id}}",
+                    displayOrder: "{{category.displayOrder}}"
+                });
+                //{% endfor %}
+                displayOrderSortable({
+                    container: "table-categories",
+                    itemSelector: "tr",
+                    update: function () {
+                        //{% if product.id > 0 %}
+                        post({
+                            url: "{% route api_UpdateProductCategoryDisplayOrder %}",
+                            data: jQuery("#categories-container input").serialize()
+                        });
+                        //{% endif %}
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>

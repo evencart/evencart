@@ -11,11 +11,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
 
         string RenderView(ViewContext viewContext);
 
-        string RenderView(string viewName, object parameters = null);
+        string RenderView(string viewName, string originalViewPath, object parameters = null);
 
-        CachedView GetView(string viewName);
+        CachedView GetView(string viewName, string requestedPath);
 
         string GetLayoutPath(string layoutName);
 
+        Dictionary<string, object> GetCompiledViews();
+
+        Dictionary<string, object> CompileAllViews(string controller = null);
     }
 }

@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotLiquid;
+using DotLiquid.NamingConventions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure.Providers;
+using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.ViewEngines.Expanders;
 using RoastedMarketplace.Infrastructure.ViewEngines.Filters;
 using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
+using RoastedMarketplace.Infrastructure.ViewEngines.NamingConventions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines
 {
@@ -14,23 +19,24 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
     {
         public const string ViewExtension = ".html";
 
-        private readonly ConcurrentDictionary<string, CachedView> _parsedTemplateCache;
+        private readonly ConcurrentDictionary<CachedViewKey, CachedView> _parsedTemplateCache;
 
         private readonly ILocalFileProvider _localFileProvider;
-        public ViewAccountant(ILocalFileProvider localFileProvider)
+        private readonly IActionContextAccessor _actionContextAccessor;
+        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor)
         {
             _localFileProvider = localFileProvider;
-            _parsedTemplateCache = new ConcurrentDictionary<string, CachedView>();
+            _actionContextAccessor = actionContextAccessor;
+            _parsedTemplateCache = new ConcurrentDictionary<CachedViewKey, CachedView>();
 
             //set the file system
             Template.FileSystem = new AppThemeFileSystem(this);
-
+            //naming convention camelCaseConvention
+            Template.NamingConvention = new CamelCaseNamingConvention();
             //register global objects
-            GlobalObject.RegisterObject<NavigationObject>("navigation");
-
-            //register filters
-            //Template.RegisterFilter(typeof(TranslateFilter));
-
+            GlobalObject.RegisterObject<PrimaryNavigationObject>("primary_navigation");
+            GlobalObject.RegisterObject<SecondaryNavigationObject>("secondary_navigation");
+            GlobalObject.RegisterObject<SelectOptionsObject>("selectOptions");
             //register additional types
             Template.RegisterSafeType(typeof(SelectListItem), new string[] { "Text", "Value", "Selected"});
         }
@@ -58,12 +64,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
 
         public string RenderView(ViewContext viewContext)
         {
-            return RenderView(viewContext.View.Path, viewContext.ViewData.Model);
+            var originalPath = viewContext.TempData["requested_path"].ToString();
+            return RenderView(viewContext.View.Path, originalPath, viewContext.ViewData.Model);
         }
 
-        public string RenderView(string viewPath, object parameters = null)
+        public string RenderView(string viewPath, string originalViewPath, object parameters = null)
         {
-            var template = GetView(viewPath).Template;
+            var template = GetView(viewPath, originalViewPath).Template;
             Hash resultHash = null;
             if (parameters != null)
             {
@@ -85,16 +92,17 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             return template.Render(resultHash);
         }
 
-        public CachedView GetView(string viewPath)
+        public CachedView GetView(string viewPath, string requestedPath)
         {
             Expander.ExpandView(viewPath, out string content);
-            if (!_parsedTemplateCache.TryGetValue(viewPath, out CachedView cachedView) || cachedView.Raw != content)
+            var cacheKey = GetCachedViewKey(requestedPath);
+            if (!_parsedTemplateCache.TryGetValue(cacheKey, out CachedView cachedView) || cachedView.Raw != content)
             {
                 if (cachedView == null)
                 {
                     cachedView = new CachedView();
                     //save it for future
-                    _parsedTemplateCache.TryAdd(viewPath, cachedView);
+                    _parsedTemplateCache.TryAdd(cacheKey, cachedView);
                 }
                 //run filters for the view
                 content = Filter.RunAll(content);
@@ -120,6 +128,37 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             return string.Empty;
         }
 
+        public Dictionary<string, object> GetCompiledViews()
+        {
+            var dictionary = new Dictionary<string, object>();
+            var groupedTemplates = _parsedTemplateCache.GroupBy(x => x.Key.Context);
+            foreach (var gt in groupedTemplates)
+            {
+                if(!dictionary.ContainsKey(gt.Key))
+                    dictionary.Add(gt.Key.ToLower(), null);
+
+                dictionary[gt.Key.ToLower()] = gt.ToDictionary(x => x.Key.Url, x => x.Value.Raw);
+            }
+            return dictionary;
+        }
+
+        public Dictionary<string, object> CompileAllViews(string controller = null)
+        {
+            //get all the routes
+            var routes = RouteFinder.GetAllRoutes(controller);
+            //conventionally we use the same name for views as our action name
+            const string pathFormat = "{0}/{1}";
+            foreach (var route in routes)
+            {
+                var viewPath = string.Format(pathFormat, route.Controller, route.Action);
+                var themeViewPath = GetThemeViewPath(viewPath);
+                if (themeViewPath.IsNullEmptyOrWhitespace())
+                    continue;
+                GetView(themeViewPath, viewPath);
+            }
+            return GetCompiledViews();
+        }
+
         private IList<string> _viewLocations;
         private IList<string> _adminViewLocations;
         private IList<string> GetViewLocations()
@@ -139,6 +178,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                 _localFileProvider.CombinePaths(themePath, "Views"),
                 _localFileProvider.CombinePaths(rootPath, "Views"),
             });
+        }
+
+        private CachedViewKey GetCachedViewKey(string viewPath)
+        {
+            return CachedViewKey.Get(viewPath, ApplicationEngine.CurrentLanguageCultureCode);
         }
     }
 }

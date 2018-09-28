@@ -7,7 +7,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
     public class GlobalExpander : Expander
     {
-        private const string AssignFormat = "{{%- assign {0} = \"{1}\" -%}}";
+        private const string AssignFormat = "{{%- capture {0} -%}}{1}{{%- endcapture -%}}";
         public override string Expand(ReadFile readFile, Regex regEx)
         {
             var matches = regEx.Matches(readFile.Content);

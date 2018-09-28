@@ -1,0 +1,4 @@
+﻿{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to products" %}
+{% secondary_navigation url="{% route GetProduct productId="{{product.id}}" %}" title=@t"Basic Info" systemName="GetProduct" %}
+{% secondary_navigation url="{% route ProductAttributesList productId="{{product.id}}" %}" title=@t"Product Attributes" systemName="ProductAttributesList" %}
+{% secondary_navigation url="{% route ProductVariantsList productId="{{product.id}}" %}" title=@t"Variants" systemName="ProductVariantsList" %}

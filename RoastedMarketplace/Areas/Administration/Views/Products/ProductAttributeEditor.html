@@ -1,0 +1,152 @@
+﻿<form action="{% route api_SaveProductAttribute %}" method="post" id="add-attribute-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Attributes Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Attribute Name" for="product-attribute-selector" %}
+                        {% if productAttribute.id > 0 %}
+                        {% control text id="product-attribute-selector" name="attribute.name" placeholder=@t"Type attribute name" value="{{productAttribute.name}}" disabled="disabled" %}
+                        {% else %}
+                        {% control text id="product-attribute-selector" name="attribute.name" placeholder=@t"Type attribute name" value="{{productAttribute.name}}" %}
+                        {% endif %}
+                        {% control hidden id="product-attribute" %}
+                        {% control validator for="product-attribute-selector" required="true" %}
+                    </div>
+                    {% if productAttribute.id > 0 %}
+                    <div class="form-group">
+                        {% control label text=@t"Display Name" for="display-name" %}
+                        {% control text id="display-name" name="attribute.label" value="{{productAttribute.label}}" %}
+                    </div>
+                    {% endif %}
+                    <div class="form-group">
+                        {% control label text=@t"Input Type" for="input-type" %}
+                        {% control select id="input-type" name="attribute.inputfieldtype" items="selectOptions.inputTypes" value="{{productAttribute.inputFieldTypeId}}" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Values" for="product-attribute-value-selector" %}
+                        {% control text id="product-attribute-value-selector" placeholder=@t"Select or add values" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="attribute.isrequired" text=@t"Is Required" value="{{productAttribute.isRequired}}" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{productId}}" %}
+                    {% control hidden name="attribute.id" value="{{productAttribute.id}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Attribute" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("add-attribute-form",
+        {
+            extraData : function () {
+                var attributeName = inputTypeahead({
+                    element: "product-attribute-selector",
+                    value: true
+                });
+                if (!attributeName)
+                    return false;
+                var attributeValues = inputTypeahead({
+                    element: "product-attribute-value-selector",
+                    value: true,
+                    multiple: true
+                });
+                if (!attributeValues)
+                    return false;
+            
+                attributeName = attributeName.trim();
+                var values = [];
+                attributeValues.forEach(function (item) {
+                    values.push({
+                        attributeValue: item.text,
+                        id: 0
+                    });
+                });
+                return {
+                    attribute :  { values: values}
+                }
+            },
+            onSuccess: function() {
+                hidePopup("add-attribute");
+            }
+        });
+
+    ready(function () {
+        inputTypeahead({
+            element: "product-attribute-selector",
+            initialData: null,
+            url: "{% route api_GetAttributeSuggestions %}",
+            preserveAfterFirstCall: true,
+            openOnFocus: true,
+            minLength: 0,
+            select: function (item) {
+                jQuery("#product-attribute-value-selector").focus();
+                jQuery("#product-attribute").val(item.id);
+                initForValues();
+            }
+        });
+        var initForValues = function () {
+            var initialData = null;
+            /* {% if productAttribute.id > 0 %} */
+            initialData = [];
+            /* {% for value in productAttribute.values %} */
+            initialData.push({
+                id: "{{value.id}}",
+                text: "{{value.attributeValue}}"
+            });
+            /* {% endfor %} */
+            /* {% endif %}*/
+            inputTypeahead({
+                element: "product-attribute-value-selector",
+                destroy: true,
+                multiple: true
+            });
+            inputTypeahead({
+                element: "product-attribute-value-selector",
+                initialData: initialData,
+                multiple: true,
+                url: function () {
+                    var attributeId = jQuery("#product-attribute").val();
+                    if (attributeId == 0)
+                        return null;
+                    var baseUrl = '{% route api_GetAttributeValueSuggestions attributeId="0" %}';
+                    baseUrl = baseUrl.replaceAll("/0", "/" + attributeId);
+                    return baseUrl;
+                },
+                preserveAfterFirstCall: true,
+                openOnFocus: true,
+                minLength: 0,
+                /* {% if productAttribute.id > 0 %} */
+                beforeItemRemoved: function (e) {
+                    var id = e.item.id;
+                    if (!deleteAttributeValue(id))
+                    {
+                        e.cancel = true;
+                    }
+                }    
+                /* {% endif %}*/
+            });
+        }
+        /* {% if productAttribute.id > 0 %} */
+        initForValues();
+        /* {% endif %}*/
+    });
+
+</script>

@@ -25,5 +25,10 @@
         public const int AdminThumbnailWidth = 100;
 
         public const int AdminThumbnailHeight = 100;
+
+        public const string PrimaryNavigationName = "primary_navigation";
+
+        public const string SecondaryNavigationName = "secondary_navigation";
+
     }
 }

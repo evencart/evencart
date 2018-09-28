@@ -1,0 +1,88 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Images" | t}}
+        <span class="btn btn-default fileinput-button btn-sm float-right">
+            <i class="rbicon-plus-circle"></i>
+            <span>{{"Add Image" | t}}</span>
+            <input id="imageFile" type="file" name="mediaFile" />
+        </span>
+    </div>
+    <div class="panel-body" id="file-dragger">
+        <div id="image-container"></div>
+        {% unless product.media.size %}
+        <div class="drag-area">
+            <div class="msg">
+                <div>
+                    {{"Drag your image file here" | t}}
+                </div>
+            </div>
+        </div>
+        {% endunless %}
+        <script id="image-block-template" type="text/html">
+            <div class="image-block">
+                <img src="image_url" />
+                <input type="hidden" data-type="id" name="media[index].id" value="media_id" />
+                <input type="hidden" data-type="displayorder" name="media[index].displayorder" value="media_displayorder" />
+            </div>
+        </script>
+        <script type="text/javascript">
+            ready(function () {
+                initFileUploader({
+                    element: "imageFile",
+                    dropZone: jQuery("#file-dragger"),
+                    url: "{% route api_UploadMedia %}",
+                    done: function(e, data) {
+                        var result = data.result;
+                        addMedia(result.media);
+                        //update sortable
+                        displayOrderSortable({
+                            container: "image-container",
+                            itemSelector: ".image-block",
+                            refresh: true
+                        });
+                    },
+                    formData: {
+                        entityName: "product",
+                        entityId: "{{product.id}}"
+                    }
+                });
+
+                //add existing images
+                //{% comment %} putting the for loop below between /**/ ensures that formatting is not lost{% endcomment %}
+                /*{% for media in product.media %}*/
+                addMedia({
+                    id: "{{media.id}}",
+                    thumbnailUrl: "{{media.thumbnailUrl}}",
+                    displayOrder: "{{media.displayOrder}}"
+                });
+                /*{% endfor %}*/
+
+                //update sortable
+                displayOrderSortable({
+                    container: "image-container",
+                    itemSelector: ".image-block",
+                    update: function () {
+                        //{% if product.id > 0 %}
+                        post({
+                            url: "{% route api_UpdateMediaDisplayOrder %}",
+                            data: jQuery("#image-container input").serialize()
+                        });
+                        //{% endif %}
+                    }
+                });
+
+            });
+
+            var addMedia = function(media) {
+                var imageBlock = jQuery("#image-block-template").html();
+                var index = jQuery("#image-container .image-block").length;
+                imageBlock = imageBlock.replaceAll("image_url", media.thumbnailUrl);
+                imageBlock = imageBlock.replaceAll("index", index);
+                imageBlock = imageBlock.replaceAll("media_id", media.id);
+                imageBlock = imageBlock.replaceAll("media_displayorder", media.displayOrder);
+                jQuery("#image-container").append(imageBlock);
+            }
+
+        </script>
+    </div>
+</div>

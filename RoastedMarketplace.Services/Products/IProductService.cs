@@ -21,6 +21,8 @@ namespace RoastedMarketplace.Services.Products
 
         void RemoveProductCategory(int productCategoryId);
 
+        void RemoveProductCategories(int productId, int[] categoryIds);
+
         void LinkMediaWithProduct(int mediaId, int productId);
 
     }

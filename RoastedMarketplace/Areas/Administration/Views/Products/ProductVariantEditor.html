@@ -1,0 +1,115 @@
+﻿<form action="{% route api_SaveProductVariant %}" method="post" id="edit-variant-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Variant Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body" style="padding: 0px 15px;border-right: solid 1px #ddd;">
+            <div class="row">
+                <div class="col-lg-3" style="background-color: #f2f2f2;">
+                    {% if variant.id > 0 %}
+                    {% for attribute in variant.attributes %}
+                    <div class="form-group" style="padding-top: 15px">
+                        {% if attribute.label %}
+                        {% control label text="{{attribute.label}}" %}
+                        {% else %}
+                        {% control label text="{{attribute.name | t}}" %}
+                        {% endif %}
+                        {% control hidden name="variant.attributes[{{forloop.index0}}].id" value="{{attribute.id}}" %}
+                        {% control hidden name="variant.attributes[{{forloop.index0}}].values[0].id" value="{{attribute.values[0].id}}" %}
+                        <strong>
+                            {% if attribute.value_label == nil or attribute.value_label == "" %}
+                            {{attribute.value}}
+                            {% else %}
+                            {{attribute.value_label}}
+                            {% endif %}
+                            {{attribute.values[0].attributeValue}}
+                        </strong>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    {% for attribute in attributes %}
+                    
+                    <div class="form-group" style="padding-top: 15px">
+                        {% control label text="{{attribute.name | t}}" %}
+                        {% control hidden name="variant.attributes[{{forloop.index0}}].id" value="{{attribute.id}}" %}
+                        {% control select name="variant.attributes[{{forloop.index0}}].values[0].id" items="attribute.valuesAsSelectListItems" required="{{attribute.isRequired}}" %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+                <div class="col-lg-9">
+                    <div class="row" style="padding-top: 15px">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Sku" for="sku" %}
+                                {% control text name="variant.sku" value="{{variant.sku}}"%}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Gtin" for="gtin" %}
+                                {% control text name="variant.gtin" value="{{variant.gtin}}"%}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Mpn" for="mpn" %}
+                                {% control text name="variant.mpn" value="{{variant.mpn}}"%}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Price" for="price" %}
+                                {% control currency name="variant.price" value="{{variant.price}}"%}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Weight Adjustment" for="weight" %}
+                                {% control number name="variant.weight" value="{{variant.weight}}"%}
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+
+                            <div class="form-group">
+                                {% control checkbox name="variant.trackInventory" text=@t"Track Inventory" value="{{variant.trackInventory}}" %}
+                            </div>
+                            <div class="form-group">
+                                {% control label text=@t"Stock Quantity" for="stockQuantity" %}
+                                {% control number name="variant.stockQuantity" value="{{variant.stockQuantity}}" min="0" %}
+                            </div>
+                            <div class="form-group">
+                                {% control checkbox name="variant.canOrderWhenOutOfStock" value="{{variant.canOrderWhenOutOfStock}}" text=@t"Can order when out of stock?" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{variant.productId}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Variant" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("edit-variant-form",
+        {
+            onSuccess: function () {
+                hidePopup("edit-variant-popup");
+            }
+        });
+</script>

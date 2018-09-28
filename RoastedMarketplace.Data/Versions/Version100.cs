@@ -28,16 +28,16 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<Country>(transaction);
             Db.CreateTable<StateOrProvince>(transaction);
 
-            Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction);
-            Db.CreateConstraint(Relation.Create<User, Address>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<Role, RoleCapability>("Id", "RoleId"), transaction);
-            Db.CreateConstraint(Relation.Create<Capability, RoleCapability>("Id", "CapabilityId"), transaction);
-            Db.CreateConstraint(Relation.Create<Capability, UserCapability>("Id", "CapabilityId"), transaction);
-            Db.CreateConstraint(Relation.Create<User, UserCapability>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<User, VendorUser>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<Vendor, VendorUser>("Id", "VendorId"), transaction);
-            Db.CreateConstraint(Relation.Create<Country, Address>("Id", "CountryId"), transaction);
+            Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Address>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Role, RoleCapability>("Id", "RoleId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Capability, RoleCapability>("Id", "CapabilityId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Capability, UserCapability>("Id", "CapabilityId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, UserCapability>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, VendorUser>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Vendor, VendorUser>("Id", "VendorId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Country, Address>("Id", "CountryId"), transaction, true);
 
             //shop
             Db.CreateTable<Product>(transaction);
@@ -54,20 +54,20 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<Media>(transaction);
             Db.CreateTable<ProductMedia>(transaction);
 
-            Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction);
-            Db.CreateConstraint(Relation.Create<AvailableAttribute, AvailableAttributeValue>("Id", "AvailableAttributeId"), transaction);
+            Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<AvailableAttribute, AvailableAttributeValue>("Id", "AvailableAttributeId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductAttribute>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<AvailableAttribute, ProductAttribute>("Id", "AvailableAttributeId"), transaction);
-            Db.CreateConstraint(Relation.Create<ProductAttribute, ProductAttributeValue>("Id", "ProductAttributeId"), transaction);
-            Db.CreateConstraint(Relation.Create<Product, ProductVendor>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<Vendor, ProductVendor>("Id", "VendorId"), transaction);
-            Db.CreateConstraint(Relation.Create<Product, ProductVariant>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<ProductVariant, ProductVariantAttribute>("Id", "ProductVariantId"), transaction);
-            Db.CreateConstraint(Relation.Create<ProductAttribute, ProductVariantAttribute>("Id", "ProductAttributeId"), transaction);
+            Db.CreateConstraint(Relation.Create<AvailableAttribute, ProductAttribute>("Id", "AvailableAttributeId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<ProductAttribute, ProductAttributeValue>("Id", "ProductAttributeId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductVendor>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Vendor, ProductVendor>("Id", "VendorId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductVariant>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<ProductVariant, ProductVariantAttribute>("Id", "ProductVariantId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<ProductAttribute, ProductVariantAttribute>("Id", "ProductAttributeId"), transaction, true);
             Db.CreateConstraint(Relation.Create<ProductAttributeValue, ProductVariantAttribute>("Id", "ProductAttributeValueId"), transaction);
-            Db.CreateConstraint(Relation.Create<Media, ProductMedia>("Id", "MediaId"), transaction);
-            Db.CreateConstraint(Relation.Create<Product, ProductMedia>("Id", "ProductId"), transaction);
+            Db.CreateConstraint(Relation.Create<Media, ProductMedia>("Id", "MediaId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductMedia>("Id", "ProductId"), transaction, true);
             //tax
             Db.CreateTable<Tax>(transaction);
             Db.CreateTable<TaxRate>(transaction);
@@ -81,13 +81,13 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<Shipment>(transaction);
             Db.CreateTable<ShipmentItem>(transaction);
 
-            Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction);
-            Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<Order, OrderItem>("Id", "OrderId"), transaction);
-            Db.CreateConstraint(Relation.Create<User, Order>("Id", "UserId"), transaction);
-            Db.CreateConstraint(Relation.Create<Product, CartItem>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction);
-            Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction);
+            Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Order, OrderItem>("Id", "OrderId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Order>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, CartItem>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction, true);
 
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);

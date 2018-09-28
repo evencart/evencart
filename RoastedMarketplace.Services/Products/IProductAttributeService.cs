@@ -1,4 +1,5 @@
-﻿using RoastedMarketplace.Core.Services;
+﻿using System.Collections.Generic;
+using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Shop;
 
 namespace RoastedMarketplace.Services.Products
@@ -9,6 +10,8 @@ namespace RoastedMarketplace.Services.Products
 
         void RemoveProductAttribute(int productAttributeId);
 
-        void AddProductAttributeValue(ProductAttributeValue productAttributeValue);
+        void AddProductAttributeValue(ProductAttributeValue productAttributeValue, Transaction transaction = null);
+
+        IList<ProductAttribute> GetByProductId(int productId, bool onlyVariantSpecific = false);
     }
 }

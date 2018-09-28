@@ -15,15 +15,14 @@ namespace RoastedMarketplace.Data.Enum
         Email = 5,
         Password = 6,
         CheckBox = 7,
-        CheckBoxList = 8,
+        //CheckBoxList = 8,
         DateTime = 9,
         RadioButton = 10,
         Color = 11,
-        Captcha = 12,
-        Dropdown = 13,
-        NestedDropdown = 14,
-        ImageUpload = 15,
-        FileUpload = 16,
-        Duration = 17
+        Dropdown = 12,
+        //NestedDropdown = 13,
+        ImageUpload = 14,
+        FileUpload = 15,
+        //Duration = 16
     }
 }

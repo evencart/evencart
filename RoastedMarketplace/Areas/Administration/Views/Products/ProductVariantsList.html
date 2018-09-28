@@ -1,0 +1,147 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Products" active_menu="ProductVariantsList" parent_active_menu="ProductsList" %}
+{% partial "Navigation/ProductEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>{{"Product Variants" | t}} <button class="btn btn-primary float-right" onclick="editVariant(0)">{{"Add New" | t}}</button></h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="variant" data-width="30%" data-formatter="variant">{{"Variant" | t}}</th>
+                            <th data-column-id="sku">{{"Sku" | t}}</th>
+                            <th data-column-id="gtin">{{"Gtin" | t}}</th>
+                            <th data-column-id="mpn">{{"Mpn" | t}}</th>
+                            <th data-column-id="price">{{"Price" | t}}</th>
+                            <th data-column-id="weight">{{"Weight" | t}}</th>
+                            <th data-column-id="stockQuantity">{{"Stock" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function () {
+                        var initData = null;
+                        /*{% if variants %}*/
+                        initData = JSON.parse('{{variants}}');
+                        /*{% endif %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: initData,
+                            method: "GET",
+                            url: '{% route api_ProductVariantsList productId="{{product.id}}" %}',
+                            responseObject: "variants",
+                            selection: false,
+                            navigation: false,
+                            columnSelection: false,
+                            formatters: {
+                                "variant": function (column, row) {
+                                    var variant = "";
+                                    if (!row.attributes)
+                                        return "";
+                                    row.attributes.forEach(function (attribute) {
+                                        variant += "<div>";
+                                        variant += "<strong>" + attribute.name;
+                                        if (attribute.label) {
+                                            variant += " (" + attribute.label + ")";
+                                        }
+                                        variant += "</strong> : ";
+                                        variant += attribute.values[0].attributeValue;
+                                        if (attribute.values[0].label) {
+                                            variant += " (" + attribute.values[0].label + ")";
+                                        }
+                                        variant += "</div>";
+                                        
+                                    });
+                                    return variant;
+                                },
+                                "values": function (column, row) {
+                                    if (!row.values)
+                                        return "";
+                                    var table = "<table class='table table-bordered'>";
+                                    row.values.forEach(function (valueItem) {
+                                        var label = valueItem.label;
+                                        if (label)
+                                            label = "(" + label + ")";
+                                        if (!label)
+                                            label = "";
+                                        table += "<tr>";
+                                        table += "<td>" + valueItem.attributeValue + " " + label + "</td>";
+                                        table += "<td><a class=''><span class='rbicon-edit'></span></a><a class=''><span class='rbicon-trash-2'></span></a></td>";
+                                        table += "</tr>";
+                                    });
+                                    table += "</table>";
+                                    return table;
+                                },
+                                "commands": function (column, row) {
+                                    return "<button type='button' class='btn btn-secondary command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editVariant(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick=deleteVariant(" + row.id +")><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-variant-popup"  style="width: 700px">
+</div>
+
+<script type="text/javascript">
+    
+    var editVariant = function(id) {
+        jQuery("#edit-variant-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-variant-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Variant was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route EditProductVariant productId="{{product.id}}" productVariantId="%id%" %}'.replaceAll("%id%", id);
+        get({
+            url: url,
+            done: function(response) {
+                jQuery("#edit-variant-popup").html(response);
+                centerPopup();
+            }
+        });
+    }
+    var deleteVariant = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this variant?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteProductVariant %}",
+                    data: {
+                        productVariantId: id  
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Variant was deleted successfully." | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>
+  

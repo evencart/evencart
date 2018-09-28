@@ -1717,11 +1717,12 @@
                     }
                 }
                 function async(suggestions) {
+                    
                     suggestions = suggestions || [];
                     if (!canceled && rendered < that.limit) {
                         that.cancel = $.noop;
                         rendered += suggestions.length;
-                        that._append(query, suggestions.slice(0, that.limit - rendered));
+                        that._append(query, suggestions.slice(0, that.limit));
                         that.async && that.trigger("asyncReceived", query);
                     }
                 }

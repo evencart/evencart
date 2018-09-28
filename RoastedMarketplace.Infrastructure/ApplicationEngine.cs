@@ -112,6 +112,14 @@ namespace RoastedMarketplace.Infrastructure
             return isAdmin;
         }
 
+        public static string GetActiveRouteName()
+        {
+            _urlHelperFactory = _urlHelperFactory ?? DependencyResolver.Resolve<IUrlHelperFactory>();
+            var urlHelper = _urlHelperFactory.GetUrlHelper(DependencyResolver.Resolve<IActionContextAccessor>().ActionContext);
+            urlHelper.ActionContext.ActionDescriptor.Properties.TryGetValue("RouteName", out object routeName);
+            return routeName?.ToString() ?? "";
+        }
+
         #endregion
 
         public static HttpContext CurrentHttpContext => DependencyResolver.Resolve<IHttpContextAccessor>().HttpContext;
@@ -120,6 +128,7 @@ namespace RoastedMarketplace.Infrastructure
 
         public static ThemeInfo ActiveTheme => new ThemeInfo();//todo:set this
 
-        
+        public static string CurrentLanguageCultureCode => "en-US";
+
     }
 }

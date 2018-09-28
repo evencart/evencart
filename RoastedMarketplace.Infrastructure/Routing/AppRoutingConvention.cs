@@ -21,9 +21,10 @@ namespace RoastedMarketplace.Infrastructure.Routing
             {
                 area = "/" + ((AreaAttribute) areaAttribute).RouteValue;
             }
-            
             foreach (var ar in attributeRoutes)
             {
+                if (!action.Properties.ContainsKey("RouteName"))
+                    action.Properties.Add("RouteName", ar.AttributeRouteModel.Name);
                 if (ar.AttributeRouteModel.Attribute is IDualRouteAttribute)
                 {
                     var dualRouteAttribute = (IDualRouteAttribute) ar.AttributeRouteModel.Attribute;

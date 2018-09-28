@@ -9,7 +9,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
     public class ControlExpander : Expander
     {
-        private static string[] NonAttributeNames = {"items", "value", "text"};
+        private static readonly string[] NonAttributeNames = {"items", "value", "text"};
+        private const string AssignFormat = "{{%- assign {0} -%}}";
         public override string Expand(ReadFile readFile, Regex regEx)
         {
             var matches = regEx.Matches(readFile.Content);
@@ -28,21 +29,23 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 if (viewName.IsNullEmptyOrWhitespace())
                     throw new Exception($"Can't find the view {viewName} in view file {readFile.FileName}");
                 var controlFile = ReadFile.From(viewName);
-                readFile.Children.Add(controlFile);
-                var attributeString = string.Join(" ", keyValuePairs.Where(x => !NonAttributeNames.Contains(x.Key))
-                    .Select(x => $"{x.Key}=\"{x.Value}\""));
+                readFile.AddChild(controlFile);
+                var keyValuePairsString = keyValuePairs.Where(x => !NonAttributeNames.Contains(x.Key))
+                    .Select(x => $"{x.Key}=\"{x.Value}\"").ToList();
+                var attributeString = string.Join(" ", keyValuePairsString);
+                var assigns = string.Join("", keyValuePairsString.Select(x => string.Format(AssignFormat, x)));
                 //replace attribute string
-                var controlText = controlFile.Content.Replace("{% attributes %}", attributeString);
+                var controlText = controlFile.Content.Replace("%attributes%", attributeString);
                 foreach(var kp in keyValuePairs.Where(x => NonAttributeNames.Contains(x.Key)))
                 {
-                    controlText = controlText.Replace($"{{% {kp.Key} %}}", kp.Value);
+                    controlText = controlText.Replace($"%{kp.Key}%", kp.Value);
                 }
 
                 //replace the non attributes which were not passed
                 foreach(var nan in NonAttributeNames)
-                    controlText = controlText.Replace($"{{% {nan} %}}", "");
+                    controlText = controlText.Replace($"%{nan}%", "");
 
-                readFile.Content = readFile.Content.Replace(match.Result("$0"), controlText);
+                readFile.Content = readFile.Content.Replace(match.Result("$0"), assigns + controlText);
             }
 
             return readFile.Content;

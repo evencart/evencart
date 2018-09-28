@@ -7,5 +7,10 @@ namespace RoastedMarketplace.Data.Entity.Shop
         public int AvailableAttributeId { get; set; }
 
         public string Value { get; set; }
+
+        #region Virtual Properties
+        public virtual AvailableAttribute AvailableAttribute { get; set; }
+        #endregion
+
     }
 }

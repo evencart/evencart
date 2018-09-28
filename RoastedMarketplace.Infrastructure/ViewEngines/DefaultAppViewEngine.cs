@@ -9,6 +9,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
     {
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isMainPage)
         {
+            var controller = context.ActionDescriptor.RouteValues["controller"];
+            viewName = $"{controller}/{viewName}";
             return GetView(viewName, isMainPage);
         }
 
@@ -23,7 +25,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             var viewFilePath = viewAccountant.GetThemeViewPath(viewName);
             if (!viewFilePath.IsNullEmptyOrWhitespace())
             {
-                return ViewEngineResult.Found(viewFilePath, new RoastedLiquidView(viewFilePath, viewAccountant));
+                return ViewEngineResult.Found(viewFilePath, new RoastedLiquidView(viewFilePath, viewName, viewAccountant));
             }
             return ViewEngineResult.NotFound(viewName, viewAccountant.GetSearchLocations());
         }

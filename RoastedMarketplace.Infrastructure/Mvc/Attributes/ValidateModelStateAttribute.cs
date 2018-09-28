@@ -6,10 +6,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
 namespace RoastedMarketplace.Infrastructure.Mvc.Attributes
@@ -26,7 +28,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Attributes
         {
             if (!actionContext.ModelState.IsValid)
             {
-                actionContext.Result = new BadRequestObjectResult(actionContext.ModelState);
+                actionContext.Result = new OkObjectResult(new { success = false, errors = ParseModelState(actionContext.ModelState) });
             }
             else
             {
@@ -54,9 +56,22 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Attributes
 
                 if (!actionContext.ModelState.IsValid)
                 {
-                    actionContext.Result = new BadRequestObjectResult(actionContext.ModelState);
+                    actionContext.Result = new OkObjectResult(new { success = false, errors = ParseModelState(actionContext.ModelState) });
                 }
             }
+        }
+
+        private List<string> ParseModelState(ModelStateDictionary modelState)
+        {
+            var errors = new List<string>();
+            foreach (var state in modelState)
+            {
+                foreach (var error in state.Value.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+            }
+            return errors;
         }
     }
 }

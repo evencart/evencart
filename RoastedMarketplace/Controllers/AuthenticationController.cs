@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using DotLiquid;
-using Microsoft.AspNetCore.Mvc;
-using RoastedMarketplace.Data.Entity.Shop;
+﻿using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Services.Authentication;
@@ -19,14 +16,7 @@ namespace RoastedMarketplace.Controllers
         [DualGet("login", Name = RouteNames.Login)]
         public IActionResult Login()
         {
-            var products = new List<Product>()
-            {
-                new Product() {Name = "First Product"},
-                new Product() {Name = "Second Product"},
-                new Product() {Name = "Third Product"},
-            };
-            Template.RegisterSafeType(typeof(Product), new []{ "Name"});
-            return Result("Authentication/Login", new {products});
+            return Result();
         }
 
         [DualPost("login", Name = RouteNames.Login)]

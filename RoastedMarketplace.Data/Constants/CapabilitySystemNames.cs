@@ -30,5 +30,7 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ViewCategories = "ViewCategories";
 
+        public const string ManageAvailableAttributes = "ManageAvailableAttributes";
+
     }
 }

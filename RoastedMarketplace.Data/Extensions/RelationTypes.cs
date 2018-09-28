@@ -8,7 +8,7 @@ namespace RoastedMarketplace.Data.Extensions
     public class RelationTypes
     {
         private static readonly Dictionary<string, object> PrefetchedActions = new Dictionary<string, object>();
-        public static Action<T, T1> OneToMany<T, T1>() where T : FoundationEntity where T1 : FoundationEntity
+        public static Action<T, T1> OneToMany<T, T1>(Action<T, T1> mutationAction = null) where T : FoundationEntity where T1 : FoundationEntity
         {
             var typeofT1 = typeof(T1);
             var typeOfT = typeof(T);
@@ -50,6 +50,8 @@ namespace RoastedMarketplace.Data.Extensions
                     if (propertyInfoT1.GetValue(t1) == null)
                         propertyInfoT1.SetValue(t1, t);
                 }
+
+                mutationAction?.Invoke(t, t1);
             };
 
             //save for future use
@@ -57,7 +59,7 @@ namespace RoastedMarketplace.Data.Extensions
             return action;
         }
 
-        public static Action<T, T1> OneToOne<T, T1>() where T : FoundationEntity where T1 : FoundationEntity
+        public static Action<T, T1> OneToOne<T, T1>(Action<T, T1> mutationAction = null) where T : FoundationEntity where T1 : FoundationEntity
         {
             var typeofT1 = typeof(T1);
             var typeOfT = typeof(T);
@@ -88,6 +90,7 @@ namespace RoastedMarketplace.Data.Extensions
                 {
                     propertyInfoT1.SetValue(t1, t);
                 }
+                mutationAction?.Invoke(t, t1);
             };
 
             //save for future use

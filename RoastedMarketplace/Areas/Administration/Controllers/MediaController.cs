@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Media;
+using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.MediaServices;
@@ -37,7 +38,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var mediaFile = mediaModel.MediaFile;
             if (mediaFile == null || mediaFile.Length == 0)
             {
-                return Result(new {success = false});
+                return R.Fail.Result;
             }
 
             var media = _mediaAccountant.GetMediaInstance(mediaFile, 0);
@@ -60,10 +61,10 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var model = _modelMapper.Map<MediaModel>(media);
             model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationConfig.AdminThumbnailWidth,
                 ApplicationConfig.AdminThumbnailHeight);
-            return Result(new {success = true, media = model});
+            return R.Success.With("media", model).Result;
         }
 
-        [DualPost("displayorder/update", Name = AdminRouteNames.UpdateMediaDisplayOrder, OnlyApi = true)]
+        [DualPost("displayorder", Name = AdminRouteNames.UpdateMediaDisplayOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.UploadMedia)]
         public IActionResult UpdateDisplayOrders(MediaModel[] media)
         {
@@ -72,7 +73,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
 
             //get media models with no-zero ids
             var validMediaModels = media.Where(x => x.Id != 0);
-            _mediaService.BatchOperation(transaction =>
+            Transaction.Initiate(transaction =>
             {
                 foreach (var model in validMediaModels)
                 {
@@ -80,7 +81,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                         transaction);
                 }
             });
-            return Result(new {success = true});
+            return R.Success.Result;
         }
     }
 }

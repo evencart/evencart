@@ -26,7 +26,7 @@ namespace RoastedMarketplace.Controllers
             var areTableInstalled = DatabaseManager.IsDatabaseInstalled(databaseSettings);
 
             if (areTableInstalled)
-                return Result(new { Success = false, Message = "Database already installed" });
+                return R.Fail.With("error", T("Database already installed")).Result;
 
             //lets save the database settings to config file
             var connectionString = model.ConnectionString;
@@ -42,7 +42,7 @@ namespace RoastedMarketplace.Controllers
             //check if we have correct connection string
             if (!DatabaseManager.IsValidConnection(providerName, connectionString))
             {
-                return Result(new { Success = false, Message = "Failed to connect to database" });
+                return R.Fail.With("error", T("Failed to connect to database")).Result;
             }
 
             databaseSettings.WriteSettings(connectionString, providerName);
@@ -54,7 +54,7 @@ namespace RoastedMarketplace.Controllers
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,
                 ApplicationEngine.CurrentHttpContext.Request.Host.Value);
 
-            return Result(new { Success = true });
+            return R.Success.Result;
         }
     }
 }

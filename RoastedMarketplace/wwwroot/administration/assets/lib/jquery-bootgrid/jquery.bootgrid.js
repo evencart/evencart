@@ -196,12 +196,21 @@
             {
                 that.selectedRows = [];
             }
-
             renderRows.call(that, rows);
             renderInfos.call(that);
             renderPagination.call(that);
 
             that.element._bgBusyAria(false).trigger("loaded" + namespace);
+        }
+
+        if (that.options.initialData) {
+            //customized, if there is initial data, render that rather than making an ajax call,
+            //the ajax call won't be made till a reload is called
+            var response = that.options.responseHandler(that.options.initialData);
+            that.options.initialData = null; //so that it doesn't load the same data on reload
+            that.current = response.current;
+            update(response.rows, response.total);
+            return;
         }
 
         if (this.options.ajax)
@@ -590,7 +599,7 @@
                 tbody = this.element.children("tbody").first(),
                 allRowsSelected = true,
                 html = "";
-
+            
             $.each(rows, function (index, row)
             {
                 var cells = "",
@@ -637,6 +646,7 @@
                 {
                     rowAttr += " class=\"" + rowCss + "\"";
                 }
+                
                 html += tpl.row.resolve(getParams.call(that, { attr: rowAttr, cells: cells }));
             });
 
@@ -974,6 +984,7 @@
         this.element = $(element);
         this.origin = this.element.clone();
         this.options = $.extend(true, {}, Grid.defaults, this.element.data(), options);
+        
         // overrides rowCount explicitly because deep copy ($.extend) leads to strange behaviour
         var rowCount = this.options.rowCount = this.element.data().rowCount || options.rowCount || this.options.rowCount;
         this.columns = [];

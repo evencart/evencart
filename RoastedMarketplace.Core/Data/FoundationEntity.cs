@@ -12,5 +12,6 @@ namespace RoastedMarketplace.Core.Data
         [NonPatchable]
         public int Id { get; set; }
         
+        public virtual object Tag { get; set; }
     }
 }

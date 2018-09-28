@@ -1,18 +1,22 @@
-﻿using DotEntity;
-using RoastedMarketplace.Core.Services;
+﻿using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.MediaEntities;
-using RoastedMarketplace.Data.Entity.Shop;
 
 namespace RoastedMarketplace.Services.MediaServices
 {
     public class MediaService : FoundationEntityService<Media>, IMediaService
     {
-        public override void Delete(Media entity)
+        private readonly IProductMediaService _productMediaService;
+        public MediaService(IProductMediaService productMediaService)
+        {
+            _productMediaService = productMediaService;
+        }
+
+        public override void Delete(Media entity, Transaction transaction = null)
         {
             //delete the product media
-            EntitySet<ProductMedia>.Delete(x => x.MediaId == entity.Id);
+            _productMediaService.Delete(x => x.MediaId == entity.Id, transaction);
             //proceed with usual deletion
-            base.Delete(entity);
+            base.Delete(entity, transaction);
         }
     }
 }

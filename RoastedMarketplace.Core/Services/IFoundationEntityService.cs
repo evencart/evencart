@@ -12,9 +12,9 @@ namespace RoastedMarketplace.Core.Services
 
         void Insert(T[] entity);
 
-        void Delete(T entity);
+        void Delete(T entity, Transaction transaction = null);
 
-        void Delete(Expression<Func<T, bool>> where);
+        void Delete(Expression<Func<T, bool>> where, Transaction transaction = null);
 
         void Update(T entity, Transaction transaction = null);
 
@@ -31,8 +31,6 @@ namespace RoastedMarketplace.Core.Services
         IEnumerable<T> Query(string query, object parameters = null);
 
         int Count(Expression<Func<T, bool>> where = null);
-
-        void BatchOperation(Action<Transaction> operationAction);
     }
 
 }

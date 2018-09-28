@@ -59,7 +59,7 @@
      * Adds the given item as a new tag. Pass true to dontPushVal to prevent
      * updating the elements val()
      */
-    add: function(item, dontPushVal, options) {
+      add: function (item, dontPushVal, options) {
       var self = this;
 
       if (self.options.maxTags && self.itemsArray.length >= self.options.maxTags)
@@ -268,7 +268,7 @@
       makeOptionItemFunction(self.options, 'itemValue');
       makeOptionItemFunction(self.options, 'itemText');
       makeOptionFunction(self.options, 'tagClass');
-
+        
       // Typeahead Bootstrap version 2.3.2
       if (self.options.typeahead) {
         var typeahead = self.options.typeahead || {};
@@ -320,7 +320,7 @@
           }
         }));
       }
-
+        
       // typeahead.js
       if (self.options.typeaheadjs) {
           var typeaheadConfig = null;
@@ -334,7 +334,7 @@
           } else {
             typeaheadDatasets = typeaheadjs;
           }
-
+          
           self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected', $.proxy(function (obj, datum) {
             if (typeaheadDatasets.valueKey)
               self.add(datum[typeaheadDatasets.valueKey]);
@@ -524,7 +524,7 @@
     this.each(function() {
       var tagsinput = $(this).data('tagsinput');
       // Initialize a new tags input
-      if (!tagsinput) {
+        if (!tagsinput) {
           tagsinput = new TagsInput(this, arg1);
           $(this).data('tagsinput', tagsinput);
           results.push(tagsinput);
