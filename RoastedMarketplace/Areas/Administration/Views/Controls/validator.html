@@ -6,14 +6,16 @@
                 messages: {}
             }
         };
-        //{% if required %}
+        //{% if required == "true" %}
         options.rule.required = true;
         options.rule.messages.required = '{{"Field is required" | t}}';
         //{% endif %}
-        //{% if email %}
+        //{% if email == "true" %}
         options.rule.email = true;
         //{% endif %}
-
+        //{% if url == "true" %}
+        options.rule.url = true;
+        //{% endif %}
         validationRule(options);
     });
 </script>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Services.Serializers;
@@ -28,14 +29,12 @@ namespace RoastedMarketplace.Services.Extensions
 
         public static List<int> RestrictionIds(this DiscountCoupon discountCoupon)
         {
-            var serializer = DependencyResolver.Resolve<IDataSerializer>();
-            return serializer.DeserializeAs<List<int>>(discountCoupon.SerializedRestrictions);
+            return discountCoupon.RestrictionValues?.Select(x => int.Parse(x.RestrictionIdentifier)).ToList() ?? new List<int>();
         }
 
         public static List<string> RestrictionValues(this DiscountCoupon discountCoupon)
         {
-            var serializer = DependencyResolver.Resolve<IDataSerializer>();
-            return serializer.DeserializeAs<List<string>>(discountCoupon.SerializedRestrictions);
+            return discountCoupon.RestrictionValues?.Select(x => x.RestrictionIdentifier).ToList() ?? new List<string>();
         }
     }
 }

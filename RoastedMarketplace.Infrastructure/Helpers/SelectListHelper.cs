@@ -5,6 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Services.Addresses;
 
 namespace RoastedMarketplace.Infrastructure.Helpers
 {
@@ -65,6 +69,30 @@ namespace RoastedMarketplace.Infrastructure.Helpers
                 });
             }
             return selectList;
+        }
+
+        public static List<SelectListItem> GetCountries()
+        {
+            var countryService = DependencyResolver.Resolve<ICountryService>();
+            var countries = countryService.Get(x => true).ToList();
+            return GetSelectItemList(countries, country => country.Id, country => country.Name);
+        }
+
+        public static List<SelectListItem> GetStatesOrProvinces(int countryId)
+        {
+            var stateProvinceService = DependencyResolver.Resolve<IStateOrProvinceService>();
+            var states = stateProvinceService.Get(x => x.CountryId == countryId).ToList();
+            return GetSelectItemList(states, state => state.Id, state => state.Name);
+        }
+
+        public static List<SelectListItem> GetInputTypes()
+        {
+            return GetSelectItemList<InputFieldType>();
+        }
+
+        public static List<SelectListItem> GetAddressTypes()
+        {
+            return GetSelectItemList<AddressType>();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace RoastedMarketplace.Data.Entity.Users
 {
     public partial class Capability : FoundationEntity
     {
-        public string CapabilityName { get; set; }
+        public string Name { get; set; }
 
         public bool IsActive { get; set; }
     }

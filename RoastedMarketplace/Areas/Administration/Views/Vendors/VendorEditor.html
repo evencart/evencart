@@ -1,0 +1,98 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Vendors" active_menu="GetVendor" parent_active_menu="UsersList"%}
+{% partial "Navigation/VendorEditSecondaryNavigation" %}
+
+<form action="{% route api_SaveVendor %}" method="post" id="edit-vendor-form">
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Basic Info" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Full Name" for="name" %}
+                        {% control text id="name" name="name" value="{{vendor.name}}" %}
+                        {% control validator for="name" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Address" for="address" %}
+                        {% control text id="address" name="address" value="{{vendor.address}}" placeholder=@t"e.g. 123, South Avenue" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Country" for="country" %}
+                        {% control select id="country" name="countryId" value="vendor.countryId" required="true" items="availableCountries" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"State or Province" for="state" %}
+                        {% control select id="state" value="vendor.stateOrProvinceId" items="items" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"City" for="city" %}
+                        {% control text id="city" name="city" value="{{vendor.city}}" %}
+                        {% control validator for="city" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Zip / Postal Code" for="zippostalcode" %}
+                        {% control text id="zippostalcode" name="zippostalcode" value="{{vendor.zipPostalCode}}" %}
+                        {% control validator for="zippostalcode" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Phone" for="phone" %}
+                        {% control text id="phone" name="phone" value="{{vendor.phone}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email" for="email" %}
+                        {% control text id="email" name="email" value="{{vendor.email}}" %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Business Info." | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Gst Number" for="gst" %}
+                        {% control text id="gstnumber" name="gstnumber" value="{{vendor.gstNumber}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Tin" for="tin" %}
+                        {% control text id="tin" name="tin" value="{{vendor.tin}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"PAN" for="pan" %}
+                        {% control text id="pan" name="pan" value="{{vendor.pan}}" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="save-button-container">
+        {% control hidden name="id" value="{{vendorId}}" %}
+        <button type="submit" class="btn btn-success">{{"Save Vendor" | t}}</button>
+        <a class="btn btn-default" href='{% route VendorsList %}'>{{"Cancel" | t}}</a>
+    </div>
+</form>
+
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("edit-vendor-form",
+            {
+                onSuccess: function() {
+
+                    notify("success", '{{"Vendor was saved successfully" | t}}');
+                    setTimeout(function() {
+                            navigate('{% route VendorsList %}');
+                        },
+                        1000);
+                }
+            });
+    });
+
+</script>

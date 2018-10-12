@@ -6,6 +6,8 @@ namespace RoastedMarketplace.Data.Entity.Promotions
 {
     public class DiscountCoupon : FoundationEntity
     {
+        public string Name { get; set; }
+
         public bool HasCouponCode { get; set; }
 
         public string CouponCode { get; set; }
@@ -26,14 +28,17 @@ namespace RoastedMarketplace.Data.Entity.Promotions
 
         public bool ExcludeAlreadyDiscountedProducts { get; set; }
 
-        public string SerializedRestrictions { get; set; }
-
-        public bool Expired { get; set; }
-
         public bool Enabled { get; set; }
 
         public RestrictionType RestrictionType { get; set; }
 
-        public string RestrictionValues { get; set; }
+        #region Virtual Properties
+
+        public virtual bool Expired => EndDate.HasValue && EndDate.Value <= DateTime.UtcNow;
+
+        public virtual IList<RestrictionValue> RestrictionValues { get; set; }
+
+        #endregion
+
     }
 }

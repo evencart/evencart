@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Areas\Administration\Views\Discounts\" />
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Ui\assets\" />
     <Folder Include="Content\Themes\Default\" />

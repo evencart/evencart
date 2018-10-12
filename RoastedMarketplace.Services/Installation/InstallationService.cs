@@ -64,7 +64,7 @@ namespace RoastedMarketplace.Services.Installation
                 {
                     SystemRoleNames.Administrator, new Role()
                     {
-                        RoleName = SystemRoleNames.Administrator,
+                        Name = SystemRoleNames.Administrator,
                         IsSystemRole = true,
                         IsActive = true,
                         SystemName = SystemRoleNames.Administrator
@@ -73,7 +73,7 @@ namespace RoastedMarketplace.Services.Installation
                 {
                     SystemRoleNames.Vendor, new Role()
                     {
-                        RoleName = SystemRoleNames.Vendor,
+                        Name = SystemRoleNames.Vendor,
                         IsSystemRole = true,
                         IsActive = true,
                         SystemName = SystemRoleNames.Vendor
@@ -82,7 +82,7 @@ namespace RoastedMarketplace.Services.Installation
                 {
                     SystemRoleNames.Manager, new Role()
                     {
-                        RoleName = SystemRoleNames.Manager,
+                        Name = SystemRoleNames.Manager,
                         IsSystemRole = true,
                         IsActive = true,
                         SystemName = SystemRoleNames.Manager
@@ -91,7 +91,7 @@ namespace RoastedMarketplace.Services.Installation
                 {
                     SystemRoleNames.Registered, new Role()
                     {
-                        RoleName = SystemRoleNames.Registered,
+                        Name = SystemRoleNames.Registered,
                         IsSystemRole = true,
                         IsActive = true,
                         SystemName = SystemRoleNames.Registered
@@ -100,7 +100,7 @@ namespace RoastedMarketplace.Services.Installation
                 {
                     SystemRoleNames.Visitor, new Role()
                     {
-                        RoleName = SystemRoleNames.Visitor,
+                        Name = SystemRoleNames.Visitor,
                         IsSystemRole = true,
                         IsActive = true,
                         SystemName = SystemRoleNames.Visitor
@@ -125,7 +125,7 @@ namespace RoastedMarketplace.Services.Installation
             {
                 var capabilityName = (string)f.GetRawConstantValue();
                 var capability = new Capability() {
-                    CapabilityName = capabilityName,
+                    Name = capabilityName,
                     IsActive = true
                 };
                 capabilityService.Insert(capability);
@@ -140,8 +140,8 @@ namespace RoastedMarketplace.Services.Installation
             {
                 if (c.Key == SystemRoleNames.Administrator)
                     continue;
-                var roleId = roles.Values.Where(x => x.RoleName == c.Key).Select(x => x.Id).First();
-                var cIds = savedCapabilities.Where(x => c.Value.Contains(x.CapabilityName)).Select(x => x.Id);
+                var roleId = roles.Values.Where(x => x.Name == c.Key).Select(x => x.Id).First();
+                var cIds = savedCapabilities.Where(x => c.Value.Contains(x.Name)).Select(x => x.Id);
                 roleCapabilityService.SetRoleCapabilities(roleId, cIds.ToArray());
             }
 
@@ -166,7 +166,7 @@ namespace RoastedMarketplace.Services.Installation
                 var user = userService.FirstOrDefault(x => x.Email == email);
                 if (user != null)
                 {
-                    roleService.AssignRoleToUser(SystemRoleNames.Administrator, user);
+                    roleService.SetUserRoles(user.Id, new[] {1});
                     user.FirstName = "RoastedMarketplace";
                     user.LastName = "Administrator";
                     user.Name = $"{user.FirstName} {user.LastName}";

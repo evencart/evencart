@@ -1,57 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotEntity;
-using RoastedMarketplace.Core.Exception;
+using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Users
 {
     public class RoleService : FoundationEntityService<Role>, IRoleService
     {
-        public void AssignRoleToUser(Role role, User user)
+        private readonly IUserRoleService _userRoleService;
+        public RoleService(IUserRoleService userRoleService)
         {
-            var isAlreadyAssigned = GetUserRoles(user).Any(x => x.Id == role.Id);
-            if (isAlreadyAssigned)
-                return;
-
-            EntitySet<UserRole>.Insert(new UserRole()
-            {
-                RoleId = role.Id,
-                UserId = user.Id
-            });
-        }
-
-        public void AssignRoleToUser(string roleName, User user)
-        {
-            var role =
-                Repository.Where(
-                    x => x.SystemName == roleName)
-                    .SelectSingle();
-
-            if(role == null)
-                throw new RoastedMarketplaceException(string.Format("The role with name '{0}' can't be found", roleName));
-
-            AssignRoleToUser(role, user);
-        }
-
-        public void UnassignRoleToUser(Role role, User user)
-        {
-            var userRole = GetUserRoles(user).FirstOrDefault(x => x.Id == role.Id);
-            if (userRole == null)
-                return;
-
-            EntitySet<UserRole>.Delete(x => x.UserId == user.Id && x.RoleId == role.Id);
-
-        }
-
-        public void UnassignRoleToUser(string roleName, User user)
-        {
-            var userRole = GetUserRoles(user).FirstOrDefault(x => x.SystemName == roleName);
-            if (userRole == null)
-                return;
-
-            EntitySet<UserRole>.Delete(x => x.UserId == user.Id && x.Role.SystemName == roleName);
+            _userRoleService = userRoleService;
         }
 
         public IList<Role> GetUserRoles(int userId)
@@ -68,9 +30,44 @@ namespace RoastedMarketplace.Services.Users
             return userRoles;
         }
 
-        public IList<Role> GetUserRoles(User user)
+        public void SetUserRoles(int userId, int[] roleIds)
         {
-            return GetUserRoles(user.Id);
+            //if there are no roles, it means all roles have been removed
+            if (roleIds == null || !roleIds.Any())
+            {
+                _userRoleService.Delete(x => x.UserId == userId);
+                return;
+            }
+            //get all the roles of current user
+            var userRoles = _userRoleService.Get(x => x.UserId == userId).ToList();
+            var newRoles = new List<UserRole>();
+            foreach (var roleId in roleIds)
+            {
+                //if the role is already there, no need to proceed
+                if (userRoles.Any(x => x.RoleId == roleId))
+                    continue;
+                //add this new role
+                newRoles.Add(new UserRole()
+                {
+                    RoleId = roleId,
+                    UserId = userId
+                });
+            }
+            //insert new roles
+            _userRoleService.Insert(newRoles.ToArray());
+            //delete other roles
+            foreach(var roleToRemove in userRoles.Where(x => !roleIds.Contains(x.RoleId)))
+                _userRoleService.Delete(roleToRemove);
+        }
+
+        public override Role Get(int id)
+        {
+            return Repository.Where(x => x.Id == id)
+                .Join<RoleCapability>("Id", "RoleId", joinType: JoinType.LeftOuter)
+                .Join<Capability>("CapabilityId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<Role, Capability>())
+                .SelectNested()
+                .FirstOrDefault();
         }
     }
 }

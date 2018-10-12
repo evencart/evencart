@@ -6,11 +6,7 @@ namespace RoastedMarketplace.Services.Users
 {
     public interface IUserService : IFoundationEntityService<User>
     {
-        IList<User> SearchUsers(string searchText, bool excludeLoggedInUser, int page, int count);
-
-        IList<User> SearchUsers(string searchText, bool excludeLoggedInUser, string[] restrictToRoles, int page, int count);
-
-        IList<User> SearchUsers(string searchText, bool excludeLoggedInUser, int[] restrictToRoles, int page, int count);
+        IList<User> GetUsers(string searchText, int[] restrictToRoles, int page, int count, out int totalMatches);
 
         User GetByUserInfo(string email, string guid = null);
     }

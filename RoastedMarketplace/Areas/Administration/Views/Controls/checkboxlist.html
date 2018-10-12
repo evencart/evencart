@@ -1,7 +1,6 @@
-﻿{% for item in {% items %} %}
+﻿{% for item in %items% %}
 <label>
     <input type="checkbox" %attributes% value="{{item.value}}" {% if %value% contains item.value %} checked="checked" {% endif %} />
     <span>{{item.text}}</span>
 </label>
-
 {% endfor %}

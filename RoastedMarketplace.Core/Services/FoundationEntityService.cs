@@ -84,7 +84,7 @@ namespace RoastedMarketplace.Core.Services
             _eventPublisherService.Publish(entity, EventType.Update);
         }
 
-        public void Update(object entity, Expression<Func<T, bool>> @where, Transaction transaction, Func<T, bool> action = null)
+        public virtual void Update(object entity, Expression<Func<T, bool>> @where, Transaction transaction, Func<T, bool> action = null)
         {
             if (transaction == null)
                 EntitySet<T>.Update(entity, where);
@@ -92,7 +92,7 @@ namespace RoastedMarketplace.Core.Services
                 EntitySet<T>.Update(entity, where, transaction?.Value, action);
         }
 
-        public void InsertOrUpdate(T entity, Transaction transaction = null)
+        public virtual void InsertOrUpdate(T entity, Transaction transaction = null)
         {
             if (entity.Id > 0)
                 Update(entity, transaction);
@@ -109,22 +109,22 @@ namespace RoastedMarketplace.Core.Services
             });
         }
 
-        public IEnumerable<T> Get(Expression<Func<T, bool>> @where)
+        public virtual IEnumerable<T> Get(Expression<Func<T, bool>> @where, int page = 1, int count = int.MaxValue)
         {
-            return EntitySet<T>.Where(where).Select();
+            return EntitySet<T>.Where(where).Select(page, count);
         }
 
-        public T FirstOrDefault(Expression<Func<T, bool>> @where)
+        public virtual T FirstOrDefault(Expression<Func<T, bool>> @where)
         {
             return EntitySet<T>.Where(where).SelectSingle();
         }
 
-        public IEnumerable<T> Query(string query, object parameters = null)
+        public virtual IEnumerable<T> Query(string query, object parameters = null)
         {
             return EntitySet<T>.Query(query, parameters);
         }
 
-        public int Count(Expression<Func<T, bool>> @where = null)
+        public virtual int Count(Expression<Func<T, bool>> @where = null)
         {
             return @where == null ? EntitySet<T>.Count() : EntitySet<T>.Where(@where).Count();
         }

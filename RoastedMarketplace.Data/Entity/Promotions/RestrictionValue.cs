@@ -2,10 +2,10 @@
 
 namespace RoastedMarketplace.Data.Entity.Promotions
 {
-    public class DiscountCouponRequirement : FoundationEntity
+    public class RestrictionValue : FoundationEntity
     {
         public int DiscountCouponId { get; set; }
 
-
+        public string RestrictionIdentifier { get; set; }
     }
 }

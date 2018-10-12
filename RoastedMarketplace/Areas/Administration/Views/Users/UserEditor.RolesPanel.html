@@ -1,0 +1,39 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Roles" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control text id="roles-selector" placeholder=@t"Select one or more roles" %}
+        </div>
+        <script type="text/javascript">
+            var initialData = [];           
+            /* {% for value in user.roles %} */
+            initialData.push({
+                id: "{{value.id}}",
+                text: "{{value.name}}"
+            });
+            /* {% endfor %} */
+            var data = [];
+            /* {% for value in roles %} */
+            data.push({
+                id: "{{value.id}}",
+                text: "{{value.name}}"
+            });
+            /* {% endfor %} */
+            ready(function () {
+                inputTypeahead({
+                    element: "roles-selector",
+                    data: data,
+                    initialData:initialData,
+                    multiple: true,
+                    preserveAfterFirstCall: true,
+                    openOnFocus: true,
+                    minLength: 0,
+                    suggestNewAdditions:false
+                });
+            })
+           
+        </script>
+    </div>
+</div>

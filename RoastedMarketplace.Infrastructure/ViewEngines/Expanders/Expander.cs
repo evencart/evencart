@@ -23,6 +23,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             new LayoutExpander() {TagName = "layout"},
             new PartialExpander() {TagName = "partial"},
             new ControlExpander() {TagName = "control"},
+            new UrlRouteExpander() {TagName = "route"},
             new NavigationExpander()
             {
                 TagName = ApplicationConfig.PrimaryNavigationName,
@@ -33,7 +34,6 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 TagName = ApplicationConfig.SecondaryNavigationName,
                 NavigationType = ApplicationConfig.SecondaryNavigationName
             },
-            new UrlRouteExpander() {TagName = "route"},
             new GlobalExpander() {TagName = "global"},
         };
 

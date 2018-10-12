@@ -22,12 +22,14 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private readonly IMediaService _mediaService;
         private readonly IModelMapper _modelMapper;
         private readonly IProductService _productService;
-        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService)
+        private readonly ICategoryService _categoryService;
+        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService, ICategoryService categoryService)
         {
             _mediaAccountant = mediaAccountant;
             _mediaService = mediaService;
             _modelMapper = modelMapper;
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [DualPost("upload", Name = AdminRouteNames.UploadMedia, OnlyApi = true)]
@@ -53,6 +55,12 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                         if (_productService.Count(x => x.Id == mediaModel.EntityId) > 0)
                         {
                             _productService.LinkMediaWithProduct(media.Id, mediaModel.EntityId);
+                        }
+                        break;
+                    case "category":
+                        if (_categoryService.Count(x => x.Id == mediaModel.EntityId) > 0)
+                        {
+                            _categoryService.Update(new {MediaId = media.Id}, x => x.Id == mediaModel.EntityId, null);
                         }
                         break;
                 }

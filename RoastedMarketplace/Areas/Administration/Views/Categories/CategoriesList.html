@@ -1,0 +1,108 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Categories" active_menu="CategoriesList" parent_active_menu="ProductsList" %}
+{% partial "Navigation/ProductSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Categories" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editCategory(0)">{{"Add new category" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="fullCategoryPath">{{"Name" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless categories == blank %}*/
+                        initData = JSON.parse('{{categories}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                categories: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_CategoriesList %}',
+                            responseObject: "categories",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editCategory(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteCategory(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-category-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editCategory = function(id) {
+        jQuery("#edit-category-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-category-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Category was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route EditCategory categoryId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-category-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteCategory = function(id) {
+        var msg =
+            '{{ "Deleting a category will delete all the child categories and product mappings. Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteCategory %}",
+                    data: {
+                      productAttributeId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Category was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>

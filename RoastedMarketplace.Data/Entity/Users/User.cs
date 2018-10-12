@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using RoastedMarketplace.Core.Data;
-using RoastedMarketplace.Core.Infrastructure.Attributes;
+using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Interfaces;
 
@@ -16,49 +15,46 @@ namespace RoastedMarketplace.Data.Entity.Users
 
         public string Name { get; set; }
 
-        [Required]
-        [NonPatchable]
         public string Email { get; set; }
 
-        [NonPatchable]
-        public string UserName { get; set; }
+        public string CompanyName { get; set; }
 
-        [NonPatchable]
         public Guid Guid { get; set; }
 
-        [Required]
-        [NonPatchable]
         public string Password { get; set; }
 
-        [NonPatchable]
         public string PasswordSalt { get; set; }
 
-        [NonPatchable]
         public PasswordFormat PasswordFormat { get; set; }
 
         public bool Active { get; set; }
 
-        [NonPatchable]
         public DateTime DateCreated { get; set; }
 
         public DateTime DateUpdated { get; set; }
 
+        public DateTime? DateOfBirth { get; set; }
+
         public DateTime? LastLoginDate { get; set; }
 
-        [NonPatchable]
         public bool IsSystemAccount { get; set; }
 
         public string Remarks { get; set; }
 
-        [NonPatchable]
         public string LastLoginIpAddress { get; set; }
 
-        [NonPatchable]
         public int ReferrerId { get; set; }
 
-        [NonPatchable]
         public bool Deleted { get; set; }
 
+        public bool RequirePasswordChange { get; set; }
+
+        public bool IsTaxExempt { get; set; }
+
+        public bool NewslettersEnabled { get; set; }
+
+        #region Virtual Properties
         public virtual IList<Role> Roles { get; set; }
+        #endregion
     }
 }

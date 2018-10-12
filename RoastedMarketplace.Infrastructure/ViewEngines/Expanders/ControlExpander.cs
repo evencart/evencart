@@ -44,8 +44,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 //replace the non attributes which were not passed
                 foreach(var nan in NonAttributeNames)
                     controlText = controlText.Replace($"%{nan}%", "");
-
-                readFile.Content = readFile.Content.Replace(match.Result("$0"), assigns + controlText);
+                var resetAssigns = string.Join("",
+                    keyValuePairs.Select(x => string.Format(AssignFormat, $"{x.Key}=\"\"")).ToList());
+                
+                readFile.Content = readFile.Content.Replace(match.Result("$0"), assigns + controlText + resetAssigns);
             }
 
             return readFile.Content;

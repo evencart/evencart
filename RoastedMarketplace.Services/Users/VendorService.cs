@@ -53,6 +53,19 @@ namespace RoastedMarketplace.Services.Users
                 .ToList();
         }
 
+        public IList<Vendor> GetVendors(string searchText, int page, int count, out int totalMatches)
+        {
+            var query = Repository;
+            if (!searchText.IsNullEmptyOrWhiteSpace())
+            {
+                query = query.Where(x => x.Name.Contains(searchText) || x.GstNumber.Contains(searchText) ||
+                                         x.Tin.Contains(searchText));
+            }
+            query = query.OrderBy(x => x.Name);
+            return query.SelectWithTotalMatches(out totalMatches, page, count)
+                .ToList();
+        }
+
         public override Vendor Get(int id)
         {
             return Repository.Where(x => x.Id == id)

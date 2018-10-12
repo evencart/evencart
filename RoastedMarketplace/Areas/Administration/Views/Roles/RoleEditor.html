@@ -1,0 +1,54 @@
+﻿<form action="{% route api_SaveRole %}" method="post" id="role-editor-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Role Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Role Name" for="name" %}
+                        {% control text id="name" name="name" value="{{role.name}}" %}
+                        {% control validator for="name" required="true" %}
+                    </div>
+                    {% unless role.isSystemRole %}
+                    <div class="form-group">
+                        {% control label text=@t"System Name" for="systemName" %}
+                        {% control text id="systemName" name="systemName" value="{{role.systemName}}" %}
+                        {% control validator for="systemName" required="true" %}
+                    </div>
+                    {% endunless %}                  
+                    <div class="form-group">
+                        {% control label text=@t"Capabilities" %}
+                        <div class="capabilities-selector-box">
+                            {% control checkboxlist name="capabilities[]" value="role.capabilities" items="availableCapabilities" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{roleId}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Role" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("role-editor-form",
+        {            
+            onSuccess: function() {
+                hidePopup("edit-role-popup");
+            }
+        });   
+
+</script>

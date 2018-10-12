@@ -21,11 +21,11 @@
                         var routeCollection = [];
                         for (var url in templates) {
                             if (templates.hasOwnProperty(url)) {
-                                var router_url = url.replaceAll("{", ":").replaceAll("}", "");
+                                var routerUrl = url.replaceAll("{", ":").replaceAll("}", "");
                                 //remove scripts
                                 var htmlTemplate = templates[url];
-                                window.templates[router_url] = htmlTemplate;
-                                routeCollection[router_url] = routeHandler;
+                                window.templates[routerUrl] = htmlTemplate;
+                                routeCollection[routerUrl] = routeHandler;
                             }
                         }
                         router.on(routeCollection);
@@ -37,50 +37,90 @@
     }
 
     var routeHandler = function (route, params, query) {
-        if (window.templates.hasOwnProperty(route)) {
-            var template = window.templates[route];
-            var currentUrl = window.location.pathname;
-            var apiUrl = currentUrl.replace("/admin", "/admin/" + api);
-            //request data from api
-            get({
-                url: apiUrl,
-                done: function (response) {
-                    liquidEngine
-                        .parseAndRender(template, response)
-                        .then(function (t) {
-                            var newDoc = document.open("text/html", "replace");
-                            newDoc.write(t);
-                            newDoc.close();
-                            setupLinks();
-                        });
+        loadPage(route,
+            true,
+            null,
+            function (t) {
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(t);
+                newDoc.close();
 
-                },
-                fail: function () {
-                    //full reload if any error occured
-                    window.location.reload();
-                }
+                setupLinks();
+            },
+            function () {
+                //full reload if any error occured
+                window.location.reload();
             });
-
-        }
-    }
-
-    var setupLinks = function() {
-        jQuery("a").click(function(e) {
-            var linkHostName = jQuery(this).prop("hostname");
-            if (linkHostName != document.location.hostname) {
-                return;
-            }
-            e.preventDefault();
-
-            var href = jQuery(this).attr("href");
-            router.navigate(href, href.startsWith("http://") || href.startsWith("https://") );
-        });
-        window.onpopstate = function (event) {
-            router.navigate(document.location.href, true);
-        };
     }
     window.initialized = true;
-    
+
+}
+
+var getApiUrl = function (url) {
+    return url.replace("/admin", "/admin/" + api);;
+}
+var setupLinks = function () {
+    ready(function () {
+        jQuery("a").on("click",
+            function (e) {
+                var linkHostName = jQuery(this).prop("hostname");
+                if (linkHostName != document.location.hostname) {
+                    return;
+                }
+                var href = jQuery(this).attr("href");
+                if (href)
+                    navigate(href, href.startsWith("http://") || href.startsWith("https://"));
+
+            });
+        window.onpopstate = function (event) {
+            navigate(document.location.pathname, null, true);
+        };
+    });
 }
 setupLinks();
 
+function navigate(url, absolute, skipHistory) {
+    //if we have a route, we'll navigate, else we reload
+    if (router.helpers.match(url, router._routes)) {
+        router.navigate(url, absolute, skipHistory);
+    } else
+        window.location.href = url;
+
+}
+/**
+ * Loads a page from cache or gets from url ange caches
+ */
+function loadPage(url, fallbackToApi, data, done, fail) {
+    if (window.templates.hasOwnProperty(url)) {
+        var template = window.templates[url];
+        url = window.location.pathname;
+        if (!fallbackToApi) {
+            done(template);
+            return;
+        }
+        //fetch from api
+        var apiUrl = getApiUrl(url);
+        //request data from api
+        get({
+            url: apiUrl,
+            done: function (response) {
+                liquidEngine
+                    .parseAndRender(template, response)
+                    .then(function (t) {
+                        done(t);
+                    });
+
+            },
+            fail: fail
+        });
+    } else {
+        get({
+            url: url,
+            data: data,
+            done: function (response) {
+                done(response);
+            },
+            fail: fail
+        });
+    }
+}

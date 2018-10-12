@@ -32,9 +32,8 @@ namespace RoastedMarketplace.Services.Users
                     SystemRoleNames.Manager, new List<string>()
                     {
                         CapabilitySystemNames.EditProduct,
-                        CapabilitySystemNames.ManageUsers,
+                        CapabilitySystemNames.ViewUsers,
                         CapabilitySystemNames.ManageEmailAccounts,
-                        CapabilitySystemNames.CommentDelete,
                     }
                 }
             };

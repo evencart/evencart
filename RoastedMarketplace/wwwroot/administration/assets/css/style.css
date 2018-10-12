@@ -362,16 +362,21 @@ input:focus, textarea:focus {
   overflow-x: hidden; }
 
 .save-button-container {
+  position: fixed;
   top: 0;
-  left: 120px;
   right: 0;
   padding: 5px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   text-align: right;
   background-color: white; }
   .save-button-container button, .save-button-container input[type='submit'], .save-button-container input[type='button'], .save-button-container a.btn {
     font-size: 13px;
     margin: 0 3px; }
+
+.bootgrid-footer {
+  background-color: #f2f2f2;
+  padding: 10px 10px;
+  border-top: solid 1px #ddd;
+  margin: 0; }
 
 .btn:focus {
   box-shadow: none !important;
@@ -490,4 +495,36 @@ select {
 
 .clickable {
   cursor: pointer; }
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  display: none; }
+  #loader .handle {
+    position: absolute;
+    background-color: green;
+    height: 100%;
+    width: 350px; }
+
+.pagination .active a {
+  background-color: #6c757d;
+  color: white; }
+
+label.error {
+  color: red;
+  font-weight: bold;
+  display: block;
+  border-top: solid 1px;
+  text-align: center;
+  padding: 2px 0;
+  font-size: 0.7em; }
+
+.capabilities-selector-box {
+  max-height: 400px;
+  overflow: auto; }
+  .capabilities-selector-box label {
+    display: block; }
 

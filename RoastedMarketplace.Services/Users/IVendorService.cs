@@ -16,5 +16,7 @@ namespace RoastedMarketplace.Services.Users
         void RemoveVendorProduct(int vendorId, int productId);
 
         IList<Vendor> GetVendorsByProductIds(int[] productIds);
+
+        IList<Vendor> GetVendors(string searchText, int page, int count, out int totalMatches);
     }
 }

@@ -1,0 +1,106 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Roles" active_menu="RolesList" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-8 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Roles" | t}}
+                <a class="btn btn-primary btn-sm float-right" href="" onclick="editRole(0); return false;">{{"Add new role" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-roles" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="name" data-width="80%">{{"Name" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" id="edit-role-popup">
+</div>
+<script type="text/javascript">
+    ready(function () {
+        var initData = null;
+        /*{% unless roles == blank %}*/
+        initData = JSON.parse('{{roles}}');
+        /*{% endunless %}*/
+        generateGrid({
+            element: "grid-roles",
+            initialData: {
+                addresses: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_RolesList %}',
+            responseObject: "roles",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {                
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editRole(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button> " + ( row.isSystemRole ? "" :
+                        "<button class=\"btn btn-danger command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteRole(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>");
+                }
+            }
+        });
+    });
+
+
+    var editRole = function (id) {
+        jQuery("#edit-role-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-role-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-roles');
+                    notify("success", '{{"Role was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetRole roleId="?" %}'.replaceAll("?", id);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-role-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteRole = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this role? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteRole %}",
+                    data: {
+                        roleId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-roles');
+                            notify("success", '{{"Role was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

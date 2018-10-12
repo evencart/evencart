@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
@@ -32,7 +34,22 @@ namespace RoastedMarketplace.Areas.Administration.Models.Shop
         public void SetupValidationRules(ModelValidator<ProductAttributeModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty().When(x => x.Id == 0);
-            v.RuleForEach(x => x.Values).SetValidator(new ModelValidator<ProductAttributeValueModel>());
+            //v.RuleForEach(x => x.Values).SetValidator(new ModelValidator<ProductAttributeValueModel>());
+            v.RuleFor(x => x.Values).Custom((list, context) =>
+            {
+                if (!list.Any())
+                {
+                    context.AddFailure(nameof(ProductAttributeValueModel.AttributeValue), "At least one attribute value must be provided");
+                }
+            });
+            v.RuleForEach(x => x.Values)
+                .Custom((model, context) =>
+                {
+                    if (model.AttributeValue.IsNullEmptyOrWhitespace())
+                    {
+                        context.AddFailure(nameof(ProductAttributeValueModel.AttributeValue), "Can't add empty values");
+                    }
+                });
         }
 
     }

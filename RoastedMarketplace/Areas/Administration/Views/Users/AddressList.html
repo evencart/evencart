@@ -1,0 +1,107 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Addresses" active_menu="AddressList" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Addresses" | t}}
+                <a class="btn btn-primary btn-sm float-right" href="" onclick="editAddress(0); return false;">{{"Add new address" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-addresses" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="name">{{"Name" | t }}</th>
+                                <th data-column-id="addressTypeDisplay">{{"Type" | t }}</th>
+                                <th data-column-id="address" data-formatter="address">{{"Address" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    ready(function () {
+        var initData = null;
+        /*{% unless addresses == blank %}*/
+        initData = JSON.parse('{{addresses}}');
+        /*{% endunless %}*/
+        generateGrid({
+            element: "grid-addresses",
+            initialData: {
+                addresses: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_AddressList userId="{{userId}}" %}',
+            responseObject: "addresses",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {
+                "address": function(column, row) {
+                    var address = "";
+                    if (row.address1)
+                        address += "<div><span>" + row.address1 + "</span></div>";
+                    if (row.address2)
+                        address += "<div><span>" + row.address2 + "</span></div>";
+                    if (row.city)
+                        address += "<div><span>" + row.city + "</span></div>";
+                    if (row.stateProvinceName)
+                        address += "<div><span>" + row.stateProvinceName + "</span></div>";
+                    if (row.countryName)
+                        address += "<div><span>" + row.countryName + "</span></div>";
+                    if (row.zipPostalCode)
+                        address += "<div><span>" + row.zipPostalCode + "</span></div>";
+                    return address;
+                },
+                "commands": function (column, row) {
+                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editAddress(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></a> " +
+                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></a>";
+                }
+            }
+        });
+    });
+
+
+    var editAddress = function (id) {
+        var url = '{% route GetAddress userId="{{userId}}" addressId="?" %}';
+        navigate(url.replace("?", id));
+    }
+
+    var deleteAddress = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this address? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteAddress %}",
+                    data: {
+                        addressId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-addresses');
+                            notify("success", '{{"Address was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

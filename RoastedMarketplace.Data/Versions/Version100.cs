@@ -3,6 +3,7 @@ using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
+using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
@@ -68,6 +69,10 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<ProductAttributeValue, ProductVariantAttribute>("Id", "ProductAttributeValueId"), transaction);
             Db.CreateConstraint(Relation.Create<Media, ProductMedia>("Id", "MediaId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductMedia>("Id", "ProductId"), transaction, true);
+
+            Db.CreateTable<DiscountCoupon>(transaction);
+            Db.CreateTable<RestrictionValue>(transaction);
+            Db.CreateConstraint(Relation.Create<DiscountCoupon, RestrictionValue>("Id", "DiscountCouponId"), transaction, true);
             //tax
             Db.CreateTable<Tax>(transaction);
             Db.CreateTable<TaxRate>(transaction);

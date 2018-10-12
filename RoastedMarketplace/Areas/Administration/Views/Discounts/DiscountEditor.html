@@ -1,0 +1,117 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Discount Editor" active_menu="GetDiscount" parent_active_menu="DiscountsList"%}
+{% partial "Navigation/DiscountEditSecondaryNavigation" %}
+
+<h3 class="page-title">
+    {% if discount.id != 0 %}
+    {{ discount.name }}
+    {% else %}
+    {{"Add Discount" | t }}
+    {% endif %}
+</h3>
+<form action="{% route api_SaveDiscount %}" method="post" id="save-discount-form">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Name" for="name" %}
+                        {% control text name="name" id="name" placeholder=@t"e.g. 10% off above $500 or Christmas 2018 Offer" value="{{discount.name}}"%}
+                        {% control validator for="name" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="hasCouponCode" value="discount.hasCouponCode" text=@t"Require coupon code?" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Coupon Code" for="couponCode" %}
+                        {% control text name="couponCode" id="couponCode" placeholder=@t"e.g. DISC50 or pyz10" value="{{discount.couponCode}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Calculate as" for="calculationType" %}
+                        {% control select name="calculationType" id="calculationType" items="availableCalculationTypes"  value="discount.calculationType" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Discount Value" for="discountValue" %}
+                        {% control number name="discountValue" id="discountValue" value="{{discount.discountValue}}" %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"No. of times per user" for="numberOfTimesPerUser" %}
+                                {% control text name="numberOfTimesPerUser" id="numberOfTimesPerUser" value="{{discount.numberOfTimesPerUser}}"%}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Max. no. of times" for="totalNumberOfTimes" %}
+                                {% control text name="totalNumberOfTimes" id="totalNumberOfTimes" value="{{discount.totalNumberOfTimes}}"%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Coupon Life" | t }}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control checkbox name="enabled" value="discount.enabled" text=@t"Active" %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Start Date" for="startDate" %}
+                                {% control datetime name="startDate" id="startDate" value="{{discount.startDate}}"%}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"End Date" for="endDate" %}
+                                {% control datetime name="endDate" id="endDate" value="{{discount.endDate}}"%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Discount Type" | t}}                    
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Apply to" for="restrictionType" %}
+                        {% control select name="restrictionType" id="restrictionType" value="discount.restrictionType" items="availableRestrictionTypes" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% control hidden name="id" value="{{discountId}}" %}
+    <div class="save-button-container">
+        <button type="submit" class="btn btn-success">{{"Save Discount" | t}}</button>
+        <a class="btn btn-default" href="{% route UsersList %}">{{"Cancel" | t}}</a>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function () {
+        initAjaxForm("save-discount-form",
+            {                
+                onSuccess: function () {
+                    notify("success", '{{"Discount was saved successfully." | t }}')
+                    setTimeout(function () {
+                        navigate("{% route DiscountsList %}");
+                    }, 500);
+                   
+                }
+            });
+    })
+
+</script>
+

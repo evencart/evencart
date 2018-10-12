@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Shop;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Infrastructure.Mvc;
+using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Services.Products;
@@ -55,6 +56,22 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 });
             }
             return R.Success.With("suggestions", model.OrderBy(x => x.Text)).Result;
+        }
+
+
+        [DualGet("{attributeId}", Name = AdminRouteNames.EditAvailableAttribute)]
+        [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
+        [ValidateModelState(ModelType = typeof(AttributeSearchModel))]
+        public IActionResult AttributesList(AttributeSearchModel searchModel)
+        {
+            return null;
+        }
+
+        [DualGet("{attributeId}", Name = AdminRouteNames.EditAvailableAttribute)]
+        [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
+        public IActionResult AttributeEditor(int attributeId)
+        {
+            return null;
         }
 
     }

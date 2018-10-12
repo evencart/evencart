@@ -1,0 +1,101 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Users" active_menu="UsersList" parent_active_menu="UsersList" %}
+{% partial "Navigation/UserSecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Customers" | t}} <a class="btn btn-sm btn-primary float-right" href='{% route GetUser userId="0" %}'>{{"Add new user" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed no-margin">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="name">{{"Name" | t}}</th>
+                        <th data-column-id="email">{{"Email" | t}}</th>
+                        <th data-column-id="active" data-formatter="active">{{"Active" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless users == blank %}*/
+                        initData = JSON.parse('{{users}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                users: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_UsersList %}',
+                            responseObject: "users",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                active: function(column, row) {
+                                    return gridFormatters.binary(column, row, "active");
+                                },
+                                "name": function(column, row) {
+                                    var displayName = (function() {
+                                        if (row.name)
+                                            return row.name;
+                                        if (row.firstName && row.lastName)
+                                            return row.firstName + " " + row.lastName;
+                                        if (row.firstName)
+                                            return row.firstName;
+                                        if (row.lastName)
+                                            return row.lastName;
+                                        return "";
+                                    })();
+                                    if (row.roles) {
+                                        displayName += "<div>";
+                                        row.roles.forEach(function(item) {
+                                            displayName += "<span class='badge badge-success'>" +
+                                                item.name +
+                                                "</span> ";
+                                        });
+                                        displayName += "</div>";
+                                    }
+                                    return displayName;
+
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editUser(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteCategory(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var editUser = function(id) {
+        var url = '{% route GetUser userId="user_id" %}';
+        navigate(url.replace("user_id", id));
+    }
+
+</script>

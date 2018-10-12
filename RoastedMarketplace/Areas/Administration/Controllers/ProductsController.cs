@@ -55,11 +55,43 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _dataSerializer = dataSerializer;
         }
 
-        [HttpGet("", Name = AdminRouteNames.ProductsList)]
+        [DualGet("", Name = AdminRouteNames.ProductsList)]
+        [ValidateModelState(ModelType = typeof(SearchModel))]
         [CapabilityRequired(CapabilitySystemNames.ViewProducts)]
-        public IActionResult ProductsList()
+        public IActionResult ProductsList([FromQuery] ProductSearchModel parameters)
         {
-            return R.Success.Result;
+            if(parameters == null)
+                parameters = new ProductSearchModel();
+            //create order by expression
+            Expression<Func<Product, object>> orderByExpression = null;
+            if (!parameters.SortColumn.IsNullEmptyOrWhitespace())
+            {
+                switch (parameters.SortColumn.ToLower())
+                {
+                    case "name":
+                        orderByExpression = product => product.Name;
+                        break;
+                    case "createdon":
+                        orderByExpression = product => product.CreatedOn;
+                        break;
+                    case "price":
+                        orderByExpression = product => product.Price;
+                        break;
+                    default:
+                        orderByExpression = product => product.Id;
+                        break;
+
+                }
+            }
+
+            var products = _productService.GetProducts(out int totalResults, parameters.SearchPhrase, parameters.Published,
+                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, orderByExpression, parameters.SortOrder, parameters.Current,
+                parameters.RowCount);
+            var productsModel = products.Select(x => _modelMapper.Map<ProductModel>(x));
+            return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
+                .WithAvailableInputTypes()
+                .With("products", () => productsModel, () => _dataSerializer.Serialize(productsModel))
+                .Result;
         }
 
         [DualGet("{productId}/attributes", Name = AdminRouteNames.ProductAttributesList)]
@@ -127,44 +159,6 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var attributeModels = productAttributes?.Select(MapProductAttributeModel).ToList();
             var variantModel = MapProductVariantModel(productVariant);
             return R.Success.With("attributes", attributeModels).With("variant", variantModel).Result;
-        }
-
-        [DualGet("", Name = AdminRouteNames.GetProducts, OnlyApi = true)]
-        [ValidateModelState(ModelType = typeof(SearchModel))]
-        [CapabilityRequired(CapabilitySystemNames.ViewProducts)]
-        public IActionResult GetProducts([FromQuery] ProductSearchModel parameters)
-        {
-            //create order by expression
-            Expression<Func<Product, object>> orderByExpression = null;
-            if (!parameters.SortColumn.IsNullEmptyOrWhitespace())
-            {
-                switch (parameters.SortColumn.ToLower())
-                {
-                    case "name":
-                        orderByExpression = product => product.Name;
-                        break;
-                    case "createdon":
-                        orderByExpression = product => product.CreatedOn;
-                        break;
-                    case "price":
-                        orderByExpression = product => product.Price;
-                        break;
-                    default:
-                        orderByExpression = product => product.Id;
-                        break;
-
-                }
-            }
-
-            var products = _productService.GetProducts(out int totalResults, parameters.Search, parameters.Published,
-                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, orderByExpression, parameters.SortOrder, parameters.Page,
-                parameters.Count);
-            var productsModel = products.Select(x => _modelMapper.Map<ProductModel>(x));
-            return R.Success.With("totalResults", totalResults)
-                .With("page", parameters.Page)
-                .With("count", parameters.Count)
-                .With("products", productsModel)
-                .Result;
         }
 
         [DualGet("{productId}", Name = AdminRouteNames.GetProduct)]

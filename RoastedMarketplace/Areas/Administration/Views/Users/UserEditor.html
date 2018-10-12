@@ -1,0 +1,115 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"User Editor" active_menu="GetUser" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+
+<h3 class="page-title">
+    {% if user.id != 0 %}
+    {{ user.name }}
+    {% else %}
+    {{"Add User" | t }}
+    {% endif %}
+</h3>
+<form action="{% route api_SaveUser %}" method="post" id="save-user-form">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"First Name" for="firstName" %}
+                                {% control text name="firstname" placeholder=@t"e.g. John" value="{{user.firstName}}"%}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Last Name" for="lastName" %}
+                                {% control text name="lastname" placeholder=@t"e.g. Doe" value="{{user.lastName}}"%}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email" for="email" %}
+                        {% control text name="email" id="email" placeholder=@t"e.g. john@yourstore.com" value="{{user.email}}"%}
+                        {% control validator for="email" required="true" email="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Date of birth" for="dateofbirth" %}
+                        {% control datetime name="dateofbirth" id="dateofbirth" value="{{user.dateofbirth}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="newslettersenabled" value="user.newslettersEnabled" text=@t"Can receive newsletters?" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="active" value="user.active" text=@t"Active" %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Password" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Password" for="password" %}
+                                {% control password name="password" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Confirm Password" for="confirmPassword" %}
+                                {% control password name="confirmPassword" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="requirepasswordchange" value="user.requirePasswordChange" text=@t"Require password change on next login" %}
+                    </div>
+                </div>
+            </div>
+            {% control hidden name="id" value="{{user.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save User" | t}}</button>
+                <a class="btn btn-default" href="{% route UsersList %}">{{"Cancel" | t}}</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {% partial "Users/UserEditor.RolesPanel" %}
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("save-user-form",
+            {
+                extraData: function () {
+                    var roles = inputTypeahead({
+                        element: "roles-selector",
+                        value: true,
+                        multiple: true
+                    });
+                    if (!roles)
+                        return false;
+
+                    var values = [];
+                    roles.forEach(function (item) {
+                        values.push({
+                            id: item.id,
+                            name: item.text
+                        });
+                    });
+                    return {
+                        roles: values
+                    }
+                },
+                onSuccess: function () {
+                    navigate("{% route UsersList %}");
+                }
+            });
+    })
+    
+</script>
+

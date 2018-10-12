@@ -42,10 +42,10 @@ namespace RoastedMarketplace.Services.Tests.Products
             _manufacturerService.Insert(manufacturer);
 
             var vendor1 = new Vendor() {
-                VendorName = "Vendor One"
+                Name = "Vendor One"
             };
             var vendor2 = new Vendor() {
-                VendorName = "Vendor One"
+                Name = "Vendor One"
             };
             _vendorService.Insert(new[] { vendor1, vendor2 });
 

@@ -31,7 +31,7 @@ namespace RoastedMarketplace.Services.Extensions
             //and now the capabilities
             var capabilities = roleCapabilityService.GetConsolidatedCapabilities(roleIds.ToArray());
 
-            return capabilities.Select(x => x.CapabilityName).Intersect(capabilityName).Count() == capabilityName.Length;
+            return capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace RoastedMarketplace.Services.Extensions
             //and now the capabilities
             var capabilities = roleCapabilityService.GetConsolidatedCapabilities(roleIds.ToArray());
 
-            return capabilities.Select(x => x.CapabilityName).Intersect(capabilityName).Any();
+            return capabilities.Select(x => x.Name).Intersect(capabilityName).Any();
         }
 
         public static bool IsAdministrator(this User user)

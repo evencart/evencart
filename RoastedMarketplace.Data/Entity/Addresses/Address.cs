@@ -1,4 +1,5 @@
 ﻿using RoastedMarketplace.Core.Data;
+using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Data.Entity.Addresses
 {
@@ -15,7 +16,11 @@ namespace RoastedMarketplace.Data.Entity.Addresses
 
         public string Address2 { get; set; }
 
+        public string Landmark { get; set; }
+
         public int? StateProvinceId { get; set; }
+
+        public string StateProvinceName { get; set; }
 
         public string City { get; set; }
 
@@ -28,6 +33,8 @@ namespace RoastedMarketplace.Data.Entity.Addresses
         public string Website { get; set; }
 
         public string Email { get; set; }
+
+        public AddressType AddressType { get; set; }
 
         #region Virtual Properties
         public virtual Country Country { get; set; }

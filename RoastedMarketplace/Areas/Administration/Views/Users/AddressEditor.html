@@ -1,0 +1,89 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Addresses" active_menu="GetAddress" parent_active_menu="UsersList"%}
+{% partial "Navigation/AddressEditSecondaryNavigation" %}
+
+<form action="{% route api_SaveAddress %}" method="post" id="edit-address-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Address Editor" | t}}
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Full Name" for="name" %}
+                        {% control text id="name" name="name" value="{{address.name}}" %}
+                        {% control validator for="name" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Address" for="address1" %}
+                        {% control text id="address1" name="address1" value="{{address.address1}}" placeholder=@t"e.g. 123, South Avenue" %}
+                        {% control validator for="address1" required="true" %}
+                        {% control text id="address2" name="address2" value="{{address.address2}}" placeholder=@t"e.g. Necklace Road" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Landmark" for="landmark" %}
+                        {% control text id="landmark" name="landmark" value="{{address.landmark}}" placeholder=@t"e.g. Opp. luxury gas station" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Country" for="country" %}
+                        {% control select id="country" name="countryId" value="address.countryId" required="true" items="availableCountries" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"State or Province" for="state" %}
+                        {% control select id="state" value="address.stateOrProvinceId" items="items" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"City" for="city" %}
+                        {% control text id="city" name="city" value="{{address.city}}" %}
+                        {% control validator for="city" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Zip / Postal Code" for="zippostalcode" %}
+                        {% control text id="zippostalcode" name="zippostalcode" value="{{address.zipPostalCode}}" %}
+                        {% control validator for="zippostalcode" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Phone" for="phone" %}
+                        {% control text id="phone" name="phone" value="{{address.phone}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email" for="email" %}
+                        {% control text id="email" name="email" value="{{address.email}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Website" for="website" %}
+                        {% control text id="website" name="website" value="{{address.website}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Address Type" for="addressType" %}
+                        {% control select id="addressType" name="addressType" value="address.addressType" items="availableAddressTypes" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="save-button-container">
+            {% control hidden name="id" value="{{addressId}}" %}
+            {% control hidden name="userId" value="{{userId}}" %}
+            <button type="submit" class="btn btn-success">{{"Save Address" | t}}</button>
+            <a class="btn btn-default" href='{% route AddressList userId="{{userId}}" %}'>{{"Cancel" | t}}</a>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("edit-address-form",
+            {
+                onSuccess: function() {
+                    
+                    notify("success", '{{"Address was saved successfully" | t}}');
+                    setTimeout(function() {
+                            navigate('{% route AddressList userId="{{userId}}" %}');
+                        },
+                        1000);
+                }
+            });
+    });
+ 
+</script>

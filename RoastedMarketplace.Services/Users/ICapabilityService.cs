@@ -6,8 +6,10 @@ namespace RoastedMarketplace.Services.Users
 {
     public interface ICapabilityService : IFoundationEntityService<Capability>
     {
-        IList<Capability> GetByRole(int roleId);
+        IEnumerable<Capability> GetByRole(int roleId);
 
-        IList<Capability> GetByRolesConsolidated(int[] roleIds);
+        IEnumerable<Capability> GetByRolesConsolidated(int[] roleIds);
+
+        void SetRoleCapabilities(int roleId, int[] capabilityIds);
     }
 }

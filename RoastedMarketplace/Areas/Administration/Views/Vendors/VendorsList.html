@@ -1,0 +1,107 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Vendors" active_menu="VendorsList" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Vendors" | t}}
+                <a class="btn btn-primary btn-sm float-right" href="" onclick="editVendor(0); return false;">{{"Add new vendor" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-vendors" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="name">{{"Name" | t }}</th>
+                                <th data-column-id="address" data-formatter="address">{{"Address" | t }}</th>
+                                <th data-column-id="gstNumber">{{"GST No." | t }}</th>
+                                <th data-column-id="tin">{{"Tin" | t }}</th>
+                                <th data-column-id="pan">{{"PAN" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    ready(function () {
+        var initData = null;
+        /*{% unless addresses == blank %}*/
+        initData = JSON.parse('{{vendors}}');
+        /*{% endunless %}*/
+        generateGrid({
+            element: "grid-vendors",
+            initialData: {
+                addresses: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_VendorsList %}',
+            responseObject: "vendors",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {
+                "address": function(column, row) {
+                    var address = "";
+                    if (row.address)
+                        address += "<div><span>" + row.address + "</span></div>";
+                    if (row.city)
+                        address += "<div><span>" + row.city + "</span></div>";
+                    if (row.stateProvinceName)
+                        address += "<div><span>" + row.stateProvinceName + "</span></div>";
+                    if (row.countryName)
+                        address += "<div><span>" + row.countryName + "</span></div>";
+                    if (row.zipPostalCode)
+                        address += "<div><span>" + row.zipPostalCode + "</span></div>";
+                    return address;
+                },
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editVendor(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                        "<button class=\"btn btn-danger command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteVendor(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                }
+            }
+        });
+    });
+
+
+    var editVendor = function (id) {
+        var url = '{% route GetVendor vendorId="?" %}';
+        navigate(url.replace("?", id));
+    }
+
+    var deleteVendor = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this vendor? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteVendor %}",
+                    data: {
+                        addressId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-vendors');
+                            notify("success", '{{"Vendor was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

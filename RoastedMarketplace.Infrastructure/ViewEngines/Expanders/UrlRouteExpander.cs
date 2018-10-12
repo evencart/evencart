@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using Microsoft.AspNetCore.Routing;
-using RoastedMarketplace.Core.Infrastructure;
-using RoastedMarketplace.Services.Serializers;
+using RoastedMarketplace.Core.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
@@ -21,12 +18,17 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             foreach (Match match in matches)
             {
                 ExtractMatch(match, out string[] straightParameters, out Dictionary<string, string> keyValuePairs);
-                if(!straightParameters.Any())
+                if (!straightParameters.Any())
                     throw new Exception($"A route name must be specified in the view {readFile.FileName}");
 
                 var routeName = straightParameters[0];
                 var routeUrl = ApplicationEngine.RouteUrl(routeName, keyValuePairs);
                 routeUrl = HttpUtility.UrlDecode(routeUrl);
+                //we are using lower case urls and this causes the liquid parameters to convert to lower case like {{userId}} converts to {{userid}}
+                //we need to fix those otherwise the liquid urls break.
+                if (keyValuePairs != null && !routeUrl.IsNullEmptyOrWhitespace())
+                    foreach (var kp in keyValuePairs)
+                        routeUrl = routeUrl.Replace(kp.Value, kp.Value, StringComparison.InvariantCultureIgnoreCase);
                 readFile.Content = readFile.Content.Replace(match.Result("$0"), routeUrl);
             }
 

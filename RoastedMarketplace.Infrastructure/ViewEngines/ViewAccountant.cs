@@ -33,10 +33,6 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             Template.FileSystem = new AppThemeFileSystem(this);
             //naming convention camelCaseConvention
             Template.NamingConvention = new CamelCaseNamingConvention();
-            //register global objects
-            GlobalObject.RegisterObject<PrimaryNavigationObject>("primary_navigation");
-            GlobalObject.RegisterObject<SecondaryNavigationObject>("secondary_navigation");
-            GlobalObject.RegisterObject<SelectOptionsObject>("selectOptions");
             //register additional types
             Template.RegisterSafeType(typeof(SelectListItem), new string[] { "Text", "Value", "Selected"});
         }

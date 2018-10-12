@@ -1,4 +1,11 @@
-﻿var validationRule = function (options) {
+﻿$(document).on("keypress", 'form', function (e) {
+    var code = e.keyCode || e.which;
+    if (code == 13) {
+        e.preventDefault();
+        return false;
+    }
+});
+var validationRule = function (options) {
     var element = jQuery("#" + options.element);
     var rule = options.rule;
     setTimeout(function () { //https://github.com/jquery-validation/jquery-validation/issues/1267#issuecomment-119692849
@@ -67,21 +74,8 @@ var initAjaxForm = function (formId, options) {
                             if (options.onSuccess)
                                 options.onSuccess(response);
                         } else {
+                            
                             if (options.onError) {
-                                var errMsg = "";
-                                if (response.errors) {
-                                    var errors = response.errors;
-                                    var errorList = "<ul>";
-                                    errors.forEach(function (err) {
-                                        errorList += "<li>" + err + "</li>";
-                                    });
-                                    errorList += "</ul>";
-                                }
-                                else if (response.error)
-                                    errMsg = response.error;
-                                else
-                                    errMsg = "An error occured while completing operation";
-                                notify("error", errMsg);
                                 options.onError(response);
                             }
                         }
@@ -170,18 +164,19 @@ var generateGrid = function (options) {
         multiSelect: true,
         columnSelection: false,
         navigation: true,
-        initialData: null
+        initialData: null,
+        keepSelection:false
 
     }, options);
     if (options.reload) {
         jQuery("#" + options.element).bootgrid("reload");
         return;
     }
-    var initData = null;
     if (options.initialData) {
-        initData = [];
-        initData["success"] = true;
-        initData[options.responseObject] = options.initialData;
+        if (options.initialData[options.responseObject])
+            options.initialData["success"] = true;
+        else
+            options.initialData = null;
     }
     jQuery("#" + options.element).bootgrid({
         ajax: true,
@@ -189,7 +184,8 @@ var generateGrid = function (options) {
             method: options.method,
             cache: true
         },
-        initialData: initData,
+        rowCount: [15, 30, 50, 100],
+        initialData: options.initialData,
         post: options.data,
         url: options.url,
         selection: options.selection,
@@ -198,12 +194,13 @@ var generateGrid = function (options) {
         templates: options.templates,
         formatters: options.formatters,
         navigation: options.navigation,
+        keepSelection: options.keepSelection,
         responseHandler: function (response) {
             if (response.success) {
                 return {
-                    current: response.page,
-                    total: response.totalResults,
-                    rowCount: response.count,
+                    current: response.current,
+                    total: response.total,
+                    rowCount: response.rowCount,
                     rows: response[options.responseObject]
                 };
             }
@@ -264,7 +261,8 @@ var inputTypeahead = function (options) {
         value: false,
         beforeItemRemoved: function (evt) { },
         itemRemoved: function (evt) { },
-        itemAdded: function (evt) { }
+        itemAdded: function (evt) { },
+        data: []
     }, options);
 
     var element = options.element;
@@ -335,7 +333,8 @@ var inputTypeahead = function (options) {
                     return;
                 }
             }
-            var matches = dataSearch(q, options.initialData);
+            var data = options.data || options.initialData;
+            var matches = dataSearch(q, data);
             syncResults(matches);
         };
     }
@@ -344,8 +343,9 @@ var inputTypeahead = function (options) {
         jQuery('#' + element).tagsinput({
             allowDuplicates: false,
             trimValue: true,
+            freeInput: options.suggestNewAdditions,
             itemText: "text",
-            itemValue: "text",
+            itemValue: "id",
             typeaheadjs: [
                 {
                     hint: true,
@@ -417,15 +417,58 @@ var ajaxExtend = function (options) {
         data: [],
         done: function () { },
         fail: function () { },
-        always: function () { }
+        always: function () { },
+        method: "GET"
     },
         options);
     return options;
 }
+
+var loaderInterval;
+//global progress
+jQuery(document).ajaxStart(function () {
+    jQuery("body").append("<div id='loader'><div class='handle'></div></div>");
+    $('#loader').show();
+    var position = 0;
+    loaderInterval = setInterval(function () {
+        jQuery("#loader .handle").css("left", position + "%");
+        position++;
+        if (position >= 100)
+            position = 0;
+    }, 10);
+});
+jQuery(document).ajaxComplete(function () {
+    jQuery('#loader').remove();
+    clearInterval(loaderInterval);
+});
+
 var ajax = function (options) {
-    var method = options.method.toLowerCase() == "get" ? "get" : "post";
+    options = ajaxExtend(options);
+    var method = options.method.toLowerCase() === "get" ? "get" : "post";
     var jqxhr = jQuery[method](options.url, options.data)
-        .done(options.done)
+        .done(function (response, status, xhr) {
+            var ct = xhr.getResponseHeader("content-type") || "";
+            //do the notification only for json response
+            if (ct.indexOf("application/json") > -1 && !response.success) {
+                var errMsg = "";
+                if (response.errors) {
+                    var errors = response.errors;
+                    var errorList = "<ul>";
+                    errors.forEach(function (err) {
+                        errorList += "<li>" + err + "</li>";
+                    });
+                    errorList += "</ul>";
+                    errMsg = errorList;
+                }
+                else if (response.error)
+                    errMsg = response.error;
+                else
+                    errMsg = "An error occured while completing operation";
+                notify("error", errMsg);
+            }
+            if (options.done)
+                options.done(response);
+        })
         .fail(options.fail)
         .always(options.always);
     return jqxhr;

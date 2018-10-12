@@ -1,4 +1,6 @@
-﻿namespace RoastedMarketplace.Infrastructure
+﻿using RoastedMarketplace.Data.Enum;
+
+namespace RoastedMarketplace.Infrastructure
 {
     public static class ApplicationConfig
     {
@@ -30,5 +32,6 @@
 
         public const string SecondaryNavigationName = "secondary_navigation";
 
+        public const PasswordFormat DefaultPasswordFormat = PasswordFormat.Sha256Hashed;
     }
 }

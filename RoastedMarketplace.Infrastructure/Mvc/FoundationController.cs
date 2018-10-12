@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -42,6 +43,8 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         {
             private readonly ExpandoObject _expandoObject;
             private readonly Controller _controller;
+            private static readonly string[] IgnoredRouteValues = {"action", "area", "controller"};
+
             private CustomResponse(Controller controller)
             {
                 _controller = controller;
@@ -49,6 +52,11 @@ namespace RoastedMarketplace.Infrastructure.Mvc
                 var controllerName = ApplicationEngine.CurrentHttpContext.GetRouteData().Values["controller"].ToString().ToLower();
                 _expandoObject = new ExpandoObject();
                 With("context", controllerName);
+                //passed values except the ones ignored
+                foreach (var rv in controller.RouteData.Values.Where(x => !IgnoredRouteValues.Contains(x.Key)))
+                {
+                    With(rv.Key, rv.Value);
+                }
             }
 
             public CustomResponse With(string key, object value)
@@ -60,7 +68,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc
                     expandoDict.Add(key, value);
                 return this;
             }
-
+           
             /// <summary>
             /// Attaches specified parameter to the response
             /// </summary>
@@ -107,5 +115,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc
             }
 
         }
+        
     }
+   
 }

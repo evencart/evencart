@@ -25,16 +25,16 @@ $node-meta-color: #999;
     margin-right: 10px;
 }
 
-.no-padding{
-    padding:0px!important;
+.no-padding {
+    padding: 0px !important;
 }
-.no-margin
-{
-    margin:0px!important;
+
+.no-margin {
+    margin: 0px !important;
 }
+
 body {
     letter-spacing: 0.02rem;
-    
 }
 
 a {
@@ -234,15 +234,16 @@ a {
         display: table-cell;
         vertical-align: middle;
         padding: 15px;
-        width:125px;
+        width: 125px;
+
         .btn-group {
-            visibility:hidden;
+            visibility: hidden;
         }
     }
 
     &:hover {
         .action-links .btn-group {
-            visibility:visible;
+            visibility: visible;
         }
     }
 }
@@ -301,7 +302,7 @@ a {
 }
 
 .typeahead {
-   /* width: 396px;
+    /* width: 396px;
     height: 30px;
     padding: 8px 12px;
     font-size: 24px;
@@ -318,7 +319,7 @@ a {
 }
 
 .tt-query {
-  /*  width: 396px;
+    /*  width: 396px;
     height: 30px;
     padding: 8px 12px;
     font-size: 24px;
@@ -334,7 +335,7 @@ a {
 }
 
 .tt-hint {
- /*   width: 396px;
+    /*   width: 396px;
     height: 30px;
     padding: 8px 12px;
     font-size: 24px;
@@ -363,7 +364,7 @@ a {
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
     left: -7px !important;
-    background-color:white;
+    background-color: white;
 }
 
 .tt-suggestion {
@@ -492,19 +493,26 @@ input:focus, textarea:focus {
 }
 
 .save-button-container {
+    position: fixed;
     top: 0;
-    left: 120px;
     right: 0;
     padding: 5px;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.1);
     text-align: right;
     background-color: white;
 
     button, input[type='submit'], input[type='button'], a.btn {
-        font-size:13px;
-        margin:0 3px;
+        font-size: 13px;
+        margin: 0 3px;
     }
 }
+
+.bootgrid-footer {
+    background-color: #f2f2f2;
+    padding: 10px 10px;
+    border-top: solid 1px #ddd;
+    margin: 0;
+}
+
 .btn:focus {
     box-shadow: none !important;
     background-color: #999;
@@ -542,10 +550,10 @@ input:focus, textarea:focus {
     }
 }
 
-h3.page-title
-{
-    margin-bottom:15px;
+h3.page-title {
+    margin-bottom: 15px;
 }
+
 .fileupload-buttonbar .btn, .fileupload-buttonbar .toggle {
     margin-bottom: 5px;
 }
@@ -554,7 +562,8 @@ h3.page-title
     position: relative;
     overflow: hidden;
     display: inline-block;
-    cursor:pointer;
+    cursor: pointer;
+
     input[type='file'] {
         position: absolute;
         filter: alpha(opacity=0);
@@ -567,46 +576,45 @@ h3.page-title
         cursor: pointer;
     }
 }
+
 .image-block {
     display: inline-block;
     margin-right: 15px;
     margin-bottom: 15px;
-    
 }
 
 .draggable, .ui-sortable-handle {
     cursor: grabbing;
 }
 
-.trash-link
-{
-    cursor:pointer;
-    &:hover{
-        text-decoration:none;
+.trash-link {
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
     }
 }
 
-#categories-container{
-    margin-top:5px;
+#categories-container {
+    margin-top: 5px;
 }
 
 .bootstrap-tagsinput {
     border: 1px solid #eee;
+
     input[type='text'] {
         border: solid 1px transparent !important;
     }
-
 }
 
-.overlay
-{
-    background-color:rgba(0,0,0,0.3);
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    z-index:1;
+.overlay {
+    background-color: rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
 }
 
 .popup {
@@ -649,12 +657,56 @@ select {
     border-radius: 15px;
     display: none;
     z-index: 2;
-    cursor:pointer;
-    ul{
+    cursor: pointer;
 
+    ul {
     }
 }
-.clickable
-{
-    cursor:pointer;
+
+.clickable {
+    cursor: pointer;
+}
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    display: none;
+
+    .handle {
+        position: absolute;
+        background-color: green;
+        height: 100%;
+        width: 350px;
+    }
+}
+
+.pagination {
+    .active {
+        a {
+            background-color: #6c757d;
+            color: white;
+        }
+    }
+}
+
+label.error {
+    color: red;
+    font-weight: bold;
+    display: block;
+    border-top: solid 1px;
+    text-align: center;
+    padding: 2px 0;
+    font-size: 0.7em;
+}
+
+.capabilities-selector-box {
+    max-height: 400px;
+    overflow: auto;
+
+    label {
+        display: block;
+    }
 }

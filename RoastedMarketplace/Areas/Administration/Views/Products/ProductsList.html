@@ -1,51 +1,60 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"Products" active_menu="ProductsList" parent_active_menu="ProductsList" %}
 {% partial "Navigation/ProductSecondaryNavigation" %}
-<div class="row">
-    <div class="col-md-6">
-        <h3>{{"Products" | t}}</h3>
-    </div>
-    <div class="col-md-3 col-offset-3">
-        <a class="btn btn-primary float-right" href='{% route GetProduct productId="0" %}'>{{"Add New" | t}}</a>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-md-10 col-offset-2">
         <div class="panel">
-            <div class="panel-body">
+            <div class="panel-title">
+                {{"Products" | t}}
+                <a class="btn btn-sm btn-primary float-right" href='{% route GetProduct productId="0" %}'>{{"Add new product" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name">{{"Product" | t}}</th>
-                            <th data-column-id="sku">{{"Sku" | t}}</th>
-                            <th data-column-id="price">{{"Price" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Product" | t}}</th>
+                        <th data-column-id="sku">{{"Sku" | t}}</th>
+                        <th data-column-id="price">{{"Price" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
                 <script type="text/javascript">
-                    var editProduct = function (id) {
+                    var editProduct = function(id) {
                         var url = '{% route GetProduct productId="product_id" %}';
-                        window.location.href = url.replace("product_id", id);
+                        url = url.replace("product_id", id);
+                        navigate(url);
                     }
-                    ready(function () {
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless products == blank %}*/
+                        initData = JSON.parse('{{products}}');
+                        /*{% endunless %}*/
+
                         generateGrid({
                             element: "grid-selection",
+                            initialData: {
+                                products: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
                             method: "GET",
-                            url: "{% route api_GetProducts %}",
+                            navigation : 3,
+                            url: "{% route api_ProductsList %}",
                             responseObject: "products",
                             formatters: {
-                                "commands": function (column, row) {
-                                    return "<button type=\"button\" class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                                "commands": function(column, row) {
+                                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editProduct(" +
                                         row.id +
-                                        ")'><span class=\"rbicon-edit\"></span></button> " +
-                                        "<button type=\"button\" class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                                        ")'><span class=\"rbicon-edit\"></span></a> " +
+                                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
                                         row.id +
-                                        "\"><span class=\"rbicon-external-link\"></span></button>";
+                                        "\"><span class=\"rbicon-external-link\"></span></a>";
                                 }
                             }
                         });
