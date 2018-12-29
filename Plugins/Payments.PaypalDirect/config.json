@@ -1,0 +1,11 @@
+﻿{
+  "name": "Paypal Direct Payment",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Payments.PaypalDirect.dll",
+  "systemName": "RoastedBytes.Payments.PaypalDirect",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}

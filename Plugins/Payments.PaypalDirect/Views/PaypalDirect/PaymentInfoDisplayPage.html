@@ -1,0 +1,22 @@
+﻿<div class="row">
+    <div class="col-xs-12 mb-30">
+        {% control label text=@t"Card Number" for="" %}
+        {% control text id="card-number" name="cardNumber" value="" placeholder="XXXX-XXXX-XXXX-XXXX" %}
+    </div>
+    <div class="col-xs-12 mb-30">
+        {% control label text=@t"Name on card" for="name-on-card" %}
+        {% control text id="name-on-card" name="nameOnCard" value=""  %}
+    </div>
+    <div class="col-xs-4 mb-30">
+        {% control label text=@t"Expiry Month" for="expiry-month" %}
+        {% control select id="expiry-month" name="expiryMonth" value="paymentInfo.month" required="true" items="paymentInfo.availableMonths"  %}
+    </div>
+    <div class="col-xs-4 mb-30">
+        {% control label text=@t"Expiry Year" for="expiry-year" %}
+        {% control select id="expiry-year" name="expiryYear" value="paymentInfo.year" required="true" items="paymentInfo.availableYears"  %}
+    </div>
+    <div class="col-xs-4 mb-30">
+        {% control label text=@t"CVV" for="cvv" %}
+        {% control text id="cvv" name="cvv" value=""  %}
+    </div>
+</div>

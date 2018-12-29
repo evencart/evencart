@@ -16,3 +16,8 @@ RoastedMarketplace.Infrastructure/bin/
 RoastedMarketplace/bin/
 .vs/
 RoastedMarketplace/wwwroot/content/Uploads/
+*.pdb
+RoastedMarketplace/Plugins/
+Plugins/Shipping.FedEx/obj/
+Plugins/Payments.PaypalDirect/obj/
+Plugins/Payments.PaypalDirect/bin/

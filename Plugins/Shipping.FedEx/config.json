@@ -1,0 +1,11 @@
+﻿{
+  "name": "FedEx Provider",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Shipping.FedEx.dll",
+  "systemName": "RoastedBytes.Shipping.FedEx",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}

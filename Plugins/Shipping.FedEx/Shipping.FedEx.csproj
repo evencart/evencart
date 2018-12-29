@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Shipping.FedEx\netcoreapp2.1\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Shipping.FedEx\netcoreapp2.1\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
