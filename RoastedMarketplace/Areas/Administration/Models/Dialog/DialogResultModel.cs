@@ -4,7 +4,9 @@ namespace RoastedMarketplace.Areas.Administration.Models.Dialog
 {
     public class DialogResultModel : FoundationModel
     {
-        public string Url { get; set; }
+        public string ApiUrl { get; set; }
+
+        public string UiUrl { get; set; }
 
         public string ResponseObjectName { get; set; }
 

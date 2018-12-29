@@ -15,6 +15,8 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         #region Virtual Properties
         public virtual IList<ShipmentItem> ShipmentItems { get; set; }
+
+        public virtual IList<ShipmentHistory> ShipmentStatusHistories { get; set; }
         #endregion
     }
 }

@@ -27,7 +27,7 @@
                     {% endif %}
                     <div class="form-group">
                         {% control label text=@t"Input Type" for="input-type" %}
-                        {% control select id="input-type" name="attribute.inputfieldtype" items="availableInputTypes" value="{{productAttribute.inputFieldTypeId}}" required="true" %}
+                        {% control select id="input-type" name="attribute.inputfieldtype" items="inputTypes" value="productAttribute.inputFieldTypeDisplay" required="true" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Values" for="product-attribute-value-selector" %}

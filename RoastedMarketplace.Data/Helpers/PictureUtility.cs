@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Linq;
 using RoastedMarketplace.Core.Infrastructure.Media;
 
 namespace RoastedMarketplace.Data.Helpers
@@ -97,7 +99,15 @@ namespace RoastedMarketplace.Data.Helpers
             };
         }
 
+        
+        public static Size GetSize(string sizeString)
+        {
+            var sizeParts = sizeString.Split('x', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => Convert.ToInt32(x)).ToArray();
+            if (sizeParts.Length != 2)
+                throw new Exception($"Invalid size value {sizeString} in theme configuration");
 
-
+            return new Size(sizeParts[0], sizeParts[1]);
+        }
     }
 }

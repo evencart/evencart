@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.ViewEngines;
@@ -21,7 +22,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         [DualGet("templates/get", Name = AdminRouteNames.GetTemplates, OnlyApi = true)]
         public IActionResult LoadTemplates(string context)
         {
-            var templates = _viewAccountant.CompileAllViews(context);
+            var templates = _viewAccountant.CompileAllViews(context, ApplicationConfig.AdminAreaName);
             return R.Success.With("templates", templates).Result;
         }
     }

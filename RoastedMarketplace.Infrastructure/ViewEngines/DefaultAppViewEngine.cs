@@ -9,8 +9,12 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
     {
         public ViewEngineResult FindView(ActionContext context, string viewName, bool isMainPage)
         {
-            var controller = context.ActionDescriptor.RouteValues["controller"];
-            viewName = $"{controller}/{viewName}";
+            if (!viewName.StartsWith("Components"))
+            {
+                var controller = context.ActionDescriptor.RouteValues["controller"];
+                viewName = $"{controller}/{viewName}";
+            }
+
             return GetView(viewName, isMainPage);
         }
 

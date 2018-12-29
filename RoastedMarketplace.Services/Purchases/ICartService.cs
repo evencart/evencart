@@ -10,21 +10,25 @@ namespace RoastedMarketplace.Services.Purchases
 
         Cart GetWishlist(int userId);
 
-        void AddToCart(int userId, CartItem item);
+        void AddToCart(int userId, CartItem item, Transaction transaction = null);
 
-        void AddToWishlist(int userId, CartItem item);
+        void UpdateCart(int userId, CartItem item, Transaction transaction = null);
 
-        void RemoveFromCart(int cartItemId);
+        void AddToWishlist(int userId, CartItem item, Transaction transaction = null);
+
+        void RemoveFromCart(int cartItemId, Transaction transaction = null);
 
         void ClearCart(int userId);
 
         void ClearWishlist(int userId);
 
-        void SetPaymentMethodOnCart(int userId, string paymentMethodName, string paymentMethodData);
+        void SetPaymentMethodOnCart(int userId, string paymentMethodName, string paymentMethodData, Cart cart = null);
 
-        void SetShippingMethodOnCart(int userId, string shippingMethodName);
+        void SetShippingMethodOnCart(int userId, string shippingMethodName, Cart cart = null);
 
-        DiscountApplicationStatus SetDiscountCoupon(int userId, string discountCoupon);
+        DiscountApplicationStatus SetDiscountCoupon(int userId, string discountCoupon, Cart cart = null);
+
+        void ClearDiscountCoupon(int userId, Cart cart = null);
 
         void SetAddresses(int userId, int billingAddressId, int shippingAddressId);
     }

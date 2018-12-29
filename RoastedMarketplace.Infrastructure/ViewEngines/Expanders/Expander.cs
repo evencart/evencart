@@ -10,7 +10,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
     {
         public string TagName { get; set; }
 
-        public Regex AssociatedRegEx { get; private set; }
+        private Regex AssociatedRegEx { get; set; }
 
         private readonly ILocalizer _localizer;
         protected Expander()
@@ -22,6 +22,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         {
             new LayoutExpander() {TagName = "layout"},
             new PartialExpander() {TagName = "partial"},
+            new ComponentExpander() {TagName = "component"},
             new ControlExpander() {TagName = "control"},
             new UrlRouteExpander() {TagName = "route"},
             new NavigationExpander()
@@ -44,14 +45,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         {
             return new Regex(TagMatcherPattern.Replace("{tagName}", tagName));
         }
-        public static void ExpandView(string viewName, out string expandedContent)
+        public static void ExpandView(string viewName, object parameters, out string expandedContent)
         {
             var readFile = ReadFile.From(viewName);
-            SafeExpandView(readFile, true);
-            expandedContent = readFile.Content;
+            expandedContent = SafeExpandView(readFile, readFile.Content, parameters, true);
         }
 
-        private static void SafeExpandView(ReadFile readFile, bool prePostRun = false)
+        private static string SafeExpandView(ReadFile readFile, string inputContent, object parameters = null, bool prePostRun = false)
         {
             foreach (var e in Expanders)
             {
@@ -61,7 +61,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     //run before expansion
                     e.PreRun(readFile);
                 //run the expansion
-                e.Expand(readFile, tagRegex);
+                inputContent = e.Expand(readFile, tagRegex, inputContent, parameters);
                 if (prePostRun)
                     //run the post expansion
                     e.PostRun(readFile);
@@ -71,8 +71,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             foreach (var e in Expanders)
             {
                 if (e.AssociatedRegEx.Matches(readFile.Content).Any())
-                    SafeExpandView(readFile);
+                    inputContent = SafeExpandView(readFile, inputContent, parameters);
             }
+            return inputContent;
         }
 
         protected void ExtractMatch(Match match, out string[] straightParameters, out Dictionary<string, string> keyValuePairs)
@@ -90,7 +91,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 keyValuePairs = new Dictionary<string, string>();
                 foreach (Capture capture in match.Groups[2].Captures)
                 {
-                    var pSplit = capture.Value.Split('=').Select(x => x.Trim('"')).ToList();
+                    var pSplit = capture.Value.Split('=', 2).Select(x => x.Trim('"')).ToList();
                     if (pSplit[1].StartsWith("@t"))
                     {
                         //the value needs a translation
@@ -102,7 +103,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             }
         }
 
-        public abstract string Expand(ReadFile readFile, Regex regEx);
+        public abstract string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null);
 
         public virtual void PreRun(ReadFile readFile)
         {

@@ -7,6 +7,8 @@ namespace RoastedMarketplace.Data.Entity.Addresses
     {
         public string Name { get; set; }
 
+        public string Code { get; set; }
+
         #region Virtual Properties
         public virtual IList<StateOrProvince> StateOrProvinces { get; set; }
         #endregion

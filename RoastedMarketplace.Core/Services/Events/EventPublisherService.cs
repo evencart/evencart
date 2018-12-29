@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using RoastedMarketplace.Core.Data;
+﻿using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Core.Infrastructure;
 
 namespace RoastedMarketplace.Core.Services.Events
@@ -8,7 +7,6 @@ namespace RoastedMarketplace.Core.Services.Events
     {
         public void Publish<T>(T entity, EventType eventType) where T : FoundationEntity
         {
-
             switch (eventType)
             {
                 case EventType.Insert:
@@ -37,6 +35,16 @@ namespace RoastedMarketplace.Core.Services.Events
                     }
                     break;
             }
+        }
+
+        public T Filter<T>(T input)
+        {
+            var dFilters = DependencyResolver.ResolveMany<IFoundationFilter<T>>();
+            foreach (var ec in dFilters)
+            {
+                input = ec.Filter(input);
+            }
+            return input;
         }
     }
 }

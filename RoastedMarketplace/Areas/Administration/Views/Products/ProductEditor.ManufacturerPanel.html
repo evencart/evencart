@@ -1,0 +1,20 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Manufacturers" | t}}
+    </div>
+    <div class="panel-body">
+        {% control text id="manufacturer-selector" name="manufacturerName" value="{{product.manufacturerName}}" placeholder=@t"Start typing manufacturer name..." %}
+        
+        <script type="text/javascript">
+            ready(function () {
+                inputTypeahead({
+                    element: "manufacturer-selector",
+                    initialData: null,
+                    url: "{% route api_GetManufacturerSuggestions %}",
+                    preserveAfterFirstCall: true,
+                    clearAfterSelect: false
+                });
+            });
+        </script>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿using RoastedMarketplace.Core.Data;
+using RoastedMarketplace.Data.Entity.Shop;
 
 namespace RoastedMarketplace.Data.Entity.Purchases
 {
@@ -22,6 +23,8 @@ namespace RoastedMarketplace.Data.Entity.Purchases
         public virtual Order Order { get; set; }
 
         public virtual Shipment Shipment { get; set; }
+
+        public virtual Product Product { get; set; }
         #endregion
     }
 }

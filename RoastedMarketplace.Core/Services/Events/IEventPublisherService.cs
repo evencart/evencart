@@ -1,4 +1,5 @@
-﻿using RoastedMarketplace.Core.Data;
+﻿using DotEntity;
+using RoastedMarketplace.Core.Data;
 
 namespace RoastedMarketplace.Core.Services.Events
 {
@@ -11,5 +12,13 @@ namespace RoastedMarketplace.Core.Services.Events
         /// <param name="entity"></param>
         /// <param name="eventType"></param>
         void Publish<T>(T entity, EventType eventType) where T : FoundationEntity;
+
+        /// <summary>
+        /// Used to change state of an object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        T Filter<T>(T input);
     }
 }

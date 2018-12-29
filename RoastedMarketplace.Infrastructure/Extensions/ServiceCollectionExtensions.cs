@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using RoastedMarketplace.Infrastructure.Routing;
+using Newtonsoft.Json.Converters;
+using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Infrastructure.Plugins;
+using RoastedMarketplace.Infrastructure.Routing.Conventions;
 using RoastedMarketplace.Infrastructure.ViewEngines;
 
 namespace RoastedMarketplace.Infrastructure.Extensions
@@ -23,12 +29,18 @@ namespace RoastedMarketplace.Infrastructure.Extensions
                 });
         }
 
-        public static IMvcBuilder AddAppMvc(this IServiceCollection services)
+        public static IMvcBuilder AddAppMvc(this IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
-            return services.AddMvc(options =>
+            var mvcBuilder = services.AddMvc(options =>
                 {
                     options.Conventions.Add(new AppRoutingConvention());
                 })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                })
+                //load plugins
+                .AddAppPlugins(new PluginLoader(hostingEnvironment))
                 .AddViewOptions(options =>
                 {
                     options.ViewEngines.Clear();
@@ -38,6 +50,7 @@ namespace RoastedMarketplace.Infrastructure.Extensions
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 //add controllers as services
                 .AddControllersAsServices();
+            return mvcBuilder;
         }
 
         public static void AddAppRouting(this IServiceCollection services)
@@ -55,6 +68,20 @@ namespace RoastedMarketplace.Infrastructure.Extensions
 
             //url helper
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+        }
+
+        public static IMvcBuilder AddAppPlugins(this IMvcBuilder mvcBuilder, IPluginLoader pluginLoader)
+        {
+            pluginLoader.LoadAvailablePlugins();
+            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            mvcBuilder.ConfigureApplicationPartManager(manager =>
+            {
+                foreach (var pluginInfo in pluginInfos)
+                {
+                    manager.ApplicationParts.Add(new AssemblyPart(pluginInfo.Assembly));
+                }
+            });
+            return mvcBuilder;
         }
     }
 }

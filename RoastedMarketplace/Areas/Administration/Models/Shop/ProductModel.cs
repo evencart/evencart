@@ -54,6 +54,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Shop
 
         public int? TaxId { get; set; }
 
+        public string ManufacturerName { get; set; }
+
         public IList<MediaModel> Media { get; set; }
 
         public IList<CategoryModel> Categories { get; set; }

@@ -27,7 +27,7 @@ namespace RoastedMarketplace.Services.Taxes
             if (!product.TaxId.HasValue)
             {
                 //check if the category defines a tax 
-                if (!product.Categories.Any(x => x.TaxId.HasValue))
+                if (!product.Categories?.Any(x => x.TaxId.HasValue) ?? true)
                 {
                     return _taxSettings.DefaultTaxRate; //go with default
                 }
@@ -39,7 +39,7 @@ namespace RoastedMarketplace.Services.Taxes
             if (taxId == 0)
                 return _taxSettings.DefaultTaxRate;
 
-            var tax = _taxService.GetWithTaxRate(taxId, address.CountryId, address.StateProvinceId ?? 0, address.ZipPostalCode);
+            var tax = _taxService.GetWithTaxRate(taxId, address?.CountryId ?? 0, address?.StateProvinceId ?? 0, address?.ZipPostalCode);
             if (tax?.TaxRates == null || !tax.TaxRates.Any())
                 return _taxSettings.DefaultTaxRate;
 

@@ -32,9 +32,13 @@ $node-meta-color: #999;
 .no-margin {
     margin: 0px !important;
 }
-
+.no-border
+{
+    border:none!important;
+}
 body {
     letter-spacing: 0.02rem;
+    font-size:0.9rem;
 }
 
 a {
@@ -623,6 +627,8 @@ h3.page-title {
     min-width: 330px;
     box-shadow: 0 0 1px rgba(0,0,0,0.5);
     display: none;
+    background: #fff;
+    border-radius: 3px;
 
     .panel {
         margin-bottom: 0;
@@ -708,5 +714,17 @@ label.error {
 
     label {
         display: block;
+    }
+}
+
+table.table-borderless {
+    border: none;
+
+    tr, td {
+        border: none;
+    }
+
+    td {
+        padding: 0.3rem 0.75rem;
     }
 }

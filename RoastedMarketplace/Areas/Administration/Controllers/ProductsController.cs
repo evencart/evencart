@@ -38,8 +38,9 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private readonly IAvailableAttributeService _availableAttributeService;
         private readonly IAvailableAttributeValueService _availableAttributeValueService;
         private readonly IDataSerializer _dataSerializer;
+        private readonly IManufacturerService _manufacturerService;
 
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer)
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -53,15 +54,15 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _availableAttributeService = availableAttributeService;
             _productAttributeValueService = productAttributeValueService;
             _dataSerializer = dataSerializer;
+            _manufacturerService = manufacturerService;
         }
 
         [DualGet("", Name = AdminRouteNames.ProductsList)]
-        [ValidateModelState(ModelType = typeof(SearchModel))]
+        [ValidateModelState(ModelType = typeof(AdminSearchModel))]
         [CapabilityRequired(CapabilitySystemNames.ViewProducts)]
         public IActionResult ProductsList([FromQuery] ProductSearchModel parameters)
         {
-            if(parameters == null)
-                parameters = new ProductSearchModel();
+            parameters = parameters ?? new ProductSearchModel();
             //create order by expression
             Expression<Func<Product, object>> orderByExpression = null;
             if (!parameters.SortColumn.IsNullEmptyOrWhitespace())
@@ -84,13 +85,19 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 }
             }
 
-            var products = _productService.GetProducts(out int totalResults, parameters.SearchPhrase, parameters.Published,
-                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, orderByExpression, parameters.SortOrder, parameters.Current,
+            var products = _productService.GetProducts(out int totalResults, out decimal availableFromPrice,
+                out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
+                out Dictionary<int, string> availableVendors,
+                out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published,
+                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, null, orderByExpression,
+                parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
             var productsModel = products.Select(x => _modelMapper.Map<ProductModel>(x));
             return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
                 .WithAvailableInputTypes()
                 .With("products", () => productsModel, () => _dataSerializer.Serialize(productsModel))
+                .With("availableFromPrice", availableFromPrice)
+                .With("availableToPrice", availableToPrice)
                 .Result;
         }
 
@@ -126,7 +133,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                     InputFieldType = InputFieldType.Dropdown
                 }
                 : MapProductAttributeModel(productAttribute);
-            return R.Success.With("productAttribute", model).With("productId", productId).Result;
+            return R.Success.With("productAttribute", model).With("productId", productId).WithAvailableInputTypes().Result;
         }
 
         [DualGet("{productId}/variants", Name = AdminRouteNames.ProductVariantsList)]
@@ -191,10 +198,13 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 })
                 .OrderBy(x => x.DisplayOrder)
                 .ToList();
+
+            productModel.ManufacturerId = product.Manufacturer?.Id;
+            productModel.ManufacturerName = product.Manufacturer?.Name;
             return R.Success.With("product", productModel).Result;
         }
 
-        [DualPost("", Name = AdminRouteNames.SaveProduct)]
+        [DualPost("", Name = AdminRouteNames.SaveProduct, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         [ValidateModelState(ModelType = typeof(ProductModel))]
         public IActionResult SaveProduct(ProductModel model)
@@ -203,6 +213,21 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             //is that a non-existent product?
             if (product == null)
                 return BadRequest();
+            //do we have manufacturer?
+            if (model.ManufacturerId == null && !model.ManufacturerName.IsNullEmptyOrWhitespace())
+            {
+                //find the manufacturer
+                var manufacturer = _manufacturerService.FirstOrDefault(x => x.Name == model.ManufacturerName);
+                model.ManufacturerId = manufacturer?.Id;
+            }
+            else if (model.ManufacturerId.HasValue && model.ManufacturerId.Value > 0)
+            {
+                var manufacturer = _manufacturerService.Get(model.ManufacturerId.Value);
+                model.ManufacturerId = manufacturer?.Id;
+            }
+            else
+                model.ManufacturerId = null;
+
             //update the product properties
             _modelMapper.Map(model, product);
             product.UpdatedOn = DateTime.UtcNow;
@@ -221,6 +246,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             {
                 LinkProductWithCategories(product.Id, model.Categories);
             }
+            
             return R.Success.Result;
         }
 
@@ -387,7 +413,15 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         {
             if (productVariantId <= 0)
                 return NotFound();
+            var variant = _productVariantService.Get(productVariantId);
+            var productId = variant.ProductId;
             _productVariantService.Delete(x => x.Id == productVariantId);
+            //update variant's product if there are no more any variants
+            if (_productVariantService.Count(x => x.ProductId == productId) == 0)
+            {
+                _productVariantService.Update(new { HasVariants = false}, x => x.ProductId == productId, null);
+            }
+            
             return R.Success.Result;
         }
 

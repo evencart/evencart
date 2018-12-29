@@ -8,11 +8,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
     public class GlobalExpander : Expander
     {
         private const string AssignFormat = "{{%- capture {0} -%}}{1}{{%- endcapture -%}}";
-        public override string Expand(ReadFile readFile, Regex regEx)
+        public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
-            var matches = regEx.Matches(readFile.Content);
+            var matches = regEx.Matches(inputContent);
             if (matches.Count == 0)
-                return readFile.Content;
+                return inputContent;
             var globalBuilder = new StringBuilder();
             foreach (Match match in matches)
             {
@@ -27,9 +27,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             }
             //remove the global matches
             readFile.Content = regEx.Replace(readFile.Content, "");
+            inputContent = regEx.Replace(inputContent, "");
             //and prepend the assignments
             readFile.Content = globalBuilder + readFile.Content;
-            return readFile.Content;
+            inputContent = globalBuilder + inputContent;
+            return inputContent;
         }
     }
 }

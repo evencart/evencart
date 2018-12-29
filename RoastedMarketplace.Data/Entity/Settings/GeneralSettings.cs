@@ -18,6 +18,5 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// Default timezone to be used for network
         /// </summary>
         public string DefaultTimeZoneId { get; set; }
-
     }
 }

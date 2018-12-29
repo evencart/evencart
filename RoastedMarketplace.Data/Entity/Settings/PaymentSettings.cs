@@ -25,13 +25,6 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// </summary>
         public PaymentMethodSelectionType PaymentMethodSelectionType { get; set; }
 
-        public decimal MicroPaymentsFixedPaymentProcessingFee { get; set; }
-
-        public decimal MacroPaymentsFixedPaymentProcessingFee { get; set; }
-
-        public decimal MicroPaymentsPaymentProcessingPercentage { get; set; }
-
-        public decimal MacroPaymentsPaymentProcessingPercentage { get; set; }
 
     }
 }

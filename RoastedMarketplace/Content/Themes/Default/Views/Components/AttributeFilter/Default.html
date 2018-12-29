@@ -1,0 +1,40 @@
+﻿{% for filter in filters %}
+<div class="attribute-filter margin-b-20">
+    <h5>
+        {{ filter.filterTitle }}
+        {% if filter.hasSelection %}
+        <a class="clickable text-sm-right float-right" href="" onclick="productSearch.clearFilter('{{filter.keyName}}');return false;">{{"clear" | t}}</a>
+        {% endif %}
+    </h5>
+    <ul class="filter-list filter-{{filter.keyName}}">
+        {% for value in filter.filterValues %}
+        <li>
+            <label>
+                <input type="checkbox" name="{{filter.keyName}}" value="{{value.value}}" {% if value.selected %}checked{% endif %}/> {{value.text}}
+                <script type="text/javascript">
+                    ready(function() {
+                        //{% if value.selected %}
+                        productSearch.setFilter("{{filter.keyName}}", "{{value.value}}", true);
+                        //{% endif %}
+                    })
+                </script>
+            </label>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+<script type="text/javascript">
+    ready(function() {
+        jQuery(".filter-list input").change(function (e) {
+            e.preventDefault();
+            var key = jQuery(this).attr("name");
+            var value = jQuery(this).val();
+            if (jQuery(this).is(":checked")) {
+                productSearch.setFilter(key, value);
+            } else {
+                productSearch.resetFilter(key, value);
+            }
+        });
+    })
+</script>

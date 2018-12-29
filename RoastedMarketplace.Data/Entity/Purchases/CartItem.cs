@@ -13,7 +13,7 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         public string AttributeJson { get; set; }
 
-        public decimal ComparePrice { get; set; } // = 100
+        public decimal? ComparePrice { get; set; } // = 100
 
         public decimal Price { get; set; } //= 80
 

@@ -21,7 +21,7 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         public DateTime CreatedOn { get; set; }
 
-        public DateTime PaidOn { get; set; }
+        public DateTime? PaidOn { get; set; }
 
         public string ShippingMethodName { get; set; }
 

@@ -6,13 +6,10 @@
 
   <ItemGroup>
     <Compile Remove="Emails\**" />
-    <Compile Remove="Formatter\**" />
     <Compile Remove="MediaServices\**" />
     <EmbeddedResource Remove="Emails\**" />
-    <EmbeddedResource Remove="Formatter\**" />
     <EmbeddedResource Remove="MediaServices\**" />
     <None Remove="Emails\**" />
-    <None Remove="Formatter\**" />
     <None Remove="MediaServices\**" />
   </ItemGroup>
 

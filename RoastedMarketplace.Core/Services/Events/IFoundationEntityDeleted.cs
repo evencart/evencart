@@ -2,7 +2,7 @@
 
 namespace RoastedMarketplace.Core.Services.Events
 {
-    public interface IFoundationEntityDeleted<T> where T : FoundationEntity
+    public interface IFoundationEntityDeleted<T> : IFoundationEntityEvent where T : FoundationEntity
     {
         void OnDeleted(T entity);
     }

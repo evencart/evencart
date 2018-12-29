@@ -1,9 +1,9 @@
-﻿using F1Suite.Data.Entity.Currency;
-
-namespace RoastedMarketplace.Services.Formatter
+﻿namespace RoastedMarketplace.Services.Formatter
 {
     public interface IFormatterService
     {
-        string FormatCurrency(decimal amount, Currency targetCurrency, bool includeSymbol = true);
+        string FormatCurrency(decimal amount, string languageCultureCode, bool includeSymbol = true);
+
+        string FormatProductAttributes(string attributeJson);
     }
 }

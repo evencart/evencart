@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -8,11 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using RoastedMarketplace.Core.Infrastructure;
-using RoastedMarketplace.Core.Modules;
+using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Infrastructure.DependencyContainer;
 using RoastedMarketplace.Infrastructure.Extensions;
+using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Theming;
 using RoastedMarketplace.Services.Authentication;
 
@@ -21,11 +24,11 @@ namespace RoastedMarketplace.Infrastructure
     public static class ApplicationEngine
     {
         #region Initialization
-        public static IServiceProvider ConfigureServices(IServiceCollection services)
+        public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
             //initialize modules
-            ModuleEngine.Initialize();
-            
+            PluginEngine.Initialize();
+
             //add authentications
             services.AddAppAuthentication();
 
@@ -33,7 +36,7 @@ namespace RoastedMarketplace.Infrastructure
             services.AddGlobalSingletons();
 
             //add MVC and routing convention for api access
-            services.AddAppMvc();
+            services.AddAppMvc(hostingEnvironment);
             services.AddAppRouting();
 
             //fire up dependency injector
@@ -60,6 +63,19 @@ namespace RoastedMarketplace.Infrastructure
 
             app.UseStaticFiles();
 
+            //get all the theme's directories, they'll be used for static files
+            var themesDir = Path.Combine(_hostingEnvironment.ContentRootPath, "Content", "Themes");
+            var allThemes = Directory.GetDirectories(themesDir);
+            foreach (var themeDir in allThemes)
+            {
+                var directoryInfo = new DirectoryInfo(themeDir);
+                app.UseStaticFiles(new StaticFileOptions() {
+                    FileProvider = new PhysicalFileProvider(
+                    Path.Combine(themesDir, themeDir, "Assets")),
+                    RequestPath = new PathString($"/{directoryInfo.Name}/assets")
+                });
+            }
+
             //init database
             app.InitializeDatabase();
 
@@ -70,7 +86,10 @@ namespace RoastedMarketplace.Infrastructure
             app.UseAppAuthentication();
 
             //use mvc
-            app.UseMvc();
+            app.UseMvc(builder =>
+            {
+                builder.Routes.Add(new AppRouter(builder.DefaultHandler));
+            });
 
             //load language files
             app.LoadLocalizations();
@@ -126,7 +145,7 @@ namespace RoastedMarketplace.Infrastructure
 
         public static User CurrentUser => DependencyResolver.Resolve<IAppAuthenticationService>().GetCurrentUser();
 
-        public static ThemeInfo ActiveTheme => new ThemeInfo();//todo:set this
+        public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
 
         public static string CurrentLanguageCultureCode => "en-US";
 

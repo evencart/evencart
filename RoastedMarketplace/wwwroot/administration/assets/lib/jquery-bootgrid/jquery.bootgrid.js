@@ -217,7 +217,7 @@
         {
             var request = getRequest.call(this),
                 url = getUrl.call(this);
-
+            
             if (url == null || typeof url !== "string" || url.length === 0)
             {
                 throw new Error("Url setting must be a none empty string or a function that returns one.");
@@ -242,7 +242,6 @@
                     }
 
                     response = that.options.responseHandler(response);
-
                     that.current = response.current;
                     update(response.rows, response.total);
                 },

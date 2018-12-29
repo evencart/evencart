@@ -44,7 +44,7 @@ namespace RoastedMarketplace.Data.Database
         {
             if (_versionsAdded)
                 return;
-            DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101(), new Version102(), new Version103());
+            DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
             _versionsAdded = true;
         }
 

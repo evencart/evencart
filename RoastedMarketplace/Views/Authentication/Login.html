@@ -1,7 +1,32 @@
 ﻿{% layout "_Layout" %}
-
-{% for product in products %}
-{% partial "Authentication/Product" %}
-{% endfor %}
-
-{% partial "Authentication/Category" %}
+<div class="page-section section pt-120 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+                <div class="login-reg-form">
+                    <form action="{% route api_Login %}" method="post">
+                        <div class="row">
+                            <div class="col-xs-12 mb-20">
+                                <label id="email">Email <span class="required">*</span></label>
+                                <input name="email" id="email" type="text">
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <label id="password">Passwords <span class="required">*</span></label>
+                                <input name="password" id="password" type="password">
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <input id="Login" name="login" class="inline" type="submit">
+                                <label class="inline" for="rememberme">
+                                    <input id="rememberme" name="rememberme" type="checkbox"> Remember me
+                                </label>
+                            </div>
+                            <div class="col-xs-12">
+                                <a href="#">Lost your password?</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

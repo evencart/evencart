@@ -102,6 +102,13 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
             return ApplicationEngine.MapUrl(fileNameWithDirectory); // /abc_150_150.jpg
         }
 
+        public string GetPictureUrl(Media picture, string size, bool returnDefaultIfNotFound = false)
+        {
+            //parse size
+            var parsedSize = PictureUtility.GetSize(size);
+            return GetPictureUrl(picture, parsedSize.Width, parsedSize.Height, returnDefaultIfNotFound);
+        }
+
         public string GetVideoUrl(Media media)
         {
             throw new System.NotImplementedException();

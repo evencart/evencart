@@ -1,0 +1,48 @@
+﻿<div class="form-group">
+    {% control label text=@t"Payment Status" %}
+    {% control text id="paymentStatusSelector" %}
+</div>
+<script type="text/javascript">
+    var paymentInitialData = [];
+
+    /* {% for value in params.paymentStatus %} */
+    paymentInitialData.push({
+        id: "{{value}}",
+        text: "{{value}}"
+    });
+    /* {% endfor %} */
+    var paymentStatusTypes = [];
+    /* {% for value in paymentStatusTypes %} */
+    paymentStatusTypes.push({
+        id: "{{value.value}}",
+        text: "{{value.text}}"
+    });
+    /* {% endfor %} */
+    ready(function() {
+        inputTypeahead({
+            element: "paymentStatusSelector",
+            data: paymentStatusTypes,
+            initialData: paymentInitialData,
+            multiple: true,
+            preserveAfterFirstCall: true,
+            openOnFocus: true,
+            minLength: 0,
+            suggestNewAdditions: false,
+            itemAdded: function (e) {
+                searchParams.paymentStatus = searchParams.paymentStatus || [];
+                searchParams.paymentStatus.push(e.item.id);
+                reloadGrid("grid-selection");
+            },
+            itemRemoved: function (e) {
+                for (var i = 0; i < searchParams.paymentStatus.length; i++) {
+                    if (searchParams.paymentStatus[i] === e.item.id) {
+                        searchParams.paymentStatus.splice(i, 1);
+                        break;
+                    }
+                }
+                reloadGrid("grid-selection");
+            }
+        });
+    });
+
+</script>

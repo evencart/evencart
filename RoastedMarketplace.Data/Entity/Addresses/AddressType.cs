@@ -2,7 +2,7 @@
 {
     public enum AddressType
     {
-        Home = 10,
-        Office = 20
+        Home = 0,
+        Office = 1
     }
 }

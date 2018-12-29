@@ -18,6 +18,8 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageSettings = "Setting.Manage";
 
+        public const string ManagePlugins = "Plugins.Manage";
+
         public const string ManageEmailAccounts = "EmailAccount.Manage";
 
         public const string ManageTaxes = "Tax.Manage";
@@ -43,6 +45,22 @@ namespace RoastedMarketplace.Data.Constants
         public const string DeleteVendor = "Vendor.Delete";
 
         public const string ManageDiscounts = "Discount.Manage";
+
+        public const string EditManufacturer = "Manufacturer.Edit";
+
+        public const string DeleteManufacturer = "Manufacturer.Delete";
+
+        public const string ViewManufacturers = "Manufacturer.View";
+
+        public const string EditOrder = "Order.Edit";
+
+        public const string CreateOrder = "Order.Create";
+
+        public const string DeleteOrder = "Order.Delete";
+
+        public const string ViewOrder = "Order.View";
+
+        public const string ManageShipment = "Shpment.Manage";
 
     }
 }

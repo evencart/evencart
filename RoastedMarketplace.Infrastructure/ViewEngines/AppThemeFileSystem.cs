@@ -22,7 +22,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                 throw new FileSystemException(
                     $"The template '{templateName}' was not found. The following locations were searched:<br/>{string.Join("<br/>", _viewAccountant.GetSearchLocations())}");
             }
-            return _viewAccountant.RenderView(viewPath, templateName, context.Scopes[0]);
+            return _viewAccountant.RenderView(viewPath, templateName, null , context.Scopes[0]);
         }
     }
 }

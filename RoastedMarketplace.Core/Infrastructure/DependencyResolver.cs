@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DotEntity.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RoastedMarketplace.Core.Infrastructure
@@ -28,9 +29,13 @@ namespace RoastedMarketplace.Core.Infrastructure
             return ServiceProvider.GetRequiredService(type);
         }
 
-        public static object ResolveOptional(Type type)
+        public static object ResolveOptional(Type type, bool createIfNull = false)
         {
-            return ServiceProvider.GetService(type);
+            var instance = ServiceProvider.GetService(type);
+            if (instance != null || !createIfNull)
+                return instance;
+            instance = Instantiator.GetInstance(type);
+            return instance;
         }
     }
 }

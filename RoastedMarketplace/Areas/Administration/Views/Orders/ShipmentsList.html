@@ -1,0 +1,155 @@
+﻿{% if shipments.size > 0 %}
+<table id="grid-selection" class="table table-condensed">
+    <thead>
+    <tr>
+        <th>{{"Tracking Number" | t }}</th>
+        <th>{{"Items" | t}}</th>
+        <th>{{"Shipment Status" | t}}</th>
+        <th>{{"New Status" | t}}</th>
+        <th>{{"Activity" | t}}</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for shipment in shipments %}
+    <tr>
+        <td>
+            {{shipment.trackingNumber}}
+        </td>
+        <td>
+            {% for shipmentItem in shipment.shipmentItems %}
+            <div>
+                {{shipmentItem.productName}} x <strong>{{shipmentItem.quantity}}</strong><br />
+                {{shipmentItem.attributeText}}
+            </div>
+
+            {% endfor %}
+        </td>
+        <td>
+            {{shipment.shipmentStatusDisplay}}
+        </td>
+        <td>
+            <div class="form-group">
+                <form id="form-shipping-{{shipment.id}}" action="{% route api_SaveShipmentHistory %}" method="post">
+                    {% control hidden name="shipmentId" value="{{shipment.id}}" %}
+                    {% case shipment.shipmentStatusId %}
+                    {% when 0 %}
+                    {% control hidden name="shipmentStatus" value="10" %}
+                    <button class="btn btn-sm btn-default">{{"Set as Packaged" | t}}</button>
+                    {% when 10 %}
+                    {% control hidden name="shipmentStatus" value="20" %}
+                    <button class="btn btn-sm btn-default">{{"Set as InTransit" | t}}</button>
+                    {% when 20 %}
+                    {% control hidden name="shipmentStatus" value="30" %}
+                    <button class="btn btn-sm btn-default">{{"Set as OutForDelivery" | t}}</button>
+                    {% when 30 %}
+                    <label>{{"New Status" | t }}</label>
+                    <div class="input-group">
+                        <select name="shipmentStatus" class="form-control">
+                            <option value="50">
+                                {{"Delivered" | t}}
+                            </option>
+                            <option value="40">
+                                {{"DeliveryFailed" | t}}
+                            </option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-default">{{"Set" | t}}</button>
+                        </div>
+                    </div>
+                    {% when 40 %}
+                    <div class="input-group">
+                        <select name="shipmentStatus" class="form-control">
+                            <option value="30">
+                                {{"OutForDelivery" | t}}
+                            </option>
+                            <option value="60">
+                                {{"Returned" | t}}
+                            </option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-default">{{"Set" | t}}</button>
+                        </div>
+                    </div>
+                    {% when 50 %}
+                    <div class="input-group">
+                        {% control select name="shipmentStatus" items="availableShippingStatusTypes" class="form-control" %}
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-default">{{"Set" | t}}</button>
+                        </div>
+                    </div>
+                    {% endcase %}
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-shipping-{{shipment.id}}",
+                            {
+                                onSuccess: function() {
+                                    window['reload_shipment_list']();
+                                }
+                            });
+                    });
+                </script>
+            </div>
+        </td>
+        <td>
+            {% if shipment.shipmentHistoryItems.size > 0 %}
+            <a class="clickable expand-activity">
+                <span class="rbicon rbicon-plus-circle"></span> {{"Show" | t}}
+            </a>
+            <table class="table table-bordered" style="display: none;">
+                {% for shipmentHistory in shipment.shipmentHistoryItems %}
+                <tr>
+                    <td>
+                        {{shipmentHistory.shipmentStatusDisplay}}
+                        <div class="text-sm-left">
+                            <small class="text-muted">
+                                {{shipmentHistory.createdOn}}
+                            </small>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+            <script>
+                ready(function() {
+                    jQuery(".expand-activity").on("click",
+                        function() {
+                            jQuery(this).next("table").show();
+                            jQuery(this).remove();
+                        });
+                })
+            </script>
+        </td>
+        <td>
+            <button class="btn btn-danger" onclick="deleteShipment({{shipment.id}})">
+                <span class="rbicon rbicon-trash-2"></span>
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    var deleteShipment = function(shipmentId) {
+        confirm('{{"Deleting a shipment will delete all the activity? Are you sure you want to continue?"}}',
+            function() {
+                var deleteUrl =
+                    '{% route api_DeleteShipment orderId="{{orderId}}" shipmentId="%id%" %}'
+                        .replace("%id%", shipmentId);
+
+                post({
+                    url: deleteUrl,
+                    done: function() {
+                        window['reload_shipment_list']();
+                    }
+                });
+            });
+    }
+</script>
+{% else %}
+<div class="text-center container">
+    {{"No items have been shipped" | t}}
+</div>
+{% endif %}

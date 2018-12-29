@@ -1,0 +1,53 @@
+﻿{% layout "_Layout" %}
+<div class="page-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12">
+                <div class="login-reg-form">
+                    <form action="{% route api_Register %}" method="post" id="formRegistration">                       
+                        <div class="row">
+                            <div class="col-xs-12 mb-20">
+                                {% control label text=@t"Email" for="email" %}
+                                {% control text name="email" id="email" %}
+                                {% control validator for="email" required="true" email="true" %}
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                {% control label text=@t"Password" for="password" %}
+                                {% control password name="password" id="password" %}
+                                {% control validator for="password" required="true" %}
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                {% control label text=@t"Confirm Password" for="confirmPassword" %}
+                                {% control password name="confirmPassword" id="confirmPassword" %}
+                                {% control validator for="confirmPassword" required="true" %}
+                            </div>
+                            <div class="col-xs-12 mb-20">
+                                <input id="rememberme" type="checkbox">
+                                <label for="rememberme">I agree <a href="#">Terms &amp; Condition</a></label>
+                            </div>
+                            <div class="col-xs-12">
+                                <input value="register" type="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    ready(function () {
+        initAjaxForm("formRegistration",
+            {
+                onSuccess: function () {
+                    var loginUrl = "{% route Login %}";
+                    window.location.href = loginUrl;
+                },
+                errorPlacement: function (error, element) {
+                    
+                }
+            });
+    });
+   
+</script>

@@ -1,0 +1,40 @@
+﻿<div class="price-filter margin-b-20">
+    <h5>
+        {{"Price" | t}}
+        {% if prices.hasSelection %}
+        <a class="clickable text-sm-right float-right" href="" onclick="productSearch.setPrices(null, null);return false;">{{"clear" | t}}</a>
+        {% endif %}
+    </h5>
+    <div id="price-range" class="margin-b-20"></div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                {% control label text=@t"From" %}
+                {% control currency name="fromPrice" id="fromPrice" value="{{prices.fromPrice}}" %}
+            </div>
+            <div class="col-md-5">
+                {% control label text=@t"To" %}
+                {% control currency name="toPrice" id="toPrice" value="{{prices.toPrice}}" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    ready(function () {
+        $('#price-range').slider({
+            range: true,
+            min: parseFloat("{{prices.availableFromPrice}}"),
+            max: parseFloat("{{prices.availableToPrice}}"),
+            step: 10,
+            values: [parseFloat("{{prices.fromPrice}}"), parseFloat("{{prices.toPrice}}")],
+            slide: function (event, ui) {
+                $('#fromPrice').val(ui.values[0]);
+                $('#toPrice').val(ui.values[1]);
+            },
+            stop: function (event, ui) {
+                productSearch.setPrices(ui.values[0], ui.values[1]);
+            }
+        });
+    });
+</script>

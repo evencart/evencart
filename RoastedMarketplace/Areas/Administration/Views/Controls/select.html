@@ -3,7 +3,7 @@
     <option value="0">{{"Select" | t}}</option>
     {% endunless %}
     {% for item in %items% %}
-    <option value="{{item.value}}" {% if item.value == "%value%" %} selected="selected" {% endif %}>{{item.text}}</option>
+    <option value="{{item.value}}" {% if item.value == %value% %} selected="selected" {% endif %}>{{item.text}}</option>
     {% endfor %}
 </select>
-{{required}}
+

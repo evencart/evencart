@@ -3,7 +3,7 @@ using RoastedMarketplace.Infrastructure.Mvc.Models;
 
 namespace RoastedMarketplace.Areas.Administration.Models.Shop
 {
-    public class ProductSearchModel : SearchModel
+    public class ProductSearchModel : AdminSearchModel
     {
         public int[] CategoryIds { get; set; }
 

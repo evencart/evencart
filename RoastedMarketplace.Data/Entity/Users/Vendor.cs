@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
+using RoastedMarketplace.Data.Entity.Page;
 using RoastedMarketplace.Data.Entity.Shop;
 
 namespace RoastedMarketplace.Data.Entity.Users
@@ -34,6 +35,8 @@ namespace RoastedMarketplace.Data.Entity.Users
         public virtual IList<User> Users { get; set; }
 
         public virtual IList<Product> Products { get; set; }
+
+        public virtual SeoMeta SeoMeta { get; set; }
         #endregion
     }
 }

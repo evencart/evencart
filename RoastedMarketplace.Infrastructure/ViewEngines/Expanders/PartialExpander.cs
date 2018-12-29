@@ -9,21 +9,23 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
     public class PartialExpander : Expander
     {
-        public override string Expand(ReadFile readFile, Regex regEx)
+        private const string AssignFormat = "{{%- capture {0} -%}}{1}{{%- endcapture -%}}";
+
+        public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
-            var partialMatches = regEx.Matches(readFile.Content);
+            var partialMatches = regEx.Matches(inputContent);
 
             if (partialMatches.Count == 0)
-                return readFile.Content;
+                return inputContent;
 
             foreach (Match partialMatch in partialMatches)
             {
-                ExtractMatch(partialMatch, out string[] straightParameters, out Dictionary<string, string> _);
-                if(!straightParameters.Any())
+                ExtractMatch(partialMatch, out string[] straightParameters, out Dictionary<string, string> keyValuePairs);
+                if (!straightParameters.Any())
                     throw new Exception($"A partial view must be specified with partial tag in view {readFile.FileName}");
 
                 var partialFile = straightParameters[0];
-                
+
                 var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
                 //read the layout now
                 var viewPath = viewAccountant.GetThemeViewPath(partialFile);
@@ -34,13 +36,26 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 readFile.AddChild(viewFile);
 
                 //expand the view file
-                var partialViewExpanded = Expand(viewFile, regEx);
+                var partialViewExpanded = Expand(viewFile, regEx, viewFile.Content);
                 if (viewFile.Content == partialViewExpanded)
                 {
-                    readFile.Content = readFile.Content.Replace(partialMatch.Result("$0"), partialViewExpanded);
+                    var assignString = "";
+                    var resetAssignString = "";
+                    if (keyValuePairs != null)
+                    {
+                        //create assigns
+                        assignString = string.Join("",
+                            keyValuePairs.Select(x => string.Format(AssignFormat, x.Key, x.Value)));
+                        resetAssignString = string.Join("",
+                            keyValuePairs.Select(x => string.Format(AssignFormat, x.Key, "")));
+                    }
+                    inputContent = inputContent.Replace(partialMatch.Result("$0"), assignString + partialViewExpanded + resetAssignString);
+                    readFile.Content = readFile.Content.Replace(partialMatch.Result("$0"), assignString + partialViewExpanded + resetAssignString);
                 }
+               
+
             }
-            return readFile.Content;
+            return inputContent;
         }
     }
 }

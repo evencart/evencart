@@ -1,0 +1,170 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Order Editor" active_menu="GetOrder" parent_active_menu="OrdersList"%}
+{% partial "Navigation/OrderEditSecondaryNavigation" %}
+
+<h3 class="page-title">
+    {% if order.id != 0 %}
+    {{ "Edit Order" | t }}
+    {% else %}
+    {{"Add Order" | t }}
+    {% endif %}
+</h3>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Order Info" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                {{"Order Id" | t}}
+                            </td>
+                            <td>
+                                {{order.id}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Order Number" | t}}
+                            </td>
+                            <td>
+                                {{order.orderNumber}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Order Uid" | t}}
+                            </td>
+                            <td>
+                                {{order.guid}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Customer" | t}}
+                            </td>
+                            <td>
+                                {{order.user.name}} {{order.user.email}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Order Status" | t}}
+                            </td>
+                            <td>
+                                {{order.orderStatusDisplay}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Payment Method" | t}}
+                            </td>
+                            <td>
+                                {{order.paymentMethodName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Payment Status" | t}}
+                            </td>
+                            <td>
+                                {{order.paymentStatusDisplay}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+           
+        {% control hidden name="id" value="{{order.id}}" %}
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Ordered Products" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table  table-borderless">
+                        {% for orderItem in order.orderItems %}
+                        <tr>
+                            <td>
+                                <div class="productName">
+                                    <a href='{% route GetProduct productId="{{orderItem.productId}}" %}'>
+                                        {{orderItem.productName}}
+                                    </a>
+                                </div>
+                                <div class="productAttributes">
+                                    {{orderItem.attributeText}}
+                                </div>
+                            </td>
+                            <td>
+                                {{orderItem.price}} x {{orderItem.quantity}}
+                            </td>
+                            <td>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td>
+                                            <strong>{{"Line Total" | t }}</strong>
+                                        </td>
+                                        <td>
+                                            {{ orderItem.price * orderItem.quantity}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>{{"Tax" | t}}</strong>
+                                        </td>
+                                        <td>
+                                            0.00
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>{{"Discount" | t}}</strong>
+                                        </td>
+                                        <td>
+                                            0.00
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>{{"Net Amount" | t}}</strong>
+                                        </td>
+                                        <td>
+                                            0.00
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        {% partial "Orders/OrderEditor.ShippedProductsPanel" %}
+    </div>
+     
+</div>
+<script type="text/javascript">
+    ready(function () {
+        initAjaxForm("order-editor-form",
+            {
+                onSuccess: function () {
+                    notify("success", '{{"Order was saved successfully." | t }}');
+                    setTimeout(function () {
+                        navigate("{% route OrdersList %}");
+                    }, 500);
+
+                }
+            });
+    })
+
+</script>

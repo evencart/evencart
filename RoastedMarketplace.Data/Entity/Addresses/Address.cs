@@ -1,5 +1,4 @@
 ﻿using RoastedMarketplace.Core.Data;
-using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Data.Entity.Addresses
 {

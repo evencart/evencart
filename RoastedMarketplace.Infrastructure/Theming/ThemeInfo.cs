@@ -1,33 +1,17 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-
-namespace RoastedMarketplace.Infrastructure.Theming
+﻿namespace RoastedMarketplace.Infrastructure.Theming
 {
     public class ThemeInfo
     {
-        public string ThemeName { get; set; }
+        public string Name { get; set; }
 
-        public string ThumbnailSize { get; set; }
+        public string Description { get; set; }
 
-        public string GetThemePath()
-        {
-            return ApplicationEngine.MapPath($"~/Content/Themes/{ThemeName}");
-        }
+        public string ProductBoxImageSize { get; set; }
 
-        public Size GetThumbnailSize()
-        {
-            return GetSize(ThumbnailSize);
-        }
+        public string CartItemImageSize { get; set; }
 
-        private Size GetSize(string sizeString)
-        {
-            var sizeParts = sizeString.Split('x', StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => Convert.ToInt32(x)).ToArray();
-            if (sizeParts.Length != 2)
-                throw new Exception($"Invalid size value {sizeString} in theme configuration");
+        public string ProductPageImageSize { get; set; }
 
-            return new Size(sizeParts[0], sizeParts[1]);
-        }
+        public string ProductPageImageThumbnailSize { get; set; }
     }
 }

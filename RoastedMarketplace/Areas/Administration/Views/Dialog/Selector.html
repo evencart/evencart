@@ -3,40 +3,27 @@
         <div class="panel">
             <div class="panel-title">
                 {{selector.dialogTitle}}
+                <a class="popup-close float-right">
+                    <span class="rbicon-x"></span>
+                </a>
             </div>
-            <div class="panel-body no-padding">
-                <div class="row">
-                    <div class="{% if selector.multiSelect %}col-md-6{% else %}col-md-12{% endif %}">
-                        <table id="grid-selector" class="table table-hover table-condensed">
-                            <thead>
-                            <tr>
-                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                                <th data-column-id="{{selector.displayField}}">{{"Name" | t}}</th>
-                                <th data-column-id="commands" data-formatter="selector-commands" data-sortable="false"></th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    {% if selector.multiSelect %}
-                    <div class="col-md-6">
-                        <table id="grid-selections" class="table table-hover table-condensed">
-                            <thead>
-                            <tr>
-                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                                <th data-column-id="{{selector.displayField}}">{{"Name" | t}}</th>
-                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    {% endif %}
-                </div>
+            <div class="panel-body  no-padding">
+                <table id="grid-selector" class="table table-hover table-condensed no-margin">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="{{selector.displayField}}">{{"Name" | t}}</th>
+                        <th data-column-id="commands" data-formatter="selector-commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
                 <script type="text/javascript">
+                    var initData = null;
                     ready(function() {
                         generateGrid({
                             element: "grid-selector",
                             method: "GET",
-                            url: '{{selector.url}}',
+                            url: '{{selector.apiUrl}}',
                             responseObject: "{{selector.responseObjectName}}",
                             selection: "{{selector.multiSelect}}" === "true",
                             navigation: 3,
@@ -51,11 +38,24 @@
                     });
                 </script>
             </div>
+            {% if selector.multiSelect %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="popup-actions text-center">
+                        <button type="button" class="btn btn-primary" id="btnSelectorSelect">{{"Select" | t}}</button>
+                        <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
 
 <script type="text/javascript">
-    
+    jQuery("#btnSelectorSelect").click(function () {
+
+        hidePopup("popup-selector", "ok", getGridSelections("grid-selector"));
+    });
 </script>

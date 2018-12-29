@@ -45,9 +45,21 @@ namespace RoastedMarketplace.Data.Extensions
         public static IEnumerable<T> TakeFromLastPage<T>(this IEnumerable<T> source, int countPerPage)
         {
             var enumerable = source as IList<T> ?? source.ToList();
-            var totalPages = (int) Math.Ceiling((decimal) enumerable.Count() / countPerPage);
+            var totalPages = (int)Math.Ceiling((decimal)enumerable.Count() / countPerPage);
             return enumerable.TakeFromPage<T>(totalPages, countPerPage);
 
+        }
+        /// <summary>
+        /// Selects many elements recursively
+        /// </summary>
+        public static IEnumerable<T> SelectManyRecursive<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> selector)
+        {
+            var result = source.SelectMany(selector);
+            if (!result.Any())
+            {
+                return source;
+            }
+            return result.Concat(result.SelectManyRecursive(selector));
         }
     }
 }

@@ -1,0 +1,52 @@
+﻿{% layout "_LayoutCheckout" %}
+
+<form action="{% route api_CheckoutConfirm %}" method="post" id="form-checkout-confirm">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    {{"Order Summary" | t}}
+                </h3>
+                <div id="order-summary-table">
+                    <div class="cart-table table-responsive mb-40">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="pro-thumbnail"></th>
+                                    <th class="pro-title">Product</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for cartItem in cart.items %}
+                                <tr>
+                                    <td class="pro-thumbnail">
+                                        <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>
+                                            <img src="{{cartItem.imageUrl}}" alt="" />
+                                        </a>
+                                    </td>
+                                    <td class="pro-title">
+                                        <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a>
+                                        <p>
+                                            {{cartItem.attributeText}}
+                                        </p>
+                                        {{"Quantity : " | t}}{{cartItem.quantity}}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="text-center">
+                <input type="submit" value='{{"Complete Order" | t}}' />
+            </div>
+        </div>
+    </div>
+</form>

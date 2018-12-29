@@ -1,4 +1,6 @@
-﻿using RoastedMarketplace.Core.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Page;
 
@@ -10,6 +12,13 @@ namespace RoastedMarketplace.Services.Pages
         {
             var entityName = typeof(T).Name;
             return Repository.Where(x => x.EntityName == entityName && x.EntityId == entityId).SelectSingle();
+        }
+
+        public IList<SeoMeta> Search(string slug, string languageCultureCode = "en-US")
+        {
+            return Repository.Where(x => x.Slug == slug && x.LanguageCultureCode == languageCultureCode)
+                .Select()
+                .ToList();
         }
     }
 }

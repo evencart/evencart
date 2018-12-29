@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Dialog;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
 
@@ -7,7 +8,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
 {
     public class DialogController : FoundationAdminController
     {
-        [HttpGet("selector")]
+        [HttpGet("selector", Name = AdminRouteNames.SelectorDialog)]
         public IActionResult Selector([FromQuery] DialogModel dialogModel)
         {
             var model = new DialogResultModel() {
@@ -17,47 +18,50 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var url = "";
             var title = "";
             var displayField = "name";
+            var routeName = "";
             switch (model.ResponseObjectName)
             {
                 case "categories":
-                    url = Url.RouteUrl(AdminRouteNames.CategoriesList);
+                    routeName = AdminRouteNames.CategoriesList;
                     title = T("Categories");
                     displayField = "fullCategoryPath";
                     break;
                 case "products":
-                    url = Url.RouteUrl(AdminRouteNames.ProductsList);
+                    routeName = AdminRouteNames.ProductsList;
                     title = T("Products");
                     break;
                 case "users":
-                    url = Url.RouteUrl(AdminRouteNames.UsersList);
+                    routeName = AdminRouteNames.UsersList;
                     title = T("Users");
                     break;
                 case "roles":
-                    url = Url.RouteUrl(AdminRouteNames.RolesList);
+                    routeName = AdminRouteNames.RolesList;
                     title = T("Roles");
                     break;
                 case "vendors":
-                    url = Url.RouteUrl(AdminRouteNames.VendorsList);
+                    routeName = AdminRouteNames.VendorsList;
                     title = T("Vendors");
                     break;
                 case "manufacturers":
-                    url = Url.RouteUrl(AdminRouteNames.ManufacturersList);
+                    routeName = AdminRouteNames.ManufacturersList;
                     title = T("Manufacturers");
                     break;
                 case "paymentmethods":
-                    url = Url.RouteUrl(AdminRouteNames.PaymentMethodsList);
+                    routeName = AdminRouteNames.PaymentMethodsList;
                     title = T("Payment Methods");
                     break;
                 case "shippingmethods":
-                    url = Url.RouteUrl(AdminRouteNames.ShippingMethodsList);
+                    routeName = AdminRouteNames.ShippingMethodsList;
                     title = T("Shipping Methods");
                     break;
                 default:
                     return NotFound();
             }
-            model.Url = url;
+            model.ApiUrl = Url.RouteUrl($"{ApplicationConfig.ApiEndpointName}_{routeName}");
+            model.UiUrl = Url.RouteUrl($"{routeName}");
             model.DialogTitle = title;
-            return R.Success.With("selector", dialogModel).Result;
+            model.DisplayField = displayField;
+            return R.Success.With("selector", model).Result;
         }
     }
 }

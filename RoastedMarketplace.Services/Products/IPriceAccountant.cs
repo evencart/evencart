@@ -12,8 +12,14 @@ namespace RoastedMarketplace.Services.Products
     {
         DiscountApplicationStatus ApplyDiscountCoupon(string couponCode, Cart cart);
 
+        DiscountApplicationStatus ApplyDiscountCoupon(DiscountCoupon coupon, Cart cart);
+
+        void ClearCouponCode(Cart cart);
+
+        void RefreshCartParameters(Cart cart);
+
         decimal GetAutoDiscountedPriceForUser(Product product, User user, ref IList<DiscountCoupon> discountCoupons);
 
-        void GetProductPriceDetails(Product product, Address address, out decimal price, out decimal tax);
+        void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate);
     }
 }

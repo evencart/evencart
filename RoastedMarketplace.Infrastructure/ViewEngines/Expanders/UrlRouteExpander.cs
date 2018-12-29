@@ -9,11 +9,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
     public class UrlRouteExpander : Expander
     {
-        public override string Expand(ReadFile readFile, Regex regEx)
+        public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
-            var matches = regEx.Matches(readFile.Content);
+            var matches = regEx.Matches(inputContent);
             if (matches.Count == 0)
-                return readFile.Content;
+                return inputContent;
 
             foreach (Match match in matches)
             {
@@ -30,9 +30,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     foreach (var kp in keyValuePairs)
                         routeUrl = routeUrl.Replace(kp.Value, kp.Value, StringComparison.InvariantCultureIgnoreCase);
                 readFile.Content = readFile.Content.Replace(match.Result("$0"), routeUrl);
+                inputContent = inputContent.Replace(match.Result("$0"), routeUrl);
             }
 
-            return readFile.Content;
+            return inputContent;
         }
 
     }

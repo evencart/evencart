@@ -1,0 +1,7 @@
+﻿{% for item in {% items %} %}
+<label>
+    <input type="radio" %attributes% value="{{item.value}}" {% if item.value == "%value%" %} checked="checked" {% endif %} />
+    <span>{{item.text}}</span>
+</label>
+
+{% endfor %}

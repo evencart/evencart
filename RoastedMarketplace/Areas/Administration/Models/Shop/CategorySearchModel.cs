@@ -4,7 +4,7 @@ using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
 namespace RoastedMarketplace.Areas.Administration.Models.Shop
 {
-    public class CategorySearchModel : SearchModel, IRequiresValidations<CategorySearchModel>
+    public class CategorySearchModel : AdminSearchModel, IRequiresValidations<CategorySearchModel>
     {
         public void SetupValidationRules(ModelValidator<CategorySearchModel> v)
         {

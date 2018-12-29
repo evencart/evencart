@@ -26,7 +26,8 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributeSuggestions(string q = null)
         {
-            var attributes = _availableAttributeService.Get(x => true);
+            q = q ?? "";
+            var attributes = _availableAttributeService.Get(x => x.Name.StartsWith(q));
             var model = new List<AutocompleteModel>();
             foreach (var c in attributes)
             {

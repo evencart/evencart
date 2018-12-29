@@ -1,39 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using F1Suite.Data.Entity.Currency;
+using RoastedMarketplace.Services.Serializers;
 
 namespace RoastedMarketplace.Services.Formatter
 {
     public class FormatterService : IFormatterService
     {
-        public string FormatCurrency(decimal amount, Currency targetCurrency, bool includeSymbol = true)
+        private readonly IDataSerializer _dataSerializer;
+
+        public FormatterService(IDataSerializer dataSerializer)
         {
-            //find out the culture for the target currency
-            var culture = CultureInfo.GetCultures(CultureTypes.SpecificCultures).FirstOrDefault(c =>
-            {
-                var r = new RegionInfo(c.LCID);
-                return string.Equals(r.ISOCurrencySymbol, targetCurrency.CurrencyCode, StringComparison.CurrentCultureIgnoreCase);
-            });
+            _dataSerializer = dataSerializer;
+        }
 
-            //the format of display
-            var format = targetCurrency.DisplayFormat;
-            var locale = targetCurrency.DisplayLocale;
 
-            if (culture == null)
-            {
-                if (!string.IsNullOrEmpty(locale))
-                {
-                    culture = new CultureInfo(locale);
-                }
-            }
+        public string FormatCurrency(decimal amount, string languageCultureCode, bool includeSymbol = true)
+        {
+            var culture = new CultureInfo(languageCultureCode);
+            return amount.ToString("C", culture);
+        }
 
-            if (string.IsNullOrEmpty(format))
-            {
-                format = culture == null || !includeSymbol ? "{0:N}" : "{0:C}";
-            }
-
-            return culture == null ? string.Format(format, amount): string.Format(culture, format, amount);
+        public string FormatProductAttributes(string attributeJson)
+        {
+            var productAttributes =
+                _dataSerializer.DeserializeAs<Dictionary<string, IList<string>>>(attributeJson);
+            var attributeText = string.Join(Environment.NewLine, productAttributes.Select(y => y.Key + " : " + string.Join(", ", y.Value)));
+            return attributeText;
         }
     }
 }

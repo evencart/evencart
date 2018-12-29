@@ -5,97 +5,6 @@
         return false;
     }
 });
-var validationRule = function (options) {
-    var element = jQuery("#" + options.element);
-    var rule = options.rule;
-    setTimeout(function () { //https://github.com/jquery-validation/jquery-validation/issues/1267#issuecomment-119692849
-        element.rules("add", rule);
-    });
-}
-var notify = function (type, msg, withclose) {
-    var element = jQuery("<div />");
-    element.addClass("notification");
-    if (type == "error") {
-        element.append("<span class='rbicon-x-circle text-danger margin-r-10'></span><strong>Error!</strong>");
-    }
-    else if (type == "success") {
-        element.append("<span class='rbicon-check-circle margin-r-10 text-success'></span><strong>Success</strong>");
-    }
-    element.append("<div class='msg'>" + msg + "</div>");
-    jQuery("body").append(element);
-    element.center();
-    element.css("top", 10);
-    element.fadeIn();
-    var closeNotify = function () {
-        element.fadeOut(function () {
-            element.remove();
-        });
-
-    }
-   setTimeout(closeNotify, 5000);
-    element.click(closeNotify);
-}
-
-var initAjaxForm = function (formId, options) {
-    formId = "#" + formId;
-    options = jQuery.extend({},
-        {
-            extraData: null,
-            onError: function () { },
-            onSuccess: function () { }
-        },
-        options);
-    jQuery(formId).submit(function(e) {
-            e.preventDefault();
-        })
-        .validate({
-            submitHandler: function (form) {
-                if (isFunction(options.extraData)) {
-                    options.extraData = options.extraData();
-                    if (!options.extraData) {
-                        if (options.onError)
-                            options.onError();
-                        return;
-                    }
-                }
-                //get form object
-                var object = jQuery(form).serializeObject();
-                //add additional parameters
-                object = jQuery.extend(object, options.extraData);
-                var method = jQuery(form).attr("method") || "post";
-                var action = jQuery(form).attr("action") || window.location.href;
-
-                var ajaxOptions = {
-                    url: action,
-                    data: object,
-                    method: method,
-                    done: function(response) {
-                        if (response.success) {
-                            if (options.onSuccess)
-                                options.onSuccess(response);
-                        } else {
-                            
-                            if (options.onError) {
-                                options.onError(response);
-                            }
-                        }
-                    },
-                    fail: options.onError
-                };
-                ajax(ajaxOptions);
-            }
-        });
-}
-
-var windowConfirm = window.confirm;
-var confirm = function (msg, action) {
-    if (windowConfirm(msg)) {
-        if (action)
-            action();
-        return true;
-    }
-    return false;
-}
 
 var showAsPopup = function (id, ajax, onClose) {
     var overlay = "<div class='overlay'></div>";
@@ -118,8 +27,8 @@ var showAsPopup = function (id, ajax, onClose) {
     if (onClose && isFunction(onClose)) {
 
         element.data("popup.onclose",
-            function (result) {
-                onClose(result);
+            function (result, data) {
+                onClose(result, data);
             });
     }
     if (ajax) {
@@ -134,7 +43,7 @@ var showAsPopup = function (id, ajax, onClose) {
 
 }
 
-var hidePopup = function (id, result) {
+var hidePopup = function (id, result, data) {
     result = result || "ok";
     jQuery(".overlay").remove();
     var element = jQuery("#" + id);
@@ -142,7 +51,7 @@ var hidePopup = function (id, result) {
     element.hide();
 
     if (element.data("popup.onclose")) {
-        element.data("popup.onclose")(result);
+        element.data("popup.onclose")(result, data);
     }
 }
 
@@ -153,10 +62,12 @@ var reloadGrid = function (name) {
         reload: true
     });
 }
+
 var generateGrid = function (options) {
     if (!options)
         return;
     options = jQuery.extend({}, {
+        url: null,
         reload: false,
         method: "GET",
         data: null,
@@ -165,8 +76,8 @@ var generateGrid = function (options) {
         columnSelection: false,
         navigation: true,
         initialData: null,
-        keepSelection:false
-
+        keepSelection: false,
+        done: null
     }, options);
     if (options.reload) {
         jQuery("#" + options.element).bootgrid("reload");
@@ -179,14 +90,14 @@ var generateGrid = function (options) {
             options.initialData = null;
     }
     jQuery("#" + options.element).bootgrid({
-        ajax: true,
+        ajax: options.url != null,
         ajaxSettings: {
             method: options.method,
-            cache: true
+            cache: true,
+            traditional:true
         },
         rowCount: [15, 30, 50, 100],
         initialData: options.initialData,
-        post: options.data,
         url: options.url,
         selection: options.selection,
         multiSelect: options.multiSelect,
@@ -195,8 +106,15 @@ var generateGrid = function (options) {
         formatters: options.formatters,
         navigation: options.navigation,
         keepSelection: options.keepSelection,
+        requestHandler: function (request) {
+            if (options.data)
+                request = jQuery.extend(request, typeof options.data == "function" ? options.data() : "");
+            return request;
+        },
         responseHandler: function (response) {
             if (response.success) {
+                if (options.done)
+                    options.done(response);
                 return {
                     current: response.current,
                     total: response.total,
@@ -211,6 +129,36 @@ var generateGrid = function (options) {
             paginationButton: "page-link"
         }
     });
+}
+
+var getGridRows = function(id) {
+    var currentRows = jQuery("#" + id).bootgrid("getCurrentRows");
+    return currentRows;
+}
+
+var getGridSelections = function(id) {
+    var currentRows = jQuery("#" + id).bootgrid("getCurrentRows");
+    var selectedRowIds = jQuery("#" + id).bootgrid("getSelectedRows");
+    var resultRows = [];
+    selectedRowIds.forEach(function(rowId) {
+        currentRows.forEach(function(row) {
+            if (row.id === rowId) {
+                resultRows.push(row);
+            }
+        });
+    });
+    return resultRows;
+}
+
+var addRowsToGrid = function(id, rows) {
+    jQuery("#" + id).bootgrid("append", rows);
+}
+
+var removeRowFromGrid = function (id, rowId) {
+    jQuery("#" + id).bootgrid("remove", [rowId]);
+}
+var clearGrid = function (id) {
+    jQuery("#" + id).bootgrid("clear");
 }
 
 var gridFormatters = {
@@ -367,11 +315,11 @@ var inputTypeahead = function (options) {
             });
         }
         if (options.itemAdded)
-            jQuery('#' + element).on("itemAdd", options.itemAdded);
+            jQuery('#' + element).on("itemAdded", options.itemAdded);
         if (options.beforeItemRemoved)
             jQuery('#' + element).on("beforeItemRemove", options.beforeItemRemoved);
         if (options.itemRemoved)
-            jQuery('#' + element).on("itemRemove", options.itemRemoved);
+            jQuery('#' + element).on("itemRemoved", options.itemRemoved);
 
         jQuery('#' + element).data("taginit", true);
 
@@ -411,75 +359,4 @@ var inputTypeahead = function (options) {
 
 }
 
-var ajaxExtend = function (options) {
-    jQuery.extend({
-        url: "",
-        data: [],
-        done: function () { },
-        fail: function () { },
-        always: function () { },
-        method: "GET"
-    },
-        options);
-    return options;
-}
 
-var loaderInterval;
-//global progress
-jQuery(document).ajaxStart(function () {
-    jQuery("body").append("<div id='loader'><div class='handle'></div></div>");
-    $('#loader').show();
-    var position = 0;
-    loaderInterval = setInterval(function () {
-        jQuery("#loader .handle").css("left", position + "%");
-        position++;
-        if (position >= 100)
-            position = 0;
-    }, 10);
-});
-jQuery(document).ajaxComplete(function () {
-    jQuery('#loader').remove();
-    clearInterval(loaderInterval);
-});
-
-var ajax = function (options) {
-    options = ajaxExtend(options);
-    var method = options.method.toLowerCase() === "get" ? "get" : "post";
-    var jqxhr = jQuery[method](options.url, options.data)
-        .done(function (response, status, xhr) {
-            var ct = xhr.getResponseHeader("content-type") || "";
-            //do the notification only for json response
-            if (ct.indexOf("application/json") > -1 && !response.success) {
-                var errMsg = "";
-                if (response.errors) {
-                    var errors = response.errors;
-                    var errorList = "<ul>";
-                    errors.forEach(function (err) {
-                        errorList += "<li>" + err + "</li>";
-                    });
-                    errorList += "</ul>";
-                    errMsg = errorList;
-                }
-                else if (response.error)
-                    errMsg = response.error;
-                else
-                    errMsg = "An error occured while completing operation";
-                notify("error", errMsg);
-            }
-            if (options.done)
-                options.done(response);
-        })
-        .fail(options.fail)
-        .always(options.always);
-    return jqxhr;
-}
-var get = function (options) {
-    options = ajaxExtend(options);
-    options.method = "GET";
-    return ajax(options);
-}
-var post = function (options) {
-    options = ajaxExtend(options);
-    options.method = "POST";
-    return ajax(options);
-}

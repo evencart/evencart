@@ -8,9 +8,15 @@ namespace RoastedMarketplace
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public Startup(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            return ApplicationEngine.ConfigureServices(services);
+            return ApplicationEngine.ConfigureServices(services, _hostingEnvironment);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

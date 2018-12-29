@@ -1,0 +1,48 @@
+﻿<div class="form-group">
+    {% control label text=@t"Order Status" %}
+    {% control text id="orderStatusSelector" %}
+</div>
+<script type="text/javascript">
+    var orderInitialData = [];
+
+    /* {% for value in params.orderStatus %} */
+    orderInitialData.push({
+        id: "{{value}}",
+        text: "{{value}}"
+    });
+    /* {% endfor %} */
+    var orderStatusTypes = [];
+    /* {% for value in orderStatusTypes %} */
+    orderStatusTypes.push({
+        id: "{{value.text}}",
+        text: "{{value.text}}"
+    });
+    /* {% endfor %} */
+    ready(function() {
+        inputTypeahead({
+            element: "orderStatusSelector",
+            data: orderStatusTypes,
+            initialData: orderInitialData,
+            multiple: true,
+            preserveAfterFirstCall: true,
+            openOnFocus: true,
+            minLength: 0,
+            suggestNewAdditions: false,
+            itemAdded: function (e) {
+                searchParams.orderStatus = searchParams.orderStatus || [];
+                searchParams.orderStatus.push(e.item.id);
+                reloadGrid("grid-selection");
+            },
+            itemRemoved: function (e) {
+                for (var i = 0; i < searchParams.orderStatus.length; i++) {
+                    if (searchParams.orderStatus[i] === e.item.id) {
+                        searchParams.orderStatus.splice(i, 1);
+                        break;
+                    }
+                }
+                reloadGrid("grid-selection");
+            }
+        });
+    });
+
+</script>

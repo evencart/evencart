@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Payments;
+using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Services.Addresses;
 
@@ -93,6 +95,21 @@ namespace RoastedMarketplace.Infrastructure.Helpers
         public static List<SelectListItem> GetAddressTypes()
         {
             return GetSelectItemList<AddressType>();
+        }
+
+        public static List<SelectListItem> GetPaymentStatusItems()
+        {
+            return GetSelectItemList<PaymentStatus>();
+        }
+
+        public static List<SelectListItem> GetOrderStatusItems()
+        {
+            return GetSelectItemList<OrderStatus>();
+        }
+
+        public static List<SelectListItem> GetShipmentStatusItems()
+        {
+            return GetSelectItemList<ShipmentStatus>();
         }
     }
 }

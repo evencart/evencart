@@ -1,0 +1,47 @@
+﻿<div class="col-lg-12">
+    <div class="form-group">
+        {% control label text=@t"Full Name" for="{{prefix}}name" %}
+        {% control text id="{{prefix}}name" name="{{prefix}}name" value="{{address.name}}" %}
+        {% control validator for="{{prefix}}name" required="true" value="s" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Address" for="{{prefix}}address1" %}
+        {% control text id="{{prefix}}address1" name="{{prefix}}address1" value="{{address.address1}}" placeholder=@t"e.g. 123, South Avenue" %}
+        {% control validator for="{{prefix}}address2" required="true" %}
+        {% control text id="{{prefix}}address2" name="{{prefix}}address2" value="{{address.address2}}" placeholder=@t"e.g. Necklace Road" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Landmark" for="landmark" %}
+        {% control text id="{{prefix}}landmark" name="{{prefix}}landmark" value="{{address.landmark}}" placeholder=@t"e.g. Opp. luxury gas station" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Country" for="country" %}
+        {% control select id="{{prefix}}country" name="{{prefix}}countryId" value="address.countryId" required="true" items="availableCountries" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"State or Province" for="state" %}
+        {% control select id="{{prefix}}state" value="address.stateOrProvinceId" items="items" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"City" for="city" %}
+        {% control text id="{{prefix}}city" name="{{prefix}}city" value="{{address.city}}" %}
+        {% control validator for="city" required="true" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Zip / Postal Code" for="zippostalcode" %}
+        {% control text id="{{prefix}}zippostalcode" name="{{prefix}}zippostalcode" value="{{address.zipPostalCode}}" %}
+        {% control validator for="zippostalcode" required="true" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Phone" for="phone" %}
+        {% control text id="{{prefix}}phone" name="{{prefix}}phone" value="{{address.phone}}" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Email" for="email" %}
+        {% control text id="{{prefix}}email" name="{{prefix}}email" value="{{address.email}}" %}
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Address Type" for="addressType" %}
+        {% control select id="{{prefix}}addressType" name="{{prefix}}addressType" value="address.addressType" items="availableAddressTypes" %}
+    </div>
+</div>

@@ -15,9 +15,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
         public string Content { get; set; }
 
+        public string RequestContent { get; private set; }
+
         private List<ReadFile> Children { get; } = new List<ReadFile>();
 
         private List<ReadFile> Parents { get; } = new List<ReadFile>();
+
+        private Dictionary<string, object> Meta { get; set; }
 
         private bool IsDirty { get; set; }
 
@@ -39,6 +43,43 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         {
             foreach (var parent in Parents)
                 parent.IsDirty = true;
+        }
+
+        public void AddMeta(string key, object value, string context)
+        {
+            key = $"{context}.{key}";
+            Meta = Meta ?? new Dictionary<string, object>();
+            if (Meta.ContainsKey(key))
+                Meta[key] = value;
+            else
+            {
+                Meta.Add(key, value);
+            }
+        }
+
+        public IEnumerable<KeyValuePair<string, object>> GetMeta(string context)
+        {
+            Meta = Meta ?? new Dictionary<string, object>();
+            foreach (var kp in Meta)
+            {
+                if (kp.Key.StartsWith($"{context}."))
+                    yield return new KeyValuePair<string, object>(kp.Key.Substring($"{context}.".Length), kp.Value);
+            }    
+        }
+
+        public string GetRequestContent()
+        {
+            return RequestContent;
+        }
+
+        public void SetRequestContent(string content)
+        {
+            RequestContent = content;
+        }
+
+        public void ResetRequestContent()
+        {
+            SetRequestContent(null);
         }
 
         public bool IsModified()
@@ -68,6 +109,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 readFile.LastModified = lastModified;
                 readFile.FileName = fileName;
                 readFile.IsDirty = false;
+                readFile.Meta?.Clear();
                 readFile.MarkAllParentsDirty();
             }
             return readFile;

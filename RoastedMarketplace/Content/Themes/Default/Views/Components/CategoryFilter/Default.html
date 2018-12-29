@@ -1,0 +1,40 @@
+﻿<div class="category-filter margin-b-20">
+    <h5>
+        {{"Browsing" | t}}
+    </h5>
+    <ul class="category-list">
+        {% for category in categories %}
+        <li class="{% if category.selected and category.childCategories.size == 0  %}last-node{% endif %}">
+            <a href="{{category.url}}" class="{% if category.selected %}active{% endif %}">
+                {% unless category.selected %}
+                <span class="fa fa-angle-left margin-r-5"></span>
+                {% endunless %}
+                {% if category.childCategories.size > 0 %}
+                <span class="fa fa-angle-down margin-r-5"></span>
+                {% endif %}
+                {{category.name}}
+            </a>
+            {% if category.childCategories.size > 0 %}
+            <ul class="child-category-list">
+                {% for child in category.childCategories %}
+                <li>
+                    <a href="{{child.url}}" class="{% if child.selected %}active{% endif %}">
+                        {{child.name}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+<script type="text/javascript">
+    ready(function() {
+        jQuery(".category-list a").click(function (e) {
+            e.preventDefault();
+            productSearch.setUrl(jQuery(this).attr("href"));
+        });
+    })
+</script>

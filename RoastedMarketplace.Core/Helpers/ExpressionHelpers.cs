@@ -9,7 +9,7 @@ namespace RoastedMarketplace.Core.Helpers
     {
         public static Expression<Func<T, bool>> CombineOr<T>(params Expression<Func<T, bool>>[] filters)
         {
-            return filters.CombineOr();
+            return filters.CombineOr<T>();
         }
 
         public static Expression<Func<T, bool>> CombineOr<T>(this IEnumerable<Expression<Func<T, bool>>> filters)
@@ -65,6 +65,22 @@ namespace RoastedMarketplace.Core.Helpers
             return result;
         }
 
+        public static LambdaExpression CombineOr(this IList<LambdaExpression> filters)
+        {
+            var filterWhere = filters[0].Body;
+            var parameters = filters[0].Parameters.AsEnumerable();
+            if (filters.Count > 1)
+            {
+                for (var i = 1; i < filters.Count; i++)
+                {
+                    filterWhere = Expression.OrElse(filterWhere, filters[i].Body);
+                    parameters = parameters.Concat(filters[i].Parameters);
+                }
+            }
+            var combined = Expression.Lambda(filterWhere, parameters);
+            return combined;
+        }
+
         class ReplaceVisitor : ExpressionVisitor
         {
             private readonly Expression from, to;
@@ -73,6 +89,7 @@ namespace RoastedMarketplace.Core.Helpers
                 this.from = from;
                 this.to = to;
             }
+
             public override Expression Visit(Expression node)
             {
                 return node == from ? to : base.Visit(node);

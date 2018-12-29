@@ -1,0 +1,21 @@
+﻿<script type="text/javascript">
+    ready(function () {
+        var options = {
+            element : "%for%",
+            rule: {
+                messages: {}
+            }
+        };
+        //{% if required == "true" %}
+        options.rule.required = true;
+        options.rule.messages.required = '{{"Field is required" | t}}';
+        //{% endif %}
+        //{% if email == "true" %}
+        options.rule.email = true;
+        //{% endif %}
+        //{% if url == "true" %}
+        options.rule.url = true;
+        //{% endif %}
+        validationRule(options);
+    });
+</script>

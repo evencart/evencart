@@ -13,11 +13,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
         private const string ColumnSeparator = "::::";
         private const string ItemSeparator = "=%=";
-        public override string Expand(ReadFile readFile, Regex regEx)
+        public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
-            var matches = regEx.Matches(readFile.Content);
+            var matches = regEx.Matches(inputContent);
             if (matches.Count == 0)
-                return readFile.Content;
+                return inputContent;
 
             //it's not possible to preserve and serve different navigation because of cached views and clearing
             //of navigation on each request. 
@@ -44,11 +44,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             }
             //remove the tags
             readFile.Content = regEx.Replace(readFile.Content, "");
+            inputContent = regEx.Replace(inputContent, "");
             //prepend our variable
             var captureStatement = string.Format(CaptureFormat, $"{NavigationType}_temporary", captureBuilder.ToString());
             var assignStatement = string.Format(AssignFormat, NavigationType, $"{NavigationType}_temporary");
             readFile.Content = captureStatement + assignStatement + readFile.Content;
-            return readFile.Content;
+            inputContent = captureStatement + assignStatement + inputContent;
+            return inputContent;
         }
 
         public override void PreRun(ReadFile readFile)

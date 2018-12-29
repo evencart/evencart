@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Calculate as" for="calculationType" %}
-                        {% control select name="calculationType" id="calculationType" items="availableCalculationTypes"  value="discount.calculationType" %}
+                        {% control select name="calculationType" id="calculationType" items="availableCalculationTypes"  value="discount.calculationTypeDisplay" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Discount Value" for="discountValue" %}
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            
+
 
         </div>
         <div class="col-lg-6">
@@ -82,12 +82,205 @@
 
             <div class="panel">
                 <div class="panel-title">
-                    {{"Discount Type" | t}}                    
+                    {{"Discount Type" | t}}
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
                         {% control label text=@t"Apply to" for="restrictionType" %}
-                        {% control select name="restrictionType" id="restrictionType" value="discount.restrictionType" items="availableRestrictionTypes" %}
+                        {% control select name="restrictionType" id="restrictionType" value="discount.restrictionTypeDisplay" items="availableRestrictionTypes" %}
+
+                    </div>
+                    <div class="form-group">
+                        <div id="selector-grid-area" style="display: none;">
+                            <button class="btn btn-sm btn-primary" type="button" id="btn-add-restriction">
+                                {{"Add" | t}}
+                            </button>
+                            <table id="grid-restriction-list" class="table table-hover table-condensed" style="display: none; margin-top: 15px;">
+                                <thead>
+                                    <tr>
+                                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                        <th data-column-id="name" data-formatter="restriction-item-name">{{"Name" | t}}</th>
+                                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="popup-selector" style="width: 800px; min-height: 200px; display: none"></div>
+                        <script type="text/javascript">
+                           
+                            ready(function () {
+                                var currentType = "{{discount.restrictionTypeDisplay}}";
+                                var savedRows = [];
+                                savedRows[currentType] = [];
+
+                                var fillRowTypes = function(type) {
+                                    if (savedRows[type]) {
+                                        savedRows[type].forEach(function(item) {
+                                            addRestrictionRow(item);
+                                        });
+                                    }
+                                }
+                                //generation restriction grid
+                                generateGrid({
+                                    element: "grid-restriction-list",
+                                    selection: false,
+                                    navigation: 0,
+                                    columnSelection: false,
+                                    formatters: {
+                                        "restriction-item-name": function (column, row) {
+                                            return row.fullCategoryPath || row.name;
+                                        },
+                                        "commands": function (column, row) {
+                                            return "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                                row.id +
+                                                "' onclick='deleteRestriction(\"" +
+                                                row.id +
+                                                "\")'><span class='rbicon-trash-2'></span></button>";
+                                        }
+                                    }
+                                });
+
+                                var selectedType = currentType;
+                                jQuery("#restrictionType").focus(function() {
+                                    selectedType = jQuery(this).val();
+                                });
+                                jQuery("#restrictionType").change(function(e) {
+                                    var value = jQuery(this).val();
+                                    if (currentType !== value) {
+                                        var currentGridRows = getGridRows("grid-restriction-list");
+                                        savedRows[selectedType] = currentGridRows;
+                                        if (savedRows[currentType].length > 0) {
+                                            if (!confirm(
+                                                '{{"This will clear current restrictions. Are you sure you want to continue?" | t}}',
+                                                function() {
+                                                    clearGrid("grid-restriction-list");
+                                                    fillRowTypes(value);
+                                                })) {
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    } else {
+                                        fillRowTypes(currentType);
+                                    }
+                                    
+                                    var label = '{{"Add" | t}}';
+                                    switch (value) {
+                                    case "Products":
+                                        label = '{{"Add products" | t }}';
+                                        break;
+                                    case "Categories":
+                                        label = '{{"Add categories" | t }}';
+                                        break;
+                                    case "Users":
+                                        label = '{{"Add users" | t }}';
+                                        break;
+                                    case "UserGroups":
+                                        label = '{{"Add user groups" | t }}';
+                                        break;
+                                    case "Roles":
+                                        label = '{{"Add roles" | t }}';
+                                        break;
+                                    case "Vendors":
+                                        label = '{{"Add vendors" | t }}';
+                                        break;
+                                    case "Manufacturers":
+                                        label = '{{"Add manufacturers" | t }}';
+                                        break;
+                                    case "PaymentMethods":
+                                        label = '{{"Add payment methods" | t }}';
+                                        break;
+                                    case "ShippingMethods":
+                                        label = '{{"Add shipping methods" | t }}';
+                                        break;
+                                    case "OrderTotal":
+                                        break;
+                                    case "OrderSubTotal":
+                                        break;
+                                    }
+
+                                    if (value !== "0" && value !== "OrderTotal" && value !== "OrderSubTotal") {
+                                        jQuery("#selector-grid-area").show();
+                                    } else {
+                                        jQuery("#selector-grid-area").hide();
+                                    }
+
+                                    jQuery("#btn-add-restriction").text(label);
+                                });
+
+                                jQuery("#btn-add-restriction").click(selectRestriction);
+
+                                //add any existing rows
+                                /*{% for r in discount.restrictionValues %}*/
+                                var r = {
+                                    id: "{{r.restrictionIdentifier}}",
+                                    name: "{{r.name}}"
+                                };
+                                savedRows[currentType].push(r);
+                                addRestrictionRow(r);
+                                /*{% endfor %}*/
+                                jQuery("#restrictionType").trigger("change");
+                            });
+
+                            var addRestrictionRow = function (row) {
+                                addRowsToGrid("grid-restriction-list", [row]);
+                                jQuery("#grid-restriction-list").show();
+                            }
+
+                            var selectRestriction = function() {
+                                var type = jQuery("#restrictionType").val();
+                                if (!type || type == "0")
+                                    return;
+                                jQuery("#popup-selector").html("{{'Please wait...'}}");
+                                var centerPopup = showAsPopup("popup-selector",
+                                    true,
+                                    function(result, data) {
+                                        if (result == "ok") {
+                                            data.forEach(function(d) {
+                                                addRestrictionRow({
+                                                    id: d.id.toString(),
+                                                    name: d.fullCategoryPath || d.name
+                                                });
+                                            });
+
+                                        }
+                                    });
+                                var url =
+                                    '{% route SelectorDialog entityName="%" multiSelect="true" %}'.replace("%", type);
+                                loadPage(url,
+                                    true,
+                                    null,
+                                    function(response) {
+                                        jQuery("#popup-selector").html(response);
+                                        centerPopup();
+                                    });
+                            }
+
+                            var deleteRestriction = function(id) {
+                                function deleteImpl() {
+                                    var url = '{% route api_DeleteDiscountRestriction %}';
+                                    post({
+                                        url: url,
+                                        data: {
+                                            discountId: "{{discountId}}",
+                                            restrictionIdentifier: id
+                                        },
+                                        done: function() {
+                                            removeRowFromGrid("grid-restriction-list", id);
+                                        }
+                                    });
+                                }
+
+                                if ("{{discountId}}" !== "0") {
+                                    var msg =
+                                        '{{"Are you sure you want to continue? The action can not be undone." | t}}';
+                                    confirm(msg, deleteImpl);
+                                } else {
+                                    removeRowFromGrid("grid-restriction-list", id);
+                                }
+
+                            }
+
+                        </script>
                     </div>
                 </div>
             </div>
@@ -102,13 +295,26 @@
 <script type="text/javascript">
     ready(function () {
         initAjaxForm("save-discount-form",
-            {                
+            {
+                extraData: function() {
+                    //get restrictions
+                    var restrictionRows = getGridRows("grid-restriction-list");
+                    var restrictions = [];
+                    restrictionRows.forEach(function(row) {
+                        restrictions.push({
+                            restrictionIdentifier: row.id
+                        });
+                    });
+                    return {
+                        restrictionValues : restrictions
+                    }
+                },
                 onSuccess: function () {
-                    notify("success", '{{"Discount was saved successfully." | t }}')
+                    notify("success", '{{"Discount was saved successfully." | t }}');
                     setTimeout(function () {
                         navigate("{% route DiscountsList %}");
                     }, 500);
-                   
+
                 }
             });
     })

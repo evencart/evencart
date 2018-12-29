@@ -1,0 +1,26 @@
+﻿<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-50">
+    <div class="product-item product-item-2 text-center" id="product-{{product.id}}">
+        <!-- Product Image -->
+        <div class="product-img">
+            <!-- Image -->
+            <a class="image" href='{% route SingleProduct seName="{{product.seName}}" %}'>
+                <img src="{{product.media[0].url}}" alt="{{product.name}}"/>
+            </a>
+            <!-- Action Button -->
+            <div class="action-btn-2">
+                <a href="#" title='{{"Add to Cart" | t}}'><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title='{{"Quick View" | t}}'><i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a class="wishlist" href="#" title='{{"Wishlist" | t}}'><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <!-- Portfolio Info -->
+        <div class="product-info">
+            <!-- Title -->
+            <h5 class="title"><a href='{% route SingleProduct seName="{{product.seName}}" %}'>{{product.name}}</a></h5>
+            <!-- Price -->
+            <div class="price-ratting fix">
+                <span class="price"><span class="new">{{product.price}}</span></span>
+            </div>
+        </div>
+    </div>
+</div>

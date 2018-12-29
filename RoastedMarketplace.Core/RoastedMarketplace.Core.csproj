@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Helpers\ExpressionHelpers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.1.1" />

@@ -3,6 +3,8 @@ using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
+using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
@@ -85,6 +87,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<OrderItem>(transaction);
             Db.CreateTable<Shipment>(transaction);
             Db.CreateTable<ShipmentItem>(transaction);
+            Db.CreateTable<PaymentTransaction>(transaction);
 
             Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction, true);
@@ -93,10 +96,11 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<Product, CartItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction, true);
-
+            Db.CreateConstraint(Relation.Create<Shipment, ShipmentHistory>("Id", "ShipmentId"), transaction, true);
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
             Db.CreateTable<Log>(transaction);
+            Db.CreateTable<SeoMeta>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -178,6 +182,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.DropTable<OrderItem>(transaction);
             Db.DropTable<Shipment>(transaction);
             Db.DropTable<ShipmentItem>(transaction);
+            Db.DropTable<PaymentTransaction>(transaction);
 
             //settings, logs, and others
             Db.DropTable<Setting>(transaction);

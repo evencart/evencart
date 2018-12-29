@@ -2,7 +2,7 @@
 
 namespace RoastedMarketplace.Areas.Administration.Models.Vendors
 {
-    public class VendorSearchModel : SearchModel
+    public class VendorSearchModel : AdminSearchModel
     {
         
     }

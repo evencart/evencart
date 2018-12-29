@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using RoastedMarketplace.Core.Modules;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Services.Helpers;
-using RoastedMarketplace.Services.Modules;
 
 namespace RoastedMarketplace.Services.Payments
 {
@@ -13,7 +11,7 @@ namespace RoastedMarketplace.Services.Payments
         public TransactionResult ProcessPayment(Order order, Dictionary<string, object> paymentMethodData = null)
         {
             var paymentMethodName = order.PaymentMethodName;
-            var paymentMethodInfo = ModuleHelper.GetPaymentHandler(paymentMethodName);
+            var paymentMethodInfo = PluginHelper.GetPaymentHandler(paymentMethodName);
 
             if (paymentMethodInfo == null)
                 throw new Exception("Can't load payment method");
@@ -28,6 +26,7 @@ namespace RoastedMarketplace.Services.Payments
             };
 
             var transactionResult = paymentMethodInfo.ProcessTransaction(transactionRequest);
+            transactionResult.OrderGuid = order.Guid;
             return transactionResult;
         }
     }

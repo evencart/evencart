@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Promotions;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Promotions
 {
     public class DiscountCouponService : FoundationEntityService<DiscountCoupon>, IDiscountCouponService
     {
+        private readonly IRestrictionValueService _restrictionValueService;
+        public DiscountCouponService(IRestrictionValueService restrictionValueService)
+        {
+            _restrictionValueService = restrictionValueService;
+        }
+
         public override DiscountCoupon Get(int id)
         {
             return GetByWhere(x => x.Id == id);
@@ -29,10 +38,52 @@ namespace RoastedMarketplace.Services.Promotions
             return query.SelectWithTotalMatches(out totalMatches, page, count);
         }
 
+        public void SetRestrictionIdentifiers(int discountCouponId, IList<string> restrictionIdentifiers)
+        {
+            var savedValues = _restrictionValueService.Get(x => x.DiscountCouponId == discountCouponId).ToList();
+            if (restrictionIdentifiers != null)
+            {
+                //insert the new ones
+                var toInsert = new List<RestrictionValue>();
+                foreach (var ri in restrictionIdentifiers)
+                {
+                    if (savedValues.Any(
+                        x => x.RestrictionIdentifier.Equals(ri, StringComparison.InvariantCultureIgnoreCase)))
+                        continue; //already saved, nothing to be done
+                    toInsert.Add(new RestrictionValue() {
+                        DiscountCouponId = discountCouponId,
+                        RestrictionIdentifier = ri
+                    });
+                }
+                //save the new
+                _restrictionValueService.Insert(toInsert.ToArray());
+            }
+
+            if (restrictionIdentifiers == null || !restrictionIdentifiers.Any())
+            {
+                //delete all
+                _restrictionValueService.Delete(x => x.DiscountCouponId == discountCouponId);
+            }
+            else
+            {
+                //delete the other ones
+                var toDelete = savedValues
+                    .Where(x => !restrictionIdentifiers.Contains(x.RestrictionIdentifier,
+                        StringComparer.InvariantCultureIgnoreCase))
+                    .ToList();
+                foreach (var rv in toDelete)
+                    _restrictionValueService.Delete(rv);
+            }
+
+        }
+
         private DiscountCoupon GetByWhere(Expression<Func<DiscountCoupon, bool>> where)
         {
             return Repository.Where(where)
-                .SelectSingle();
+                .Join<RestrictionValue>("Id", "DiscountCouponId", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<DiscountCoupon, RestrictionValue>())
+                .SelectNested()
+                .FirstOrDefault();
         }
 
         public override void Insert(DiscountCoupon entity, Transaction transaction = null)

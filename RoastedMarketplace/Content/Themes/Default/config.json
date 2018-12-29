@@ -1,0 +1,14 @@
+﻿{
+  "name": "Default",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0" ],
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "themeUri": "",
+  "tags": "",
+  "productBoxImageSize": "200x240",
+  "productPageImageSize": "385x500",
+  "productPageThumbnailImageSize": "75x75",
+  "cartItemImageSize": "75x75"
+}

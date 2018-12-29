@@ -14,8 +14,12 @@
 .no-margin {
   margin: 0px !important; }
 
+.no-border {
+  border: none !important; }
+
 body {
-  letter-spacing: 0.02rem; }
+  letter-spacing: 0.02rem;
+  font-size: 0.9rem; }
 
 a {
   color: #555; }
@@ -464,7 +468,9 @@ h3.page-title {
   z-index: 2;
   min-width: 330px;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
-  display: none; }
+  display: none;
+  background: #fff;
+  border-radius: 3px; }
   .popup .panel {
     margin-bottom: 0; }
   .popup .popup-close, .popup .close-popup {
@@ -527,4 +533,11 @@ label.error {
   overflow: auto; }
   .capabilities-selector-box label {
     display: block; }
+
+table.table-borderless {
+  border: none; }
+  table.table-borderless tr, table.table-borderless td {
+    border: none; }
+  table.table-borderless td {
+    padding: 0.3rem 0.75rem; }
 

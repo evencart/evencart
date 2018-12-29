@@ -38,7 +38,7 @@ namespace RoastedMarketplace.Services.Tests.Products
         [Test]
         public void Get_Product_By_Id_Succeeds()
         {
-            var manufacturer = new Manufacturer() { ManufacturerName = "RoastedBytes" };
+            var manufacturer = new Manufacturer() { Name = "RoastedBytes" };
             _manufacturerService.Insert(manufacturer);
 
             var vendor1 = new Vendor() {

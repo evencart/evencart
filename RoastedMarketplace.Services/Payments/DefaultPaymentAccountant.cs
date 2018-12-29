@@ -43,6 +43,10 @@ namespace RoastedMarketplace.Services.Payments
             };
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
+
+            //update order
+            order.CurrencyCode = result.TransactionCurrencyCode;
+            _orderService.Update(order);
         }
     }
 }

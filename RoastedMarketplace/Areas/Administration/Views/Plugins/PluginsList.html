@@ -1,0 +1,146 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Plugins" active_menu="PluginsList" parent_active_menu="PluginsList" %}
+{% partial "Navigation/PluginSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Plugins" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="plugin">{{"Plugin" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless plugins == blank %}*/
+                        initData = JSON.parse('{{plugins}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                plugins: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_PluginsList %}',
+                            responseObject: "plugins",
+                            selection: false,
+                            navigation: 0,
+                            columnSelection: false,
+                            formatters: {
+                                "plugin": function(column, row) {
+                                    var plugin = '';
+                                    plugin += '<div>' + row.name + '</div>';
+                                    if (row.descriptoin) {
+                                        plugin += '<div>{{"Description" | t}} ' + "<b>" + row.description + "</b></div>";
+                                    }
+                                    plugin += '<div>{{"System Name" | t}} ' + "<b>" + row.systemName + "</b></div>";
+                                    plugin += '<div>{{"Version" | t}} ' + "<b>" + row.version + "</b></div>";
+                                    plugin += '<div>{{"Author" | t}} ' + "<b>" + row.author + "</b></div>";
+
+                                    return plugin;
+                                },
+                                "commands": function (column, row) {
+                                    if (!row.installed) {
+                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
+                                            '{{"Install" | t}}' +
+                                            "</button> ";
+                                    }
+                                    else if (!row.active) {
+                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, true)'>" +
+                                            '{{"Activate" | t}}' +
+                                            "</button> " + "<button type='button' class='btn btn-danger command-edit' " +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
+                                            '{{"Uninstall" | t}}' +
+                                            "</button> ";
+                                    }
+                                    else if (row.active) {
+                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
+                                            '{{"Deactivate" | t}}' +
+                                            "</button> ";
+                                    }
+                                    else if (row.installed) {
+                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
+                                            '{{"Uninstall" | t}}' +
+                                            "</button> ";
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-plugin-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editPlugin = function(systemName) {
+        jQuery("#edit-plugin-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-plugin-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Plugin was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetPlugin pluginSystemName="?" %}'.replaceAll("?", systemName);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-plugin-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var updatePlugin = function(systemName, installed, active) {
+        post({
+            url: "{% route api_UpdatePluginStatus %}",
+            data: {
+                systemName: systemName,
+                installed: installed,
+                active: active
+            },
+            done: function(response) {
+                if (response.success) {
+                    reloadGrid('grid-selection');
+                    if (installed && !active) {
+                        notify("success", '{{"Plugin was installed successfully" | t}}');
+                    }
+                    else if (installed && active) {
+                        notify("success", '{{"Plugin was activated successfully" | t}}');
+                    }
+                    else if (installed && !active) {
+                        notify("success", '{{"Plugin was deactivated successfully" | t}}');
+                    }
+                    else if (!installed && !active) {
+                        notify("success", '{{"Plugin was uninstalled successfully" | t}}');
+                    }
+
+                }
+            }
+        });
+    }
+</script>

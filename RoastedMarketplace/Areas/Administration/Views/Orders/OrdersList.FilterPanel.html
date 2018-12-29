@@ -1,0 +1,28 @@
+﻿<div class="panel no-border">
+    <div class="panel-body">
+        {% control label text=@t"Product Name" %}
+        <div class="form-group">
+            <div class="input-group">
+                {% control text name="searchPhrase" id="searchPhrase" value="{{params.searchPhrase}}"  class="form-control" %}
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-default" id="btnOrderSearch">
+                        <span class="rbicon rbicon-search"></span>
+                    </button>
+                    <script type="text/javascript">
+                        ready(function() {
+                            jQuery("#btnOrderSearch").click(function() {
+                                searchParams.searchPhrase = jQuery("#searchPhrase").val();
+                                reloadGrid("grid-selection");
+                            });
+                        })
+                    </script>
+                </div>
+            </div>
+
+        </div>
+        {% partial "Orders/OrdersList.FilterPanel.PaymentStatus.html" %}
+        {% partial "Orders/OrdersList.FilterPanel.OrderStatus.html" %}
+        {% partial "Orders/OrdersList.FilterPanel.Dates.html" %}
+    </div>
+</div>
+

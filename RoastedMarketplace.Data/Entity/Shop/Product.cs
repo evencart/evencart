@@ -7,7 +7,7 @@ using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Data.Entity.Shop
 {
-    public class Product : FoundationEntity, ISoftDeletable
+    public class Product : FoundationEntity, ISoftDeletable, ISeoEntity
     {
         public string Name { get; set; }
 

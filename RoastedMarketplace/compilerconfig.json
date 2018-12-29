@@ -6,5 +6,9 @@
   {
     "outputFile": "wwwroot/administration/assets/lib/trumbowyg/ui/sass/trumbowyg.css",
     "inputFile": "wwwroot/administration/assets/lib/trumbowyg/ui/sass/trumbowyg.scss"
+  },
+  {
+    "outputFile": "Content/Themes/Default/Assets/css/style.css",
+    "inputFile": "Content/Themes/Default/Assets/css/style.scss"
   }
 ]

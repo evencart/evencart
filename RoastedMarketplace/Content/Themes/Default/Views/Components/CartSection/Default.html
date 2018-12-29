@@ -1,0 +1,213 @@
+﻿<!-- PAGE SECTION START -->
+<div class="page-section section" id="cart-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="cart-table table-responsive mb-40">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="pro-thumbnail">Image</th>
+                                <th class="pro-title">Product</th>
+                                <th class="pro-price">Price</th>
+                                <th class="pro-quantity">Quantity</th>
+                                <th class="pro-subtotal">Total</th>
+                                <th class="pro-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for cartItem in cart.items %}
+                            <tr>
+                                <td class="pro-thumbnail">
+                                    <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>
+                                        <img src="{{cartItem.imageUrl}}" alt="" />
+                                    </a>
+                                </td>
+                                <td class="pro-title">
+                                    <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a>
+                                    <p>
+                                        {{cartItem.attributeText}}
+                                    </p>
+                                </td>
+                                <td class="pro-price">
+                                    {% if cartItem.comparePrice > 0 %}
+                                    <div>
+                                        <del>{{cartItem.comparePriceFormatted}}</del>
+                                    </div>
+                                    {% endif %}
+                                    <strong>
+                                        <span class="amount">{{cartItem.priceFormatted}}</span>
+                                    </strong>
+                                </td>
+                                <td class="pro-quantity">
+                                    <div class="product-quantity">
+                                        <form action="{% route api_UpdateCart %}" method="post" id="form-cart-{{cartItem.id}}">
+                                            <input name="quantity" id="quantity-{{cartItem.id}}" class="no-spinner" type="number" min="1" value="{{cartItem.quantity}}" />
+                                            {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
+                                        </form>
+                                        <script type="text/javascript">
+                                            ready(function () {
+                                                initAjaxForm("form-cart-{{cartItem.id}}",
+                                                    {
+                                                        onSuccess: function () {
+                                                            //reload cart
+                                                            reloadComponent("CartSection", null, "#cart-section");
+                                                        }
+                                                    });
+                                                jQuery("#btn-update-cart").click(function() {
+                                                    jQuery("#form-cart-{{cartItem.id}}").submit();
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </td>
+                                <td class="pro-subtotal">{{cartItem.subTotalFormatted}}</td>
+                                <td class="pro-remove">
+                                    <form action="{% route api_UpdateCart %}" method="post" id="remove-form-cart-{{cartItem.id}}">
+                                        <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
+                                        {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
+                                        <a href="#" class="remove-from-cart">×</a>
+                                    </form>
+                                    <script type="text/javascript">
+                                        ready(function () {
+                                            initAjaxForm("remove-form-cart-{{cartItem.id}}",
+                                                {
+                                                    onSuccess: function () {
+                                                        //reload cart
+                                                        reloadComponent("CartSection", null, "#cart-section");
+                                                    }
+                                                });
+                                            jQuery(".remove-from-cart").click(function(e) {
+                                                e.preventDefault();
+                                                jQuery(this).closest("form").submit();
+                                            });
+                                        });
+                                    </script>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <div class="cart-buttons mb-30">
+                    <input type="submit" id="btn-update-cart" value="Update Cart" />
+                    <a href="#">{{"Shop more" | t}}</a>
+                </div>
+                <div class="cart-coupon mb-40">
+                    <h4>{{"Discount Coupon" | t}}</h4>
+
+                    <form action="{% route api_UpdateCart %}" method="post" id="form-discount-coupon">
+                        {% if cart.discountCoupon != "" %}
+                        <span class="text-uppercase">
+                            {{cart.discountCoupon}}
+                        </span>
+                        <input type="hidden" name="removeCoupon" value="true"/>
+                        <a id="link-remove" href="">
+                            <span class="fa fa-times"></span>
+                        </a>
+                        <script type="text/javascript">
+                            ready(function() {
+                                jQuery("#link-remove").click(function(e) {
+                                    e.preventDefault();
+                                    jQuery("#form-discount-coupon").submit();
+                                });
+                            })
+                        </script>
+                        {% else %}
+                        <div class="text-danger" id="discount-error"></div>
+                        {% control label for="discountCoupon" text=@t"Enter your coupon code if you have one." %}
+                        {% control text name="discountCoupon" id="discountCoupon" placeholder=@t"Enter coupon code" class="text-uppercase" required="true" %}
+                        {% control validator for="discountCoupon" required="true" %}
+                        <input type="submit" value='{{"Apply Coupon" | t}}' />
+                        {% endif %}
+
+                    </form>
+                    <script type="text/javascript">
+                        ready(function () {
+                            initAjaxForm("form-discount-coupon",
+                                {
+                                    onSuccess: function () {
+                                        //reload cart
+                                        reloadComponent("CartSection", null, "#cart-section");
+                                    },
+                                    onError: function (response) {
+                                        var msg = "";
+                                        switch (response.status) {
+                                        case "InvalidCode":
+                                            msg = '{{"The coupon code is not valid" | t}}';
+                                            break;
+                                        case "NotEligibleForCart":
+                                            msg = '{{"The coupon is not eligible or has already been used" | t}}';
+                                            break;
+                                        }
+                                        jQuery("#discount-error").html("<label>" + msg + "</label>");
+
+                                    },
+                                    errorPlacement: function(error, element) {
+                                        jQuery("#discount-error").html(error);
+                                    }
+                                });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <div class="cart-total mb-40">
+                    <h3>{{"Cart Totals" | t}}</h3>
+                    <table>
+                        <tbody>
+                        <tr class="cart-subtotal">
+                            <th>{{"Subtotal" | t}}</th>
+                            <td>
+                                <span class="amount">
+                                    {{cart.subTotalFormatted}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% if cart.discount > 0 %}
+                        <tr class="cart-subtotal">
+                            <th>{{"Discount" | t}}</th>
+                            <td>
+                                <span class="amount">
+                                    -{{cart.discountFormatted}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                            {% if cart.tax > 0 %}
+                            <tr class="cart-subtotal">
+                                <th>{{"Tax" | t}}</th>
+                                <td>
+                                    <span class="amount">
+                                        {{cart.taxFormatted}}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                            <tr class="order-total">
+                                <th>{{"Total" | t }}</th>
+                                <td>
+                                    <strong><span class="amount">{{cart.finalAmountFormatted}}</span></strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="proceed-to-checkout section mt-30">
+                        <a href="#">Proceed to Checkout</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->
+<script type="text/javascript">
+    ready(function() {
+        window.styleQty();
+    });
+</script>

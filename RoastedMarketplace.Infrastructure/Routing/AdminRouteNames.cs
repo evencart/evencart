@@ -2,6 +2,7 @@
 {
     public static class AdminRouteNames
     {
+        public const string SelectorDialog = "SelectorDialog";
         public const string GetTemplates = "GetTemplates";
         public const string GetProduct = "GetProduct";
         public const string GetProducts = "GetProducts";
@@ -39,6 +40,13 @@
         public const string OrdersList = "OrdersList";
         public const string SaveOrder = "SaveOrder";
         public const string DeleteOrder = "DeleteOrder";
+        public const string GetOrder = "GetOrder";
+        public const string GetShipment = "GetShipment";
+        public const string ShipmentsList = "ShipmentsList";
+        public const string SaveShipment = "SaveShipment";
+        public const string SaveShipmentHistory = "SaveShipmentHistory";
+        public const string DeleteShipmentHistory = "DeleteShipmentHistory";
+        public const string DeleteShipment = "DeleteShipment";
         public const string UsersList = "UsersList";
         public const string GetUser = "GetUser";
         public const string SaveUser = "SaveUser";
@@ -62,13 +70,17 @@
         public const string GetDiscount = "GetDiscount";
         public const string SaveDiscount = "SaveDiscount";
         public const string DeleteDiscount = "DeleteDiscount";
+        public const string DeleteDiscountRestriction = "DeleteDiscountRestriction";
         public const string ManufacturersList = "ManufacturersList";
         public const string GetManufacturer = "GetManufacturer";
         public const string SaveManufacturer = "SaveManufacturer";
         public const string DeleteManufacturer = "DeleteManufacturer";
+        public const string GetManufacturerSuggestions = "GetManufacturerSuggestions";
         public const string PaymentMethodsList = "PaymentMethodsList";
         public const string ShippingMethodsList = "ShippingMethodsList";
-
+        public const string PluginsList = "PluginsList";
+        public const string UpdatePluginStatus = "UpdatePluginStatus";
+        public const string UploadPlugin = "UploadPlugin";
 
     }
 }

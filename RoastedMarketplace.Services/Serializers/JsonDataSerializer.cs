@@ -5,11 +5,11 @@ namespace RoastedMarketplace.Services.Serializers
 {
     public class JsonDataSerializer : IDataSerializer
     {
-        public string Serialize(object obj)
+        public string Serialize(object obj, bool camelCase = true)
         {
             return JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings()
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                ContractResolver = camelCase ? new CamelCasePropertyNamesContractResolver() : new DefaultContractResolver()
             });
         }
 

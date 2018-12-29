@@ -1,0 +1,17 @@
+﻿<script type="text/javascript">
+    window["reload_{{id}}"] = function () {
+        jQuery("#{{id}}").html('<div class="container text-center">{{"Loading..." | t}}</div>');
+        /*{% if source %}*/
+        var url = eval('{{source}}()');
+        /*{% else %}*/
+        var url = '{{url}}';
+        /*{% endif %}*/
+        get({
+            url: url,
+            done: function (response) {
+                jQuery("#{{id}}").html(response);
+            }
+        });
+    }
+    ready(window["reload_{{id}}"]);
+</script>

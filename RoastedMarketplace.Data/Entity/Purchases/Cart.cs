@@ -32,6 +32,8 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         public decimal CompareFinalAmount { get; set; }
 
+        public decimal Discount { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<CartItem> CartItems { get; set; }

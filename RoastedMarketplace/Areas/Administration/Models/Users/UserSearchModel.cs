@@ -4,7 +4,7 @@ using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
 namespace RoastedMarketplace.Areas.Administration.Models.Users
 {
-    public class UserSearchModel : SearchModel, IRequiresValidations<UserSearchModel>
+    public class UserSearchModel : AdminSearchModel, IRequiresValidations<UserSearchModel>
     {
         public int[] RoleIds { get; set; }
 

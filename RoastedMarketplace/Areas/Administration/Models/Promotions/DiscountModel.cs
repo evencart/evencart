@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
@@ -22,9 +23,11 @@ namespace RoastedMarketplace.Areas.Administration.Models.Promotions
 
         public CalculationType CalculationType { get; set; }
 
+        public string CalculationTypeDisplay => CalculationType.ToString();
+
         public decimal DiscountValue { get; set; }
 
-        public DateTime StartDate { get; set; } = DateTime.UtcNow;
+        public DateTime? StartDate { get; set; } = DateTime.UtcNow;
 
         public DateTime? EndDate { get; set; }
 
@@ -36,7 +39,9 @@ namespace RoastedMarketplace.Areas.Administration.Models.Promotions
 
         public RestrictionType RestrictionType { get; set; }
 
-        public string RestrictionValues { get; set; }
+        public string RestrictionTypeDisplay => RestrictionType.ToString();
+
+        public IList<RestrictionValueModel> RestrictionValues { get; set; }
 
         public void SetupValidationRules(ModelValidator<DiscountModel> v)
         {

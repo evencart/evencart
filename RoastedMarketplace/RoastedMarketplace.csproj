@@ -16,10 +16,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Widgets\CategoryFilterWidget.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Content\Themes\Default\config.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="App_Data\database.configex" />
+    <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
+    <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Products\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_ProductBox.html" />
     <None Remove="Views\Authentication\Login.html" />
     <None Remove="Views\Authentication\Product - Copy.html" />
-    <None Remove="Views\Authentication\Product.html" />
     <None Remove="Views\_Layout.liquid" />
   </ItemGroup>
 
@@ -28,7 +46,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Views\Authentication\Product.html">
+    <Content Include="Content\Themes\Default\Views\Cart\Index.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\Complete.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\Confirm.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\PaymentInfo.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\AddressInfo.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\AttributeFilter\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\CartSection\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\PriceFilter\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\Index.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_ProductBox.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\ProductsList.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Views\Authentication\Login.html">
@@ -43,12 +91,16 @@
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Areas\Administration\Views\Discounts\" />
     <Folder Include="Content\SecureData\" />
-    <Folder Include="Content\Ui\assets\" />
-    <Folder Include="Content\Themes\Default\" />
+    <Folder Include="Content\Themes\Default\Views\Home\" />
     <Folder Include="Models\Installation\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="Widgets\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Content\Themes\Default\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\administration\assets\css\style.css" />
     <None Include="wwwroot\administration\assets\css\style.min.css" />
     <None Include="wwwroot\administration\assets\css\style.scss" />
@@ -223,6 +275,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

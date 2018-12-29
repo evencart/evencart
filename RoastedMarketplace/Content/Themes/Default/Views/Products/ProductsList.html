@@ -1,0 +1,20 @@
+﻿{% layout "_Layout" ignoreForAjax="true" %}
+<div class="container" id="product-list-container">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="product-filters">
+                {% component "CategoryFilter" params="@params" %}
+                {% component "AttributeFilter" params="@params" %}
+                {% component "PriceFilter" params="@params" %}
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="row">
+                {% for product in products %}
+                {% partial "Products/_ProductBox" %}
+                {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+</div>

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Data.Entity.MediaEntities;
+using RoastedMarketplace.Data.Entity.Page;
 
 namespace RoastedMarketplace.Data.Entity.Shop
 {
-    public class Category : FoundationEntity
+    public class Category : FoundationEntity, ISeoEntity
     {
         public string Name { get; set; }
 
@@ -25,6 +26,8 @@ namespace RoastedMarketplace.Data.Entity.Shop
         public virtual Category ParentCategory { get; set; }
 
         public virtual Media Media { get; set; }
+
+        public virtual SeoMeta SeoMeta { get; set; }
         #endregion
     }
 }

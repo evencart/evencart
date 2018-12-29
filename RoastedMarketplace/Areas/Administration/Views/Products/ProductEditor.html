@@ -9,7 +9,7 @@
     {{"Add Product" | t }}
     {% endif %}
 </h3>
-<form action="{% route SaveProduct %}" method="post">
+<form action="{% route api_SaveProduct %}" method="post" id="product-editor-form">
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">
@@ -102,19 +102,17 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                {% control label text=@t"Min. Purchase Qty." for="minPurchaseQuantity" %}
-                                {% control number name="minPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="0" %}
+                                {% control label text=@t"Min. Purchase Qty." for="minimumPurchaseQuantity" %}
+                                {% control number name="minimumPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="0" %}
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                {% control label text=@t"Max. Purchase Qty." for="maxPurchaseQuantity" %}
-                                {% control number name="maxPurchaseQuantity" value="{{product.maximumPurchaseQuantity}}" min="0" %}
+                                {% control label text=@t"Max. Purchase Qty." for="maximumPurchaseQuantity" %}
+                                {% control number name="maximumPurchaseQuantity" value="{{product.maximumPurchaseQuantity}}" min="0" %}
                             </div>
                         </div>
                     </div>
-
-
                     <div class="form-group">
                         {% control checkbox name="canOrderWhenOutOfStock" value="product.canOrderWhenOutIfStock" text=@t"Can order when out of stock?" %}
                     </div>
@@ -131,9 +129,23 @@
         <div class="col-lg-4">
             {% partial "Products/ProductEditor.ImagePanel" %}
             {% partial "Products/ProductEditor.CategoryPanel" %}
-
+            {% partial "Products/ProductEditor.ManufacturerPanel" %}
 
         </div>
     </div>
 </form>
+<script type="text/javascript">
+    ready(function () {
+        initAjaxForm("product-editor-form",
+            {
+                onSuccess: function () {
+                    notify("success", '{{"Product was saved successfully." | t }}');
+                    setTimeout(function () {
+                        navigate("{% route ProductsList %}");
+                    }, 500);
 
+                }
+            });
+    })
+
+</script>
