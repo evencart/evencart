@@ -12,18 +12,18 @@ namespace RoastedMarketplace.Components
         public override IViewComponentResult Invoke(object data = null)
         {
             var searchModel = (ProductSearchModel) data;
-
-            var startPrice = searchModel?.AvailableFromPrice ?? 0;
-            var endPrice = searchModel?.AvailableToPrice ?? 0;
+            if (searchModel == null)
+                return R.Success.ComponentResult;
+            var startPrice = searchModel.AvailableFromPrice;
+            var endPrice = searchModel.AvailableToPrice;
 
             var model = new PriceFilterModel()
             {
                 AvailableFromPrice = startPrice.FloorTen(),
                 AvailableToPrice = endPrice.CeilTen(),
-                FromPrice = searchModel?.FromPrice ?? startPrice,
-                ToPrice = searchModel?.ToPrice ?? endPrice
             };
-
+            model.FromPrice = searchModel.FromPrice ?? model.AvailableFromPrice;
+            model.ToPrice = searchModel.ToPrice ?? model.AvailableToPrice;
             return R.Success.With("prices", model).ComponentResult;
         }
     }
