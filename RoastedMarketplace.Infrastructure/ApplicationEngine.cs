@@ -40,14 +40,15 @@ namespace RoastedMarketplace.Infrastructure
             services.AddAppRouting();
 
             //fire up dependency injector
-            var serviceProvider = new Container()
+            var container = new Container();
+            var serviceProvider = container
                 .WithDependencyInjectionAdapter(services,
                     throwIfUnresolved: type => type.Name.EndsWith("Controller"))
                 .ConfigureServiceProvider<CompositionRoot>();
 
             //set dependency resolver for core functions
             DependencyResolver.ServiceProvider = serviceProvider;
-
+            DependencyResolver.Container = container;
             return serviceProvider;
         }
 

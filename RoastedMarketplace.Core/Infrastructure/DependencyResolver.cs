@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotEntity.Reflection;
+using DryIoc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RoastedMarketplace.Core.Infrastructure
@@ -8,6 +9,8 @@ namespace RoastedMarketplace.Core.Infrastructure
     public static class DependencyResolver
     {
         public static IServiceProvider ServiceProvider { get; set; }
+
+        public static IContainer Container { get; set; }
 
         public static T Resolve<T>()
         {
@@ -36,6 +39,11 @@ namespace RoastedMarketplace.Core.Infrastructure
                 return instance;
             instance = Instantiator.GetInstance(type);
             return instance;
+        }
+
+        public static void ClearResolutionCache(Type type)
+        {
+            Container.ClearCache(type);
         }
     }
 }
