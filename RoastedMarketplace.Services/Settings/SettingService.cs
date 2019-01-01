@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using RoastedMarketplace.Core.Config;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Settings;
@@ -19,7 +20,7 @@ namespace RoastedMarketplace.Services.Settings
             return settings.SelectSingle();
         }
 
-        public void Save<T>(string keyName, string keyValue) where T : ISettingGroup
+        public void Save<T>(string keyName, string keyValue, bool clearCache = false) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
 
@@ -41,7 +42,7 @@ namespace RoastedMarketplace.Services.Settings
             }
         }
 
-        public void Save<T>(T settings) where T : ISettingGroup
+        public void Save<T>(T settings, bool clearCache = false) where T : ISettingGroup
         {
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = typeof(T).GetProperties();
@@ -52,6 +53,44 @@ namespace RoastedMarketplace.Services.Settings
                 var value = valueObj == null ? "" : valueObj.ToString();
                 //save the property
                 Save<T>(propertyName, value);
+            }
+        }
+
+        public void Save(Type settingType, object settings, bool clearCache = false)
+        {
+            //each setting group will have some properties. We'll loop through these using reflection
+            var propertyFields = settingType.GetProperties();
+            foreach (var property in propertyFields)
+            {
+                var propertyName = property.Name;
+                var valueObj = property.GetValue(settings);
+                var value = valueObj == null ? "" : valueObj.ToString();
+                //save the property
+                Save(settingType, propertyName, value);
+            }
+            if(clearCache)
+                DependencyResolver.ClearResolutionCache(settingType);
+        }
+
+        public void Save(Type settingType, string keyName, string keyValue, bool clearCache = false)
+        {
+            var groupName = settingType.Name;
+
+            //check if setting exist
+            var setting = Repository.Where(x => x.GroupName == groupName && x.Key == keyName).SelectSingle();
+            if (setting == null)
+            {
+                setting = new Setting() {
+                    GroupName = groupName,
+                    Key = keyName,
+                    Value = keyValue
+                };
+                Insert(setting);
+            }
+            else
+            {
+                setting.Value = keyValue;
+                Update(setting);
             }
         }
 

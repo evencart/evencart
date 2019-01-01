@@ -1,4 +1,4 @@
-﻿using RoastedMarketplace.Core.Data;
+﻿using System;
 
 namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
 {
@@ -7,5 +7,9 @@ namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
         T Map<T>(object entity);
 
         T Map<T>(object entity, T existingEntity, params string[] excludeProperties);
+
+        object MapType(Type targetType, object entity);
+
+        object MapType(Type targetType, object entity, object existingEntity, params string[] excludeProperties);
     }
 }
