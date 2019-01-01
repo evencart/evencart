@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RoastedMarketplace.Core.Data;
@@ -7,7 +8,7 @@ namespace RoastedMarketplace.Data.Extensions
 {
     public class RelationTypes
     {
-        private static readonly Dictionary<string, object> PrefetchedActions = new Dictionary<string, object>();
+        private static readonly ConcurrentDictionary<string, object> PrefetchedActions = new ConcurrentDictionary<string, object>();
         public static Action<T, T1> OneToMany<T, T1>(Action<T, T1> mutationAction = null) where T : FoundationEntity where T1 : FoundationEntity
         {
             var typeofT1 = typeof(T1);
@@ -55,7 +56,7 @@ namespace RoastedMarketplace.Data.Extensions
             };
 
             //save for future use
-            PrefetchedActions.Add(key, action);
+            PrefetchedActions.TryAdd(key, action);
             return action;
         }
 
@@ -94,7 +95,7 @@ namespace RoastedMarketplace.Data.Extensions
             };
 
             //save for future use
-            PrefetchedActions.Add(key, action);
+            PrefetchedActions.TryAdd(key, action);
             return action;
         }
     }
