@@ -1,9 +1,10 @@
-﻿using RoastedMarketplace.Core.Config;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RoastedMarketplace.Data.Enum;
 
-namespace RoastedMarketplace.Data.Entity.Settings
+namespace RoastedMarketplace.Areas.Administration.Models.Settings
 {
-    public class UserSettings: ISettingGroup
+    public class UserSettingsModel : SettingsModel
     {
         /// <summary>
         /// Default registration mode for users
@@ -14,5 +15,9 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// Specifies if user names are enabled for site
         /// </summary>
         public bool AreUserNamesEnabled { get; set; }
+
+        public int MaximumNumberOfVisibleNotifications { get; set; }
+
+        public List<SelectListItem> AvailableUserRegistrationModes { get; set; }
     }
 }

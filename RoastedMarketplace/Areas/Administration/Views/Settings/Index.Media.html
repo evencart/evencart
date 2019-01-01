@@ -1,0 +1,14 @@
+﻿{% global page_title=@t"Media Settings" active_menu="MediaSettings" parent_active_menu="Settings" if="settingType == 'media'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"Media Settings" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control label text=@t"Maximum " for="maximumFileUploadSizeForImages" %}
+            {% control text name="maximumFileUploadSizeForImages" value="{{settings.maximumFileUploadSizeForImages}}"%}
+        </div>
+      
+    </div>
+</div>

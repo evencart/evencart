@@ -1,0 +1,19 @@
+﻿{% global page_title=@t"Tax Settings" active_menu="TaxSettings" parent_active_menu="Settings" if="settingType == 'tax'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"Tax Settings" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control checkbox name="pricesIncludeTax" text=@t"Product prices include tax" value="{{settings.pricesIncludeTax}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="displayProductPricesWithoutTax" text=@t"Display product prices without tax" value="{{settings.displayProductPricesWithoutTax}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="chargeTaxOnShipping" text=@t"Charge tax on shipping" value="{{settings.chargeTaxOnShipping}}"%}
+        </div>
+      
+    </div>
+</div>

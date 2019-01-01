@@ -1,0 +1,23 @@
+﻿{% global page_title=@t"Catalog Settings" active_menu="CatalogSettings" parent_active_menu="Settings" if="settingType == 'catalog'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"Catalog Settings" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control checkbox name="displayProductsFromChildCategories" text=@t"Display products from child categories" value="{{settings.displayProductsFromChildCategories}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Number of products per page" for="numberOfProductsPerPage" %}
+            {% control number min="1" name="numberOfProductsPerPage" value="{{settings.numberOfProductsPerPage}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="displaySortOptions" text=@t"Display sort options on catalog pages" value="{{settings.displaySortOptions}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Pagination Style" for="catalogPaginationType" %}
+            {% control select name="catalogPaginationType" value="settings.catalogPaginationType" items="catalogPaginationTypes" required="true" %}
+        </div>
+    </div>
+</div>

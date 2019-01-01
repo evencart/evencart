@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
@@ -110,6 +111,12 @@ namespace RoastedMarketplace.Infrastructure.Helpers
         public static List<SelectListItem> GetShipmentStatusItems()
         {
             return GetSelectItemList<ShipmentStatus>();
+        }
+
+        public static List<SelectListItem> GetTimezones()
+        {
+            var timeZones = ServerHelper.GetAvailableTimezones();
+            return GetSelectItemList(timeZones, info => info.Id, info => info.DisplayName);
         }
     }
 }

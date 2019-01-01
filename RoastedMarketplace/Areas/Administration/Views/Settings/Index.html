@@ -1,0 +1,45 @@
+﻿{% layout "_Layout" %}
+
+{% partial "Navigation/SettingsSecondaryNavigation" %}
+
+<form action='{% route api_SaveSettings settingType="{{settingType}}" %}' method="post" id="save-setting-form">
+    <div class="row">
+        <div class="col-md-12 col-offset-2">
+        
+            {% if settingType == "general" %}
+                {% partial "Settings/Index.General" %}
+            {% elseif settingType == "user" %}
+                {% partial "Settings/Index.User" %}
+            {% elseif settingType == "tax" %}
+                {% partial "Settings/Index.Tax" %}
+            {% elseif settingType == "media" %}
+                {% partial "Settings/Index.Media" %}
+            {% elseif settingType == "order" %}
+                {% partial "Settings/Index.Order" %}
+            {% elseif settingType == "catalog" %}
+                {% partial "Settings/Index.Catalog" %}
+            {% elseif settingType == "email" %}
+            {% partial "Settings/Index.Email" %}
+            {% elseif settingType == "url" %}
+                {% partial "Settings/Index.Url" %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="save-button-container">
+        {% control hidden name="settingType" value="{{settingType}}" %}
+        <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+        <button type="reset" class="btn btn-default">{{"Cancel" | t}}</button>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("save-setting-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Settings saved successfully" | t}}');
+                }
+            });
+    });
+</script>
+
+

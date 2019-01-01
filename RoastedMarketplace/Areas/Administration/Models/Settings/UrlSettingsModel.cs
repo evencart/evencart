@@ -1,8 +1,6 @@
-﻿using RoastedMarketplace.Core.Config;
-
-namespace RoastedMarketplace.Data.Entity.Settings
+﻿namespace RoastedMarketplace.Areas.Administration.Models.Settings
 {
-    public class UrlSettings : ISettingGroup
+    public class UrlSettingsModel : SettingsModel
     {
         public string ProductUrlTemplate { get; set; }
 

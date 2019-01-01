@@ -189,7 +189,6 @@ namespace RoastedMarketplace.Services.Installation
             //general settings
             settingService.Save(new GeneralSettings() {
                 StoreDomain = installDomain,
-                ApplicationCookieDomain = installDomain
             });
 
             //media settings
@@ -211,27 +210,12 @@ namespace RoastedMarketplace.Services.Installation
             //user settings
             settingService.Save(new UserSettings() {
                 UserRegistrationDefaultMode = RegistrationMode.WithActivationEmail,
-                MaximumNumberOfVisibleNotifications = 10,
                 AreUserNamesEnabled = true
             });
 
             //email sender settings
             settingService.Save(new EmailSenderSettings() {
                 PasswordChangedEmailEnabled = true,
-                SlaModifiedEmailToAdminEnabled = true,
-                SlaViolatedEmailToAdminEnabled = true,
-                TicketCreatedByAgentEmailEnabled = true,
-                TicketCreatedByAgentEmailToAdminEnabled = false,
-                TicketResolvedEmailToAdminEnabled = false,
-                TicketResolvedEmailEnabled = false,
-                TicketUpdatedEmailEnabled = true,
-                TicketUpdatedEmailToAdminEnabled = false,
-                TicketClosedEmailEnabled = true,
-                TicketClosedEmailToAdminEnabled = false,
-                TicketDeletedEmailEnabled = false,
-                TicketDeletedEmailToAdminEnabled = true,
-                TicketCreatedByUserEmailEnabled = true,
-                TicketCreatedByUserEmailToAdminEnabled = true,
                 UserRegisteredEmailToAdminEnabled = true,
                 UserRegisteredEmailEnabled = true,
                 UserActivationEmailEnabled = true,

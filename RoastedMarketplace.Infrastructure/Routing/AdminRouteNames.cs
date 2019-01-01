@@ -81,6 +81,9 @@
         public const string PluginsList = "PluginsList";
         public const string UpdatePluginStatus = "UpdatePluginStatus";
         public const string UploadPlugin = "UploadPlugin";
+        public const string GetSettings = "GetSettings";
+        public const string SaveSettings = "SaveSettings";
+
 
     }
 }

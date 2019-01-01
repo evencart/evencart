@@ -22,16 +22,16 @@ namespace RoastedMarketplace.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        private readonly ProductsSettings _productsSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IModelMapper _modelMapper;
         private readonly IMediaAccountant _mediaAccountant;
         private readonly ISearchQueryParserService _searchQueryParserService;
 
-        public ProductsController(IProductService productService, ICategoryService categoryService, ProductsSettings productsSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService)
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService)
         {
             _productService = productService;
             _categoryService = categoryService;
-            _productsSettings = productsSettings;
+            _catalogSettings = catalogSettings;
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
             _searchQueryParserService = searchQueryParserService;
@@ -67,7 +67,7 @@ namespace RoastedMarketplace.Controllers
                 {
                     searchModel.CategoryId.Value
                 };
-                if (_productsSettings.DisplayProductsFromChildCategories)
+                if (_catalogSettings.DisplayProductsFromChildCategories)
                 {
                     var fullCategoryTree = _categoryService.GetFullCategoryTree();
                     var currentCategory = fullCategoryTree.FirstOrDefault(x => x.Id == searchModel.CategoryId.Value);

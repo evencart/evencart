@@ -1,4 +1,5 @@
 ﻿using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.ViewEngines;
@@ -80,6 +81,21 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         public static CustomResponse WithSeoMeta(this CustomResponse customResponse, object seoMeta)
         {
             return customResponse.With("seoMeta", seoMeta);
+        }
+
+        public static CustomResponse WithTimezones(this CustomResponse customResponse)
+        {
+            return customResponse.With("timezones", SelectListHelper.GetTimezones());
+        }
+
+        public static CustomResponse WithRegistrationModes(this CustomResponse customResponse)
+        {
+            return customResponse.With("registrationModes", SelectListHelper.GetSelectItemList<RegistrationMode>());
+        }
+
+        public static CustomResponse WithCatalogPaginationTypes(this CustomResponse customResponse)
+        {
+            return customResponse.With("catalogPaginationTypes", SelectListHelper.GetSelectItemList<CatalogPaginationType>());
         }
     }
 }

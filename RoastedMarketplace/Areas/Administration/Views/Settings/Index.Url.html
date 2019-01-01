@@ -1,0 +1,21 @@
+﻿{% global page_title=@t"Url Settings" active_menu="UrlSettings" parent_active_menu="Settings" if="settingType == 'url'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"URL Settings" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control label text=@t"Product url pattern" for="productUrlTemplate" %}
+            {% control text name="productUrlTemplate" value="{{settings.productUrlTemplate}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Category url pattern" for="categoryUrlTemplate" %}
+            {% control text name="categoryUrlTemplate" value="{{settings.categoryUrlTemplate}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Page url pattern" for="pageUrlTemplate" %}
+            {% control text name="pageUrlTemplate" value="{{settings.pageUrlTemplate}}"%}
+        </div>
+    </div>
+</div>
