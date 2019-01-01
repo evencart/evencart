@@ -17,11 +17,21 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             foreach (Match match in matches)
             {
                 ExtractMatch(match, out string[] _, out Dictionary<string, string> keyValuePairs);
+                var ifStr = "";
+                var endifStr = "";
+                if (keyValuePairs.ContainsKey("if"))
+                {
+                    ifStr = $"{{% if {keyValuePairs["if"]} %}}";
+                    endifStr = "{% endif %}";
+                }
+                keyValuePairs.Remove("if");
                 foreach (var parameter in keyValuePairs)
                 {
                     var variableName = parameter.Key;
                     var variableValue = parameter.Value;
+                    globalBuilder.Append(ifStr);
                     globalBuilder.Append(string.Format(AssignFormat, variableName, variableValue));
+                    globalBuilder.Append(endifStr);
                     globalBuilder.Append(Environment.NewLine);
                 }
             }
