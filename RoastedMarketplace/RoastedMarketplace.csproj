@@ -36,6 +36,10 @@
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
     <None Remove="Content\Themes\Default\Views\Products\_ProductBox.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_Rating.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_RatingMini.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_RatingStars.html" />
+    <None Remove="Content\Themes\Default\Views\Reviews\ReviewsList.html" />
     <None Remove="Views\Authentication\Login.html" />
     <None Remove="Views\Authentication\Product - Copy.html" />
     <None Remove="Views\_Layout.liquid" />
@@ -73,10 +77,22 @@
     <Content Include="Content\Themes\Default\Views\Products\Index.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_RatingMini.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_RatingStars.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_Rating.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Products\_ProductBox.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\ProductsList.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Reviews\ReviewsList.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Views\Authentication\Login.html">

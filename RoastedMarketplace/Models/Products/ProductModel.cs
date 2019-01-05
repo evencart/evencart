@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Models.Media;
+using RoastedMarketplace.Models.Reviews;
 
 namespace RoastedMarketplace.Models.Products
 {
@@ -56,6 +57,8 @@ namespace RoastedMarketplace.Models.Products
         public bool HasVariants { get; set; }
 
         public string SeName { get; set; }
+
+        public ReviewSummaryModel ReviewSummary { get; set; }
 
         public IList<MediaModel> Media { get; set; }
 

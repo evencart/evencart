@@ -9,6 +9,7 @@ using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Core.Services.Events;
 using RoastedMarketplace.Data.Entity.MediaEntities;
 using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Reviews;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
@@ -193,7 +194,9 @@ namespace RoastedMarketplace.Services.Products
             //filter to include anything else in query
             query = _eventPublisherService.Filter(query);
 
-            return query.SelectNestedWithTotalMatches(out totalResults, page, count);
+            var products = query.SelectNestedWithTotalMatches(out totalResults, page, count).ToList();
+            PopulateReviewSummary(products);
+            return products;
         }
 
         public IList<Product> GetProductsByVendorIds(IList<int> vendorIds)
@@ -369,10 +372,35 @@ namespace RoastedMarketplace.Services.Products
                 })
                 .SelectNested()
                 .FirstOrDefault();
-
+            PopulateReviewSummary(new List<Product>() {product});
             return product;
         }
 
+        private void PopulateReviewSummary(IList<Product> products)
+        {
+            var productIdStr = string.Join(",", products.Select(x => x.Id));
+            //find the average rating
+            using (var multiresult = EntitySet.Query(
+                $"SELECT ProductId, AVG(CAST(Rating AS DECIMAL(10,2))) AS AverageRating, COUNT(Rating) AS TotalRatings FROM {DotEntityDb.GetTableNameForType<Review>()} WHERE ProductId IN ({productIdStr}) GROUP BY ProductId;" +
+                $"SELECT ProductId, COUNT(Rating) AS TotalReviews FROM {DotEntityDb.GetTableNameForType<Review>()} WHERE ProductId IN ({productIdStr}) AND (Title IS NOT NULL OR Description IS NOT NULL)  GROUP BY ProductId;",
+                null))
+            {
+                var reviewSummaryData = multiresult.SelectAllAs<Product.ReviewSummaryData>();
+                foreach (var summaryData in reviewSummaryData)
+                {
+                    var product = products.FirstOrDefault(x => x.Id == summaryData.ProductId);
+                    if (product != null)
+                        product.ReviewSummary = summaryData;
+                }
+                reviewSummaryData = multiresult.SelectAllAs<Product.ReviewSummaryData>();
+                foreach (var summaryData in reviewSummaryData)
+                {
+                    var productSummaryData = products.FirstOrDefault(x => x.Id == summaryData.ProductId)?.ReviewSummary;
+                    if (productSummaryData != null)
+                        productSummaryData.TotalReviews = summaryData.TotalReviews;
+                }
 
+            }
+        }
     }
 }

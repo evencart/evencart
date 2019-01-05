@@ -5,7 +5,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
 {
     public interface IDynamicRouteProvider
     {
-        DynamicRoute GetDynamicRoute(SeoMeta seoMeta);
+        DynamicRoute GetDynamicRoute(SeoMeta seoMeta, string requestPath);
 
         VirtualPathData GetVirtualPathData(IRouter router, VirtualPathContext context);
     }

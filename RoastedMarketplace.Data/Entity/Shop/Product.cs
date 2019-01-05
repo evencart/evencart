@@ -76,6 +76,24 @@ namespace RoastedMarketplace.Data.Entity.Shop
         public virtual IList<Media> MediaItems { get; set; }
 
         public virtual SeoMeta SeoMeta { get; set; }
+
+        public virtual ReviewSummaryData ReviewSummary { get; set; }
+
+        #endregion
+
+
+        #region Inner Classes
+
+        public class ReviewSummaryData
+        {
+            public int TotalReviews { get; set; }
+
+            public int TotalRatings { get; set; }
+
+            public decimal AverageRating { get; set; }
+
+            public int ProductId { get; set; }
+        }
         #endregion
     }
 }

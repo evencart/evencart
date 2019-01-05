@@ -24,15 +24,26 @@ namespace RoastedMarketplace.Infrastructure.Routing
             _productService = productService;
         }
 
-        public virtual DynamicRoute GetDynamicRoute(SeoMeta seoMeta)
+        public virtual DynamicRoute GetDynamicRoute(SeoMeta seoMeta, string requestPath)
         {
             var dynamicRoute = new DynamicRoute { Id = seoMeta.EntityId };
             switch (seoMeta.EntityName)
             {
                 case "Product":
-                    dynamicRoute.Controller = "Products";
-                    dynamicRoute.Action = "Index";
-                    dynamicRoute.IdTypeName = "Id";
+                    //check if it's a review page being requested?
+                    if (requestPath.EndsWith(AppRouter.ReviewUrlSuffix))
+                    {
+                        dynamicRoute.Controller = "Reviews";
+                        dynamicRoute.Action = "ReviewsList";
+                        dynamicRoute.IdTypeName = "ProductId";
+                    }
+                    else
+                    {
+                        dynamicRoute.Controller = "Products";
+                        dynamicRoute.Action = "Index";
+                        dynamicRoute.IdTypeName = "Id";
+                    }
+                  
                     break;
                 case "Category":
                     dynamicRoute.Controller = "Products";
@@ -74,6 +85,10 @@ namespace RoastedMarketplace.Infrastructure.Routing
             {
                 case RouteNames.SingleProduct:
                     url = _urlSettings.ProductUrlTemplate;
+                    entityName = "Product";
+                    break;
+                case RouteNames.ReviewsList:
+                    url = _urlSettings.ProductUrlTemplate + AppRouter.ReviewUrlSuffix;
                     entityName = "Product";
                     break;
                 case RouteNames.ProductsPage:

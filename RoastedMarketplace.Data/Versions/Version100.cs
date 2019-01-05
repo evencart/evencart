@@ -7,6 +7,7 @@ using RoastedMarketplace.Data.Entity.Page;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Entity.Reviews;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Taxes;
@@ -56,6 +57,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<ProductVariantAttribute>(transaction);
             Db.CreateTable<Media>(transaction);
             Db.CreateTable<ProductMedia>(transaction);
+            Db.CreateTable<Review>(transaction);
 
             Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction, true);
@@ -71,6 +73,9 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<ProductAttributeValue, ProductVariantAttribute>("Id", "ProductAttributeValueId"), transaction);
             Db.CreateConstraint(Relation.Create<Media, ProductMedia>("Id", "MediaId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductMedia>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Review>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, Review>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Order, Review>("Id", "OrderId"), transaction, true);
 
             Db.CreateTable<DiscountCoupon>(transaction);
             Db.CreateTable<RestrictionValue>(transaction);

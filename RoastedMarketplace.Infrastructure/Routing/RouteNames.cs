@@ -22,6 +22,7 @@
         public const string RenderComponent = "RenderComponent";
         public const string Templates = "Templates";
         public const string RawView = "RawView";
-
+        public const string SaveReview = "SaveReview";
+        public const string ReviewsList = "ReviewsList";
     }
 }

@@ -13,6 +13,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
 {
     public class AppRouter : IRouter
     {
+        public const string ReviewUrlSuffix = "/reviews";
         private readonly IRouter _defaultRouter;
         private readonly IDynamicRouteProvider _dynamicRouteProvider;
         private readonly IList<string> _templatesToCheck;
@@ -25,6 +26,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
             _templatesToCheck = new List<string>()
             {
                 urlSettings.ProductUrlTemplate,
+                urlSettings.ProductUrlTemplate + ReviewUrlSuffix,
                 urlSettings.CategoryUrlTemplate,
             };
         }
@@ -55,7 +57,9 @@ namespace RoastedMarketplace.Infrastructure.Routing
                             routeName = RouteNames.ProductsPage;
                             break;
                         case nameof(Product):
-                            routeName = RouteNames.SingleProduct;
+                            routeName = requestPath.EndsWith(ReviewUrlSuffix)
+                                ? RouteNames.ReviewsList
+                                : RouteNames.SingleProduct;
                             break;
                         default:
                             continue;
@@ -70,7 +74,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                     var url = vpd.VirtualPath;
                     if (requestPath != url)
                         continue;
-                    var dynamicRoute = _dynamicRouteProvider.GetDynamicRoute(seoMeta);
+                    var dynamicRoute = _dynamicRouteProvider.GetDynamicRoute(seoMeta, requestPath);
                     if (dynamicRoute == null)
                         continue;
                     context.RouteData.Values["controller"] = dynamicRoute.Controller;

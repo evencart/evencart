@@ -3324,3 +3324,24 @@ div.tab button.active {
 .margin-b-20 {
   margin-bottom: 20px; }
 
+.rating-container {
+  display: inline-block;
+  position: relative;
+  clear: both;
+  height: 24px;
+  width: 76px; }
+  .rating-container .active-stars {
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    display: block;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: #ffc741;
+    white-space: nowrap; }
+  .rating-container .inactive-stars {
+    padding: 0;
+    display: block;
+    z-index: 0; }
+

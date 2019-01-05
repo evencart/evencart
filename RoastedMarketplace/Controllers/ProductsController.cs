@@ -168,6 +168,9 @@ namespace RoastedMarketplace.Controllers
                     .ToList();
             }
 
+            //reviews
+            if (product.ReviewSummary != null)
+                productModel.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(product.ReviewSummary);
             return productModel;
         }
         #endregion

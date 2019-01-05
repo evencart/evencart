@@ -31,15 +31,8 @@
                     <div class="price-ratting section">
                         <!-- Price -->
                         <span class="price float-left"><span class="new">{{product.price}}</span></span>
-                        <!-- Ratting -->
-                        <span class="ratting float-right">
-                            <i class="fa fa-star active"></i>
-                            <i class="fa fa-star active"></i>
-                            <i class="fa fa-star active"></i>
-                            <i class="fa fa-star active"></i>
-                            <i class="fa fa-star active"></i>
-                            <span> (01 Customer Review)</span>
-                        </span>
+                      
+                        {% partial "Products/_Rating" %}
                     </div>
                     <!-- Short Description -->
                     <div class="short-desc section">

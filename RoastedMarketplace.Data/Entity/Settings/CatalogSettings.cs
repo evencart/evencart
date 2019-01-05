@@ -14,5 +14,13 @@ namespace RoastedMarketplace.Data.Entity.Settings
         public bool DisplaySortOptions { get; set; }
 
         public bool EnableWishlist { get; set; }
+
+        public bool EnableReviews { get; set; }
+
+        public bool EnableReviewModeration { get; set; }
+
+        public bool AllowReviewsForStorePurchaseOnly { get; set; }
+
+        public bool AllowOneReviewPerUserPerItem { get; set; }
     }
 }
