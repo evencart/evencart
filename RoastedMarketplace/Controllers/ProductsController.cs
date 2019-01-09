@@ -66,6 +66,17 @@ namespace RoastedMarketplace.Controllers
                 }
 
             }
+            SeoMetaModel seoMetaModel = null;
+            if (product.SeoMeta != null)
+            {
+                seoMetaModel = _modelMapper.Map<SeoMetaModel>(product.SeoMeta);
+            }
+            seoMetaModel = seoMetaModel ?? new SeoMetaModel();
+            seoMetaModel.Description = product.Description;
+            seoMetaModel.PageTitle = seoMetaModel.PageTitle ?? product.Name;
+            seoMetaModel.MetaDescription = seoMetaModel.MetaDescription ?? product.Description;
+
+            response.WithSeoMeta(seoMetaModel);
             return response.Result;
         }
 
