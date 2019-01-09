@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Models.Media;
 using RoastedMarketplace.Models.Reviews;
@@ -26,7 +27,11 @@ namespace RoastedMarketplace.Models.Products
 
         public decimal? ComparePrice { get; set; }
 
+        public string ComparePriceFormatted => ComparePrice.ToCurrency();
+
         public decimal Price { get; set; }
+
+        public string PriceFormatted => Price.ToCurrency();
 
         public string Sku { get; set; }
 
