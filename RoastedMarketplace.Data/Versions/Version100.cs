@@ -58,12 +58,19 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<Media>(transaction);
             Db.CreateTable<ProductMedia>(transaction);
             Db.CreateTable<Review>(transaction);
+            Db.CreateTable<ProductSpecificationGroup>(transaction);
+            Db.CreateTable<ProductSpecification>(transaction);
+            Db.CreateTable<ProductSpecificationValue>(transaction);
+            Db.CreateTable<ProductRelation>(transaction);
+
+            
 
             Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction, true);
             Db.CreateConstraint(Relation.Create<AvailableAttribute, AvailableAttributeValue>("Id", "AvailableAttributeId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductAttribute>("Id", "ProductId"), transaction);
             Db.CreateConstraint(Relation.Create<AvailableAttribute, ProductAttribute>("Id", "AvailableAttributeId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<AvailableAttributeValue, ProductAttributeValue>("Id", "AvailableAttributeValueId"), transaction);
             Db.CreateConstraint(Relation.Create<ProductAttribute, ProductAttributeValue>("Id", "ProductAttributeId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductVendor>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Vendor, ProductVendor>("Id", "VendorId"), transaction, true);
@@ -76,6 +83,13 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<User, Review>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, Review>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Order, Review>("Id", "OrderId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductSpecificationGroup>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductSpecification>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<ProductSpecification, ProductSpecificationValue>("Id", "ProductSpecificationId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<AvailableAttribute, ProductSpecification>("Id", "AvailableAttributeId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<AvailableAttributeValue, ProductSpecificationValue>("Id", "AvailableAttributeValueId"), transaction);
+            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, true);
 
             Db.CreateTable<DiscountCoupon>(transaction);
             Db.CreateTable<RestrictionValue>(transaction);

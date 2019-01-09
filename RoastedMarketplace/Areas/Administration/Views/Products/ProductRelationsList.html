@@ -1,0 +1,114 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Related Products" active_menu="RelatedProducts" parent_active_menu="ProductsList" if="relationType == 'RelatedProduct'" %}
+{% global page_title=@t"Cross Sell Products" active_menu="CrossSell" parent_active_menu="ProductsList" if="relationType == 'CrossSell'" %}
+{% global page_title=@t"Upsell Products" active_menu="UpSell" parent_active_menu="ProductsList" if="relationType == 'UpSell'" %}
+{% global page_title=@t"Frequently Bought Together" active_menu="FbtProducts" parent_active_menu="ProductsList" if="relationType == 'FrequentlyBoughtTogether'" %}
+
+{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to product" %}
+
+{% partial "Navigation/ProductEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {% if relationType == "RelatedProduct" %}
+                {{"Related Products" | t}}
+                {% elseif relationType == "CrossSell" %}
+                {{"Cross Sell Products" | t}}
+                {% elseif relationType == "UpSell" %}
+                {{"Up Sell Products" | t}}
+                {% elseif relationType == "FrequentlyBoughtTogether" %}
+                {{"Frequently Bought Together" | t}}
+                {% endif %}
+                <button class="btn btn-primary float-right btn-sm" onclick="editRelation()">{{"Add New" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed no-margin">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="productName" data-formatter="product">{{"Name" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-width="10%" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless relations == blank %}*/
+                        initData = JSON.parse('{{relations}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                relations: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_ProductRelationsList %}',
+                            responseObject: "relations",
+                            selection: false,
+                            navigation: 0,
+                            columnSelection: false,
+                            formatters: {
+                                product: function(column, row) {
+                                    return row.destinationProduct.name;
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteRelation(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="popup-editor" style="display: none;">
+    {% partial "Products/ProductRelationEditor" %}
+</div>
+
+
+
+<script type="text/javascript">
+
+    var editRelation = function () {
+        var centerPopup = showAsPopup("popup-editor", null, function() {
+            jQuery("#products-list").html("");
+            jQuery("#products-list").hide();
+        }, function() {
+            selectRelative();
+        });
+    }
+
+    var deleteRelation = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteProductRelation %}",
+                    data: {
+                        productRelationId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Relation was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

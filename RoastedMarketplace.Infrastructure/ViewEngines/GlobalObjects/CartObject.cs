@@ -36,7 +36,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                         Id = x.Id,
                         ProductId = x.ProductId,
                         ProductName = x.Product.Name,
-                        Price = taxSettings.DisplayProductPricesWithoutTax ? x.Price : x.Price + x.Tax,
+                        Price = decimal.Round(taxSettings.DisplayProductPricesWithoutTax ? x.Price : x.Price + x.Tax, 2),
                         Quantity = x.Quantity,
                         Discount = x.Discount,
                         ComparePrice = x.ComparePrice,

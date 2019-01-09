@@ -1,0 +1,70 @@
+﻿<form action="{% route api_SaveProductSpecificationGroup %}" method="post" id="add-spec-group-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Specification Group Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Group Name" for="product-productSpecification-group-selector" %}
+                        {% if productSpecification.id > 0 %}
+                        {% control text id="product-productSpecification-group-selector" name="productSpecificationGroup.name" placeholder=@t"Type group name" value="{{productSpecificationGroup.name}}" disabled="disabled" %}
+                        {% else %}
+                        {% control text id="product-productSpecification-group-selector" name="productSpecificationGroup.name" placeholder=@t"Type group name" value="{{productSpecificationGroup.name}}" %}
+                        {% endif %}
+                        {% control hidden id="product-productSpecification-group" %}
+                        {% control validator for="product-productSpecification-group-selector" required="true" %}
+                    </div>                  
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productspecificationgroup.productId" value="{{productId}}" %}
+                    {% control hidden name="productspecificationgroup.id" value="{{productSpecificationGroup.id}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Group" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("add-spec-group-form",
+        {
+            extraData : function () {
+                var productSpecificationGroupName = inputTypeahead({
+                    element: "product-productSpecification-group-selector",
+                    value: true
+                });
+                if (!productSpecificationGroupName)
+                    return false;
+            },
+            onSuccess: function() {
+                hidePopup("edit-specGroup");
+            }
+        });
+
+    ready(function () {
+        inputTypeahead({
+            element: "product-productSpecification-group-selector",
+            initialData: null,
+            url: "{% route api_GetProductSpecificationsGroupSuggestions %}",
+            preserveAfterFirstCall: true,
+            openOnFocus: true,
+            minLength: 0,
+            select: function (item) {
+                jQuery("#product-productSpecification-group").val(item.id);
+            }
+        });
+      
+    });
+
+</script>

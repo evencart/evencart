@@ -1,0 +1,83 @@
+﻿<form action="{% route api_SaveProductRelation %}" method="post" id="add-product-relation-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Product Relation Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Products" %}
+                        <table class="table table-data table-bordered" id="products-list">
+                            
+                        </table>
+                        <a class="clickable" id="select-products-link" onclick="selectRelative()">
+                            {{"[Select Product(s)]" | t}}
+                        </a>
+                    </div>   
+                    <div class="form-group">
+                        {% control checkbox text=@t"Create Reciprocal Relation" value="true" name="isreciprocal" %}
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{productId}}" %}
+                    {% control hidden name="relationType" value="{{relationType}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Relation" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<div class="popup" id="popup-selector" style="width: 800px; min-height: 200px; display: none">
+</div>
+
+<script type="text/javascript">
+    var selectRelative = function() {
+        jQuery("#popup-selector").show().html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("popup-selector",
+            true,
+            function(result, data) {
+                if (result == "ok") {
+                    var trs = "";
+                    data.forEach(function (d) {
+                        trs += "<tr>";
+                        trs += "<td>" + d.name + "<input type='hidden' name='destinationProductIds[]' value='" + d.id + "' /></td>";
+                        trs += "</tr>";
+                    });
+                    jQuery("#products-list").html(trs);
+                    if (trs != "")
+                        jQuery("#select-products-link").hide();
+                }
+            });
+        var url =
+            '{% route SelectorDialog entityName="products" multiSelect="true" %}';
+        loadPage(url,
+            false,
+            null,
+            function(response) {
+                jQuery("#popup-selector").html(response);
+                centerPopup();
+            });
+    }
+
+    ready(function() {
+        initAjaxForm("add-product-relation-form",
+            {
+                onSuccess: function() {
+                    hidePopup("popup-editor");
+                    reloadGrid("grid-selection");
+                }
+            });
+    });
+   
+</script>

@@ -8,6 +8,10 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
+            Db.CreateTable<ProductRelation>(transaction);
+
+            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, false);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

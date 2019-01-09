@@ -2081,9 +2081,6 @@ a.meanmenu-reveal i {
   color: #3f3f3f; }
 
 /*-- Info Tab List --*/
-.pro-info-tab-list {
-  border-bottom: 1px solid #ddd; }
-
 .pro-info-tab-list li {
   bottom: -1px;
   display: block;

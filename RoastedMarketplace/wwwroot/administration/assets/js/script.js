@@ -6,7 +6,7 @@
     }
 });
 
-var showAsPopup = function (id, ajax, onClose) {
+var showAsPopup = function (id, ajax, onClose, onOpen) {
     var overlay = "<div class='overlay'></div>";
     var element = jQuery("#" + id);
     element.addClass("popup");
@@ -14,7 +14,8 @@ var showAsPopup = function (id, ajax, onClose) {
     jQuery("body").append(element);
     element.center();
     element.show();
-
+    if (onOpen)
+        onOpen();
     element.find(".close-popup, .popup-close").click(function () {
         hidePopup(id);
     });
@@ -83,12 +84,21 @@ var generateGrid = function (options) {
         jQuery("#" + options.element).bootgrid("reload");
         return;
     }
-    if (options.initialData) {
-        if (options.initialData[options.responseObject])
-            options.initialData["success"] = true;
-        else
-            options.initialData = null;
+
+    var dataFormatter = function (response) {
+        var rows = null;
+        if (typeof options.responseObject == "function") {
+            rows = options.responseObject(response);
+        } else {
+            if (response[options.responseObject])
+                rows = response[options.responseObject];
+        }
+        return rows;
     }
+
+    if (options.initialData)
+        options.initialData["success"] = true;
+
     jQuery("#" + options.element).bootgrid({
         ajax: options.url != null,
         ajaxSettings: {
@@ -115,11 +125,12 @@ var generateGrid = function (options) {
             if (response.success) {
                 if (options.done)
                     options.done(response);
+                var rows = dataFormatter(response);
                 return {
                     current: response.current,
                     total: response.total,
                     rowCount: response.rowCount,
-                    rows: response[options.responseObject]
+                    rows: rows
                 };
             }
             return null;

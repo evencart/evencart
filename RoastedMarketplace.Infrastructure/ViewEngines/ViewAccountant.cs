@@ -54,6 +54,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             {
                 Template.RegisterSafeType(enumType,x => x.ToString());
             }
+
+            Template.RegisterFilter(typeof(TextFilters));
+
             //register global objects
             GlobalObject.RegisterObject<StoreObject>("store");
             GlobalObject.RegisterObject<CartObject>("cart");
@@ -124,7 +127,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                     _parsedTemplateCache.TryAdd(cacheKey, cachedView);
                 }
                 //run filters for the view
-                content = Filter.RunAll(content);
+                //content = Filter.RunAll(content); //we've now moved to dotliquid filter method. That is better and more flexible
                 try
                 {
                     var template = Template.Parse(content);

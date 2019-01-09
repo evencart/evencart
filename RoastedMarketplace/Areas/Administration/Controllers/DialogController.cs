@@ -61,7 +61,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             model.UiUrl = Url.RouteUrl($"{routeName}");
             model.DialogTitle = title;
             model.DisplayField = displayField;
-            return R.Success.With("selector", model).Result;
+            return R.Success.With("selector", model).With("type", model.ResponseObjectName).Result;
         }
     }
 }

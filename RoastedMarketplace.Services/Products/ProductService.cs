@@ -28,7 +28,7 @@ namespace RoastedMarketplace.Services.Products
             _searchQueryParserService = searchQueryParserService;
         }
 
-        public IEnumerable<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
+        public IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
             out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
             out Dictionary<int, string> availableVendors, out Dictionary<string, List<string>> availableFilters,
             string searchText = null, string filterExpression = null, bool? published = true, IList<int> manufacturerIds = null,
@@ -47,7 +47,7 @@ namespace RoastedMarketplace.Services.Products
             {
                 query = query.Where(x => x.Published == published.Value);
             }
-           
+
 
             //join manufacturers
             query = query.Join<Manufacturer>("ManufacturerId", "Id", joinType: JoinType.LeftOuter)
@@ -59,12 +59,15 @@ namespace RoastedMarketplace.Services.Products
                 .Join<Vendor>("VendorId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Product, Vendor>());
 
-            //product attributes
-            query = query.Join<ProductAttribute>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
-                .Join<ProductAttributeValue>("Id", "ProductAttributeId", joinType: JoinType.LeftOuter)
+            //product specs
+            query = query.Join<ProductSpecification>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter);
-
+            //only filterable attributes
+            Expression<Func<ProductSpecification, bool>> filterWhere =
+                (specification) => specification.IsFilterable || specification.AvailableAttributeId == null;
+            query = query.Where(filterWhere);
             //categories?
             if (categoryIds != null && categoryIds.Any())
             {
@@ -80,7 +83,7 @@ namespace RoastedMarketplace.Services.Products
             //find out the available filters as well.
             const string Sep = "%";
             var filterValues = query.CustomSelectNested(
-                $"DISTINCT(COALESCE(ProductAttribute_Label,'') + '{Sep}' + AvailableAttribute_Name + '{Sep}' + COALESCE(ProductAttributeValue_Label,'') + '{Sep}' + AvailableAttributeValue_Value)");
+                $"DISTINCT(COALESCE(ProductSpecification_Label,'') + '{Sep}' + AvailableAttribute_Name + '{Sep}' + COALESCE(ProductSpecificationValue_Label,'') + '{Sep}' + AvailableAttributeValue_Value)");
             availableFilters = new Dictionary<string, List<string>>();
             foreach (var filterValue in filterValues)
             {
@@ -153,7 +156,7 @@ namespace RoastedMarketplace.Services.Products
                 {
                     var key = filter.Key;
                     var values = filter.Value;
-                    Expression<Func<AvailableAttribute, ProductAttribute, AvailableAttributeValue, ProductAttributeValue, bool>> where =
+                    Expression<Func<AvailableAttribute, ProductSpecification, AvailableAttributeValue, ProductSpecificationValue, bool>> where =
                         (aa, pa, aav, pav) => (aa.Name == key || pa.Label == key) && (values.Contains(aav.Value) || values.Contains(pav.Label));
                     conditions.Add(where);
                 }
@@ -294,9 +297,21 @@ namespace RoastedMarketplace.Services.Products
             EntitySet<ProductMedia>.Insert(new ProductMedia() { ProductId = productId, MediaId = mediaId });
         }
 
-        public IList<Product> GetProducts(IList<int> ids)
+        public IList<Product> GetProducts(IList<int> ids, bool withReviews = false)
         {
-            return Repository.Where(x => ids.Contains(x.Id)).Select().ToList();
+            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
+            var products = Repository.Where(x => ids.Contains(x.Id))
+                .Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Where(seoMetaWhere)
+                .Relate(RelationTypes.OneToMany<Product, Media>())
+                .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
+                .SelectNested()
+                .ToList();
+            if (withReviews)
+                PopulateReviewSummary(products);
+            return products;
         }
 
         public override Product Get(int id)
@@ -312,12 +327,26 @@ namespace RoastedMarketplace.Services.Products
                 .Join<ProductAttributeValue>("Id", "ProductAttributeId", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductSpecification>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", joinType: JoinType.LeftOuter)
+                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
+                .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductSpecificationGroup>("ProductSpecificationGroupId", "Id", typeof(ProductSpecification), joinType: JoinType.LeftOuter)
                 .Join<Manufacturer>("ManufacturerId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Where(seoMetaWhere)
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
+                .Relate<ProductCategory>((product1, category) =>
+                {
+                    //we don't have categories as yet, so we'll have to preserve display order
+                    product1.Tag = product1.Tag ?? new Dictionary<int, int>();
+                    var dictionary = (Dictionary<int, int>)product1.Tag;
+                    if (dictionary.ContainsKey(category.CategoryId))
+                        return;
+                    dictionary.Add(category.CategoryId, category.DisplayOrder);
+                })
                 .Relate(RelationTypes.OneToMany<Product, Category>((product1, category) =>
                 {
                     //we need to est display order of category appropriately from product1 object's tag property
@@ -329,18 +358,8 @@ namespace RoastedMarketplace.Services.Products
                         category.DisplayOrder = dictionary[category.Id];
                 }))
                 .Relate(RelationTypes.OneToMany<Product, Media>())
-                .Relate(RelationTypes.OneToOne<Product, Manufacturer>())
-                .Relate(RelationTypes.OneToMany<Product, Vendor>())
                 .Relate(RelationTypes.OneToMany<Product, ProductAttribute>())
-                .Relate<ProductCategory>((product1, category) =>
-                {
-                    //we don't have categories as yet, so we'll have to preserve display order
-                    product1.Tag = product1.Tag ?? new Dictionary<int, int>();
-                    var dictionary = (Dictionary<int, int>)product1.Tag;
-                    if (dictionary.ContainsKey(category.CategoryId))
-                        return;
-                    dictionary.Add(category.CategoryId, category.DisplayOrder);
-                })
+                .Relate(RelationTypes.OneToMany<Product, ProductSpecification>())
                 .Relate<ProductAttributeValue>((product1, value) =>
                 {
                     var pa = product1.ProductAttributes.FirstOrDefault(x => x.Id == value.ProductAttributeId);
@@ -350,33 +369,83 @@ namespace RoastedMarketplace.Services.Products
                     if (!pa.ProductAttributeValues.Contains(value))
                         pa.ProductAttributeValues.Add(value);
                 })
+                .Relate<ProductSpecificationValue>((product1, value) =>
+                {
+                    var pa = product1.ProductSpecifications.FirstOrDefault(x => x.Id == value.ProductSpecificationId);
+                    if (pa == null)
+                        return;
+                    pa.ProductSpecificationValues = pa.ProductSpecificationValues ?? new List<ProductSpecificationValue>();
+                    if (!pa.ProductSpecificationValues.Contains(value))
+                        pa.ProductSpecificationValues.Add(value);
+                })
+                .Relate<ProductSpecificationGroup>((product1, group) =>
+                {
+                    product1.ProductSpecifications.FirstOrDefault(x => x.ProductSpecificationGroupId == group.Id)
+                        .ProductSpecificationGroup = group;
+                })
                 .Relate<AvailableAttribute>((product1, attribute) =>
                 {
-                    var pa = product1.ProductAttributes.First(x => x.AvailableAttributeId == attribute.Id);
-                    pa.AvailableAttribute = attribute;
-                    if (pa.Label.IsNullEmptyOrWhiteSpace())
+                    var pa = product1.ProductAttributes.FirstOrDefault(x => x.AvailableAttributeId == attribute.Id);
+                    if (pa != null)
                     {
-                        pa.Label = attribute.Name;
+                        pa.AvailableAttribute = attribute;
+                        if (pa.Label.IsNullEmptyOrWhiteSpace())
+                        {
+                            pa.Label = attribute.Name;
+                        }
+                        pa.AvailableAttribute.AvailableAttributeValues = pa.AvailableAttribute.AvailableAttributeValues ?? new List<AvailableAttributeValue>();
                     }
-                    pa.AvailableAttribute.AvailableAttributeValues = pa.AvailableAttribute.AvailableAttributeValues ?? new List<AvailableAttributeValue>();
+
+
+                    var ps = product1.ProductSpecifications?.FirstOrDefault(x => x.AvailableAttributeId == attribute.Id);
+                    if (ps == null)
+                        return;
+                    ps.AvailableAttribute = attribute;
+                    if (ps.Label.IsNullEmptyOrWhiteSpace())
+                    {
+                        ps.Label = attribute.Name;
+                    }
+                    ps.AvailableAttribute.AvailableAttributeValues = ps.AvailableAttribute.AvailableAttributeValues ?? new List<AvailableAttributeValue>();
                 })
                 .Relate<AvailableAttributeValue>((product1, attributeValue) =>
                 {
                     var pa =
-                        product1.ProductAttributes.First(
+                        product1.ProductAttributes.FirstOrDefault(
                             x => x.AvailableAttributeId == attributeValue.AvailableAttributeId);
-                    if (pa.AvailableAttribute == null)
-                        return;
-                    if (!pa.AvailableAttribute.AvailableAttributeValues.Contains(attributeValue))
-                        pa.AvailableAttribute.AvailableAttributeValues.Add(attributeValue);
+                    if (pa != null && pa.AvailableAttribute != null)
+                    {
+                        if (!pa.AvailableAttribute.AvailableAttributeValues.Contains(attributeValue))
+                            pa.AvailableAttribute.AvailableAttributeValues.Add(attributeValue);
+                    }
+
+                    var ps =
+                        product1.ProductSpecifications?.FirstOrDefault(
+                            x => x.AvailableAttributeId == attributeValue.AvailableAttributeId);
+                    if (ps?.AvailableAttribute != null)
+                    {
+                        if (!ps.AvailableAttribute.AvailableAttributeValues.Contains(attributeValue))
+                        {
+                            ps.AvailableAttribute.AvailableAttributeValues.Add(attributeValue);
+                        }
+
+                        var psValue = ps.ProductSpecificationValues.FirstOrDefault(
+                            x => x.AvailableAttributeValueId == attributeValue.Id);
+                        if (psValue != null)
+                        {
+                            psValue.AvailableAttributeValue = attributeValue;
+                            psValue.Label = psValue.Label ?? psValue.AvailableAttributeValue.Value;
+                        }
+                    }
                 })
+                .Relate(RelationTypes.OneToOne<Product, Manufacturer>())
+                .Relate(RelationTypes.OneToMany<Product, Vendor>())
                 .SelectNested()
                 .FirstOrDefault();
-            PopulateReviewSummary(new List<Product>() {product});
+            PopulateReviewSummary(new List<Product>() { product });
             return product;
         }
 
-        private void PopulateReviewSummary(IList<Product> products)
+        public void PopulateReviewSummary(IList<Product> products)
         {
             var productIdStr = string.Join(",", products.Select(x => x.Id));
             //find the average rating

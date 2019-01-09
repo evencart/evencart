@@ -1,0 +1,22 @@
+﻿{% if relatedProducts.size > 0 %}
+<!-- PRODUCT SECTION START -->
+<div class="product-section section pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="section-title text-center col-xs-12 mb-60">
+                <h2>{{"Related Products" | t}}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="product-slider product-slider-4">
+                {% for product in relatedProducts %}
+                {% partial "Products/_ProductBox" %}
+               
+                {% endfor %}
+               
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PRODUCT SECTION END -->
+{% endif %}

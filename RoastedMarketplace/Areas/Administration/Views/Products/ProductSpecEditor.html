@@ -1,0 +1,151 @@
+﻿<form action="{% route api_SaveProductSpecification %}" method="post" id="add-spec-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Specification Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Specification Name" for="product-productSpecification-selector" %}
+                        {% if productSpecification.id > 0 %}
+                        {% control text id="product-productSpecification-selector" name="productSpecification.name" placeholder=@t"Type specification name" value="{{productSpecification.name}}" disabled="disabled" %}
+                        {% else %}
+                        {% control text id="product-productSpecification-selector" name="productSpecification.name" placeholder=@t"Type specification name" value="{{productSpecification.name}}" %}
+                        {% endif %}
+                        {% control hidden id="product-productSpecification" %}
+                        {% control validator for="product-productSpecification-selector" required="true" %}
+                    </div>
+                    {% if productSpecification.id > 0 %}
+                    <div class="form-group">
+                        {% control label text=@t"Display Name" for="display-name" %}
+                        {% control text id="display-name" name="productSpecification.label" value="{{productSpecification.label}}" %}
+                    </div>
+                    {% endif %}
+                    <div class="form-group">
+                        {% control label text=@t"Values" for="product-productSpecification-value-selector" %}
+                        {% control text id="product-productSpecification-value-selector" placeholder=@t"Select or add values" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="productSpecification.isvisible" text=@t"Is Visible" value="{{productSpecification.isVisible}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="productSpecification.isfilterable" text=@t"Is Filterable" value="{{productSpecification.isFilterable}}" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{productId}}" %}
+                    {% control hidden name="productspecification.id" value="{{productSpecification.id}}" %}
+                    {% control hidden name="productspecification.productspecificationgroupid" value="{{productSpecification.productspecificationgroupid}}" %}
+                    <button type="submit" class="btn btn-primary">{{"Save Specification" | t}}</button>
+                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("add-spec-form",
+        {
+            extraData : function () {
+                var productSpecificationName = inputTypeahead({
+                    element: "product-productSpecification-selector",
+                    value: true
+                });
+                if (!productSpecificationName)
+                    return false;
+                var productSpecificationValues = inputTypeahead({
+                    element: "product-productSpecification-value-selector",
+                    value: true,
+                    multiple: true
+                });
+                if (!productSpecificationValues)
+                    return false;
+            
+                var values = [];
+                productSpecificationValues.forEach(function (item) {
+                    values.push({
+                        attributeValue: item.text,
+                        id: 0
+                    });
+                });
+                return {
+                    productSpecification :  { values: values}
+                }
+            },
+            onSuccess: function() {
+                hidePopup("edit-spec");
+            }
+        });
+
+    ready(function () {
+        inputTypeahead({
+            element: "product-productSpecification-selector",
+            initialData: null,
+            url: "{% route api_GetAttributeSuggestions %}",
+            preserveAfterFirstCall: true,
+            openOnFocus: true,
+            minLength: 0,
+            select: function (item) {
+                jQuery("#product-productSpecification-value-selector").focus();
+                jQuery("#product-productSpecification").val(item.id);
+                initForValues();
+            }
+        });
+        var initForValues = function () {
+            var initialData = null;
+            /* {% if productSpecification.id > 0 %} */
+            initialData = [];
+            /* {% for value in productSpecification.values %} */
+            initialData.push({
+                id: "{{value.id}}",
+                text: "{{value.attributeValue}}"
+            });
+            /* {% endfor %} */
+            /* {% endif %}*/
+            inputTypeahead({
+                element: "product-productSpecification-value-selector",
+                destroy: true,
+                multiple: true
+            });
+            inputTypeahead({
+                element: "product-productSpecification-value-selector",
+                initialData: initialData,
+                multiple: true,
+                url: function () {
+                    var productSpecificationId = jQuery("#product-productSpecification").val();
+                    if (productSpecificationId == 0)
+                        return null;
+                    var baseUrl = '{% route api_GetAttributeValueSuggestions attributeId="0" %}';
+                    baseUrl = baseUrl.replaceAll("/0", "/" + productSpecificationId);
+                    return baseUrl;
+                },
+                preserveAfterFirstCall: true,
+                openOnFocus: true,
+                minLength: 0,
+                /* {% if productSpecification.id > 0 %} */
+                beforeItemRemoved: function (e) {
+                    var id = e.item.id;
+                    if (!deleteSpecValue(id))
+                    {
+                        e.cancel = true;
+                    }
+                }    
+                /* {% endif %}*/
+            });
+        }
+        /* {% if productSpecification.id > 0 %} */
+        initForValues();
+        /* {% endif %}*/
+    });
+
+</script>

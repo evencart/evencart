@@ -79,6 +79,8 @@ namespace RoastedMarketplace.Data.Entity.Shop
 
         public virtual ReviewSummaryData ReviewSummary { get; set; }
 
+        public virtual IList<ProductSpecification> ProductSpecifications { get; set; }
+
         #endregion
 
 

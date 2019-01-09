@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
+using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.MediaServices;
@@ -12,7 +13,9 @@ using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Models.Media;
 using RoastedMarketplace.Models.Products;
+using RoastedMarketplace.Models.Reviews;
 using RoastedMarketplace.Models.Site;
+using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Search;
 
@@ -26,8 +29,8 @@ namespace RoastedMarketplace.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly IMediaAccountant _mediaAccountant;
         private readonly ISearchQueryParserService _searchQueryParserService;
-
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService)
+        private readonly IProductRelationService _productRelationService;
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -35,22 +38,38 @@ namespace RoastedMarketplace.Controllers
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
             _searchQueryParserService = searchQueryParserService;
+            _productRelationService = productRelationService;
         }
 
-        [DynamicRoute("{id}", Name = RouteNames.SingleProduct)]
+        [DynamicRoute(Name = RouteNames.SingleProduct)]
         public IActionResult Index(int id)
         {
             if (id < 1)
                 return NotFound();
             var product = _productService.Get(id);
-            if (product == null)
+            if (!product.IsPublic())
                 return NotFound();
 
             var productModel = MapProductModel(product);
-            return R.Success.With("product", productModel).Result;
+
+            var response = R.Success;
+            response.With("product", productModel);
+
+            if (_catalogSettings.EnableRelatedProducts)
+            {
+                var productRelations = _productRelationService.GetByProductId(id, ProductRelationType.RelatedProduct, 1,
+                    _catalogSettings.NumberOfRelatedProducts);
+                if (productRelations.Any())
+                {
+                    var relatedProductsModel = productRelations.Select(x => x.DestinationProduct).Select(MapProductModel).ToList();
+                    response.With("relatedProducts", relatedProductsModel);
+                }
+
+            }
+            return response.Result;
         }
 
-        [DynamicRoute("", Name = RouteNames.ProductsPage)]
+        [DynamicRoute(Name = RouteNames.ProductsPage)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult ProductsList(ProductSearchModel searchModel)
         {
@@ -79,21 +98,21 @@ namespace RoastedMarketplace.Controllers
                 }
             }
 
-            var products = _productService.GetProducts(out int totalResults, 
+            var products = _productService.GetProducts(out int totalResults,
                 out decimal availableFromPrice,
                 out decimal availableToPrice,
-                out Dictionary<int, string> availableManufacturers, 
-                out Dictionary<int, string> availableVendors, 
+                out Dictionary<int, string> availableManufacturers,
+                out Dictionary<int, string> availableVendors,
                 out Dictionary<string, List<string>> availableFilters,
-                searchText: searchModel.Search, 
+                searchText: searchModel.Search,
                 filterExpression: searchModel.Filters,
                 published: true,
-                vendorIds:searchModel.VendorIds,
-                manufacturerIds:searchModel.ManufacturerIds,
-                categoryids: categoryIds, 
+                vendorIds: searchModel.VendorIds,
+                manufacturerIds: searchModel.ManufacturerIds,
+                categoryids: categoryIds,
                 fromPrice: searchModel.FromPrice,
                 toPrice: searchModel.ToPrice,
-                sortOrder: searchModel.SortOrder, 
+                sortOrder: searchModel.SortOrder,
                 page: searchModel.Page,
                 count: searchModel.Count);
 
@@ -166,6 +185,24 @@ namespace RoastedMarketplace.Controllers
                         return paModel;
                     })
                     .ToList();
+            }
+
+            if (product.ProductSpecifications != null)
+            {
+                productModel.ProductSpecificationGroups = new List<ProductSpecificationGroupModel>();
+
+                foreach (var grp in product.ProductSpecifications.GroupBy(x => x.ProductSpecificationGroup))
+                {
+                    var groupName = grp?.Key?.Name ?? "";
+                    var specs = grp.Select(x => new ProductSpecificationModel() {
+                        Name = x.Label,
+                        Values = x.ProductSpecificationValues.Select(y => y.Label).ToList()
+                    }).ToList();
+                    productModel.ProductSpecificationGroups.Add(new ProductSpecificationGroupModel() {
+                        Name = groupName,
+                        ProductSpecifications = specs
+                    });
+                }
             }
 
             //reviews

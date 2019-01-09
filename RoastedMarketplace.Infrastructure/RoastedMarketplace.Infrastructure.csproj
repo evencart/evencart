@@ -44,6 +44,8 @@
     <Compile Remove="Routing\Conventions\AppActionDiscoveryConvention.cs" />
     <Compile Remove="Routing\GenericRoute.cs" />
     <Compile Remove="ViewEngines\F1SuiteRazorProviderViewEngine.cs" />
+    <Compile Remove="ViewEngines\Filters\Filter.cs" />
+    <Compile Remove="ViewEngines\Filters\TranslateFilter.cs" />
   </ItemGroup>
 
   <ItemGroup>

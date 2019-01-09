@@ -91,6 +91,8 @@
                         <a href="#"><i class="fa fa-instagram"></i></a>
                         <a href="#"><i class="fa fa-pinterest"></i></a>
                     </div>
+                    
+
                 </div>
             </div>
         </div>
@@ -98,33 +100,34 @@
             <!-- Nav tabs -->
             <div class="col-xs-12">
                 <ul class="pro-info-tab-list section">
-                    <li class="active"><a href="#more-info" data-toggle="tab">More info</a></li>
-                    <li><a href="#data-sheet" data-toggle="tab">Data sheet</a></li>
-                    <li><a href="#reviews" data-toggle="tab">Reviews</a></li>
+                    <li class="active"><a href="#more-info" data-toggle="tab">{{"Description" | t}}</a></li>
+                    <li><a href="#data-sheet" data-toggle="tab">{{"Product Details" | t}}</a></li>
+                    <li><a href="#reviews" data-toggle="tab">{{"Reviews" | t}}</a></li>
                 </ul>
             </div>
             <!-- Tab panes -->
             <div class="tab-content col-xs-12">
                 <div class="pro-info-tab tab-pane active" id="more-info">
-                    <p>Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which have since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!</p>
+                    {{product.description}}
                 </div>
                 <div class="pro-info-tab tab-pane" id="data-sheet">
-                    <table class="table-data-sheet">
-                        <tbody>
-                        <tr class="odd">
-                            <td>Compositions</td>
-                            <td>Cotton</td>
-                        </tr>
-                        <tr class="even">
-                            <td>Styles</td>
-                            <td>Casual</td>
-                        </tr>
-                        <tr class="odd">
-                            <td>Properties</td>
-                            <td>Short Sleeve</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        {% for specGroup in product.productSpecificationGroups %}
+                        <div class="col-md-4">
+                            <h5>
+                                {{specGroup.name}}
+                            </h5>
+                            <table class="table-data-sheet">
+                                {% for spec in specGroup.productSpecifications %}
+                                <tr class="{% cycle 'odd', 'even' %}">
+                                    <td>{{spec.name}}</td>
+                                    <td>{{spec.valuesCsv}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="pro-info-tab tab-pane" id="reviews">
                     <a href="#">Be the first to write your review!</a>
@@ -135,154 +138,5 @@
 </div>
 <!-- PAGE SECTION END -->
     
-<!-- PRODUCT SECTION START -->
-<div class="product-section section pb-120">
-    <div class="container">
-        <div class="row">
-            <div class="section-title text-center col-xs-12 mb-60">
-                <h2>related products</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="product-slider product-slider-4">
-                <!-- Product Item Start -->
-                <div class="col-xs-12">
-                    <div class="product-item text-center">
-                        <div class="product-img">
-                            <a class="image" href="product-details.html"><img src="img/product/1.jpg" alt=""/></a>
-                            <a class="wishlist" href="#" title="Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            <div class="action-btn fix">
-                                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title="Quick View"><i class="fa fa-eye" aria-hidden="true"></i></i>Quick view</a>
-                                <a href="#" title="Add to Cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>add to cart</a>
-                            </div>
-                        </div>
-                        <div class="product-info text-left">
-                            <h5 class="title"><a href="product-details.html">Le Parc Minotti Chair</a></h5>
-                            <div class="price-ratting fix">
-                                <span class="price float-left"><span class="new">€169.00</span></span>
-                                <span class="ratting float-right">
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Item End -->
-                <!-- Product Item Start -->
-                <div class="col-xs-12">
-                    <div class="product-item text-center">
-                        <div class="product-img">
-                            <a class="image" href="product-details.html"><img src="img/product/2.jpg" alt=""/></a>
-                            <a class="wishlist" href="#" title="Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            <div class="action-btn fix">
-                                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title="Quick View"><i class="fa fa-eye" aria-hidden="true"></i>Quick view</a>
-                                <a href="#" title="Add to Cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>add to cart</a>
-                            </div>
-                        </div>
-                        <div class="product-info text-left">
-                            <h5 class="title"><a href="product-details.html">DSR Eiffel chair</a></h5>
-                            <div class="price-ratting fix">
-                                <span class="price float-left"><span class="new">€137.00</span><span class="old">€115.00</span></span>
-                                <span class="ratting float-right">
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Item End -->
-                <!-- Product Item Start -->
-                <div class="col-xs-12">
-                    <div class="product-item text-center">
-                        <div class="product-img">
-                            <a class="image" href="product-details.html"><img src="img/product/8.jpg" alt=""/></a>
-                            <a class="wishlist" href="#" title="Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            <div class="action-btn fix">
-                                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title="Quick View"><i class="fa fa-eye" aria-hidden="true"></i>Quick view</a>
-                                <a href="#" title="Add to Cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>add to cart</a>
-                            </div>
-                        </div>
-                        <div class="product-info text-left">
-                            <h5 class="title"><a href="product-details.html">pendant lights</a></h5>
-                            <div class="price-ratting fix">
-                                <span class="price float-left"><span class="new">€245.00</span></span>
-                                <span class="ratting float-right">
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Item End -->
-                <!-- Product Item Start -->
-                <div class="col-xs-12">
-                    <div class="product-item text-center">
-                        <div class="product-img">
-                            <a class="image" href="product-details.html"><img src="img/product/3.jpg" alt=""/></a>
-                            <a class="wishlist" href="#" title="Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            <div class="action-btn fix">
-                                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title="Quick View"><i class="fa fa-eye" aria-hidden="true"></i>Quick view</a>
-                                <a href="#" title="Add to Cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>>add to cart</a>
-                            </div>
-                        </div>
-                        <div class="product-info text-left">
-                            <h5 class="title"><a href="product-details.html">3d laser cut models</a></h5>
-                            <div class="price-ratting fix">
-                                <span class="price float-left"><span class="new">€185.00</span><span class="old">€125..00</span></span>
-                                <span class="ratting float-right">
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Item End -->
-                <!-- Product Item Start -->
-                <div class="col-xs-12">
-                    <div class="product-item text-center">
-                        <div class="product-img">
-                            <a class="image" href="product-details.html"><img src="img/product/4.jpg" alt=""/></a>
-                            <a class="wishlist" href="#" title="Wishlist"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                            <div class="action-btn fix">
-                                <a href="#" data-toggle="modal"  data-target="#quickViewModal" title="Quick View"><i class="fa fa-eye" aria-hidden="true"></i>Quick view</a>
-                                <a href="#" title="Add to Cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>add to cart</a>
-                            </div>
-                        </div>
-                        <div class="product-info text-left">
-                            <h5 class="title"><a href="product-details.html">carl hansen ch25</a></h5>
-                            <div class="price-ratting fix">
-                                <span class="price float-left"><span class="new">€245.00</span></span>
-                                <span class="ratting float-right">
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                    <i class="fa fa-star active"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Item End -->
-            </div>
-        </div>
-    </div>
-</div>
-<!-- PRODUCT SECTION END --> 
+{% partial "Products/_RelatedProducts" %}
 

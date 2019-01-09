@@ -9,7 +9,7 @@ namespace RoastedMarketplace.Services.Products
 {
     public interface IProductService : IFoundationEntityService<Product>
     {
-        IEnumerable<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
+        IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
             out decimal availableToPrice, 
             out Dictionary<int, string> availableManufacturers, 
             out Dictionary<int, string> availableVendors, 
@@ -35,7 +35,9 @@ namespace RoastedMarketplace.Services.Products
 
         void LinkMediaWithProduct(int mediaId, int productId);
 
-        IList<Product> GetProducts(IList<int> ids);
+        IList<Product> GetProducts(IList<int> ids, bool withReviews = false);
+
+        void PopulateReviewSummary(IList<Product> products);
 
     }
 }

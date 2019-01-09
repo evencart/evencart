@@ -103,7 +103,7 @@ namespace RoastedMarketplace.Services.Products
             }
 
 
-            return q//.Relate(RelationTypes.OneToOne<ProductAttribute, Product>())
+            return q
                 .Relate(RelationTypes.OneToMany<ProductAttribute, ProductAttributeValue>())
                 .Relate<AvailableAttributeValue>((productAttribute, availableAttributeValue) =>
                 {

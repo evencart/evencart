@@ -63,5 +63,7 @@ namespace RoastedMarketplace.Models.Products
         public IList<MediaModel> Media { get; set; }
 
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
+
+        public IList<ProductSpecificationGroupModel> ProductSpecificationGroups { get; set; }
     }
 }

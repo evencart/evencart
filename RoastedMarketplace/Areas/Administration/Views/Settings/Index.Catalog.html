@@ -19,5 +19,24 @@
             {% control label text=@t"Pagination Style" for="catalogPaginationType" %}
             {% control select name="catalogPaginationType" value="settings.catalogPaginationType" items="catalogPaginationTypes" required="true" %}
         </div>
+        <div class="form-group">
+            {% control checkbox name="enableReviews" text=@t"Enable Reviews" value="{{settings.enableReviews}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="enableReviewModeration" text=@t"Moderate Reviews" value="{{settings.enableReviewModeration}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="allowReviewsForStorePurchaseOnly" text=@t"Allow Reviews For Store Purchase Only" value="{{settings.allowReviewsForStorePurchaseOnly}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="allowOneReviewPerUserPerItem" text=@t"Allow one review per user per order item" value="{{settings.allowOneReviewPerUserPerItem}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="enableRelatedProducts" text=@t"Enable Related Products" value="{{settings.enableRelatedProducts}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Number of related products" for="numberOfRelatedProducts" %}
+            {% control number min="1" name="numberOfRelatedProducts" value="{{settings.numberOfRelatedProducts}}"%}
+        </div>
     </div>
 </div>

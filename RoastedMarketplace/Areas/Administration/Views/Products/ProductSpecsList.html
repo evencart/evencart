@@ -1,0 +1,227 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Product Specifications" active_menu="ProductSpecificationsList" parent_active_menu="ProductsList" %}
+{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to product" %}
+
+{% partial "Navigation/ProductEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Product Specifications" | t}}
+                {% if hasGroup == "false" %}
+                <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, 0)">{{"Add New" | t}}</button>
+                {% endif %}
+                <button class="btn btn-primary float-right btn-sm" onclick="editSpecGroup(0)">{{"Add New Group" | t}}</button>
+            </div>
+            <div class="panel-body">
+               
+                {% for psl in productSpecificationsList %}
+                <h6 class="text-center">
+                    {% if psl.productSpecificationGroup.id == 0 %}
+                    {{"Ungrouped" | t}}
+                    {% else %}
+                    {{psl.productSpecificationGroup.name}}
+                    <a class="clickable" onclick="editSpecGroup('{{psl.productSpecificationGroup.id }}')">
+                        <span class="rbicon rbicon-edit"></span>
+                    </a>
+                    {% endif %}
+                    {% if hasGroup == "true" %}
+                    <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, '{{psl.productSpecificationGroup.id}}')">{{"Add Specification" | t}}</button>
+                    {% endif %}
+                </h6>
+                <table id="grid-selection-{{psl.productSpecificationGroup.id}}" class="table table-hover table-condensed table-bordered">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="name" data-width="20%">{{"Name" | t}}</th>
+                        <th data-column-id="isVisible" data-formatter="isvisible" data-width="10%">{{"Visible" | t}}</th>
+                        <th data-column-id="isFilterable" data-formatter="isfilterable" data-width="10%">{{"Filterable" | t}}</th>
+                        <th data-column-id="values" data-width="50%" data-formatter="values">{{"Values" | t}}</th>
+                        <th data-column-id="commands" data-width="10%" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless psl.productSpecificationsSerialized == blank %}*/
+                        initData = JSON.parse('{{psl.productSpecificationsSerialized}}');
+                        /*{% endunless %}*/
+                        if (initData) {
+                            initData = {
+                                data: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            }
+                        }
+                        generateGrid({
+                            element: "grid-selection-{{psl.productSpecificationGroup.id}}",
+                            initialData: initData,
+                            method: "GET",
+                            url:
+                                '{% route api_ProductSpecificationsListByGroup productId="{{product.id}}" groupId="{{psl.productSpecificationGroup.id}}" %}',
+                            responseObject: function (response) {
+                                if (response.data)
+                                    return response.data;
+                                var rows = [];
+                                for (var i = 0; i < response.productSpecificationsList.length; i++) {
+                                    if (response.productSpecificationsList[i].productSpecificationGroup.id == "{{psl.productSpecificationGroup.id}}") {
+                                        rows = response.productSpecificationsList[i].productSpecifications;
+                                        break;
+                                    }
+                                }
+                                return rows;
+                            },
+                            selection: false,
+                            navigation: false,
+                            columnSelection: false,
+                            formatters: {
+                                isvisible: function(column, row) {
+                                    return gridFormatters.binary(column, row, "isVisible");
+                                },
+                                isfilterable: function(column, row) {
+                                    return gridFormatters.binary(column, row, "isFilterable");
+                                },
+                                name: function(column, row) {
+                                    if (row.label)
+                                        return row.name + " (" + row.label + ")";
+                                    return row.name;
+                                },
+                                "values": function(column, row) {
+                                    if (!row.values)
+                                        return "";
+                                    var specs = "";
+                                    row.values.forEach(function(valueItem) {
+                                        var label = valueItem.label;
+                                        if (label)
+                                            label = "(" + label + ")";
+                                        if (!label)
+                                            label = "";
+                                        specs += "<span class='badge badge-default'>";
+                                        specs += valueItem.attributeValue + " " + label;
+                                        specs += "<a class='clickable' onclick='deleteSpecValue(" +
+                                            valueItem.id +
+                                            ")'><span class='rbicon-trash-2'></span></a>";
+                                        specs += "</span>";
+                                    });
+                                    return specs;
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editSpec(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteSpec(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-spec">
+</div>
+
+<div class="popup" id="edit-spec-group">
+</div>
+
+<script type="text/javascript">
+
+    var editSpec = function (id, groupId) {
+        groupId = groupId || 0;
+        jQuery("#edit-spec").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-spec",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Specification was saved successfully" | t}}');
+                }
+            });
+        var url =
+            '{% route EditProductSpecification productId="{{product.id}}" productSpecificationId="%id%" productSpecificationGroupId="%groupId%" %}'
+                .replaceAll("%id%", id)
+                .replaceAll("%groupId%", groupId);
+
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-spec").html(response);
+                centerPopup();
+            });
+    }
+
+    var editSpecGroup = function(id) {
+        jQuery("#edit-spec-group").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-spec-group",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Group was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route EditProductSpecificationGroup productId="{{product.id}}" productSpecificationId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-spec-group").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteSpec = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteProductSpecification %}",
+                    data: {
+                        productSpecificationId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Specification was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+    var deleteSpecValue = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this value?" | t}}';
+        return confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteProductSpecificationValue %}",
+                    data: {
+                        productSpecificationValueId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Value was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>

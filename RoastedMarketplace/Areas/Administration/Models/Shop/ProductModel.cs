@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
 using RoastedMarketplace.Areas.Administration.Models.Media;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
@@ -30,7 +31,11 @@ namespace RoastedMarketplace.Areas.Administration.Models.Shop
 
         public decimal? ComparePrice { get; set; }
 
+        public string ComparePriceFormatted => ComparePrice.ToCurrency();
+
         public decimal Price { get; set; }
+
+        public string PriceFormatted => Price.ToCurrency();
 
         public string Sku { get; set; }
 
