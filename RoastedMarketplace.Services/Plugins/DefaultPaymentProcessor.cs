@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Services.Helpers;
+using RoastedMarketplace.Services.Payments;
 
-namespace RoastedMarketplace.Services.Payments
+namespace RoastedMarketplace.Services.Plugins
 {
     public class DefaultPaymentProcessor : IPaymentProcessor
     {

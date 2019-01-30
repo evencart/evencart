@@ -1,0 +1,121 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Plugins" active_menu="WidgetsList" parent_active_menu="PluginsList" %}
+{% partial "Navigation/PluginSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Available Widgets" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table class="table">
+                    {% for widget in availableWidgets %}
+                    <tr>
+                        <td style="vertical-align: middle">
+                            <span class="float-left">
+                                {{widget.widgetName}}
+                            </span>
+                            <div class="btn-group float-right">
+                                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{"Add to zone" | t}}
+                                </button>
+                                <div class="dropdown-menu">
+                                    {% if widget.widgetZones.size > 1 %}
+                                    {% for zone in widget.widgetZones %}
+                                    <a class="dropdown-item clickable" onclick="addWidgetToZone('{{widget.pluginSystemName}}', '{{widget.widgetSystemName}}', '{{zone}}')">{{zone}}</a>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for zone in zones %}
+                                    <a class="dropdown-item clickable" onclick="addWidgetToZone('{{widget.pluginSystemName}}', '{{widget.widgetSystemName}}', '{{zone.systemName}}')">{{zone.name}}</a>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                </div>
+                            </div> 
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-primary">
+            {% for zone in zones %}
+            <div class="panel-title">
+                {{zone.name}}
+            </div>
+            <div class="panel-body" id="zone-{{zone.systemName}}-widgets">
+                {% for activeWidget in activeWidgets %}
+                {% if activeWidget.zoneName == zone.systemName %}
+                {% for widget in activeWidget.widgets %}
+                <div>
+                    {{widget.widgetName}}
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].widgetSystemName" value="{{widget.widgetSystemName}}" />
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].pluginSystemName" value="{{widget.pluginSystemName}}" />
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].displayOrder" value="{{widget.displayOrder}}" data-type="displayorder" />
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].id" value="{{widget.id}}" />
+                  
+                    <a onclick="deleteWidget('{{widget.id}}')" class="clickable float-right">
+                        <span class="rbicon rbicon-trash-2"></span>
+                    </a>
+                    {% if widget.hasConfiguration %}
+                    <a href="{{widget.configurationUrl}}" class="clickable float-right">
+                        <span class="rbicon rbicon-settings"></span>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+            <script type="text/javascript">
+                ready(function() {
+                    displayOrderSortable({
+                        container: "zone-{{zone.systemName}}-widgets",
+                        itemSelector: "div",
+                        update: function() {
+                            post({
+                                url: "{% route api_UpdateWidgetsDisplayOrder %}",
+                                data: jQuery("#zone-{{zone.systemName}}-widgets input").serialize()
+                            });
+                        }
+                    });
+                });
+            </script>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var addWidgetToZone = function(pluginName, widgetName, zoneName) {
+        post({
+            url: '{% route api_SaveWidget %}',
+            data: {
+                pluginSystemName: pluginName,
+                widgetSystemName: widgetName,
+                zoneName: zoneName
+            },
+            done: function() {
+                window.location.reload();
+            }
+        });
+    }
+    var deleteWidget = function (id) {
+        confirm('{{"Are you sure you wish to remove this widget?" | t}}',
+            function() {
+                post({
+                    url: '{% route api_DeleteWidget %}',
+                    data: {
+                        id: id
+                    },
+                    done: function() {
+                        window.location.reload();
+                    }
+                });
+            });
+
+    }
+</script>

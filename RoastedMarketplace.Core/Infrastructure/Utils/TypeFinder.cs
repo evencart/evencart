@@ -73,6 +73,25 @@ namespace RoastedMarketplace.Core.Infrastructure.Utils
             return null;
         }
 
+        public static IEnumerable<Type> ClassesOfType<T>(Assembly assembly, bool excludeAbstract = true)
+        {
+            //exclude if it's a system assembly
+            if (AssemblyLoader.IsSystemAssembly(assembly.FullName))
+                yield return null;
+            //if error occurs while loading the assembly, continue or throw error
+            var types = assembly.GetTypes().Where(x => x.IsClass).ToList();
+            foreach (var type in types)
+            {
+                if (excludeAbstract && type.IsClass && type.IsAbstract)
+                    continue;
+
+                if (typeof(T).IsAssignableFrom(type) || typeof(T).IsGenericType)
+                {
+                    yield return type;
+                }
+            }
+        }
+
         public static IList<Type> ClassesOfType<T>(bool excludeAbstract = true)
         {
             _allAssemblies = AssemblyLoader.GetAppDomainAssemblies();

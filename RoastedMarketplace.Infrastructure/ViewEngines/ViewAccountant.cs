@@ -217,10 +217,18 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             var plugins = _pluginLoader.GetAvailablePlugins();
             if (ApplicationEngine.IsAdmin())
             {
-                return _adminViewLocations ?? (_adminViewLocations = new List<string>()
+                if (_adminViewLocations != null)
+                    return _adminViewLocations;
+                _adminViewLocations = new List<string>();
+
+                _adminViewLocations.Add(_localFileProvider.CombinePaths(rootPath, "Areas", "Administration", "Views"));
+
+                //then the plugin locations
+                foreach (var plugin in plugins)
                 {
-                    _localFileProvider.CombinePaths(rootPath, "Areas", "Administration", "Views"),
-                });
+                    _adminViewLocations.Add(_localFileProvider.CombinePaths(plugin.PluginDirectory, "Views", "Administration"));
+                }
+                return _adminViewLocations;
             }
             var themePath = _themeProvider.GetThemePath(ApplicationEngine.ActiveTheme.Name);
             if (_viewLocations != null)

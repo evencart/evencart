@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Shop;
 
 namespace RoastedMarketplace.Data.Entity.Users

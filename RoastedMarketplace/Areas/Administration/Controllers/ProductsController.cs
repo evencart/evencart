@@ -102,7 +102,18 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, null, orderByExpression,
                 parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
-            var productsModel = products.Select(x => _modelMapper.Map<ProductModel>(x));
+            var productsModel = products.Select(x =>
+            {
+                var model = _modelMapper.Map<ProductModel>(x);
+                model.Media = x.MediaItems?.Select(y =>
+                    {
+                        var mediaModel = _modelMapper.Map<MediaModel>(y);
+                        mediaModel.ThumbnailUrl = _mediaAccountant.GetPictureUrl(y, 100, 100);
+                        return mediaModel;
+                    })
+                    .ToList();
+                return model;
+            });
             return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
                 .WithAvailableInputTypes()
                 .With("products", () => productsModel, () => _dataSerializer.Serialize(productsModel))

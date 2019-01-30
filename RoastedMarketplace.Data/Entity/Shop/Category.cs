@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Data.Entity.MediaEntities;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 
 namespace RoastedMarketplace.Data.Entity.Shop
 {

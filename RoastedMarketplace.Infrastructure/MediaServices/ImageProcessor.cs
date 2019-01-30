@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
 namespace RoastedMarketplace.Infrastructure.MediaServices
 {
@@ -22,7 +23,12 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
                 if (height == 0)
                     height = image.Height;
                 image.Mutate(x => x
-                    .Resize(width, height));
+                    .Resize(new ResizeOptions()
+                    {
+                        Size = new Size(width, height),
+                        Mode = ResizeMode.Max
+                    }));
+                
                 IImageEncoder encoder = null;
                 switch (imageFormat.Name) {
                     case "PNG":

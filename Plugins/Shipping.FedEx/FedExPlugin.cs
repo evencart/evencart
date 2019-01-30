@@ -1,32 +1,13 @@
 ﻿using System;
-using RoastedMarketplace.Core.Infrastructure.Routing;
+using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Services.Shipping;
+using RoastedMarketplace.Infrastructure.Plugins;
+using RoastedMarketplace.Services.Plugins;
 
 namespace Shipping.FedEx
 {
-    public class FedExPlugin : IShipmentHandlerPlugin
+    public class FedExPlugin : FoundationPlugin, IShipmentHandlerPlugin
     {
-        public void Install()
-        {
-            
-        }
-
-        public void Uninstall()
-        {
-            
-        }
-
-        public RouteData GetConfigurationPageRouteData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public RouteData GetDisplayPageRouteData()
-        {
-            throw new NotImplementedException();
-        }
-
         public decimal GetShippingHandlerFee(Cart cart)
         {
             throw new NotImplementedException();

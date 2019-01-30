@@ -1,0 +1,16 @@
+﻿using DryIoc;
+using RoastedMarketplace.Core.Infrastructure;
+using Ui.Slider.Services;
+
+namespace Ui.Slider
+{
+    public class DependencyContainer : IDependencyContainer
+    {
+        public void RegisterDependencies(IRegistrator registrar)
+        {
+            registrar.Register<IUiSliderService, UiSliderService>(Reuse.ScopedOrSingleton);
+        }
+
+        public int Priority { get; } = 0;
+    }
+}

@@ -9,5 +9,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementa
         public string Name { get; set; }
 
         public ThemeImplementation Theme { get; set; }
+
+        public string LogoUrl { get; set; }
     }
 }

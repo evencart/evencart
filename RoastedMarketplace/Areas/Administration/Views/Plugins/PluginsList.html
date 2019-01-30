@@ -51,38 +51,47 @@
                                     return plugin;
                                 },
                                 "commands": function (column, row) {
+                                    var actionLinks = "";
+                                    if (row.installed && row.configurationUrl) {
+                                        actionLinks = "<a class='btn btn-sm btn-primary' href='" + row.configurationUrl + "'>" +
+                                            '{{"Configuration" | t}}' +
+                                            "</button> ";
+                                    }
+                                   
+
                                     if (!row.installed) {
-                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                        return "<button type='button' class='btn btn-sm btn-primary command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
                                             '{{"Install" | t}}' +
                                             "</button> ";
                                     }
                                     else if (!row.active) {
-                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                        return "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", true, true)'>" +
                                             '{{"Activate" | t}}' +
-                                            "</button> " + "<button type='button' class='btn btn-danger command-edit' " +
+                                            "</button> " + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
                                             '{{"Uninstall" | t}}' +
-                                            "</button> ";
+                                            "</button> " + actionLinks;
                                     }
                                     else if (row.active) {
-                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                        return "<button type='button' class='btn btn-sm btn-danger command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
                                             '{{"Deactivate" | t}}' +
-                                            "</button> ";
+                                            "</button> " + actionLinks;
                                     }
                                     else if (row.installed) {
-                                        return "<button type='button' class='btn btn-secondary command-edit' " +
+                                        return "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
                                             '{{"Uninstall" | t}}' +
-                                            "</button> ";
+                                            "</button> " + actionLinks;
                                     }
                                 }
                             }
                         });
+                        jQuery('.dropdown-toggle').dropdown();
                     });
-
+                    
                 </script>
             </div>
         </div>

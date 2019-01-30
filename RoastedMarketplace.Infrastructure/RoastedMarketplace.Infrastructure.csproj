@@ -33,7 +33,6 @@
     <Compile Remove="Mvc\FoundationWidget.cs" />
     <Compile Remove="Mvc\Models\FoundationExtraFieldModel.cs" />
     <Compile Remove="Mvc\Models\FoundationModelBinder.cs" />
-    <Compile Remove="Mvc\Models\FoundationModelBinderProvider.cs" />
     <Compile Remove="Mvc\Models\WithExtraFieldsModel.cs" />
     <Compile Remove="Mvc\UI\IPageGenerator.cs" />
     <Compile Remove="Mvc\UI\PageGenerator.cs" />

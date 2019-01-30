@@ -38,6 +38,10 @@ namespace RoastedMarketplace.Core.Plugins
 
         public bool Active { get; set; }
 
+        public IList<IWidget> Widgets { get; set; }
+
+        public string ConfigurationUrl => LoadPluginInstance<IPlugin>().ConfigurationUrl;
+
         public static PluginInfo Load(string fileName)
         {
             return PluginConfigurator.LoadModuleInfo(fileName);
@@ -52,6 +56,8 @@ namespace RoastedMarketplace.Core.Plugins
         {
             var instance = DependencyResolver.Resolve(this.PluginType);
             var pluginTypedInstance = instance as T;
+            if (pluginTypedInstance != null)
+                pluginTypedInstance.PluginInfo = this;
             return pluginTypedInstance;
         }
     }

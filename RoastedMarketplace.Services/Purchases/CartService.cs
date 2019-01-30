@@ -7,7 +7,7 @@ using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.MediaEntities;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Shop;

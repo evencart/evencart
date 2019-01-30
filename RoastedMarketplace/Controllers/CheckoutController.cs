@@ -7,9 +7,9 @@ using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
-using RoastedMarketplace.Infrastructure.Mvc.Components;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Plugins;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -21,7 +21,6 @@ using RoastedMarketplace.Services.Payments;
 using RoastedMarketplace.Services.Plugins;
 using RoastedMarketplace.Services.Purchases;
 using RoastedMarketplace.Services.Serializers;
-using RoastedMarketplace.Services.Shipping;
 
 namespace RoastedMarketplace.Controllers
 {

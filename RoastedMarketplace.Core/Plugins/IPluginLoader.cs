@@ -6,7 +6,7 @@ namespace RoastedMarketplace.Core.Plugins
     {
         void LoadAvailablePlugins();
 
-        IList<PluginInfo> GetAvailablePlugins();
+        IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false);
 
         PluginInfo FindPlugin(string systemName);
     }

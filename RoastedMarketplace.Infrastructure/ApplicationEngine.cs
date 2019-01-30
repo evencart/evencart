@@ -26,9 +26,6 @@ namespace RoastedMarketplace.Infrastructure
         #region Initialization
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
-            //initialize modules
-            PluginEngine.Initialize();
-
             //add authentications
             services.AddAppAuthentication();
 
@@ -77,6 +74,20 @@ namespace RoastedMarketplace.Infrastructure
                 });
             }
 
+            //also plugin's assets directories
+            var pluginsDir = Path.Combine(_hostingEnvironment.ContentRootPath, "Plugins");
+            var allPlugins = Directory.GetDirectories(pluginsDir);
+            foreach (var pluginDir in allPlugins)
+            {
+                var directoryInfo = new DirectoryInfo(pluginDir);
+                var assetDir = Path.Combine(pluginsDir, pluginDir, "Assets");
+                if (!Directory.Exists(assetDir))
+                    continue;
+                app.UseStaticFiles(new StaticFileOptions() {
+                    FileProvider = new PhysicalFileProvider(assetDir),
+                    RequestPath = new PathString($"/plugins/{directoryInfo.Name}/assets")
+                });
+            }
             //init database
             app.InitializeDatabase();
 

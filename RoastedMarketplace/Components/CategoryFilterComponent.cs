@@ -23,7 +23,10 @@ namespace RoastedMarketplace.Components
 
         public override IViewComponentResult Invoke(object data = null)
         {
-            var searchModel = data as ProductSearchModel;
+            var dataAsDict = data as Dictionary<string, object>;
+            if (dataAsDict == null)
+                return R.Success.ComponentResult;
+            var searchModel = dataAsDict["model"] as ProductSearchModel;
             var currentCategoryId = searchModel?.CategoryId ?? 0;
             var allCategories = _categoryService.GetFullCategoryTree();
 

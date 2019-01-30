@@ -10,7 +10,7 @@ namespace RoastedMarketplace.Infrastructure.Plugins
 
         IList<PluginInfo> GetActivePlugins(Type type = null);
 
-        IList<PluginInfo> GetAvailablePlugins();
+        IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false);
 
         void InstallPlugin(PluginInfo pluginInfo);
 
@@ -19,5 +19,7 @@ namespace RoastedMarketplace.Infrastructure.Plugins
         void ActivatePlugin(PluginInfo pluginInfo);
 
         void DeactivatePlugin(PluginInfo pluginInfo);
+
+        IList<WidgetInfo> GetAvailableWidgets();
     }
 }

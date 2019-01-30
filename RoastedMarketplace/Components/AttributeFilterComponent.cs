@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,7 +22,10 @@ namespace RoastedMarketplace.Components
 
         public override IViewComponentResult Invoke(object data = null)
         {
-            var searchModel = (ProductSearchModel) data;
+            var dataAsDict = data as Dictionary<string, object>;
+            if (dataAsDict == null)
+                return R.Success.ComponentResult;
+            var searchModel = dataAsDict["model"] as ProductSearchModel;
             if (searchModel == null)
                 return null;
             var selectedFilters = _searchQueryParserService.ParseToDictionary(searchModel.Filters);

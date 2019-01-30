@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using RoastedMarketplace.Core.Extensions;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Plugins;
 
@@ -82,8 +83,17 @@ namespace RoastedMarketplace.Infrastructure.Plugins
             }
         }
 
-        public IList<PluginInfo> GetAvailablePlugins()
+        public IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
         {
+            if (_loadedPlugins.All(x => x.Widgets == null) && withWidgets)
+            {
+                foreach (var pluginInfo in _loadedPlugins)
+                {
+                    var widgetTypes = TypeFinder.ClassesOfType<IWidget>(pluginInfo.Assembly);
+                    var widgets = widgetTypes.Where(x => x != null).Select(x => (IWidget)DependencyResolver.ResolveOptional(x)).ToList();
+                    pluginInfo.Widgets = widgets;
+                }
+            }
             return _loadedPlugins;
         }
 
@@ -98,8 +108,8 @@ namespace RoastedMarketplace.Infrastructure.Plugins
             {
                 var pluginName = e.RequestingAssembly.GetName().Name;
                 var assemblyDirectory = e.RequestingAssembly.Location;
-                
-                var pluginDependencyName = e.Name.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).First();
+
+                var pluginDependencyName = e.Name.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).First();
 
                 var pluginDependencyFullName =
                     Path.Combine(_hostingEnvironment.ContentRootPath, _pluginsDirectory, pluginName, $"{pluginDependencyName}.dll"

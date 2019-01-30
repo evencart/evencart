@@ -22,6 +22,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         {
             new LayoutExpander() {TagName = "layout"},
             new PartialExpander() {TagName = "partial"},
+            new WidgetExpander() {TagName = "widget"},
             new ComponentExpander() {TagName = "component"},
             new ControlExpander() {TagName = "control"},
             new UrlRouteExpander() {TagName = "route"},

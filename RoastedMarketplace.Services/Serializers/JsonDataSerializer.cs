@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace RoastedMarketplace.Services.Serializers
@@ -16,6 +17,11 @@ namespace RoastedMarketplace.Services.Serializers
         public T DeserializeAs<T>(string serializedData)
         {
             return JsonConvert.DeserializeObject<T>(serializedData);
+        }
+
+        public object Deserialize(string serializedData, Type targetType)
+        {
+            return JsonConvert.DeserializeObject(serializedData, targetType);
         }
     }
 }

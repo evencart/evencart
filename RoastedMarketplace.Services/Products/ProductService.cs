@@ -8,7 +8,7 @@ using RoastedMarketplace.Core.Helpers;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Core.Services.Events;
 using RoastedMarketplace.Data.Entity.MediaEntities;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Reviews;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;

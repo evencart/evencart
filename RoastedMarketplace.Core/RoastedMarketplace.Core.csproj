@@ -20,6 +20,7 @@
     <Compile Remove="Caching\HttpCacheProvider.cs" />
     <Compile Remove="Caching\MemoryCacheProvider.cs" />
     <Compile Remove="Dummy\DummyHttpContext.cs" />
+    <Compile Remove="Plugins\PluginEngine.cs" />
     <Compile Remove="Startup\IOwinStartupTask.cs" />
   </ItemGroup>
 

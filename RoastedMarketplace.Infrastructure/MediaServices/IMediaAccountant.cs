@@ -12,5 +12,7 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
         string GetPictureUrl(Media picture, string size, bool returnDefaultIfNotFound = false);
 
         string GetVideoUrl(Media media);
+
+        string GetPictureUrl(int pictureId, int width = 0, int height = 0, bool returnDefaultIfNotFound = false);
     }
 }

@@ -1,8 +1,12 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using DotEntity;
 using DotEntity.Providers;
 using DotEntity.SqlServer;
+using DotEntity.Versioning;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Versions;
 using DotEntity = DotEntity.DotEntity;
 
@@ -34,7 +38,7 @@ namespace RoastedMarketplace.Data.Database
 
                 case "sqlserver":
                     return new SqlServerDatabaseProvider();
-             
+
             }
             return null;
         }
@@ -45,19 +49,43 @@ namespace RoastedMarketplace.Data.Database
             if (_versionsAdded)
                 return;
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
+
+            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
+            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            foreach (var pluginInfo in pluginInfos)
+            {
+                var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
+                if (versions.Any())
+                    DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+            }
             _versionsAdded = true;
         }
 
         public static void UpgradeDatabase()
         {
-            AppendVersions();
-            DotEntityDb.UpdateDatabaseToLatestVersion(DatabaseContextKey);
+            UpgradeDatabase(DatabaseContextKey);
+            //upgrade the installed plugin's database as well.
+            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
+            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            foreach (var pluginInfo in pluginInfos)
+            {
+                if (pluginInfo.Installed)
+                {
+                    UpgradeDatabase(pluginInfo.SystemName);
+                }
+            }
         }
 
-        public static void CleanupDatabase()
+        public static void UpgradeDatabase(string callingContextName)
         {
             AppendVersions();
-            DotEntityDb.UpdateDatabaseToVersion(DatabaseContextKey, null);
+            DotEntityDb.UpdateDatabaseToLatestVersion(callingContextName);
+        }
+
+        public static void CleanupDatabase(string callingContextName)
+        {
+            AppendVersions();
+            DotEntityDb.UpdateDatabaseToVersion(callingContextName, null);
         }
 
         public static void ClearVersions()

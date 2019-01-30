@@ -25,7 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{FADC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PaypalDirect", "Plugins\Payments.PaypalDirect\Payments.PaypalDirect.csproj", "{0E471D60-BE92-4F0C-89B3-1193709C1DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping.FedEx", "Plugins\Shipping.FedEx\Shipping.FedEx.csproj", "{E3992960-ED94-4B76-9590-3AAF061F129C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.FedEx", "Plugins\Shipping.FedEx\Shipping.FedEx.csproj", "{E3992960-ED94-4B76-9590-3AAF061F129C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.Slider", "Plugins\Ui.Slider\Ui.Slider.csproj", "{6B272832-8C62-4B95-9615-F54FCD96F2DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{E3992960-ED94-4B76-9590-3AAF061F129C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3992960-ED94-4B76-9590-3AAF061F129C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3992960-ED94-4B76-9590-3AAF061F129C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 		{EC8E7E6A-9256-43F3-906B-0B575313919E} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
 		{0E471D60-BE92-4F0C-89B3-1193709C1DA9} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{E3992960-ED94-4B76-9590-3AAF061F129C} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
+		{6B272832-8C62-4B95-9615-F54FCD96F2DB} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {646273F8-A252-4654-8A29-F5380A2FCDB0}

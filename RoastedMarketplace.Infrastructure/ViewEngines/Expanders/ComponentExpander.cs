@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
@@ -11,10 +12,12 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
     public class ComponentExpander : Expander
     {
+        private const string AssignFormat = "{{%- assign {0} = {1} -%}}";
         public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
             var componentMatches = regEx.Matches(inputContent);
             var viewComponentManager = DependencyResolver.Resolve<IViewComponentManager>();
+            var componentIndexOnPage = 0;
             if (componentMatches.Count == 0)
             {
                 foreach (var meta in readFile.GetMeta(nameof(ComponentExpander)))
@@ -22,13 +25,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     var componentName = meta.Key;
                     var keyValuePairs = (Dictionary<string, string>) meta.Value;
                     var componentParameters = GetComponentParameters(keyValuePairs, parameters);
-                    viewComponentManager.InvokeViewComponent(componentName, componentParameters.Count > 1 ? (object) componentParameters : (object)componentParameters.FirstOrDefault().Value ?? null, out string _, out object model, out string _, true);
-                    MergeModel(parameters, model, componentName);
+                    viewComponentManager.InvokeViewComponent(componentName, componentParameters, out string _, out object model, out string _, true);
+                    MergeModel(parameters, model, componentName, componentIndexOnPage++, out string _);
                 }
                 return inputContent;
             }
 
-
+            
             foreach (Match componentMatch in componentMatches)
             {
                 ExtractMatch(componentMatch, out string[] straightParameters, out Dictionary<string, string> keyValuePairs);
@@ -39,27 +42,30 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 //collect the values that are being passed to the component
                 var componentParameters = GetComponentParameters(keyValuePairs, parameters);
                 viewComponentManager.InvokeViewComponent(componentName,
-                    componentParameters.Count > 1 ? componentParameters : (object) componentParameters.FirstOrDefault().Value,
+                    componentParameters,
                     out string componentContent, out object model, out string viewPath);
 
                 if (!viewPath.IsNullEmptyOrWhitespace())
                     readFile.AddChild(ReadFile.From(viewPath));
 
+                //merge models
+                MergeModel(parameters, model, componentName, componentIndexOnPage++, out string assignString);
+
                 //add keyvaluepairs as meta
                 readFile.AddMeta(componentName, keyValuePairs, nameof(ComponentExpander));
-               
-                readFile.Content = readFile.Content.Replace(componentMatch.Result("$0"), componentContent);
-                inputContent = inputContent.Replace(componentMatch.Result("$0"), componentContent);
-                //merge models
-                MergeModel(parameters, model, componentName);
+                var match = componentMatch.Result("$0");
+                //replace only first occurance of the pattern result
+                readFile.Content = readFile.Content.ReplaceFirstOccurance(match, assignString + componentContent);
+                inputContent = inputContent.ReplaceFirstOccurance(match, assignString + componentContent);
             }
             return inputContent;
         }
 
-        private void MergeModel(object originalModel, object modelToMerge, string componentName)
+        private static void MergeModel(object originalModel, object modelToMerge, string componentName, int componentIndexOnPage, out string assignString)
         {
             //add to model
             var objects = originalModel as IDictionary<string, object>;
+            var assignBuilder = new StringBuilder();
             if (objects != null)
             {
                 if (modelToMerge is IDictionary<string, object>)
@@ -67,19 +73,26 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     var modelToMergeAsDictionary = modelToMerge as IDictionary<string, object>;
                     foreach (var m in modelToMergeAsDictionary)
                     {
-                        if (objects.ContainsKey(m.Key))
-                            objects[m.Key] = m.Value;
+                        var key = $"{m.Key}{componentIndexOnPage}";
+                        if (objects.ContainsKey(key))
+                            objects[key] = m.Value;
                         else
                         {
-                            objects.Add(m.Key, m.Value);
+                            objects.Add(key, m.Value);
                         }
+                        assignBuilder.AppendFormat(AssignFormat, m.Key, key);
+                        assignBuilder.AppendLine();
                     }
                 }
                 else
                 {
-                    objects.Add(componentName, modelToMerge);
+                    componentName = componentName.Replace('.', '_').Replace(" ", "_");
+                    var key = $"{componentName}{componentIndexOnPage}";
+                    objects.Add($"{key}", modelToMerge);
+                    assignBuilder.AppendFormat(AssignFormat, componentName, key);
                 }
             }
+            assignString = assignBuilder.ToString();
         }
 
         private object ExtractObject(object originalModel, string objectPath)
@@ -120,6 +133,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         {
             //collect the values that are being passed to the component
             var componentParameters = new Dictionary<string, object>();
+            if (keyValuePairs == null)
+                return componentParameters;
             foreach (var kp in keyValuePairs)
             {
                 if (!kp.Value.StartsWith("@"))

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 
 namespace RoastedMarketplace.Infrastructure.Routing
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Extensions;
 

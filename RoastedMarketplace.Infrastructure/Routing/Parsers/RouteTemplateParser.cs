@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -25,7 +26,7 @@ namespace RoastedMarketplace.Infrastructure.Routing.Parsers
             { DayKey, $@"(?<{DayKey}>([1-9]|0[1-9]|[1-2][0-9]|3[0-1]))" },
         };
 
-        private readonly Dictionary<string, Regex> _regexCache = new Dictionary<string, Regex>();
+        private readonly ConcurrentDictionary<string, Regex> _regexCache = new ConcurrentDictionary<string, Regex>();
 
         public virtual Dictionary<string, string> ParsePathForTemplate(string path, string template)
         {
@@ -35,7 +36,7 @@ namespace RoastedMarketplace.Infrastructure.Routing.Parsers
             if (!_regexCache.TryGetValue(template, out Regex regEx))
             {
                 regEx = new Regex(template);
-                _regexCache.Add(template, regEx);
+                _regexCache.TryAdd(template, regEx);
             }
             ParseTemplate(path, regEx, parsedValues);
             return parsedValues;

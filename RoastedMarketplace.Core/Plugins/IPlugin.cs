@@ -1,4 +1,5 @@
-﻿using RoastedMarketplace.Core.Infrastructure.Routing;
+﻿using System.Collections.Generic;
+using DotEntity.Versioning;
 
 namespace RoastedMarketplace.Core.Plugins
 {
@@ -15,15 +16,18 @@ namespace RoastedMarketplace.Core.Plugins
         void Uninstall();
 
         /// <summary>
-        /// Gets the configuration page route data
+        /// Gets the database versions of the plugin
         /// </summary>
-        /// <returns></returns>
-        RouteData GetConfigurationPageRouteData();
+        IList<IDatabaseVersion> GetDatabaseVersions();
 
         /// <summary>
-        /// Gets the display page route data
+        /// The info about the plugin
         /// </summary>
-        /// <returns></returns>
-        RouteData GetDisplayPageRouteData();
+        PluginInfo PluginInfo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the configuration url for the plugin
+        /// </summary>
+        string ConfigurationUrl { get; }
     }
 }

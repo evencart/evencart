@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Models.Components;
@@ -11,7 +12,10 @@ namespace RoastedMarketplace.Components
     {
         public override IViewComponentResult Invoke(object data = null)
         {
-            var searchModel = (ProductSearchModel) data;
+            var dataAsDict = data as Dictionary<string, object>;
+            if (dataAsDict == null)
+                return R.Success.ComponentResult;
+            var searchModel = dataAsDict["model"] as ProductSearchModel;
             if (searchModel == null)
                 return R.Success.ComponentResult;
             var startPrice = searchModel.AvailableFromPrice;

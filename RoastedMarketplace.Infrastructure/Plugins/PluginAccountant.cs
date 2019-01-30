@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Infrastructure.Extensions;
@@ -37,9 +39,9 @@ namespace RoastedMarketplace.Infrastructure.Plugins
             return type != null ? activePlugins.Where(x => type.IsAssignableFrom(x.PluginType)).ToList() : activePlugins.ToList();
         }
 
-        public IList<PluginInfo> GetAvailablePlugins()
+        public IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
         {
-            var availablePlugins = _pluginLoader.GetAvailablePlugins();
+            var availablePlugins = _pluginLoader.GetAvailablePlugins(withWidgets);
             var sitePlugins = _pluginSettings.GetSitePlugins();
             foreach (var ap in availablePlugins)
             {
@@ -78,6 +80,45 @@ namespace RoastedMarketplace.Infrastructure.Plugins
         private void UpdatePluginActiveStatus(PluginInfo pluginInfo, bool active)
         {
             _pluginSettings.UpdatePluginStatus(pluginInfo.SystemName, true, active);
+        }
+
+        public IList<WidgetInfo> GetAvailableWidgets()
+        {
+            var plugins = GetAvailablePlugins(true).Where(x => x.Active).ToList();
+            var widgetInfos = plugins.SelectMany(x =>
+            {
+                return x.Widgets.Select(y => new WidgetInfo() {
+                    PluginName = x.Name,
+                    PluginSystemName = x.SystemName,
+                    WidgetSystemName = y.SystemName,
+                    WidgetDisplayName = y.DisplayName,
+                    WidgetZones = y.WidgetZones,
+                    ConfigurationUrl = y.ConfigurationUrl,
+                    HasConfiguration = y.HasConfiguration,
+                    WidgetInstance = y
+                });
+
+            }).ToList();
+            //todo:move this to separate file
+            //get the widgets already part of solution
+            var solutionWidgetTypes = TypeFinder.ClassesOfType<IWidget>();
+            var solutionWidgets = solutionWidgetTypes.Select(x => (IWidget) DependencyResolver.Resolve(x)).ToList();
+            foreach (var sw in solutionWidgets)
+            {
+                if (widgetInfos.Any(x => x.WidgetSystemName == sw.SystemName))
+                    continue;
+                widgetInfos.Add(new WidgetInfo() {
+                    PluginName = "RoastedMarketplace",
+                    PluginSystemName = "RoastedMarketplace.InbuiltWidgets",
+                    WidgetSystemName = sw.SystemName,
+                    WidgetDisplayName = sw.DisplayName,
+                    WidgetZones = sw.WidgetZones,
+                    ConfigurationUrl = sw.ConfigurationUrl,
+                    HasConfiguration = sw.HasConfiguration,
+                    WidgetInstance = sw
+                });
+            }
+            return widgetInfos;
         }
     }
 }

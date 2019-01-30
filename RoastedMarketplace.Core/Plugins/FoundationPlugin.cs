@@ -1,14 +1,13 @@
-﻿using RoastedMarketplace.Core.Infrastructure.Routing;
+﻿using System.Collections.Generic;
+using DotEntity.Versioning;
 
 namespace RoastedMarketplace.Core.Plugins
 {
     public abstract class FoundationPlugin : IPlugin
     {
-        protected FoundationPlugin()
-        {
-        }
+        public PluginInfo PluginInfo { get; set; }
 
-        public virtual PluginInfo ModuleInfo { get; set; }
+        public virtual string ConfigurationUrl { get; } = null;
 
         /// <summary>
         /// A system module can't be deactivated or uninstalled. It's install method is called immediately on application restart
@@ -19,8 +18,9 @@ namespace RoastedMarketplace.Core.Plugins
 
         public virtual void Uninstall() { }
 
-        public abstract RouteData GetConfigurationPageRouteData();
-
-        public abstract RouteData GetDisplayPageRouteData();
+        public virtual IList<IDatabaseVersion> GetDatabaseVersions()
+        {
+            return new List<IDatabaseVersion>();
+        }
     }
 }

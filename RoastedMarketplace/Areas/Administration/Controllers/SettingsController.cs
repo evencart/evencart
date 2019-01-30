@@ -9,6 +9,7 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Services.MediaServices;
 using RoastedMarketplace.Services.Settings;
 
 namespace RoastedMarketplace.Areas.Administration.Controllers

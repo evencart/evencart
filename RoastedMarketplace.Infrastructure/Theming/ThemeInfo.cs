@@ -1,4 +1,6 @@
-﻿namespace RoastedMarketplace.Infrastructure.Theming
+﻿using System.Collections.Generic;
+
+namespace RoastedMarketplace.Infrastructure.Theming
 {
     public class ThemeInfo
     {
@@ -13,5 +15,7 @@
         public string ProductPageImageSize { get; set; }
 
         public string ProductPageImageThumbnailSize { get; set; }
+
+        public Dictionary<string, string> WidgetZones { get; set; }
     }
 }

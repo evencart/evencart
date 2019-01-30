@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace RoastedMarketplace.Infrastructure.Mvc.Models
 {
-    public class FoundationModelBinderProvider : IModelBinderProvider
+    public class WidgetSettingsModelBinderProvider : IModelBinderProvider
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
@@ -13,9 +13,9 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Models
                 throw new ArgumentNullException(nameof(context));
             }
 
-            if (context.Metadata.ModelType == typeof(FoundationModel))
+            if (context.Metadata.ModelType == typeof(WidgetSettingsModel))
             {
-                return new BinderTypeModelBinder(typeof(FoundationModelBinder));
+                return new BinderTypeModelBinder(typeof(WidgetSettingsModelBinder));
             }
 
             return null;

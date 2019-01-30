@@ -13,5 +13,9 @@
             {% control label text=@t"Default Timezone" for="defaultTimezoneId" %}
             {% control select name="defaultTimezoneId" value="settings.defaultTimezoneId" items="timezones" %}
         </div>
+        <div class="form-group">
+            {% control label text=@t"Store Logo" for="logoId" %}
+            {% control imageupload name="logoId" id="logoId" value="settings.logoId" __url="{{settings.logoUrl}}" %}
+        </div>
     </div>
 </div>

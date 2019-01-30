@@ -110,10 +110,15 @@
         public const string ShippingMethodsList = "ShippingMethodsList";
         public const string PluginsList = "PluginsList";
         public const string UpdatePluginStatus = "UpdatePluginStatus";
+        public const string WidgetsList = "WidgetsList";
+        public const string SaveWidget = "SaveWidget";
+        public const string DeleteWidget = "DeleteWidget";
+        public const string UpdateWidgetsDisplayOrder = "UpdateWidgetsDisplayOrder";
         public const string UploadPlugin = "UploadPlugin";
         public const string GetSettings = "GetSettings";
         public const string SaveSettings = "SaveSettings";
 
-
+        public const string GetWidgetSettings = "GetWidgetSettings";
+        public const string SaveWidgetSettings = "SaveWidgetSettings";
     }
 }

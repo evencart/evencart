@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Data.Entity.MediaEntities;
 using RoastedMarketplace.Data.Helpers;
+using RoastedMarketplace.Services.MediaServices;
 
 namespace RoastedMarketplace.Infrastructure.MediaServices
 {
@@ -112,6 +114,12 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
         public string GetVideoUrl(Media media)
         {
             throw new System.NotImplementedException();
+        }
+
+        public string GetPictureUrl(int pictureId, int width = 0, int height = 0, bool returnDefaultIfNotFound = false)
+        {
+            var media = DependencyResolver.Resolve<IMediaService>().Get(pictureId);
+            return GetPictureUrl(media, width, height, returnDefaultIfNotFound);
         }
 
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Plugins;
 using RoastedMarketplace.Infrastructure.Routing.Conventions;
 using RoastedMarketplace.Infrastructure.ViewEngines;
@@ -34,6 +35,7 @@ namespace RoastedMarketplace.Infrastructure.Extensions
             var mvcBuilder = services.AddMvc(options =>
                 {
                     options.Conventions.Add(new AppRoutingConvention());
+                    options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
                 })
                 .AddJsonOptions(options =>
                 {

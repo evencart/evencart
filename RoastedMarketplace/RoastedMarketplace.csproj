@@ -26,13 +26,16 @@
   <ItemGroup>
     <None Remove="App_Data\database.configex" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
-    <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
-    <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
-    <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
-    <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
+    <None Remove="Content\Themes\Default\Assets\Checkout\AddressInfo.html" />
+    <None Remove="Content\Themes\Default\Assets\Checkout\Complete.html" />
+    <None Remove="Content\Themes\Default\Assets\Checkout\Confirm.html" />
+    <None Remove="Content\Themes\Default\Assets\Checkout\PaymentInfo.html" />
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Home\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
     <None Remove="Content\Themes\Default\Views\Products\_ProductBox.html" />
@@ -53,16 +56,16 @@
     <Content Include="Content\Themes\Default\Views\Cart\Index.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Checkout\Complete.html">
+    <Content Include="Content\Themes\Default\Assets\Checkout\Complete.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Checkout\Confirm.html">
+    <Content Include="Content\Themes\Default\Assets\Checkout\Confirm.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Checkout\PaymentInfo.html">
+    <Content Include="Content\Themes\Default\Assets\Checkout\PaymentInfo.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Checkout\AddressInfo.html">
+    <Content Include="Content\Themes\Default\Assets\Checkout\AddressInfo.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\AttributeFilter\Default.html">
@@ -71,7 +74,16 @@
     <Content Include="Content\Themes\Default\Views\Components\CartSection\Default.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Include="Content\Themes\Default\Views\Components\CustomHtml\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Components\PriceFilter\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\ProductCarousel\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Home\Index.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\Index.html">
@@ -107,7 +119,6 @@
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Areas\Administration\Views\Discounts\" />
     <Folder Include="Content\SecureData\" />
-    <Folder Include="Content\Themes\Default\Views\Home\" />
     <Folder Include="Models\Installation\" />
     <Folder Include="Plugins\" />
     <Folder Include="Widgets\" />

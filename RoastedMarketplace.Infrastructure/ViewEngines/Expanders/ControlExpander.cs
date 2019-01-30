@@ -36,9 +36,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 var assigns = string.Join("", keyValuePairsString.Select(x => string.Format(AssignFormat, x)));
                 //replace attribute string
                 var controlText = controlFile.Content.Replace("%attributes%", attributeString);
-                foreach(var kp in keyValuePairs.Where(x => NonAttributeNames.Contains(x.Key)))
+                foreach(var kp in keyValuePairs.Where(x => NonAttributeNames.Contains(x.Key) || x.Key.StartsWith("__")))
                 {
-                    controlText = controlText.Replace($"%{kp.Key}%", kp.Value);
+                    var key = kp.Key.StartsWith("__") ? kp.Key.Substring("__".Length) : kp.Key;
+                    controlText = controlText.Replace($"%{key}%", kp.Value);
                 }
 
                 //replace the non attributes which were not passed

@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using RoastedMarketplace.Core.Extensions;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Pages;

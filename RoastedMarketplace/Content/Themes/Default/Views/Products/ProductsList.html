@@ -3,9 +3,9 @@
     <div class="row">
         <div class="col-lg-3">
             <div class="product-filters">
-                {% component "CategoryFilter" params="@params" %}
-                {% component "AttributeFilter" params="@params" %}
-                {% component "PriceFilter" params="@params" %}
+                {% component "CategoryFilter" model="@params" %}
+                {% component "AttributeFilter" model="@params" %}
+                {% component "PriceFilter" model="@params" %}
             </div>
         </div>
         <div class="col-lg-9">

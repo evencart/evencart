@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc.UI;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
@@ -34,7 +35,12 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 keyValuePairs.TryGetValue("title", out string title);
                 keyValuePairs.TryGetValue("systemName", out string systemName);
 
-                url = url ?? "";
+                if (url.IsNullEmptyOrWhiteSpace())
+                {
+                    //use the current url if it's empty url
+                    url = ApplicationEngine.CurrentHttpContext.Request.Path + ApplicationEngine.CurrentHttpContext.Request.QueryString;
+                }
+                
                 title = title ?? "";
                 systemName = systemName ?? "";
                 //single navigation link

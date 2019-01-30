@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using RoastedMarketplace.Core.Extensions;
-using RoastedMarketplace.Core.Infrastructure.Routing;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
+using RoastedMarketplace.Infrastructure.Plugins;
 using RoastedMarketplace.Services.Payments;
 using RoastedMarketplace.Services.Plugins;
 
@@ -107,18 +107,7 @@ namespace Payments.PaypalDirect
             //so return affirmative for now
             return true;
         }
-
-
-
-        public override RouteData GetConfigurationPageRouteData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override RouteData GetDisplayPageRouteData()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         #region Helpers
         private static bool Mod10Check(string creditCardNumber)

@@ -1,6 +1,6 @@
 ﻿using RoastedMarketplace.Core.Data;
 
-namespace RoastedMarketplace.Data.Entity.Page
+namespace RoastedMarketplace.Data.Entity.Pages
 {
     public class SeoMeta : FoundationEntity
     {

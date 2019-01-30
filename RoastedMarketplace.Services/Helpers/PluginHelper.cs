@@ -1,6 +1,5 @@
 ﻿using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Services.Plugins;
-using RoastedMarketplace.Services.Shipping;
 
 namespace RoastedMarketplace.Services.Helpers
 {

@@ -13,5 +13,10 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// Default timezone to be used for network
         /// </summary>
         public string DefaultTimeZoneId { get; set; }
+
+        /// <summary>
+        /// The logo id of the website
+        /// </summary>
+        public int LogoId { get; set; }
     }
 }

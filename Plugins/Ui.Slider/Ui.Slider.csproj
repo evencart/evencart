@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Ui.Slider\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Ui.Slider\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\js\jquery.cycle.all.js" />
+    <None Remove="Views\Administration\UiSlider\SlideList.html" />
+    <None Remove="Views\Administration\UiSlider\_Navigation.html" />
+    <None Remove="Views\Components\SliderWidget\Default.html" />
+    <None Remove="Views\Administration\UiSlider\Configure.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\js\jquery.cycle.all.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\UiSlider\_Navigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\UiSlider\SlideList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\SliderWidget\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\UiSlider\Configure.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

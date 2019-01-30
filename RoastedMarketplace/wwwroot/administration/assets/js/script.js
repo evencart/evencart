@@ -17,7 +17,7 @@ var showAsPopup = function (id, ajax, onClose, onOpen) {
     if (onOpen)
         onOpen();
     element.find(".close-popup, .popup-close").click(function () {
-        hidePopup(id);
+        hidePopup(id, "cancel");
     });
 
     //center element on window resizes

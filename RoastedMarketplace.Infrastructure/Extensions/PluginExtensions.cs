@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
@@ -49,6 +50,45 @@ namespace RoastedMarketplace.Infrastructure.Extensions
             ps.Active = active;
             ps.Installed = installed;
             pluginSettings.SetSitePlugins(pluginStatus, true);
+        }
+
+        public static IList<WidgetStatus> GetSiteWidgets(this PluginSettings pluginSettings)
+        {
+            var siteWidgets = pluginSettings.SiteWidgets;
+            if (siteWidgets.IsNullEmptyOrWhitespace())
+                return new List<WidgetStatus>();
+
+            var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
+            return dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets);
+        }
+
+        public static void AddWidget(this PluginSettings pluginSettings, string widgetName, string pluginSystemName, string zoneName)
+        {
+            var siteWidgets = pluginSettings.GetSiteWidgets();
+            //find widget count in zone
+            var zoneWidgetCount = siteWidgets.Count(x => x.ZoneName == zoneName);
+            siteWidgets.Add(new WidgetStatus()
+            {
+                WidgetSystemName = widgetName,
+                PluginSystemName = pluginSystemName,
+                ZoneName = zoneName,
+                DisplayOrder = zoneWidgetCount,
+                Id = Guid.NewGuid().ToString()
+            });
+
+            pluginSettings.SaveWidgets(siteWidgets, true);
+        }
+
+        public static void SaveWidgets(this PluginSettings pluginSettings, IList<WidgetStatus> widgets, bool save = false)
+        {
+            var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
+            var sitePlugins = dataSerializer.Serialize(widgets);
+            pluginSettings.SiteWidgets = sitePlugins;
+            if (save)
+            {
+                var settingService = DependencyResolver.Resolve<ISettingService>();
+                settingService.Save(pluginSettings);
+            }
         }
     }
 }

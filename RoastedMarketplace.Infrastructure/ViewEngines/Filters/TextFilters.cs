@@ -16,5 +16,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Filters
         {
             return string.Concat(string.Format("{0} ", input), T(input == 1 ? singular : plural));
         }
+
+        public static string WithCurrency(Context context, decimal input)
+        {
+            return input.ToCurrency();
+        }
     }
 }

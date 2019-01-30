@@ -1,0 +1,101 @@
+﻿{% layout "_WidgetLayout" %}
+{% global page_title=@t"Widget Configuration" active_menu="WidgetConfiguration" parent_active_menu="PluginsList" %}
+{% partial "Navigation/WidgetSecondaryNavigation" %}
+
+<form action="" method="post">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Configure Product Carousel" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Title" for="title" %}
+                        {% control text id="name" name="title" value="{{settings.title}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Products" %}
+                       <table class="table table-bordered" id="table-products"></table>
+                        <button class="btn btn-primary btn-sm" type="button" onclick="selectProducts()">
+                            {{"Select Products" | t}}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="save-button-container">
+        <input type="hidden" name="id" value="{{widgetId}}"/>
+        <button type="submit" class="btn btn-success">{{"Save Widget" | t}}</button>
+        <a class="btn btn-default" href='{% route WidgetsList %}'>{{"Cancel" | t}}</a>
+    </div>
+</form>
+<div id="popup-selector" style="width: 800px; min-height: 200px; display: none"></div>
+<script type="text/javascript">
+    var selectProducts = function() {
+        jQuery("#popup-selector").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("popup-selector",
+            true,
+            function(result, data) {
+                if (result == "ok") {
+                    data.forEach(function (d) {
+                        addProductToTable(d);
+                    });
+
+                }
+            });
+        var url =
+            '{% route SelectorDialog entityName="products" multiSelect="true" %}';
+        loadPage(url,
+            true,
+            null,
+            function(response) {
+                jQuery("#popup-selector").html(response);
+                centerPopup();
+            });
+    }
+
+    var addProductToTable = function(product, skip) {
+        var tr = "<tr>";
+        tr += "<td>";
+        if (product.media && product.media[0].thumbnailUrl) {
+            tr += "<img src='" + product.media[0].thumbnailUrl + "'/>";
+        }
+        tr += "</td>";
+        tr += "<td>" + product.name + "<input type='hidden' name='productIds[]' value='" + product.id + "'/></td>";
+        tr += "</tr>";
+        jQuery("#table-products").append(tr);
+        if (!skip)
+            displayOrderSortable({
+                container: "table-products",
+                itemSelector: "tr",
+                refresh: true
+            });
+    }
+
+    ready(function() {
+      
+        //initila products
+        /*{% for product in settings.products %}*/
+        addProductToTable({
+            id: "{{product.id}}",
+            name: "{{product.name}}",
+            /*{% if product.media.size() > 0 %}*/
+            media: [
+                {
+                    thumbnailUrl: "{{product.media[0].thumbnailUrl}}"
+                }
+            ]
+            /*{% endif %}*/
+        }, true);
+        /*{% endfor %}*/
+        displayOrderSortable({
+            container: "table-products",
+            itemSelector: "tr"
+        });
+
+    });
+</script>

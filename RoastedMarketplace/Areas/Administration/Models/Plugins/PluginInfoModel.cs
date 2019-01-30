@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Collections.Generic;
+using FluentValidation;
+using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
@@ -25,6 +27,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Plugins
         public bool Installed { get; set; }
 
         public bool Active { get; set; }
+
+        public string ConfigurationUrl{ get; set; }
 
         public void SetupValidationRules(ModelValidator<PluginInfoModel> v)
         {

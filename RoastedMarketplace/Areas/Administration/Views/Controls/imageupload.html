@@ -1,0 +1,27 @@
+﻿<img src="%url%" id="image-{{name}}" width="100px"/>
+<div>
+    <span class="btn btn-primary clickable fileinput-button btn-sm" id="btn-{{name}}">
+        {% if %value% == 0 %}
+        <span>{{"Add Image" | t}}</span>
+        {% else %}
+        <span>{{"Update Image" | t}}</span>
+        {% endif %}
+        <input id="imageFile-{{name}}" name="mediaFile" type="file" />
+        <input type="hidden" name="{{name}}" id="hidden-{{name}}" value="%value%" />
+    </span>
+</div>
+
+<script type="text/javascript">
+    ready(function () {
+        initFileUploader({
+            element: "imageFile-{{name}}",
+            url: "{% route api_UploadMedia %}",
+            done: function (e, data) {
+                var result = data.result;
+                var media = result.media;
+                jQuery("#image-{{name}}").attr("src", media.thumbnailUrl);
+                jQuery("#hidden-{{name}}").val(media.id);
+            }
+        });
+    });
+</script>

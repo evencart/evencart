@@ -9,7 +9,7 @@ namespace RoastedMarketplace.Controllers
         [HttpGet("~/", Name = RouteNames.Home)]
         public IActionResult Index()
         {
-            return Content("Home");
+            return R.Success.Result;
         }
     }
 }

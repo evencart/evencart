@@ -6,5 +6,6 @@ namespace RoastedMarketplace.Data.Entity.Settings
     {
         public string SitePlugins { get; set; }
 
+        public string SiteWidgets { get; set; }
     }
 }

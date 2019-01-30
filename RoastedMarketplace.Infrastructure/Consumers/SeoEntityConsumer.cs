@@ -1,7 +1,7 @@
 ﻿using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Core.Services.Events;
-using RoastedMarketplace.Data.Entity.Page;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Services.Pages;
 
 namespace RoastedMarketplace.Infrastructure.Consumers

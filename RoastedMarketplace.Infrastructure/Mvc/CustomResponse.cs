@@ -45,6 +45,12 @@ namespace RoastedMarketplace.Infrastructure.Mvc
             return this;
         }
 
+        private string _viewName = null;
+        public CustomResponse WithView(string viewName)
+        {
+            _viewName = viewName;
+            return this;
+        }
         /// <summary>
         /// Attaches specified parameter to the response
         /// </summary>
@@ -93,11 +99,15 @@ namespace RoastedMarketplace.Infrastructure.Mvc
                 //ignore the view and return the model as json
                 return r._controller.Json(r._expandoObject);
             }
+            if(r._viewName != null)
+                return r._controller?.View(r._viewName, r._expandoObject);
             return r._controller?.View(r._expandoObject);
         }
 
         public static IViewComponentResult GetComponentResult(CustomResponse r)
         {
+            if (r._viewName != null)
+                return r._viewComponent?.View(r._viewName, r._expandoObject);
             return r._viewComponent?.View(r._expandoObject);
         }
 

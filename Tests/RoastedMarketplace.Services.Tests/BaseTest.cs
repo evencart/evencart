@@ -41,7 +41,7 @@ namespace RoastedMarketplace.Services.Tests
             }
 
             var serviceCollection = new ServiceCollection();
-            ApplicationEngine.ConfigureServices(serviceCollection);
+            ApplicationEngine.ConfigureServices(serviceCollection, null);
         }
 
         [OneTimeSetUp]
@@ -53,7 +53,7 @@ namespace RoastedMarketplace.Services.Tests
         [OneTimeTearDown]
         public void Setdown()
         {
-            DatabaseManager.CleanupDatabase();
+            DatabaseManager.CleanupDatabase(ContextKey);
         }
 
         public T Resolve<T>()
