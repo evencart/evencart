@@ -62,5 +62,11 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageShipment = "Shpment.Manage";
 
+        public const string EditContentPage = "ContentPage.Edit";
+
+        public const string DeleteContentPage = "ContentPage.Delete";
+
+        public const string ViewContentPages = "ContentPage.View";
+
     }
 }

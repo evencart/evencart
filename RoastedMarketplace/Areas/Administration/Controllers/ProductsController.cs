@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Areas.Administration.Extensions;
 using RoastedMarketplace.Areas.Administration.Models.Media;
+using RoastedMarketplace.Areas.Administration.Models.Pages;
 using RoastedMarketplace.Areas.Administration.Models.Shop;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
@@ -19,6 +21,7 @@ using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Services.MediaServices;
+using RoastedMarketplace.Services.Pages;
 using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Serializers;
 
@@ -43,8 +46,8 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private readonly IProductSpecificationValueService _productSpecificationValueService;
         private readonly IProductSpecificationGroupService _productSpecificationGroupService;
         private readonly IProductRelationService _productRelationService;
-
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService)
+        private readonly ISeoMetaService _seoMetaService;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -63,6 +66,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _productSpecificationValueService = productSpecificationValueService;
             _productSpecificationGroupService = productSpecificationGroupService;
             _productRelationService = productRelationService;
+            _seoMetaService = seoMetaService;
         }
 
 
@@ -131,6 +135,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 return NotFound();
 
             var productModel = _modelMapper.Map<ProductModel>(product);
+            productModel.SeoMeta = _modelMapper.Map<SeoMetaModel>(product.SeoMeta);
             productModel.Media = product.MediaItems?.Select(x =>
                 {
                     var model = _modelMapper.Map<MediaModel>(x);
@@ -201,6 +206,8 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 LinkProductWithCategories(product.Id, model.Categories);
             }
 
+            //update seo
+            _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
             return R.Success.Result;
         }
         #endregion

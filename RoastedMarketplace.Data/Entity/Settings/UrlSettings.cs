@@ -6,8 +6,8 @@ namespace RoastedMarketplace.Data.Entity.Settings
     {
         public string ProductUrlTemplate { get; set; }
 
-        public string TopicUrlTemplate { get; set; }
-
         public string CategoryUrlTemplate { get; set; }
+
+        public string ContentPageUrlTemplate { get; set; }
     }
 }

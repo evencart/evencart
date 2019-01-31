@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
@@ -12,9 +11,9 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Models.Media;
+using RoastedMarketplace.Models.Pages;
 using RoastedMarketplace.Models.Products;
 using RoastedMarketplace.Models.Reviews;
-using RoastedMarketplace.Models.Site;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Search;
@@ -41,7 +40,7 @@ namespace RoastedMarketplace.Controllers
             _productRelationService = productRelationService;
         }
 
-        [DynamicRoute(Name = RouteNames.SingleProduct)]
+        [DynamicRoute(Name = RouteNames.SingleProduct, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate))]
         public IActionResult Index(int id)
         {
             if (id < 1)
@@ -80,7 +79,9 @@ namespace RoastedMarketplace.Controllers
             return response.Result;
         }
 
-        [DynamicRoute(Name = RouteNames.ProductsPage)]
+        [DynamicRoute(Name = RouteNames.ProductsPage, SeoEntityName = nameof(Category),
+            SettingName = nameof(UrlSettings.CategoryUrlTemplate),
+            ParameterName = nameof(ProductSearchModel.CategoryId))]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult ProductsList(ProductSearchModel searchModel)
         {

@@ -120,5 +120,10 @@
 
         public const string GetWidgetSettings = "GetWidgetSettings";
         public const string SaveWidgetSettings = "SaveWidgetSettings";
+
+        public const string ContentPagesList = "ContentPagesList";
+        public const string GetContentPage = "GetContentPage";
+        public const string SaveContentPage = "SaveContentPage";
+        public const string DeleteContentPage = "DeleteContentPage";
     }
 }

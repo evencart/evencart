@@ -1,6 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using RoastedMarketplace.Data.Entity.Shop;
+using RoastedMarketplace.Data.Entity.Pages;
+using RoastedMarketplace.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
 namespace RoastedMarketplace.Data.Versions
 {
@@ -8,10 +9,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<ProductRelation>(transaction);
-
-            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
-            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, false);
+            Db.CreateConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction, true);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

@@ -108,6 +108,10 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<ShipmentItem>(transaction);
             Db.CreateTable<PaymentTransaction>(transaction);
 
+            //content
+            Db.CreateTable<ContentPage>(transaction);
+            Db.CreateConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction, true);
+
             Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Order, OrderItem>("Id", "OrderId"), transaction, true);

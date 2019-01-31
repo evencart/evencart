@@ -1,0 +1,65 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Page Editor" active_menu="GetContentPage" parent_active_menu="ContentPagesList"%}
+{% partial "Navigation/ContentPageEditSecondaryNavigation" %}
+
+
+<form action="{% route api_SaveContentPage %}" method="post" id="content-editor-form">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel">
+                <div class="panel-title">
+                    {% if contentPage.id != 0 %}
+                    {{ contentPage.name }}
+                    {% else %}
+                    {{"Add Page" | t }}
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Page Title" for="name" %}
+                        {% control text name="name" placeholder=@t"e.g. Privacy Policy" value="{{contentPage.name}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Description" for="content" %}
+                        {% control wyswyg name="content" id="contentPage-content" value="{{contentPage.content}}" %}
+                    </div>
+                  
+                </div>
+            </div>
+            {% control hidden name="id" value="{{contentPage.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save Page" | t}}</button>
+                <a class="btn btn-default" href='{% route ContentPagesList %}'>{{"Cancel" | t}}</a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Visibility" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control checkbox name="published" value="contentPage.published" text=@t"Published" %}
+                    </div>
+                </div>
+            </div>
+            {% assign seoMeta = contentPage.seoMeta %}
+            {% partial "Pages/SeoMetaPanel" %}
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function () {
+        initAjaxForm("content-editor-form",
+            {
+                onSuccess: function () {
+                    notify("success", '{{"Content was saved successfully." | t }}');
+                    setTimeout(function () {
+                        navigate("{% route ContentPagesList %}");
+                    }, 500);
+
+                }
+            });
+    })
+
+</script>

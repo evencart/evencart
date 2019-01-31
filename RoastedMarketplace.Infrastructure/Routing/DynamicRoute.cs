@@ -2,9 +2,9 @@
 {
     public class DynamicRoute
     {
-        public string Controller { get; set; }
+        public string ControllerName { get; set; }
 
-        public string Action { get; set; }
+        public string ActionName { get; set; }
 
         public int Id { get; set; }
 

@@ -6,7 +6,7 @@ using RoastedMarketplace.Services.Pages;
 
 namespace RoastedMarketplace.Infrastructure.Consumers
 {
-    public class SeoEntityConsumer<T> : IFoundationEntityInserted<T> where T: FoundationEntity
+    public class SeoEntityConsumer<T> : IFoundationEntityInserted<T>, IFoundationEntityDeleted<T> where T: FoundationEntity
     {
         private readonly ISeoMetaService _seoMetaService;
         public SeoEntityConsumer(ISeoMetaService seoMetaService)
@@ -27,6 +27,16 @@ namespace RoastedMarketplace.Infrastructure.Consumers
                 Slug = CommonHelper.GenerateSlug(name)
             };
             _seoMetaService.Insert(seoMeta);
+        }
+
+        public void OnDeleted(T entity)
+        {
+            if (!(entity is ISeoEntity))
+                return;
+            var name = typeof(T).Name;
+            var seoMeta = _seoMetaService.FirstOrDefault(x => x.Id == entity.Id && x.EntityName == name);
+            if(seoMeta != null)
+                _seoMetaService.Delete(seoMeta);
         }
     }
 }

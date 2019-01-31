@@ -1,0 +1,23 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"SEO" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control label text=@t"Page Title" for="page-title" %}
+            {% control text name="seometa.pagetitle" id="page-title" value="{{seoMeta.pageTitle}}" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Meta Keywords" for="meta-keywords" %}
+            {% control text name="seometa.metakeywords" id="meta-keywords" value="{{seoMeta.metaKeywords}}" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Meta Description" for="meta-description" %}
+            {% control text name="seometa.metadescription" id="meta-description" value="{{seoMeta.metaDescription}}" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Slug" for="slug" %}
+            {% control text name="seometa.slug" id="slug" value="{{seoMeta.slug}}" %}
+        </div>
+    </div>
+</div>

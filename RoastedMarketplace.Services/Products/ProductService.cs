@@ -447,6 +447,8 @@ namespace RoastedMarketplace.Services.Products
 
         public void PopulateReviewSummary(IList<Product> products)
         {
+            if (!products.Any())
+                return;
             var productIdStr = string.Join(",", products.Select(x => x.Id));
             //find the average rating
             using (var multiresult = EntitySet.Query(

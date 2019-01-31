@@ -1,0 +1,66 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Content Pages" active_menu="ContentPagesList" parent_active_menu="ContentPagesList" %}
+{% partial "Navigation/ContentPagesSecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-10 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Content Pages" | t}}
+                <a class="btn btn-sm btn-primary float-right" href='{% route GetContentPage contentPageId="0" %}'>{{"Add new page" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    var editContentPage = function(id) {
+                        var url = '{% route GetContentPage contentPageId="_id" %}';
+                        url = url.replace("_id", id);
+                        navigate(url);
+                    }
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless contentPages == blank %}*/
+                        initData = JSON.parse('{{contentPages}}');
+                        /*{% endunless %}*/
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                contentPages: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation : 3,
+                            url: "{% route api_ContentPagesList %}",
+                            responseObject: "contentPages",
+                            formatters: {
+                                "commands": function(column, row) {
+                                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editContentPage(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></a> " +
+                                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                                        row.id +
+                                        "\"><span class=\"rbicon-external-link\"></span></a>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+

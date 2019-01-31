@@ -1,6 +1,6 @@
 ﻿using RoastedMarketplace.Infrastructure.Mvc.Models;
 
-namespace RoastedMarketplace.Models.Site
+namespace RoastedMarketplace.Models.Pages
 {
     public class SeoMetaModel : FoundationModel
     {

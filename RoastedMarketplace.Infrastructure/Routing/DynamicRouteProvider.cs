@@ -1,59 +1,30 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Infrastructure.Routing.Parsers;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Pages;
 using RoastedMarketplace.Services.Products;
+using RouteData = RoastedMarketplace.Core.Infrastructure.Routing.RouteData;
 
 namespace RoastedMarketplace.Infrastructure.Routing
 {
     public class DynamicRouteProvider : IDynamicRouteProvider
     {
-        private readonly UrlSettings _urlSettings;
         private readonly ISeoMetaService _seoMetaService;
         private readonly ICategoryService _categoryService;
-        private readonly IProductService _productService;
-        public DynamicRouteProvider(UrlSettings urlSettings, ISeoMetaService seoMetaService, ICategoryService categoryService, IProductService productService)
+        private readonly IRouteTemplateParser _routeTemplateParser;
+
+        public DynamicRouteProvider(ISeoMetaService seoMetaService, ICategoryService categoryService, IRouteTemplateParser routeTemplateParser)
         {
-            _urlSettings = urlSettings;
             _seoMetaService = seoMetaService;
             _categoryService = categoryService;
-            _productService = productService;
-        }
-
-        public virtual DynamicRoute GetDynamicRoute(SeoMeta seoMeta, string requestPath)
-        {
-            var dynamicRoute = new DynamicRoute { Id = seoMeta.EntityId };
-            switch (seoMeta.EntityName)
-            {
-                case "Product":
-                    //check if it's a review page being requested?
-                    if (requestPath.EndsWith(AppRouter.ReviewUrlSuffix))
-                    {
-                        dynamicRoute.Controller = "Reviews";
-                        dynamicRoute.Action = "ReviewsList";
-                        dynamicRoute.IdTypeName = "ProductId";
-                    }
-                    else
-                    {
-                        dynamicRoute.Controller = "Products";
-                        dynamicRoute.Action = "Index";
-                        dynamicRoute.IdTypeName = "Id";
-                    }
-                  
-                    break;
-                case "Category":
-                    dynamicRoute.Controller = "Products";
-                    dynamicRoute.Action = "ProductsList";
-                    dynamicRoute.IdTypeName = "CategoryId";
-                    break;
-                default:
-                    return null;
-            }
-            return dynamicRoute;
+            _routeTemplateParser = routeTemplateParser;
         }
 
         public virtual VirtualPathData GetVirtualPathData(IRouter router, VirtualPathContext context)
@@ -81,22 +52,12 @@ namespace RoastedMarketplace.Infrastructure.Routing
             }
             var url = "";
             var entityName = "";
-            switch (context.RouteName)
-            {
-                case RouteNames.SingleProduct:
-                    url = _urlSettings.ProductUrlTemplate;
-                    entityName = "Product";
-                    break;
-                case RouteNames.ReviewsList:
-                    url = _urlSettings.ProductUrlTemplate + AppRouter.ReviewUrlSuffix;
-                    entityName = "Product";
-                    break;
-                case RouteNames.ProductsPage:
-                    url = _urlSettings.CategoryUrlTemplate;
-                    entityName = "Category";
-                    break;
-            }
+            var dynamicRoute = DynamicRoutes.FirstOrDefault(x => x.RouteName == context.RouteName);
+            if (dynamicRoute == null)
+                return null;
 
+            url = dynamicRoute.Template;
+            entityName = dynamicRoute.SeoEntityName;
             
             if (id.IsNullEmptyOrWhitespace() && id != "0")
             {
@@ -136,6 +97,62 @@ namespace RoastedMarketplace.Infrastructure.Routing
 
             var vpd = new VirtualPathData(router, url);
             return vpd;
+        }
+
+        protected List<RouteData> DynamicRoutes;
+        public virtual void RegisterDynamicRoute(RouteData routeData)
+        {
+            DynamicRoutes = DynamicRoutes ?? new List<RouteData>();
+            DynamicRoutes.Add(routeData);
+        }
+
+        public virtual RouteData GetMatchingRoute(IRouter router, RouteContext routeContext)
+        {
+            if (DynamicRoutes == null)
+                return null;
+            var requestPath = routeContext.HttpContext.Request.Path.Value.TrimEnd('/');
+            foreach (var dr in DynamicRoutes.OrderBy(x => x.Order))
+            {
+                var routeData = dr;
+                var parsedTokens = _routeTemplateParser.ParsePathForTemplate(requestPath, routeData.Template);
+                if (!parsedTokens.Any())
+                    continue;
+                parsedTokens.TryGetValue("SeName", out string seName);
+                parsedTokens.TryGetValue("Id", out string id);
+                if (seName.IsNullEmptyOrWhitespace() && id.IsNullEmptyOrWhitespace())
+                    continue;
+
+                var entityName = routeData.SeoEntityName;
+                if (!id.IsNullEmptyOrWhitespace())
+                {
+                    var idAsInt = int.Parse(id);
+                    var seoMeta =
+                        _seoMetaService.FirstOrDefault(x => x.EntityName == entityName && x.Slug == seName &&
+                                                            x.EntityId == idAsInt);
+                    if (seoMeta == null)
+                        continue;
+                    routeContext.RouteData.Values["id"] = id;
+                    return routeData;
+                }
+                //if we are here, id was not passed, so we'll have to check all the available slugs for entitytype
+                var matchingSeoMetas = _seoMetaService.Get(x => x.EntityName == entityName && x.Slug == seName).ToList();
+                foreach (var seoMeta in matchingSeoMetas)
+                {
+                    //set id so we can generate correct reverse path for validation
+                    routeContext.RouteData.Values["id"] = seoMeta.EntityId;
+                    //check if the request path is correct 
+                    var vpd = GetVirtualPathData(router,
+                        new VirtualPathContext(ApplicationEngine.CurrentHttpContext, routeContext.RouteData.Values, routeContext.RouteData.Values, routeData.RouteName));
+                    var url = vpd.VirtualPath;
+                    if (requestPath != url)
+                        continue;
+                    routeContext.RouteData.Values["controller"] = routeData.ControllerName;
+                    routeContext.RouteData.Values["action"] = routeData.ActionName;
+                    routeContext.RouteData.Values[routeData.ParameterName] = seoMeta.EntityId;
+                    return routeData;
+                }
+            }
+            return null;
         }
     }
 }

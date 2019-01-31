@@ -13,6 +13,8 @@ namespace RoastedMarketplace.Core.Extensions
         public static string ReplaceFirstOccurance(this string s, string search, string replace, StringComparison stringComparison = StringComparison.Ordinal)
         {
             var indexOf = s.IndexOf(search, stringComparison);
+            if (indexOf == -1)
+                return s;
             return s.Remove(indexOf, search.Length).Insert(indexOf, replace);
         }
     }

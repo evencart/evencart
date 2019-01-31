@@ -15,6 +15,7 @@ namespace RoastedMarketplace.Services.Reviews
         {
             return Repository.Join<User>("UserId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<Review, User>())
+                .OrderBy(x => x.CreatedOn, RowOrder.Descending)
                 .SelectNested(page, count);
         }
     }

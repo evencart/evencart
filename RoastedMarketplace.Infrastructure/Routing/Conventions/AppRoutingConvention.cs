@@ -3,7 +3,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using RoastedMarketplace.Core.Infrastructure;
-using RoastedMarketplace.Infrastructure.Routing.Parsers;
+using RoastedMarketplace.Core.Infrastructure.Routing;
+using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Services.Settings;
 
 namespace RoastedMarketplace.Infrastructure.Routing.Conventions
@@ -47,6 +48,27 @@ namespace RoastedMarketplace.Infrastructure.Routing.Conventions
                         newAm.Name = $"{ApplicationConfig.ApiEndpointName}_" + newAm.Name;
 
                     newSelectors.Add(selectorModel);
+                }
+                else if (ar.AttributeRouteModel.Attribute is DynamicRouteAttribute)
+                {
+                    var dynamicRoute = (DynamicRouteAttribute) ar.AttributeRouteModel.Attribute;
+                    var settingService = DependencyResolver.Resolve<ISettingService>();
+                    var settingName = dynamicRoute.SettingName;
+                    var setting =
+                        settingService.FirstOrDefault(x => x.GroupName == nameof(UrlSettings) && x.Key == settingName);
+                    if (setting == null)
+                        continue;
+                    var dynamicRouteProvider = DependencyResolver.Resolve<IDynamicRouteProvider>();
+                    dynamicRouteProvider.RegisterDynamicRoute(new RouteData()
+                    {
+                        Template = dynamicRoute.TemplatePrefix + setting.Value + dynamicRoute.TemplateSuffix,
+                        ActionName = action.ActionName,
+                        ControllerName = action.Controller.ControllerName,
+                        RouteName = dynamicRoute.Name,
+                        Order = dynamicRoute.Order,
+                        SeoEntityName = dynamicRoute.SeoEntityName,
+                        ParameterName = dynamicRoute.ParameterName
+                    });
                 }
             }
         

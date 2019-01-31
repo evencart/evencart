@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Reviews;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
@@ -81,7 +82,7 @@ namespace RoastedMarketplace.Controllers
             return R.Success.Result;
         }
 
-        [DynamicRoute(Name = RouteNames.ReviewsList)]
+        [DynamicRoute(Name = RouteNames.ReviewsList, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate), TemplateSuffix = "/reviews", ParameterName = nameof(ReviewSearchModel.ProductId))]
         public IActionResult ReviewsList(ReviewSearchModel reviewSearchModel)
         {
             return ReviewsListApi(reviewSearchModel);

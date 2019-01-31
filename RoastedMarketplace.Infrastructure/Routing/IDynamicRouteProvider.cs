@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using RoastedMarketplace.Data.Entity.Pages;
+using RouteData = RoastedMarketplace.Core.Infrastructure.Routing.RouteData;
 
 namespace RoastedMarketplace.Infrastructure.Routing
 {
     public interface IDynamicRouteProvider
     {
-        DynamicRoute GetDynamicRoute(SeoMeta seoMeta, string requestPath);
-
         VirtualPathData GetVirtualPathData(IRouter router, VirtualPathContext context);
+
+        void RegisterDynamicRoute(RouteData routeData);
+
+        RouteData GetMatchingRoute(IRouter router, RouteContext routeContext);
     }
 }

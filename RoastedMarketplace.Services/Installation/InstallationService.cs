@@ -225,6 +225,13 @@ namespace RoastedMarketplace.Services.Installation
                 UserDeactivationEmailToAdminEnabled = false,
             });
 
+            //url settings
+            settingService.Save(new UrlSettings() {
+              CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
+              ProductUrlTemplate = "/product/{SeName}",
+              ContentPageUrlTemplate = "{SeName}"
+            });
+
         }
 
         private void SeedNotificationEvents()
