@@ -54,7 +54,7 @@
         public const string DeleteProductVariant = "DeleteProductVariant";
         public const string SaveProductVariant = "SaveProductVariant";
 
-        public const string EditAvailableAttribute = "EditAvailableAttribute";
+        public const string GetAvailableAttribute = "GetAvailableAttribute";
         public const string AvailableAttributesList = "AvailableAttributesList";
         public const string SaveAvailableAttribute = "SaveAvailableAttribute";
         public const string DeleteAvailableAttribute = "DeleteAvailableAttribute";
@@ -125,5 +125,27 @@
         public const string GetContentPage = "GetContentPage";
         public const string SaveContentPage = "SaveContentPage";
         public const string DeleteContentPage = "DeleteContentPage";
+
+        public const string EmailTemplatesList = "EmailTemplatesList";
+        public const string GetEmailTemplate = "GetEmailTemplate";
+        public const string SaveEmailTemplate = "SaveEmailTemplate";
+        public const string DeleteEmailTemplate = "DeleteEmailTemplate";
+
+        public const string EmailAccountsList = "EmailAccountsList";
+        public const string GetEmailAccount = "GetEmailAccount";
+        public const string SaveEmailAccount= "SaveEmailAccount";
+        public const string DeleteEmailAccount = "DeleteEmailAccount";
+        public const string TestEmailAccount = "TestEmailAccount";
+
+        public const string EmailMessagesList = "EmailMessagesList";
+        public const string GetEmailMessage = "GetEmailMessage";
+        public const string SaveEmailMessage = "SaveEmailMessage";
+        public const string DeleteEmailMessage = "DeleteEmailMessage";
+        public const string ResendEmailMessage = "ResendEmailMessage";
+
+        public const string ScheduledTasksList = "ScheduledTasksList";
+        public const string GetScheduledTask = "GetScheduledTask";
+        public const string SaveScheduledTask = "SaveScheduledTask";
+
     }
 }

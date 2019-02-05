@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using DotEntity;
+using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Caching;
 using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Core.Infrastructure;
@@ -111,7 +112,14 @@ namespace RoastedMarketplace.Core.Services
 
         public virtual IEnumerable<T> Get(Expression<Func<T, bool>> @where, int page = 1, int count = int.MaxValue)
         {
-            return EntitySet<T>.Where(where).Select(page, count);
+            return EntitySet<T>.Where(where).OrderBy(x => x.Id).Select(page, count);
+        }
+
+        public IEnumerable<T> Get(out int totalResults, Expression<Func<T, bool>> @where, Expression<Func<T, object>> orderBy = null, RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
+        {
+            if (orderBy == null)
+                orderBy = x => x.Id;
+            return EntitySet<T>.Where(where).OrderBy(orderBy, rowOrder).SelectWithTotalMatches(out totalResults, page, count);
         }
 
         public virtual T FirstOrDefault(Expression<Func<T, bool>> @where)

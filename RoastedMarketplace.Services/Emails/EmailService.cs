@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
-using RoastedMarketplace.Core.Data;
+using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Exception;
-using RoastedMarketplace.Core.Infrastructure.AppEngine;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Emails;
+using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Services.Logger;
 using RoastedMarketplace.Services.Security;
-using RoastedMarketplace.Services.VerboseReporter;
 
 namespace RoastedMarketplace.Services.Emails
 {
@@ -18,20 +20,27 @@ namespace RoastedMarketplace.Services.Emails
         private readonly IEmailAccountService _emailAccountService;
         private readonly ICryptographyService _cryptographyService;
         private readonly ILogger _logger;
-
-        public EmailService(IFoundationEntityRepository<EmailMessage> dataRepository, IEmailAccountService emailAccountService, ICryptographyService cryptographyService, ILogger logger) : base(dataRepository)
+        private readonly EmailSenderSettings _emailSenderSettings;
+        public EmailService(IEmailAccountService emailAccountService, ICryptographyService cryptographyService, ILogger logger, EmailSenderSettings emailSenderSettings)
         {
             _emailAccountService = emailAccountService;
             _cryptographyService = cryptographyService;
             _logger = logger;
+            _emailSenderSettings = emailSenderSettings;
         }
 
-        public bool SendEmail(EmailMessage emailMessage, bool verboseErrorOnFailure = false)
+        public bool SendEmail(EmailMessage emailMessage, out Exception exception)
         {
+            exception = null;
             //we need an email account
-            var emailAccount = emailMessage.EmailAccount ?? _emailAccountService.FirstOrDefault(x => x.IsDefault);
+            var emailAccount = emailMessage.EmailAccount ??
+                               _emailAccountService.Get(_emailSenderSettings.DefaultEmailAccountId) ??
+                               _emailAccountService.FirstOrDefault(x => true);
             if (emailAccount == null)
+            {
+                _logger.Log<EmailService>(LogLevel.Error, $"Failed to send email. No default email account could be loaded.");
                 return false; //can't send email without account
+            }
 
             var message = new MailMessage();
             //from, to, reply to
@@ -99,26 +108,38 @@ namespace RoastedMarketplace.Services.Emails
                     smtpClient.Send(message);
                     //update the send status
                     emailMessage.IsSent = true;
-                    Update(emailMessage);
+                    if (emailMessage.Id > 0)
+                        Update(emailMessage);
                     return true;
                 }
                 catch (Exception ex)
                 {
+                    exception = ex;
                     //log the error
                     _logger.Log<EmailService>(LogLevel.Error, $"Failed to send email to {emailMessage.TosSerialized}", ex);
-                    if (verboseErrorOnFailure)
-                    {
-                        var verboseReporterService = RoastedMarketplaceEngine.ActiveEngine.Resolve<IVerboseReporterService>();
-                        verboseReporterService.ReportError(ex.Message, "send_email");
-                    }
                     return false;
                 }
             }
         }
 
+        public bool SendEmail(EmailMessage emailMessage)
+        {
+            return SendEmail(emailMessage, out Exception _);
+        }
+
         public void Queue(EmailMessage emailMessage)
         {
             Insert(emailMessage);
+        }
+
+        public override IEnumerable<EmailMessage> Get(Expression<Func<EmailMessage, bool>> @where, int page = 1, int count = Int32.MaxValue)
+        {
+            return Repository.Join<EmailAccount>("EmailAccountId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToOne<EmailMessage, EmailAccount>())
+                .Where(where)
+                .OrderBy(x => x.Id)
+
+                .SelectNested(page, count);
         }
     }
 }

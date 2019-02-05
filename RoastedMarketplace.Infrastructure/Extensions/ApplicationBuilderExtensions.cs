@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Tasks;
+using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Database;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Localization;
 
 namespace RoastedMarketplace.Infrastructure.Extensions
@@ -46,6 +49,9 @@ namespace RoastedMarketplace.Infrastructure.Extensions
 
                 //upgrade to latest version
                 DatabaseManager.UpgradeDatabase();
+
+                //upgrade capabilities
+                CapabilityHelper.UpgradeCapabilities();
             }
 
         }
@@ -54,6 +60,12 @@ namespace RoastedMarketplace.Infrastructure.Extensions
         {
             var localizer = DependencyResolver.Resolve<ILocalizer>();
             localizer.LoadLanguage("en-US");
+        }
+
+        public static void RunScheduledTasks(this IApplicationBuilder app)
+        {
+            var taskManager = DependencyResolver.Resolve<ITaskManager>();
+            taskManager.Start();
         }
     }
 }

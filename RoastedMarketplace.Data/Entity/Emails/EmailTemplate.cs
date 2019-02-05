@@ -12,18 +12,20 @@ namespace RoastedMarketplace.Data.Entity.Emails
 
         public bool IsMaster { get; set; }
 
-        public int? ParentEmailTemplateId { get; set; }
+        public int ParentEmailTemplateId { get; set; }
 
-        public virtual EmailTemplate ParentEmailTemplate { get; set; }
-
-        public int? EmailAccountId { get; set; }
-
-        public virtual EmailAccount EmailAccount { get; set; }
+        public int EmailAccountId { get; set; }
 
         public string Subject { get; set; }
 
         public string AdministrationEmail { get; set; }
 
         public bool IsSystem { get; set; }
+
+        #region Virtual Properties
+        public virtual EmailTemplate ParentEmailTemplate { get; set; }
+
+        public virtual EmailAccount EmailAccount { get; set; }
+        #endregion
     }
 }

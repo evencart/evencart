@@ -117,13 +117,12 @@ namespace RoastedMarketplace.Services.Installation
 
             //seed capabilities
             //insert all available capabilities using reflection
-            var allCapabilityFields = typeof(CapabilitySystemNames).GetFields(BindingFlags.Public | BindingFlags.Static |
-                                                    BindingFlags.FlattenHierarchy);
+            var allCapabilityFields = capabilityProvider.GetRawCapabilities();
 
             var savedCapabilities = new List<Capability>();
             foreach (var f in allCapabilityFields)
             {
-                var capabilityName = (string)f.GetRawConstantValue();
+                var capabilityName = f;
                 var capability = new Capability() {
                     Name = capabilityName,
                     IsActive = true

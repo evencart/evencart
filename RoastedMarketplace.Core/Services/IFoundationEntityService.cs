@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Data;
 
 namespace RoastedMarketplace.Core.Services
@@ -24,6 +25,8 @@ namespace RoastedMarketplace.Core.Services
         T Get(int id);
 
         IEnumerable<T> Get(Expression<Func<T, bool>> where, int page = 1, int count = int.MaxValue);
+
+        IEnumerable<T> Get(out int totalResults, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy = null, RowOrder rowOrder = RowOrder.Ascending,  int page = 1, int count = int.MaxValue);
 
         T FirstOrDefault(Expression<Func<T, bool>> where);
 

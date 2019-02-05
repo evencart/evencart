@@ -105,6 +105,9 @@ namespace RoastedMarketplace.Infrastructure
 
             //load language files
             app.LoadLocalizations();
+
+            //run the schedule tasks
+            app.RunScheduledTasks();
         }
 
         #endregion

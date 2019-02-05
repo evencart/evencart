@@ -145,6 +145,8 @@ namespace RoastedMarketplace.Controllers
             }
 
             _cartService.Update(cart);
+
+            RaiseEvent(NamedEvent.OrderAddressSaved, cart);
             return R.Success.Result;
         }
 
@@ -197,6 +199,8 @@ namespace RoastedMarketplace.Controllers
             cart.PaymentMethodName = requestModel.SystemName;
             cart.PaymentMethodData = _dataSerializer.Serialize(formAsDictionary);
             _cartService.Update(cart);
+
+            RaiseEvent(NamedEvent.OrderPaymentInfoSaved, cart);
             return R.Success.Result;
         }
 
@@ -272,6 +276,8 @@ namespace RoastedMarketplace.Controllers
         [HttpGet("complete/{orderId:int}", Name = RouteNames.CheckoutComplete)]
         public IActionResult Complete(int orderId)
         {
+            var order = _orderService.Get(orderId);
+            RaiseEvent(NamedEvent.OrderPlaced, order.User, order);
             return R.Success.Result;
         }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentScheduler;
+using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Tasks;
+using RoastedMarketplace.Data.Database;
 using RoastedMarketplace.Data.Entity.ScheduledTasks;
+using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Logger;
 
 namespace RoastedMarketplace.Services.ScheduledTasks
@@ -17,26 +21,17 @@ namespace RoastedMarketplace.Services.ScheduledTasks
             _logger = logger;
         }
 
-        public void Start(Type[] availableTasksTypes)
+        public void Start()
         {
-            /*
-            //only start tasks if we have db installed
+           //only start tasks if we have db installed
             if (!DatabaseManager.IsDatabaseInstalled())
                 return;
-            List<ScheduledTask> scheduledTasks;
-            using (new OfflineDatabaseContextProvider())
-            {
-                //because dbcontext resolves per web request and the per request scope hasn't yet started here,
-                //we'll have to fake open it, otherwise database context won't be resolved
-                //first let's update 
-
-                //get the scheduled tasks which are enabled
-                scheduledTasks = _scheduledTaskService.Get().ToList();
-                //first sync available tasks and database tasks
-                UpdateTasksInDatabase(availableTasksTypes, scheduledTasks);
-                if (!scheduledTasks.Any(x => x.Enabled))
-                    return;
-            }
+            var availableTasksTypes = TypeFinder.ClassesOfType<ITask>();
+            var scheduledTasks = _scheduledTaskService.Get(x => true).ToList();
+            //first sync available tasks and database tasks
+            UpdateTasksInDatabase(availableTasksTypes, scheduledTasks);
+            if (!scheduledTasks.Any(x => x.Enabled))
+                return;
             var registry = new Registry();
                 //add each enabled task to the scheduler
                 foreach (var sTask in scheduledTasks.Where(x => x.Enabled))
@@ -44,12 +39,11 @@ namespace RoastedMarketplace.Services.ScheduledTasks
                     var taskType = availableTasksTypes.FirstOrDefault(x => x.FullName == sTask.SystemName);
                     if (taskType != null)
                     {
-                        if (sTask.Seconds < 30)
-                            sTask.Seconds = 30;
+                        if (sTask.Seconds < 10)
+                            sTask.Seconds = 10;
                         //schedule the task
                         registry.Schedule(() =>
                         {
-                            using (new OfflineDatabaseContextProvider())
                             using (var task = (ITask)Activator.CreateInstance(taskType))
                             {
                                 try
@@ -83,11 +77,11 @@ namespace RoastedMarketplace.Services.ScheduledTasks
                     }
                 }
                 //initialize the jobmanager
-                JobManager.Initialize(registry);*/
+                JobManager.Initialize(registry);
             
         }
 
-        private void UpdateTasksInDatabase(Type[] allTaskTypes, IList<ScheduledTask> availableScheduledTasks)
+        private void UpdateTasksInDatabase(IList<Type> allTaskTypes, IList<ScheduledTask> availableScheduledTasks)
         {
             var taskNames = allTaskTypes.Select(x => x.FullName).ToArray();
             foreach (var taskName in taskNames)

@@ -21,11 +21,11 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Product Summary" for="summary" %}
-                        {% control textarea name="summary" value="{{product.summary}}" %}
+                        {% control wyswyg id="summary" name="summary" value="{{product.summary}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Description" for="description" %}
-                        {% control textarea name="description" value="{{product.description}}" %}
+                        {% control wyswyg id="description" name="description" value="{{product.description}}" %}
                     </div>
                     <div class="form-group">
                         {% control checkbox name="published" value="product.published" text=@t"Published" %}

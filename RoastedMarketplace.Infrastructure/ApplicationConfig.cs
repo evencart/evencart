@@ -12,7 +12,7 @@ namespace RoastedMarketplace.Infrastructure
 
         public const string ExternalAuthenticationScheme = "External";
 
-        public const string DefaultLoginUrl = "/Authentication/Login";
+        public const string DefaultLoginUrl = "/login";
 
         public const string GlobalLanguagesDirectory = "~/App_Data/Languages";
 

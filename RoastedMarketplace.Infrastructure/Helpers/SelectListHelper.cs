@@ -4,14 +4,17 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Services.Addresses;
+using RoastedMarketplace.Services.Emails;
 
 namespace RoastedMarketplace.Infrastructure.Helpers
 {
@@ -117,6 +120,13 @@ namespace RoastedMarketplace.Infrastructure.Helpers
         {
             var timeZones = ServerHelper.GetAvailableTimezones();
             return GetSelectItemList(timeZones, info => info.Id, info => info.DisplayName);
+        }
+
+        public static List<SelectListItem> GetAvailableEmailAccounts()
+        {
+            var emailAccountService = DependencyResolver.Resolve<IEmailAccountService>();
+            var emailAccounts = emailAccountService.Get(x => true).ToList();
+            return GetSelectItemList(emailAccounts, account => account.Id, account => account.Email);
         }
     }
 }

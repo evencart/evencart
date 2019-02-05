@@ -1,36 +1,26 @@
-﻿using RoastedMarketplace.Data.Entity.Emails;
-using RoastedMarketplace.Data.Entity.Tickets;
+﻿using System;
+using RoastedMarketplace.Data.Entity.Emails;
+using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Services.Emails
 {
     public interface IEmailSender
     {
-        bool SendTestEmail(string email, EmailAccount emailAccount);
+        bool SendTestEmail(string email, EmailAccount emailAccount, out Exception ex);
 
-        void SendUserRegisteredMessage(User user);
+        void SendUserRegistered(User user);
 
-        void SendUserActivationLinkMessage(User user, string activationUrl);
+        void SendUserActivationLink(User user, string activationUrl);
 
-        void SendUserActivatedMessage(User user);
+        void SendUserActivated(User user);
 
-        void SendTicketCreatedMessage(User user, Ticket ticket, bool agentCreatedTicket = false);
+        void SendOrderPlaced(User user, Order order);
 
-        void SendTicketUpdatedMessage(User user, Ticket ticket);
+        void SendOrderComplete(User user, Order order);
 
-        void SendTicketClosedMessage(User user, Ticket ticket);
+        void SendShipmentShipped(User user, Order order, Shipment shipment);
 
-        void SendTicketResolvedMessage(User user, Ticket ticket);
-
-        void SendTicketDeletedMessage(User user, Ticket ticket);
-
-        void SendSlaViolationReminderMessage(User user, SlaPolicy slaPolicy, Ticket ticket);
-
-        void SendSlaViolatedMessage(User user, SlaPolicy slaPolicy, Ticket ticket);
-
-        void SendSlaModifiedMessage(User user, SlaPolicy slaPolicy);
-
-        void SendSlaDeletedMessage(User user, SlaPolicy slaPolicy);
-
+        void SendShipmentDelivered(User user, Order order, Shipment shipment);
     }
 }

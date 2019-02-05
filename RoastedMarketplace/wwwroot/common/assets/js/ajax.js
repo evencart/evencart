@@ -119,7 +119,7 @@ var notify = function (type, msg, withclose) {
         });
 
     }
-    //setTimeout(closeNotify, 5000);
+    setTimeout(closeNotify, 5000);
     element.click(closeNotify);
 }
 var ajaxExtend = function (options) {

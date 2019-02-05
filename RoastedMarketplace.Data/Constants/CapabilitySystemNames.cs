@@ -4,6 +4,11 @@
 // (c) 2016 Apexol Technologies. All Rights Reserved.
 // 
 #endregion
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
 namespace RoastedMarketplace.Data.Constants
 {
     public class CapabilitySystemNames
@@ -67,6 +72,6 @@ namespace RoastedMarketplace.Data.Constants
         public const string DeleteContentPage = "ContentPage.Delete";
 
         public const string ViewContentPages = "ContentPage.View";
-
+      
     }
 }

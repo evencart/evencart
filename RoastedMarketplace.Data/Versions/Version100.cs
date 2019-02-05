@@ -1,6 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Emails;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
 using RoastedMarketplace.Data.Entity.Pages;
@@ -111,6 +112,12 @@ namespace RoastedMarketplace.Data.Versions
             //content
             Db.CreateTable<ContentPage>(transaction);
             Db.CreateConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction, true);
+
+            //emails
+            Db.CreateTable<EmailAccount>(transaction);
+            Db.CreateTable<EmailTemplate>(transaction);
+            Db.CreateTable<EmailMessage>(transaction);
+            Db.CreateConstraint(Relation.Create<EmailAccount, EmailTemplate>("Id", "EmailAccountId"), transaction, false);
 
             Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction, true);

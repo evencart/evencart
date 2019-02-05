@@ -19,7 +19,5 @@ namespace RoastedMarketplace.Data.Entity.Emails
         public bool UseSsl { get; set; }
 
         public bool UseDefaultCredentials { get; set; }
-
-        public bool IsDefault { get; set; }
     }
 }

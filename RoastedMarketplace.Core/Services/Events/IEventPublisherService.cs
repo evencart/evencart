@@ -1,5 +1,4 @@
-﻿using DotEntity;
-using RoastedMarketplace.Core.Data;
+﻿using RoastedMarketplace.Core.Data;
 
 namespace RoastedMarketplace.Core.Services.Events
 {
@@ -20,5 +19,7 @@ namespace RoastedMarketplace.Core.Services.Events
         /// <param name="input"></param>
         /// <returns></returns>
         T Filter<T>(T input);
+
+        void Publish(string eventName, object[] eventData = null);
     }
 }

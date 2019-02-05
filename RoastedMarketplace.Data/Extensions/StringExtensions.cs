@@ -72,6 +72,14 @@ namespace RoastedMarketplace.Data.Extensions
             return result;
         }
 
+        public static string ToCamelCase(this string str)
+        {
+            if (str.IsNullEmptyOrWhiteSpace())
+                return str;
+            if (str.Length > 1)
+                return str[0].ToString().ToLowerInvariant() + str.Substring(1);
+            return str.ToLower();
+        }
         public static bool IsNullEmptyOrWhiteSpace(this string str)
         {
             str = str?.Trim();

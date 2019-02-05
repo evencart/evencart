@@ -9,7 +9,6 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
-using RoastedMarketplace.Services.MediaServices;
 using RoastedMarketplace.Services.Settings;
 
 namespace RoastedMarketplace.Areas.Administration.Controllers
@@ -78,7 +77,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         }
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
-        [FieldRequired("settingType", "tax")]
+        [FieldRequired("settingType", "url")]
         public IActionResult SaveSettings(UrlSettingsModel urlSettings)
         {
             SaveSetting(urlSettings);
@@ -98,6 +97,14 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         public IActionResult SaveSettings(CatalogSettingsModel catalogSettings)
         {
             SaveSetting(catalogSettings);
+            return R.Success.Result;
+        }
+
+        [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
+        [FieldRequired("settingType", "email")]
+        public IActionResult SaveSettings(EmailSettingsModel emailSettings)
+        {
+            SaveSetting(emailSettings);
             return R.Success.Result;
         }
 
@@ -134,6 +141,11 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 case "tax":
                     settings = DependencyResolver.Resolve<TaxSettings>();
                     model = _modelMapper.Map<TaxSettingsModel>(settings);
+                    break;
+                case "email":
+                    settings = DependencyResolver.Resolve<EmailSenderSettings>();
+                    model = _modelMapper.Map<EmailSettingsModel>(settings);
+                    result.WithEmailAccounts();
                     break;
                 case "catalog":
                     settings = DependencyResolver.Resolve<CatalogSettings>();

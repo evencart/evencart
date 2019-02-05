@@ -36,7 +36,7 @@
         generateGrid({
             element: "grid-roles",
             initialData: {
-                addresses: initData,
+                roles: initData,
                 current: parseInt("{{current}}"),
                 total: parseInt("{{total}}"),
                 rowCount: parseInt("{{rowCount}}")
@@ -49,12 +49,12 @@
             columnSelection: false,
             formatters: {                
                 "commands": function (column, row) {
-                    return "<button class=\"btn btn-secondary command-edit\" data-row-id=\"" +
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                         row.id +
                         "\" onclick='editRole(" +
                         row.id +
                         ")'><span class=\"rbicon-edit\"></span></button> " + ( row.isSystemRole ? "" :
-                        "<button class=\"btn btn-danger command-preview\" data-row-id=\"" +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                         row.id +
                         "\" onclick='deleteRole(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>");
                 }

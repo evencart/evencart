@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RoastedMarketplace.Data.Attributes;
 using RoastedMarketplace.Data.Entity.Tokens;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Tokens
 {
@@ -24,17 +25,17 @@ namespace RoastedMarketplace.Services.Tokens
 
             //we use reflection to find all the public fields that are marked with attribute TokenField
             var properties = entityType.GetProperties();
-            var tokenProperties = properties.Where(x => Attribute.IsDefined(x, typeof(TokenFieldAttribute))).ToArray();
+            var tokenProperties = properties.Where(x => !Attribute.IsDefined(x, typeof(NonTokenFieldAttribute))).ToArray();
 
             if (!tokenProperties.Any())
                 return null;
 
             var tokens = new List<Token>();
             var entityName = entityType.Name;
-            var tokenNameFormat = entityName + ".{0}";
+            var tokenNameFormat = entityName.ToCamelCase() + ".{0}";
             foreach (var tp in tokenProperties)
             {
-                var tokenFieldName = "{{" + string.Format(tokenNameFormat, tp.Name) + "}}";
+                var tokenFieldName = "{{" + string.Format(tokenNameFormat, tp.Name.ToCamelCase()) + "}}";
                 var token = new Token(tokenFieldName, "");
                 //we need value as well
                 if (!nameOnly)

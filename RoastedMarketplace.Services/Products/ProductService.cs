@@ -246,7 +246,7 @@ namespace RoastedMarketplace.Services.Products
 
         public IList<int> GetProductIdsByVendorIds(IList<int> vendorIds)
         {
-            return EntitySet<ProductVendor>.Where(x => vendorIds.Contains(x.VendorId))
+            return RepositoryExplorer<ProductVendor>().Where(x => vendorIds.Contains(x.VendorId))
                 .Select()
                 .Select(x => x.ProductId)
                 .ToArray();

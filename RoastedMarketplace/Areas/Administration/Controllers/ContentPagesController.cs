@@ -86,6 +86,17 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        [DualPost("", Name = AdminRouteNames.DeleteContentPage, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.DeleteContentPage)]
+        public IActionResult DeleteContentPage(int contentPageId)
+        {
+            var contentPage = _contentPageService.Get(contentPageId);
+            if (contentPage == null)
+                return NotFound();
+            _contentPageService.Delete(contentPage);
+            return R.Success.Result;
+        }
+
         #region Helpers
 
         private ContentPageModel PrepareModel(ContentPage page)

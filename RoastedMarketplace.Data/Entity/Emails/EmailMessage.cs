@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Net.Mail;
 using RoastedMarketplace.Core.Data;
@@ -13,25 +12,29 @@ namespace RoastedMarketplace.Data.Entity.Emails
     /// </summary>
     public class EmailMessage : FoundationEntity
     {
-        [NotMapped]
-        public IList<UserInfo> Tos { get; set; }
+        public string TosSerialized
+        {
+            get => JsonConvert.SerializeObject(Tos);
+            set => Tos = JsonConvert.DeserializeObject<IList<UserInfo>>(value);
+        } 
 
-        public string TosSerialized => JsonConvert.SerializeObject(Tos);
+        public string CcsSerialized
+        {
+            get => JsonConvert.SerializeObject(Ccs);
+            set => Ccs = JsonConvert.DeserializeObject<IList<UserInfo>>(value);
+        }
 
-        [NotMapped]
-        public IList<UserInfo> Ccs { get; set; }
+        public string BccsSerialized
+        {
+            get => JsonConvert.SerializeObject(Bccs);
+            set => Bccs = JsonConvert.DeserializeObject<IList<UserInfo>>(value);
+        }
 
-        public string CcsSerialized => JsonConvert.SerializeObject(Ccs);
-
-        [NotMapped]
-        public IList<UserInfo> Bccs { get; set; }
-
-        public string BccsSerialized => JsonConvert.SerializeObject(Bccs);
-
-        [NotMapped]
-        public IList<UserInfo> ReplyTos { get; set; }
-
-        public string ReplyTosSerialized => JsonConvert.SerializeObject(ReplyTos);
+        public string ReplyTosSerialized
+        {
+            get => JsonConvert.SerializeObject(ReplyTos);
+            set => ReplyTos = JsonConvert.DeserializeObject<IList<UserInfo>>(value);
+        }
 
         public string Subject { get; set; }
 
@@ -39,37 +42,19 @@ namespace RoastedMarketplace.Data.Entity.Emails
 
         public bool IsEmailBodyHtml { get; set; }
 
-        [NotMapped]
-        public IDictionary<string, string> Headers { get; set; }
-
-        public string HeadersSerialized => JsonConvert.SerializeObject(Headers);
+        public string HeadersSerialized
+        {
+            get => JsonConvert.SerializeObject(Headers);
+            set => Headers = JsonConvert.DeserializeObject<IDictionary<string, string>>(value);
+        }
 
         private string _attachmentSerialized = string.Empty;
 
-        [NotMapped]
-        public IList<Attachment> Attachments
-        {
-            get
-            {
-                return string.IsNullOrEmpty(_attachmentSerialized)
-                    ? new List<Attachment>()
-                    : JsonConvert.DeserializeObject<List<Attachment>>(_attachmentSerialized);
-            }
-            
-        }
-        [NotMapped]
-        public EmailTemplate OriginalEmailTemplate { get; set; }
-
         public string AttachmentsSerialized
         {
-            get
-            {
-                return JsonConvert.SerializeObject(Attachments);
-            }
-            set { _attachmentSerialized = value; }
-        } 
-
-        public virtual EmailAccount EmailAccount { get; set; }
+            get => JsonConvert.SerializeObject(Attachments);
+            set => _attachmentSerialized = value;
+        }
 
         public int EmailAccountId { get; set; }
 
@@ -103,7 +88,6 @@ namespace RoastedMarketplace.Data.Entity.Emails
         /// <summary>
         /// Specifies a user in email communication
         /// </summary>
-        [NotMapped]
         public class UserInfo
         {
             public string Name { get; set; }
@@ -116,6 +100,26 @@ namespace RoastedMarketplace.Data.Entity.Emails
                 Email = email;
             }
         }
+
+        #region Virtual Properties
+        public virtual IList<UserInfo> Tos { get; set; }
+
+        public virtual IList<UserInfo> Ccs { get; set; }
+
+        public virtual IList<UserInfo> Bccs { get; set; }
+
+        public virtual IList<UserInfo> ReplyTos { get; set; }
+
+        public virtual IDictionary<string, string> Headers { get; set; }
+
+        public virtual IList<Attachment> Attachments => string.IsNullOrEmpty(_attachmentSerialized)
+            ? new List<Attachment>()
+            : JsonConvert.DeserializeObject<List<Attachment>>(_attachmentSerialized);
+
+        public virtual EmailTemplate OriginalEmailTemplate { get; set; }
+
+        public virtual EmailAccount EmailAccount { get; set; }
+        #endregion
     }
 
 }

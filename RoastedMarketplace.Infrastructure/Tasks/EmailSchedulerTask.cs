@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Tasks;
+using RoastedMarketplace.Services.Emails;
 
 namespace RoastedMarketplace.Infrastructure.Tasks
 {
@@ -12,12 +15,12 @@ namespace RoastedMarketplace.Infrastructure.Tasks
 
         public void Run()
         {
-          /*  //resolve email sender service
+            //resolve email sender service
             var emailService = DependencyResolver.Resolve<IEmailService>();
             var emailMessages = emailService.Get(x => !x.IsSent && x.SendingDate <= DateTime.UtcNow).ToList();
 
             foreach (var message in emailMessages)
-                emailService.SendEmail(message);*/
+                emailService.SendEmail(message);
         }
 
         public string SystemName => "RoastedMarketplace.Infrastructure.Tasks.EmailSchedulerTask";

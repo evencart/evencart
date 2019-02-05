@@ -1,0 +1,96 @@
+﻿<form action="{% route api_SaveAvailableAttribute %}" method="post" id="attribute-editor-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Attribute Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Name" for="attribute-name" %}
+                        {% control text id="attribute-name" name="name" placeholder=@t"e.g. Color or Size" value="{{attribute.name}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Description" for="description" %}
+                        {% control textarea id="description" name="description" placeholder=@t"Description" value="{{attribute.description}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Values" for="" %}
+                        {% control text id="attribute-value-selector" placeholder=@t"Enter values"%}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{attribute.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Attribute" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    ready(function () {
+        var initialData = null;
+        /* {% if attribute.id > 0 %} */
+        initialData = [];
+        /* {% for value in attribute.attributeValues %} */
+        initialData.push({
+            id: "{{value.id}}",
+            text: "{{value.value}}"
+        });
+        /* {% endfor %}*/
+        /* {% endif %}*/
+        inputTypeahead({
+            element: "attribute-value-selector",
+            initialData: initialData,
+            preserveAfterFirstCall: true,
+            multiple: true,
+            openOnFocus: true,
+            minLength: 0,
+            select: function (item) {
+
+            }
+        });
+    });
+
+    initAjaxForm("attribute-editor-form",
+        {
+            extraData : function () {
+                var attributeValues = inputTypeahead({
+                    element: "attribute-value-selector",
+                    value: true,
+                    multiple: true
+                });
+                if (!attributeValues)
+                    return false;
+            
+                var values = [];
+                attributeValues.forEach(function (item) {
+                    values.push({
+                        value: item.text,
+                        id: item.id
+                    });
+                });
+                return {
+                    attributeValues: values
+                }
+            },
+            onSuccess: function() {
+                hidePopup("edit-availableAttribute-popup");
+            },
+            onError : function () {
+                notify("error", '{{"An error occured while removing attribute value" | t}}');
+            }
+        });
+
+</script>

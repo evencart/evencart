@@ -38,7 +38,7 @@
         generateGrid({
             element: "grid-vendors",
             initialData: {
-                addresses: initData,
+                vendors: initData,
                 current: parseInt("{{current}}"),
                 total: parseInt("{{total}}"),
                 rowCount: parseInt("{{rowCount}}")
@@ -65,12 +65,12 @@
                     return address;
                 },
                 "commands": function (column, row) {
-                    return "<button class=\"btn btn-secondary command-edit\" data-row-id=\"" +
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                         row.id +
                         "\" onclick='editVendor(" +
                         row.id +
                         ")'><span class=\"rbicon-edit\"></span></button> " +
-                        "<button class=\"btn btn-danger command-preview\" data-row-id=\"" +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                         row.id +
                         "\" onclick='deleteVendor(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
                 }

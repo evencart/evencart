@@ -1,4 +1,6 @@
-﻿using RoastedMarketplace.Core.Data;
+﻿using System;
+using System.Linq;
+using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Core.Infrastructure;
 
 namespace RoastedMarketplace.Core.Services.Events
@@ -45,6 +47,18 @@ namespace RoastedMarketplace.Core.Services.Events
                 input = ec.Filter(input);
             }
             return input;
+        }
+
+        public void Publish(string eventName, object[] data = null)
+        {
+            var consumers = DependencyResolver.ResolveMany<IEventCapture>()
+                .Where(x => x.EventNames != null &&
+                            x.EventNames.Contains(eventName, StringComparer.InvariantCultureIgnoreCase));
+
+            foreach (var c in consumers)
+            {
+                c.Capture(eventName, data);
+            }
         }
     }
 }

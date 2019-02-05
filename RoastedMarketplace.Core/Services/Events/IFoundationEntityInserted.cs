@@ -2,7 +2,7 @@
 
 namespace RoastedMarketplace.Core.Services.Events
 {
-    public interface IFoundationEntityInserted<T> : IFoundationEntityEvent where T : FoundationEntity
+    public interface IFoundationEntityInserted<T> : IFoundationEvent where T : FoundationEntity
     {
         void OnInserted(T entity);
     }

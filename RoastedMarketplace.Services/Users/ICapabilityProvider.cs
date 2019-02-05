@@ -12,5 +12,7 @@ namespace RoastedMarketplace.Services.Users
     public interface ICapabilityProvider
     {
         IDictionary<string, IList<string>> GetCapabilities();
+
+        IList<string> GetRawCapabilities();
     }
 }

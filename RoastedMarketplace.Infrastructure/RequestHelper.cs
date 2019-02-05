@@ -12,7 +12,7 @@ namespace RoastedMarketplace.Infrastructure
             var httpContextAccessor = DependencyResolver.Resolve<IHttpContextAccessor>();
             var actionContextAccessor = DependencyResolver.Resolve<IActionContextAccessor>();
             var area = "";
-            if (actionContextAccessor.ActionContext.RouteData.Values.ContainsKey("area"))
+            if (actionContextAccessor.ActionContext?.RouteData.Values.ContainsKey("area") ?? false)
             {
                 area = actionContextAccessor.ActionContext.RouteData.Values["area"]?.ToString();
                 if (!area.IsNullEmptyOrWhitespace())

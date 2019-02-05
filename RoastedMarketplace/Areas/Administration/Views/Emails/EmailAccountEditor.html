@@ -1,0 +1,99 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Email Account Editor" active_menu="GetEmailAccount" parent_active_menu="EmailsList"%}
+{% partial "Navigation/EmailAccountEditSecondaryNavigation" %}
+
+
+<form action="{% route api_SaveEmailAccount %}" method="post" id="account-editor-form">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-title">
+                    {% if emailAccount.id != 0 %}
+                    {{ emailAccount.email }}
+                    {% else %}
+                    {{"Add Email Account" | t }}
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Email" for="email" %}
+                        {% control text name="email" value="{{emailAccount.email}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"From Name" for="fromName" %}
+                        {% control text name="fromName" value="{{emailAccount.fromName}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Host" for="host" %}
+                        {% control text name="host" value="{{emailAccount.host}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Port" for="port" %}
+                        {% control number name="port" value="{{emailAccount.port}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"User Name" for="userName" %}
+                        {% control text name="userName" value="{{emailAccount.userName}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Password" for="password" %}
+                        {% control password name="password" value="{{emailAccount.password}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox text=@t"Use SSL" name="useSsl" value="emailAccount.useSsl" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox text=@t"Use Default Credentials" name="useDefaultCredentials" value="emailAccount.useDefaultCredentials" %}
+                    </div>
+                </div>
+            </div>
+            {% control hidden name="id" value="{{emailAccount.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save Email Account" | t}}</button>
+                <a class="btn btn-default" href='{% route EmailAccountsList %}'>{{"Cancel" | t}}</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Test Email Settings" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Test Email" for="testemail" %}
+                        {% control text name="testemail" value="" %}
+                    </div>
+                    <button type="button" id="validate-settings" class="btn btn-sm btn-default">
+                        {{"Validate Settings" | t}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("account-editor-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Email account was saved successfully." | t }}');
+                    setTimeout(function() {
+                            navigate("{% route EmailAccountsList %}");
+                        },
+                        500);
+
+                }
+            });
+    });
+
+    jQuery("#validate-settings").click(function() {
+        post({
+            url: "{% route api_TestEmailAccount %}",
+            data: jQuery("#account-editor-form").serialize(),
+            done: function(response) {
+                notify("success", '{{"Test email was sent successfully." | t }}');
+            }
+        });
+    });
+
+</script>

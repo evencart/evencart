@@ -97,5 +97,10 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         {
             return customResponse.With("catalogPaginationTypes", SelectListHelper.GetSelectItemList<CatalogPaginationType>());
         }
+
+        public static CustomResponse WithEmailAccounts(this CustomResponse customResponse)
+        {
+            return customResponse.With("emailAccounts", SelectListHelper.GetAvailableEmailAccounts());
+        }
     }
 }

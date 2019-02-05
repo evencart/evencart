@@ -86,6 +86,9 @@ namespace RoastedMarketplace.Controllers
             var roleId = _roleService.Get(x => x.SystemName == SystemRoleNames.Registered).First().Id;
             //assign role to the user
             _roleService.SetUserRoles(user.Id, new[] {roleId});
+            //raise the event
+            RaiseEvent(NamedEvent.UserRegistered, user);
+
             return R.Success.Result;
         }
 

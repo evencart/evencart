@@ -1,7 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using RoastedMarketplace.Data.Entity.Pages;
-using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Entity.ScheduledTasks;
 using Db = DotEntity.DotEntity.Database;
 namespace RoastedMarketplace.Data.Versions
 {
@@ -9,7 +8,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction, true);
+            Db.CreateTable<ScheduledTask>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

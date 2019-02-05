@@ -1,0 +1,92 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Queued Emails" active_menu="EmailMessagesList" parent_active_menu="EmailsList" %}
+{% partial "Navigation/EmailsSecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Email Messages" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
+                            <th data-column-id="subject">{{"Subject" | t}}</th>
+                            <th data-column-id="toUsers" data-formatter="tos">{{"To" | t}}</th>
+                            <th data-column-id="sendingDate">{{"Sending Date" | t}}</th>
+                            <th data-column-id="isSent" data-formatter="issent">{{"Sent" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    var editEmailMessage = function(id) {
+                        var url = '{% route GetEmailMessage emailMessageId="_id" %}';
+                        url = url.replace("_id", id);
+                        navigate(url);
+                    }
+                    var deleteEmailMessage = function (id) {
+                        confirm('{{"Are you sure you want to delete this message?" | t}}',
+                            function() {
+                                var url = '{% route api_DeleteEmailMessage %}';
+                                post({
+                                    url: url,
+                                    data: {
+                                        emailMessageId: id
+                                    },
+                                    done: function(r) {
+                                        reloadGrid("grid-selection");
+                                    }
+                                });
+                            });
+                        
+                    }
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless emailMessages == blank %}*/
+                        initData = JSON.parse('{{emailMessages}}');
+                        /*{% endunless %}*/
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                emailMessages: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 0,
+                            selection: false,
+                            url: "{% route api_EmailMessagesList %}",
+                            responseObject: "emailMessages",
+                            formatters: {
+                                "tos": function(column, row) {
+                                    var tos = "";
+                                    row.tos.forEach(function(item) {
+                                        tos += item;
+                                    });
+                                    return tos;
+                                },
+                                "issent": function(column, row) {
+                                    return gridFormatters.binary(column, row, "isSent");
+                                },
+                                "commands": function(column, row) {
+                                    return "<button class=\"btn btn-sm btn-danger command-preview\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteEmailMessage(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+

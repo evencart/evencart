@@ -6,6 +6,7 @@ namespace RoastedMarketplace.Services.Products
 {
     public interface IAvailableAttributeService : IFoundationEntityService<AvailableAttribute>
     {
-       
+        IEnumerable<AvailableAttribute> GetAvailableAttributes(out int totalResults, string searchText = null, int page = 1,
+            int count = int.MaxValue);
     }
 }

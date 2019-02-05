@@ -47,14 +47,14 @@
                             responseObject: "products",
                             formatters: {
                                 "commands": function(column, row) {
-                                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editProduct(" +
                                         row.id +
-                                        ")'><span class=\"rbicon-edit\"></span></a> " +
-                                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-secondary btn-sm command-preview\" data-row-id=\"" +
                                         row.id +
-                                        "\"><span class=\"rbicon-external-link\"></span></a>";
+                                        "\"><span class=\"rbicon-external-link\"></span></button>";
                                 }
                             }
                         });

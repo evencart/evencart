@@ -1,0 +1,108 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Available Attributes" active_menu="AvailableAttributesList" parent_active_menu="ProductsList" %}
+{% partial "Navigation/ProductSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Available Attributes" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editAvailableAttribute(0)">{{"Add new attribute" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">{{"ID" | t}}</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless attributes == blank %}*/
+                        initData = JSON.parse(`{{attributes}}`);
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                attributes: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_AvailableAttributesList %}',
+                            responseObject: "attributes",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editAvailableAttribute(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteAvailableAttribute(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-availableAttribute-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editAvailableAttribute = function(id) {
+        jQuery("#edit-availableAttribute-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-availableAttribute-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Attribute was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetAvailableAttribute availableAttributeId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-availableAttribute-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteAvailableAttribute = function(id) {
+        var msg =
+            '{{ "Deleting an attribute will delete all the associated product attributes and relations. Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteAvailableAttribute %}",
+                    data: {
+                      productAttributeId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Attribute was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>

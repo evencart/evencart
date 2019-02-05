@@ -65,12 +65,12 @@
                     return address;
                 },
                 "commands": function (column, row) {
-                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                    return "<a class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                         row.id +
                         "\" onclick='editAddress(" +
                         row.id +
                         ")'><span class=\"rbicon-edit\"></span></a> " +
-                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                        "<a class=\"btn btn-secondary btn-sm command-preview\" data-row-id=\"" +
                         row.id +
                         "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></a>";
                 }

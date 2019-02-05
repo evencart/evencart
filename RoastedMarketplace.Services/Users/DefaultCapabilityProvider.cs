@@ -6,6 +6,8 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Users;
 
@@ -19,6 +21,12 @@ namespace RoastedMarketplace.Services.Users
         {
             FillDefaultCapabilities();
             return _defaultCapabilities;
+        }
+
+        public IList<string> GetRawCapabilities()
+        {
+            var allCapabilityFields = typeof(CapabilitySystemNames).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            return allCapabilityFields.Select(x => (string)x.GetRawConstantValue()).ToList();
         }
 
         private void FillDefaultCapabilities()

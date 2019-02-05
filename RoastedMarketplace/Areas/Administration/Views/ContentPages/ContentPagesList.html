@@ -7,7 +7,7 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Content Pages" | t}}
-                <a class="btn btn-sm btn-primary float-right" href='{% route GetContentPage contentPageId="0" %}'>{{"Add new page" | t}}</a>
+                <a class="btn btn-sm btn-primary float-right" href='{% route GetContentPage contentPageId="0" %}'>{{"Add page" | t}}</a>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
@@ -24,6 +24,22 @@
                         var url = '{% route GetContentPage contentPageId="_id" %}';
                         url = url.replace("_id", id);
                         navigate(url);
+                    }
+                    var deleteContentPage = function(id) {
+                        var url = '{% route DeleteContentPage %}';
+                        confirm('{{"Are you sure you want to delete this page?" | t }}',
+                            function() {
+                                post({
+                                    url: url,
+                                    data: {
+                                        contentPageId: id
+                                    },
+                                    done: function() {
+                                        reloadGrid("grid-selection");
+                                    }
+                                });
+                            });
+
                     }
                     ready(function() {
                         var initData = null;
@@ -45,14 +61,16 @@
                             responseObject: "contentPages",
                             formatters: {
                                 "commands": function(column, row) {
-                                    return "<a class=\"btn btn-outline-secondary command-edit\" data-row-id=\"" +
+                                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editContentPage(" +
                                         row.id +
-                                        ")'><span class=\"rbicon-edit\"></span></a> " +
-                                        "<a class=\"btn btn-outline-secondary command-preview\" data-row-id=\"" +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                                         row.id +
-                                        "\"><span class=\"rbicon-external-link\"></span></a>";
+                                        "\" onclick='deleteContentPage(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button>";
                                 }
                             }
                         });

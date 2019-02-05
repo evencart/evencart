@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Emails;
+using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
-using RoastedMarketplace.Data.Entity.Tickets;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Services.Extensions;
+using RoastedMarketplace.Services.Logger;
 using RoastedMarketplace.Services.Tokens;
 using RoastedMarketplace.Services.Users;
 
@@ -18,16 +20,19 @@ namespace RoastedMarketplace.Services.Emails
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly IUserService _userService;
         private readonly EmailSenderSettings _emailSenderSettings;
+        private readonly ILogger _logger;
         #endregion
 
-        public EmailSender(IEmailService emailService, ITokenProcessor tokenProcessor, IEmailTemplateService emailTemplateService, IUserService userService, EmailSenderSettings emailSenderSettings)
+        public EmailSender(IEmailService emailService, ITokenProcessor tokenProcessor, IEmailTemplateService emailTemplateService, IUserService userService, EmailSenderSettings emailSenderSettings, ILogger logger)
         {
             _emailService = emailService;
             _tokenProcessor = tokenProcessor;
             _emailTemplateService = emailTemplateService;
             _userService = userService;
             _emailSenderSettings = emailSenderSettings;
+            _logger = logger;
         }
+
         /// <summary>
         /// Loads a named email template from database and replaces tokens with passed entities, and returns a new email message object with template values
         /// </summary>
@@ -37,7 +42,7 @@ namespace RoastedMarketplace.Services.Emails
         private EmailMessage LoadAndProcessTemplate(string templateName, params object[] entities)
         {
             //first load the template from database
-            var template = _emailTemplateService.(x => x.TemplateSystemName == templateName);
+            var template = _emailTemplateService.FirstOrDefault(x => x.TemplateSystemName == templateName);
             if (template == null)
                 return null;
 
@@ -49,8 +54,10 @@ namespace RoastedMarketplace.Services.Emails
                 IsEmailBodyHtml = true,
                 EmailBody = processedTemplateString,
                 EmailAccount = emailAccount,
+                EmailAccountId = emailAccount?.Id ?? 0,
                 Subject = subjectString,
                 OriginalEmailTemplate = template,
+                SendingDate = DateTime.UtcNow,
                 Tos = new List<EmailMessage.UserInfo>()
             };
 
@@ -60,6 +67,11 @@ namespace RoastedMarketplace.Services.Emails
         private void QueueEmailMessage(string templateName, User user, params object[] entities)
         {
             var message = LoadAndProcessTemplate(templateName, user, entities);
+            if (message == null)
+            {
+                _logger.LogError<EmailTemplate>(null, user, $"Failure sending email. Unable to load template '{templateName}'");
+                return;
+            }
             message.Tos.Add(new EmailMessage.UserInfo(user.Name, user.Email));
             _emailService.Queue(message);
         }
@@ -67,14 +79,19 @@ namespace RoastedMarketplace.Services.Emails
         private void QueueEmailMessageToAdmin(string templateName, params object[] entities)
         {
             var message = LoadAndProcessTemplate(templateName, entities);
+            if (message == null)
+            {
+                _logger.LogError<EmailTemplate>(null, null, $"Failure sending email. Unable to load template '{templateName}'");
+                return;
+            }
             message.Tos.Add(new EmailMessage.UserInfo("Administrator", message.OriginalEmailTemplate.AdministrationEmail));
             _emailService.Queue(message);
         }
 
-        public bool SendTestEmail(string email, EmailAccount emailAccount)
+        public bool SendTestEmail(string email, EmailAccount emailAccount, out Exception ex)
         {
-            var subject = "MobSocial Test Email";
-            var message = "Thank you for using mobSocial. This is a sample email to test if emails are functioning.";
+            var subject = "Test Email";
+            var message = "This is a sample email to test if emails are functioning.";
             //create a new email message
             var emailMessage = new EmailMessage() {
                 IsEmailBodyHtml = true,
@@ -86,10 +103,10 @@ namespace RoastedMarketplace.Services.Emails
                     new EmailMessage.UserInfo("WebAdmin", email)
                 }
             };
-            return _emailService.SendEmail(emailMessage, true);
+            return _emailService.SendEmail(emailMessage, out ex);
         }
 
-        public void SendUserRegisteredMessage(User user)
+        public void SendUserRegistered(User user)
         {
             if (_emailSenderSettings.UserRegisteredEmailEnabled)
             {
@@ -101,119 +118,35 @@ namespace RoastedMarketplace.Services.Emails
             }
         }
 
-        public void SendUserActivationLinkMessage(User user, string activationUrl)
+        public void SendUserActivationLink(User user, string activationUrl)
         {
             QueueEmailMessage(EmailTemplateNames.UserActivationLinkMessage, user);
         }
 
-        public void SendUserActivatedMessage(User user)
+        public void SendUserActivated(User user)
         {
             if (_emailSenderSettings.UserActivationEmailEnabled)
                 QueueEmailMessage(EmailTemplateNames.UserActivatedMessage, user);
         }
 
-        public void SendTicketCreatedMessage(User user, Ticket ticket, bool agentCreatedTicket = false)
+        public void SendOrderPlaced(User user, Order order)
         {
-            if (agentCreatedTicket)
-            {
-                if (_emailSenderSettings.TicketCreatedByAgentEmailEnabled)
-                {
-                    QueueEmailMessage(EmailTemplateNames.TicketCreatedMessage, user, ticket);
-                }
-                if (_emailSenderSettings.TicketCreatedByAgentEmailToAdminEnabled)
-                {
-                    QueueEmailMessageToAdmin(EmailTemplateNames.TicketCreatedMessageToAdmin, user, ticket);
-                }
-            }
-            else
-            {
-                if (_emailSenderSettings.TicketCreatedByUserEmailEnabled)
-                {
-                    QueueEmailMessage(EmailTemplateNames.TicketCreatedMessage, user, ticket);
-                }
-                if (_emailSenderSettings.TicketCreatedByUserEmailToAdminEnabled)
-                {
-                    QueueEmailMessageToAdmin(EmailTemplateNames.TicketCreatedMessageToAdmin, user, ticket);
-                }
-            }
+            
         }
 
-        public void SendTicketUpdatedMessage(User user, Ticket ticket)
+        public void SendOrderComplete(User user, Order order)
         {
-            if (_emailSenderSettings.TicketUpdatedEmailEnabled)
-            {
-                QueueEmailMessage(EmailTemplateNames.TicketUpdatedMessage, user, ticket);
-            }
-            if (_emailSenderSettings.TicketUpdatedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.TicketUpdatedMessageToAdmin, user, ticket);
-            }
+            
         }
 
-        public void SendTicketClosedMessage(User user, Ticket ticket)
+        public void SendShipmentShipped(User user, Order order, Shipment shipment)
         {
-            if (_emailSenderSettings.TicketClosedEmailEnabled)
-            {
-                QueueEmailMessage(EmailTemplateNames.TicketClosedMessage, user, ticket);
-            }
-            if (_emailSenderSettings.TicketClosedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.TicketClosedMessageToAdmin, user, ticket);
-            }
+            
         }
 
-        public void SendTicketDeletedMessage(User user, Ticket ticket)
+        public void SendShipmentDelivered(User user, Order order, Shipment shipment)
         {
-            if (_emailSenderSettings.TicketDeletedEmailEnabled)
-            {
-                QueueEmailMessage(EmailTemplateNames.TicketDeletedMessage, user, ticket);
-            }
-            if (_emailSenderSettings.TicketDeletedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.TicketDeletedMessageToAdmin, user, ticket);
-            }
-        }
-
-        public void SendSlaViolationReminderMessage(User user, SlaPolicy slaPolicy, Ticket ticket)
-        {
-            QueueEmailMessage(EmailTemplateNames.SlaViolationReminderMessage, user, slaPolicy, ticket);
-        }
-
-        public void SendTicketResolvedMessage(User user, Ticket ticket)
-        {
-            if (_emailSenderSettings.TicketResolvedEmailEnabled)
-            {
-                QueueEmailMessage(EmailTemplateNames.TicketResolvedMessage, user, ticket);
-            }
-            if (_emailSenderSettings.TicketResolvedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.TicketResolvedMessageToAdmin, user, ticket);
-            }
-        }
-
-        public void SendSlaViolatedMessage(User user, SlaPolicy slaPolicy, Ticket ticket)
-        {
-            QueueEmailMessage(EmailTemplateNames.SlaViolatedMessage, user, slaPolicy, ticket);
-            if (_emailSenderSettings.SlaViolatedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.SlaViolatedMessageToAdmin, slaPolicy, ticket);
-            }
-        }
-
-        public void SendSlaModifiedMessage(User user, SlaPolicy slaPolicy)
-        {
-            if (_emailSenderSettings.SlaModifiedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.SlaModifiedMessageToAdmin, user, slaPolicy);
-            }
-        }
-
-        public void SendSlaDeletedMessage(User user, SlaPolicy slaPolicy)
-        {
-            if (_emailSenderSettings.SlaModifiedEmailToAdminEnabled)
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.SlaModifiedMessageToAdmin, user, slaPolicy);
-            }
+            
         }
     }
 }

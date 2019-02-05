@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Services.Events;
 using RoastedMarketplace.Infrastructure.Helpers;
 
 namespace RoastedMarketplace.Infrastructure.Mvc
@@ -33,6 +36,14 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         }
 
         public CustomResponse R => CustomResponse.Response(this);
+
+        /// <summary>
+        /// Raises a named event so other services and plugins can capture
+        /// </summary>
+        public void RaiseEvent(Enum eventName, params object[] eventData)
+        {
+            DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName.ToString(), eventData);
+        }
         
     }
    

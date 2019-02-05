@@ -24,6 +24,7 @@ using RoastedMarketplace.Infrastructure.ViewEngines;
 using RoastedMarketplace.Services.Authentication;
 using RoastedMarketplace.Services.Search;
 using RoastedMarketplace.Services.Settings;
+using RoastedMarketplace.Services.Users;
 
 namespace RoastedMarketplace.Infrastructure.DependencyContainer
 {
@@ -69,11 +70,19 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             var allConsumerTypes = asm.SelectMany(x => x.GetTypes())
                 .Where(type => type.IsPublic && // get public types 
                                type.GetInterfaces()
-                                   .Any(x => x.IsGenericType &&
-                                             x.IsAssignableTo(typeof(IFoundationEntityEvent)) && 
+                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent)) && 
                                              !type.IsAbstract));// which implementing some interface(s)
             //all consumers which are not interfaces
             registrar.RegisterMany(allConsumerTypes);
+
+            //capability providers
+            var allCapabilityProviderTypes = asm.SelectMany(x => x.GetTypes())
+                .Where(type => type.IsPublic && // get public types 
+                               type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ICapabilityProvider)) &&
+                                             !type.IsAbstract));// which implementing some interface(s)
+            //all consumers which are not interfaces
+            registrar.RegisterMany(allCapabilityProviderTypes);
 
             //services
             //to register services, we need to get all types from services assembly and register each of them;

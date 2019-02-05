@@ -1,0 +1,74 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Email Template Editor" active_menu="GetEmailTemplate" parent_active_menu="EmailsList"%}
+{% partial "Navigation/EmailTemplateEditSecondaryNavigation" %}
+
+
+<form action="{% route api_SaveEmailTemplate %}" method="post" id="template-editor-form">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-title">
+                    {% if emailTemplate.id != 0 %}
+                    {{ emailTemplate.templateName }} ({{ emailTemplate.templateSystemName }})
+                    {% else %}
+                    {{"Add email template" | t }}
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Template Name" for="templateName" %}
+                        {% control text name="templateName" value="{{emailTemplate.templateName}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"System Name" for="templateSystemName" %}
+                        {% if emailTemplate.isSystem %}
+                        {% control text name="templateSystemName" value="{{emailTemplate.templateSystemName}}"%}
+                        {% else %}
+                        {% control label text="{{emailTemplate.templateSystemName}}"%}    
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Subject" for="subject" %}
+                        {% control text name="subject" value="{{emailTemplate.subject}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Template" for="template" %}
+                        {% control wyswyg id="emailTemplate_template" name="template" value="{{emailTemplate.template}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Master Template" for="parentEmailTemplateId" %}
+                        {% control select id="parentEmailTemplateId" name="parentEmailTemplateId" value="emailTemplate.parentEmailTemplateId" items="availableMasterTemplates" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox text=@t"Is Master" name="isMaster" value="emailTemplate.ismaster" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email Account" for="emailAccountId" %}
+                        {% control select id="emailAccountId" name="emailAccountId" value="emailTemplate.emailAccountId" required="true" items="availableEmailAccounts" %}
+                    </div>
+                </div>
+            </div>
+            {% control hidden name="id" value="{{emailTemplate.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save Email Template" | t}}</button>
+                <a class="btn btn-default" href='{% route EmailTemplatesList %}'>{{"Cancel" | t}}</a>
+            </div>
+        </div>
+        
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("template-editor-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Email template was saved successfully." | t }}');
+                    setTimeout(function() {
+                            navigate("{% route EmailTemplatesList %}");
+                        },
+                        500);
+
+                }
+            });
+    });
+</script>

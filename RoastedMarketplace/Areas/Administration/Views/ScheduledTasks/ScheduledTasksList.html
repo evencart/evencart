@@ -1,0 +1,104 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Scheduled Tasks" active_menu="ScheduledTasksList" parent_active_menu="Settings" %}
+{% partial "Navigation/SettingsSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Scheduled Tasks" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="name" data-width="40%">{{"Name" | t}}</th>
+                            <th data-column-id="seconds" data-formatter="seconds">{{"Runs every" | t}}</th>
+                            <th data-column-id="enabled" data-formatter="enabled">{{"Enabled" | t}}</th>
+                            <th data-column-id="isRunning" data-formatter="isRunning">{{"In progress" | t}}</th>
+                            <th data-column-id="stopOnError" data-formatter="stopOnError">{{"Stop on error" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless tasks == blank %}*/
+                        initData = JSON.parse('{{tasks}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                tasks: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_ScheduledTasksList %}',
+                            responseObject: "tasks",
+                            selection: false,
+                            navigation: false,
+                            columnSelection: false,
+                            formatters: {
+                                name: function(column, row) {
+                                    return row.name + "<br/>" + row.systemName;
+                                },
+                                seconds: function(column, row) {
+                                    var hms = secondsToHms(row.seconds);
+                                    return hms;
+                                },
+                                enabled: function(column, row) {
+                                    return gridFormatters.binary(column, row, "enabled");
+                                },
+                                isRunning: function (column, row) {
+                                    return gridFormatters.binary(column, row, "isRunning");
+                                },
+                                stopOnError: function (column, row) {
+                                    return gridFormatters.binary(column, row, "stopOnError");
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-sm btn-secondary command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editTask(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> ";
+
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-task">
+</div>
+
+<script type="text/javascript">
+
+    var editTask = function(id) {
+        jQuery("#edit-task").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-task",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Scheduled Task was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetScheduledTask scheduledTaskId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-task").html(response);
+                centerPopup();
+            });
+    }
+</script>
