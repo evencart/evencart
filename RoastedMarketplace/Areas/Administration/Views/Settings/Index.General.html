@@ -6,8 +6,12 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
+            {% control label text=@t"Store Name" for="storeName" %}
+            {% control text name="storeName" value="{{settings.storeName}}"%}
+        </div>
+        <div class="form-group">
             {% control label text=@t"Store Domain" for="store-domain" %}
-            {% control text name="storedomain" value="{{settings.storeDomain}}"%}
+            {% control text name="storeDomain" value="{{settings.storeDomain}}"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Default Timezone" for="defaultTimezoneId" %}

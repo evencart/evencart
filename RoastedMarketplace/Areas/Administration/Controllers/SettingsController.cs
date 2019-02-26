@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Settings;
 using RoastedMarketplace.Core.Config;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Services.Settings;
+using RoastedMarketplace.Services.Taxes;
 
 namespace RoastedMarketplace.Areas.Administration.Controllers
 {
@@ -140,7 +143,11 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                     break;
                 case "tax":
                     settings = DependencyResolver.Resolve<TaxSettings>();
+                    var taxService = DependencyResolver.Resolve<ITaxService>();
+                    var taxes = taxService.Get(x => true).ToList();
+                    var taxesSelectList = SelectListHelper.GetSelectItemList(taxes, x => x.Id, x => x.Name);
                     model = _modelMapper.Map<TaxSettingsModel>(settings);
+                    result.With("availableTaxes", taxesSelectList);
                     break;
                 case "email":
                     settings = DependencyResolver.Resolve<EmailSenderSettings>();

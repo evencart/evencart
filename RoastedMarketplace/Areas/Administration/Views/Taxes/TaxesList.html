@@ -1,0 +1,110 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Taxes" active_menu="TaxesList" parent_active_menu="TaxesList" %}
+{% partial "Navigation/TaxSecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-10 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Taxes" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editTax(0)">{{"Add tax" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead style="display: none">
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name">{{"Name" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                   
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless taxes == blank %}*/
+                        initData = JSON.parse('{{taxes}}');
+                        /*{% endunless %}*/
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                taxes: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_TaxesList %}',
+                            responseObject: "taxes",
+                            formatters: {
+                                "commands": function (column, row) {
+                                    var taxRatesUrl = '{% route TaxRatesList taxId="_id_" %}'.replace("_id_", row.id);
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editTax(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " + 
+                                        "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteTax(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button> " + 
+                                        "<a class=\"btn btn-sm btn-secondary\" href='" + taxRatesUrl + "'><span class=\"rbicon-edit\"></span></a> ";;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-tax-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editTax = function(id) {
+        jQuery("#edit-tax-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-tax-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Tax was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetTax taxId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-tax-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteTax = function(id) {
+        confirm('{{"Are you sure you wish to delete this tax?" | t}}',
+            function() {
+                var url = '{% route api_DeleteTax %}';
+                post({
+                    url: url,
+                    data: {
+                        taxId: id
+                    },
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Tax was deleted successfully" | t}}');
+                    }
+                });
+            });
+        
+        
+    }
+</script>

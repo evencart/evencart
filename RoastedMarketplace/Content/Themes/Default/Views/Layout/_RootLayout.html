@@ -1,10 +1,12 @@
 ﻿<!doctype html>
 <html class="no-js" lang="en">
 <head>
+    {% widget "head_start" %}
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{{seoMeta.pageTitle}} - {{store.name}}</title>
     <meta name="description" content="{{seoMeta.metaDescription}}">
+    <meta name="keywords" content="{{seoMeta.metaKeywords}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <!-- All CSS Files -->
@@ -33,9 +35,10 @@
     </script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-
+    {% widget "head_end" %}
 </head>
 <body>
+    {% widget "body_start" %}
     {% bodyContent %}
     <!-- Placed JS at the end of the document so the pages load faster -->
     <!-- Bootstrap js -->
@@ -52,8 +55,8 @@
     <script src="{{store.url}}/common/assets/lib/navigo/navigo.js"></script>
     <script src="{{store.url}}/common/assets/lib/liquidjs/liquid.js"></script>
     <script src="{{store.url}}/common/assets/js/ajax.js"></script>
-<script src="{{store.url}}/common/assets/js/helpers.js"></script>
-<script src="{{store.url}}/common/assets/js/catalog.js"></script>
-
+    <script src="{{store.url}}/common/assets/js/helpers.js"></script>
+    <script src="{{store.url}}/common/assets/js/catalog.js"></script>
+    {% widget "body_end" %}
 </body>
 </html>

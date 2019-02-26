@@ -1,0 +1,58 @@
+﻿{% layout "_AccountLayout" %}
+{% global active_menu="AccountAddresses" %}
+<h3>
+    {{"Addresses" | t}}
+</h3>
+<div class="page-section section pb-120">
+    <div class="row">
+        <table class="table table-striped table-bordered">
+            {% for address in addresses %}
+            <tr>
+                <td>
+                    <div>
+                        <strong>{{address.name}}</strong>
+                    </div>
+                    <div>
+                        {{address.address1}}
+                    </div>
+                    <div>
+                        {{address.address2}}
+                    </div>
+                    <div>
+                        {{address.city}}, {{address.stateProvinceName}} - {{address.zipPostalCode}}
+                    </div>
+                    <div>
+                        {{address.countryName}}
+                    </div>
+                    <a href='{% route SingleAddress addressId="{{address.id}}" %}'>
+                        <span class="fa fa-pencil"></span> {{"Edit" | t}}
+                    </a>
+                    <a onclick="deleteAddress('{{address.id}}');return false;" href="#" class="clickable">
+                        <span class="fa fa-times"></span> {{"Delete" | t}}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="action-button-container text-center">
+            <a class="btn btn-default" href='{% route SingleAddress addressId="0" %}'>
+                {{"Add Address" | t}}
+            </a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var deleteAddress = function(id) {
+        if (!confirm('{{"Are you sure you wish to delete this address?" | t}}')) {
+            return;
+        }
+
+        var url = '{% route api_AccountDeleteAddress addressId="%id%" %}'.replace("%id%", id);
+        post({
+            url: url,
+            done: function() {
+                window.location.reload();
+            }
+        });
+    }
+</script>

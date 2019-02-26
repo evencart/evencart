@@ -1,6 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using RoastedMarketplace.Data.Entity.ScheduledTasks;
+using RoastedMarketplace.Data.Entity.Purchases;
 using Db = DotEntity.DotEntity.Database;
 namespace RoastedMarketplace.Data.Versions
 {
@@ -8,7 +8,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<ScheduledTask>(transaction);
+            Db.AddColumn<Order, string>(nameof(Order.TaxDetails), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

@@ -5,9 +5,12 @@
         {% control validator for="{{prefix}}name" required="true" value="s" %}
     </div>
     <div class="form-group">
-        {% control label text=@t"Address" for="{{prefix}}address1" %}
+        {% control label text=@t"House / Apartment / Flat No. and Name" for="{{prefix}}address1" %}
         {% control text id="{{prefix}}address1" name="{{prefix}}address1" value="{{address.address1}}" placeholder=@t"e.g. 123, South Avenue" %}
-        {% control validator for="{{prefix}}address2" required="true" %}
+        
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Street" for="{{prefix}}address2" %}
         {% control text id="{{prefix}}address2" name="{{prefix}}address2" value="{{address.address2}}" placeholder=@t"e.g. Necklace Road" %}
     </div>
     <div class="form-group">
@@ -20,8 +23,17 @@
     </div>
     <div class="form-group">
         {% control label text=@t"State or Province" for="state" %}
-        {% control select id="{{prefix}}state" value="address.stateOrProvinceId" items="items" %}
+        {% control select id="{{prefix}}state" name="{{prefix}}stateProvinceId" value="address.stateOrProvinceId" items="items" %}
     </div>
+    <div class="form-group" id="{{prefix}}other-state-container">
+        {% control label text=@t"State or Province" for="state" %}
+        {% control text name="{{prefix}}stateProvinceName" value="{{address.stateProvinceName}}" %}
+    </div>
+    <script type="text/javascript">
+        ready(function () {
+            initCountryState("{{prefix}}country", "{{prefix}}state", "{{prefix}}other-state-container", "{{address.stateProvinceId}}");
+        });
+    </script>
     <div class="form-group">
         {% control label text=@t"City" for="city" %}
         {% control text id="{{prefix}}city" name="{{prefix}}city" value="{{address.city}}" %}

@@ -1,0 +1,58 @@
+﻿<h4>
+    {{"Review Summary" | t}}
+</h4>
+<table class="table table-striped">
+    <tr>
+        <td>
+            {%- assign ratingWidth=100 -%}
+            {% partial "Products/_RatingStars" %}
+        </td>
+        <td>
+            {{summary.fiveStarCount}} ({{summary.fiveStarPercent}} %)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {%- assign ratingWidth=80 -%}
+            {% partial "Products/_RatingStars" %}
+        </td>
+        <td>
+            {{summary.fourStarCount}} ({{summary.fourStarPercent}} %)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {%- assign ratingWidth=60 -%}
+            {% partial "Products/_RatingStars" %}
+        </td>
+        <td>
+            {{summary.threeStarCount}} ({{summary.threeStarPercent}} %)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {%- assign ratingWidth=40 -%}
+            {% partial "Products/_RatingStars" %}
+        </td>
+        <td>
+            {{summary.twoStarCount}} ({{summary.twoStarPercent}} %)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {%- assign ratingWidth=20 -%}
+            {% partial "Products/_RatingStars" %}
+        </td>
+        <td>
+            {{summary.oneStarCount}} ({{summary.oneStarPercent}} %)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{"Total Reviews" | t}}
+        </td>
+        <td>
+            {{summary.totalReviews}}
+        </td>
+    </tr>
+</table>

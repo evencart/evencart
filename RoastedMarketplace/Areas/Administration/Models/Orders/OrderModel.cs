@@ -27,15 +27,13 @@ namespace RoastedMarketplace.Areas.Administration.Models.Orders
 
         public string PaymentMethodName { get; set; }
 
-        public decimal SubtotalWithoutDiscount { get; set; }
-
         public decimal Discount { get; set; }
 
         public string DiscountCoupon { get; set; }
 
         public int? DiscountId { get; set; }
 
-        public decimal SubtotalWithDiscount { get; set; }
+        public decimal Subtotal { get; set; }
 
         public decimal? ShippingMethodFee { get; set; }
 

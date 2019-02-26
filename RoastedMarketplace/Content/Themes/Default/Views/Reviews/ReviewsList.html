@@ -1,1 +1,39 @@
-﻿Re
+﻿{% layout "_Layout" %}
+<!-- PAGE SECTION START -->
+<div class="product-section section pt-120 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="product-block">
+                    <h3>
+                        <a href='{% route SingleProduct seName="{{product.seName}}" %}'>
+                            <span class="fa fa-angle-left"></span> 
+                            <img width="50px" src="{{product.media[0].thumbnailUrl}}"/>
+                            {{product.name}}
+                        </a>
+                    </h3>
+                    {{"Price : " | }} {{product.priceFormatted}}
+                </div>
+                {% partial "Reviews/_ReviewSummary" %}
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        {%- assign review=bestReview -%}
+                        {% partial "Reviews/_ReviewBox" %}
+                    </div>
+                    <div class="col-md-6">
+                        {%- assign review=worstReview -%}
+                        {% partial "Reviews/_ReviewBox" %}
+                    </div>
+                </div>
+                <div class="reviews">
+                    {% for review in reviews %}
+                    {% partial "Reviews/_ReviewBox" %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->

@@ -144,7 +144,11 @@ namespace RoastedMarketplace.Services.Products
                             x => x.ProductAttribute.AvailableAttribute == null &&
                                  x.ProductAttribute.AvailableAttributeId == attribute.Id);
                     if (productVariantAttribute != null)
+                    {
                         productVariantAttribute.ProductAttribute.AvailableAttribute = attribute;
+                        if (productVariantAttribute.ProductAttribute.Label.IsNullEmptyOrWhiteSpace())
+                            productVariantAttribute.ProductAttribute.Label = attribute.Name;
+                    }
 
                 })
                 .Relate<AvailableAttributeValue>((variant, attributeValue) =>

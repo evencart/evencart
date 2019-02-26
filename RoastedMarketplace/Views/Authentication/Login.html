@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
                 <div class="login-reg-form">
-                    <form action="{% route api_Login %}" method="post">
+                    <form action="{% route api_Login %}" method="post" id="login-form">
                         <div class="row">
                             <div class="col-xs-12 mb-20">
                                 <label id="email">Email <span class="required">*</span></label>
@@ -17,7 +17,7 @@
                             <div class="col-xs-12 mb-20">
                                 <input id="Login" name="login" class="inline" type="submit">
                                 <label class="inline" for="rememberme">
-                                    <input id="rememberme" name="rememberme" type="checkbox"> Remember me
+                                    <input id="rememberme" name="rememberme" value="true" type="checkbox"> Remember me
                                 </label>
                             </div>
                             <div class="col-xs-12">
@@ -30,3 +30,17 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        initAjaxForm("login-form",
+            {
+                onSuccess: function(response) {
+                    var returnUrl = jQuery.urlParam("ReturnUrl");
+                    if (returnUrl)
+                        window.location.href = decodeURIComponent(returnUrl);
+                    else
+                        window.location.href = "/";
+                }
+            });
+    });
+</script>

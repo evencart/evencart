@@ -3,7 +3,7 @@
 <!-- Body main wrapper start -->
 <div class="wrapper">
 <!-- START HEADER SECTION -->
-<header class="header-section section sticker">
+<header class="header-section section">
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
@@ -44,7 +44,9 @@
                             <!-- Cart Toggle -->
                             <a class="cart-toggle" href="{% route Cart %}" data-toggle="dropdown">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                {% if cart.totalItems > 0 %}
                                 <span>{{cart.totalItems}}</span>
+                                {% endif %}
                             </a>
                             <!-- Mini Cart Brief -->
                             <div class="mini-cart-brief dropdown-menu text-left">
@@ -116,7 +118,7 @@
 </header>
 <!-- END HEADER SECTION -->
 <!-- MAIN SECTION START -->
-<div class="section pt-120 pb-120">
+<div class="section">
     {% bodyContent %}
 </div>
 <!-- MAIN SECTION END -->
@@ -158,28 +160,23 @@
                     <!-- Tab panes -->
                     <div class="tab-content mb-10">
                         <div class="pro-large-img tab-pane active" id="pro-large-img-1">
-                            <img src="img/product/10.jpg" alt="" />
                         </div>
                         <div class="pro-large-img tab-pane" id="pro-large-img-2">
-                            <img src="img/product/11.jpg" alt="" />
                         </div>
                         <div class="pro-large-img tab-pane" id="pro-large-img-3">
-                            <img src="img/product/12.jpg" alt="" />
                         </div>
                         <div class="pro-large-img tab-pane" id="pro-large-img-4">
-                            <img src="img/product/13.jpg" alt="" />
                         </div>
                         <div class="pro-large-img tab-pane" id="pro-large-img-5">
-                            <img src="img/product/14.jpg" alt="" />
                         </div>
                     </div>
                     <!-- QuickView Product Thumbnail Slider -->
                     <div class="pro-thumb-img-slider">
-                        <div><a href="#pro-large-img-1" data-toggle="tab"><img src="img/product/10.jpg" alt="" /></a></div>
+                        <!--<div><a href="#pro-large-img-1" data-toggle="tab"><img src="img/product/10.jpg" alt="" /></a></div>
                         <div><a href="#pro-large-img-2" data-toggle="tab"><img src="img/product/11.jpg" alt="" /></a></div>
                         <div><a href="#pro-large-img-3" data-toggle="tab"><img src="img/product/12.jpg" alt="" /></a></div>
                         <div><a href="#pro-large-img-4" data-toggle="tab"><img src="img/product/13.jpg" alt="" /></a></div>
-                        <div><a href="#pro-large-img-5" data-toggle="tab"><img src="img/product/14.jpg" alt="" /></a></div>
+                        <div><a href="#pro-large-img-5" data-toggle="tab"><img src="img/product/14.jpg" alt="" /></a></div>-->
                     </div>
                 </div>
                 <!-- QuickView Product Details -->
@@ -295,12 +292,12 @@
             <div class="footer-widget footer-widget-dark col-md-3 col-sm-6 col-xs-12 mb-40">
                 <h5 class="widget-title">instagram</h5>
                 <ul class="instagram-feed">
-                    <li><a href="#"><img src="img/instagram/1.jpg" alt=""></a></li>
+                    <!--<li><a href="#"><img src="img/instagram/1.jpg" alt=""></a></li>
                     <li><a href="#"><img src="img/instagram/2.jpg" alt=""></a></li>
                     <li><a href="#"><img src="img/instagram/3.jpg" alt=""></a></li>
                     <li><a href="#"><img src="img/instagram/4.jpg" alt=""></a></li>
                     <li><a href="#"><img src="img/instagram/5.jpg" alt=""></a></li>
-                    <li><a href="#"><img src="img/instagram/6.jpg" alt=""></a></li>
+                    <li><a href="#"><img src="img/instagram/6.jpg" alt=""></a></li>-->
                 </ul>
             </div>
 

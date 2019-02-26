@@ -1,4 +1,4 @@
-﻿namespace RoastedMarketplace.Data.Entity.Tokens
+﻿namespace RoastedMarketplace.Services.Tokens
 {
     public class Token
     {

@@ -24,5 +24,9 @@ namespace RoastedMarketplace.Data.Entity.Settings
         public bool EnableRelatedProducts { get; set; }
 
         public int NumberOfRelatedProducts { get; set; }
+
+        public int NumberOfReviewsToDisplayOnProductPage { get; set; }
+
+        public string DisplayNameForPrivateReviews { get; set; }
     }
 }

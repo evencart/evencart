@@ -1,0 +1,96 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Countries" active_menu="CountriesList" parent_active_menu="CountriesList" %}
+{% partial "Navigation/CountrySecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-10 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Countries" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name">{{"Name" | t}}</th>
+                            <th data-column-id="code">{{"Code" | t}}</th>
+                            <th data-column-id="shippingEnabled" data-formatter="shippingEnabled">{{"Shipping Enabled" | t}}</th>
+                            <th data-column-id="published" data-formatter="published"> {{"Published" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                   
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless countries == blank %}*/
+                        initData = JSON.parse('{{countries}}');
+                        /*{% endunless %}*/
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                countries: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: "{% route api_CountriesList %}",
+                            responseObject: "countries",
+                            formatters: {
+                                "published": function(column, row) {
+                                    return gridFormatters.binary(column, row, "published");
+                                },
+                                "shippingEnabled": function(column, row) {
+                                    return gridFormatters.binary(column, row, "shippingEnabled");
+                                },
+                                "commands": function (column, row) {
+                                    var statesUrl = '{% route StatesList countryId="_id_" %}'.replace("_id_", row.id);
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editCountry(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<a class=\"btn btn-sm btn-secondary\" href='" + statesUrl + "'><span class=\"rbicon-edit\"></span></a> ";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-country-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editCountry = function(id) {
+        jQuery("#edit-country-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-country-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Country was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetCountry countryId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-country-popup").html(response);
+                centerPopup();
+            });
+    }
+
+</script>

@@ -201,6 +201,7 @@ namespace RoastedMarketplace.Services.Products
                                         ci.Tax = tax * ci.Quantity;
                                         ci.TaxPercent = taxRate;
                                         ci.Discount = 0;
+                                        ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
                                         _cartItemService.Update(ci);
                                     }
                                 }
@@ -217,7 +218,7 @@ namespace RoastedMarketplace.Services.Products
                                     ci.Tax = tax;
                                     ci.TaxPercent = taxRate;
                                     ci.Discount = 0;
-                                    ci.FinalPrice = ci.Price * ci.Quantity;
+                                    ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
                                     _cartItemService.Update(ci);
                                 }
                             }
@@ -235,10 +236,10 @@ namespace RoastedMarketplace.Services.Products
                         }
                     }
 
-                   /* cart.FinalAmount = cart.CartItems.Sum(x => x.FinalPrice);
+                    cart.FinalAmount = cart.CartItems.Sum(x => x.FinalPrice);
                     cart.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
                     //do we need to apply discount
-                    _cartService.Update(cart);*/
+                    _cartService.Update(cart);
 
                 });
             }

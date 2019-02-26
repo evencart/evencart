@@ -8,6 +8,8 @@ namespace RoastedMarketplace.Infrastructure
 
         public const string DefaultAuthenticationScheme = "AppAuthentication";
 
+        public const string VisitorAuthenticationScheme = "VisitorAuthentication";
+
         public const string ApiAuthenticationScheme = "ApiAuthentication";
 
         public const string ExternalAuthenticationScheme = "External";

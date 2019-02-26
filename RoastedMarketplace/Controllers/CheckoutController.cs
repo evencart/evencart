@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -16,11 +19,14 @@ using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Models.Addresses;
 using RoastedMarketplace.Models.Checkout;
 using RoastedMarketplace.Services.Addresses;
+using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Helpers;
 using RoastedMarketplace.Services.Payments;
 using RoastedMarketplace.Services.Plugins;
 using RoastedMarketplace.Services.Purchases;
 using RoastedMarketplace.Services.Serializers;
+using RoastedMarketplace.Services.Tokens;
+using RoastedMarketplace.Services.Users;
 
 namespace RoastedMarketplace.Controllers
 {
@@ -36,7 +42,12 @@ namespace RoastedMarketplace.Controllers
         private readonly IPluginAccountant _pluginAccountant;
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, IOrderItemService orderItemService)
+        private readonly OrderSettings _orderSettings;
+        private readonly IRoleService _roleService;
+        private readonly IUserService _userService;
+        private readonly ITokenGenerator _tokenGenerator;
+
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, IOrderItemService orderItemService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, ITokenGenerator tokenGenerator)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -47,6 +58,10 @@ namespace RoastedMarketplace.Controllers
             _pluginAccountant = pluginAccountant;
             _orderService = orderService;
             _orderItemService = orderItemService;
+            _orderSettings = orderSettings;
+            _roleService = roleService;
+            _userService = userService;
+            _tokenGenerator = tokenGenerator;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -95,6 +110,50 @@ namespace RoastedMarketplace.Controllers
                 return R.Fail.Result;
 
             var currentUser = ApplicationEngine.CurrentUser;
+
+            //validations first before inserting anything
+            if (requestModel.BillingAddress.Id > 0)
+            {
+                //is it the valid address of current user?
+                var billingAddressId = requestModel.BillingAddress.Id;
+                if (_addressService.Count(x => x.UserId == currentUser.Id && x.Id == billingAddressId) == 0)
+                    return R.Fail.With("error", T("Invalid billing address provided")).Result;
+            }
+
+            if (requestModel.UseDifferentShippingAddress)
+            {
+                if (requestModel.ShippingAddress.Id > 0)
+                {
+                    //is it the valid address of current user?
+                    var shippingAddressId = requestModel.ShippingAddress.Id;
+                    Address shippingAddress = null;
+                    if ((shippingAddress = _addressService.Get(x => x.UserId == currentUser.Id && x.Id == shippingAddressId, 1, 1).FirstOrDefault()) == null)
+                        return R.Fail.With("error", T("Invalid shipping address provided")).Result;
+
+                    if (!shippingAddress.StateOrProvince?.ShippingEnabled ?? false)
+                    {
+                        return R.Fail.With("error", T("Shipping is not allowed in this state")).Result;
+                    }
+
+                    if (!shippingAddress.Country?.ShippingEnabled ?? false)
+                    {
+                        return R.Fail.With("error", T("Shipping is not allowed in this country")).Result;
+                    }
+                }
+            }
+
+            //shipping handler validation
+            if (requestModel.ShippingMethod != null)
+            {
+
+                //validate shipping method
+                var shippingHandler = PluginHelper.GetShipmentHandler(requestModel.ShippingMethod.SystemName);
+                if (shippingHandler == null)
+                    return R.Fail.With("error", T("Shipping method unavailable")).Result;
+                cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
+                cart.ShippingFee = shippingHandler.GetShippingHandlerFee(cart);
+            }
+
             //save addresses if required
             if (requestModel.BillingAddress.Id == 0)
             {
@@ -103,13 +162,7 @@ namespace RoastedMarketplace.Controllers
                 _addressService.Insert(address);
                 requestModel.BillingAddress.Id = address.Id;
             }
-            else
-            {
-                //is it the valid address of current user?
-                var billingAddressId = requestModel.BillingAddress.Id;
-                if (_addressService.Count(x => x.UserId == currentUser.Id && x.Id == billingAddressId) == 0)
-                    return R.Fail.With("message", T("Invalid billing address provided")).Result;
-            }
+           
             if (requestModel.UseDifferentShippingAddress)
             {
                 if (requestModel.ShippingAddress.Id == 0)
@@ -117,13 +170,6 @@ namespace RoastedMarketplace.Controllers
                     var address = _modelMapper.Map<Address>(requestModel.ShippingAddress);
                     address.UserId = currentUser.Id;
                     _addressService.Insert(address);
-                }
-                else
-                {
-                    //is it the valid address of current user?
-                    var shippingAddressId = requestModel.ShippingAddress.Id;
-                    if (_addressService.Count(x => x.UserId == currentUser.Id && x.Id == shippingAddressId) == 0)
-                        return R.Fail.With("message", T("Invalid shipping address provided")).Result;
                 }
             }
             else
@@ -133,17 +179,6 @@ namespace RoastedMarketplace.Controllers
             //save the address in the cart now
             cart.BillingAddressId = requestModel.BillingAddress.Id;
             cart.ShippingAddressId = requestModel.ShippingAddress.Id;
-            if (requestModel.ShippingMethod != null)
-            {
-                
-                //validate shipping method
-                var shippingHandler = PluginHelper.GetShipmentHandler(requestModel.ShippingMethod.SystemName);
-                if (shippingHandler == null)
-                    return R.Fail.With("message", T("Shipping method unavailable")).Result;
-                cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
-                cart.ShippingFee = shippingHandler.GetShippingHandlerFee(cart);
-            }
-
             _cartService.Update(cart);
 
             RaiseEvent(NamedEvent.OrderAddressSaved, cart);
@@ -165,7 +200,8 @@ namespace RoastedMarketplace.Controllers
             var paymentModels = paymentHandlers.Select(x =>
                 {
                     var pluginHandlerInstance = x.LoadPluginInstance<IPaymentHandlerPlugin>();
-                    var model = new PaymentMethodModel() {
+                    var model = new PaymentMethodModel()
+                    {
                         SystemName = x.SystemName,
                         Description = x.Description,
                         FriendlyName = x.Name,
@@ -218,7 +254,9 @@ namespace RoastedMarketplace.Controllers
             if (!CanCheckout(out Cart cart))
                 return R.Fail.Result;
 
-            var order = new Order() {
+            var currentUser = ApplicationEngine.CurrentUser;
+            var order = new Order()
+            {
                 PaymentMethodName = cart.PaymentMethodName,
                 ShippingMethodName = cart.ShippingMethodName,
                 CreatedOn = DateTime.UtcNow,
@@ -228,10 +266,30 @@ namespace RoastedMarketplace.Controllers
                 Guid = Guid.NewGuid().ToString(),
                 UserId = cart.UserId,
                 PaymentStatus = PaymentStatus.Pending,
-                OrderStatus = OrderStatus.New
+                OrderStatus = OrderStatus.New,
+                DiscountCoupon =  cart.DiscountCoupon?.CouponCode,
+                Discount = cart.Discount,
+                PaymentMethodFee = cart.PaymentMethodFee,
+                ShippingMethodFee = cart.ShippingFee,
+                Tax = cart.CartItems.Sum(x => x.Tax),
+                UserIpAddress = WebHelper.GetClientIpAddress(),
+                CurrencyCode = ApplicationEngine.CurrentCurrencyCode,
+                Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
             };
-           
+            order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
+                               order.ShippingMethodFee ?? 0;
+
             _orderService.Insert(order);
+            //generate order number & update it
+            var orderNumber = _tokenGenerator.MakeToken(new TemplateToken()
+            {
+                DateTime = order.CreatedOn,
+                Id = order.Id,
+                Template = _orderSettings.OrderNumberTemplate,
+                UserId = order.UserId
+            });
+            order.OrderNumber = orderNumber;
+            _orderService.Update(order);
 
             var orderItems = new List<OrderItem>();
             foreach (var cartItem in cart.CartItems)
@@ -260,7 +318,7 @@ namespace RoastedMarketplace.Controllers
             if (transactionResult.Success)
             {
                 if (transactionResult.RequiresRedirection)
-                    return Redirect(transactionResult.RedirectionUrl);
+                    return R.Redirect(transactionResult.RedirectionUrl);
             }
 
             //if we are here, payment has been done, so we can get the transaction data
@@ -268,17 +326,34 @@ namespace RoastedMarketplace.Controllers
             _paymentAccountant.ProcessTransactionResult(transactionResult);
 
             //clear the user's cart
-            _cartService.ClearCart(ApplicationEngine.CurrentUser.Id);
+            _cartService.ClearCart(currentUser.Id);
 
-            return RedirectToRoute(RouteNames.CheckoutComplete, new {orderId = order.Id});
+            if (currentUser.IsVisitor())
+            {
+                //if current user is visitor, change the email to billing address and change it to registered user
+                var billingAddress = _addressService.Get(order.BillingAddressId);
+                currentUser.Email = billingAddress.Email;
+                _userService.Update(currentUser);
+
+                var roleId = _roleService.Get(x => x.SystemName == SystemRoleNames.Registered).First().Id;
+                //assign registered role to the user
+                _roleService.SetUserRoles(currentUser.Id, new[] { roleId });
+
+                ApplicationEngine.SignIn(currentUser.Email, null, false);
+
+            }
+
+            return R.Success.With("orderGuid", order.Guid).Result;
         }
 
-        [HttpGet("complete/{orderId:int}", Name = RouteNames.CheckoutComplete)]
-        public IActionResult Complete(int orderId)
+        [HttpGet("complete/{orderGuid}", Name = RouteNames.CheckoutComplete)]
+        public IActionResult Complete(string orderGuid)
         {
-            var order = _orderService.Get(orderId);
+            var order = _orderService.GetByGuid(orderGuid);
+            if (order == null || order.UserId != ApplicationEngine.CurrentUser.Id)
+                return NotFound();
             RaiseEvent(NamedEvent.OrderPlaced, order.User, order);
-            return R.Success.Result;
+            return R.Success.With("orderGuid", orderGuid).With("orderNumber", order.OrderNumber).Result;
         }
 
 
@@ -290,6 +365,9 @@ namespace RoastedMarketplace.Controllers
             cart = _cartService.GetCart(currentUser.Id);
             //refresh the cart
             CartHelper.RefreshCart(cart);
+
+            if (!_orderSettings.AllowGuestCheckout && currentUser.IsVisitor())
+                return false;
 
             //do we have any items remaining
             return cart.CartItems.Any();

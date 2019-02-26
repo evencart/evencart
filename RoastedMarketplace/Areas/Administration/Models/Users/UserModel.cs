@@ -16,7 +16,9 @@ namespace RoastedMarketplace.Areas.Administration.Models.Users
 
         public string Email { get; set; }
 
-        public string UserName { get; set; }
+        public string CompanyName { get; set; }
+
+        public string MobileNumber { get; set; }
 
         public string Guid { get; set; }
 

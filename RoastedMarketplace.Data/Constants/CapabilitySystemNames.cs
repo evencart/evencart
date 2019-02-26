@@ -43,6 +43,8 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageAvailableAttributes = "AvailableAttribute.Manage";
 
+        public const string ManageCountries = "Country.Manage";
+
         public const string EditVendor = "Vendor.Edit";
 
         public const string ViewVendors = "Vendor.View";

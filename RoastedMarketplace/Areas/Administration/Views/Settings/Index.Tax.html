@@ -6,6 +6,10 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
+            {% control label text=@t"Default Tax Rate" for="defaultTaxRate" %}
+            {% control text name="defaultTaxRate" value="{{settings.defaultTaxRate}}"%}
+        </div>
+        <div class="form-group">
             {% control checkbox name="pricesIncludeTax" text=@t"Product prices include tax" value="{{settings.pricesIncludeTax}}"%}
         </div>
         <div class="form-group">
@@ -14,6 +18,12 @@
         <div class="form-group">
             {% control checkbox name="chargeTaxOnShipping" text=@t"Charge tax on shipping" value="{{settings.chargeTaxOnShipping}}"%}
         </div>
-      
+        <div class="form-group">
+            {% control checkbox name="shippingPricesIncludeTax" text=@t"Shipping prices include tax" value="{{settings.shippingPricesIncludeTax}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Shipping Tax Name" for="shippingTax" %}
+            {% control select name="shippingTaxId" value="settings.shippingTaxId" items="availableTaxes" %}
+        </div>
     </div>
 </div>

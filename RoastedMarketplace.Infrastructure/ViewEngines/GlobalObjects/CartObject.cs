@@ -18,6 +18,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
             var taxSettings = DependencyResolver.Resolve<TaxSettings>();
+           
             if (ApplicationEngine.CurrentUser == null)
                 return null;
             var cart = cartService.GetCart(ApplicationEngine.CurrentUser.Id);

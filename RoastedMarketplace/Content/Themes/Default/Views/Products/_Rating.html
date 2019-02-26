@@ -1,2 +1,5 @@
-﻿{% partial "Products/_RatingStars" %}
+﻿{% if product.reviewSummary %}
+{%- assign ratingWidth=product.reviewSummary.positivePercent -%}
+{% partial "Products/_RatingStars" %}
 {{ product.reviewSummary.totalReviews | pluralize : "Review","Reviews" }} & {{ product.reviewSummary.totalRatings | pluralize: "Rating","Ratings" }}
+{% endif %}

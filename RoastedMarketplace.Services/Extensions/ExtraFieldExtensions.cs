@@ -29,13 +29,13 @@ namespace RoastedMarketplace.Services.Extensions
         public static ExtraFieldValidationResult ValidateValueForUser(this ExtraField extraField, string fieldValue, User user)
         {
             var required = (user.IsRegistered() && extraField.RequiredForUsers) ||
-                           (user.IsAgent() && extraField.RequiredForAgents);
+                           (user.IsVendor() && extraField.RequiredForAgents);
 
             if (required && fieldValue.IsNullEmptyOrWhiteSpace())
                 return ExtraFieldValidationResult.EmptyValueForRequiredField;
 
             var visible = (user.IsRegistered() && extraField.VisibleToUsers) ||
-                           (user.IsAgent() && extraField.VisibleToAgents);
+                           (user.IsVendor() && extraField.VisibleToAgents);
 
             if (user.IsRegistered() && (!extraField.IsUserEditable || !visible))
                 return ExtraFieldValidationResult.NonEditableField;

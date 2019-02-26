@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Media;
 using RoastedMarketplace.Areas.Administration.Models.Shop;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -24,12 +25,16 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
         private readonly IProductService _productService;
         private readonly IModelMapper _modelMapper;
         private readonly IMediaAccountant _mediaAccountant;
-        public ProductCarouselWidget(IWidgetService widgetService, IProductService productService, IModelMapper modelMapper, IMediaAccountant mediaAccountant)
+        private readonly IPriceAccountant _priceAccountant;
+        private readonly TaxSettings _taxSettings;
+        public ProductCarouselWidget(IWidgetService widgetService, IProductService productService, IModelMapper modelMapper, IMediaAccountant mediaAccountant, IPriceAccountant priceAccountant, TaxSettings taxSettings)
         {
             _widgetService = widgetService;
             _productService = productService;
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
+            _priceAccountant = priceAccountant;
+            _taxSettings = taxSettings;
         }
 
         public override IViewComponentResult Invoke(object data = null)
@@ -45,6 +50,8 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             var productsModel = products.Select(x =>
                 {
                     var model = _modelMapper.Map<RoastedMarketplace.Models.Products.ProductModel>(x);
+                    _priceAccountant.GetProductPriceDetails(x, null, null, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                    model.Price = _taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax;
                     model.SeName = x.SeoMeta.Slug;
                     model.Media = x.MediaItems?.Select(y =>
                         {

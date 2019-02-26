@@ -7,6 +7,7 @@ using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -52,9 +53,9 @@ namespace RoastedMarketplace.Controllers
             if (!ShouldSignIn(loginModel.Email, loginModel.Password, out User user))
                 return R.Fail.With("message", T("Invalid email or password provided")).Result;
 
-            var loginStatus = _appAuthenticationService.SignIn(loginModel.Email, user.Name, loginModel.RememberMe);
+            var loginStatus = ApplicationEngine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe);
             if (loginStatus == LoginStatus.Success)
-                return RedirectToRoute(RouteNames.Home);
+                return R.Success.Result;
 
             return R.Fail.With("message", T("An error occured while login")).Result;
         }

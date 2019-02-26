@@ -16,7 +16,9 @@ using RoastedMarketplace.Models.Products;
 using RoastedMarketplace.Models.Reviews;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
+using RoastedMarketplace.Services.Reviews;
 using RoastedMarketplace.Services.Search;
+using RoastedMarketplace.Services.Serializers;
 
 namespace RoastedMarketplace.Controllers
 {
@@ -29,7 +31,12 @@ namespace RoastedMarketplace.Controllers
         private readonly IMediaAccountant _mediaAccountant;
         private readonly ISearchQueryParserService _searchQueryParserService;
         private readonly IProductRelationService _productRelationService;
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService)
+        private readonly IProductVariantService _productVariantService;
+        private readonly IDataSerializer _dataSerializer;
+        private readonly IPriceAccountant _priceAccountant;
+        private readonly TaxSettings _taxSettings;
+        private readonly IReviewService _reviewService;
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -38,6 +45,11 @@ namespace RoastedMarketplace.Controllers
             _mediaAccountant = mediaAccountant;
             _searchQueryParserService = searchQueryParserService;
             _productRelationService = productRelationService;
+            _productVariantService = productVariantService;
+            _dataSerializer = dataSerializer;
+            _priceAccountant = priceAccountant;
+            _taxSettings = taxSettings;
+            _reviewService = reviewService;
         }
 
         [DynamicRoute(Name = RouteNames.SingleProduct, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate))]
@@ -63,8 +75,55 @@ namespace RoastedMarketplace.Controllers
                     var relatedProductsModel = productRelations.Select(x => x.DestinationProduct).Select(MapProductModel).ToList();
                     response.With("relatedProducts", relatedProductsModel);
                 }
-
             }
+
+            if (product.HasVariants)
+            {
+                //any variants
+                var variants = _productVariantService.GetByProductId(product.Id);
+                var variantModels = new List<object>();
+                foreach (var variant in variants)
+                {
+                    _priceAccountant.GetProductPriceDetails(product, null, variant.Price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                    var variantObject = new
+                    {
+                        attributes = new Dictionary<string, string>(),
+                        price = (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax).ToCurrency(),
+                        isAvailable = variant.TrackInventory && (variant.StockQuantity > 0 || variant.CanOrderWhenOutOfStock)
+                    };
+                    foreach (var pva in variant.ProductVariantAttributes)
+                    {
+                        variantObject.attributes.Add(pva.ProductAttribute.Label, pva.ProductAttributeValue.AvailableAttributeValue.Value);
+                    }
+                    variantModels.Add(variantObject);
+                }
+
+                if (variantModels.Any())
+                    response.With("variants", () => variantModels, () => _dataSerializer.Serialize(variantModels));
+            }
+
+            //reviews
+            if (_catalogSettings.EnableReviews)
+            {
+                var reviews = _reviewService.Get(x => x.ProductId == product.Id, 1,
+                    _catalogSettings.NumberOfReviewsToDisplayOnProductPage).ToList();
+
+                if (reviews.Any())
+                {
+                    var reviewModels = reviews.Select(x =>
+                    {
+                        var model = _modelMapper.Map<ReviewModel>(x);
+                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User.Name;
+                        if (model.DisplayName.IsNullEmptyOrWhiteSpace())
+                        {
+                            model.DisplayName = T("Store Customer");
+                        }
+                        return model;
+                    }).ToList();
+                    response.With("reviews", reviewModels);
+                }
+            }
+
             SeoMetaModel seoMetaModel = null;
             if (product.SeoMeta != null)
             {
@@ -151,6 +210,7 @@ namespace RoastedMarketplace.Controllers
                 seoMetaModel.Description = category?.Description;
                 seoMetaModel.PageTitle = seoMeta?.PageTitle ?? category?.Name;
             }
+
             return R.Success.With("products", productModels)
                 .WithSeoMeta(seoMetaModel)
                 .WithParams(searchModel)
@@ -176,14 +236,16 @@ namespace RoastedMarketplace.Controllers
             {
                 productModel.ProductAttributes = product.ProductAttributes.Select(x =>
                     {
-                        var paModel = new ProductAttributeModel {
+                        var paModel = new ProductAttributeModel
+                        {
                             Name = x.Label,
                             Id = x.Id,
                             InputFieldType = x.InputFieldType,
                             IsRequired = x.IsRequired,
                             AvailableValues = x.AvailableAttribute.AvailableAttributeValues.Select(y =>
                                 {
-                                    var avModel = new ProductAttributeValueModel() {
+                                    var avModel = new ProductAttributeValueModel()
+                                    {
                                         Name = y.Value
                                     };
                                     return avModel;
@@ -206,20 +268,35 @@ namespace RoastedMarketplace.Controllers
                 foreach (var grp in product.ProductSpecifications.GroupBy(x => x.ProductSpecificationGroup))
                 {
                     var groupName = grp?.Key?.Name ?? "";
-                    var specs = grp.Select(x => new ProductSpecificationModel() {
+                    var specs = grp.Select(x => new ProductSpecificationModel()
+                    {
                         Name = x.Label,
                         Values = x.ProductSpecificationValues.Select(y => y.Label).ToList()
                     }).ToList();
-                    productModel.ProductSpecificationGroups.Add(new ProductSpecificationGroupModel() {
+                    productModel.ProductSpecificationGroups.Add(new ProductSpecificationGroupModel()
+                    {
                         Name = groupName,
                         ProductSpecifications = specs
                     });
                 }
             }
 
-            //reviews
-            if (product.ReviewSummary != null)
-                productModel.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(product.ReviewSummary);
+            if (_catalogSettings.EnableReviews)
+            {
+                //reviews
+                if (product.ReviewSummary != null)
+                    productModel.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(product.ReviewSummary);
+            }
+            else
+            {
+                product.ReviewSummary = null;
+            }
+
+
+            _priceAccountant.GetProductPriceDetails(product, null, product.Price, out decimal priceWithoutTax,
+                out decimal tax, out decimal taxRate);
+            if (_taxSettings.DisplayProductPricesWithoutTax)
+                productModel.Price = priceWithoutTax;
             return productModel;
         }
         #endregion

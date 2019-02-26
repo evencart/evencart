@@ -115,7 +115,7 @@ namespace RoastedMarketplace.Core.Services
             return EntitySet<T>.Where(where).OrderBy(x => x.Id).Select(page, count);
         }
 
-        public IEnumerable<T> Get(out int totalResults, Expression<Func<T, bool>> @where, Expression<Func<T, object>> orderBy = null, RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
+        public virtual IEnumerable<T> Get(out int totalResults, Expression<Func<T, bool>> @where, Expression<Func<T, object>> orderBy = null, RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
         {
             if (orderBy == null)
                 orderBy = x => x.Id;

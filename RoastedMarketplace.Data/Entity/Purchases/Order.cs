@@ -27,21 +27,21 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         public string PaymentMethodName { get; set; }
 
-        public decimal SubtotalWithoutDiscount { get; set; }
-
         public decimal Discount { get; set; }
 
         public string DiscountCoupon { get; set; }
 
         public int? DiscountId { get; set; }
 
-        public decimal SubtotalWithDiscount { get; set; }
+        public decimal Subtotal { get; set; }
 
         public decimal? ShippingMethodFee { get; set; }
 
         public decimal? PaymentMethodFee { get; set; }
 
         public decimal Tax { get; set; }
+
+        public string TaxDetails { get; set; }
 
         public decimal OrderTotal { get; set; }
 

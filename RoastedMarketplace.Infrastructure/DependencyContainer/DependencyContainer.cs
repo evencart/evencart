@@ -33,7 +33,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
         public void RegisterDependencies(IRegistrator registrar)
         {
             // settings register for access across app
-            registrar.Register<IDatabaseSettings>(made: Made.Of(() => new DatabaseSettings()), reuse: Reuse.Singleton);
+            registrar.Register<IDatabaseSettings, DatabaseSettings>(reuse: Reuse.Singleton);
             //caching
             registrar.Register<ICacheProvider, DefaultCacheProvider>(reuse: Reuse.Singleton);
             //events
@@ -70,7 +70,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             var allConsumerTypes = asm.SelectMany(x => x.GetTypes())
                 .Where(type => type.IsPublic && // get public types 
                                type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent)) && 
+                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent)) &&
                                              !type.IsAbstract));// which implementing some interface(s)
             //all consumers which are not interfaces
             registrar.RegisterMany(allConsumerTypes);
@@ -92,7 +92,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
                               !type.IsAbstract && // which are not interfaces nor abstract
                               type.GetInterfaces().Length != 0);// which implementing some interface(s)
 
-            registrar.RegisterMany(serviceTypes, Reuse.ScopedOrSingleton);
+            registrar.RegisterMany(serviceTypes, Reuse.Transient);
 
             //components
             //find all event consumer types
@@ -101,7 +101,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
                                !type.IsAbstract &&
                                type.IsAssignableTo(typeof(FoundationComponent)));// which implementing some interface(s)
 
-            registrar.RegisterMany(allComponents, Reuse.ScopedOrSingleton);
+            registrar.RegisterMany(allComponents, Reuse.Transient);
 
             //settings
             var allSettingTypes = TypeFinder.ClassesOfType<ISettingGroup>();
@@ -117,7 +117,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
 
             }
 
-            registrar.Register<IAppAuthenticationService, AuthenticationService>(reuse: Reuse.ScopedOrSingleton);
+            registrar.Register<IAppAuthenticationService, AuthenticationService>(reuse: Reuse.Transient);
 
             var allModules = TypeFinder.ClassesOfType<IPlugin>();
             foreach (var moduleType in allModules)

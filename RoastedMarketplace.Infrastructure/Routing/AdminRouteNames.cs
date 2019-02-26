@@ -147,5 +147,22 @@
         public const string GetScheduledTask = "GetScheduledTask";
         public const string SaveScheduledTask = "SaveScheduledTask";
 
+        public const string TaxesList = "TaxesList";
+        public const string GetTax = "GetTax";
+        public const string SaveTax = "SaveTax";
+        public const string DeleteTax = "DeleteTax";
+        public const string TaxRatesList = "TaxRatesList";
+        public const string GetTaxRate = "GetTaxRate";
+        public const string SaveTaxRate = "SaveTaxRate";
+        public const string DeleteTaxRate = "DeleteTaxRate";
+
+        public const string CountriesList = "CountriesList";
+        public const string GetCountry = "GetCountry";
+        public const string SaveCountry = "SaveCountry";
+
+        public const string StatesList = "StatesList";
+        public const string GetState = "GetState";
+        public const string SaveState = "SaveState";
+        public const string DeleteState = "DeleteState";
     }
 }

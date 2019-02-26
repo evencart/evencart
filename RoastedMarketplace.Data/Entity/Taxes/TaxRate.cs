@@ -1,4 +1,5 @@
 ﻿using RoastedMarketplace.Core.Data;
+using RoastedMarketplace.Data.Entity.Addresses;
 
 namespace RoastedMarketplace.Data.Entity.Taxes
 {
@@ -16,6 +17,10 @@ namespace RoastedMarketplace.Data.Entity.Taxes
 
         #region Virtual Properties
         public virtual Tax Tax { get; set; }
+
+        public virtual Country Country { get; set; }
+
+        public virtual StateOrProvince StateOrProvince { get; set; }
         #endregion
     }
 }

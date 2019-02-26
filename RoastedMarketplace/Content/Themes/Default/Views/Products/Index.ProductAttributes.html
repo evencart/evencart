@@ -1,0 +1,63 @@
+﻿ {% for attribute in product.productAttributes %}
+<!-- Product Attributes -->
+<div class="section product-attribute">
+    <input type="hidden" name="attributes[{{forloop.index0}}].name" value="{{attribute.name}}" />
+    <h5 class="pd-sub-title">{{attribute.name}}</h5>
+    <select class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name">
+        {% unless attribute.isRequired %}
+        <option value="-1">{{"Select" | t}}</option>
+        {% endunless %}
+        {% for value in attribute.availableValues %}
+        <option value="{{value.name}}">{{value.name}}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endfor %}
+{% if variants.size > 0 %}
+<script type="text/javascript">
+                            jQuery(document).ready(function () {
+                                var variants = JSON.parse('{{variants}}');
+                                variants = variants.sort(function (v1, v2) {
+                                    //sort in descending order of number of attributes
+                                    var v1Length = Object.keys(v1.attributes).length;
+                                    var v2Length = Object.keys(v2.attributes).length;
+                                    return v2Length - v1Length;
+                                });
+                                var refreshVariant = function () {
+                                    //create an object for selected values
+                                    var obj = {};
+                                    jQuery(".product-attribute select").each(function() {
+                                        var attributeName = jQuery(this).data("attribute");
+                                        attributeName = attributeName[0].toLowerCase() + attributeName.substr(1);
+                                        var value = jQuery(this).val();
+                                        obj[attributeName] = value;
+                                    });
+                                    var variant = null;
+                                    for (var i = 0; i < variants.length; i++) {
+                                        if (variant != null)
+                                            break;
+                                        var attributes = variants[i].attributes;
+                                        variant = variants[i];
+                                        for (var attribute in attributes) {
+                                            if (attributes.hasOwnProperty(attribute)) {
+                                                if (attributes[attribute] !== obj[attribute]) {
+                                                    variant = null;
+                                                    break;
+                                                }
+                                            } else {
+                                                variant = null;
+                                            }
+                                        }
+                                    }
+                                    if (variant != null) {
+                                        jQuery("#priceFormatted").html(variant.price);
+                                    } else {
+                                        jQuery("#priceFormatted").html("{{product.priceFormatted}}");
+                                    }
+                                }
+                                jQuery(".product-attribute select").change(refreshVariant);
+                                //initial price
+                                refreshVariant();
+                            });
+</script>
+{% endif %}

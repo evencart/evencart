@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Infrastructure.Authentication;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Plugins;
 using RoastedMarketplace.Infrastructure.Routing.Conventions;
@@ -21,12 +23,21 @@ namespace RoastedMarketplace.Infrastructure.Extensions
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = ApplicationConfig.DefaultAuthenticationScheme;
+                    options.DefaultChallengeScheme = ApplicationConfig.DefaultAuthenticationScheme;
+                    options.DefaultSignInScheme = ApplicationConfig.DefaultAuthenticationScheme;
+                })
+                .AddCookie(ApplicationConfig.VisitorAuthenticationScheme, options =>
+                {
+                    options.LoginPath = new PathString(ApplicationConfig.DefaultLoginUrl);
+                    options.Events = new CookieAuthEvents();
                 })
                 .AddCookie(ApplicationConfig.DefaultAuthenticationScheme, options =>
                 {
                     options.LoginPath = new PathString(ApplicationConfig.DefaultLoginUrl);
                     options.AccessDeniedPath = new PathString(ApplicationConfig.DefaultLoginUrl);
+                    options.Events = new CookieAuthEvents();
                 });
+            services.AddAuthorization();
         }
 
         public static IMvcBuilder AddAppMvc(this IServiceCollection services, IHostingEnvironment hostingEnvironment)

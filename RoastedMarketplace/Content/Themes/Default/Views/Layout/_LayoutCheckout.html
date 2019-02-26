@@ -7,22 +7,39 @@
             <div class="col-md-2">
                 <!-- logo -->
                 <div class="header-logo float-left">
-                    <a href="{{store.url}}"><img width="100" height="100" src="/common/assets/images/logo.png" alt="main logo"></a>
+                    <a href="/"><img src="{{store.logoUrl}}" alt="main logo"></a>
                 </div>
             </div>
             <div class="col-md-8">
-                <ul class="list-inline">
+                <ul class="list-inline checkout-wizard-links">
                     <li>
-                        <a>{{"Billing & Shipping" | t}}</a>
+                        <a class='{% if active_menu == "BillingShipping" %}active{% endif %} {% if step_index > 0 %}done{% endif %}' {% if step_index > 0 %}href="{% route CheckoutAddress %}"{% endif %}>
+                            {% if step_index > 0 %}
+                            <i class="fa fa-check-circle-o"></i>
+                            {% endif %}
+                            {{"Billing & Shipping" | t}}
+                        </a>
                     </li>
                     <li>
-                        <a>{{"Payment Info" | t}}</a>
+                        <a class='{% if active_menu == "PaymentInfo" %}active{% endif %} {% if step_index > 1 %}done{% endif %}' {% if step_index > 1 %}href="{% route CheckoutPayment %}"{% endif %}>
+                            {% if step_index > 1 %}
+                            <i class="fa fa-check-circle-o"></i>
+                            {% endif %}
+                            {{"Payment Info" | t}}
+                        </a>
                     </li>
                     <li>
-                        <a>{{"Order Summary" | t}}</a>
+                        <a class='{% if active_menu == "OrderSummary" %}active{% endif %} {% if step_index > 2 %}done{% endif %}' {% if step_index > 2 %}href="{% route CheckoutConfirm %}"{% endif %}>
+                            {% if step_index > 2 %}
+                            <i class="fa fa-check-circle-o"></i>
+                            {% endif %}
+                            {{"Order Summary" | t}}
+                        </a>
                     </li>
                     <li>
-                        <a>{{"Order Placed" | t}}</a>
+                        <a class='{% if active_menu == "OrderConfirmed" %}active{% endif %}'>
+                            {{"Order Placed" | t}}
+                        </a>
                     </li>
                 </ul>
             </div>

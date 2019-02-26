@@ -12,6 +12,6 @@
 
         public bool ShippingPricesIncludeTax { get; set; }
 
-        public int? ShippingTaxId { get; set; }
+        public int? ShippingTaxId { get; set; } = 0;
     }
 }

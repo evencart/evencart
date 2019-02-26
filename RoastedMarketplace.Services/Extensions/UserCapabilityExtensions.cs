@@ -67,7 +67,7 @@ namespace RoastedMarketplace.Services.Extensions
 
         public static bool IsVisitor(this User user)
         {
-            return user == null || user.Is(SystemRoleNames.Visitor);
+            return user.Roles == null || !user.Roles.Any();
         }
 
         public static bool IsRegistered(this User user)
@@ -75,7 +75,7 @@ namespace RoastedMarketplace.Services.Extensions
             return user.Is(SystemRoleNames.Registered);
         }
 
-        public static bool IsAgent(this User user)
+        public static bool IsVendor(this User user)
         {
             return user.Is(SystemRoleNames.Vendor);
         }

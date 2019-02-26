@@ -9,6 +9,8 @@ namespace RoastedMarketplace.Models.Reviews
     {
         public int Rating { get; set; }
 
+        public decimal RatingPercent => (decimal) Rating / 5 * 100;
+
         public string Title { get; set; }
 
         public string Description { get; set; }

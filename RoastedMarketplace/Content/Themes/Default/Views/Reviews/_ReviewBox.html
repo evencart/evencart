@@ -1,0 +1,21 @@
+﻿<div class="review">
+    <div class="review-title">
+        <h4>
+            {{review.title}}
+                                    
+        </h4>
+    </div>
+    {%- assign ratingWidth=review.ratingPercent -%}
+    {% partial "Products/_RatingStars" %}
+    <div class="review-description">
+        {{review.description}}
+    </div>
+    <div class="posted-by" title="{{'The customer purchased this product on this store' | t}}">
+        {{review.displayName}} {{"on" | t}} {{review.createdOn }}
+        {% if review.verifiedPurchase %}
+        <small>
+            <span class="fa fa-check-circle"></span> {{"Verified Purchase" | t}}
+        </small>
+        {% endif %}
+    </div>
+</div>

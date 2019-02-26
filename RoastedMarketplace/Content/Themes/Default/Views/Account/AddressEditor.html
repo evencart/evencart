@@ -1,0 +1,43 @@
+﻿{% layout "_AccountLayout" %}
+{% global active_menu="AccountAddresses" %}
+<small>
+    <a href='{% route AccountAddresses %}'>
+       <i class="fa fa-angle-left"></i> {{"Back to addresses" | t}}
+    </a>
+</small>
+<h3>
+    {% if address.id > 0 %}
+    {{"Edit Address" | t}}
+    {% else %}
+    {{"Add Address" | t}}
+    {% endif %}
+   
+   
+</h3>
+
+<div class="page-section section pb-120">
+    <div class="row">
+        <form action="{% route api_AccountSaveAddress %}" id="save-address-form" method="post">
+            {% partial "Addresses/AddressForm" %}
+            <div class="action-button-container text-center">
+                {% control hidden name="id" value="{{address.id}}" %}
+                <button type="submit" class="btn btn-default">
+                    {{"Save Address" | t}}
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        initAjaxForm("save-address-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Address saved successfully" | t}}');
+                    window.location.href = '{% route AccountAddresses %}';
+                }
+            });
+    })
+</script>
+

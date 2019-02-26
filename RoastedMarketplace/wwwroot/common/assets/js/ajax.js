@@ -103,14 +103,14 @@ var notify = function (type, msg, withclose) {
     var element = jQuery("<div />");
     element.addClass("notification");
     if (type == "error") {
-        element.append("<span class='rbicon-x-circle text-danger margin-r-10'></span><strong>Error!</strong>");
+        element.append("<span class='rbicon-x-circle fa fa-times text-danger margin-r-10'></span><strong>Error!</strong>");
     }
     else if (type == "success") {
-        element.append("<span class='rbicon-check-circle margin-r-10 text-success'></span><strong>Success</strong>");
+        element.append("<span class='rbicon-check-circle fa fa-check-circle margin-r-10 text-success'></span><strong>Success</strong>");
     }
     element.append("<div class='msg'>" + msg + "</div>");
     jQuery("body").append(element);
-    element.center();
+    element.center("fixed");
     element.css("top", 10);
     element.fadeIn();
     var closeNotify = function () {
@@ -160,24 +160,32 @@ var ajax = function (options) {
         .done(function (response, status, xhr) {
             var ct = xhr.getResponseHeader("content-type") || "";
             //do the notification only for json response
-            if (ct.indexOf("application/json") > -1 && !response.success) {
-                var errMsg = "";
-                if (response.errors) {
-                    var errors = response.errors;
-                    var errorList = "<ul>";
-                    errors.forEach(function (err) {
-                        errorList += "<li>" + err + "</li>";
-                    });
-                    errorList += "</ul>";
-                    errMsg = errorList;
+            if (ct.indexOf("application/json") > -1) {
+                if (response.redirect) {
+                    //if there is a redirection
+                    window.location.href = response.url;
+                    return;
                 }
-                else if (response.error)
-                    errMsg = response.error;
-                else if (response.message)
-                    errMsg = response.message;
-                else
-                    errMsg = "An error occured while completing operation";
-                notify("error", errMsg);
+                if (!response.success) {
+                    var errMsg = "";
+                    if (response.errors) {
+                        var errors = response.errors;
+                        var errorList = "<ul>";
+                        errors.forEach(function (err) {
+                            errorList += "<li>" + err + "</li>";
+                        });
+                        errorList += "</ul>";
+                        errMsg = errorList;
+                    }
+                    else if (response.error)
+                        errMsg = response.error;
+                    else if (response.message)
+                        errMsg = response.message;
+                    else
+                        errMsg = "An error occured while completing operation";
+                    notify("error", errMsg);
+                }
+                
             }
             if (options.done)
                 options.done(response);

@@ -98,7 +98,7 @@ namespace RoastedMarketplace.Data.Versions
             //tax
             Db.CreateTable<Tax>(transaction);
             Db.CreateTable<TaxRate>(transaction);
-            Db.CreateConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction);
+            Db.CreateConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction, true);
 
             //cart
             Db.CreateTable<Cart>(transaction);

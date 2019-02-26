@@ -18,5 +18,7 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// The logo id of the website
         /// </summary>
         public int LogoId { get; set; }
+
+        public string StoreName { get; set; }
     }
 }

@@ -5,6 +5,8 @@ namespace RoastedMarketplace.Services.Reviews
 {
     public interface IReviewService : IFoundationEntityService<Review>
     {
-        
+        Review GetBestReview(int productId);
+
+        Review GetWorstReview(int productId);
     }
 }

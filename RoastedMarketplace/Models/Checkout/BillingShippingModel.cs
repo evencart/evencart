@@ -29,15 +29,15 @@ namespace RoastedMarketplace.Models.Checkout
             v.RuleFor(x => x.BillingAddress.ZipPostalCode).NotEmpty().When(x => x.BillingAddress.Id == 0);
 
             v.RuleFor(x => x.ShippingAddress).NotNull().When(x => x.UseDifferentShippingAddress);
-            v.RuleFor(x => x.ShippingAddress.Name).NotEmpty().When(x => x.ShippingAddress.Id == 0);
-            v.RuleFor(x => x.ShippingAddress.Address1).NotEmpty().When(x => x.ShippingAddress.Id == 0);
-            v.RuleFor(x => x.ShippingAddress.City).NotEmpty().When(x => x.ShippingAddress.Id == 0);
+            v.RuleFor(x => x.ShippingAddress.Name).NotEmpty().When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
+            v.RuleFor(x => x.ShippingAddress.Address1).NotEmpty().When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
+            v.RuleFor(x => x.ShippingAddress.City).NotEmpty().When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
             v.RuleFor(x => x.ShippingAddress.StateProvinceName)
                 .NotEmpty()
-                .When(x => x.ShippingAddress.Id == 0 && !(x.ShippingAddress.StateProvinceId.HasValue && x.ShippingAddress.StateProvinceId.Value > 0));
-            v.RuleFor(x => x.ShippingAddress.CountryId).GreaterThan(0).When(x => x.ShippingAddress.Id == 0);
-            v.RuleFor(x => x.ShippingAddress.Email).NotEmpty().EmailAddress().When(x => x.ShippingAddress.Id == 0);
-            v.RuleFor(x => x.ShippingAddress.ZipPostalCode).NotEmpty().When(x => x.ShippingAddress.Id == 0);
+                .When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0 && !(x.ShippingAddress.StateProvinceId.HasValue && x.ShippingAddress.StateProvinceId.Value > 0));
+            v.RuleFor(x => x.ShippingAddress.CountryId).GreaterThan(0).When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
+            v.RuleFor(x => x.ShippingAddress.Email).NotEmpty().EmailAddress().When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
+            v.RuleFor(x => x.ShippingAddress.ZipPostalCode).NotEmpty().When(x => x.UseDifferentShippingAddress && x.ShippingAddress.Id == 0);
         }
     }
 }

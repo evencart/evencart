@@ -6,6 +6,8 @@ using DotEntity;
 using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.MediaEntities;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Shop;
@@ -115,16 +117,36 @@ namespace RoastedMarketplace.Services.Purchases
 
         public Order GetByGuid(string guid)
         {
-            return GetByWhere(x => x.Guid == guid);
+            return GetByWhere(x => x.Guid == guid)
+                .SelectNested()
+                .FirstOrDefault();
         }
 
-        private Order GetByWhere(Expression<Func<Order, bool>> where)
+        public override IEnumerable<Order> Get(out int totalResults, Expression<Func<Order, bool>> @where, Expression<Func<Order, object>> orderBy = null,
+            RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
         {
+
+            var query = GetByWhere(where);
+            return query.OrderBy(orderBy, rowOrder)
+                .SelectNestedWithTotalMatches(out totalResults, page, count);
+
+        }
+
+        private IEntitySet<Order> GetByWhere(Expression<Func<Order, bool>> where)
+        {
+            Expression<Func<SeoMeta, bool>> meteWhere = x => x.EntityName == "Product";
             return Repository.Where(where)
                 .Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter)
                 .Join<ShipmentItem>("Id", "OrderItemId", joinType: JoinType.LeftOuter)
                 .Join<Shipment>("ShipmentId", "Id", joinType: JoinType.LeftOuter)
                 .Join<User>("UserId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Product>("ProductId", "Id", typeof(OrderItem))
+                .Join<ProductMedia>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                .Join<SeoMeta>("Id", "EntityId", typeof(Product))
+                .Join<Address>("UserId", "UserId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<Country>("CountryId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
+                .Join<StateOrProvince>("CountryId", "Id", typeof(Address), JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Order, OrderItem>())
                 .Relate(RelationTypes.OneToMany<Order, Shipment>())
                 .Relate(RelationTypes.OneToOne<Order, User>())
@@ -135,8 +157,64 @@ namespace RoastedMarketplace.Services.Purchases
                     if (!orderItem.Shipment.ShipmentItems.Contains(shipmentItem))
                         orderItem.Shipment.ShipmentItems.Add(shipmentItem);
                 })
-                .SelectNested()
-                .FirstOrDefault();
+                .Relate<Product>((order, product) =>
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        if (orderItem.ProductId == product.Id)
+                            orderItem.Product = product;
+                    }
+                })
+                .Relate<ProductMedia>((order, media) =>
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        if (orderItem.ProductId == media.ProductId)
+                            orderItem.Product.Tag = media.MediaId;
+                    }
+                })
+                .Relate<Media>((order, media) =>
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        if ((int) orderItem.Product.Tag == media.Id)
+                        {
+                            orderItem.Product.MediaItems = orderItem.Product.MediaItems ?? new List<Media>();
+                            if (!orderItem.Product.MediaItems.Contains(media))
+                                orderItem.Product.MediaItems.Add(media);
+                        }
+                    }
+                })
+                .Relate<SeoMeta>((order, meta) =>
+                {
+                    var orderItem = order.OrderItems.FirstOrDefault(x => x.ProductId == meta.EntityId);
+                    if (orderItem != null)
+                        orderItem.Product.SeoMeta = meta;
+                })
+                .Relate<Address>((order, address) =>
+                {
+                    if (order.BillingAddressId == address.Id)
+                        order.BillingAddress = address;
+                    if (order.ShippingAddressId == address.Id)
+                        order.ShippingAddress = address;
+                })
+                .Relate<Country>((order, country) =>
+                {
+                    if (order.BillingAddress.CountryId == country.Id)
+                        order.BillingAddress.Country = country;
+
+                    if (order.ShippingAddress.CountryId == country.Id)
+                        order.ShippingAddress.Country = country;
+                })
+                .Relate<StateOrProvince>((order, province) =>
+                {
+                    if (order.BillingAddress.StateProvinceId == province.Id)
+                        order.BillingAddress.StateOrProvince = province;
+
+                    if (order.ShippingAddress.StateProvinceId == province.Id)
+                        order.ShippingAddress.StateOrProvince = province;
+                })
+                .Where(meteWhere);
         }
     }
 }

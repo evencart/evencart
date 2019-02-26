@@ -1,0 +1,163 @@
+﻿{% layout "_Layout" %}
+<div class="container">
+    <h3>
+        {{"Order" | t}} # {{order.orderNumber}}
+    </h3>
+    <label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+    <div class="page-section section pb-120">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div>
+                    <label>{{"Shipping Address" | t}}</label>
+                </div>
+                <div>
+                    {{order.shippingAddress.name}}
+                </div>
+                <div>
+                    {{order.shippingAddress.address1}}
+                </div>
+                <div>
+                    {{order.shippingAddress.address2}}
+                </div>
+                <div>
+                    {{order.shippingAddress.city}} {{order.shippingAddress.zipPostalCode}}
+                </div>
+                <div>
+                    {{order.shippingAddress.stateProvinceName}}
+                </div>
+                <div>
+                    {{order.shippingAddress.countryName}}
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div>
+                    <label>{{"Shipping Method" | t}}</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div>
+                    <label>{{"Order Status" | t}}</label>
+                </div>
+                <div>
+                    {{order.orderStatus}}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="">
+                    <div class="text-center">
+                        <label>{{"Order Summary" | t}}</label>
+                    </div>
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th>{{"Subtotal" | t}}</th>
+                            <td class="text-right">
+                                <span class="amount">
+                                    {{order.subTotal | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% if order.discount > 0 %}
+                        <tr>
+                            <th>{{"Discount" | t}}</th>
+                            <td class="text-right">
+                                <span class="amount">
+                                    -{{order.discount | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if order.shippingMethodFee > 0 %}
+                        <tr>
+                            <th>{{"Shipping" | t}}</th>
+                            <td class="text-right">
+                                <span class="amount">
+                                    {{order.shippingMethodFee | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if order.paymentMethodFee > 0 %}
+                        <tr>
+                            <th>{{"Payment Fee" | t}}</th>
+                            <td class="text-right">
+                                <span class="amount">
+                                    {{order.paymentMethodFee | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if order.tax > 0 %}
+                        <tr>
+                            <th>{{"Tax" | t}}</th>
+                            <td class="text-right">
+                                <span class="amount">
+                                    {{order.tax | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        <tr class="order-total">
+                            <th>{{"Total" | t }}</th>
+                            <td class="text-right">
+                                <strong><span class="amount">{{order.orderTotal | withCurrency}}</span></strong>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <h3>
+            {{"Products" | t}}
+        </h3>
+        <div class="order-items-list">
+            {% for orderItem in order.orderItems %}
+            <div class="order-item row">
+                <div class="col-md-2">
+                    <img src="{{orderItem.imageUrl}}" />
+                </div>
+                <div class="col-md-3">
+                    <a href='{% route SingleProduct seName="{{orderItem.seName}}" %}'>
+                        {{orderItem.productName}}
+                    </a>
+                    <div>
+                        {{orderItem.attributeText}}
+                    </div>
+                </div>
+                <div class="col-md-3 ">
+                    <label>{{"Price per unit" | t }} x {{"Quantity" | t}}</label>
+                    <div>
+                        {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>{{"Line Total" | t }}</label>
+                    <div>
+                        <strong>
+                            {{orderItem.totalPrice | withCurrency }}
+                        </strong>
+                    </div>
+
+                </div>
+                <div class="col-md-2">
+                    <h4>
+                        {{orderItem.shipmentStatus}}
+                    </h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% if order.orderStatus == "New" %}
+            <button class="btn btn-default float-right">
+                {{"Cancel Order" | t}}
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>

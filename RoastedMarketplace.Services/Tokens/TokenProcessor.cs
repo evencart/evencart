@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RoastedMarketplace.Data.Attributes;
-using RoastedMarketplace.Data.Entity.Tokens;
 using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Tokens

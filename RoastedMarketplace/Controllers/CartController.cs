@@ -3,11 +3,13 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Models.Purchases;
+using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Promotions;
 using RoastedMarketplace.Services.Purchases;
@@ -23,13 +25,16 @@ namespace RoastedMarketplace.Controllers
         private readonly IProductService _productService;
         private readonly IProductVariantService _productVariantService;
         private readonly ICartItemService _cartItemService;
-        public CartController(ICartService cartService, IDataSerializer dataSerializer, IProductService productService, IProductVariantService productVariantService, ICartItemService cartItemService)
+        private readonly OrderSettings _orderSettings;
+
+        public CartController(ICartService cartService, IDataSerializer dataSerializer, IProductService productService, IProductVariantService productVariantService, ICartItemService cartItemService, OrderSettings orderSettings)
         {
             _cartService = cartService;
             _dataSerializer = dataSerializer;
             _productService = productService;
             _productVariantService = productVariantService;
             _cartItemService = cartItemService;
+            _orderSettings = orderSettings;
         }
 
         [HttpGet("", Name = RouteNames.Cart)]
@@ -41,10 +46,27 @@ namespace RoastedMarketplace.Controllers
         [DualPost("add", Name = RouteNames.AddToCart, OnlyApi = true)]
         public IActionResult AddToCart(CartItemModel cartItemModel)
         {
+            //check if we need to redirect user to login page. This will happen in the following cases.
+            //1. Either user is trying to add to his wishlist
+            //2. Order settings don't allow guest checkout
+            var currentUser = ApplicationEngine.CurrentUser;
+            if (currentUser == null || currentUser.IsVisitor())
+            {
+                if (cartItemModel.IsWishlist || !_orderSettings.AllowGuestCheckout)
+                {
+                    var loginUrl = ApplicationEngine.RouteUrl(RouteNames.Login);
+                    return R.Redirect(loginUrl);
+                }
+            }
+            
             //first get the product
             var product = _productService.Get(cartItemModel.ProductId);
             if (product == null)
                 return R.Fail.Result;
+            //use attributes which are valid
+            var allowedAttributes = product.ProductAttributes.Select(x => x.Label).ToList();
+            cartItemModel.Attributes = cartItemModel.Attributes.Where(x => allowedAttributes.Contains(x.Name)).ToList();
+
             //exclude attributes without any values
             cartItemModel.Attributes = cartItemModel.Attributes
                 .Where(x => x.SelectedValues.Count > 0 && x.SelectedValues.Count(y => y.Name == "-1") == 0)
@@ -55,6 +77,20 @@ namespace RoastedMarketplace.Controllers
             {
                 if (cartItemModel.Attributes.All(x => x.Name != ra.Label))
                     return R.Fail.With("error", T("{0} is required", arguments: ra.AvailableAttribute.Name)).Result;
+            }
+            
+            //check if valid values for attributes has been passed
+            foreach (var ca in cartItemModel.Attributes)
+            {
+                var allowedAttributeValues = product.ProductAttributes.First(x => x.Label == ca.Name).AvailableAttribute
+                    .AvailableAttributeValues.Select(x => x.Value).ToList();
+                var invalidValues = ca.SelectedValues.Where(x => !allowedAttributeValues.Contains(x.Name)).Select(x => x.Name).ToList();
+                if (invalidValues.Any())
+                {
+                    return R.Fail.With("error",
+                        T("'{0}' is not valid value for '{1}'",
+                            arguments: new object[] {string.Join(T(" or "), invalidValues), ca.Name})).Result;
+                }
             }
 
             //validate the quantity
@@ -99,10 +135,15 @@ namespace RoastedMarketplace.Controllers
                 productAttributes.TryAdd(cpa.Name, cpa.SelectedValues.Select(x => x.Name).ToList());
             }
             var attributeJson = _dataSerializer.Serialize(productAttributes, false);
+
+            //guest signin if user is not signed in
+            ApplicationEngine.GuestSignIn();
+            currentUser = ApplicationEngine.CurrentUser;
+
             //find if there is already an existing product added
             var cart = cartItemModel.IsWishlist
-                ? _cartService.GetWishlist(ApplicationEngine.CurrentUser.Id)
-                : _cartService.GetCart(ApplicationEngine.CurrentUser.Id);
+                ? _cartService.GetWishlist(currentUser.Id)
+                : _cartService.GetCart(currentUser.Id);
             var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == product.Id && x.AttributeJson == attributeJson);
 
             if (cartItem == null)

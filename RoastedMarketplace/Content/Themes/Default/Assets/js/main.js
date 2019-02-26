@@ -93,29 +93,33 @@
     /*--
         Price Range
     -----------------------------------*/
-   
 
-    window.styleQty = function () {
+
+    window.styleQty = function() {
         /*--
     Product Quantity
 -----------------------------------*/
-        $('.product-quantity').append('<span class="dec qtybtn"><i class="fa fa-angle-left"></i></span><span class="inc qtybtn"><i class="fa fa-angle-right"></i></span>');
-        $('.qtybtn').on('click', function () {
-            var $button = $(this);
-            var oldValue = $button.parent().find("input[type='number']").val();
-            if ($button.hasClass('inc')) {
-                var newVal = parseFloat(oldValue) + 1;
-            } else {
-                // Don't allow decrementing below zero
-                if (oldValue > 1) {
-                    var newVal = parseFloat(oldValue) - 1;
+        $('.product-quantity')
+            .append(
+                '<span class="dec qtybtn"><i class="fa fa-angle-left"></i></span><span class="inc qtybtn"><i class="fa fa-angle-right"></i></span>');
+        $('.qtybtn').on('click',
+            function() {
+                var $button = $(this);
+                var oldValue = $button.parent().find("input[type='number']").val();
+                if ($button.hasClass('inc')) {
+                    var newVal = parseFloat(oldValue) + 1;
                 } else {
-                    newVal = 1;
+                    // Don't allow decrementing below zero
+                    if (oldValue > 1) {
+                        var newVal = parseFloat(oldValue) - 1;
+                    } else {
+                        newVal = 1;
+                    }
                 }
-            }
-            $button.parent().find("input[type='number']").val(newVal);
-        });
-    }
+                $button.parent().find("input[type='number']").val(newVal);
+                $button.parent().find("input[type='number']").trigger("change");
+            });
+    };
     window.styleQty();
 
     /*--

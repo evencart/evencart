@@ -1,0 +1,19 @@
+﻿{% layout "_Layout" %}
+
+<div class="product-section section">
+    {% widget "order_complete_before" %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    {{"Thank you for placing your order." | t}}
+                </h3>
+                <p>
+                    {{"Your order number is " | t}} {{orderNumber}}
+                </p>
+                <a href="{% route AccountOrders %}">{{"View my orders" | t}}</a>
+            </div>
+        </div>
+    </div>
+    {% widget "order_complete_after" %}
+</div>

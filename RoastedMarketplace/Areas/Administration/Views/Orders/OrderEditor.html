@@ -74,6 +74,72 @@
                                 {{order.paymentStatusDisplay}}
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                {{"Shipping Method" | t}}
+                            </td>
+                            <td>
+                                {{order.shippingMethodName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Subtotal" | t}}
+                            </td>
+                            <td>
+                                {{order.subTotal | withCurrency}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Cart Discount" | t}}
+                            </td>
+                            <td>
+                                {{order.discount | withCurrency}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Coupon" | t}}
+                            </td>
+                            <td>
+                                {{order.discountCoupon}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Tax" | t}}
+                            </td>
+                            <td>
+                                {{order.tax | withCurrency}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Shipping Fee" | t}}
+                            </td>
+                            <td>
+                                {{order.shippingMethodFee | withCurrency}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Payment Fee" | t}}
+                            </td>
+                            <td>
+                                {{order.paymentMethodFee | withCurrency}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Total" | t}}
+                            </td>
+                            <td>
+                                <strong>
+                                    {{order.orderTotal | withCurrency}}
+                                </strong> 
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -103,7 +169,7 @@
                                 </div>
                             </td>
                             <td>
-                                {{orderItem.price}} x {{orderItem.quantity}}
+                                {{orderItem.price }} x {{orderItem.quantity}}
                             </td>
                             <td>
                                 <table class="table table-borderless">
@@ -112,7 +178,7 @@
                                             <strong>{{"Line Total" | t }}</strong>
                                         </td>
                                         <td>
-                                            {{ orderItem.price * orderItem.quantity}}
+                                            {{ orderItem.price | withCurrency}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -120,15 +186,7 @@
                                             <strong>{{"Tax" | t}}</strong>
                                         </td>
                                         <td>
-                                            0.00
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>{{"Discount" | t}}</strong>
-                                        </td>
-                                        <td>
-                                            0.00
+                                            {{orderItem.tax | withCurrency }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -136,7 +194,7 @@
                                             <strong>{{"Net Amount" | t}}</strong>
                                         </td>
                                         <td>
-                                            0.00
+                                            {{orderItem.price + orderItem.tax}}
                                         </td>
                                     </tr>
                                 </table>

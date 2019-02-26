@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -12,12 +13,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Core.Services;
+using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Infrastructure.DependencyContainer;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Theming;
 using RoastedMarketplace.Services.Authentication;
+using RoastedMarketplace.Services.Extensions;
+using RoastedMarketplace.Services.Purchases;
 
 namespace RoastedMarketplace.Infrastructure
 {
@@ -67,7 +73,8 @@ namespace RoastedMarketplace.Infrastructure
             foreach (var themeDir in allThemes)
             {
                 var directoryInfo = new DirectoryInfo(themeDir);
-                app.UseStaticFiles(new StaticFileOptions() {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
                     FileProvider = new PhysicalFileProvider(
                     Path.Combine(themesDir, themeDir, "Assets")),
                     RequestPath = new PathString($"/{directoryInfo.Name}/assets")
@@ -83,7 +90,8 @@ namespace RoastedMarketplace.Infrastructure
                 var assetDir = Path.Combine(pluginsDir, pluginDir, "Assets");
                 if (!Directory.Exists(assetDir))
                     continue;
-                app.UseStaticFiles(new StaticFileOptions() {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
                     FileProvider = new PhysicalFileProvider(assetDir),
                     RequestPath = new PathString($"/plugins/{directoryInfo.Name}/assets")
                 });
@@ -164,5 +172,66 @@ namespace RoastedMarketplace.Infrastructure
 
         public static string CurrentLanguageCultureCode => "en-US";
 
+        public static string CurrentCurrencyCode => "USD";
+
+        public static LoginStatus GuestSignIn()
+        {
+            //if we don't have any user, then only we'll do a guest signin
+            if (CurrentUser != null)
+                return LoginStatus.Success;
+            var authenticationService = DependencyResolver.Resolve<IAppAuthenticationService>();
+            return authenticationService.GuestSignIn();
+        }
+
+        public static LoginStatus SignIn(string email, string name, bool rememberMe)
+        {
+            if (CurrentUser != null && !CurrentUser.IsVisitor())
+                return LoginStatus.Success; //user is already logged in
+
+            var isVisitor = CurrentUser != null && CurrentUser.IsVisitor();
+            var visitorId = isVisitor ? CurrentUser.Id : 0;
+
+            var authenticationService = DependencyResolver.Resolve<IAppAuthenticationService>();
+            authenticationService.SignOut();
+            var signinStatus = authenticationService.SignIn(email, name, rememberMe);
+            if (signinStatus != LoginStatus.Success)
+                return signinStatus;
+
+            //if we are here, the login was successful. If already logged in user was a visitor, we'll move the cart items 
+            //from old user to new user
+            if (isVisitor)
+            {
+                //move all the cart items of guest user to logged in user
+                var cartService = DependencyResolver.Resolve<ICartService>();
+                var cartItemService = DependencyResolver.Resolve<ICartItemService>();
+                var visitorCart = cartService.GetCart(visitorId);
+                if (visitorCart.CartItems.Any())
+                {
+                    Transaction.Initiate(transaction =>
+                    {
+                        //move the cart items to the current user's cart
+                        var registeredUserCart = cartService.GetCart(CurrentUser.Id);
+                        foreach (var cItem in visitorCart.CartItems)
+                        {
+                            cItem.CartId = registeredUserCart.Id;
+                            CartItem sameCartItem = null;
+                            if ((sameCartItem = registeredUserCart.CartItems.FirstOrDefault(x =>
+                                    x.ProductId == cItem.ProductId && x.AttributeJson == cItem.AttributeJson)) != null)
+                            {
+                                sameCartItem.Quantity++;
+                                cartItemService.Update(sameCartItem, transaction);
+                                cartItemService.Delete(cItem, transaction);
+                            }
+                            else
+                            {
+                                cartItemService.Update(cItem, transaction);
+                            }
+
+                        }
+                    });
+                }
+            }
+            return signinStatus;
+        }
     }
 }

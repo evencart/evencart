@@ -15,16 +15,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="config.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
     <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
     <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
     <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

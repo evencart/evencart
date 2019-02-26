@@ -81,6 +81,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                     var orderItemModel = _modelMapper.Map<OrderItemModel>(x);
                     orderItemModel.ProductName = x.Product.Name;
                     orderItemModel.AttributeText = _formatterService.FormatProductAttributes(x.AttributeJson);
+                    orderItemModel.TotalPrice = orderItemModel.Price * orderItemModel.Quantity;
                     return orderItemModel;
                 })
                 .ToList();

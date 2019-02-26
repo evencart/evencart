@@ -85,5 +85,13 @@ namespace RoastedMarketplace.Data.Extensions
             str = str?.Trim();
             return string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str);
         }
+
+        public static string Reverse(this string s)
+        {
+            var charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
     }
 }

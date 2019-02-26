@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
-using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Interfaces;
 
@@ -18,6 +17,8 @@ namespace RoastedMarketplace.Data.Entity.Users
         public string Email { get; set; }
 
         public string CompanyName { get; set; }
+
+        public string MobileNumber { get; set; }
 
         public Guid Guid { get; set; }
 

@@ -40,7 +40,8 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         /// <summary>
         /// Raises a named event so other services and plugins can capture
         /// </summary>
-        public void RaiseEvent(Enum eventName, params object[] eventData)
+        [NonAction]
+        protected void RaiseEvent(Enum eventName, params object[] eventData)
         {
             DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName.ToString(), eventData);
         }

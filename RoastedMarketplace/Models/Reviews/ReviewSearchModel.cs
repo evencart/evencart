@@ -10,6 +10,8 @@ namespace RoastedMarketplace.Models.Reviews
 
         public bool VerifiedPurchase { get; set; }
 
+        public int? Rating { get; set; }
+
         public void SetupValidationRules(ModelValidator<ReviewSearchModel> v)
         {
             v.RuleFor(x => x.Page).GreaterThan(0);

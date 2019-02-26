@@ -12,6 +12,8 @@ namespace RoastedMarketplace.Models.Authentication
 
         public bool RememberMe { get; set; }
 
+        public string ReturnUrl { get; set; }
+
         public void SetupValidationRules(ModelValidator<LoginModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();

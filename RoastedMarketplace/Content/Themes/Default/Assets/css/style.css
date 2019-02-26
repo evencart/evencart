@@ -1,37 +1,4 @@
-﻿/*
-  Template Name: Outside - Minimalist Ecommerce HTML Template
-  Template URI: http://devitems.com
-  Description: Minimalist Ecommerce HTML Template
-  Author: Hastech
-  Author URI: http://devitems.com
-  Version: 1.0
-
-*/
-/*================================================
-[  Table of contents  ]
-================================================
-  01. General
-  02. Header Section
-  03. Home Slider Section
-  04. Product Section
-  05. Footer Section
-  06. Banner Section
-  07. Subscribe Section
-  08. Blog Section
-  09. Contact Section
-  10. Cart Page
-  11. Wishlist Page
-  12. Checkout Page
-  13. Login & Register Page
-
-======================================
-[ End table content ]
-======================================*/
-/*font-family: 'Catamaran', sans-serif;*/
-/*************************
-  1.General
-*************************/
-@import url("https://fonts.googleapis.com/css?family=Catamaran:300,400,500,600,700|Lato:300,400,700|Montserrat:300,400,500,600,700");
+﻿@import url("https://fonts.googleapis.com/css?family=Catamaran:300,400,500,600,700|Lato:300,400,700|Montserrat:300,400,500,600,700");
 body {
   background: #fff;
   color: #999999;
@@ -69,7 +36,6 @@ a:hover {
   color: inherit;
   text-decoration: none; }
 
-a,
 button,
 input {
   outline: medium none;
@@ -756,8 +722,7 @@ input:focus, textarea:focus {
 .header-section {
   background-color: #fff;
   position: relative;
-  width: 100%;
-  z-index: 99999; }
+  width: 100%; }
 
 .header-section.sticker {
   left: 0;
@@ -1911,10 +1876,10 @@ a.meanmenu-reveal i {
   line-height: 24px; }
 
 /*-- Size --*/
-.product-size {
-  margin-bottom: 40px; }
+.product-attribute {
+  margin-bottom: 20px; }
 
-.product-size button {
+.product-attribute button {
   background-color: transparent;
   border: 1px solid #b6b6b6;
   border-radius: 50%;
@@ -1929,11 +1894,11 @@ a.meanmenu-reveal i {
   text-transform: uppercase;
   width: 31px; }
 
-.product-size button:hover {
+.product-attribute button:hover {
   border: 1px solid #3f3f3f;
   color: #3f3f3f; }
 
-.product-size button.active {
+.product-attribute button.active {
   background-color: #3f3f3f;
   border: 1px solid #3f3f3f;
   color: #fff; }
@@ -3346,3 +3311,44 @@ div.tab button.active {
     text-align: center;
     margin: 20px 0 30px 0; }
 
+.product-section .section {
+  margin-bottom: 25px; }
+
+.product-section .section-reviews .review {
+  margin-bottom: 30px; }
+  .product-section .section-reviews .review .posted-by {
+    color: gray; }
+
+.notification {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  top: 10px;
+  border-radius: 15px;
+  display: none;
+  z-index: 2;
+  cursor: pointer; }
+
+.order-items-list .order-item {
+  border: solid 1px #eee;
+  padding: 15px 0;
+  margin: 20px 0; }
+
+.checkout-wizard-links {
+  margin: 35px; }
+  .checkout-wizard-links a {
+    padding: 10px 0px;
+    margin: 0 15px;
+    color: #ccc; }
+  .checkout-wizard-links a.active {
+    color: #555;
+    border-bottom: solid 2px #555;
+    font-weight: bold; }
+  .checkout-wizard-links a.done {
+    color: #555; }
+
+#payment-info-form {
+  padding: 10px;
+  background-color: #eef;
+  margin: 15px 0; }

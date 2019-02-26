@@ -10,7 +10,7 @@ namespace Shipping.FedEx
     {
         public decimal GetShippingHandlerFee(Cart cart)
         {
-            throw new NotImplementedException();
+            return 15m;
         }
     }
 }

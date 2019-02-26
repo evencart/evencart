@@ -24,5 +24,19 @@
         public const string RawView = "RawView";
         public const string SaveReview = "SaveReview";
         public const string ReviewsList = "ReviewsList";
+        public const string AccountProfile = "AccountProfile";
+        public const string AccountAddresses = "AccountAddresses";
+        public const string AccountOrders = "AccountOrders";
+        public const string AccountReviews = "AccountReviews";
+        public const string AccountWishlist = "AccountWishlist";
+        public const string SaveUser = "AccountSaveUser";
+        public const string SaveAddress = "AccountSaveAddress";
+        public const string DeleteAddress = "AccountDeleteAddress";
+        public const string SingleOrder = "SingleOrder";
+        public const string CancelOrder = "CancelOrder";
+        public const string ReturnOrder = "ReturnOrder";
+        public const string SingleAddress = "SingleAddress";
+        public const string CountryStates = "CountryStates";
+
     }
 }

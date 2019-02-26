@@ -11,22 +11,21 @@ namespace RoastedMarketplace.Services.Authentication
         LoginStatus SignIn(string email, string name = "", bool isPersistent = false,  bool forceCreateNewAccount = false);
 
         /// <summary>
+        /// Signs in the user
+        /// </summary>
+        LoginStatus SignIn(string authenticationScheme, string email, string name = "", bool isPersistent = false, bool forceCreateNewAccount = false);
+
+        /// <summary>
         /// Signs out the current logged in user
         /// </summary>
         void SignOut();
 
         /// <summary>
-        /// Creates an authentication ticket for the user
+        /// Signs in the visitor as guest
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="isPersistent"></param>
-        void CreateAuthenticationTicket(User user, bool isPersistent = false);
-
-        /// <summary>
-        /// Clears the authentication ticket of the user
-        /// </summary>
-        /// <param name="user"></param>
-        void ClearAuthenticationTicket();
+        /// <returns></returns>
+        LoginStatus GuestSignIn();
+      
 
         /// <summary>
         /// Gets the current user

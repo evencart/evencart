@@ -6,11 +6,15 @@ using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Reviews;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Models.Media;
+using RoastedMarketplace.Models.Products;
 using RoastedMarketplace.Models.Reviews;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
@@ -26,13 +30,15 @@ namespace RoastedMarketplace.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly IModelMapper _modelMapper;
         private readonly IProductService _productService;
-        public ReviewsController(IReviewService reviewService, IOrderService orderService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductService productService)
+        private readonly IMediaAccountant _mediaAccountant;
+        public ReviewsController(IReviewService reviewService, IOrderService orderService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductService productService, IMediaAccountant mediaAccountant)
         {
             _reviewService = reviewService;
             _orderService = orderService;
             _catalogSettings = catalogSettings;
             _modelMapper = modelMapper;
             _productService = productService;
+            _mediaAccountant = mediaAccountant;
         }
 
         [ValidateModelState(ModelType = typeof(ReviewModel))]
@@ -97,21 +103,82 @@ namespace RoastedMarketplace.Controllers
                 return NotFound();
 
             IList<Review> reviews;
+            var ratings = reviewSearchModel.Rating.HasValue
+                ? new List<int>() {reviewSearchModel.Rating.Value}
+                : new List<int>() { 1, 2, 3, 4, 5 };
+            int totalMatches;
             if (reviewSearchModel.VerifiedPurchase)
-                reviews =_reviewService.Get(x => x.ProductId == reviewSearchModel.ProductId && x.VerifiedPurchase == true, reviewSearchModel.Page,
-                    reviewSearchModel.Count).ToList();
+                reviews = _reviewService.Get(out totalMatches,
+                    x => x.ProductId == reviewSearchModel.ProductId && ratings.Contains(x.Rating) &&
+                         x.VerifiedPurchase == true && x.Published, page: reviewSearchModel.Page,
+                    count: reviewSearchModel.Count).ToList();
             else
-                reviews = _reviewService.Get(x => x.ProductId == reviewSearchModel.ProductId, reviewSearchModel.Page,
-                    reviewSearchModel.Count).ToList();
+                reviews = _reviewService.Get(out totalMatches,
+                    x => x.ProductId == reviewSearchModel.ProductId && ratings.Contains(x.Rating) && x.Published,
+                    page: reviewSearchModel.Page,
+                    count: reviewSearchModel.Count).ToList();
 
-            var reviewModels = reviews.Select(x =>
+            var reviewModels = reviews.Select(GetReviewModel).ToList();
+
+            var reviewsSummaryModel = new AllReviewsSummaryModel()
+            {
+                TotalReviews = totalMatches
+            };
+            //find best and worst review
+            ReviewModel bestReview = null, worstReview = null;
+            if (reviews.Count > 1 && reviews.Count < reviewSearchModel.Count)
+            {
+                bestReview = reviewModels.OrderByDescending(x => x.Rating).First();
+                worstReview = reviewModels.OrderBy(x => x.Rating).First();
+                reviewsSummaryModel.FiveStarCount = reviews.Count(x => x.Rating == 5);
+                reviewsSummaryModel.FourStarCount = reviews.Count(x => x.Rating == 4);
+                reviewsSummaryModel.ThreeStarCount = reviews.Count(x => x.Rating == 3);
+                reviewsSummaryModel.TwoStarCount = reviews.Count(x => x.Rating == 2);
+                reviewsSummaryModel.OneStarCount = reviews.Count(x => x.Rating == 1);
+            }
+            else
+            {
+                if (reviews.Count > 1)
                 {
-                    var model = _modelMapper.Map<ReviewModel>(x);
-                    model.DisplayName = x.User.Name;
-                    return model;
-                })
-                .ToList();
-            return R.Success.With("reviews", reviewModels).Result;
+                    bestReview = GetReviewModel(_reviewService.GetBestReview(product.Id));
+                    worstReview = GetReviewModel(_reviewService.GetWorstReview(product.Id));
+                    reviewsSummaryModel.FiveStarCount = _reviewService.Count(x => x.Rating == 5 && x.ProductId == product.Id && x.Published);
+                    reviewsSummaryModel.FourStarCount = _reviewService.Count(x => x.Rating == 4 && x.ProductId == product.Id && x.Published);
+                    reviewsSummaryModel.ThreeStarCount = _reviewService.Count(x => x.Rating == 3 && x.ProductId == product.Id && x.Published);
+                    reviewsSummaryModel.TwoStarCount = _reviewService.Count(x => x.Rating == 2 && x.ProductId == product.Id && x.Published);
+                    reviewsSummaryModel.OneStarCount = _reviewService.Count(x => x.Rating == 1 && x.ProductId == product.Id && x.Published);
+                }
+            }
+            var productModel = _modelMapper.Map<ProductModel>(product);
+            productModel.SeName = product.SeoMeta.Slug;
+            var mediaModels = product.MediaItems?.Select(y =>
+            {
+                var mediaModel = _modelMapper.Map<MediaModel>(y);
+                mediaModel.ThumbnailUrl =
+                    _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
+                mediaModel.Url = _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
+                return mediaModel;
+            }).ToList();
+            productModel.Media = mediaModels;
+
+            return R.Success
+                .With("product", productModel)
+                .With("reviews", reviewModels)
+                .With("bestReview", bestReview)
+                .With("worstReview", worstReview)
+                .WithGridResponse(totalMatches, reviewSearchModel.Page, reviewSearchModel.Count)
+                .With("summary", reviewsSummaryModel).Result;
+        }
+
+        private ReviewModel GetReviewModel(Review review)
+        {
+            var model = _modelMapper.Map<ReviewModel>(review);
+            model.DisplayName = review.Private ? _catalogSettings.DisplayNameForPrivateReviews : review.User.Name;
+            if (model.DisplayName.IsNullEmptyOrWhiteSpace())
+            {
+                model.DisplayName = T("Store Customer");
+            }
+            return model;
         }
     }
 }
