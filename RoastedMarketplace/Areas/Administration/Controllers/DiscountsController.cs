@@ -69,7 +69,9 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var discount = discountModel.Id > 0 ? _discountCouponService.Get(discountModel.Id) : new DiscountCoupon();
             if (discount == null)
                 return NotFound();
+            discountModel.StartDate = discountModel.StartDate ?? DateTime.UtcNow;
             _modelMapper.Map(discountModel, discount);
+            discount.StartDate = discountModel.StartDate.Value;
             _discountCouponService.InsertOrUpdate(discount);
 
             //update the restrictions

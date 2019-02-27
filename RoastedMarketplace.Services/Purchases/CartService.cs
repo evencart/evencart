@@ -50,6 +50,7 @@ namespace RoastedMarketplace.Services.Purchases
                                .Join<ProductMedia>("EntityId", "ProductId", joinType: JoinType.LeftOuter)
                                .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                                .Join<DiscountCoupon>("DiscountCouponId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                               .Join<RestrictionValue>("Id", "DiscountCouponId", joinType: JoinType.LeftOuter)
                                .Relate(RelationTypes.OneToMany<Cart, CartItem>())
                                .Relate<Product>((cart, product) =>
                                {
@@ -90,6 +91,12 @@ namespace RoastedMarketplace.Services.Purchases
                                    }
                                })
                                .Relate(RelationTypes.OneToOne<Cart, DiscountCoupon>())
+                               .Relate<RestrictionValue>((cart, value) =>
+                                   {
+                                       cart.DiscountCoupon.RestrictionValues =
+                                           cart.DiscountCoupon.RestrictionValues ?? new List<RestrictionValue>();
+                                       cart.DiscountCoupon.RestrictionValues.Add(value);
+                                   })
                                .Where(seoMetaWhere)
                                .SelectNested()
                                .FirstOrDefault();
@@ -197,6 +204,7 @@ namespace RoastedMarketplace.Services.Purchases
             cart.CompareFinalAmount = 0;
             cart.FinalAmount = 0;
             cart.ShippingFee = 0;
+            cart.Discount = 0;
             Update(cart);
         }
     }

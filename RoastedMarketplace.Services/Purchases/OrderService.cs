@@ -153,6 +153,7 @@ namespace RoastedMarketplace.Services.Purchases
                 .Relate<ShipmentItem>((order, shipmentItem) =>
                 {
                     var orderItem = order.OrderItems.First(x => x.Id == shipmentItem.OrderItemId);
+                    orderItem.Shipment = order.Shipments.First(x => x.Id == shipmentItem.ShipmentId);
                     orderItem.Shipment.ShipmentItems = orderItem.Shipment.ShipmentItems ?? new List<ShipmentItem>();
                     if (!orderItem.Shipment.ShipmentItems.Contains(shipmentItem))
                         orderItem.Shipment.ShipmentItems.Add(shipmentItem);

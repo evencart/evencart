@@ -44,24 +44,20 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                         ComparePrice = x.ComparePrice,
                         Tax = x.Tax,
                         TaxPercent = x.TaxPercent,
-                        ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems.FirstOrDefault(), ApplicationEngine.ActiveTheme.CartItemImageSize, true),
+                        ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(), ApplicationEngine.ActiveTheme.CartItemImageSize, true),
                         Slug = x.Product.SeoMeta.Slug,
                         AttributeText = formatterService.FormatProductAttributes(x.AttributeJson)
                     };
                     cartItem.SubTotal = cartItem.Price * cartItem.Quantity;
-                    cartItem.FinalPrice = cartItem.SubTotal - cartItem.Tax - cartItem.Discount;
+                    cartItem.FinalPrice = cartItem.SubTotal + cartItem.Tax - cartItem.Discount;
                     return cartItem;
                 })
                 .ToList();
-            cartModel.SubTotal = cartModel.Items.Sum(x => x.SubTotal);
-            cartModel.Tax = cartModel.Items.Sum(x => x.Tax);
-            cartModel.CompareFinalAmount = cartModel.Items.Sum(x => x.ComparePrice ?? 0);
-            cartModel.Discount = cart.Discount;
-            if (cartModel.Discount == 0)
-                cartModel.Discount = cartModel.Items.Sum(x => x.Discount);
-            cartModel.FinalAmount = cartModel.SubTotal - cartModel.Discount;
-            if (taxSettings.DisplayProductPricesWithoutTax)
-                cartModel.FinalAmount += cartModel.Tax;
+            cartModel.SubTotal = cart.CartItems.Sum(x => x.Price * x.Quantity);
+            cartModel.Tax = cart.CartItems.Sum(x => x.Tax);
+            cartModel.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
+            cartModel.Discount = cart.Discount + cart.CartItems.Sum(x => x.Discount);
+            cartModel.FinalAmount = cartModel.SubTotal + cartModel.Tax - cartModel.Discount;
             return cartModel;
         }
     }

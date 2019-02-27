@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DotEntity;
 using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
@@ -20,13 +21,24 @@ namespace RoastedMarketplace.Services.Promotions
 
         public override DiscountCoupon Get(int id)
         {
-            return GetByWhere(x => x.Id == id);
+            return GetByWhere(x => x.Id == id)
+                .SelectNested()
+                .FirstOrDefault();
+        }
+
+        public override IEnumerable<DiscountCoupon> Get(Expression<Func<DiscountCoupon, bool>> @where, int page = 1, int count = Int32.MaxValue)
+        {
+            return GetByWhere(where)
+                .SelectNested(page, count);
         }
 
         public DiscountCoupon GetByCouponCode(string couponCode)
         {
             couponCode = couponCode.ToLower();
-            return GetByWhere(x => x.CouponCode == couponCode);
+            return GetByWhere(x => x.CouponCode == couponCode && x.Enabled)
+                .OrderBy(x => x.Id, RowOrder.Descending)
+                .SelectNested(1, 1)
+                .FirstOrDefault(); ;
         }
 
         public IEnumerable<DiscountCoupon> SearchDiscountCoupons(string searchText, out int totalMatches, int page = 1, int count = 15)
@@ -77,13 +89,11 @@ namespace RoastedMarketplace.Services.Promotions
 
         }
 
-        private DiscountCoupon GetByWhere(Expression<Func<DiscountCoupon, bool>> where)
+        private IEntitySet<DiscountCoupon> GetByWhere(Expression<Func<DiscountCoupon, bool>> where)
         {
             return Repository.Where(where)
                 .Join<RestrictionValue>("Id", "DiscountCouponId", joinType: JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToMany<DiscountCoupon, RestrictionValue>())
-                .SelectNested()
-                .FirstOrDefault();
+                .Relate(RelationTypes.OneToMany<DiscountCoupon, RestrictionValue>());
         }
 
         public override void Insert(DiscountCoupon entity, Transaction transaction = null)

@@ -16,6 +16,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Orders
 
         public decimal TotalPrice { get; set; }
 
+        public decimal LineTotal => TotalPrice + Tax;
+
         public decimal Tax { get; set; }
 
         public decimal TaxPercent { get; set; }

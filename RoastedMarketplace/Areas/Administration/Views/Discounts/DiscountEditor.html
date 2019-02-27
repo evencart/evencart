@@ -34,6 +34,13 @@
                         {% control label text=@t"Discount Value" for="discountValue" %}
                         {% control number name="discountValue" id="discountValue" value="{{discount.discountValue}}" %}
                     </div>
+                    <div class="form-group">
+                        {% control label text=@t"Maximum Discount Amount" for="maximumDiscountAmount" %}
+                        {% control number name="maximumDiscountAmount" id="maximumDiscountAmount" value="{{discount.maximumDiscountAmount}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="excludeAlreadyDiscountedProducts" value="discount.excludeAlreadyDiscountedProducts" text=@t"Exclude already discounted products" %}
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

@@ -108,11 +108,12 @@ namespace RoastedMarketplace.Services.Products
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (cartUpdated)
+            if (cartUpdated || cartItemUpdated)
             {
                 cart.DiscountCouponId = discountCoupon.Id;
                 _cartService.Update(cart);
-                return DiscountApplicationStatus.Success;
+                if (cartUpdated)
+                    return DiscountApplicationStatus.Success;
             }
             if (cartItemUpdated)
             {
@@ -145,6 +146,8 @@ namespace RoastedMarketplace.Services.Products
 
                 Transaction.Initiate(transaction =>
                 {
+                    //preserve autodiscounts for performance
+                    IList<DiscountCoupon> discountCoupons = _discountCouponService.Get(x => x.Enabled && !x.HasCouponCode).Where(x => !x.Expired).ToList();
                     //update cart items if required
                     foreach (var ci in cart.CartItems)
                     {
@@ -179,7 +182,8 @@ namespace RoastedMarketplace.Services.Products
                                 //is there a difference in quantity that's required
                                 ci.Quantity = product.MaximumPurchaseQuantity;
                             }
-
+                            //are there any discounted price for product
+                            var basePrice =  GetAutoDiscountedPriceForUser(product, cart.User, ref discountCoupons, out decimal discount);
                             if (product.HasVariants && ci.ProductVariantId > 0)
                             {
                                 //find the product variants
@@ -190,17 +194,18 @@ namespace RoastedMarketplace.Services.Products
                                 else
                                 {
                                     var comparisonPrice = variant.ComparePrice ?? product.ComparePrice;
-                                    var price = variant.Price ?? product.Price;
+                                    var price = Math.Min(basePrice, variant.Price ?? product.Price);
+
                                     GetProductPriceDetails(product, cart.BillingAddress, price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
 
                                     //do we need an update?
                                     if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent)
                                     {
                                         ci.Price = priceWithoutTax;
-                                        ci.ComparePrice = ci.ComparePrice;
+                                        ci.ComparePrice = comparisonPrice;
                                         ci.Tax = tax * ci.Quantity;
                                         ci.TaxPercent = taxRate;
-                                        ci.Discount = 0;
+                                        ci.Discount = discount;
                                         ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
                                         _cartItemService.Update(ci);
                                     }
@@ -208,7 +213,7 @@ namespace RoastedMarketplace.Services.Products
                             }
                             else
                             {
-                                GetProductPriceDetails(product, cart.BillingAddress, null, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                                GetProductPriceDetails(product, cart.BillingAddress, basePrice, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
                                 tax = tax * ci.Quantity;
                                 //do we need an update?
                                 if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent)
@@ -217,7 +222,7 @@ namespace RoastedMarketplace.Services.Products
                                     ci.ComparePrice = product.ComparePrice;
                                     ci.Tax = tax;
                                     ci.TaxPercent = taxRate;
-                                    ci.Discount = 0;
+                                    ci.Discount = discount;
                                     ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
                                     _cartItemService.Update(ci);
                                 }
@@ -225,9 +230,11 @@ namespace RoastedMarketplace.Services.Products
 
                         }
                     }
+                    cart.FinalAmount = cart.CartItems.Sum(x => x.FinalPrice);
+                    cart.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
 
                     //do we have an discount coupon
-                    if (cart.DiscountCoupon != null)
+                    if (cart.DiscountCoupon != null && cart.DiscountCoupon.Enabled && !cart.DiscountCoupon.Expired)
                     {
                         if (ApplyDiscountCoupon(cart.DiscountCoupon, cart) == DiscountApplicationStatus.Success)
                         {
@@ -235,21 +242,29 @@ namespace RoastedMarketplace.Services.Products
                             return;
                         }
                     }
-
-                    cart.FinalAmount = cart.CartItems.Sum(x => x.FinalPrice);
-                    cart.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
-                    //do we need to apply discount
-                    _cartService.Update(cart);
+                    else
+                    {
+                        if (cart.DiscountCoupon != null)
+                        {
+                            cart.DiscountCouponId = 0;
+                            _cartService.Update(cart);
+                        }
+                      
+                        ////find coupons which should be automatically applied
+                        foreach(var dc in discountCoupons)
+                            if (ApplyDiscountCoupon(dc, cart) == DiscountApplicationStatus.Success)
+                                break;
+                    }
 
                 });
             }
         }
 
-        public decimal GetAutoDiscountedPriceForUser(Product product, User user, ref IList<DiscountCoupon> discountCoupons)
+        public decimal GetAutoDiscountedPriceForUser(Product product, User user, ref IList<DiscountCoupon> discountCoupons, out decimal discount)
         {
             //get active discount coupons which don't have any code
-            discountCoupons = discountCoupons ?? _discountCouponService.Get(x => x.Enabled && !x.Expired && !x.HasCouponCode).ToList();
-            var discount = decimal.Zero;
+            discountCoupons = discountCoupons ?? _discountCouponService.Get(x => x.Enabled && !x.HasCouponCode).Where(x => !x.Expired).ToList();
+            discount = decimal.Zero;
             foreach (var dc in discountCoupons)
             {
                 var currentDiscount = GetProductDiscountedPrice(dc, product, user);
@@ -423,6 +438,8 @@ namespace RoastedMarketplace.Services.Products
             {
                 var paymentHandler = PluginHelper.GetPaymentHandler(cart.PaymentMethodName);
                 var discount = discountCoupon.GetDiscountAmount(paymentHandler.GetPaymentHandlerFee(cart));
+                if (discountCoupon.HasCouponCode)
+                    cart.Discount = discount;
                 cart.PaymentMethodFee = cart.PaymentMethodFee - discount;
                 return true;
             }
@@ -436,6 +453,8 @@ namespace RoastedMarketplace.Services.Products
             {
                 var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
                 var discount = discountCoupon.GetDiscountAmount(shippingHandler.GetShippingHandlerFee(cart));
+                if (discountCoupon.HasCouponCode)
+                    cart.Discount = discount;
                 cart.ShippingFee = cart.ShippingFee - discount;
                 return true;
             }
@@ -444,28 +463,19 @@ namespace RoastedMarketplace.Services.Products
 
         private bool ApplyOrderTotalDiscount(DiscountCoupon discountCoupon, Cart cart)
         {
-            IList<DiscountCoupon> discountCoupons = null;
             var orderTotalForDiscount = decimal.Zero;
             var otherOrderTotal = decimal.Zero;
             foreach (var cartItem in cart.CartItems)
             {
-                var discountedPrice = GetAutoDiscountedPriceForUser(cartItem.Product, cart.User, ref discountCoupons);
-                if (discountedPrice < cartItem.Price)
+                if (discountCoupon.ExcludeAlreadyDiscountedProducts && cartItem.Discount > 0)
                 {
-                    if (discountCoupon.ExcludeAlreadyDiscountedProducts)
-                    {
-                        otherOrderTotal += discountedPrice * cartItem.Quantity;
-                        continue; //exclude this product
-                    }
-                    orderTotalForDiscount += discountedPrice * cartItem.Quantity;
+                    otherOrderTotal += cartItem.Tax + cartItem.Price * cartItem.Quantity;
+                    continue;
                 }
-                else
-                {
-                    orderTotalForDiscount += cartItem.Tax + cartItem.Price * cartItem.Quantity;
-                }
-                cartItem.Discount = 0;
+                orderTotalForDiscount += cartItem.Tax + cartItem.Price * cartItem.Quantity;
             }
-            cart.Discount = discountCoupon.GetDiscountAmount(orderTotalForDiscount + otherOrderTotal);
+
+            cart.Discount = discountCoupon.GetDiscountAmount(orderTotalForDiscount);
             return true;
         }
 

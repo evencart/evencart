@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Enum;
@@ -292,11 +293,24 @@ namespace RoastedMarketplace.Controllers
                 product.ReviewSummary = null;
             }
 
-
-            _priceAccountant.GetProductPriceDetails(product, null, product.Price, out decimal priceWithoutTax,
+            IList<DiscountCoupon> coupons = null;
+            //any autodiscounted price
+            var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, ref coupons, out decimal discount);
+            if (price < product.Price)
+            {
+                productModel.ComparePrice = product.Price;
+                if (productModel.ComparePrice < product.ComparePrice)
+                {
+                    productModel.ComparePrice = product.ComparePrice;
+                }
+            }
+            _priceAccountant.GetProductPriceDetails(product, null, price, out decimal priceWithoutTax,
                 out decimal tax, out decimal taxRate);
             if (_taxSettings.DisplayProductPricesWithoutTax)
                 productModel.Price = priceWithoutTax;
+            else
+                productModel.Price = priceWithoutTax + tax;
+
             return productModel;
         }
         #endregion

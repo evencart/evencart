@@ -268,7 +268,7 @@ namespace RoastedMarketplace.Controllers
                 PaymentStatus = PaymentStatus.Pending,
                 OrderStatus = OrderStatus.New,
                 DiscountCoupon =  cart.DiscountCoupon?.CouponCode,
-                Discount = cart.Discount,
+                Discount = cart.Discount + cart.CartItems.Sum(x => x.Discount),
                 PaymentMethodFee = cart.PaymentMethodFee,
                 ShippingMethodFee = cart.ShippingFee,
                 Tax = cart.CartItems.Sum(x => x.Tax),

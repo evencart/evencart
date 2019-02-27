@@ -3312,7 +3312,8 @@ div.tab button.active {
     margin: 20px 0 30px 0; }
 
 .product-section .section {
-  margin-bottom: 25px; }
+  margin-bottom: 25px;
+  clear: both; }
 
 .product-section .section-reviews .review {
   margin-bottom: 30px; }

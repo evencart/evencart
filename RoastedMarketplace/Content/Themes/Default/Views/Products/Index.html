@@ -30,7 +30,14 @@
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->
-                        <span class="price float-left"><span class="new" id="priceFormatted">{{product.priceFormatted}}</span></span>
+                        <span class="price float-left">
+                            {% if product.comparePrice %}
+                            <del>
+                                {{product.comparePrice | withCurrency }}
+                            </del>
+                            {% endif %}
+                            <div class="new" id="priceFormatted">{{product.price | withCurrency }}</div>
+                        </span>
                         <a href="#reviews">
                             {% partial "Products/_Rating" %}
                         </a>

@@ -7,7 +7,7 @@
                     <thead>
                         <tr>
                             <th class="pro-thumbnail"></th>
-                            <th class="pro-title">Product {{checkout}}</th>
+                            <th class="pro-title">Product</th>
                             <th class="pro-price">Price</th>
                             <th class="pro-quantity">Quantity</th>
                             <th class="pro-subtotal">Total</th>
@@ -28,7 +28,7 @@
                             <td class="pro-title">
                                 <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a>
                                 <p>
-                                    {{cartItem.attributeText}}
+                                    {{cartItem.attributeText | newLine2Br}}
                                 </p>
                             </td>
                             <td class="pro-price">
@@ -171,7 +171,7 @@
         </div>
         <div class="col-md-4 col-sm-5 col-xs-12">
             <div class="cart-total mb-40">
-                <h3>{{"Cart Totals" | t}}</h3>
+                <h3>{{"Cart Summary" | t}}</h3>
                 <table>
                     <tbody>
                         <tr class="cart-subtotal">

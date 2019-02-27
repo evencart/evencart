@@ -55,7 +55,7 @@ namespace RoastedMarketplace.Controllers
                 {
                     var orderItemModel = _modelMapper.Map<OrderItemModel>(x);
                     orderItemModel.ProductName = x.Product.Name;
-                    orderItemModel.ImageUrl = _mediaAccountant.GetPictureUrl(x.Product.MediaItems.FirstOrDefault(),
+                    orderItemModel.ImageUrl = _mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(),
                         returnDefaultIfNotFound: true);
                     orderItemModel.AttributeText = _formatterService.FormatProductAttributes(x.AttributeJson);
                     orderItemModel.Price = _taxSettings.DisplayProductPricesWithoutTax

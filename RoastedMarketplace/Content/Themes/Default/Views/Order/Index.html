@@ -31,17 +31,25 @@
                 </div>
 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div>
                     <label>{{"Shipping Method" | t}}</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div>
                     <label>{{"Order Status" | t}}</label>
                 </div>
                 <div>
                     {{order.orderStatus}}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div>
+                    <label>{{"Payment Status" | t}}</label>
+                </div>
+                <div>
+                    {{order.paymentStatus}}
                 </div>
             </div>
             <div class="col-md-3">
@@ -119,14 +127,14 @@
             {% for orderItem in order.orderItems %}
             <div class="order-item row">
                 <div class="col-md-2">
-                    <img src="{{orderItem.imageUrl}}" />
+                    <img src="{{orderItem.imageUrl}}"/>
                 </div>
                 <div class="col-md-3">
                     <a href='{% route SingleProduct seName="{{orderItem.seName}}" %}'>
                         {{orderItem.productName}}
                     </a>
                     <div>
-                        {{orderItem.attributeText}}
+                        {{orderItem.attributeText | newLine2Br}}
                     </div>
                 </div>
                 <div class="col-md-3 ">
