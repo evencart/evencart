@@ -1,4 +1,5 @@
-﻿using DotLiquid;
+﻿using System;
+using DotLiquid;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Infrastructure.Localization;
 
@@ -20,6 +21,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Filters
         public static string WithCurrency(Context context, decimal input)
         {
             return input.ToCurrency();
+        }
+
+        public static string NewLine2Br(string input)
+        {
+            return input.Replace(Environment.NewLine, "<br/>");
         }
     }
 }
