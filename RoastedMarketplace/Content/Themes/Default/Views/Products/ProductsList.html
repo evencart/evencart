@@ -9,6 +9,7 @@
             </div>
         </div>
         <div class="col-lg-9">
+            {% partial "Common/Breadcrumb" %}
             <div class="row">
                 {% for product in products %}
                 {% partial "Products/_ProductBox" %}

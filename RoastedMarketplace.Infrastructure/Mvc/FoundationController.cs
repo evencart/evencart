@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Services.Events;
 using RoastedMarketplace.Infrastructure.Helpers;
+using RoastedMarketplace.Infrastructure.Mvc.Breadcrumbs;
 
 namespace RoastedMarketplace.Infrastructure.Mvc
 {
@@ -45,7 +46,29 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         {
             DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName.ToString(), eventData);
         }
-        
+
+        /// <summary>
+        /// Creates a breadcrumb node with the provided data
+        /// </summary>
+        [NonAction]
+        protected void SetBreadcrumbToUrl(string displayText, string url, string description = null, bool localize = true)
+        {
+            HttpContext.AppendToBreadcrumb(new BreadcrumbNode()
+            {
+                DisplayText = localize ? T(displayText, ApplicationEngine.CurrentLanguageCultureCode) : displayText,
+                Url = url,
+                Description = localize ? T(description, ApplicationEngine.CurrentLanguageCultureCode) : description
+            });
+        }
+
+        /// <summary>
+        /// Creates a breadcrumb node with the provided data
+        /// </summary>
+        [NonAction]
+        protected void SetBreadcrumbToRoute(string displayText, string routeName, object routeParams = null, string description = null, bool localize = true)
+        {
+           SetBreadcrumbToUrl(displayText, Url.RouteUrl(routeName, routeParams), description, localize);
+        }
     }
    
 }

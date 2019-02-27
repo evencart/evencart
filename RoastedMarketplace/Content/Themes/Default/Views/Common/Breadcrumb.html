@@ -1,0 +1,18 @@
+﻿{% if breadcrumb %}
+<div class="breadcrumb">
+    {% for b in breadcrumb %}
+    {% if forloop.last %}
+    <span class="active">
+        {{b.displayText}}
+    </span>
+    {% else %}
+    <a href="{{b.url}}" class="margin-r-10">
+        {{b.displayText}}
+    </a>
+    <span class="fa fa-angle-right margin-r-10"></span>
+    {% endif %}
+
+    {% endfor %}
+</div>
+
+{% endif %}

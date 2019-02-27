@@ -69,6 +69,12 @@ namespace RoastedMarketplace.Controllers
                     return orderItemModel;
                 })
                 .ToList();
+
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
+            SetBreadcrumbToRoute("Orders", RouteNames.AccountOrders);
+            SetBreadcrumbToRoute(order.OrderNumber, RouteNames.SingleOrder, new { orderGuid }, localize: false);
+
             return R.Success.With("order", model).Result;
         }
     }

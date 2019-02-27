@@ -7,6 +7,7 @@ using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
@@ -37,7 +38,8 @@ namespace RoastedMarketplace.Controllers
         private readonly IPriceAccountant _priceAccountant;
         private readonly TaxSettings _taxSettings;
         private readonly IReviewService _reviewService;
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService)
+        private readonly GeneralSettings _generalSettings;
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -51,6 +53,7 @@ namespace RoastedMarketplace.Controllers
             _priceAccountant = priceAccountant;
             _taxSettings = taxSettings;
             _reviewService = reviewService;
+            _generalSettings = generalSettings;
         }
 
         [DynamicRoute(Name = RouteNames.SingleProduct, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate))]
@@ -125,6 +128,14 @@ namespace RoastedMarketplace.Controllers
                 }
             }
 
+            //breadcrumbs
+            if (_generalSettings.EnableBreadcrumbs)
+            {
+                var categoryTree = _categoryService.GetFullCategoryTree();
+                var category = product.Categories.FirstOrDefault();
+                var currentCategoryFull = categoryTree.FirstOrDefault(x => x.Id == category?.Id);
+                BreadcrumbHelper.SetCategoryBreadcrumb(currentCategoryFull, categoryTree);
+            }
             SeoMetaModel seoMetaModel = null;
             if (product.SeoMeta != null)
             {
@@ -158,10 +169,13 @@ namespace RoastedMarketplace.Controllers
                 {
                     searchModel.CategoryId.Value
                 };
+                var fullCategoryTree = _categoryService.GetFullCategoryTree();
+                var currentCategory = fullCategoryTree.FirstOrDefault(x => x.Id == searchModel.CategoryId.Value);
+                //set breadcrumb
+                BreadcrumbHelper.SetCategoryBreadcrumb(currentCategory, fullCategoryTree);
+
                 if (_catalogSettings.DisplayProductsFromChildCategories)
                 {
-                    var fullCategoryTree = _categoryService.GetFullCategoryTree();
-                    var currentCategory = fullCategoryTree.FirstOrDefault(x => x.Id == searchModel.CategoryId.Value);
                     if (currentCategory != null)
                     {
                         var childIds = currentCategory.ChildCategories.SelectManyRecursive(x => x.ChildCategories).Select(x => x.Id);

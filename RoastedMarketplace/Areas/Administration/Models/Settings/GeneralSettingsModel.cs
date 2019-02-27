@@ -12,5 +12,7 @@ namespace RoastedMarketplace.Areas.Administration.Models.Settings
         public int LogoId { get; set; }
 
         public string LogoUrl => DependencyResolver.Resolve<IMediaAccountant>().GetPictureUrl(LogoId);
+
+        public bool EnableBreadcrumbs { get; set; }
     }
 }
