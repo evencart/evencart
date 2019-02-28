@@ -141,6 +141,11 @@ namespace RoastedMarketplace.Infrastructure
 
         public static string MapUrl(string path, bool isWebRootPath = true)
         {
+            if (path.StartsWith("~/"))
+            {
+                //relative to absolute
+                path = MapPath(path, isWebRootPath);
+            }
             // path = c:\\www\\Content\\...
             // content root = c:\\www
             var contentRootPath = isWebRootPath ? _hostingEnvironment.WebRootPath : _hostingEnvironment.ContentRootPath;
