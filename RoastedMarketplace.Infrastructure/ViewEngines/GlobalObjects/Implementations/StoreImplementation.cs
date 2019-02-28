@@ -11,5 +11,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementa
         public ThemeImplementation Theme { get; set; }
 
         public string LogoUrl { get; set; }
+
+        public string CurrentPage { get; set; }
     }
 }

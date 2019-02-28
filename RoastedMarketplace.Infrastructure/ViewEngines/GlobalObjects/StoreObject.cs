@@ -18,14 +18,15 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             }
             return new StoreImplementation()
             {
-                Url = "",
-                Name = "Store Name",
+                Url = generalSettings.StoreDomain,
+                Name = generalSettings.StoreName,
                 Theme = new ThemeImplementation()
                 {
                     Name = "Default",
                     Url = "/default"
                 },
-                LogoUrl = logoUrl
+                LogoUrl = logoUrl,
+                CurrentPage = ApplicationEngine.GetActiveRouteName()
             };
         }
     }
