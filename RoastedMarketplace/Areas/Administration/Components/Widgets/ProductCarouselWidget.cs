@@ -59,7 +59,15 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
                             mediaModel.Url = _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
                             return mediaModel;
                         })
-                        .ToList();
+                        .ToList() ?? new List<RoastedMarketplace.Models.Media.MediaModel>()
+                    {
+                        new RoastedMarketplace.Models.Media.MediaModel()
+                        {
+                            ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
+                                ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
+                            Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
+                        }
+                    };
                     //reviews
                     if (x.ReviewSummary != null)
                         model.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(x.ReviewSummary);
@@ -106,12 +114,14 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
                     })
                     .OrderBy(x => widgetSettings.ProductIds.IndexOf(x.Id))
                     .ToList();
-                return new {
+                return new
+                {
                     title = widgetSettings.Title,
                     products = productsModel
                 };
             }
-            return new {
+            return new
+            {
                 title = widgetSettings?.Title,
             };
         }

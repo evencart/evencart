@@ -135,7 +135,9 @@ namespace RoastedMarketplace.Controllers
                 var category = product.Categories.FirstOrDefault();
                 var currentCategoryFull = categoryTree.FirstOrDefault(x => x.Id == category?.Id);
                 BreadcrumbHelper.SetCategoryBreadcrumb(currentCategoryFull, categoryTree);
+                SetBreadcrumbToRoute(product.Name, RouteNames.SingleProduct, new {seName = product.SeoMeta.Slug}, localize: false);
             }
+
             SeoMetaModel seoMetaModel = null;
             if (product.SeoMeta != null)
             {
@@ -243,9 +245,19 @@ namespace RoastedMarketplace.Controllers
                 var mediaModel = _modelMapper.Map<MediaModel>(y);
                 mediaModel.ThumbnailUrl =
                     _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
-                mediaModel.Url = _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
+                mediaModel.Url = _mediaAccountant.GetPictureUrl(y, 0, 0, true);
                 return mediaModel;
-            }).ToList();
+            }).ToList() ?? new List<MediaModel>()
+            {
+                new MediaModel()
+                {
+                    ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
+                        ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
+                    Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
+
+                }
+            };
+
             productModel.Media = mediaModels;
             if (product.ProductAttributes != null)
             {

@@ -70,7 +70,7 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
         public string GetPictureUrl(Media picture, int width = 0, int height = 0, bool returnDefaultIfNotFound = false)
         {
             if(picture == null)
-                return returnDefaultIfNotFound ? ApplicationEngine.MapPath(ApplicationConfig.DefaultImagePath, true) : null;
+                return returnDefaultIfNotFound ? ApplicationEngine.MapUrl(ApplicationConfig.DefaultImagePath, true) : null;
 
             var serveFileDirectory = ApplicationEngine.MapPath(ApplicationConfig.MediaServeDirectory, true);
 
@@ -92,7 +92,7 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
             var originalFile = _localFileProvider.CombinePaths(mediaFileDirectory, picture.SystemName);
             //does the original file exist?
             if(!_localFileProvider.FileExists(originalFile))
-                return returnDefaultIfNotFound ? ApplicationEngine.MapPath(ApplicationConfig.DefaultImagePath, true) : null;
+                return returnDefaultIfNotFound ? ApplicationEngine.MapUrl(ApplicationConfig.DefaultImagePath, true) : null;
             //read original file
             var originalFileBytes = _localFileProvider.ReadBytes(originalFile);
             //resize the image
