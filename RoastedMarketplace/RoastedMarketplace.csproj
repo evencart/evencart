@@ -6,12 +6,16 @@
 
   <ItemGroup>
     <Compile Remove="Pages\**" />
+    <Compile Remove="Plugins\**" />
     <Compile Remove="wwwroot\administration\assets\lib\dist\**" />
     <Content Remove="Pages\**" />
+    <Content Remove="Plugins\**" />
     <Content Remove="wwwroot\administration\assets\lib\dist\**" />
     <EmbeddedResource Remove="Pages\**" />
+    <EmbeddedResource Remove="Plugins\**" />
     <EmbeddedResource Remove="wwwroot\administration\assets\lib\dist\**" />
     <None Remove="Pages\**" />
+    <None Remove="Plugins\**" />
     <None Remove="wwwroot\administration\assets\lib\dist\**" />
   </ItemGroup>
 
@@ -36,6 +40,8 @@
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Error\404.html" />
+    <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Home\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
@@ -88,6 +94,12 @@
     <Content Include="Content\Themes\Default\Views\ContentPages\Index.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Include="Content\Themes\Default\Views\Error\Index.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Error\404.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Home\Index.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -129,7 +141,6 @@
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
-    <Folder Include="Plugins\" />
     <Folder Include="Widgets\" />
   </ItemGroup>
 

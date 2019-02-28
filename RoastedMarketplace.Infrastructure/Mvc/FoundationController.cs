@@ -31,6 +31,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc
             return Content(content);
         }
 
+        [NonAction]
         public string T(string resource, string languageCultureCode = "en-US", params object[] arguments)
         {
             return LocalizationHelper.Localize(resource, languageCultureCode, arguments);

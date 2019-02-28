@@ -64,6 +64,8 @@ namespace RoastedMarketplace.Infrastructure
             {
                 app.UseDeveloperExceptionPage();
             }
+            //use response pages
+            app.UseStatusPages();
 
             app.UseStaticFiles();
 
@@ -98,10 +100,7 @@ namespace RoastedMarketplace.Infrastructure
             }
             //init database
             app.InitializeDatabase();
-
-            //use response pages
-            app.UseStatusPages();
-
+            
             //use authentication
             app.UseAppAuthentication();
 

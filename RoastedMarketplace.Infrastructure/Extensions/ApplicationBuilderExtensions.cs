@@ -31,6 +31,8 @@ namespace RoastedMarketplace.Infrastructure.Extensions
                     }
                 }
             });
+
+            app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
         }
 
         public static void UseAppAuthentication(this IApplicationBuilder app)
