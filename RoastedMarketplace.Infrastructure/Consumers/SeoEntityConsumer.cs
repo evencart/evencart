@@ -34,7 +34,7 @@ namespace RoastedMarketplace.Infrastructure.Consumers
             if (!(entity is ISeoEntity))
                 return;
             var name = typeof(T).Name;
-            var seoMeta = _seoMetaService.FirstOrDefault(x => x.Id == entity.Id && x.EntityName == name);
+            var seoMeta = _seoMetaService.FirstOrDefault(x => x.EntityId == entity.Id && x.EntityName == name);
             if(seoMeta != null)
                 _seoMetaService.Delete(seoMeta);
         }
