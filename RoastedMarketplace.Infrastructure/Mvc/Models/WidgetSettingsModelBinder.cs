@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Plugins;
@@ -70,16 +71,9 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Models
                 if (propertyValueProviderResult == ValueProviderResult.None)
                     continue;
                 bindingContext.ModelState.SetModelValue(property.Name ,valueProviderResult);
-                if (property.PropertyType == typeof(IList<int>))
-                    property.SetValue(settingsObject,
-                        propertyValueProviderResult.Values.Where(x => int.TryParse(x, out int result))
-                            .Select(x => int.Parse(x))
-                            .ToList());
-                else if (property.PropertyType == typeof(IList<string>))
-                    property.SetValue(settingsObject,
-                        propertyValueProviderResult.Values.ToList());
-                else
-                    property.SetValue(settingsObject, propertyValueProviderResult.FirstValue);
+                //convert property value to appropriate type
+                var typedValue = TypeConverter.CastPropertyValue(property, propertyValueProviderResult.FirstValue);
+                property.SetValue(settingsObject, typedValue);
             }
             bindingContext.Result = ModelBindingResult.Success(settingsObject);
             return Task.CompletedTask;
