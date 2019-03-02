@@ -1,0 +1,390 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Menu" active_menu="ProductsList" parent_active_menu="ProductsList" %}
+
+<div class="row menu-page">
+    <div class="col-md-3">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Custom Link" | t}}
+            </div>
+            <div class="panel-body">
+                <form id="form-url-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                {% control label text=@t"Name" for="name" %}
+                                {% control text name="name" placeholder=@t"e.g. About us" %}
+                            </div>
+                            <div class="form-group">
+                                {% control label text=@t"Url" for="url" %}
+                                {% control text name="url" placeholder=@t"e.g. http://www.roastedbytes.com" %}
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Link' | t}}" />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <div class="panel" id="categories-panel">
+            <div class="panel-title">
+                {{"Categories" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <form id="form-category-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    <div id="categories-container">
+
+                    </div>
+                    <div class="form-group text-center" style="padding: 10px 0;">
+                        <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Link(s)' | t}}" />
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="panel" id="pages-panel">
+            <div class="panel-title">
+                {{"Pages" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <form id="form-pages-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    <div id="pages-container">
+
+                    </div>
+                    <div class="form-group text-center" style="padding: 10px 0;">
+                        <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Link(s)' | t}}" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Group Item" | t}}
+            </div>
+            <div class="panel-body">
+                <form id="form-group-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                {% control label text=@t"Name" for="name" %}
+                                {% control text name="name" value="" placeholder=@t"e.g. New Items" %}
+                            </div>
+                            <div class="text-center">
+                                {% control hidden name="isGroup" value="true" %}
+                                <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Group' | t}}" />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Menu" | t}}
+                <button class="btn btn-sm btn-primary float-right" onclick="editMenu(0)">{{"Add new menu" | t}}</button>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>{{"Select Menu" | t}}</label>
+                    <select id="selected-menu" class="form-control">
+                        {% for menu in menus %}
+                        <option value="{{menu.id}}">
+                            {{menu.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="aMenuLevelUp" style="display: none; margin-bottom: 20px;" class="btn btn-sm btn-default">
+                        <i class="rbicon rbicon-chevron-left margin-r-5"></i>
+                        <span></span>
+                    </button>
+                    <table id="table-menu-items" class="table table-bordered table-hover"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-popup">
+</div>
+<script type="text/html" id="menu-item-template">
+    <tr class="menu_item_type-row">
+        <td>
+            <span class="rbicon rbicon-more-vertical"></span>
+            <span>menu_item_name</span>
+            <input type="hidden" name="menuItemModel[index].id" value="menu_item_id" data-type="id" />
+            <input type="hidden" name="menuItemModel[index].displayorder" value="category_displayorder" data-type="displayorder" />
+        </td>
+        <td style="width: 80px;" class="text-right">
+            <a class="list-link clickable" onclick="loadMenuItems(menu_item_id)">
+                <span class="rbicon-list"></span>
+            </a>
+            <a class="edit-link clickable" onclick="editMenuItem(this, menu_item_id)">
+                <span class="rbicon-edit"></span>
+            </a>
+            <a class="trash-link clickable" onclick="deleteMenuItem(this, menu_item_id)">
+                <span class="rbicon-trash-2"></span>
+            </a>
+        </td>
+    </tr>
+</script>
+<script type="text/javascript">
+    var editMenu = function(id) {
+        jQuery("#edit-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-popup",
+            true,
+            function(result, response) {
+                if (result == "ok") {
+                    notify("success", '{{"Menu was saved successfully" | t}}');
+                    jQuery("#selected-menu").append("<option value='" + response.menu.id + "'>" + response.menu.name + "</option>");
+                    jQuery("#selected-menu").val(response.menu.id);
+                    jQuery("#selected-menu").trigger("change");
+                }
+            });
+        var url = '{% route GetMenu menuId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var editMenuItem = function (link, menuItemId) {
+        var menuId = jQuery("#selected-menu").val();
+        jQuery("#edit-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    notify("success", '{{"Menu item was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetMenuItem menuId="%menuId%" menuItemId="%menuItemId%" %}'.replaceAll("%menuId%", menuId).replaceAll("%menuItemId%", menuItemId);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteMenuItem = function(link,id) {
+        confirm('{{"Are you sure you want to delete this menu item?" | t}}',
+            function() {
+                var url = '{% route api_DeleteMenuItem %}';
+                post({
+                    url: url,
+                    data: {
+                        menuItemId: id
+                    },
+                    done: function() {
+                        jQuery(link).closest("tr").remove();
+                    }
+                });
+            });
+    }
+    var renderCategory = function(allCategories, parentCategoryId, level) {
+        var categoryLine = "<ul>";
+        allCategories.forEach(function(c) {
+            if (c.parentCategoryId == parentCategoryId) {
+                categoryLine += "<li>";
+                categoryLine += "<label><input type='checkbox' class='margin-r-5' name='categoryIds[]' value='" + c.id + "'/>" + c.name + "</label>";
+                categoryLine += renderCategory(allCategories, c.id, level + 1);
+                categoryLine += "</li>";
+            }
+        });
+        categoryLine += "</ul>";
+        return categoryLine;
+    }
+
+    var renderPages = function (allPages) {
+        var pageLine = "<ul>";
+        allPages.forEach(function (c) {
+            pageLine += "<li>";
+            pageLine += "<label><input type='checkbox' class='margin-r-5' name='contentPageIds[]' value='" + c.id + "' />" + c.name + "</label>";
+            pageLine += "</li>";
+        });
+        pageLine += "</ul>";
+        return pageLine;
+    }
+
+    var allCategories = JSON.parse('{{categories}}');
+    if (allCategories.length == 0) {
+        jQuery("#categories-panel").hide();
+    } else
+        jQuery("#categories-container").html(renderCategory(allCategories, 0, 0));
+
+    var allPages = JSON.parse('{{pages}}');
+    if (allPages.length == 0)
+        jQuery("#pages-panel").hide();
+    else
+        jQuery("#pages-container").html(renderPages(allPages));
+
+    var loadMenuItems = function (parentMenuItemId) {
+        parentMenuItemId = parentMenuItemId || 0;
+        var menuId = jQuery("#selected-menu").val();
+        var url = '{% route api_MenuItemList menuId="%menuId%" parentMenuItemId="%parentMenuItemId%" %}'
+            .replace("%parentMenuItemId%", parentMenuItemId).replace("%menuId%", menuId);
+        jQuery("#table-menu-items").html("");
+        get({
+            url: url,
+            done: function(response) {
+                response.menuItems.forEach(function(mi) {
+                    appendMenuItem(mi);
+                });
+                displayOrderSortable({
+                    container: "table-categories",
+                    itemSelector: "tr",
+                    refresh: true
+                });
+                if (response.parentMenuItem) {
+                    jQuery("#aMenuLevelUp").show();
+                    jQuery("#aMenuLevelUp span").html(response.parentMenuItem.name);
+                    jQuery("#aMenuLevelUp").data("parentMenuItemId", response.parentMenuItem.id || 0);
+                    jQuery("#aMenuLevelUp").unbind("click");
+                    jQuery("#aMenuLevelUp").click(function () {
+                        var id = 0;
+                        if (response.grandParentMenuItem) {
+                            id = response.grandParentMenuItem.id;
+                        }
+                        loadMenuItems(id);
+                    });
+                } else {
+                    jQuery("#aMenuLevelUp").hide();
+                    jQuery("#aMenuLevelUp").data("parentMenuItemId", 0);
+                }
+            }
+        });
+    }
+
+    var appendMenuItem = function (menuItem) {
+        var template = jQuery("#menu-item-template").html();
+        template = template.replaceAll("menu_item_name", menuItem.name);
+        template = template.replaceAll("index", jQuery("#table-menu-items tr").length);
+        template = template.replaceAll("menu_item_displayorder", menuItem.displayOrder);
+        template = template.replaceAll("parent_menu_item_id", menuItem.parentMenuItemId);
+        template = template.replaceAll("menu_item_id", menuItem.id);
+        if (menuItem.isGroup) {
+            template = template.replaceAll("menu_item_type", "group");
+        } else {
+            template = template.replaceAll("menu_item_type", "regular");
+        }
+        jQuery("#table-menu-items").append(template);
+
+        //remove the child links for group menus
+        jQuery(".group-row .list-link").remove();
+    }
+
+    ready(function() {
+        initAjaxForm("form-category-bulk",
+            {
+                extraData: function() {
+                    return {
+                        menuId: jQuery("#selected-menu").val(),
+                        parentMenuItemId: jQuery("#aMenuLevelUp").data("parentMenuItemId")
+                    };
+                },
+                beforeSubmit: function(obj) {
+                    if (!jQuery("#selected-menu").val()) {
+                        alert('{{"Please select or create a menu to add links" | t}}');
+                        return false;
+                    }
+                    return true;
+                },
+                onSuccess: function () {
+                    notify("success", "{{'Menu link(s) saved successfully.' | t}}");
+                    loadMenuItems(jQuery("#aMenuLevelUp").data("parentMenuItemId"));
+                    jQuery("#form-category-bulk").trigger("reset");
+                }
+            });
+        initAjaxForm("form-url-bulk",
+            {
+                extraData: function() {
+                    return {
+                        menuId: jQuery("#selected-menu").val(),
+                        parentMenuItemId: jQuery("#aMenuLevelUp").data("parentMenuItemId")
+                    };
+                },
+                beforeSubmit: function (obj) {
+                    if (!jQuery("#selected-menu").val()) {
+                        alert('{{"Please select or create a menu to add link" | t}}');
+                        return false;
+                    }
+                    return true;
+                },
+                onSuccess: function () {
+                    notify("success", "{{'Menu link saved successfully.' | t}}");
+                    loadMenuItems(jQuery("#aMenuLevelUp").data("parentMenuItemId"));
+                    jQuery("#form-url-bulk").trigger("reset");
+                }
+            });
+        initAjaxForm("form-pages-bulk",
+            {
+                extraData: function() {
+                    return {
+                        menuId: jQuery("#selected-menu").val(),
+                        parentMenuItemId: jQuery("#aMenuLevelUp").data("parentMenuItemId")
+                    };
+                },
+                beforeSubmit: function (obj) {
+                    if (!jQuery("#selected-menu").val()) {
+                        alert('{{"Please select or create a menu to add links" | t}}');
+                        return false;
+                    }
+                    return true;
+                },
+                onSuccess: function () {
+                    notify("success", "{{'Menu link(s) saved successfully.' | t}}");
+                    loadMenuItems(jQuery("#aMenuLevelUp").data("parentMenuItemId"));
+                    jQuery("#form-pages-bulk").trigger("reset");
+                }
+            });
+        initAjaxForm("form-group-bulk",
+            {
+                extraData: function() {
+                    return {
+                        menuId: jQuery("#selected-menu").val(),
+                        parentMenuItemId: jQuery("#aMenuLevelUp").data("parentMenuItemId")
+                    };
+                },
+                beforeSubmit: function (obj) {
+                    if (!jQuery("#selected-menu").val()) {
+                        alert('{{"Please select or create a menu to add link" | t}}');
+                        return false;
+                    }
+                    return true;
+                },
+                onSuccess: function () {
+                    notify("success", "{{'Menu group saved successfully.' | t}}");
+                    loadMenuItems(jQuery("#aMenuLevelUp").data("parentMenuItemId"));
+                    jQuery("#form-url-bulk").trigger("reset");
+                }
+            });
+        jQuery("#selected-menu").change(function() {
+            loadMenuItems(0);
+        });
+        jQuery("#selected-menu").trigger("change");
+
+        displayOrderSortable({
+            container: "table-menu-items",
+            itemSelector: "tr",
+            update: function () {
+                post({
+                    url: '{% route api_UpdateMenuItemDisplayOrder menuId="%menuId%" %}'.replace("%menuId%", jQuery("#selected-menu").val()),
+                    data: jQuery("#table-menu-items input").serialize()
+                });
+            }
+        });
+    });
+</script>
+

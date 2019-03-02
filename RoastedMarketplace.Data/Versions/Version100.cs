@@ -4,6 +4,7 @@ using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Emails;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
+using RoastedMarketplace.Data.Entity.Navigation;
 using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Promotions;
@@ -127,6 +128,12 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentHistory>("Id", "ShipmentId"), transaction, true);
+
+            //menus
+            Db.CreateTable<Menu>(transaction);
+            Db.CreateTable<MenuItem>(transaction);
+            Db.CreateConstraint(Relation.Create<Menu, MenuItem>("Id", "MenuId"), transaction, true);
+
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
             Db.CreateTable<Log>(transaction);

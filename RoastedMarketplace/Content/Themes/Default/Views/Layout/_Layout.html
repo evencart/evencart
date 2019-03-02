@@ -81,33 +81,24 @@
                     </div>
                     <nav class="main-menu menu-right float-right">
                         <ul>
-                            <li class="active">
-                                <a href="index.html">Home</a>
-                            </li>
+                            {% for navigationItem in navigation %}
                             <li>
-                                <a href="Product.html">shop</a>
+                                <a href="{{navigationItem.url}}" class="{{navigationItem.css}}">
+                                    {{navigationItem.title}}
+                                </a>
+                                {% if navigationItem.children.size > 0 %}
                                 <ul class="sub-menu">
-                                    <li><a href="Product.html">Product</a></li>
-                                    <li><a href="Productdetails.html">Product details</a></li>
+                                    {% for childNavigationItem in navigationItem.children %}
+                                    <li>
+                                        <a href="{{childNavigationItem.url}}" class="{{childNavigationItem.css}}">
+                                            {{childNavigationItem.title}}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
                                 </ul>
+                                {% endif %}
                             </li>
-                            <li>
-                                <a href="#">Pages</a>
-                                <ul class="sub-menu">
-                                    <li><a href="cart.html">cart</a></li>
-                                    <li><a href="checkoutpage.html">Checkout</a></li>
-                                    <li><a href="Loginpage.html">login</a></li>
-                                    <li><a href="register.html">REgister</a></li>
-                                    <li><a href="Loginpage.html">wishlist</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="blog.html">Blog</a>
-                                <ul class="sub-menu">
-                                    <li><a href="blog.html">blog</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="contact.html">Contact</a></li>
+                            {% endfor %}
                         </ul>
                     </nav>
                 </div>

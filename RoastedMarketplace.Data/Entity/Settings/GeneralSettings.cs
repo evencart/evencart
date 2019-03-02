@@ -22,5 +22,7 @@ namespace RoastedMarketplace.Data.Entity.Settings
         public string StoreName { get; set; }
 
         public bool EnableBreadcrumbs { get; set; }
+
+        public int PrimaryNavigationId { get; set; }
     }
 }

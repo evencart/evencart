@@ -24,5 +24,11 @@
         <div class="form-group">
             {% control checkbox name="enableBreadcrumbs" text=@t"Enable breadcrumbs" value="{{settings.enableBreadcrumbs}}"%}
         </div>
+        {% if availableMenus.size > 0 %}
+        <div class="form-group">
+            {% control label text=@t"Primary Site Navigation" for="primaryNavigationId" %}
+            {% control select name="primaryNavigationId" value="settings.primaryNavigationId" items="availableMenus" %}
+        </div>
+        {% endif %}
     </div>
 </div>

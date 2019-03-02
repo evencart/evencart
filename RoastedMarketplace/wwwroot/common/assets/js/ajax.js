@@ -24,6 +24,10 @@
                 var object = jQuery(form).serializeObject();
                 //add additional parameters
                 object = jQuery.extend(object, options.extraData);
+                if (options.beforeSubmit) {
+                    if (!options.beforeSubmit(object))
+                        return;
+                }
                 var method = jQuery(form).attr("method") || "post";
                 var action = jQuery(form).attr("action") || window.location.href;
 

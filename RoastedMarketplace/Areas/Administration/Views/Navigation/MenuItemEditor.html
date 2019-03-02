@@ -1,0 +1,57 @@
+﻿<form action='{% route api_SaveMenuItem menuId="{{menuItem.menuId}}" %}' method="post" id="menu-item-editor-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Menu Item Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Name" for="name" %}
+                        {% control text name="name" value="{{menuItem.name}}" %}
+                    </div>
+                    {% if menuItem.isGroup == "false" %}
+                        <div class="form-group">
+                            {% control label text=@t"Css" for="css" %}
+                            {% control text name="cssClass" value="{{menuItem.cssClass}}" %}
+                        </div>
+                        {% if menuItem.seoMetaId > 0 %}
+                        <div class="form-group">
+                            {% control label text=@t"Linked Url" for="linked" %}
+                            <a href="{{menuItem.url}}" target="_blank">{{menuItem.seoMetaTargetName}}</a>
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            {% control label text=@t"Url" for="url" %}
+                            {% control text name="url" value="{{menuItem.url}}" %}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{menuItem.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Menu Item" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("menu-item-editor-form",
+        {
+            onSuccess: function() {
+                hidePopup("edit-popup");
+            }
+        });
+
+</script>

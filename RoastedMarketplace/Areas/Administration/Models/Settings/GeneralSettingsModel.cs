@@ -16,5 +16,7 @@ namespace RoastedMarketplace.Areas.Administration.Models.Settings
         public string LogoUrl => DependencyResolver.Resolve<IMediaAccountant>().GetPictureUrl(LogoId);
 
         public bool EnableBreadcrumbs { get; set; }
+
+        public int PrimaryNavigationId { get; set; }
     }
 }

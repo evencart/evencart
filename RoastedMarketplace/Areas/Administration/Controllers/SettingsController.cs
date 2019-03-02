@@ -11,6 +11,7 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Services.Navigation;
 using RoastedMarketplace.Services.Settings;
 using RoastedMarketplace.Services.Taxes;
 
@@ -122,7 +123,11 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 case "general":
                     settings = DependencyResolver.Resolve<GeneralSettings>();
                     model = _modelMapper.Map<GeneralSettingsModel>(settings);
+                    var menuService = DependencyResolver.Resolve<IMenuService>();
+                    var menus = menuService.Get(x => true).ToList();
+                    var menuSelectList = SelectListHelper.GetSelectItemList(menus, x => x.Id, x => x.Name);
                     result.WithTimezones();
+                    result.With("availableMenus", menuSelectList);
                     break;
                 case "order":
                     settings = DependencyResolver.Resolve<OrderSettings>();

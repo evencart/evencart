@@ -164,5 +164,16 @@
         public const string GetState = "GetState";
         public const string SaveState = "SaveState";
         public const string DeleteState = "DeleteState";
+
+        public const string MenuList = "MenuList";
+        public const string GetMenu = "GetMenu";
+        public const string SaveMenu = "SaveMenu";
+        public const string DeleteMenu = "DeleteMenu";
+        public const string MenuItemList = "MenuItemList";
+        public const string GetMenuItem = "GetMenuItem";
+        public const string SaveMenuItem = "SaveMenuItem";
+        public const string DeleteMenuItem = "DeleteMenuItem";
+        public const string UpdateMenuItemDisplayOrder = "UpdateMenuItemDisplayOrder";
+        public const string BulkCreateMenuItems = "BulkCreateMenuItems";
     }
 }

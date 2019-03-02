@@ -542,5 +542,23 @@ table.table-borderless {
   border: solid 1px #ddd;
   padding: 10px;
   margin: 5px 0;
-  background-color: #eee; }
+  background-color: #eee;
+  cursor: grab; }
 
+.menu-page #categories-container, .menu-page #pages-container {
+  max-height: 250px;
+  overflow: auto;
+  border-bottom: solid 1px #eee;
+  padding: 20px;
+  margin-top: 0; }
+  .menu-page #categories-container ul, .menu-page #pages-container ul {
+    margin-left: 15px;
+    padding: 0; }
+    .menu-page #categories-container ul li, .menu-page #pages-container ul li {
+      list-style: none; }
+
+.disabled * {
+  pointer-events: none;
+  /* for "disabled" effect */
+  opacity: 0.5;
+  background: #CCC; }

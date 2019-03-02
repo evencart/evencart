@@ -32,13 +32,14 @@ $node-meta-color: #999;
 .no-margin {
     margin: 0px !important;
 }
-.no-border
-{
-    border:none!important;
+
+.no-border {
+    border: none !important;
 }
+
 body {
     letter-spacing: 0.02rem;
-    font-size:0.9rem;
+    font-size: 0.9rem;
 }
 
 
@@ -733,4 +734,33 @@ table.table-borderless {
     padding: 10px;
     margin: 5px 0;
     background-color: #eee;
+    cursor: grab;
+}
+
+.menu-page {
+    #categories-container, #pages-container {
+        max-height: 250px;
+        overflow: auto;
+        border-bottom: solid 1px #eee;
+        padding: 20px;
+        margin-top: 0;
+
+        ul {
+            margin-left: 15px;
+            padding: 0;
+
+            li {
+                list-style: none;
+            }
+        }
+    }
+}
+
+.disabled {
+    * {
+        pointer-events: none;
+        /* for "disabled" effect */
+        opacity: 0.5;
+        background: #CCC;
+    }
 }
