@@ -20,7 +20,7 @@
                                     {{"Add to zone" | t}}
                                 </button>
                                 <div class="dropdown-menu">
-                                    {% if widget.widgetZones.size > 1 %}
+                                    {% if widget.widgetZones.size > 0 %}
                                     {% for zone in widget.widgetZones %}
                                     <a class="dropdown-item clickable" onclick="addWidgetToZone('{{widget.pluginSystemName}}', '{{widget.widgetSystemName}}', '{{zone}}')">{{zone}}</a>
                                     {% endfor %}

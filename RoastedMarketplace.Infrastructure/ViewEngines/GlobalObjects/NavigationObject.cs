@@ -24,7 +24,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             return GetNavigationImpl(menu.MenuItems, 0);
         }
 
-        private IList<NavigationImplementation> GetNavigationImpl(IList<MenuItem> menuItems, int parentMenuItemId)
+        ///Making this method static so we can use the same method in MenuWidget.
+        /// todo: is there a better way of doing this? may be move this to a helper function
+        public static IList<NavigationImplementation> GetNavigationImpl(IList<MenuItem> menuItems, int parentMenuItemId)
         {
             if (menuItems == null)
                 return null;

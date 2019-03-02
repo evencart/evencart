@@ -1,0 +1,6 @@
+﻿<h5 class="widget-title">{{title}}</h5>
+<ul>
+    {% for w in widgetNavigation %}
+    <li><a href="{{w.url}}">{{w.title}}</a></li>
+    {% endfor %}
+</ul>

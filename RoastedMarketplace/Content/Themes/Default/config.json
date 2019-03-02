@@ -11,7 +11,11 @@
   "productPageImageSize": "385x500",
   "productPageThumbnailImageSize": "75x75",
   "cartItemImageSize": "75x75",
-  "widgetZones" : {
-    "slider":  "Home Page Slider" 
+  "widgetZones": {
+    "slider": "Home Page Slider",
+    "footer-one": "Footer Column One",
+    "footer-two": "Footer Column Two",
+    "footer-three": "Footer Column Three",
+    "footer-four":  "Footer Column Four" 
   } 
 }

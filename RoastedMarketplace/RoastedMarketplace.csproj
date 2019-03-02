@@ -37,6 +37,7 @@
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\Menu\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
@@ -83,6 +84,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CustomHtml\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\Menu\Default.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\PriceFilter\Default.html">
