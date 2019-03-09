@@ -1,4 +1,5 @@
 ﻿if (!window.initialized) {
+   
     var root = "https://localhost:44387";
     var useHash = false; // Defaults to: false
     var hash = '#!'; // Defaults to: '#'
@@ -7,6 +8,7 @@
     var api = "api";
     window.templates = window.templates || [];
     window.contexts = window.contexts || [];
+    window.routes = window.routes || [];
     var useContext = function (context, url) {
         if (!window.contexts.hasOwnProperty(context)) {
             //download the routes
@@ -30,6 +32,7 @@
                         }
                         router.on(routeCollection);
                         window.contexts[context] = true;
+                        window.routes = window.routes.concat(router._routes);
                     }
                 }
             });
@@ -41,11 +44,10 @@
             true,
             null,
             function (t) {
+              
                 var newDoc = document.open("text/html", "replace");
                 newDoc.write(t);
                 newDoc.close();
-
-                setupLinks();
             },
             function () {
                 //full reload if any error occured
@@ -57,10 +59,11 @@
 }
 
 var getApiUrl = function (url) {
-    return url.replace("/admin", "/admin/" + api);;
+    return url.replace("/admin", "/admin/" + api);
 }
 var setupLinks = function () {
     ready(function () {
+        router._routes = window.routes;
         jQuery("a").on("click",
             function (e) {
                 var linkHostName = jQuery(this).prop("hostname");
@@ -68,27 +71,32 @@ var setupLinks = function () {
                     return;
                 }
                 var href = jQuery(this).attr("href");
-                if (href)
+                if (href) {
+                    e.preventDefault();
                     navigate(href, href.startsWith("http://") || href.startsWith("https://"));
-
+                }
+                
             });
         window.onpopstate = function (event) {
             navigate(document.location.pathname, null, true);
         };
     });
-}
+};
+
 setupLinks();
 
 function navigate(url, absolute, skipHistory) {
     //if we have a route, we'll navigate, else we reload
     if (router.helpers.match(url, router._routes)) {
         router.navigate(url, absolute, skipHistory);
-    } else
+
+    } else {
         window.location.href = url;
+    }
 
 }
 /**
- * Loads a page from cache or gets from url ange caches
+ * Loads a page from cache or gets from url caches
  */
 function loadPage(url, fallbackToApi, data, done, fail) {
     if (window.templates.hasOwnProperty(url)) {
