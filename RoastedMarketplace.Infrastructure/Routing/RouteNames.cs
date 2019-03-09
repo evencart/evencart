@@ -16,6 +16,7 @@
         public const string SingleProduct = "SingleProduct";
         public const string SinglePage = "SinglePage";
         public const string ProductsPage = "ProductsPage";
+        public const string ProductsSearchPage = "ProductsSearchPage";
         public const string AddToCart = "AddToCart";
         public const string UpdateCart = "UpdateCart";
         public const string DeleteFromCart = "DeleteFromCart";

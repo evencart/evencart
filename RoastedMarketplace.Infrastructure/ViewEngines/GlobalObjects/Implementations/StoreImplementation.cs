@@ -1,4 +1,6 @@
-﻿using RoastedMarketplace.Infrastructure.Mvc.Models;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using RoastedMarketplace.Infrastructure.Mvc.Models;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementations
 {
@@ -13,5 +15,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementa
         public string LogoUrl { get; set; }
 
         public string CurrentPage { get; set; }
+
+        public IList<SelectListItem> Categories { get; set; }
     }
 }

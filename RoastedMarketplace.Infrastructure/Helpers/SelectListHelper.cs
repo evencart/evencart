@@ -13,6 +13,7 @@ using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Services.Addresses;
 using RoastedMarketplace.Services.Emails;
 
@@ -20,7 +21,7 @@ namespace RoastedMarketplace.Infrastructure.Helpers
 {
     public static class SelectListHelper
     {
-        public static List<SelectListItem> GetSelectItemList<T, TIdProperty, TTextProperty>(IList<T> entities, Expression<Func<T, TIdProperty>> idPropertyExpression, Expression<Func<T, TTextProperty>> textPropertyExpression)
+        public static List<SelectListItem> GetSelectItemList<T, TIdProperty, TTextProperty>(IList<T> entities, Expression<Func<T, TIdProperty>> idPropertyExpression, Expression<Func<T, TTextProperty>> textPropertyExpression, string selectorItem = null)
         {
 
             var tType = typeof(T);
@@ -51,6 +52,14 @@ namespace RoastedMarketplace.Infrastructure.Helpers
                     Value = idValue,
                     Text = textValue
                 });
+            }
+
+            if (!selectorItem.IsNullEmptyOrWhiteSpace())
+            {
+                var propertyInfo = (PropertyInfo) idMemberExpression.Member;
+                var propertyType = propertyInfo.PropertyType;
+                var defaultValue = propertyType == typeof(int) ? "0" : "";
+                selectList.Insert(0, new SelectListItem(selectorItem, defaultValue, true));
             }
             return selectList;
         }

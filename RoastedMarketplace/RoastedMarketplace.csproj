@@ -52,8 +52,8 @@
     <None Remove="Content\Themes\Default\Views\Products\_RatingStars.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\ReviewsList.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\_ReviewSummary.html" />
-    <None Remove="Views\Authentication\Login.html" />
-    <None Remove="Views\Authentication\Product - Copy.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\Login.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\Product - Copy.html" />
     <None Remove="Views\_Layout.liquid" />
   </ItemGroup>
 
@@ -131,7 +131,7 @@
     <Content Include="Content\Themes\Default\Views\Reviews\ReviewsList.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Include="Views\Authentication\Login.html">
+    <Content Include="Content\Themes\Default\Views\Authentication\Login.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Views\Layout\_Layout.html">

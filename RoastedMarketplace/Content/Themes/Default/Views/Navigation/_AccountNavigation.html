@@ -1,0 +1,23 @@
+﻿<ul>
+    <li>
+        <a href="{% route AccountProfile %}" class='{% if active_menu == "AccountProfile" %}active{% endif %}'>{{"Profile Information" | t}}</a>
+    </li>
+    <li>
+        <a href="{% route AccountAddresses %}" class='{% if active_menu == "AccountAddresses" %}active{% endif %}'>{{"Saved Addresses" | t}}</a>
+    </li>
+    <li>
+        <a href="{% route AccountOrders %}" class='{% if active_menu == "AccountOrders" %}active{% endif %}'>{{"Orders" | t}}</a>
+    </li>
+    <li>
+        <a href="{% route AccountWishlist %}" class='{% if active_menu == "AccountWishlist" %}active{% endif %}'>{{"Wishlist" | t}}</a>
+    </li>
+    <li>
+        <a href="{% route AccountReviews %}" class='{% if active_menu == "AccountReviews" %}active{% endif %}'>{{"Review Center" | t}}</a>
+    </li>
+    {% if withSignout %}
+    <li>
+        <a href="{% route AccountReviews %}" class='{% if active_menu == "AccountReviews" %}active{% endif %}'>{{"Signout" | t}}</a>
+    </li>
+    {% assign withSignout=false %}
+    {% endif %}
+</ul>

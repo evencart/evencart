@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc.Components;
@@ -50,9 +51,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
                 //merge models
                 MergeModel(parameters, model, componentName, componentIndexOnPage++, out string assignString);
-
-                //add keyvaluepairs as meta
-                readFile.AddMeta(componentName, keyValuePairs, nameof(ComponentExpander));
+                if (!WebHelper.IsAjaxRequest(ApplicationEngine.CurrentHttpContext.Request))
+                    //add keyvaluepairs as meta
+                    readFile.AddMeta(componentName, keyValuePairs, nameof(ComponentExpander));
                 var match = componentMatch.Result("$0");
                 //replace only first occurance of the pattern result
                 readFile.Content = readFile.Content.ReplaceFirstOccurance(match, assignString + componentContent);

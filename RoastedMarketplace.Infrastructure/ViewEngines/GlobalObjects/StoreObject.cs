@@ -1,7 +1,10 @@
-﻿using RoastedMarketplace.Core.Infrastructure;
+﻿using System.Linq;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementations;
+using RoastedMarketplace.Services.Products;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
 {
@@ -11,11 +14,16 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
         {
             var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
+            var categoryService = DependencyResolver.Resolve<ICategoryService>();
+            var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
             var logoUrl = "";
             if (generalSettings.LogoId > 0)
             {
                 logoUrl = mediaAccountant.GetPictureUrl(generalSettings.LogoId);
             }
+
+            var categoryDefaultName =
+                LocalizationHelper.Localize("All Categories", ApplicationEngine.CurrentLanguageCultureCode);
             return new StoreImplementation()
             {
                 Url = generalSettings.StoreDomain,
@@ -26,7 +34,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                     Url = "/default"
                 },
                 LogoUrl = logoUrl,
-                CurrentPage = ApplicationEngine.GetActiveRouteName()
+                CurrentPage = ApplicationEngine.GetActiveRouteName(),
+                Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName)
             };
         }
     }

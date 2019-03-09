@@ -1,21 +1,23 @@
 ﻿{% layout "_Layout" ignoreForAjax="true" %}
-<div class="container" id="product-list-container">
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="product-filters">
-                {% component "CategoryFilter" model="@params" %}
-                {% component "AttributeFilter" model="@params" %}
-                {% component "PriceFilter" model="@params" %}
+<div class="wrapper">
+    <div class="container" id="product-list-container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="product-filters">
+                    {% component "CategoryFilter" model="@params" %}
+                    {% component "AttributeFilter" model="@params" %}
+                    {% component "PriceFilter" model="@params" %}
+                </div>
             </div>
-        </div>
-        <div class="col-lg-9">
-            {% partial "Common/Breadcrumb" %}
-            <div class="row">
-                {% for product in products %}
-                {% partial "Products/_ProductBox" %}
-                {% endfor %}
+            <div class="col-lg-9">
+                {% partial "Common/Breadcrumb" %}
+                <div class="row">
+                    {% for product in products %}
+                    {% partial "Products/_ProductBox" %}
+                    {% endfor %}
+                </div>
+
             </div>
-            
         </div>
     </div>
 </div>

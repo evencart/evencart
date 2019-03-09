@@ -1,283 +1,296 @@
 ﻿{% layout "_RootLayout" %}
 
 <!-- Body main wrapper start -->
-<div class="wrapper">
-<!-- START HEADER SECTION -->
-<header class="header-section section">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <!-- logo -->
-                <div class="header-logo float-left">
-                    <a href="/"><img src="{{store.logoUrl}}" alt="main logo"></a>
+<div class="outer-wrapper">
+    <!-- START HEADER SECTION -->
+    <header class="header-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-xs-12">
+                    <!-- logo -->
+                    <div class="header-logo float-left">
+                        <a href="/"><img src="{{store.logoUrl}}" alt="main logo"></a>
+                    </div>
                 </div>
-                <!-- header-search & total-cart -->
-                <div class="float-right">
-                    <div class="header-option-btns float-right">
-                        <!-- header-search -->
-                        <div class="header-search float-left">
-                            <button class="search-toggle" data-toggle="dropdown"><i class="fa fa-search" aria-hidden="true"></i></button>
-                            <div class="dropdown-menu header-search-form">
-                                <form action="#">
-                                    <input type="text" placeholder="Search">
-                                    <button><i class="fa fa-long-arrow-right"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- header Account -->
-                        <div class="header-account float-left">
-                            <ul>
-                                <li>
-                                    <a href="#" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="login.html">Log in</a></li>
-                                        <li><a href="register.html">Register</a></li>
-                                        <li><a href="#">My Account</a></li>
-                                        <li><a href="wishlist.html">Wish list</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- Header Cart -->
-                        <div class="header-cart float-left">
-                            <!-- Cart Toggle -->
-                            <a class="cart-toggle" href="{% route Cart %}" data-toggle="dropdown">
-                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                {% if cart.totalItems > 0 %}
-                                <span>{{cart.totalItems}}</span>
-                                {% endif %}
-                            </a>
-                            <!-- Mini Cart Brief -->
-                            <div class="mini-cart-brief dropdown-menu text-left">
-                                <!-- Cart Products -->
-                                <div class="all-cart-product clearfix">
-                                    {% for cartItem in cart.items %}
-                                    <div class="single-cart clearfix">
-                                        <div class="cart-image">
-                                            <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'><img src="{{cartItem.imageUrl}}" alt=""></a>
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="global-search">
+                        <form method="get" action="{% route ProductsSearchPage %}">
+                            <input type="text" name="search" placeholder="Search products or brands" />
+                            <button type="submit">
+                                {{"Search" | t}}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-5 col-xs-12">
+
+                    <!-- header-search & total-cart -->
+                    <div class="float-right">
+                        <div class="header-option-btns float-right">
+                            <!-- header Account -->
+                            <div class="header-account float-left">
+                                
+                                {% if currentUser.isVisitor %}
+                                <div class="user-menu dropdown">
+                                  
+                                    <a href="{% route AccountProfile %}" aria-haspopup="true" aria-expanded="false">
+                                        <div class="user-info">
+                                            <span class="user-name margin-r-5"> {{"My Account" | t}}</span>
+                                            <i class="fa fa-angle-down"></i>
                                         </div>
-                                        <div class="cart-info">
-                                            <h5><a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a></h5>
-                                            <p>
-                                                {{cartItem.attributeText}}
-                                            </p>
-                                            <p>{{cartItem.quantity}} x {{cartItem.price}}</p>
-                                            <a href="#" class="cart-delete" title="Remove this item"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div class="user-menu dropdown">
+                                    <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div class="user-info">
+                                            <span class="user-name margin-r-5"> {{currentUser.firstName}}</span>
+                                            <i class="fa fa-angle-down"></i>
                                         </div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {%- assign withSignout=true -%}
+                                        {% partial "Navigation/_AccountNavigation" %}
                                     </div>
-                                    {% endfor %}
                                 </div>
-                                <!-- Cart Total -->
-                                <div class="cart-totals">
-                                    <h5>Total <span>{{cart.subTotal}}</span></h5>
-                                </div>
-                                <!-- Cart Button -->
-                                <div class="cart-bottom  clearfix">
-                                    <a href="{% route Cart %}">Check out</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <nav class="main-menu menu-right float-right">
-                        <ul>
-                            {% for navigationItem in navigation %}
-                            <li>
-                                <a href="{{navigationItem.url}}" class="{{navigationItem.css}}">
-                                    {{navigationItem.title}}
-                                </a>
-                                {% if navigationItem.children.size > 0 %}
-                                <ul class="sub-menu">
-                                    {% for childNavigationItem in navigationItem.children %}
-                                    <li>
-                                        <a href="{{childNavigationItem.url}}" class="{{childNavigationItem.css}}">
-                                            {{childNavigationItem.title}}
-                                        </a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
                                 {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </nav>
-                </div>
-                <div class="mobile-menu"></div>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- END HEADER SECTION -->
-<!-- MAIN SECTION START -->
-<div class="section">
-    {% bodyContent %}
-</div>
-<!-- MAIN SECTION END -->
-<!-- NEWSLETTER SECTION START -->
-<div class="sunscribe-section section pb-120">
-    <div class="container">
-        <div class="row">
-            <!-- Subscribe Title -->
-            <div class="sunscribe-title text-center col-xs-12 mb-50">
-                <h4>SUBSCRIBE TO NEWSLETTER</h4>
-                <p>There are many variations of passages of Lor available, but the majority have suffered alteration in some form, by injected humour, or randomised words</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
-                <!-- Subscribe Form -->
-                <form id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="section-sunscribe-form validate" target="_blank" novalidate>
-                    <div id="mc_embed_signup_scroll">
-                        <label for="mce-EMAIL" class="hidden">Subscribe to our mailing list</label>
-                        <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email Address" required>
-                        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                        <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
-                        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- NEWSLETTER SECTION END -->
-<!-- QUICK VIEW MODAL START-->
-<div id="quickViewModal" class="modal fade">
-    <div class="container">
-        <div class="modal-content row">
-            <div class="modal-body">
-                <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <!-- QuickView Product Images -->
-                <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
-                    <!-- Tab panes -->
-                    <div class="tab-content mb-10">
-                        <div class="pro-large-img tab-pane active" id="pro-large-img-1">
-                        </div>
-                        <div class="pro-large-img tab-pane" id="pro-large-img-2">
-                        </div>
-                        <div class="pro-large-img tab-pane" id="pro-large-img-3">
-                        </div>
-                        <div class="pro-large-img tab-pane" id="pro-large-img-4">
-                        </div>
-                        <div class="pro-large-img tab-pane" id="pro-large-img-5">
-                        </div>
-                    </div>
-                    <!-- QuickView Product Thumbnail Slider -->
-                    <div class="pro-thumb-img-slider">
-                        <!--<div><a href="#pro-large-img-1" data-toggle="tab"><img src="img/product/10.jpg" alt="" /></a></div>
-                        <div><a href="#pro-large-img-2" data-toggle="tab"><img src="img/product/11.jpg" alt="" /></a></div>
-                        <div><a href="#pro-large-img-3" data-toggle="tab"><img src="img/product/12.jpg" alt="" /></a></div>
-                        <div><a href="#pro-large-img-4" data-toggle="tab"><img src="img/product/13.jpg" alt="" /></a></div>
-                        <div><a href="#pro-large-img-5" data-toggle="tab"><img src="img/product/14.jpg" alt="" /></a></div>-->
-                    </div>
-                </div>
-                <!-- QuickView Product Details -->
-                <div class="col-md-7 col-sm-6 col-xs-12 mb-40">
-                    <div class="product-details section">
-                        <!-- Title -->
-                        <h1 class="title">Folwer Vase</h1>
-                        <!-- Price Ratting -->
-                        <div class="price-ratting section">
-                            <!-- Price -->
-                            <span class="price float-left"><span class="new">€ 120.00</span></span>
-                            <!-- Ratting -->
-                            <span class="ratting float-right">
-                                <i class="fa fa-star active"></i>
-                                <i class="fa fa-star active"></i>
-                                <i class="fa fa-star active"></i>
-                                <i class="fa fa-star active"></i>
-                                <i class="fa fa-star active"></i>
-                                <span> (01 Customer Review)</span>
-                            </span>
-                        </div>
-                        <!-- Short Description -->
-                        <div class="short-desc section">
-                            <h5 class="pd-sub-title">Quick Overview</h5>
-                            <p>There are many variations of passages of Lorem Ipsum avaable, b majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. make an ami jani na.</p>
-                        </div>
-                        <!-- Product Size -->
-                        <div class="product-size section">
-                            <h5 class="pd-sub-title">Select Size</h5>
-                            <button>s</button>
-                            <button class="active">m</button>
-                            <button>x</button>
-                            <button>xl</button>
-                        </div>
-                        <!-- Product Color -->
-                        <div class="color-list section">
-                            <h5 class="pd-sub-title">Select Color</h5>
-                            <button class="active" style="background-color: #51bd99;"><i class="fa fa-check"></i></button>
-                            <button style="background-color: #ff7a5f;"><i class="fa fa-check"></i></button>
-                            <button style="background-color: #baa6c2;"><i class="fa fa-check"></i></button>
-                            <button style="background-color: #414141;"><i class="fa fa-check"></i></button>
-                        </div>
-                        <!-- Quantity Cart -->
-                        <div class="quantity-cart section">
-                            <div class="product-quantity">
-                                <input type="text" value="0">
+
+
                             </div>
-                            <button class="add-to-cart">add to cart</button>
+                            <!-- Header Cart -->
+                            <div class="header-cart float-left">
+                                <!-- Cart Toggle -->
+                                <a class="cart-toggle" href="{% route Cart %}" data-toggle="dropdown">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    {% if cart.totalItems > 0 %}
+                                    <span>{{cart.totalItems}}</span>
+                                    {% endif %}
+                                </a>
+                                <!-- Mini Cart Brief -->
+                                <div class="mini-cart-brief dropdown-menu text-left">
+                                    {% if cart.items.size > 0 %}
+                                    <!-- Cart Products -->
+                                    <div class="all-cart-product clearfix">
+                                        {% for cartItem in cart.items %}
+                                        <div class="single-cart clearfix">
+                                            <div class="cart-image">
+                                                <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'><img src="{{cartItem.imageUrl}}" alt=""></a>
+                                            </div>
+                                            <div class="cart-info">
+                                                <h5><a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a></h5>
+                                                <p>
+                                                    {{cartItem.attributeText}}
+                                                </p>
+                                                <p>{{cartItem.quantity}} x {{cartItem.price}}</p>
+                                                <a href="#" class="cart-delete" title="Remove this item"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Cart Total -->
+                                    <div class="cart-totals">
+                                        <h5>Total <span>{{cart.subTotal}}</span></h5>
+                                    </div>
+                                    <!-- Cart Button -->
+                                    <div class="cart-bottom  clearfix">
+                                        <a href="{% route Cart %}">Check out</a>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center">
+                                        <div>
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </div>
+                                        {{"Your shopping cart is empty" | t}}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-                        <!-- Usefull Link -->
-                        <ul class="usefull-link section">
-                            <li><a href="#"><i class="pe-7s-mail"></i> Email to a Friend</a></li>
-                            <li><a href="#"><i class="pe-7s-like"></i> Wishlist</a></li>
-                            <li><a href="#"><i class="pe-7s-print"></i> print</a></li>
-                        </ul>
-                        <!-- Share -->
-                        <div class="share-icons section">
-                            <span>share :</span>
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
+
+                    </div>
+                    <div class="mobile-menu"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- END HEADER SECTION -->
+    <nav class="main-menu">
+        <ul>
+            {% for navigationItem in navigation %}
+            <li>
+                <a href="{{navigationItem.url}}" class="{{navigationItem.css}}">
+                    {{navigationItem.title}}
+                </a>
+                {% if navigationItem.children.size > 0 %}
+                <ul class="sub-menu">
+                    {% for childNavigationItem in navigationItem.children %}
+                    <li>
+                        <a href="{{childNavigationItem.url}}" class="{{childNavigationItem.css}}">
+                            {{childNavigationItem.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+    </nav>
+    <!-- MAIN SECTION START -->
+    <div class="section">
+        {% bodyContent %}
+    </div>
+    <!-- MAIN SECTION END -->
+    <!-- NEWSLETTER SECTION START -->
+    <div class="sunscribe-section section pb-120">
+        <div class="container">
+            <div class="row">
+                <!-- Subscribe Title -->
+                <div class="sunscribe-title text-center col-xs-12 mb-50">
+                    <h4>SUBSCRIBE TO NEWSLETTER</h4>
+                    <p>There are many variations of passages of Lor available, but the majority have suffered alteration in some form, by injected humour, or randomised words</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+                    <!-- Subscribe Form -->
+                    <form id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="section-sunscribe-form validate" target="_blank" novalidate>
+                        <div id="mc_embed_signup_scroll">
+                            <label for="mce-EMAIL" class="hidden">Subscribe to our mailing list</label>
+                            <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email Address" required>
+                            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
+                            <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- NEWSLETTER SECTION END -->
+    <!-- QUICK VIEW MODAL START-->
+    <div id="quickViewModal" class="modal fade">
+        <div class="container">
+            <div class="modal-content row">
+                <div class="modal-body">
+                    <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <!-- QuickView Product Images -->
+                    <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
+                        <!-- Tab panes -->
+                        <div class="tab-content mb-10">
+                            <div class="pro-large-img tab-pane active" id="pro-large-img-1">
+                            </div>
+                            <div class="pro-large-img tab-pane" id="pro-large-img-2">
+                            </div>
+                            <div class="pro-large-img tab-pane" id="pro-large-img-3">
+                            </div>
+                            <div class="pro-large-img tab-pane" id="pro-large-img-4">
+                            </div>
+                            <div class="pro-large-img tab-pane" id="pro-large-img-5">
+                            </div>
+                        </div>
+                        <!-- QuickView Product Thumbnail Slider -->
+                        <div class="pro-thumb-img-slider">
+                            <!--<div><a href="#pro-large-img-1" data-toggle="tab"><img src="img/product/10.jpg" alt="" /></a></div>
+                            <div><a href="#pro-large-img-2" data-toggle="tab"><img src="img/product/11.jpg" alt="" /></a></div>
+                            <div><a href="#pro-large-img-3" data-toggle="tab"><img src="img/product/12.jpg" alt="" /></a></div>
+                            <div><a href="#pro-large-img-4" data-toggle="tab"><img src="img/product/13.jpg" alt="" /></a></div>
+                            <div><a href="#pro-large-img-5" data-toggle="tab"><img src="img/product/14.jpg" alt="" /></a></div>-->
+                        </div>
+                    </div>
+                    <!-- QuickView Product Details -->
+                    <div class="col-md-7 col-sm-6 col-xs-12 mb-40">
+                        <div class="product-details section">
+                            <!-- Title -->
+                            <h1 class="title">Folwer Vase</h1>
+                            <!-- Price Ratting -->
+                            <div class="price-ratting section">
+                                <!-- Price -->
+                                <span class="price float-left"><span class="new">€ 120.00</span></span>
+                                <!-- Ratting -->
+                                <span class="ratting float-right">
+                                    <i class="fa fa-star active"></i>
+                                    <i class="fa fa-star active"></i>
+                                    <i class="fa fa-star active"></i>
+                                    <i class="fa fa-star active"></i>
+                                    <i class="fa fa-star active"></i>
+                                    <span> (01 Customer Review)</span>
+                                </span>
+                            </div>
+                            <!-- Short Description -->
+                            <div class="short-desc section">
+                                <h5 class="pd-sub-title">Quick Overview</h5>
+                                <p>There are many variations of passages of Lorem Ipsum avaable, b majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. make an ami jani na.</p>
+                            </div>
+                            <!-- Product Size -->
+                            <div class="product-size section">
+                                <h5 class="pd-sub-title">Select Size</h5>
+                                <button>s</button>
+                                <button class="active">m</button>
+                                <button>x</button>
+                                <button>xl</button>
+                            </div>
+                            <!-- Product Color -->
+                            <div class="color-list section">
+                                <h5 class="pd-sub-title">Select Color</h5>
+                                <button class="active" style="background-color: #51bd99;"><i class="fa fa-check"></i></button>
+                                <button style="background-color: #ff7a5f;"><i class="fa fa-check"></i></button>
+                                <button style="background-color: #baa6c2;"><i class="fa fa-check"></i></button>
+                                <button style="background-color: #414141;"><i class="fa fa-check"></i></button>
+                            </div>
+                            <!-- Quantity Cart -->
+                            <div class="quantity-cart section">
+                                <div class="product-quantity">
+                                    <input type="text" value="0">
+                                </div>
+                                <button class="add-to-cart">add to cart</button>
+                            </div>
+                            <!-- Usefull Link -->
+                            <ul class="usefull-link section">
+                                <li><a href="#"><i class="pe-7s-mail"></i> Email to a Friend</a></li>
+                                <li><a href="#"><i class="pe-7s-like"></i> Wishlist</a></li>
+                                <li><a href="#"><i class="pe-7s-print"></i> print</a></li>
+                            </ul>
+                            <!-- Share -->
+                            <div class="share-icons section">
+                                <span>share :</span>
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- QUICK VIEW MODAL END-->
-<!-- FOOTER TOP SECTION START -->
-<div class="footer-top-section footer-top-dark section pt-100 pb-60">
-    <div class="container">
-        <div class="row">
+    <!-- QUICK VIEW MODAL END-->
+    <!-- FOOTER TOP SECTION START -->
+    <div class="footer-top-section footer-top-dark section pt-100 pb-60">
+        <div class="container">
+            <div class="row">
 
-            <div class="footer-widget footer-widget-dark col-md-4 col-sm-6 col-xs-12 mb-40">
-                {% widget "footer-one" %}
-            </div>
+                <div class="footer-widget footer-widget-dark col-md-4 col-sm-6 col-xs-12 mb-40">
+                    {% widget "footer-one" %}
+                </div>
 
-            <div class="footer-widget footer-widget-dark col-md-3 col-sm-6 col-xs-12 mb-40">
-                {% widget "footer-two" %}
-            </div>
+                <div class="footer-widget footer-widget-dark col-md-3 col-sm-6 col-xs-12 mb-40">
+                    {% widget "footer-two" %}
+                </div>
 
-            <div class="footer-widget footer-widget-dark col-md-2 col-sm-6 col-xs-12 mb-40">
-                {% widget "footer-three" %}
-            </div>
+                <div class="footer-widget footer-widget-dark col-md-2 col-sm-6 col-xs-12 mb-40">
+                    {% widget "footer-three" %}
+                </div>
 
-            <div class="footer-widget footer-widget-dark col-md-3 col-sm-6 col-xs-12 mb-40">
-                {% widget "footer-four" %}
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- FOOTER TOP SECTION END -->
-<!-- FOOTER BOTTOM SECTION START -->
-<div class="footer-bottom-section footer-bottom-dark section">
-    <div class="container">
-        <div class="row">
-            <!-- Copyright -->
-            <div class="copyright text-left col-sm-6 col-xs-12">
-                <p>Powered by <a href="https://hastech.company/">VALUEWORX</a></p>
-            </div>
-            <!-- Payment Method -->
-            <div class="footer-menu text-right col-sm-6 col-xs-12">
-                <a href="#">Help & Support</a>
+                <div class="footer-widget footer-widget-dark col-md-3 col-sm-6 col-xs-12 mb-40">
+                    {% widget "footer-four" %}
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- FOOTER BOTTOM SECTION END -->
+    <!-- FOOTER TOP SECTION END -->
+
 
 </div>

@@ -665,6 +665,7 @@ input:focus, textarea:focus {
 /*-- Section --*/
 .section {
     width: 100%;
+    clear:both;
 }
 
 /*-- Section Title --*/
@@ -906,31 +907,15 @@ input:focus, textarea:focus {
   02. Header Section
 --------------------------------------*/
 .header-section {
-    background-color: #fff;
+    background-color: #303030;
     position: relative;
     width: 100%;
-}
-
-.header-section.sticker {
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-.header-section.stick {
-    -webkit-animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-    animation: 300ms ease-in-out 0s normal none 1 running fadeInDown;
-    background-color: #fff;
-    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
-    position: fixed;
 }
 
 /*-- Header Logo --*/
 .header-logo {
     width: 200px;
-    padding: 23px 0;
+    padding: 15px 0;
 }
 
 .header-logo a {
@@ -942,27 +927,34 @@ input:focus, textarea:focus {
 
 /*-- Main Menu --*/
 .main-menu {
+    display: block;
+    background-color: #f0f0f0;
+    height: 50px;
+    text-align: center;
+    border-bottom: solid 1px #ddd;
 }
 
 .main-menu > ul {
-    display: block;
-    float: left;
+    margin: 0px auto;
+    display: inline-block;
+    max-width: 1300px;
 }
 
 .main-menu > ul > li {
     display: block;
     float: left;
     margin-left: 35px;
+    position:relative;
 }
 
 .main-menu > ul > li > a {
-    color: #666;
+    color: #555;
     display: block;
     font-family: "Catamaran",sans-serif;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 20px;
-    padding: 45px 0;
+    padding: 17px 0;
     text-transform: uppercase;
 }
 
@@ -971,7 +963,7 @@ input:focus, textarea:focus {
 }
 
 .main-menu > ul > li:hover > a, .main-menu > ul > li.active > a {
-    color: #3f3f3f;
+    color: #555;
 }
 /*-- Sub Menu --*/
 .sub-menu {
@@ -1149,30 +1141,6 @@ a.meanmenu-reveal i {
     margin-left: 75px;
 }
 
-/*-- Header Search --*/
-.header-search {
-    padding: 40px 0;
-    position: relative;
-}
-
-.stick .header-search {
-    padding: 20px 0;
-}
-
-.header-search .search-toggle {
-    background-color: transparent;
-    border: medium none;
-    color: #4b4b4b;
-    display: block;
-    height: 30px;
-    padding: 0;
-}
-
-.header-search .search-toggle i {
-    display: block;
-    font-size: 18px;
-    line-height: 30px;
-}
 /*-- Header Search Form --*/
 .header-search-form {
     background-color: #fff;
@@ -1237,6 +1205,15 @@ a.meanmenu-reveal i {
 /*-- Header Account --*/
 .header-account {
     margin-left: 16px;
+
+    .user-menu {
+        padding: 26px 10px 15px;
+        font-size: 16px;
+
+        & > a {
+            color: white;
+        }
+    }
 }
 
 .header-account > ul {
@@ -1327,7 +1304,7 @@ a.meanmenu-reveal i {
 
 /*-- Header Cart --*/
 .header-cart {
-    padding: 40px 0;
+    padding: 24px 0 18px;
     position: relative;
     margin-left: 16px;
 }
@@ -1337,7 +1314,7 @@ a.meanmenu-reveal i {
 }
 
 .header-cart .cart-toggle {
-    color: #4b4b4b;
+    color: #fff;
     display: block;
     padding: 0 7px 0 0;
     position: relative;
@@ -1345,12 +1322,12 @@ a.meanmenu-reveal i {
 
 .header-cart .cart-toggle i {
     display: block;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 30px;
 }
 
 .header-cart .cart-toggle span {
-    background-color: #3f3f3f;
+    background-color: #EF1010;
     border-radius: 50%;
     color: #fff;
     font-size: 10px;
@@ -2204,8 +2181,6 @@ a.meanmenu-reveal i {
 }
 /*-- Product Details --*/
 .product-details {
-    padding-left: 45px;
-    padding-top: 45px;
 }
 
 .product-details .title {
@@ -4160,4 +4135,48 @@ div.tab button.active {
     padding:10px;
     background-color:#eef;
     margin:15px 0;
+}
+
+.global-search {
+    margin-top: 20px;
+
+    input {
+        width: 70%;
+        border: none;
+        border-radius: 3px;
+        padding: 8px;
+        margin: 0;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    button {
+        width: 20%;
+        display: inline-block;
+        padding: 8px;
+        border-radius: 5px;
+        border: none;
+        border-bottom-left-radius: 0px;
+        border-top-left-radius: 0px;
+        color: black;
+    }
+}
+.dropdown-menu a {
+    padding: 5px 15px;
+    display: block;
+
+    &:hover {
+        background-color: #337ab7;
+        color:white;
+    }
+}
+
+.wrapper{
+    margin:50px 0;
+}
+
+.breadcrumb
+{
+    background-color:#fff;
+    padding:0;
 }

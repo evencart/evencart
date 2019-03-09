@@ -1,7 +1,10 @@
 ﻿{% layout "_Layout" %}
-<div class="page-section section pt-120 pb-120">
+<div class="page-section section wrapper">
     <div class="container">
         <div class="row">
+            <h3 class="text-center">
+                {{"Login" | t}}
+            </h3>
             <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
                 <div class="login-reg-form">
                     <form action="{% route api_Login %}" method="post" id="login-form">
@@ -22,6 +25,9 @@
                             </div>
                             <div class="col-xs-12">
                                 <a href="#">Lost your password?</a>
+                            </div>
+                            <div class="col-xs-12">
+                               {{"Don't have any account?" | t}} <a href="{% route Register %}">Create one</a>
                             </div>
                         </div>
                     </form>

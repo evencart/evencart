@@ -1,10 +1,16 @@
 ﻿{% layout "_Layout" %}
-<div class="page-section section">
+<div class="page-section section wrapper">
     <div class="container">
         <div class="row">
+            <h3 class="text-center">
+                {{"Register" | t}}
+            </h3>
             <div class="col-md-8 col-md-offset-2 col-xs-12">
                 <div class="login-reg-form">
-                    <form action="{% route api_Register %}" method="post" id="formRegistration">                       
+                    <div class="text-center">
+                        {{"Already have an account?" | t}} <a href="{% route Login %}">{{"Login Now" | t }}</a>
+                    </div>
+                    <form action="{% route api_Register %}" method="post" id="formRegistration">
                         <div class="row">
                             <div class="col-xs-12 mb-20">
                                 {% control label text=@t"Email" for="email" %}

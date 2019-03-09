@@ -160,9 +160,17 @@ namespace RoastedMarketplace.Controllers
         {
             return ProductsListApi(searchModel);
         }
+        [DualGet("~/s", Name = RouteNames.ProductsSearchPage)]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult ProductSearch(ProductSearchModel searchModel)
+        {
+            if (searchModel.Search.IsNullEmptyOrWhiteSpace())
+                return RedirectToRoute(RouteNames.Home);
+            return ProductsListApi(searchModel);
+        }
 
         [DualGet("", Name = RouteNames.ProductsPage, OnlyApi = true)]
-        public IActionResult ProductsListApi(ProductSearchModel searchModel)
+        public IActionResult ProductsListApi(ProductSearchModel searchModel, string viewName = null)
         {
             IList<int> categoryIds = null;
             if (searchModel.CategoryId.HasValue && searchModel.CategoryId.Value > 0)
@@ -228,10 +236,14 @@ namespace RoastedMarketplace.Controllers
                 seoMetaModel.PageTitle = seoMeta?.PageTitle ?? category?.Name;
             }
 
+            if (viewName.IsNullEmptyOrWhiteSpace())
+                viewName = "ProductsList";
+
             return R.Success.With("products", productModels)
                 .WithSeoMeta(seoMetaModel)
                 .WithParams(searchModel)
                 .WithGridResponse(totalResults, searchModel.Page, searchModel.Count)
+                .WithView(viewName)
                 .Result;
         }
         #region Helpers

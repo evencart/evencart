@@ -1,8 +1,8 @@
 ﻿{% layout "_Layout" %}
 <!-- PAGE SECTION START -->
-<div class="product-section section">
+<div class="product-section section wrapper">
     <div class="container">
-        {% partial "Common/Breadcrumb" %}
+       
         <div class="row mb-40">
             <!-- Single Product Images -->
             <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
@@ -25,13 +25,17 @@
             </div>
             <!-- Single Product Details -->
             <div class="col-md-7 col-sm-6 col-xs-12 mb-40">
+                {% partial "Common/Breadcrumb" %}
                 <div class="product-details section">
                     <!-- Title -->
                     <h1 class="title">{{product.name}}</h1>
+                    <a href="#reviews">
+                        {% partial "Products/_Rating" %}
+                    </a>
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->
-                        <span class="price float-left">
+                        <span class="price">
                             {% if product.comparePrice %}
                             <del>
                                 {{product.comparePrice | withCurrency }}
@@ -39,10 +43,6 @@
                             {% endif %}
                             <div class="new" id="priceFormatted">{{product.price | withCurrency }}</div>
                         </span>
-                        <a href="#reviews">
-                            {% partial "Products/_Rating" %}
-                        </a>
-
                     </div>
                     <!-- Short Description -->
                     <div class="short-desc section">
@@ -52,7 +52,7 @@
                         </p>
                     </div>
                     <form action="{% route api_AddToCart %}" method="post" id="form-add-to-cart">
-                        <input type="hidden" name="productId" value="{{product.id}}" />
+                        <input type="hidden" name="productId" value="{{product.id}}"/>
                         {% partial "Products/Index.ProductAttributes" %}
                         <!-- Quantity Cart -->
                         <div class="quantity-cart section">
@@ -63,10 +63,10 @@
                         </div>
                     </form>
                     <script type="text/javascript">
-                        ready(function () {
+                        ready(function() {
                             initAjaxForm("form-add-to-cart",
                                 {
-                                    onSuccess: function () {
+                                    onSuccess: function() {
 
                                     }
                                 });

@@ -62,6 +62,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             GlobalObject.RegisterObject<CartObject>("cart");
             GlobalObject.RegisterObject<BreadcrumbObject>("breadcrumb");
             GlobalObject.RegisterObject<NavigationObject>("navigation");
+            GlobalObject.RegisterObject<CurrentUserObject>("currentUser");
         }
 
         private string ValidateViewName(string viewName)
