@@ -59,7 +59,7 @@ namespace RoastedMarketplace.Infrastructure.Extensions
                 return new List<WidgetStatus>();
 
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
-            return dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets);
+            return dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets).OrderBy(x => x.DisplayOrder).ToList();
         }
 
         public static void AddWidget(this PluginSettings pluginSettings, string widgetName, string pluginSystemName, string zoneName)
