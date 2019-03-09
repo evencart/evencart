@@ -13,11 +13,11 @@
             <div class="panel-title">
                 {% if relationType == "RelatedProduct" %}
                 {{"Related Products" | t}}
-                {% elseif relationType == "CrossSell" %}
+                {% elsif relationType == "CrossSell" %}
                 {{"Cross Sell Products" | t}}
-                {% elseif relationType == "UpSell" %}
+                {% elsif relationType == "UpSell" %}
                 {{"Up Sell Products" | t}}
-                {% elseif relationType == "FrequentlyBoughtTogether" %}
+                {% elsif relationType == "FrequentlyBoughtTogether" %}
                 {{"Frequently Bought Together" | t}}
                 {% endif %}
                 <button class="btn btn-primary float-right btn-sm" onclick="editRelation()">{{"Add New" | t}}</button>
