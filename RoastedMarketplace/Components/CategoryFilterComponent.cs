@@ -28,6 +28,8 @@ namespace RoastedMarketplace.Components
                 return R.Success.ComponentResult;
             var searchModel = dataAsDict["model"] as ProductSearchModel;
             var currentCategoryId = searchModel?.CategoryId ?? 0;
+            if (currentCategoryId == 0)
+                return R.Success.ComponentResult;
             var allCategories = _categoryService.GetFullCategoryTree();
 
             var filterModels = new List<CategoryFilterModel>();
