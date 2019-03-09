@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
 
 namespace RoastedMarketplace.Infrastructure.Mvc
 {
@@ -101,8 +102,17 @@ namespace RoastedMarketplace.Infrastructure.Mvc
 
         public static IActionResult GetResult(CustomResponse r)
         {
-            if (RequestHelper.IsApiCall())
+            if (RequestHelper.IsApiCall(out bool withStoreMeta, out string[] metaTypes))
             {
+                if (withStoreMeta)
+                {
+                    foreach (var metaType in metaTypes)
+                    {
+                        var metaObject = GlobalObject.ExecuteObject(metaType);
+                        if (metaObject != null)
+                            r.With(metaType, metaObject);
+                    }
+                }
                 //ignore the view and return the model as json
                 return r._controller.Json(r._expandoObject);
             }

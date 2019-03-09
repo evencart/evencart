@@ -59,12 +59,12 @@
 }
 
 var getApiUrl = function (url) {
-    return url.replace("/admin", "/admin/" + api);
+    return url.replace("/admin", "/admin/" + api + "?storeMeta=currentUser&storeMeta=store");
 }
 var setupLinks = function () {
     ready(function () {
         router._routes = window.routes;
-        jQuery("a").on("click",
+        jQuery(".client-main-navlinks a").on("click",
             function (e) {
                 var linkHostName = jQuery(this).prop("hostname");
                 if (linkHostName != document.location.hostname) {

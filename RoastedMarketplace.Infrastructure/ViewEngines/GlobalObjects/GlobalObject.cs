@@ -15,5 +15,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             if(!RegisteredObjects.ContainsKey(key))
                 RegisteredObjects.Add(key, Activator.CreateInstance<T>());
         }
+
+        public static object ExecuteObject(string key)
+        {
+            return RegisteredObjects.ContainsKey(key) ? RegisteredObjects[key].GetObject() : null;
+        }
     }
 }
