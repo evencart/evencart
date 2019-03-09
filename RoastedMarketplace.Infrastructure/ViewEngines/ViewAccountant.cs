@@ -119,6 +119,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
 
         public CachedView GetView(string viewPath, string requestedPath, string area, object parameters = null)
         {
+            parameters = parameters ?? new Dictionary<string, object>();
             Expander.ExpandView(viewPath, parameters, out string content);
             var cacheKey = GetCachedViewKey(requestedPath, area);
             if (!_parsedTemplateCache.TryGetValue(cacheKey, out CachedView cachedView) || cachedView.Raw != content)

@@ -43,7 +43,7 @@ namespace RoastedMarketplace.Controllers
         [DualGet("login", Name = RouteNames.Login)]
         public IActionResult Login()
         {
-            return Result();
+            return R.Success.Result;
         }
 
         [DualPost("login", Name = RouteNames.Login, OnlyApi = true)]
