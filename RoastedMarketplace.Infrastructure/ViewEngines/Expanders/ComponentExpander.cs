@@ -24,10 +24,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 foreach (var meta in readFile.GetMeta(nameof(ComponentExpander)))
                 {
                     var componentName = meta.Key;
-                    var keyValuePairs = (Dictionary<string, string>) meta.Value;
+                    var valueAsArray = (object[]) meta.Value;
+                    //extract values
+                    componentIndexOnPage = (int) valueAsArray[0];
+                    var keyValuePairs = (Dictionary<string, string>) valueAsArray[1];
                     var componentParameters = GetComponentParameters(keyValuePairs, parameters);
                     viewComponentManager.InvokeViewComponent(componentName, componentParameters, out string _, out object model, out string _, true);
-                    MergeModel(parameters, model, componentName, componentIndexOnPage++, out string _);
+                    MergeModel(parameters, model, componentName, componentIndexOnPage, out string _);
                 }
                 return inputContent;
             }
@@ -50,14 +53,17 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     readFile.AddChild(ReadFile.From(viewPath));
 
                 //merge models
-                MergeModel(parameters, model, componentName, componentIndexOnPage++, out string assignString);
+                MergeModel(parameters, model, componentName, componentIndexOnPage, out string assignString);
                 if (!WebHelper.IsAjaxRequest(ApplicationEngine.CurrentHttpContext.Request))
-                    //add keyvaluepairs as meta
-                    readFile.AddMeta(componentName, keyValuePairs, nameof(ComponentExpander));
+                    //add keyvaluepairs as meta along with the index
+                    readFile.AddMeta(componentName, new object[] { componentIndexOnPage, keyValuePairs}, nameof(ComponentExpander));
                 var match = componentMatch.Result("$0");
                 //replace only first occurance of the pattern result
                 readFile.Content = readFile.Content.ReplaceFirstOccurance(match, assignString + componentContent);
                 inputContent = inputContent.ReplaceFirstOccurance(match, assignString + componentContent);
+
+                //next component
+                componentIndexOnPage++;
             }
             return inputContent;
         }
