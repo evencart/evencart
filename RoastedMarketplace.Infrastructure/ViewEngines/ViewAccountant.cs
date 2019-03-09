@@ -58,11 +58,11 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             Template.RegisterFilter(typeof(TextFilters));
 
             //register global objects
-            GlobalObject.RegisterObject<StoreObject>("store");
-            GlobalObject.RegisterObject<CartObject>("cart");
-            GlobalObject.RegisterObject<BreadcrumbObject>("breadcrumb");
-            GlobalObject.RegisterObject<NavigationObject>("navigation");
-            GlobalObject.RegisterObject<CurrentUserObject>("currentUser");
+            GlobalObject.RegisterObject<StoreObject>(GlobalObjectKeys.Store);
+            GlobalObject.RegisterObject<CartObject>(GlobalObjectKeys.Cart);
+            GlobalObject.RegisterObject<BreadcrumbObject>(GlobalObjectKeys.Breadcrumb);
+            GlobalObject.RegisterObject<NavigationObject>(GlobalObjectKeys.Navigation);
+            GlobalObject.RegisterObject<CurrentUserObject>(GlobalObjectKeys.CurrentUser);
         }
 
         private string ValidateViewName(string viewName)
