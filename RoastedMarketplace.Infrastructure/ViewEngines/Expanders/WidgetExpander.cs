@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
@@ -22,6 +23,16 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             }
             var pluginSettings = DependencyResolver.Resolve<PluginSettings>();
             var widgets = pluginSettings.GetSiteWidgets();
+            var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
+            
+            var widgetFormat = "{0}";
+            //do we have a wrapper?
+            var widgetPath = viewAccountant.GetThemeViewPath("Widgets/Index");
+            if (!widgetPath.IsNullEmptyOrWhiteSpace())
+            {
+                var widgetFile = ReadFile.From(widgetPath);
+                widgetFormat = widgetFile.Content;
+            }
             foreach (Match widgetMatch in widgetMatches)
             {
                 ExtractMatch(widgetMatch, out string[] straightParameters, out Dictionary<string, string> keyValuePairs);
@@ -37,7 +48,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 foreach (var widget in widgets.Where(x => x.ZoneName == zoneName))
                 {
                     var idStr = $"id=\"{widget.Id}\"";
-                    widgetBuilder.Append($"{{% { string.Format(ComponentFormat, widget.WidgetSystemName, paramBuilder)} {idStr} %}}");
+                    var componentStr =
+                        $"{{% {string.Format(ComponentFormat, widget.WidgetSystemName, paramBuilder)} {idStr} %}}";
+                    var widgetStr = string.Format(widgetFormat, componentStr);
+                    widgetBuilder.Append(widgetStr);
                     widgetBuilder.AppendLine();
                 }
                 inputContent = inputContent.Replace(widgetMatch.Result("$0"), widgetBuilder.ToString());

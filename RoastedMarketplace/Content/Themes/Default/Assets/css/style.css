@@ -2093,6 +2093,9 @@ a.meanmenu-reveal i {
   border-top: 0px solid #303030; }
 
 /*-- Footer Widget --*/
+.footer-widget .widget {
+  margin-bottom: 25px; }
+
 /*-- Footer Widget Title --*/
 .widget-title {
   color: #505050;
