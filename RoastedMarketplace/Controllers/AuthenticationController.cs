@@ -66,6 +66,14 @@ namespace RoastedMarketplace.Controllers
             return R.Success.WithAvailableCountries().Result;
         }
 
+        [DualGet("logout", Name = RouteNames.Logout)]
+        public IActionResult Logout()
+        {
+            _appAuthenticationService.SignOut();
+            return Redirect(Url.RouteUrl(RouteNames.Home));
+        }
+
+
         [DualPost("register", Name = RouteNames.Register, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(RegisterModel))]
         public IActionResult Register(RegisterModel registerModel)

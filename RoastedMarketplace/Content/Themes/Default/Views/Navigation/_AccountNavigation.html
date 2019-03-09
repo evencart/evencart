@@ -16,7 +16,7 @@
     </li>
     {% if withSignout %}
     <li>
-        <a href="{% route AccountReviews %}" class='{% if active_menu == "AccountReviews" %}active{% endif %}'>{{"Signout" | t}}</a>
+        <a href="{% route Logout %}">{{"Signout" | t}}</a>
     </li>
     {% assign withSignout=false %}
     {% endif %}
