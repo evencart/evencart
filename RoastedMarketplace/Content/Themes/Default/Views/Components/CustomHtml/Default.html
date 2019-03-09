@@ -1,6 +1,10 @@
 ﻿<div class="custom-html">
-    <h3 class="title">{{title}}</h3>
+    {% if formattedContent %}
+    {{formattedContent}}
+    {% else %}
+    <h5 class="widget-title">{{title}}</h5>
     <div class="content">
         {{content}}
     </div>
+    {% endif %}
 </div>

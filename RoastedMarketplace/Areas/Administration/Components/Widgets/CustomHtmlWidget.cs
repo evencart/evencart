@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Services.Widgets;
@@ -25,8 +26,14 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
                 return R.Success.ComponentResult;
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<CustomHtmlWidgetSettings>(widgetId);
+            string formattedContent = null;
+            if (!widgetSettings.CustomFormat.IsNullEmptyOrWhiteSpace())
+            {
+                formattedContent = string.Format(widgetSettings.CustomFormat, widgetSettings.Title, widgetSettings.Content);
+            }
             return R.Success.With("title", widgetSettings.Title)
                 .With("content", widgetSettings.Content)
+                .With("formattedContent", formattedContent)
                 .With("widgetId", widgetId)
                 .ComponentResult;
         }
@@ -48,7 +55,8 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             var widgetSettings = settings as CustomHtmlWidgetSettings;
             return new {
                 title = widgetSettings?.Title,
-                content = widgetSettings?.Content
+                content = widgetSettings?.Content,
+                customFormat = widgetSettings?.CustomFormat
             };
         }
 
@@ -57,6 +65,8 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             public string Title { get; set; }
 
             public string Content { get; set; }
+
+            public string CustomFormat { get; set; }
         }
     }
 }
