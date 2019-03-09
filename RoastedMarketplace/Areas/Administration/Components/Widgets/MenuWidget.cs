@@ -8,6 +8,7 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
 using RoastedMarketplace.Services.Navigation;
+using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Widgets;
 
 namespace RoastedMarketplace.Areas.Administration.Components.Widgets
@@ -18,10 +19,12 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
         private const string WidgetSystemName = "Menu";
         private readonly IWidgetService _widgetService;
         private readonly IMenuService _menuService;
-        public MenuWidget(IWidgetService widgetService, IMenuService menuService)
+        private readonly ICategoryService _categoryService;
+        public MenuWidget(IWidgetService widgetService, IMenuService menuService, ICategoryService categoryService)
         {
             _widgetService = widgetService;
             _menuService = menuService;
+            _categoryService = categoryService;
         }
 
         public override IViewComponentResult Invoke(object data = null)
@@ -34,7 +37,7 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             var menu = _menuService.Get(widgetSettings.MenuId);
             if (menu == null)
                 return R.Success.ComponentResult;
-            var widgetNavigation = NavigationObject.GetNavigationImpl(menu.MenuItems, 0);
+            var widgetNavigation = NavigationObject.GetNavigationImpl(menu.MenuItems, 0, _categoryService.GetFullCategoryTree());
             return R.Success.With("title", widgetSettings.Title)
                 .With("widgetNavigation", widgetNavigation)
                 .With("widgetId", widgetId)
