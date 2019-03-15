@@ -46,13 +46,13 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             //naming convention camelCaseConvention
             Template.NamingConvention = new CamelCaseNamingConvention();
             //register additional types
-            Template.RegisterSafeType(typeof(SelectListItem), new[] { "Text", "Value", "Selected"});
+            Template.RegisterSafeType(typeof(SelectListItem), new[] { "Text", "Value", "Selected" });
 
             //register all the enums
             var enumTypes = TypeFinder.EnumTypes();
             foreach (var enumType in enumTypes)
             {
-                Template.RegisterSafeType(enumType,x => x.ToString());
+                Template.RegisterSafeType(enumType, x => x.ToString());
             }
 
             Template.RegisterFilter(typeof(TextFilters));
@@ -96,25 +96,23 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
         public string RenderView(string viewPath, string originalViewPath, string area, object parameters = null)
         {
             var template = GetView(viewPath, originalViewPath, area, parameters).Template;
-            Hash resultHash = null;
-            if (parameters != null)
-            {
-                if (parameters is IDictionary<string, object>)
-                    resultHash = Hash.FromDictionary((IDictionary<string, object>)parameters);
-                else if (parameters.GetType() == typeof(Hash))
-                    resultHash = (Hash)parameters;
-                else
-                    resultHash = Hash.FromAnonymousObject(parameters, true);
-            }
-            else
-                resultHash = new Hash();
-
-            //add global objects
-            foreach (var globalObjectKp in GlobalObject.RegisteredObjects)
-            {
-                resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
-            }
+            var resultHash = GetTemplateHash(parameters);
             return template.Render(resultHash);
+        }
+
+        public string RenderView(string viewName, string htmlContent, object parameters = null)
+        {
+            try
+            {
+                var template = Template.Parse(htmlContent);
+                var resultHash = GetTemplateHash(parameters);
+                return template.Render(resultHash);
+            }
+            catch (Exception ex)
+            {
+                var newEx = new Exception($"Error occured while parsing template {viewName}", ex);
+                throw newEx;
+            }
         }
 
         public CachedView GetView(string viewPath, string requestedPath, string area, object parameters = null)
@@ -130,20 +128,18 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                     //save it for future
                     _parsedTemplateCache.TryAdd(cacheKey, cachedView);
                 }
-                //run filters for the view
-                //content = Filter.RunAll(content); //we've now moved to dotliquid filter method. That is better and more flexible
                 try
                 {
                     var template = Template.Parse(content);
                     cachedView.Template = template;
                     cachedView.Raw = content;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     var newEx = new Exception($"Error occured while parsing file. File: {viewPath}", ex);
                     throw newEx;
                 }
-              
+
             }
             return cachedView;
         }
@@ -181,7 +177,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             var groupedTemplates = _parsedTemplateCache.GroupBy(x => x.Key.Context);
             foreach (var gt in groupedTemplates)
             {
-                if(!dictionary.ContainsKey(gt.Key))
+                if (!dictionary.ContainsKey(gt.Key))
                     dictionary.Add(gt.Key.ToLower(), null);
 
                 dictionary[gt.Key.ToLower()] = gt.ToDictionary(x => x.Key.Url, x =>
@@ -190,7 +186,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                     {
                         return x.Value.ToSplited();
                     }
-                    return (object) x.Value.Raw;
+                    return (object)x.Value.Raw;
                 });
             }
             return dictionary;
@@ -252,13 +248,37 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             }
             //finally the root
             _viewLocations.Add(_localFileProvider.CombinePaths(rootPath, "Views"));
-            
+
             return _viewLocations;
         }
 
         private CachedViewKey GetCachedViewKey(string viewPath, string area)
         {
             return CachedViewKey.Get(viewPath, ApplicationEngine.CurrentLanguageCultureCode, area);
+        }
+
+        private Hash GetTemplateHash(object parameters = null)
+        {
+            Hash resultHash = null;
+            if (parameters != null)
+            {
+                if (parameters is IDictionary<string, object>)
+                    resultHash = Hash.FromDictionary((IDictionary<string, object>)parameters);
+                else if (parameters.GetType() == typeof(Hash))
+                    resultHash = (Hash)parameters;
+                else
+                    resultHash = Hash.FromAnonymousObject(parameters, true);
+            }
+            else
+                resultHash = new Hash();
+
+            //add global objects
+            foreach (var globalObjectKp in GlobalObject.RegisteredObjects)
+            {
+                resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
+            }
+
+            return resultHash;
         }
     }
 }

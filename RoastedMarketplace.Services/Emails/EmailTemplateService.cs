@@ -17,11 +17,11 @@ namespace RoastedMarketplace.Services.Emails
             if (emailTemplate == null)
                 return "";
 
-            if (emailTemplate.ParentEmailTemplate == null)
+            if (emailTemplate.ParentEmailTemplateId == 0)
                 return emailTemplate.Template;
-            return
-                GetProcessedContentTemplate(emailTemplate.ParentEmailTemplate)
-                    .Replace(EmailTokenNames.MessageContent, emailTemplate.Template);
+            var parentTemplate = emailTemplate.ParentEmailTemplate ?? Get(emailTemplate.ParentEmailTemplateId);
+            return GetProcessedContentTemplate(parentTemplate)
+                .Replace(EmailTokenNames.MessageContent, emailTemplate.Template);
         }
         
         public override EmailTemplate Get(int id)

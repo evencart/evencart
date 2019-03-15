@@ -52,7 +52,7 @@ namespace RoastedMarketplace.Controllers
 
             //then feed the data
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,
-                ApplicationEngine.CurrentHttpContext.Request.Host.Value);
+                ApplicationEngine.CurrentHttpContext.Request.Host.Value, model.StoreName);
 
             return R.Success.Result;
         }

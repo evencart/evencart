@@ -26,7 +26,7 @@ namespace RoastedMarketplace.Services.Payments
             var order = _orderService.GetByGuid(result.OrderGuid);
             if (!result.Success)
             {
-                _logger.LogError<Order>(result.Exception, order.User, "Error occured while processing payment", result.ResponseParameters);
+                _logger.LogError<Order>(result.Exception, "Error occured while processing payment", order.User, result.ResponseParameters);
                 return;
             }
             var paymentTransaction = new PaymentTransaction()

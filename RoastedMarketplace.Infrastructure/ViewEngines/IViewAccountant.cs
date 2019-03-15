@@ -13,6 +13,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
 
         string RenderView(string viewName, string originalViewPath, string area, object parameters = null);
 
+        string RenderView(string viewName, string htmlContent, object parameters = null);
+
         CachedView GetView(string viewName, string requestedPath, string area, object parameters = null);
 
         string GetLayoutPath(string layoutName);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Core.Data;
+using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Data.Entity.Purchases
 {
@@ -17,6 +18,8 @@ namespace RoastedMarketplace.Data.Entity.Purchases
         public virtual IList<ShipmentItem> ShipmentItems { get; set; }
 
         public virtual IList<ShipmentHistory> ShipmentStatusHistories { get; set; }
+
+        public virtual User User { get; set; }
         #endregion
     }
 }

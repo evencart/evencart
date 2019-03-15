@@ -2,7 +2,7 @@
 {
     public class EmailTemplateNames
     {
-        const string AdminSuffix = ".Admin";
+        public const string AdminSuffix = ".Admin";
 
         public const string Master = "Master";
 
@@ -25,6 +25,20 @@
         public const string UserAccountDeletedMessage = "User.AccountDeleted";
 
         public const string UserAccountDeletedMessageToAdmin = UserAccountDeletedMessage + AdminSuffix;
+
+        public const string OrderPlacedMessage = "Order.Placed";
+
+        public const string OrderPlacedMessageToAdmin = OrderPlacedMessage + AdminSuffix;
+
+        public const string OrderPaidMessage = "Order.Paid";
+
+        public const string OrderPaidMessageToAdmin = OrderPlacedMessage + AdminSuffix;
+
+        public const string ShipmentShippedMessage = "Shipment.Shipped";
+
+        public const string ShipmentDeliveredMessage = "Shipment.Delivered";
+
+        public const string ShipmentDeliveredMessageToAdmin = ShipmentDeliveredMessage + AdminSuffix;
 
     }
 }

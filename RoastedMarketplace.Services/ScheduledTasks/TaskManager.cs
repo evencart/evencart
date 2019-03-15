@@ -56,7 +56,7 @@ namespace RoastedMarketplace.Services.ScheduledTasks
                                 }
                                 catch (Exception ex)
                                 {
-                                    _logger.LogError<ScheduledTask>(ex, null, "Failed to complete the task '{0}'", task.SystemName);
+                                    _logger.LogError<ScheduledTask>(ex, "Failed to complete the task '{0}'", null, task.SystemName);
                                     //check if task should be stopped
                                     if (sTask.StopOnError)
                                     {

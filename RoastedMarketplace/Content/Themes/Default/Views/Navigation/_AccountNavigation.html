@@ -1,4 +1,4 @@
-﻿<ul>
+﻿<ul class="account-navigation">
     <li>
         <a href="{% route AccountProfile %}" class='{% if active_menu == "AccountProfile" %}active{% endif %}'>{{"Profile Information" | t}}</a>
     </li>
@@ -15,6 +15,9 @@
         <a href="{% route AccountReviews %}" class='{% if active_menu == "AccountReviews" %}active{% endif %}'>{{"Review Center" | t}}</a>
     </li>
     {% if withSignout %}
+    <li>
+        <a href="{% route ForgotPassword %}">{{"Change Password" | t}}</a>
+    </li>
     <li>
         <a href="{% route Logout %}">{{"Signout" | t}}</a>
     </li>

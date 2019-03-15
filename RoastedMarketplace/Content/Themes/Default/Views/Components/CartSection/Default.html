@@ -7,12 +7,12 @@
                     <thead>
                         <tr>
                             <th class="pro-thumbnail"></th>
-                            <th class="pro-title">Product</th>
-                            <th class="pro-price">Price</th>
-                            <th class="pro-quantity">Quantity</th>
-                            <th class="pro-subtotal">Total</th>
+                            <th class="pro-title">{{"Product" | t}}</th>
+                            <th class="pro-price">{{"Price" | t}}</th>
+                            <th class="pro-quantity">{{"Quantity" | t}}</th>
+                            <th class="pro-subtotal">{{"Total" | t}}</th>
                             {% if checkout == "false" %}
-                            <th class="pro-remove">Remove</th>
+                            <th class="pro-remove">{{"Remove" | t}}</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -104,8 +104,7 @@
         <div class="col-md-8 col-sm-7 col-xs-12">
             {% if checkout == "false" %}
             <div class="cart-buttons mb-30">
-                <input type="submit" id="btn-update-cart" value="Update Cart" />
-                <a href="#">{{"Shop more" | t}}</a>
+                <a href="{% route Home %}">{{"Shop more" | t}}</a>
             </div>
             <div class="cart-coupon mb-40">
                 <h4>{{"Discount Coupon" | t}}</h4>
@@ -213,7 +212,7 @@
                 </table>
                 {% if checkout == "false" %}
                 <div class="proceed-to-checkout section mt-30">
-                    <a class="btn btn-primary" href="{% route CheckoutAddress %}">Proceed to Checkout</a>
+                    <a class="btn btn-primary" href="{% route CheckoutAddress %}">{{"Proceed to Checkout" | t}}</a>
                 </div>
                 {% endif %}
             </div>

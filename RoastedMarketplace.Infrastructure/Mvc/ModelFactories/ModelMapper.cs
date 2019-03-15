@@ -33,40 +33,6 @@ namespace RoastedMarketplace.Infrastructure.Mvc.ModelFactories
         private T MapImpl<T>(object entity, T existingEntity, params string[] excludeProperties)
         {
             return (T) MapImplType(typeof(T), entity, existingEntity, excludeProperties);
-
-            if (entity == null)
-                return default(T);
-            var typeOfObject = entity.GetType();
-            var typePair = TypePair.Create(entity.GetType(), typeof(T));
-            if (!_mappingCache.TryGetValue(typePair, out Func<object, object, object> action))
-            {
-                var typeOfT = typeof(T);
-                action = (givenObject, existingTObject) =>
-                {
-                    //get properties of T which have get 
-                    var entityProperties = typeOfObject.GetProperties();
-                    var modelProperties = typeOfT.GetProperties();
-
-                    //create model
-                    var model = existingTObject != null ? (T)existingTObject : Activator.CreateInstance<T>();
-                    foreach (var modelProperty in modelProperties)
-                    {
-                        if (!modelProperty.CanWrite)
-                            continue;
-                        //are there any matching properties
-                        var ep = entityProperties.FirstOrDefault(x => x.Name == modelProperty.Name && x.PropertyType == modelProperty.PropertyType);
-                        if (ep == null || excludeProperties.Contains(ep.Name))
-                            continue;
-                        //get instance value for the property
-                       
-                        var epValue = ep.GetValue(givenObject);
-                        modelProperty.SetValue(model, epValue);
-                    }
-                    return model;
-                };
-                _mappingCache.TryAdd(typePair, action);
-            }
-            return (T)action(entity, existingEntity);
         }
 
         private object MapImplType(Type targetType, object entity, object existingEntity, params string[] excludeProperties)

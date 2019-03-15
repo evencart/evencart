@@ -1,4 +1,10 @@
 ﻿{% layout "_Layout" %}
-<div class="container">
-    {% component "CartSection" cart="@cart" %}
+<div class="wrapper">
+    <div class="container">
+        <h3 class="text-center pb-20">
+            {{"Your Cart" | t}}
+        </h3>
+        {% component "CartSection" cart="@cart" %}
+    </div>
+
 </div>

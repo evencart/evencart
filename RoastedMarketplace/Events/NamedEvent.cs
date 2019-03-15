@@ -12,7 +12,10 @@
 
         ShipmentShipped,
         ShipmentDelivered,
+        ShipmentDeliveryFailed,
 
+        PasswordResetRequested,
+        PasswordReset
         
     }
 }

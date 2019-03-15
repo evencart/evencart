@@ -1,33 +1,41 @@
-﻿{% layout "_AccountLayout" %}
+﻿{% layout "_Layout" %}
 {% global active_menu="AccountAddresses" %}
-<small>
-    <a href='{% route AccountAddresses %}'>
-       <i class="fa fa-angle-left"></i> {{"Back to addresses" | t}}
-    </a>
-</small>
-<h3>
-    {% if address.id > 0 %}
-    {{"Edit Address" | t}}
-    {% else %}
-    {{"Add Address" | t}}
-    {% endif %}
-   
-   
-</h3>
 
-<div class="page-section section pb-120">
-    <div class="row">
-        <form action="{% route api_AccountSaveAddress %}" id="save-address-form" method="post">
-            {% partial "Addresses/AddressForm" %}
-            <div class="action-button-container text-center">
-                {% control hidden name="id" value="{{address.id}}" %}
-                <button type="submit" class="btn btn-default">
-                    {{"Save Address" | t}}
-                </button>
+
+<div class="page-section section pb-120 wrapper">
+    <div class="container">
+       
+        <div class="row">
+            <div class="col-md-8 col-xs-12 col-md-offset-2">
+                <div class="text-center">
+                    <h3>
+                        {% if address.id > 0 %}
+                        {{"Edit Address" | t}}
+                        {% else %}
+                        {{"Add Address" | t}}
+                        {% endif %}
+                    </h3>
+                    <small>
+                        <a href='{% route AccountAddresses %}'>
+                            <i class="fa fa-angle-left"></i> {{"Back to addresses" | t}}
+                        </a>
+                    </small>
+                </div>
+                <form action="{% route api_AccountSaveAddress %}" id="save-address-form" method="post">
+                    {% partial "Addresses/AddressForm" %}
+                    <div class="action-button-container text-center">
+                        {% control hidden name="id" value="{{address.id}}" %}
+                        <button type="submit" class="btn btn-default">
+                            {{"Save Address" | t}}
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+            
 
+        </div>
     </div>
+    
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function() {

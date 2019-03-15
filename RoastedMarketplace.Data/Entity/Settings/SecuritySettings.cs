@@ -9,5 +9,11 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// Default password format
         /// </summary>
         public PasswordFormat DefaultPasswordStorageFormat { get; set; }
+
+        public int ExpirePasswordDays { get; set; }
+
+        public int EmailVerificationLinkExpirationHours { get; set; }
+
+        public int PasswordResetLinkExpirationHours { get; set; }
     }
 }

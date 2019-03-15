@@ -26,7 +26,7 @@ namespace RoastedMarketplace.Data.Entity.Settings
 
         public bool OrderPlacedEmailToAdminEnabled { get; set; }
 
-        public bool OrdrePaidEmailEnabled { get; set; }
+        public bool OrderPaidEmailEnabled { get; set; }
 
         public bool OrderPaidEmailToAdminEnabled { get; set; }
 
@@ -35,6 +35,10 @@ namespace RoastedMarketplace.Data.Entity.Settings
         public bool ShipmentDeliveredEmailEnabled { get; set; }
 
         public bool ShipmentDeliveredEmailToAdminEnabled { get; set; }
+
+        public bool ShipmentDeliveryFailedEmailEnabled { get; set; }
+
+        public bool ShipmentDeliveryFailedToAdminEmailEnabled { get; set; }
 
         public bool ProductOutOfStockToAdminEnabled { get; set; }
 

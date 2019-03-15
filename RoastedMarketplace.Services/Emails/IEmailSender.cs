@@ -1,7 +1,5 @@
 ﻿using System;
 using RoastedMarketplace.Data.Entity.Emails;
-using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Services.Emails
 {
@@ -9,18 +7,20 @@ namespace RoastedMarketplace.Services.Emails
     {
         bool SendTestEmail(string email, EmailAccount emailAccount, out Exception ex);
 
-        void SendUserRegistered(User user);
+        void SendEmail(string templateName, EmailMessage.UserInfo userInfo, object model, bool sendToUser = true, bool sendEmailToAdmin = false);
 
-        void SendUserActivationLink(User user, string activationUrl);
+        void SendUserRegistered(EmailMessage.UserInfo userInfo, object model = null);
 
-        void SendUserActivated(User user);
+        void SendUserActivationLink(EmailMessage.UserInfo userInfo, object model = null);
 
-        void SendOrderPlaced(User user, Order order);
+        void SendUserActivated(EmailMessage.UserInfo userInfo, object model = null);
 
-        void SendOrderComplete(User user, Order order);
+        void SendOrderPlaced(EmailMessage.UserInfo userInfo, object model = null);
 
-        void SendShipmentShipped(User user, Order order, Shipment shipment);
+        void SendOrderComplete(EmailMessage.UserInfo userInfo, object model = null);
 
-        void SendShipmentDelivered(User user, Order order, Shipment shipment);
+        void SendShipmentShipped(EmailMessage.UserInfo userInfo, object model = null);
+
+        void SendShipmentDelivered(EmailMessage.UserInfo userInfo, object model = null);
     }
 }

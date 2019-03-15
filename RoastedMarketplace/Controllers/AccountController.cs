@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Factories.Orders;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
@@ -28,8 +29,9 @@ namespace RoastedMarketplace.Controllers
         private readonly ICartService _cartService;
         private readonly IReviewService _reviewService;
         private readonly IModelMapper _modelMapper;
+        private readonly IOrderModelFactory _orderModelFactory;
 
-        public AccountController(IUserService userService, IOrderService orderService, IAddressService addressService, ICartService cartService, IReviewService reviewService, IModelMapper modelMapper)
+        public AccountController(IUserService userService, IOrderService orderService, IAddressService addressService, ICartService cartService, IReviewService reviewService, IModelMapper modelMapper, IOrderModelFactory orderModelFactory)
         {
             _userService = userService;
             _orderService = orderService;
@@ -37,6 +39,7 @@ namespace RoastedMarketplace.Controllers
             _cartService = cartService;
             _reviewService = reviewService;
             _modelMapper = modelMapper;
+            _orderModelFactory = orderModelFactory;
         }
 
         [DualGet("", Name = RouteNames.AccountProfile)]
@@ -78,7 +81,7 @@ namespace RoastedMarketplace.Controllers
             var currentUser = ApplicationEngine.CurrentUser;
             var orders = _orderService.GetOrders(out int totalResults, userId: currentUser.Id, startDate: searchModel.FromDate, endDate: searchModel.ToDate,
                 orderStatus: orderStatus, page: searchModel.Current, count: searchModel.RowCount);
-            var orderModels = orders.Select(x => _modelMapper.Map<OrderModel>(x)).ToList();
+            var orderModels = orders.Select(x => _orderModelFactory.Create(x)).ToList();
 
             return R.Success.With("orders", orderModels).Result;
         }

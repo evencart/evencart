@@ -28,35 +28,47 @@
                     <div class="float-right">
                         <div class="header-option-btns float-right">
                             <!-- header Account -->
+                            {% if currentUser.isVisitor %}
                             <div class="header-account float-left">
-                                
-                                {% if currentUser.isVisitor %}
-                                <div class="user-menu dropdown">
-                                  
-                                    <a href="{% route AccountProfile %}" aria-haspopup="true" aria-expanded="false">
-                                        <div class="user-info">
-                                            <span class="user-name margin-r-5"> {{"My Account" | t}}</span>
-                                            <i class="fa fa-angle-down"></i>
-                                        </div>
+                                <div class="user-menu">
+
+                                    <a href="{% route Login %}" aria-haspopup="true" aria-expanded="false">
+                                        <span class="user-info">
+                                            <span class="user-name margin-r-5"> {{"Login" | t}}</span>
+                                        </span>
+                                    </a>
+                                    <span class="margin-r-5">/</span>
+                                    <a href="{% route Register %}" aria-haspopup="true" aria-expanded="false">
+                                        <span class="user-info">
+                                            <span class="user-name margin-r-5"> {{"Register" | t}}</span>
+                                        </span>
                                     </a>
                                 </div>
-                                {% else %}
+                            </div>
+                            {% endif %}
+                            <div class="header-account float-left">
                                 <div class="user-menu dropdown">
                                     <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div class="user-info">
-                                            <span class="user-name margin-r-5"> {{currentUser.firstName}}</span>
+                                            
+                                            <span class="user-name margin-r-5">
+                                                {% if currentUser.isVisitor %}
+                                                {{"My Account" | t}}
+                                                {% else %}
+                                                {%- assign withSignout=true -%}
+                                                {{currentUser.firstName}}
+                                                {% endif %}
+                                            </span>
                                             <i class="fa fa-angle-down"></i>
                                         </div>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {%- assign withSignout=true -%}
+                                       
                                         {% partial "Navigation/_AccountNavigation" %}
                                     </div>
                                 </div>
-                                {% endif %}
-
-
                             </div>
+                            
                             <!-- Header Cart -->
                             <div class="header-cart float-left">
                                 <!-- Cart Toggle -->

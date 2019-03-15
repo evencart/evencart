@@ -48,6 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DependencyContainer\DependencyContainer.cs~RFf994d2.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Mvc\Validator\ModelValidator.cs" />
     <Compile Include="Mvc\Validator\IRequiresValidations.cs" />
     <Compile Include="Security\Attributes\AuthorizeAdministratorAttribute.cs" />

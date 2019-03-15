@@ -39,7 +39,7 @@ namespace RoastedMarketplace.Services.Users
         public User GetByUserInfo(string email, string guid = null)
         {
             var userObject = GetByWhere(x => x.Email == email);
-            return userObject?.Guid.ToString() != guid ? null : userObject;
+            return guid != null && userObject?.Guid.ToString() != guid ? null : userObject;
         }
 
         public override User Get(int id)

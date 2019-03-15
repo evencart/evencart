@@ -6,6 +6,7 @@ using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Data.Extensions;
+using RoastedMarketplace.Factories.Products;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.MediaServices;
@@ -30,8 +31,6 @@ namespace RoastedMarketplace.Controllers
         private readonly ICategoryService _categoryService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IModelMapper _modelMapper;
-        private readonly IMediaAccountant _mediaAccountant;
-        private readonly ISearchQueryParserService _searchQueryParserService;
         private readonly IProductRelationService _productRelationService;
         private readonly IProductVariantService _productVariantService;
         private readonly IDataSerializer _dataSerializer;
@@ -39,14 +38,14 @@ namespace RoastedMarketplace.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly IReviewService _reviewService;
         private readonly GeneralSettings _generalSettings;
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IMediaAccountant mediaAccountant, ISearchQueryParserService searchQueryParserService, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings)
+        private readonly IProductModelFactory _productModelFactory;
+
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings, IProductModelFactory productModelFactory)
         {
             _productService = productService;
             _categoryService = categoryService;
             _catalogSettings = catalogSettings;
             _modelMapper = modelMapper;
-            _mediaAccountant = mediaAccountant;
-            _searchQueryParserService = searchQueryParserService;
             _productRelationService = productRelationService;
             _productVariantService = productVariantService;
             _dataSerializer = dataSerializer;
@@ -54,6 +53,7 @@ namespace RoastedMarketplace.Controllers
             _taxSettings = taxSettings;
             _reviewService = reviewService;
             _generalSettings = generalSettings;
+            _productModelFactory = productModelFactory;
         }
 
         [DynamicRoute(Name = RouteNames.SingleProduct, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate))]
@@ -65,7 +65,7 @@ namespace RoastedMarketplace.Controllers
             if (!product.IsPublic())
                 return NotFound();
 
-            var productModel = MapProductModel(product);
+            var productModel = _productModelFactory.Create(product);
 
             var response = R.Success;
             response.With("product", productModel);
@@ -76,7 +76,7 @@ namespace RoastedMarketplace.Controllers
                     _catalogSettings.NumberOfRelatedProducts);
                 if (productRelations.Any())
                 {
-                    var relatedProductsModel = productRelations.Select(x => x.DestinationProduct).Select(MapProductModel).ToList();
+                    var relatedProductsModel = productRelations.Select(x => x.DestinationProduct).Select(_productModelFactory.Create).ToList();
                     response.With("relatedProducts", relatedProductsModel);
                 }
             }
@@ -212,7 +212,7 @@ namespace RoastedMarketplace.Controllers
                 page: searchModel.Page,
                 count: searchModel.Count);
 
-            var productModels = products.Select(MapProductModel).ToList();
+            var productModels = products.Select(_productModelFactory.Create).ToList();
             searchModel.AvailableFromPrice = availableFromPrice;
             searchModel.AvailableToPrice = availableToPrice;
 
@@ -246,112 +246,6 @@ namespace RoastedMarketplace.Controllers
                 .WithView(viewName)
                 .Result;
         }
-        #region Helpers
-
-        private ProductModel MapProductModel(Product product)
-        {
-            var productModel = _modelMapper.Map<ProductModel>(product);
-            productModel.SeName = product.SeoMeta.Slug;
-            var mediaModels = product.MediaItems?.Select(y =>
-            {
-                var mediaModel = _modelMapper.Map<MediaModel>(y);
-                mediaModel.ThumbnailUrl =
-                    _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
-                mediaModel.Url = _mediaAccountant.GetPictureUrl(y, 0, 0, true);
-                return mediaModel;
-            }).ToList() ?? new List<MediaModel>()
-            {
-                new MediaModel()
-                {
-                    ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
-                        ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
-                    Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
-
-                }
-            };
-
-            productModel.Media = mediaModels;
-            if (product.ProductAttributes != null)
-            {
-                productModel.ProductAttributes = product.ProductAttributes.Select(x =>
-                    {
-                        var paModel = new ProductAttributeModel
-                        {
-                            Name = x.Label,
-                            Id = x.Id,
-                            InputFieldType = x.InputFieldType,
-                            IsRequired = x.IsRequired,
-                            AvailableValues = x.AvailableAttribute.AvailableAttributeValues.Select(y =>
-                                {
-                                    var avModel = new ProductAttributeValueModel()
-                                    {
-                                        Name = y.Value
-                                    };
-                                    return avModel;
-                                })
-                                .ToList()
-                        };
-                        if (paModel.Name.IsNullEmptyOrWhiteSpace())
-                        {
-                            paModel.Name = x.AvailableAttribute.Name;
-                        }
-                        return paModel;
-                    })
-                    .ToList();
-            }
-
-            if (product.ProductSpecifications != null)
-            {
-                productModel.ProductSpecificationGroups = new List<ProductSpecificationGroupModel>();
-
-                foreach (var grp in product.ProductSpecifications.GroupBy(x => x.ProductSpecificationGroup))
-                {
-                    var groupName = grp?.Key?.Name ?? "";
-                    var specs = grp.Select(x => new ProductSpecificationModel()
-                    {
-                        Name = x.Label,
-                        Values = x.ProductSpecificationValues.Select(y => y.Label).ToList()
-                    }).ToList();
-                    productModel.ProductSpecificationGroups.Add(new ProductSpecificationGroupModel()
-                    {
-                        Name = groupName,
-                        ProductSpecifications = specs
-                    });
-                }
-            }
-
-            if (_catalogSettings.EnableReviews)
-            {
-                //reviews
-                if (product.ReviewSummary != null)
-                    productModel.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(product.ReviewSummary);
-            }
-            else
-            {
-                product.ReviewSummary = null;
-            }
-
-            IList<DiscountCoupon> coupons = null;
-            //any autodiscounted price
-            var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, ref coupons, out decimal discount);
-            if (price < product.Price)
-            {
-                productModel.ComparePrice = product.Price;
-                if (productModel.ComparePrice < product.ComparePrice)
-                {
-                    productModel.ComparePrice = product.ComparePrice;
-                }
-            }
-            _priceAccountant.GetProductPriceDetails(product, null, price, out decimal priceWithoutTax,
-                out decimal tax, out decimal taxRate);
-            if (_taxSettings.DisplayProductPricesWithoutTax)
-                productModel.Price = priceWithoutTax;
-            else
-                productModel.Price = priceWithoutTax + tax;
-
-            return productModel;
-        }
-        #endregion
 
     }
 }

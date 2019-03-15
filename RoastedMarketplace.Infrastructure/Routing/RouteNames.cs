@@ -7,6 +7,9 @@
         public const string Logout = "Logout";
         public const string Register = "Register";
         public const string NotFound = "NotFound";
+        public const string ForgotPassword = "ForgotPassword";
+        public const string ChangePassword = "ChangePassword";
+
         public const string Cart = "Cart";
         public const string CheckoutAddress = "CheckoutAddress";
         public const string CheckoutPayment = "CheckoutPayment";

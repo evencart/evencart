@@ -70,5 +70,14 @@ namespace RoastedMarketplace.Services.Users
             _userService.Insert(user);
             return UserRegistrationStatus.Success;
         }
+
+        public void UpdatePassword(int userId, string password, PasswordFormat passwordFormat)
+        {
+            //we can create a user now, we'll need to hash the password
+            var salt = _cryptographyService.CreateSalt(8); //64 bits...should be good enough
+            var hashedPassword = _cryptographyService.GetHashedPassword(password, salt, passwordFormat);
+            _userService.Update(new {password = hashedPassword, passwordSalt = salt, passwordFormat = passwordFormat},
+                x => x.Id == userId, null);
+        }
     }
 }

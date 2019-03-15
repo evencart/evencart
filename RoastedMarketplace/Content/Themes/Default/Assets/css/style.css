@@ -975,7 +975,7 @@ a.meanmenu-reveal i {
 .header-account {
   margin-left: 16px; }
   .header-account .user-menu {
-    padding: 26px 10px 15px;
+    padding: 26px 0px 0px;
     font-size: 16px; }
     .header-account .user-menu > a {
       color: white; }
@@ -2123,8 +2123,7 @@ a.meanmenu-reveal i {
   display: block;
   font-size: 15px;
   font-weight: 700;
-  line-height: 24px;
-  text-transform: uppercase; }
+  line-height: 24px; }
 
 .footer-widget ul li a:hover {
   color: #3f3f3f; }
@@ -3366,3 +3365,12 @@ div.tab button.active {
 .breadcrumb {
   background-color: #fff;
   padding: 0; }
+
+.account-navigation-container a {
+  padding: 5px 15px;
+  border-radius: 3px;
+  display: block;
+  margin-bottom: 5px; }
+  .account-navigation-container a.active {
+    background-color: #337ab7;
+    color: #fff; }

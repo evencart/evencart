@@ -28,12 +28,15 @@ namespace RoastedMarketplace.Models.Installation
 
         public bool InstallSampleData { get; set; }
 
+        public string StoreName { get; set; }
+
         public void SetupValidationRules(ModelValidator<InstallationRequestModel> v)
         {
             v.RuleFor(x => x.AdminEmail).NotEmpty().EmailAddress();
             v.RuleFor(x => x.Password).Equal(x => x.ConfirmPassword);
             v.RuleFor(x => x.DatabaseName).NotEmpty();
             v.RuleFor(x => x.ServerUrl).NotEmpty();
+            v.RuleFor(x => x.StoreName).NotEmpty();
         }
     }
 }

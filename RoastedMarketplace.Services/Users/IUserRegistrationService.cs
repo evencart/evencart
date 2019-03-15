@@ -18,5 +18,13 @@ namespace RoastedMarketplace.Services.Users
         /// <param name="passwordFormat"></param>
         /// <returns></returns>
         UserRegistrationStatus Register(User user, PasswordFormat passwordFormat);
+
+        /// <summary>
+        /// Updates the user's password
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <param name="passwordFormat"></param>
+        void UpdatePassword(int userId, string password, PasswordFormat passwordFormat);
     }
 }

@@ -32,10 +32,10 @@ namespace RoastedMarketplace.Services.Installation
         }
 
 
-        public void FillRequiredSeedData(string defaultUserEmail, string defaultUserPassword, string installDomain)
+        public void FillRequiredSeedData(string defaultUserEmail, string defaultUserPassword, string installDomain, string storeName)
         {
             //first the settings
-            SeedSettings(installDomain);
+            SeedSettings(installDomain, storeName);
 
             //seed the roles
             SeedRoles();
@@ -181,19 +181,44 @@ namespace RoastedMarketplace.Services.Installation
         /// <summary>
         /// Seed settings
         /// </summary>
-        private void SeedSettings(string installDomain)
+        private void SeedSettings(string installDomain, string storeName)
         {
             var settingService = DependencyResolver.Resolve<ISettingService>();
 
             //general settings
             settingService.Save(new GeneralSettings() {
                 StoreDomain = installDomain,
+                StoreName = storeName,
+                DefaultTimeZoneId = "UTC",
+                EnableBreadcrumbs = true,
+                LogoId = 0,
+                PrimaryNavigationId = 0
             });
 
             //media settings
             settingService.Save(new MediaSettings() {
 
             });
+
+            //order settings
+            settingService.Save(new OrderSettings()
+            {
+                AllowGuestCheckout = true,
+                OrderNumberTemplate = "{UID}{YYYY:R}{MM:R}{DD:R}-{ID}",
+                AllowReorder = true,
+                EnableWishlist = true
+            });
+            //tax settings
+            settingService.Save(new TaxSettings()
+            {
+                DisplayProductPricesWithoutTax = false,
+                ChargeTaxOnShipping = false,
+                DefaultTaxRate = 0,
+                PricesIncludeTax = true,
+                ShippingPricesIncludeTax = true,
+                ShippingTaxId = null
+            });
+
 
             //system settings
             settingService.Save(new SystemSettings() {
@@ -222,6 +247,15 @@ namespace RoastedMarketplace.Services.Installation
                 UserDeletedEmailEnabled = true,
                 UserDeletedEmailToAdminEnabled = false,
                 UserDeactivationEmailToAdminEnabled = false,
+                OrderPaidEmailToAdminEnabled = true,
+                OrderPlacedEmailEnabled = true,
+                OrderPlacedEmailToAdminEnabled = true,
+                ProductOutOfStockToAdminEnabled = true,
+                OrderPaidEmailEnabled = false,
+                ShipmentDeliveredEmailEnabled = false,
+                ShipmentDeliveredEmailToAdminEnabled = true,
+                ShipmentShippedEmailEnabled = true,
+                DefaultEmailAccountId = 1
             });
 
             //url settings
@@ -229,6 +263,23 @@ namespace RoastedMarketplace.Services.Installation
               CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
               ProductUrlTemplate = "/product/{SeName}",
               ContentPageUrlTemplate = "{SeName}"
+            });
+
+            //catalog settings
+            settingService.Save(new CatalogSettings()
+            {
+              EnableReviews = true,
+              NumberOfReviewsToDisplayOnProductPage = 5,
+              DisplayNameForPrivateReviews = $"{storeName} Customer",
+              NumberOfRelatedProducts = 10,
+              EnableReviewModeration = false,
+              DisplaySortOptions = false,
+              EnableRelatedProducts = true,
+              AllowOneReviewPerUserPerItem = true,
+              AllowReviewsForStorePurchaseOnly = false,
+              DisplayProductsFromChildCategories = true,
+              CatalogPaginationType = CatalogPaginationType.Numbered,
+              NumberOfProductsPerPage = 15
             });
 
         }

@@ -13,8 +13,10 @@ namespace RoastedMarketplace.Core
         /// Parses a url for rendering
         /// </summary>
         /// <returns></returns>
-        public static string GetUrlFromPath(string path, string rootDomain = "")
+        public static string GetUrlFromPath(string path, string rootDomain = "", string protocol = "http")
         {
+            if (rootDomain.StartsWith("//"))
+                rootDomain = protocol + ":" + rootDomain;
             //we need to see if the path is relative or absolute
             if (path.StartsWith("~"))
             {

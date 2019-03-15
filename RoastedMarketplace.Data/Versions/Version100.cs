@@ -134,6 +134,12 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<MenuItem>(transaction);
             Db.CreateConstraint(Relation.Create<Menu, MenuItem>("Id", "MenuId"), transaction, true);
 
+            //old password and active codes
+            Db.CreateTable<PreviousPassword>(transaction);
+            Db.CreateTable<UserCode>(transaction);
+            Db.CreateConstraint(Relation.Create<User, UserCode>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction, true);
+
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
             Db.CreateTable<Log>(transaction);

@@ -24,7 +24,7 @@ namespace RoastedMarketplace.Services.Purchases
         {
             if (order == null)
             {
-                _logger.LogError<Order>(new ArgumentNullException(nameof(Order)), null, "Can't update a null order");
+                _logger.LogError<Order>(new ArgumentNullException(nameof(Order)), "Can't update a null order");
                 return;
             }
             //if order is complete already, give up

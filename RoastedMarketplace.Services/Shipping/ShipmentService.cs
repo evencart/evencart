@@ -7,6 +7,7 @@ using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Shop;
+using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.Shipping
@@ -69,6 +70,7 @@ namespace RoastedMarketplace.Services.Shipping
                 .Join<OrderItem>("OrderItemId", "Id", joinType: JoinType.LeftOuter)
                 .Join<Order>("OrderId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ShipmentHistory>("Id", "ShipmentId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<User>("UserId", "Id", typeof(Order), JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentItem>())
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentHistory>())
                 .Relate<OrderItem>((shipment, item) =>
@@ -90,6 +92,10 @@ namespace RoastedMarketplace.Services.Shipping
                     order.Shipments = order.Shipments ?? new List<Shipment>();
                     if (!order.Shipments.Contains(shipment))
                         order.Shipments.Add(shipment);
+                })
+                .Relate<User>((shipment, user) =>
+                {
+                    shipment.User = user;
                 })
                 .SelectNested()
                 .FirstOrDefault();

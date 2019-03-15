@@ -11,10 +11,12 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Infrastructure.DependencyContainer;
@@ -122,11 +124,15 @@ namespace RoastedMarketplace.Infrastructure
         #region Helpers
 
         private static IUrlHelperFactory _urlHelperFactory;
-        public static string RouteUrl(string routeName, object values = null)
+        public static string RouteUrl(string routeName, object values = null, bool absoluteUrl = false)
         {
             _urlHelperFactory = _urlHelperFactory ?? DependencyResolver.Resolve<IUrlHelperFactory>();
             var urlHelper = _urlHelperFactory.GetUrlHelper(DependencyResolver.Resolve<IActionContextAccessor>().ActionContext);
-            return urlHelper.RouteUrl(routeName, values);
+            var relativeUrl = urlHelper.RouteUrl(routeName, values);
+            if (!absoluteUrl)
+                return relativeUrl;
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+            return WebHelper.GetUrlFromPath(relativeUrl, generalSettings.StoreDomain);
         }
 
         public static string MapPath(string relativePath, bool isWebRootPath = false)

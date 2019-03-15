@@ -157,6 +157,10 @@ body {
 
     .workspace {
         font-size: 1.2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 6px;
+        white-space: nowrap;
     }
 
     .user-info {

@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using RoastedMarketplace.Data.Entity.Emails;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Services.Users;
 
@@ -20,6 +21,12 @@ namespace RoastedMarketplace.Services.Extensions
            // var uQuery = userService.Get(x => x.UserRoles.Select(y => y.Role.RoleName).Intersect(roles).Any());
             //return uQuery.ToList();
             return null;
+        }
+
+
+        public static EmailMessage.UserInfo ToUserInfo(this User user)
+        {
+            return new EmailMessage.UserInfo(user.Name, user.Email);
         }
     }
 }

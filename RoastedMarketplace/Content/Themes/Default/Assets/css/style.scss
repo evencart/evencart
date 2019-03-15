@@ -1207,7 +1207,7 @@ a.meanmenu-reveal i {
     margin-left: 16px;
 
     .user-menu {
-        padding: 26px 10px 15px;
+        padding: 26px 0px 0px;
         font-size: 16px;
 
         & > a {
@@ -2594,7 +2594,6 @@ a.meanmenu-reveal i {
     font-size: 15px;
     font-weight: 700;
     line-height: 24px;
-    text-transform: uppercase;
 }
 
 .footer-widget ul li a:hover {
@@ -4182,4 +4181,18 @@ div.tab button.active {
 {
     background-color:#fff;
     padding:0;
+}
+
+.account-navigation-container {
+    a {
+        padding: 5px 15px;
+        border-radius: 3px;
+        display: block;
+        margin-bottom: 5px;
+
+        &.active {
+            background-color: #337ab7;
+            color: #fff;
+        }
+    }
 }

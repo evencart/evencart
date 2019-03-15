@@ -280,6 +280,20 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 {
                     shipment.ShipmentStatus = shipmentHistoryModel.ShipmentStatus;
                     _shipmentService.Update(shipment);
+
+                    //raise event
+                    switch (shipment.ShipmentStatus)
+                    {
+                        case ShipmentStatus.InTransit:
+                            RaiseEvent(NamedEvent.ShipmentShipped, shipment);
+                            break;
+                        case ShipmentStatus.Delivered:
+                            RaiseEvent(NamedEvent.ShipmentDelivered, shipment);
+                            break;
+                        case ShipmentStatus.DeliveryFailed:
+                            RaiseEvent(NamedEvent.ShipmentDeliveryFailed, shipment);
+                            break;
+                    }
                 }
             }
             else

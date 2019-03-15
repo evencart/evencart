@@ -11,6 +11,7 @@ using RoastedMarketplace.Core.Services.Events;
 using RoastedMarketplace.Data.Database;
 using RoastedMarketplace.Infrastructure.Authentication;
 using RoastedMarketplace.Infrastructure.Database;
+using RoastedMarketplace.Infrastructure.Emails;
 using RoastedMarketplace.Infrastructure.Localization;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -22,6 +23,7 @@ using RoastedMarketplace.Infrastructure.Routing.Parsers;
 using RoastedMarketplace.Infrastructure.Theming;
 using RoastedMarketplace.Infrastructure.ViewEngines;
 using RoastedMarketplace.Services.Authentication;
+using RoastedMarketplace.Services.Emails;
 using RoastedMarketplace.Services.Search;
 using RoastedMarketplace.Services.Settings;
 using RoastedMarketplace.Services.Users;
@@ -64,10 +66,13 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             registrar.Register<ISearchQueryParserService, SearchQueryParserService>(reuse: Reuse.Scoped);
             //html processor
             registrar.Register<IHtmlProcessor, HtmlProcessor>(reuse: Reuse.Singleton);
+            //email sender
+            registrar.Register<IEmailSender, EmailSender>(reuse: Reuse.Transient);
 
             var asm = AssemblyLoader.GetAppDomainAssemblies();
+            var allTypes = asm.SelectMany(x => x.GetTypes()).ToList();
             //find all event consumer types
-            var allConsumerTypes = asm.SelectMany(x => x.GetTypes())
+            var allConsumerTypes = allTypes
                 .Where(type => type.IsPublic && // get public types 
                                type.GetInterfaces()
                                    .Any(x => x.IsAssignableTo(typeof(IFoundationEvent)) &&
@@ -75,13 +80,22 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             //all consumers which are not interfaces
             registrar.RegisterMany(allConsumerTypes);
 
+            //find all the model factories
+            var allModelFactories = allTypes
+                .Where(type => type.IsPublic && // get public types 
+                               type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(IModelFactory)) &&
+                                             !type.IsAbstract));// which implementing some interface(s)
+            //all consumers which are not interfaces
+            registrar.RegisterMany(allModelFactories);
+            
             //capability providers
-            var allCapabilityProviderTypes = asm.SelectMany(x => x.GetTypes())
+            var allCapabilityProviderTypes = allTypes
                 .Where(type => type.IsPublic && // get public types 
                                type.GetInterfaces()
                                    .Any(x => x.IsAssignableTo(typeof(ICapabilityProvider)) &&
                                              !type.IsAbstract));// which implementing some interface(s)
-            //all consumers which are not interfaces
+            //all providers which are not interfaces
             registrar.RegisterMany(allCapabilityProviderTypes);
 
             //services
@@ -96,7 +110,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
 
             //components
             //find all event consumer types
-            var allComponents = asm.SelectMany(x => x.GetTypes())
+            var allComponents = allTypes
                 .Where(type => type.IsPublic && // get public types 
                                !type.IsAbstract &&
                                type.IsAssignableTo(typeof(FoundationComponent)));// which implementing some interface(s)
