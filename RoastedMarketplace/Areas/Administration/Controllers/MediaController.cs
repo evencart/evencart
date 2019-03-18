@@ -91,5 +91,15 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             });
             return R.Success.Result;
         }
+        [DualPost("delete", Name = AdminRouteNames.DeleteMedia, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.UploadMedia)]
+        public IActionResult DeleteMedia(int mediaId)
+        {
+            var media = mediaId > 0 ? _mediaService.Get(mediaId) : null;
+            if (media == null)
+                return NotFound();
+            _mediaService.Delete(media);
+            return R.Success.Result;
+        }
     }
 }

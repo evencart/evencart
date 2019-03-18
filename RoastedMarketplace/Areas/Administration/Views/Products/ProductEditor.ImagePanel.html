@@ -19,10 +19,13 @@
         </div>
         {% endunless %}
         <script id="image-block-template" type="text/html">
-            <div class="image-block">
+            <div class="image-block" id="image-block-media_id">
                 <img src="image_url" />
                 <input type="hidden" data-type="id" name="media[index].id" value="media_id" />
                 <input type="hidden" data-type="displayorder" name="media[index].displayorder" value="media_displayorder" />
+                <a href="javascript:void(null);" onclick="deleteMedia(media_id)">
+                    <i class="rbicon rbicon-trash-2"></i>
+                </a>
             </div>
         </script>
         <script type="text/javascript">
@@ -83,6 +86,26 @@
                 jQuery("#image-container").append(imageBlock);
             }
 
+            var deleteMedia = function(id) {
+                confirm('{{"Are you sure you wish to delete this media?" | t}}',
+                    function() {
+                        post({
+                            'url': '{% route api_DeleteMedia %}',
+                            data: {
+                                mediaId: id
+                            },
+                            done: function(response) {
+                                jQuery("#image-block-" + id).remove();
+                                //update sortable
+                                displayOrderSortable({
+                                    container: "image-container",
+                                    itemSelector: ".image-block",
+                                    refresh: true
+                                });
+                            }
+                        });
+                    });
+            }
         </script>
     </div>
 </div>

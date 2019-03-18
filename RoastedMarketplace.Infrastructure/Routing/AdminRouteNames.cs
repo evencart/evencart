@@ -12,6 +12,7 @@
 
         public const string UploadMedia = "UploadMedia";
         public const string UpdateMediaDisplayOrder = "UpdateMediaDisplayOrder";
+        public const string DeleteMedia = "DeleteMedia";
 
         public const string UpdateProductCategoryDisplayOrder = "UpdateProductCategoryDisplayOrder";
         public const string GetCategorySuggestions = "GetCategorySuggestions";
