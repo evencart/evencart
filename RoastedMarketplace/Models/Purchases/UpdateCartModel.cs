@@ -13,5 +13,7 @@ namespace RoastedMarketplace.Models.Purchases
         public int? Quantity { get; set; }
 
         public bool RemoveCoupon { get; set; }
+
+        public bool IsWishlist { get; set; }
     }
 }

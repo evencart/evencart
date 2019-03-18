@@ -80,6 +80,7 @@ var loadHtml = function(options) {
 
 var reloadComponent = function(componentName, data, rootElement) {
     var componentUrl = "/component/" + componentName;
+    data = data || {};
     loadHtml({
         url: componentUrl,
         data: data,

@@ -1,8 +1,10 @@
 ﻿<!-- PAGE SECTION START -->
 <div class="page-section section" id="cart-section">
+    {% if cart.items.size > 0 %}
     <div class="row">
         <div class="col-xs-12">
             <div class="cart-table table-responsive mb-40">
+
                 <table>
                     <thead>
                         <tr>
@@ -17,7 +19,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                         {% for cartItem in cart.items %}
                         <tr>
                             <td class="pro-thumbnail">
@@ -48,23 +50,25 @@
                                         {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
                                     </form>
                                     <script type="text/javascript">
-                                            ready(function () {
-                                                initAjaxForm("form-cart-{{cartItem.id}}",
-                                                    {
-                                                        onSuccess: function () {
-                                                            //reload cart
-                                                            reloadComponent("CartSection", {
-                                                                checkout: "{{checkout}}"
-                                                            }, "#cart-section");
-                                                        }
-                                                    });
-                                                jQuery("#btn-update-cart").click(function() {
-                                                    jQuery("#form-cart-{{cartItem.id}}").submit();
-                                                });
-                                                jQuery("#quantity-{{cartItem.id}}").change(function() {
-                                                    jQuery("#form-cart-{{cartItem.id}}").submit();
-                                                });
-                                            });
+                            ready(function() {
+                                initAjaxForm("form-cart-{{cartItem.id}}",
+                                    {
+                                        onSuccess: function() {
+                                            //reload cart
+                                            reloadComponent("CartSection",
+                                                {
+                                                    checkout: "{{checkout}}"
+                                                },
+                                                "#cart-section");
+                                        }
+                                    });
+                                jQuery("#btn-update-cart").click(function() {
+                                    jQuery("#form-cart-{{cartItem.id}}").submit();
+                                });
+                                jQuery("#quantity-{{cartItem.id}}").change(function() {
+                                    jQuery("#form-cart-{{cartItem.id}}").submit();
+                                });
+                            });
                                     </script>
                                 </div>
                             </td>
@@ -74,24 +78,30 @@
                                 <form action="{% route api_UpdateCart %}" method="post" id="remove-form-cart-{{cartItem.id}}">
                                     <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
                                     {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
-                                    <a href="#" class="remove-from-cart">×</a>
+                                    <span href="#" id="a-remove-form-cart-{{cartItem.id}}" class="clickable">
+                                        <i class="fa fa-times"></i>
+                                    </span>
                                 </form>
                                 <script type="text/javascript">
-                                        ready(function () {
-                                            initAjaxForm("remove-form-cart-{{cartItem.id}}",
-                                                {
-                                                    onSuccess: function () {
-                                                        //reload cart
-                                                        reloadComponent("CartSection", {
+                                    ready(function() {
+                                        initAjaxForm("remove-form-cart-{{cartItem.id}}",
+                                            {
+                                                onSuccess: function() {
+                                                    //reload cart
+                                                    reloadComponent("CartSection",
+                                                        {
                                                             checkout: "{{checkout}}"
-                                                        }, "#cart-section");
-                                                    }
-                                                });
-                                            jQuery(".remove-from-cart").click(function(e) {
-                                                e.preventDefault();
-                                                jQuery(this).closest("form").submit();
+                                                        },
+                                                        "#cart-section");
+                                                    reloadComponent("MiniCart", { success: true }, "#mini-cart");
+                                                }
                                             });
+                                        
+                                        jQuery("#a-remove-form-cart-{{cartItem.id}}").click(function (e) {
+                                            e.preventDefault();
+                                            jQuery("#remove-form-cart-{{cartItem.id}}").submit();
                                         });
+                                    });
                                 </script>
                             </td>
                             {% endif %}
@@ -136,34 +146,35 @@
 
                 </form>
                 <script type="text/javascript">
-                    ready(function() {
-                        initAjaxForm("form-discount-coupon",
-                            {
-                                onSuccess: function() {
-                                    //reload cart
-                                    reloadComponent("CartSection",
-                                        {
-                                            checkout: "{{checkout}}"
-                                        }, "#cart-section");
+            ready(function() {
+                initAjaxForm("form-discount-coupon",
+                    {
+                        onSuccess: function() {
+                            //reload cart
+                            reloadComponent("CartSection",
+                                {
+                                    checkout: "{{checkout}}"
                                 },
-                                onError: function(response) {
-                                    var msg = "";
-                                    switch (response.status) {
-                                    case "InvalidCode":
-                                        msg = '{{"The coupon code is not valid" | t}}';
-                                        break;
-                                    case "NotEligibleForCart":
-                                        msg = '{{"The coupon is not eligible or has already been used" | t}}';
-                                        break;
-                                    }
-                                    jQuery("#discount-error").html("<label>" + msg + "</label>");
+                                "#cart-section");
+                        },
+                        onError: function(response) {
+                            var msg = "";
+                            switch (response.status) {
+                            case "InvalidCode":
+                                msg = '{{"The coupon code is not valid" | t}}';
+                                break;
+                            case "NotEligibleForCart":
+                                msg = '{{"The coupon is not eligible or has already been used" | t}}';
+                                break;
+                            }
+                            jQuery("#discount-error").html("<label>" + msg + "</label>");
 
-                                },
-                                errorPlacement: function(error, element) {
-                                    jQuery("#discount-error").html(error);
-                                }
-                            });
+                        },
+                        errorPlacement: function(error, element) {
+                            jQuery("#discount-error").html(error);
+                        }
                     });
+            });
                 </script>
             </div>
             {% endif %}
@@ -219,6 +230,15 @@
         </div>
 
     </div>
+    {% else %}
+    <div class="row">
+        <div class="text-center">
+            <i class="fa fa-shopping-cart fa-5x"></i>
+            <h4>{{"Your shopping cart is empty" |t}}</h4>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 <!-- PAGE SECTION END -->
 <script type="text/javascript">

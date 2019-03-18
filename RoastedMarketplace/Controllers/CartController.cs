@@ -61,80 +61,87 @@ namespace RoastedMarketplace.Controllers
             
             //first get the product
             var product = _productService.Get(cartItemModel.ProductId);
-            if (product == null)
+            if (product == null || !product.IsPublic())
                 return R.Fail.Result;
-            //use attributes which are valid
-            var allowedAttributes = product.ProductAttributes.Select(x => x.Label).ToList();
-            cartItemModel.Attributes = cartItemModel.Attributes.Where(x => allowedAttributes.Contains(x.Name)).ToList();
-
-            //exclude attributes without any values
-            cartItemModel.Attributes = cartItemModel.Attributes
-                .Where(x => x.SelectedValues.Count > 0 && x.SelectedValues.Count(y => y.Name == "-1") == 0)
-                .ToList();
-            //check if required attributes have been passed
-            var requiredAttributes = product.ProductAttributes.Where(x => x.IsRequired);
-            foreach (var ra in requiredAttributes)
-            {
-                if (cartItemModel.Attributes.All(x => x.Name != ra.Label))
-                    return R.Fail.With("error", T("{0} is required", arguments: ra.AvailableAttribute.Name)).Result;
-            }
-            
-            //check if valid values for attributes has been passed
-            foreach (var ca in cartItemModel.Attributes)
-            {
-                var allowedAttributeValues = product.ProductAttributes.First(x => x.Label == ca.Name).AvailableAttribute
-                    .AvailableAttributeValues.Select(x => x.Value).ToList();
-                var invalidValues = ca.SelectedValues.Where(x => !allowedAttributeValues.Contains(x.Name)).Select(x => x.Name).ToList();
-                if (invalidValues.Any())
-                {
-                    return R.Fail.With("error",
-                        T("'{0}' is not valid value for '{1}'",
-                            arguments: new object[] {string.Join(T(" or "), invalidValues), ca.Name})).Result;
-                }
-            }
-
-            //validate the quantity
-            ValidateQuantityRange(cartItemModel.Quantity, product, out IActionResult validationResult);
-            if (validationResult != null)
-                return validationResult;
-
+            //check appropriate attributes if not wishlist
             ProductVariant variant = null;
-            //should we check for availability
-            if (product.TrackInventory)
+            IActionResult validationResult = null;
+            string attributeJson = string.Empty;
+            if (!cartItemModel.IsWishlist)
             {
-                if (!product.HasVariants)
-                {
-                    ValidateProductQuantity(product, out validationResult);
-                    if (validationResult != null)
-                        return validationResult;
-                }
-                else
-                {
-                    var attributeNames = cartItemModel.Attributes.Select(x => x.Name).ToList();
-                    var attributeIds = product.ProductAttributes.Where(x => attributeNames.Contains(x.Label))
-                        .Select(x => x.Id)
-                        .ToList();
+                //use attributes which are valid
+                var allowedAttributes = product.ProductAttributes.Select(x => x.Label).ToList();
+                cartItemModel.Attributes = cartItemModel.Attributes.Where(x => allowedAttributes.Contains(x.Name)).ToList();
 
-                    //if the product has variants only variants should be allowed to be added
-                    var variants = _productVariantService.GetByProductId(product.Id);
-                    variant = variants.FirstOrDefault(x =>
+                //exclude attributes without any values
+                cartItemModel.Attributes = cartItemModel.Attributes
+                    .Where(x => x.SelectedValues.Count > 0 && x.SelectedValues.Count(y => y.Name == "-1") == 0)
+                    .ToList();
+                //check if required attributes have been passed
+                var requiredAttributes = product.ProductAttributes.Where(x => x.IsRequired);
+                foreach (var ra in requiredAttributes)
+                {
+                    if (cartItemModel.Attributes.All(x => x.Name != ra.Label))
+                        return R.Fail.With("error", T("{0} is required", arguments: ra.AvailableAttribute.Name)).Result;
+                }
+
+                //check if valid values for attributes has been passed
+                foreach (var ca in cartItemModel.Attributes)
+                {
+                    var allowedAttributeValues = product.ProductAttributes.First(x => x.Label == ca.Name).AvailableAttribute
+                        .AvailableAttributeValues.Select(x => x.Value).ToList();
+                    var invalidValues = ca.SelectedValues.Where(x => !allowedAttributeValues.Contains(x.Name)).Select(x => x.Name).ToList();
+                    if (invalidValues.Any())
                     {
-                        var variantAttributeIds = x.ProductVariantAttributes.Select(y => y.ProductAttributeId).ToList();
-                        return !attributeIds.Except(variantAttributeIds).Any();
-                    });
-                    //is the variant available?
-                    ValidateVariantQuantity(variant, out validationResult);
-                    if (validationResult != null)
-                        return validationResult;
+                        return R.Fail.With("error",
+                            T("'{0}' is not valid value for '{1}'",
+                                arguments: new object[] { string.Join(T(" or "), invalidValues), ca.Name })).Result;
+                    }
                 }
-            }
 
-            var productAttributes = new Dictionary<string, IList<string>>();
-            foreach (var cpa in cartItemModel.Attributes)
-            {
-                productAttributes.TryAdd(cpa.Name, cpa.SelectedValues.Select(x => x.Name).ToList());
+                //validate the quantity
+                ValidateQuantityRange(cartItemModel.Quantity, product, out validationResult);
+                if (validationResult != null)
+                    return validationResult;
+
+                
+                //should we check for availability
+                if (product.TrackInventory)
+                {
+                    if (!product.HasVariants)
+                    {
+                        ValidateProductQuantity(product, out validationResult);
+                        if (validationResult != null)
+                            return validationResult;
+                    }
+                    else
+                    {
+                        var attributeNames = cartItemModel.Attributes.Select(x => x.Name).ToList();
+                        var attributeIds = product.ProductAttributes.Where(x => attributeNames.Contains(x.Label))
+                            .Select(x => x.Id)
+                            .ToList();
+
+                        //if the product has variants only variants should be allowed to be added
+                        var variants = _productVariantService.GetByProductId(product.Id);
+                        variant = variants.FirstOrDefault(x =>
+                        {
+                            var variantAttributeIds = x.ProductVariantAttributes.Select(y => y.ProductAttributeId).ToList();
+                            return !attributeIds.Except(variantAttributeIds).Any();
+                        });
+                        //is the variant available?
+                        ValidateVariantQuantity(variant, out validationResult);
+                        if (validationResult != null)
+                            return validationResult;
+                    }
+                }
+
+                var productAttributes = new Dictionary<string, IList<string>>();
+                foreach (var cpa in cartItemModel.Attributes)
+                {
+                    productAttributes.TryAdd(cpa.Name, cpa.SelectedValues.Select(x => x.Name).ToList());
+                }
+                attributeJson = _dataSerializer.Serialize(productAttributes, false);
             }
-            var attributeJson = _dataSerializer.Serialize(productAttributes, false);
 
             //guest signin if user is not signed in
             ApplicationEngine.GuestSignIn();
@@ -209,7 +216,9 @@ namespace RoastedMarketplace.Controllers
             if (cartModel.CartItemId.HasValue && cartModel.Quantity.HasValue)
             {
                 //get the cart
-                var cart = _cartService.GetCart(ApplicationEngine.CurrentUser.Id);
+                var cart = cartModel.IsWishlist
+                    ? _cartService.GetWishlist(ApplicationEngine.CurrentUser.Id)
+                    : _cartService.GetCart(ApplicationEngine.CurrentUser.Id);
                 var cartItem = cart.CartItems.FirstOrDefault(x => x.Id == cartModel.CartItemId.Value);
                 if (cartItem == null)
                     return R.Fail.Result;

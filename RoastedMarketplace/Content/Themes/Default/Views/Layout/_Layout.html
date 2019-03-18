@@ -15,7 +15,7 @@
                 <div class="col-lg-6 col-md-4 col-xs-12">
                     <div class="global-search">
                         <form method="get" action="{% route ProductsSearchPage %}">
-                            <input type="text" name="search" placeholder="Search products or brands" />
+                            <input type="text" name="search" placeholder="{{'Search products or brands' | t}}" />
                             <button type="submit">
                                 {{"Search" | t}}
                             </button>
@@ -70,51 +70,7 @@
 
                             <!-- Header Cart -->
                             <div class="header-cart float-left">
-                                <!-- Cart Toggle -->
-                                <a class="cart-toggle" href="{% route Cart %}" data-toggle="dropdown">
-                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                    {% if cart.totalItems > 0 %}
-                                    <span>{{cart.totalItems}}</span>
-                                    {% endif %}
-                                </a>
-                                <!-- Mini Cart Brief -->
-                                <div class="mini-cart-brief dropdown-menu text-left">
-                                    {% if cart.items.size > 0 %}
-                                    <!-- Cart Products -->
-                                    <div class="all-cart-product clearfix">
-                                        {% for cartItem in cart.items %}
-                                        <div class="single-cart clearfix">
-                                            <div class="cart-image">
-                                                <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'><img src="{{cartItem.imageUrl}}" alt=""></a>
-                                            </div>
-                                            <div class="cart-info">
-                                                <h5><a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a></h5>
-                                                <p>
-                                                    {{cartItem.attributeText}}
-                                                </p>
-                                                <p>{{cartItem.quantity}} x {{cartItem.price | withCurrency}}</p>
-                                                <a href="#" class="cart-delete" title="Remove this item"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                    <!-- Cart Total -->
-                                    <div class="cart-totals">
-                                        <h5>{{"Subtotal" | t}} <span>{{cart.subTotal | withCurrency}}</span></h5>
-                                    </div>
-                                    <!-- Cart Button -->
-                                    <div class="cart-bottom  clearfix">
-                                        <a href="{% route Cart %}">Check out</a>
-                                    </div>
-                                    {% else %}
-                                    <div class="text-center">
-                                        <div>
-                                            <i class="fa fa-shopping-cart"></i>
-                                        </div>
-                                        {{"Your shopping cart is empty" | t}}
-                                    </div>
-                                    {% endif %}
-                                </div>
+                               {% component "MiniCart" %}
                             </div>
                         </div>
 

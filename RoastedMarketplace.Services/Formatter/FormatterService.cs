@@ -24,6 +24,8 @@ namespace RoastedMarketplace.Services.Formatter
 
         public string FormatProductAttributes(string attributeJson)
         {
+            if (string.IsNullOrEmpty(attributeJson))
+                return string.Empty;
             var productAttributes =
                 _dataSerializer.DeserializeAs<Dictionary<string, IList<string>>>(attributeJson);
             var attributeText = string.Join(Environment.NewLine, productAttributes.Select(y => y.Key + " : " + string.Join(", ", y.Value)));

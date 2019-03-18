@@ -9,6 +9,7 @@ using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
 using RoastedMarketplace.Models.Addresses;
 using RoastedMarketplace.Models.Orders;
 using RoastedMarketplace.Models.Users;
@@ -120,10 +121,8 @@ namespace RoastedMarketplace.Controllers
         [DualGet("wishlist", Name = RouteNames.AccountWishlist)]
         public IActionResult WishList()
         {
-            var currentUser = ApplicationEngine.CurrentUser;
-            var wishlist = _cartService.GetWishlist(currentUser.Id);
-            
-            return R.Result;
+            var wishList = new CartObject(true).GetObject();
+            return R.Success.With("wishlist", wishList).Result;
         }
 
         [DualGet("reviews", Name = RouteNames.AccountReviews)]

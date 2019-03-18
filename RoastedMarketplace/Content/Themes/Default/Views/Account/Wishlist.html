@@ -1,0 +1,75 @@
+﻿{% layout "_AccountLayout" %}
+{% global active_menu="AccountWishlist" %}
+<h3>
+    {{"Wishlist" | t}}
+</h3>
+<div class="page-section section pb-120">
+    <div class="row">
+        {% if wishlist.items.size == 0 %}
+        <div>
+            <p>
+                {{"Your wishlist is empty." | t}}
+            </p>
+        </div>
+        {% else %}
+        <div class="cart-table table-responsive mb-40">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="pro-thumbnail"></th>
+                        <th class="pro-title">{{"Product" | t}}</th>
+                        <th class="pro-remove"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for cartItem in wishlist.items %}
+                    <tr>
+                        <td class="pro-thumbnail">
+                            <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>
+                                <img src="{{cartItem.imageUrl}}" alt="" />
+                            </a>
+                        </td>
+                        <td class="pro-title">
+                            <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a>
+                            {% if cartItem.comparePrice > 0 %}
+                            <div>
+                                <del>{{cartItem.comparePriceFormatted}}</del>
+                            </div>
+                            {% endif %}
+                            <strong>
+                                <span class="amount">{{cartItem.priceFormatted}}</span>
+                            </strong>
+                        </td>
+                        <td class="pro-remove">
+                            <form action="{% route api_UpdateCart %}" method="post" id="remove-form-cart-{{cartItem.id}}">
+                                <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
+                                {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
+                                {% control hidden name="isWishlist" value="true" %}
+                                <a href="#" id="remove-from-cart-{{cartItem.id}}" class="remove-from-cart">×</a>
+                            </form>
+                            <script type="text/javascript">
+                                ready(function () {
+                                    initAjaxForm("remove-form-cart-{{cartItem.id}}",
+                                        {
+                                            onSuccess: function () {
+                                                window.location.reload();
+                                            }
+                                        });
+                                    jQuery("#remove-from-cart-{{cartItem.id}}").click(function(e) {
+                                        e.preventDefault();
+                                        jQuery(this).closest("form").submit();
+                                    });
+                                });
+                            </script>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+
+    </div>
+</div>

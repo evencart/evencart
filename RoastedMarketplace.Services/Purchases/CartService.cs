@@ -42,7 +42,7 @@ namespace RoastedMarketplace.Services.Purchases
         private Cart GetCart(int userId, bool isWishlist)
         {
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
-
+            Expression<Func<Product, bool>> productWhere = product => product.Published;
             var userCart = Repository.Where(x => x.UserId == userId && x.IsWishlist == isWishlist)
                                .Join<CartItem>("Id", "CartId", joinType: JoinType.LeftOuter)
                                .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
@@ -98,6 +98,7 @@ namespace RoastedMarketplace.Services.Purchases
                                        cart.DiscountCoupon.RestrictionValues.Add(value);
                                    })
                                .Where(seoMetaWhere)
+                               .Where(productWhere)
                                .SelectNested()
                                .FirstOrDefault();
 

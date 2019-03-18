@@ -14,6 +14,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
 {
     public class CartObject : GlobalObject
     {
+        private bool _isWishList;
+        public CartObject(bool isWishList)
+        {
+            _isWishList = isWishList;
+        }
+
+        public CartObject() : this(false) { }
+
         public override object GetObject()
         {
             var cartService = DependencyResolver.Resolve<ICartService>();
@@ -24,7 +32,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
 
             if (ApplicationEngine.CurrentUser == null)
                 return null;
-            var cart = cartService.GetCart(ApplicationEngine.CurrentUser.Id);
+            var cart = _isWishList
+                ? cartService.GetWishlist(ApplicationEngine.CurrentUser.Id)
+                : cartService.GetCart(ApplicationEngine.CurrentUser.Id);
+
             //refresh the cart items if necessary
             CartHelper.RefreshCart(cart);
 

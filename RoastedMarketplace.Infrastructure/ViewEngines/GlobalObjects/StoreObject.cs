@@ -13,6 +13,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
         public override object GetObject()
         {
             var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+            var catalogSettings = DependencyResolver.Resolve<CatalogSettings>();
+            var orderSettings = DependencyResolver.Resolve<OrderSettings>();
+
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
             var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
@@ -35,7 +38,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 },
                 LogoUrl = logoUrl,
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
-                Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName)
+                Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName),
+                WishlistEnabled = orderSettings.EnableWishlist,
+                RepeatOrdersEnabled = orderSettings.AllowReorder
             };
         }
     }

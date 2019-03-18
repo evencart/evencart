@@ -28,7 +28,13 @@
                 {% partial "Common/Breadcrumb" %}
                 <div class="product-details section">
                     <!-- Title -->
-                    <h1 class="title">{{product.name}}</h1>
+                    <h1 class="title">
+                        {{product.name}}
+                        <small>
+                            {% partial "Products/_AddToWishlist" %}
+                        </small>
+                        
+                    </h1>
                     <a href="#reviews">
                         {% partial "Products/_Rating" %}
                     </a>
@@ -46,7 +52,7 @@
                     </div>
                     <!-- Short Description -->
                     <div class="short-desc section">
-                        <h5 class="pd-sub-title">Quick Overview</h5>
+                        <h5 class="pd-sub-title">{{"Quick Overview" | t}}</h5>
                         <p>
                             {{product.summary}}
                         </p>
@@ -59,15 +65,19 @@
                             <div class="product-quantity">
                                 <input name="quantity" type="text" value="{{product.minimumPurchaseQuantity}}">
                             </div>
-                            <button class="add-to-cart">add to cart</button>
+                            <button class="add-to-cart">{{"add to cart" | t }}</button>
                         </div>
                     </form>
                     <script type="text/javascript">
                         ready(function() {
                             initAjaxForm("form-add-to-cart",
                                 {
-                                    onSuccess: function() {
-
+                                    onSuccess: function () {
+                                        notify("success", '{{"Successfully added product to the cart" | t}}');
+                                        reloadComponent("MiniCart",
+                                            {
+                                                success: true //just there for the sake of any key
+                                            }, "#mini-cart");
                                     }
                                 });
                         });

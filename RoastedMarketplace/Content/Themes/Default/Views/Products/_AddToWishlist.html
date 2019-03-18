@@ -1,0 +1,20 @@
+﻿<a id="a-add-{{product.id}}-towishlist" class="wishlist" href="#" title='{{"Add to wishlist" | t}}'>
+    <i class="fa fa-heart-o" aria-hidden="true"></i>
+</a>
+<script type="text/javascript">
+    ready(function() {
+        jQuery("#a-add-{{product.id}}-towishlist").click(function (e) {
+            e.preventDefault();
+            post({
+                url: '{% route api_AddToCart %}',
+                data: {
+                    productId: "{{product.id}}",
+                    isWishlist: true
+                },
+                done: function(response) {
+                    notify("success", '{{"Successfully added to wishlist" | t}}');
+                }
+            });
+        });
+    })
+</script>
