@@ -1143,10 +1143,12 @@ a.meanmenu-reveal i {
   text-transform: capitalize; }
 
 .single-cart .cart-info h5 a {
-  color: #666; }
+  color: #666;
+  padding: 0; }
 
 .single-cart .cart-info h5 a:hover {
-  color: #3f3f3f; }
+  color: #3f3f3f;
+  background-color: white; }
 
 .single-cart .cart-info p {
   margin: 0;
@@ -1157,14 +1159,16 @@ a.meanmenu-reveal i {
   padding: 0;
   position: absolute;
   right: 0;
-  top: 0; }
+  top: 0;
+  color: #3f3f3f; }
 
 .single-cart .cart-info .cart-delete i {
   display: block;
   font-size: 16px; }
 
 .single-cart .cart-info .cart-delete:hover {
-  color: #3f3f3f; }
+  color: #3f3f3f;
+  background-color: white; }
 
 /*-- Cart Total --*/
 .cart-totals {

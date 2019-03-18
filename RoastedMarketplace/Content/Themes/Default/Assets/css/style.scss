@@ -1409,10 +1409,12 @@ a.meanmenu-reveal i {
 
 .single-cart .cart-info h5 a {
     color: #666;
+    padding:0;
 }
 
 .single-cart .cart-info h5 a:hover {
     color: #3f3f3f;
+    background-color:white;
 }
 
 .single-cart .cart-info p {
@@ -1426,6 +1428,7 @@ a.meanmenu-reveal i {
     position: absolute;
     right: 0;
     top: 0;
+    color: #3f3f3f;
 }
 
 .single-cart .cart-info .cart-delete i {
@@ -1435,6 +1438,7 @@ a.meanmenu-reveal i {
 
 .single-cart .cart-info .cart-delete:hover {
     color: #3f3f3f;
+    background-color:white;
 }
 /*-- Cart Total --*/
 .cart-totals {
