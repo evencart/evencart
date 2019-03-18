@@ -18,11 +18,14 @@ namespace RoastedMarketplace.Data.Entity.Settings
         /// The logo id of the website
         /// </summary>
         public int LogoId { get; set; }
+      
+        public int FaviconId { get; set; }
 
         public string StoreName { get; set; }
 
         public bool EnableBreadcrumbs { get; set; }
 
         public int PrimaryNavigationId { get; set; }
+       
     }
 }
