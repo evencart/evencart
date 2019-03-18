@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure
 {
@@ -22,7 +22,7 @@ namespace RoastedMarketplace.Infrastructure
             if (actionContext?.RouteData.Values.ContainsKey("area") ?? false)
             {
                 area = actionContext.RouteData.Values["area"]?.ToString();
-                if (!area.IsNullEmptyOrWhitespace())
+                if (!area.IsNullEmptyOrWhiteSpace())
                 {
                     area = "/" + area;
                 }

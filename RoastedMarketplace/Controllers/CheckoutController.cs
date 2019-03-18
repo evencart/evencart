@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -310,7 +310,7 @@ namespace RoastedMarketplace.Controllers
             _orderItemService.Insert(orderItems.ToArray());
 
             //process payment
-            var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhitespace()
+            var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()
                 ? null
                 : _dataSerializer.DeserializeAs<Dictionary<string, object>>(cart.PaymentMethodData);
 

@@ -2,8 +2,8 @@
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
@@ -45,7 +45,7 @@ namespace RoastedMarketplace.Areas.Administration.Models.Shop
             v.RuleForEach(x => x.Values)
                 .Custom((model, context) =>
                 {
-                    if (model.AttributeValue.IsNullEmptyOrWhitespace())
+                    if (model.AttributeValue.IsNullEmptyOrWhiteSpace())
                     {
                         context.AddFailure(nameof(ProductAttributeValueModel.AttributeValue), "Can't add empty values");
                     }

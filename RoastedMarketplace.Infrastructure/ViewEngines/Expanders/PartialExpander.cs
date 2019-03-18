@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
@@ -29,7 +29,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
                 //read the layout now
                 var viewPath = viewAccountant.GetThemeViewPath(partialFile);
-                if (viewPath.IsNullEmptyOrWhitespace())
+                if (viewPath.IsNullEmptyOrWhiteSpace())
                     throw new Exception($"Can't find partial view {partialFile} in view {readFile.FileName}");
 
                 var viewFile = ReadFile.From(viewPath);

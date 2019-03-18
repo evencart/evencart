@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.Plugins
 {
@@ -49,8 +49,8 @@ namespace RoastedMarketplace.Infrastructure.Plugins
                         continue;//invalid file found
 
                     //ignore any invalid ones
-                    if (pluginInfo.SystemName.IsNullEmptyOrWhitespace() || pluginInfo.Name.IsNullEmptyOrWhitespace() ||
-                        pluginInfo.AssemblyName.IsNullEmptyOrWhitespace())
+                    if (pluginInfo.SystemName.IsNullEmptyOrWhiteSpace() || pluginInfo.Name.IsNullEmptyOrWhiteSpace() ||
+                        pluginInfo.AssemblyName.IsNullEmptyOrWhiteSpace())
                         continue;
                 }
                 catch

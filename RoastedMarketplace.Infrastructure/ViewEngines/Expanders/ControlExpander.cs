@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
@@ -26,7 +26,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
                 var controlType = straightParameters[0];
                 var viewName = viewAccountant.GetThemeViewPath($"Controls/{controlType}");
-                if (viewName.IsNullEmptyOrWhitespace())
+                if (viewName.IsNullEmptyOrWhiteSpace())
                     throw new Exception($"Can't find the view {viewName} in view file {readFile.FileName}");
                 var controlFile = ReadFile.From(viewName);
                 readFile.AddChild(controlFile);

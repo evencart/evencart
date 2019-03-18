@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity.Enumerations;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Extensions;
@@ -14,7 +13,7 @@ namespace RoastedMarketplace.Services.Products
         public IEnumerable<AvailableAttribute> GetAvailableAttributes(out int totalResults, string searchText = null, int page = 1, int count = Int32.MaxValue)
         {
             var query = Repository;
-            if (!searchText.IsNullEmptyOrWhitespace())
+            if (!searchText.IsNullEmptyOrWhiteSpace())
                 query = query.Where(x => x.Name.Contains(searchText));
 
             return query.Join<AvailableAttributeValue>("Id", "AvailableAttributeId", joinType: JoinType.LeftOuter)

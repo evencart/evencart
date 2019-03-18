@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Users;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Extensions;
@@ -66,7 +65,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _roleService.InsertOrUpdate(role);
 
             //get valid capabilities
-            var capabilityIds = roleModel.Capabilities?.Where(x => !x.IsNullEmptyOrWhitespace() && x.IsInteger())
+            var capabilityIds = roleModel.Capabilities?.Where(x => !x.IsNullEmptyOrWhiteSpace() && x.IsInteger())
                                     .Select(int.Parse)
                                     .ToArray() ?? new int[] { };
             //set the values

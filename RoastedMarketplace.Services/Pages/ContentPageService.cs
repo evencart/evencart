@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Users;
@@ -17,7 +16,7 @@ namespace RoastedMarketplace.Services.Pages
         public IList<ContentPage> GetContentPages(out int totalResults, string search = null, int page = 1, int count = Int32.MaxValue)
         {
             var query = Repository;
-            if (!search.IsNullEmptyOrWhitespace())
+            if (!search.IsNullEmptyOrWhiteSpace())
                 query = query.Where(x => x.Name.Contains(search));
             query = WithRelations(query);
             query = query.OrderBy(x => x.CreatedOn, RowOrder.Descending);

@@ -5,10 +5,10 @@ using System.Linq;
 using DotLiquid;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Core.Infrastructure.Utils;
 using RoastedMarketplace.Core.Plugins;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -202,7 +202,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             {
                 var viewPath = string.Format(pathFormat, route.Controller, route.Action);
                 var themeViewPath = GetThemeViewPath(viewPath);
-                if (themeViewPath.IsNullEmptyOrWhitespace())
+                if (themeViewPath.IsNullEmptyOrWhiteSpace())
                     continue;
                 GetView(themeViewPath, viewPath, area);
             }

@@ -3,9 +3,9 @@ using System.Linq;
 using DotEntity.Enumerations;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Areas.Administration.Models.Emails;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Emails;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
@@ -154,7 +154,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 return NotFound();
 
             _modelMapper.Map(model, emailAccount, nameof(EmailAccount.Id), nameof(EmailAccount.Password));
-            if (!model.Password.IsNullEmptyOrWhitespace())
+            if (!model.Password.IsNullEmptyOrWhiteSpace())
             {
                 emailAccount.Password = _cryptographyService.Encrypt(model.Password);
             }
@@ -185,7 +185,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         {
             var emailAccount = _modelMapper.Map<EmailAccount>(emailAccountModel);
             emailAccount.Id = emailAccountModel.Id;
-            if (emailAccount.Password.IsNullEmptyOrWhitespace())
+            if (emailAccount.Password.IsNullEmptyOrWhiteSpace())
             {
                 //if password is empty, we'll need to find saved password
                 var savedEmailAccount = _emailAccountService.Get(emailAccount.Id);

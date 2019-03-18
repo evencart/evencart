@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Providers;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.ViewEngines;
 using RoastedMarketplace.Infrastructure.ViewEngines.Expanders;
 
@@ -68,7 +68,7 @@ namespace RoastedMarketplace.Infrastructure.Mvc.Components
             {
                 var componentPath = $"Components/{component.FullName}/Default";
                 viewPath = _viewAccountant.GetThemeViewPath(componentPath);
-                if (viewPath.IsNullEmptyOrWhitespace())
+                if (viewPath.IsNullEmptyOrWhiteSpace())
                     return;
                 viewHtml = ReadFile.From(viewPath).Content;
             }

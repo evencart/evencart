@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Routing.Parsers;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Pages;
@@ -46,7 +46,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
             if (context.Values.ContainsKey("date"))
                 date = Convert.ToDateTime(context.Values["date"]);
 
-            if (id.IsNullEmptyOrWhitespace() && seName.IsNullEmptyOrWhitespace())
+            if (id.IsNullEmptyOrWhiteSpace() && seName.IsNullEmptyOrWhiteSpace())
             {
                 throw new Exception("At least seName or id must be provided to generate the route");
             }
@@ -59,7 +59,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
             url = dynamicRoute.Template;
             entityName = dynamicRoute.SeoEntityName;
             
-            if (id.IsNullEmptyOrWhitespace() && id != "0")
+            if (id.IsNullEmptyOrWhiteSpace() && id != "0")
             {
                 var seoMeta = _seoMetaService.FirstOrDefault(x => x.Slug == seName && x.EntityName == entityName);
                 if (seoMeta == null)
@@ -67,7 +67,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                 id = seoMeta.EntityId.ToString();
             }
             var idAsInt = 0;
-            if (seName.IsNullEmptyOrWhitespace())
+            if (seName.IsNullEmptyOrWhiteSpace())
             {
                 idAsInt = Convert.ToInt32(id);
                 var seoMeta = _seoMetaService.FirstOrDefault(x => x.EntityId == idAsInt && x.EntityName == entityName);
@@ -75,7 +75,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                     return null;
                 seName = seoMeta.Slug;
             }
-            if (categoryPath.IsNullEmptyOrWhitespace() && url.Contains("{CategoryPath}"))
+            if (categoryPath.IsNullEmptyOrWhiteSpace() && url.Contains("{CategoryPath}"))
             {
                 var allCategories = _categoryService.GetFullCategoryTree();
                 switch (entityName)
@@ -119,11 +119,11 @@ namespace RoastedMarketplace.Infrastructure.Routing
                     continue;
                 parsedTokens.TryGetValue("SeName", out string seName);
                 parsedTokens.TryGetValue("Id", out string id);
-                if (seName.IsNullEmptyOrWhitespace() && id.IsNullEmptyOrWhitespace())
+                if (seName.IsNullEmptyOrWhiteSpace() && id.IsNullEmptyOrWhiteSpace())
                     continue;
 
                 var entityName = routeData.SeoEntityName;
-                if (!id.IsNullEmptyOrWhitespace())
+                if (!id.IsNullEmptyOrWhiteSpace())
                 {
                     var idAsInt = int.Parse(id);
                     var seoMeta =

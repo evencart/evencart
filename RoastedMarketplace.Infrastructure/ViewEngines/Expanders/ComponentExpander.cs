@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using RoastedMarketplace.Core;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc.Components;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
@@ -49,7 +49,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     componentParameters,
                     out string componentContent, out object model, out string viewPath);
 
-                if (!viewPath.IsNullEmptyOrWhitespace())
+                if (!viewPath.IsNullEmptyOrWhiteSpace())
                     readFile.AddChild(ReadFile.From(viewPath));
 
                 //merge models

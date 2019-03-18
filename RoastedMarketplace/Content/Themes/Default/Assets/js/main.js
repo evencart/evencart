@@ -13,17 +13,7 @@
             $(".sticker").addClass("stick");
         }
     });
-    /*--
-        Mobile Menu
-    -----------------------------------*/
-    $('.main-menu').meanmenu({
-        meanScreenWidth: '991',
-        meanMenuContainer: '.mobile-menu',
-        meanMenuClose: '<i class="pe-7s-close-circle"></i>',
-        meanMenuOpen: '<i class="pe-7s-menu"></i>',
-        meanRevealPosition: 'right',
-        meanMenuCloseSize: '30px',
-    });
+   
 
     /*--
         Nivo Slider

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.Routing
 {
@@ -27,7 +27,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                     .ToList();
             }
 
-            var result = !controller.IsNullEmptyOrWhitespace()
+            var result = !controller.IsNullEmptyOrWhiteSpace()
                 ? _routes.Where(x => x.Controller.Equals(controller, StringComparison.InvariantCultureIgnoreCase))
                     .ToList()
                 : _routes;

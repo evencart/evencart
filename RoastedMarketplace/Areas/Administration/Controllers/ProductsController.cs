@@ -7,11 +7,11 @@ using RoastedMarketplace.Areas.Administration.Extensions;
 using RoastedMarketplace.Areas.Administration.Models.Media;
 using RoastedMarketplace.Areas.Administration.Models.Pages;
 using RoastedMarketplace.Areas.Administration.Models.Shop;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -79,7 +79,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             parameters = parameters ?? new ProductSearchModel();
             //create order by expression
             Expression<Func<Product, object>> orderByExpression = null;
-            if (!parameters.SortColumn.IsNullEmptyOrWhitespace())
+            if (!parameters.SortColumn.IsNullEmptyOrWhiteSpace())
             {
                 switch (parameters.SortColumn.ToLower())
                 {
@@ -173,7 +173,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             if (product == null)
                 return BadRequest();
             //do we have manufacturer?
-            if (model.ManufacturerId == null && !model.ManufacturerName.IsNullEmptyOrWhitespace())
+            if (model.ManufacturerId == null && !model.ManufacturerName.IsNullEmptyOrWhiteSpace())
             {
                 //find the manufacturer
                 var manufacturer = _manufacturerService.FirstOrDefault(x => x.Name == model.ManufacturerName);
@@ -820,10 +820,10 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private IList<ProductAttribute> SaveProductAttributesImpl(int productId, IList<ProductAttributeModel> attributeModels)
         {
             //exclude invalid attributes
-            attributeModels = attributeModels.Where(x => !x.Name.IsNullEmptyOrWhitespace() || x.Id != 0)
+            attributeModels = attributeModels.Where(x => !x.Name.IsNullEmptyOrWhiteSpace() || x.Id != 0)
                 .Select(x =>
                 {
-                    x.Values = x.Values.Where(y => !y.AttributeValue.IsNullEmptyOrWhitespace() || y.Id != 0).ToList();
+                    x.Values = x.Values.Where(y => !y.AttributeValue.IsNullEmptyOrWhiteSpace() || y.Id != 0).ToList();
                     return x;
                 })
                 .ToList();
@@ -951,10 +951,10 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private void SaveProductSpecsImpl(int productId, IList<ProductSpecificationModel> specModels)
         {
             //exclude invalid attributes
-            specModels = specModels.Where(x => !x.Name.IsNullEmptyOrWhitespace() || x.Id != 0)
+            specModels = specModels.Where(x => !x.Name.IsNullEmptyOrWhiteSpace() || x.Id != 0)
                 .Select(x =>
                 {
-                    x.Values = x.Values.Where(y => !y.AttributeValue.IsNullEmptyOrWhitespace() || y.Id != 0).ToList();
+                    x.Values = x.Values.Where(y => !y.AttributeValue.IsNullEmptyOrWhiteSpace() || y.Id != 0).ToList();
                     return x;
                 })
                 .ToList();

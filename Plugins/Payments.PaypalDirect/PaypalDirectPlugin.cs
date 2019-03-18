@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Plugins;
@@ -79,9 +79,9 @@ namespace Payments.PaypalDirect
             parameters.TryGetValue("expiryYear", out string expiryYearStr);
             parameters.TryGetValue("cvv", out string cvv);
 
-            var suppliedDataInvalid = cardNumber.IsNullEmptyOrWhitespace() || nameOnCard.IsNullEmptyOrWhitespace() ||
-                                expiryMonthStr.IsNullEmptyOrWhitespace() || expiryYearStr.IsNullEmptyOrWhitespace() ||
-                                cvv.IsNullEmptyOrWhitespace();
+            var suppliedDataInvalid = cardNumber.IsNullEmptyOrWhiteSpace() || nameOnCard.IsNullEmptyOrWhiteSpace() ||
+                                expiryMonthStr.IsNullEmptyOrWhiteSpace() || expiryYearStr.IsNullEmptyOrWhiteSpace() ||
+                                cvv.IsNullEmptyOrWhiteSpace();
             if (suppliedDataInvalid)
             {
                 error = LocalizationHelper.Localize("All fields are required", ApplicationEngine.CurrentLanguageCultureCode);

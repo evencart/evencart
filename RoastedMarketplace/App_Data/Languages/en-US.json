@@ -1,5 +1,8 @@
 ﻿{
-  "context": "",
+  "contextName": "",
+  "name": "English",
+  "cultureCode": "en-IN",
+  "flag": "in.png", 
   "translations": {
     "Product Editor": "",
     "Add Product": "",

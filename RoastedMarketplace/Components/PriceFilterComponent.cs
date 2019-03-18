@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using RoastedMarketplace.Core.Extensions;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Models.Components;
 using RoastedMarketplace.Models.Products;

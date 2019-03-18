@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines
 {
@@ -27,7 +27,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
         {
             var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
             var viewFilePath = viewAccountant.GetThemeViewPath(viewName);
-            if (!viewFilePath.IsNullEmptyOrWhitespace())
+            if (!viewFilePath.IsNullEmptyOrWhiteSpace())
             {
                 return ViewEngineResult.Found(viewFilePath, new RoastedLiquidView(viewFilePath, viewName, viewAccountant));
             }

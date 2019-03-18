@@ -3,7 +3,7 @@ using RoastedMarketplace.Data.Database;
 
 namespace RoastedMarketplace.Services.Plugins
 {
-    public class DatabasePlugin : FoundationPlugin
+    public abstract class DatabasePlugin : FoundationPlugin
     {
         public override void Install()
         {

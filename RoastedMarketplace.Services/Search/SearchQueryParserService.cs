@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using RoastedMarketplace.Core.Extensions;
+using RoastedMarketplace.Data.Extensions;
 
 
 namespace RoastedMarketplace.Services.Search
@@ -20,7 +20,7 @@ namespace RoastedMarketplace.Services.Search
             const string pattern = "([a-zA-Z0-9_-]+):(?:\"(?<v>[^\"]+)\"|(?<v>[^\\s]+))";
 
             parameters = new Dictionary<string, IList<string>>(StringComparer.InvariantCultureIgnoreCase);
-            if (searchQuery.IsNullEmptyOrWhitespace())
+            if (searchQuery.IsNullEmptyOrWhiteSpace())
                 return;
 
             //find the matches in input text

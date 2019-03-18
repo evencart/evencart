@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RoastedMarketplace.Core;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
@@ -52,7 +52,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
             //read the layout now
             var layoutPath = viewAccountant.GetLayoutPath(layoutValue);
-            if (layoutPath.IsNullEmptyOrWhitespace())
+            if (layoutPath.IsNullEmptyOrWhiteSpace())
                 throw new Exception($"Can't find layout {layoutValue} in view {readFile.FileName}");
 
             var layoutFile = ReadFile.From(layoutPath);

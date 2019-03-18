@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
-using RoastedMarketplace.Core.Extensions;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
 
@@ -24,7 +24,7 @@ namespace RoastedMarketplace.Areas.Administration.Models.Users
             v.RuleFor(x => x.SystemName).Custom((s, context) =>
             {
                 var instanceToValidate = (RoleModel) context.InstanceToValidate;
-                if (instanceToValidate.Id == 0 && s.IsNullEmptyOrWhitespace())
+                if (instanceToValidate.Id == 0 && s.IsNullEmptyOrWhiteSpace())
                 {
                     context.AddFailure(nameof(SystemName), "System Name can't be empty");
                 }

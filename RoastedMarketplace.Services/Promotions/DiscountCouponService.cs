@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Extensions;
@@ -44,7 +43,7 @@ namespace RoastedMarketplace.Services.Promotions
         public IEnumerable<DiscountCoupon> SearchDiscountCoupons(string searchText, out int totalMatches, int page = 1, int count = 15)
         {
             var query = Repository;
-            if (!searchText.IsNullEmptyOrWhitespace())
+            if (!searchText.IsNullEmptyOrWhiteSpace())
                 query = query.Where(x => x.Name.Contains(searchText));
             query = query.OrderBy(x => x.Name);
             return query.SelectWithTotalMatches(out totalMatches, page, count);

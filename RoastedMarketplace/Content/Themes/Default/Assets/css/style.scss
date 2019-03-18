@@ -1203,10 +1203,10 @@ a.meanmenu-reveal i {
 }
 
 /*-- Header Account --*/
-.header-account {
+.header-selector {
     margin-left: 16px;
 
-    .user-menu {
+    .selector-menu {
         padding: 26px 0px 0px;
         font-size: 16px;
 
@@ -1216,31 +1216,31 @@ a.meanmenu-reveal i {
     }
 }
 
-.header-account > ul {
+.header-selector > ul {
 }
 
-.header-account > ul > li {
+.header-selector > ul > li {
     padding: 40px 0;
     position: relative;
 }
 
-.stick .header-account > ul > li {
+.stick .header-selector > ul > li {
     padding: 20px 0;
 }
 
-.header-account > ul > li > a {
+.header-selector > ul > li > a {
     color: #4b4b4b;
     display: block;
     line-height: 30px;
 }
 
-.header-account > ul > li > a i {
+.header-selector > ul > li > a i {
     display: block;
     font-size: 18px;
     line-height: 30px;
 }
 /*-- Account Dropdown --*/
-.header-account > ul > li ul {
+.header-selector > ul > li ul {
     background-color: #fff;
     border: medium none;
     border-radius: 0;
@@ -1259,18 +1259,18 @@ a.meanmenu-reveal i {
     z-index: -99999;
 }
 
-.header-account > ul > li.open ul {
+.header-selector > ul > li.open ul {
     margin-top: 0;
     opacity: 1;
     visibility: visible;
     z-index: 999;
 }
 
-.header-account > ul > li ul li {
+.header-selector > ul > li ul li {
     margin: 3px 0;
 }
 
-.header-account > ul > li ul li a {
+.header-selector > ul > li ul li a {
     color: #a3a3a3;
     display: block;
     font-family: "Catamaran",sans-serif;
@@ -1282,13 +1282,13 @@ a.meanmenu-reveal i {
     text-transform: uppercase;
 }
 
-.header-account > ul > li ul li:hover a {
+.header-selector > ul > li ul li:hover a {
     background-color: transparent;
     color: #3f3f3f;
     padding-left: 15px;
 }
 
-.header-account > ul > li ul li a::before {
+.header-selector > ul > li ul li a::before {
     background-color: #3f3f3f;
     content: "";
     height: 2px;
@@ -1298,7 +1298,7 @@ a.meanmenu-reveal i {
     width: 0;
 }
 
-.header-account > ul > li ul li:hover a::before {
+.header-selector > ul > li ul li:hover a::before {
     width: 10px;
 }
 
@@ -4195,4 +4195,8 @@ div.tab button.active {
             color: #fff;
         }
     }
+}
+.clickable
+{
+    cursor:pointer;
 }

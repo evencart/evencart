@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using RoastedMarketplace.Core.Extensions;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 {
@@ -26,7 +26,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 routeUrl = HttpUtility.UrlDecode(routeUrl);
                 //we are using lower case urls and this causes the liquid parameters to convert to lower case like {{userId}} converts to {{userid}}
                 //we need to fix those otherwise the liquid urls break.
-                if (keyValuePairs != null && !routeUrl.IsNullEmptyOrWhitespace())
+                if (keyValuePairs != null && !routeUrl.IsNullEmptyOrWhiteSpace())
                     foreach (var kp in keyValuePairs)
                         routeUrl = routeUrl.Replace(kp.Value, kp.Value, StringComparison.InvariantCultureIgnoreCase);
                 readFile.Content = readFile.Content.Replace(match.Result("$0"), routeUrl);

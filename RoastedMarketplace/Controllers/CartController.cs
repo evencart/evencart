@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -184,7 +184,7 @@ namespace RoastedMarketplace.Controllers
         [DualPost("update", Name = RouteNames.UpdateCart, OnlyApi = true)]
         public IActionResult UpdateCart(UpdateCartModel cartModel)
         {
-            if (!cartModel.DiscountCoupon.IsNullEmptyOrWhitespace())
+            if (!cartModel.DiscountCoupon.IsNullEmptyOrWhiteSpace())
             {
                 var discountStatus =
                     _cartService.SetDiscountCoupon(ApplicationEngine.CurrentUser.Id, cartModel.DiscountCoupon);
@@ -202,7 +202,7 @@ namespace RoastedMarketplace.Controllers
                 _cartService.ClearDiscountCoupon(ApplicationEngine.CurrentUser.Id);
                 return R.Success.Result;
             }
-            if (!cartModel.GiftCode.IsNullEmptyOrWhitespace())
+            if (!cartModel.GiftCode.IsNullEmptyOrWhiteSpace())
             {
                 //do nothing
             }

@@ -39,7 +39,7 @@ namespace RoastedMarketplace.Data.Extensions
 
             foreach (Match match in matches)
             {
-                str = str.Replace(match.Value, string.Empty);
+                str = str.Replace(match.Value, String.Empty);
             }
 
             return str;
@@ -55,7 +55,7 @@ namespace RoastedMarketplace.Data.Extensions
         {
             string result = str;
 
-            if (!string.IsNullOrEmpty(str))
+            if (!String.IsNullOrEmpty(str))
             {
                 str.ToLower();
                 var words = str.Split(' ');
@@ -67,7 +67,7 @@ namespace RoastedMarketplace.Data.Extensions
                         words[index] = s[0].ToString().ToUpper() + s.Substring(1);
                     }
                 }
-                result = string.Join(" ", words);
+                result = String.Join(" ", words);
             }
             return result;
         }
@@ -83,7 +83,7 @@ namespace RoastedMarketplace.Data.Extensions
         public static bool IsNullEmptyOrWhiteSpace(this string str)
         {
             str = str?.Trim();
-            return string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str);
+            return String.IsNullOrEmpty(str) || String.IsNullOrWhiteSpace(str);
         }
 
         public static string Reverse(this string s)
@@ -93,5 +93,12 @@ namespace RoastedMarketplace.Data.Extensions
             return new string(charArray);
         }
 
+        public static string ReplaceFirstOccurance(this string s, string search, string replace, StringComparison stringComparison = StringComparison.Ordinal)
+        {
+            var indexOf = s.IndexOf(search, stringComparison);
+            if (indexOf == -1)
+                return s;
+            return s.Remove(indexOf, search.Length).Insert(indexOf, replace);
+        }
     }
 }

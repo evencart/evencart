@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.ScheduledTasks;
+using RoastedMarketplace.Data.Extensions;
 
 namespace RoastedMarketplace.Services.ScheduledTasks
 {
@@ -12,7 +12,7 @@ namespace RoastedMarketplace.Services.ScheduledTasks
             int count = Int32.MaxValue)
         {
             var query = Repository;
-            if (!searchText.IsNullEmptyOrWhitespace())
+            if (!searchText.IsNullEmptyOrWhiteSpace())
                 query = query.Where(x => x.Name.StartsWith(searchText));
             if (enableStatus.HasValue)
                 query = query.Where(x => x.Enabled == enableStatus);

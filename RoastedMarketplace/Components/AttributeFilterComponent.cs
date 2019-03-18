@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Models.Components;
 using RoastedMarketplace.Models.Products;

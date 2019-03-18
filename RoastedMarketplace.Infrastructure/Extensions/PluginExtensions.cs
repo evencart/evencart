@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Plugins;
 using RoastedMarketplace.Services.Serializers;
 using RoastedMarketplace.Services.Settings;
@@ -15,7 +15,7 @@ namespace RoastedMarketplace.Infrastructure.Extensions
         public static IList<PluginStatus> GetSitePlugins(this PluginSettings pluginSettings)
         {
             var sitePlugins = pluginSettings.SitePlugins;
-            if (sitePlugins.IsNullEmptyOrWhitespace())
+            if (sitePlugins.IsNullEmptyOrWhiteSpace())
                 return new List<PluginStatus>();
 
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
@@ -55,7 +55,7 @@ namespace RoastedMarketplace.Infrastructure.Extensions
         public static IList<WidgetStatus> GetSiteWidgets(this PluginSettings pluginSettings)
         {
             var siteWidgets = pluginSettings.SiteWidgets;
-            if (siteWidgets.IsNullEmptyOrWhitespace())
+            if (siteWidgets.IsNullEmptyOrWhiteSpace())
                 return new List<WidgetStatus>();
 
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
