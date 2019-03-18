@@ -38,7 +38,7 @@ namespace RoastedMarketplace.Factories.Products
         {
             var productModel = _modelMapper.Map<ProductModel>(product);
             productModel.SeName = product.SeoMeta.Slug;
-            var mediaModels = product.MediaItems?.Select(y =>
+            var mediaModels = product.MediaItems?.OrderBy(x => x.DisplayOrder).Select(y =>
             {
                 var mediaModel = _modelMapper.Map<MediaModel>(y);
                 mediaModel.ThumbnailUrl =
