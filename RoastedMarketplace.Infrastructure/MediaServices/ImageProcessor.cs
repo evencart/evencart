@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
@@ -26,8 +27,9 @@ namespace RoastedMarketplace.Infrastructure.MediaServices
                     .Resize(new ResizeOptions()
                     {
                         Size = new Size(width, height),
-                        Mode = ResizeMode.Max
-                    }));
+                        Mode = ResizeMode.Pad
+                    })
+                    .BackgroundColor(Rgba32.White));
                 
                 IImageEncoder encoder = null;
                 switch (imageFormat.Name) {
