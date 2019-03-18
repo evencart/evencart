@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using RoastedMarketplace.Services.Formatter;
 using RoastedMarketplace.Services.Helpers;
+using RoastedMarketplace.Services.Products;
 using RoastedMarketplace.Services.Purchases;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
@@ -18,7 +20,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
             var taxSettings = DependencyResolver.Resolve<TaxSettings>();
-           
+            var priceAccountant = DependencyResolver.Resolve<IPriceAccountant>();
+
             if (ApplicationEngine.CurrentUser == null)
                 return null;
             var cart = cartService.GetCart(ApplicationEngine.CurrentUser.Id);
@@ -30,7 +33,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 TotalItems = cart.CartItems.Sum(x => x.Quantity),
                 DiscountCoupon = cart.DiscountCoupon?.HasCouponCode ?? false ? cart.DiscountCoupon?.CouponCode : ""
             };
-
+            var currentCurrency = ApplicationEngine.CurrentCurrency;
             cartModel.Items = cart.CartItems.Select(x =>
                 {
 
@@ -38,7 +41,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                         Id = x.Id,
                         ProductId = x.ProductId,
                         ProductName = x.Product.Name,
-                        Price = decimal.Round(taxSettings.DisplayProductPricesWithoutTax ? x.Price : x.Price + x.Tax, 2),
+                        Price = taxSettings.DisplayProductPricesWithoutTax ? x.Price : x.Price + x.Tax,
                         Quantity = x.Quantity,
                         Discount = x.Discount,
                         ComparePrice = x.ComparePrice,
@@ -50,6 +53,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                     };
                     cartItem.SubTotal = cartItem.Price * cartItem.Quantity;
                     cartItem.FinalPrice = cartItem.SubTotal + cartItem.Tax - cartItem.Discount;
+
+                    //currency convert if required
+                    cartItem.Price = priceAccountant.ConvertCurrency(cartItem.Price, currentCurrency, Rounding.Default);
+                    cartItem.Tax = priceAccountant.ConvertCurrency(cartItem.Tax, currentCurrency, Rounding.Default);
+                    cartItem.Discount = priceAccountant.ConvertCurrency(cartItem.Discount, currentCurrency, Rounding.Default);
+                    cartItem.SubTotal = priceAccountant.ConvertCurrency(cartItem.SubTotal, currentCurrency, Rounding.Default);
+                    cartItem.FinalPrice = priceAccountant.ConvertCurrency(cartItem.FinalPrice, currentCurrency, Rounding.Default);
+                    cartItem.ComparePrice = priceAccountant.ConvertCurrency(cartItem.ComparePrice ?? 0, currentCurrency, Rounding.Default);
                     return cartItem;
                 })
                 .ToList();
@@ -58,6 +69,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             cartModel.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
             cartModel.Discount = cart.Discount + cart.CartItems.Sum(x => x.Discount);
             cartModel.FinalAmount = cartModel.SubTotal + cartModel.Tax - cartModel.Discount;
+
+            //convert currency
+            cartModel.SubTotal = priceAccountant.ConvertCurrency(cartModel.SubTotal, currentCurrency, Rounding.Default);
+            cartModel.Tax = priceAccountant.ConvertCurrency(cartModel.Tax, currentCurrency, Rounding.Default);
+            cartModel.CompareFinalAmount = priceAccountant.ConvertCurrency(cartModel.CompareFinalAmount, currentCurrency, Rounding.Default);
+            cartModel.Discount = priceAccountant.ConvertCurrency(cartModel.Discount, currentCurrency, Rounding.Default);
+            cartModel.FinalAmount = priceAccountant.ConvertCurrency(cartModel.FinalAmount, currentCurrency);
+
             return cartModel;
         }
     }

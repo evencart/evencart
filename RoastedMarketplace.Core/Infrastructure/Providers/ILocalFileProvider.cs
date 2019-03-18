@@ -28,5 +28,7 @@ namespace RoastedMarketplace.Core.Infrastructure.Providers
         string GetFileNameWithoutExtension(string fileName);
 
         string GetFileName(string filePath);
+
+        string[] GetFiles(string directoryName, string pattern = "*.*");
     }
 }

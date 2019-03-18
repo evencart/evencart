@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
@@ -12,6 +13,18 @@ namespace RoastedMarketplace
     {
         private const string CurrentUserKey = "CurrentUser";
         private const string BreadcrumbKey = "BreadcrumbKey";
+        private const string CurrentLanguageKey = "CurrentLanguageKey";
+        private const string CurrentCurrencyKey = "CurrentCurrencyKey";
+
+        public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
+        {
+            httpContext.Items[CurrentCurrencyKey] = currency;
+        }
+
+        public static Currency GetCurrentCurrency(this HttpContext httpContext)
+        {
+            return (Currency)httpContext.Items[CurrentCurrencyKey];
+        }
 
         public static void SetCurrentUser(this HttpContext httpContext, User user)
         {

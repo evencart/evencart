@@ -1,0 +1,87 @@
+﻿<form action="{% route api_SaveCurrency %}" method="post" id="currency-editor-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Currency Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {% control label text=@t"Currency Name" for="currency-name" %}
+                        {% control text id="currency-name" name="name" placeholder=@t"e.g. Indian Rupee" value="{{currency.name}}" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {% control label text=@t"ISO Code" for="isoCode" %}
+                        {% control text id="isoCOde" name="isoCode" placeholder=@t"e.g. INR" value="{{currency.isoCode}}" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Exchange Rate" for="exchangeRate" %}
+                        {% control number id="exchangeRate" name="exchangeRate" value="{{currency.exchangeRate}}" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Locale" for="cultureCode" %}
+                        {% control select id="cultureCode" name="cultureCode" value="currency.cultureCode" items="cultures" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {% control label text=@t"Custom Format" for="customFormat" %}
+                        {% control text id="customFormat" name="customFormat" value="{{currency.customFormat}}" %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {% control label text=@t"Flag" for="flag" %}
+                        {% control select id="flag" name="flag" value="currency.flag" items="countryFlags" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Rounding Type" for="roundingType" %}
+                        {% control select id="roundingType" name="roundingType" value="currency.roundingType" items="roundingTypes" required="true" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Number of decimal places" for="numberOfDecimalPlaces" %}
+                        {% control number id="numberOfDecimalPlaces" name="numberOfDecimalPlaces" value="{{currency.numberOfDecimalPlaces}}" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control checkbox id="published" text=@t"Published" name="published" value="currency.published" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{currency.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Currency" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("currency-editor-form",
+        {
+            onSuccess: function() {
+                hidePopup("edit-currency-popup");
+            }
+        });
+
+</script>

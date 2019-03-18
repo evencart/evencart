@@ -1,0 +1,44 @@
+﻿{% if currencies.size > 1 %}
+<div class="header-selector float-left">
+    <div class="selector-menu dropdown">
+        <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="currency-info">
+                <img src="{{activeCurrency.flagUrl}}" class="margin-r-5" width="20px" />
+                {{activeCurrency.isoCode}}
+                <i class="fa fa-angle-down"></i>
+            </div>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <ul class="account-navigation">
+                {% for currency in currencies %}
+                <li>
+                    <a class="clickable" onclick="setCurrency('{{currency.id}}')">
+                        <img src="{{currency.flagUrl}}" class="margin-r-5" width="20px"/>
+                        {{currency.isoCode}}
+                    </a>
+                </li>
+                {% endfor %}
+               
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form action="{% route api_SetActiveCurrency %}" method="post" id="form-currency-selector">
+    <input type="hidden" name="currencyId" id="currency-selector" />
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("form-currency-selector",
+            {
+                onSuccess: function() {
+                   window.location.reload();
+                }
+            });
+    });
+    var setCurrency = function(id) {
+        jQuery("#currency-selector").val(id);
+        jQuery("#form-currency-selector").submit();
+    }
+</script>
+{% endif %}

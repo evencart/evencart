@@ -6,6 +6,7 @@ using RoastedMarketplace.Areas.Administration.Models.Media;
 using RoastedMarketplace.Areas.Administration.Models.Shop;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Factories.Products;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
@@ -25,16 +26,14 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
         private readonly IProductService _productService;
         private readonly IModelMapper _modelMapper;
         private readonly IMediaAccountant _mediaAccountant;
-        private readonly IPriceAccountant _priceAccountant;
-        private readonly TaxSettings _taxSettings;
-        public ProductCarouselWidget(IWidgetService widgetService, IProductService productService, IModelMapper modelMapper, IMediaAccountant mediaAccountant, IPriceAccountant priceAccountant, TaxSettings taxSettings)
+        private readonly IProductModelFactory _productModelFactory;
+        public ProductCarouselWidget(IWidgetService widgetService, IProductService productService, IModelMapper modelMapper, IMediaAccountant mediaAccountant, IProductModelFactory productModelFactory)
         {
             _widgetService = widgetService;
             _productService = productService;
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
-            _priceAccountant = priceAccountant;
-            _taxSettings = taxSettings;
+            _productModelFactory = productModelFactory;
         }
 
         public override IViewComponentResult Invoke(object data = null)
@@ -47,32 +46,7 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             if (!widgetSettings.ProductIds.Any())
                 return R.Success.ComponentResult;
             var products = _productService.GetProducts(widgetSettings.ProductIds, true);
-            var productsModel = products.Select(x =>
-                {
-                    var model = _modelMapper.Map<RoastedMarketplace.Models.Products.ProductModel>(x);
-                    _priceAccountant.GetProductPriceDetails(x, null, null, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
-                    model.Price = _taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax;
-                    model.SeName = x.SeoMeta.Slug;
-                    model.Media = x.MediaItems?.Select(y =>
-                        {
-                            var mediaModel = _modelMapper.Map<RoastedMarketplace.Models.Media.MediaModel>(y);
-                            mediaModel.Url = _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
-                            return mediaModel;
-                        })
-                        .ToList() ?? new List<RoastedMarketplace.Models.Media.MediaModel>()
-                    {
-                        new RoastedMarketplace.Models.Media.MediaModel()
-                        {
-                            ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
-                                ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
-                            Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
-                        }
-                    };
-                    //reviews
-                    if (x.ReviewSummary != null)
-                        model.ReviewSummary = _modelMapper.Map<ReviewSummaryModel>(x.ReviewSummary);
-                    return model;
-                })
+            var productsModel = products.Select(_productModelFactory.Create)
                 .OrderBy(x => widgetSettings.ProductIds.IndexOf(x.Id))
                 .ToList();
 

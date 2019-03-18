@@ -1,0 +1,22 @@
+﻿{% global page_title=@t"Localization Settings" active_menu="LocalizationSettings" parent_active_menu="Settings" if="settingType == 'localization'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"Localization Settings" | t}}
+    </div>
+    <div class="panel-body">
+        {% if availableCurrencies.size > 1 %}
+        <div class="form-group">
+            {% control checkbox text=@t"Allow users to change currency" name="allowUserToSelectCurrency" value="settings.allowUserToSelectCurrency" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Base Currency" for="baseCurrencyId" %}
+            {% control select name="baseCurrency" value="settings.baseCurrencyId" items="availableCurrencies" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Default Display Currency" for="primaryCurrencyId" %}
+            {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
+        </div>
+        {% endif %}
+    </div>
+</div>

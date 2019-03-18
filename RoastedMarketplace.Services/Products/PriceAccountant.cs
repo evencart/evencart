@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoastedMarketplace.Core.Extensions;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Services.Extensions;
+using RoastedMarketplace.Services.Formatter;
 using RoastedMarketplace.Services.Helpers;
 using RoastedMarketplace.Services.Promotions;
 using RoastedMarketplace.Services.Purchases;
@@ -28,8 +30,9 @@ namespace RoastedMarketplace.Services.Products
         private readonly TaxSettings _taxSettings;
         private readonly ICartService _cartService;
         private readonly IProductVariantService _productVariantService;
+        private readonly IRoundingService _roundingService;
 
-        public PriceAccountant(IDiscountCouponService discountCouponService, IUserService userService, ICartItemService cartItemService, IProductService productService, ITaxAccountant taxAccountant, TaxSettings taxSettings, ICartService cartService, IProductVariantService productVariantService)
+        public PriceAccountant(IDiscountCouponService discountCouponService, IUserService userService, ICartItemService cartItemService, IProductService productService, ITaxAccountant taxAccountant, TaxSettings taxSettings, ICartService cartService, IProductVariantService productVariantService, IRoundingService roundingService)
         {
             _discountCouponService = discountCouponService;
             _userService = userService;
@@ -39,11 +42,12 @@ namespace RoastedMarketplace.Services.Products
             _taxSettings = taxSettings;
             _cartService = cartService;
             _productVariantService = productVariantService;
+            _roundingService = roundingService;
         }
 
         public DiscountApplicationStatus ApplyDiscountCoupon(string couponCode, Cart cart)
         {
-            if (couponCode.IsNullEmptyOrWhitespace())
+            if (couponCode.IsNullEmptyOrWhiteSpace())
             {
                 return DiscountApplicationStatus.InvalidCode;
             }
@@ -288,6 +292,16 @@ namespace RoastedMarketplace.Services.Products
                 tax = fromBasePrice * taxRate / 100;
                 price = fromBasePrice;
             }
+        }
+
+        public decimal ConvertCurrency(decimal input, Currency targetCurrency, Rounding? roundingType = null)
+        {
+            if (targetCurrency.ExchangeRate > 0)
+            {
+                input = input * targetCurrency.ExchangeRate;
+                input = _roundingService.Round(input, targetCurrency.NumberOfDecimalPlaces, roundingType ?? targetCurrency.RoundingType);
+            }
+            return input;
         }
 
         #region Helpers

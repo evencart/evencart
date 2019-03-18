@@ -1,4 +1,7 @@
-﻿using RoastedMarketplace.Core.Infrastructure;
+﻿using System.Linq;
+using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Providers;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Helpers;
@@ -101,6 +104,21 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         public static CustomResponse WithEmailAccounts(this CustomResponse customResponse)
         {
             return customResponse.With("emailAccounts", SelectListHelper.GetAvailableEmailAccounts());
+        }
+
+        public static CustomResponse WithAllFlags(this CustomResponse customResponse)
+        {
+            return customResponse.With("countryFlags", SelectListHelper.GetAvailableFlags());
+        }
+
+        public static CustomResponse WithCultures(this CustomResponse customResponse)
+        {
+            return customResponse.With("cultures", SelectListHelper.GetCultures());
+        }
+
+        public static CustomResponse WithRoundingTypes(this CustomResponse customResponse)
+        {
+            return customResponse.With("roundingTypes", SelectListHelper.GetSelectItemList<Rounding>());
         }
     }
 }

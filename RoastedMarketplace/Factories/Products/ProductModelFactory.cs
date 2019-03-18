@@ -10,6 +10,7 @@ using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Models.Media;
 using RoastedMarketplace.Models.Products;
 using RoastedMarketplace.Models.Reviews;
+using RoastedMarketplace.Services.Formatter;
 using RoastedMarketplace.Services.Products;
 
 namespace RoastedMarketplace.Factories.Products
@@ -21,14 +22,16 @@ namespace RoastedMarketplace.Factories.Products
         private readonly CatalogSettings _catalogSettings;
         private readonly IPriceAccountant _priceAccountant;
         private readonly TaxSettings _taxSettings;
+        private readonly IRoundingService _roundingService;
 
-        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings)
+        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings, IRoundingService roundingService)
         {
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
             _catalogSettings = catalogSettings;
             _priceAccountant = priceAccountant;
             _taxSettings = taxSettings;
+            _roundingService = roundingService;
         }
 
         public ProductModel Create(Product product)
@@ -132,6 +135,9 @@ namespace RoastedMarketplace.Factories.Products
             else
                 productModel.Price = priceWithoutTax + tax;
 
+            //change display prices to current currency
+            var targetCurrency = ApplicationEngine.CurrentCurrency;
+            productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
             return productModel;
         }
     }

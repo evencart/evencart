@@ -81,5 +81,10 @@ namespace RoastedMarketplace.Core.Infrastructure.Providers
         {
             return Path.GetFileName(filePath);
         }
+
+        public string[] GetFiles(string directoryName, string pattern = "*.*")
+        {
+            return Directory.GetFiles(directoryName, pattern);
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace RoastedMarketplace.Infrastructure
 
         public const string GlobalLanguagesDirectory = "~/App_Data/Languages";
 
+        public const string FlagsDirectory = "~/common/flags";
+
         public const string MediaDirectory = "~/Content/Uploads";
 
         public const string MediaServeDirectory = "~/Content/Uploads/Serves";

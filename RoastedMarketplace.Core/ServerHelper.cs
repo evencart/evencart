@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 
 namespace RoastedMarketplace.Core
 {
@@ -12,6 +15,11 @@ namespace RoastedMarketplace.Core
         {
             var availableTimezones = TimeZoneInfo.GetSystemTimeZones();
             return availableTimezones;
+        }
+
+        public static IEnumerable<CultureInfo> GetAvailableCultureInfos()
+        {
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).OrderBy(x => x.EnglishName);
         }
     }
 }

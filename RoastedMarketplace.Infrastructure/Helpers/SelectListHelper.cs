@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Payments;
@@ -57,6 +59,41 @@ namespace RoastedMarketplace.Infrastructure.Helpers
             if (!selectorItem.IsNullEmptyOrWhiteSpace())
             {
                 var propertyInfo = (PropertyInfo) idMemberExpression.Member;
+                var propertyType = propertyInfo.PropertyType;
+                var defaultValue = propertyType == typeof(int) ? "0" : "";
+                selectList.Insert(0, new SelectListItem(selectorItem, defaultValue, true));
+            }
+            return selectList;
+        }
+
+        public static List<SelectListItem> GetSelectItemListWithAction<T, TIdProperty>(IList<T> entities, Expression<Func<T, TIdProperty>> idPropertyExpression, Func<T, string> textPropertyFunction, string selectorItem = null)
+        {
+
+            var tType = typeof(T);
+            var idMemberExpression = idPropertyExpression.Body as MemberExpression;
+            if (idMemberExpression == null)
+                throw new ArgumentException($"Expression {idPropertyExpression} refers a method, not a property");
+
+            var idFieldName = idMemberExpression.Member.Name;
+            //check if the fields asked actually exist
+            var idProperty = tType.GetProperty(idFieldName);
+            //so we are good to go
+            var selectList = new List<SelectListItem>();
+
+            foreach (var entity in entities)
+            {
+                var idValue = idProperty.GetValue(entity)?.ToString() ?? "0";
+                var textValue = textPropertyFunction(entity);
+                selectList.Add(new SelectListItem()
+                {
+                    Value = idValue,
+                    Text = textValue
+                });
+            }
+
+            if (!selectorItem.IsNullEmptyOrWhiteSpace())
+            {
+                var propertyInfo = (PropertyInfo)idMemberExpression.Member;
                 var propertyType = propertyInfo.PropertyType;
                 var defaultValue = propertyType == typeof(int) ? "0" : "";
                 selectList.Insert(0, new SelectListItem(selectorItem, defaultValue, true));
@@ -131,11 +168,25 @@ namespace RoastedMarketplace.Infrastructure.Helpers
             return GetSelectItemList(timeZones, info => info.Id, info => info.DisplayName);
         }
 
+        public static List<SelectListItem> GetCultures()
+        {
+            var cultureInfos = ServerHelper.GetAvailableCultureInfos().ToList();
+            return GetSelectItemListWithAction(cultureInfos, info => info.Name, info => $"{info.DisplayName} - {info.Name}");
+        }
+
         public static List<SelectListItem> GetAvailableEmailAccounts()
         {
             var emailAccountService = DependencyResolver.Resolve<IEmailAccountService>();
             var emailAccounts = emailAccountService.Get(x => true).ToList();
             return GetSelectItemList(emailAccounts, account => account.Id, account => account.Email);
+        }
+
+        public static List<SelectListItem> GetAvailableFlags()
+        {
+            var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
+            var files = localFileProvider.GetFiles(ApplicationEngine.MapPath(ApplicationConfig.FlagsDirectory, true), "*.png");
+            var fileInfos = files.Select(x => new FileInfo(x));
+            return GetSelectItemList(fileInfos.ToList(), x => x.Name, x => x.Name);
         }
     }
 }

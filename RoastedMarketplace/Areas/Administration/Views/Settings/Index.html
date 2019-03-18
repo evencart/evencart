@@ -19,9 +19,11 @@
             {% elseif settingType == "catalog" %}
                 {% partial "Settings/Index.Catalog" %}
             {% elseif settingType == "email" %}
-            {% partial "Settings/Index.Email" %}
+                {% partial "Settings/Index.Email" %}
             {% elseif settingType == "url" %}
                 {% partial "Settings/Index.Url" %}
+            {% elseif settingType == "localization" %}
+                {% partial "Settings/Index.Localization" %}
             {% endif %}
         </div>
     </div>

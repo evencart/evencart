@@ -11,6 +11,7 @@ using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Services.Cultures;
 using RoastedMarketplace.Services.Navigation;
 using RoastedMarketplace.Services.Settings;
 using RoastedMarketplace.Services.Taxes;
@@ -31,6 +32,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             { typeof(SystemSettingsModel), typeof(SystemSettings) },
             { typeof(TaxSettingsModel), typeof(TaxSettings) },
             { typeof(UserSettingsModel), typeof(UserSettings) },
+            { typeof(LocalizationSettingsModel), typeof(LocalizationSettings) },
         };
 
 
@@ -111,6 +113,13 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             SaveSetting(emailSettings);
             return R.Success.Result;
         }
+        [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
+        [FieldRequired("settingType", "localization")]
+        public IActionResult SaveSettings(LocalizationSettingsModel localizationSettings)
+        {
+            SaveSetting(localizationSettings);
+            return R.Success.Result;
+        }
 
         #region Helpers
         private IActionResult GetSettingResult(string settingType)
@@ -124,6 +133,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                     settings = DependencyResolver.Resolve<GeneralSettings>();
                     model = _modelMapper.Map<GeneralSettingsModel>(settings);
                     var menuService = DependencyResolver.Resolve<IMenuService>();
+
                     var menus = menuService.Get(x => true).ToList();
                     var menuSelectList = SelectListHelper.GetSelectItemList(menus, x => x.Id, x => x.Name);
                     result.WithTimezones();
@@ -162,6 +172,16 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 case "catalog":
                     settings = DependencyResolver.Resolve<CatalogSettings>();
                     model = _modelMapper.Map<CatalogSettingsModel>(settings);
+                    result.WithCatalogPaginationTypes();
+                    break;
+                case "localization":
+                    settings = DependencyResolver.Resolve<LocalizationSettings>();
+                    model = _modelMapper.Map<LocalizationSettingsModel>(settings);
+                    var currencyService = DependencyResolver.Resolve<ICurrencyService>();
+                    var currencies = currencyService.Get(x => x.Published).ToList();
+                    var currenciesSelectList = SelectListHelper.GetSelectItemListWithAction(currencies, x => x.Id, x => $"{x.Name} ({x.IsoCode})");
+                    result.With("availableCurrencies", currenciesSelectList);
+
                     result.WithCatalogPaginationTypes();
                     break;
             }

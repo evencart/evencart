@@ -1,6 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Emails;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
@@ -139,6 +140,8 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<UserCode>(transaction);
             Db.CreateConstraint(Relation.Create<User, UserCode>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction, true);
+
+            Db.CreateTable<Currency>(transaction);
 
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);

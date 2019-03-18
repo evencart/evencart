@@ -76,6 +76,10 @@ namespace RoastedMarketplace.Infrastructure.Localization
         {
             public string ContextName { get; set; }
 
+            public string Name { get; set; }
+
+            public string CultureCode { get; set; }
+
             public Dictionary<string, string> Translations { get; set; }
         }
         #endregion

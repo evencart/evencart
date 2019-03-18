@@ -51,6 +51,8 @@ namespace RoastedMarketplace.Data.Entity.Purchases
 
         public string CurrencyCode { get; set; }
 
+        public decimal ExchangeRate { get; set; }
+
         public OrderStatus OrderStatus { get; set; }
 
         public PaymentStatus PaymentStatus { get; set; }

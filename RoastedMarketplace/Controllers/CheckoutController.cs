@@ -273,7 +273,7 @@ namespace RoastedMarketplace.Controllers
                 ShippingMethodFee = cart.ShippingFee,
                 Tax = cart.CartItems.Sum(x => x.Tax),
                 UserIpAddress = WebHelper.GetClientIpAddress(),
-                CurrencyCode = ApplicationEngine.CurrentCurrencyCode,
+                CurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
                 Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
             };
             order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +

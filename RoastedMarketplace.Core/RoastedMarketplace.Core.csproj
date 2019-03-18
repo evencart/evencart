@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Dummy\" />
+    <Folder Include="Extensions\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Shop;
@@ -21,5 +22,7 @@ namespace RoastedMarketplace.Services.Products
         decimal GetAutoDiscountedPriceForUser(Product product, User user, ref IList<DiscountCoupon> discountCoupons, out decimal discount);
 
         void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate);
+
+        decimal ConvertCurrency(decimal input, Currency targetCurrency, Rounding? roundingType = null);
     }
 }

@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.ViewEngines;
+using RoastedMarketplace.Services.Users;
 
 namespace RoastedMarketplace.Controllers
 {
-    [Route("dashboard")]
+    [Route("")]
     public class DashboardController : FoundationController
     {
         private readonly IViewAccountant _viewAccountant;
-        public DashboardController(IViewAccountant viewAccountant)
+        private readonly IUserService _userService;
+        public DashboardController(IViewAccountant viewAccountant, IUserService userService)
         {
             _viewAccountant = viewAccountant;
+            _userService = userService;
         }
 
         [DualGet("templates", Name = RouteNames.Templates, OnlyApi = true)]
@@ -24,6 +28,16 @@ namespace RoastedMarketplace.Controllers
         public IActionResult GetRawView(string viewPath)
         {
             return R.Success.WithRawView(viewPath).Result;
+        }
+        [DualPost("set-active-currency", Name = RouteNames.SetActiveCurrency, OnlyApi = true)]
+        public IActionResult SetActiveCurrency(int currencyId)
+        {
+            if (ApplicationEngine.CurrentUser == null)
+                ApplicationEngine.GuestSignIn();
+
+            ApplicationEngine.CurrentUser.ActiveCurrencyId = currencyId;
+            _userService.Update(ApplicationEngine.CurrentUser);
+            return R.Success.Result;
         }
     }
 }

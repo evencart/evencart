@@ -54,6 +54,10 @@ namespace RoastedMarketplace.Data.Entity.Users
 
         public bool NewslettersEnabled { get; set; }
 
+        public string ActiveLanguageCulture { get; set; }
+
+        public int ActiveCurrencyId { get; set; }
+
         #region Virtual Properties
         public virtual IList<Role> Roles { get; set; }
         #endregion

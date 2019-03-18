@@ -5,15 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\Languages\Flags\**" />
     <Compile Remove="Pages\**" />
     <Compile Remove="Plugins\**" />
     <Compile Remove="wwwroot\administration\assets\lib\dist\**" />
+    <Content Remove="App_Data\Languages\Flags\**" />
     <Content Remove="Pages\**" />
     <Content Remove="Plugins\**" />
     <Content Remove="wwwroot\administration\assets\lib\dist\**" />
+    <EmbeddedResource Remove="App_Data\Languages\Flags\**" />
     <EmbeddedResource Remove="Pages\**" />
     <EmbeddedResource Remove="Plugins\**" />
     <EmbeddedResource Remove="wwwroot\administration\assets\lib\dist\**" />
+    <None Remove="App_Data\Languages\Flags\**" />
     <None Remove="Pages\**" />
     <None Remove="Plugins\**" />
     <None Remove="wwwroot\administration\assets\lib\dist\**" />
@@ -37,6 +41,7 @@
     <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\CurrencySelector\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\Menu\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
@@ -85,6 +90,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CartSection\Default.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\CurrencySelector\Default.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CustomHtml\Default.html">

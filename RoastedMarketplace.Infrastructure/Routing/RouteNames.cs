@@ -42,6 +42,6 @@
         public const string ReturnOrder = "ReturnOrder";
         public const string SingleAddress = "SingleAddress";
         public const string CountryStates = "CountryStates";
-
+        public const string SetActiveCurrency = "SetActiveCurrency";
     }
 }

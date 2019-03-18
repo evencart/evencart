@@ -1,0 +1,115 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Currencies" active_menu="CurrenciesList" parent_active_menu="CurrenciesList" %}
+{% partial "Navigation/UserSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Currencies" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editCurrency(0)">{{"Add new currency" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed no-margin">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name">{{"Name" | t}}</th>
+                            <th data-column-id="isoCode">{{"Iso Code" | t}}</th>
+                            <th data-column-id="cultureCode">{{"Culture" | t}}</th>
+                            <th data-column-id="exchangeRate">{{"Exchange Rate" | t}}</th>
+                            <th data-column-id="published" data-formatter="published">{{"Published" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        var initData = null;
+                        /*{% unless currencies == blank %}*/
+                        initData = JSON.parse('{{currencies}}');
+                        /*{% endunless %}*/
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                currencies: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_CurrenciesList %}',
+                            responseObject: "currencies",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                published: function(column, row) {
+                                    return gridFormatters.binary(column, row, "published");
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editCurrency(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteCurrency(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-currency-popup" style="max-width: 600px">
+</div>
+
+<script type="text/javascript">
+
+    var editCurrency = function(id) {
+        jQuery("#edit-currency-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-currency-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Currency was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetCurrency currencyId="?" %}'.replaceAll("?", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-currency-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteCurrency = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this currency?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteCurrency %}",
+                    data: {
+                      currencyId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Currency was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>

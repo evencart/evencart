@@ -77,5 +77,7 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageMenu = "Menu.Manage";
 
+        public const string ManageCurrencies = "Currency.Manage";
+
     }
 }

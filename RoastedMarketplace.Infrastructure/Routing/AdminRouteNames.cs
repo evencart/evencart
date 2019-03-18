@@ -175,5 +175,10 @@
         public const string DeleteMenuItem = "DeleteMenuItem";
         public const string UpdateMenuItemDisplayOrder = "UpdateMenuItemDisplayOrder";
         public const string BulkCreateMenuItems = "BulkCreateMenuItems";
+
+        public const string CurrenciesList = "CurrenciesList";
+        public const string GetCurrency = "GetCurrency";
+        public const string SaveCurrency = "SaveCurrency";
+        public const string DeleteCurrency = "DeleteCurrency";
     }
 }

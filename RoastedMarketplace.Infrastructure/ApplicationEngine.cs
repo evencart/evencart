@@ -15,6 +15,7 @@ using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Core.Services;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
@@ -24,6 +25,7 @@ using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Theming;
 using RoastedMarketplace.Services.Authentication;
+using RoastedMarketplace.Services.Cultures;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Purchases;
 
@@ -180,9 +182,24 @@ namespace RoastedMarketplace.Infrastructure
 
         public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
 
-        public static string CurrentLanguageCultureCode => "en-US";
+        public static string CurrentLanguageCultureCode => "fr-GB";
 
-        public static string CurrentCurrencyCode => "USD";
+        public static Currency CurrentCurrency
+        {
+            get
+            {
+                var currency = CurrentHttpContext.GetCurrentCurrency();
+                if (currency != null)
+                    return currency;
+                var currentCurrencyId = CurrentUser?.ActiveCurrencyId ?? DependencyResolver.Resolve<LocalizationSettings>().PrimaryCurrencyId;
+                var currencyService = DependencyResolver.Resolve<ICurrencyService>();
+                if (currentCurrencyId > 0)
+                    currency = currencyService.Get(currentCurrencyId);
+                currency = currency ?? currencyService.FirstOrDefault(x => true);
+                return currency;
+            }
+
+        }
 
         public static LoginStatus GuestSignIn()
         {
