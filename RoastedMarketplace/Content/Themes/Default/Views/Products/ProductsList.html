@@ -2,18 +2,35 @@
 <div class="wrapper">
     <div class="container" id="product-list-container">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-12">
+                <h5 class="d-xl-none d-lg-none">
+                    {{"Filters" | t}}
+                </h5>
                 <div class="product-filters">
                     {% component "CategoryFilter" model="@params" %}
                     {% component "AttributeFilter" model="@params" %}
                     {% component "PriceFilter" model="@params" %}
                 </div>
+                <script type="text/javascript">
+                    ready(function() {
+                        jQuery(window).resize(function() {
+                            var width = jQuery(this).width();
+                            if (width < 1024)
+                                jQuery(".product-filters").addClass("mobile");
+                            else
+                                jQuery(".product-filters").removeClass("mobile");
+                        });
+                        jQuery(window).trigger("resize");
+                    })
+                </script>
             </div>
-            <div class="col-lg-9">
+            <div class="col-lg-9 col-12">
                 {% partial "Common/Breadcrumb" %}
                 <div class="row">
                     {% for product in products %}
-                    {% partial "Products/_ProductBox" %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        {% partial "Products/_ProductBox" %}
+                    </div>
                     {% endfor %}
                 </div>
 

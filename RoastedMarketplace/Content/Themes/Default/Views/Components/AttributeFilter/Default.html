@@ -1,9 +1,11 @@
 ﻿{% for filter in filters %}
-<div class="attribute-filter margin-b-20">
+<div class="product-filter attribute-filter margin-b-20">
     <h5>
         {{ filter.filterTitle }}
         {% if filter.hasSelection %}
-        <a class="clickable text-sm-right float-right" href="" onclick="productSearch.clearFilter('{{filter.keyName}}');return false;">{{"clear" | t}}</a>
+        <small>
+            <a class="clickable text-muted text-sm-right float-right" href="" onclick="productSearch.clearFilter('{{filter.keyName}}');return false;">{{"clear" | t}}</a>
+        </small>
         {% endif %}
     </h5>
     <ul class="filter-list filter-{{filter.keyName}}">

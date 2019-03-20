@@ -3,7 +3,30 @@
     jQuery('.dropdown-menu.keep-open').on('click', function (e) {
         e.stopPropagation();
     });
-
+    jQuery(".mobile-bars").on("click",
+        function() {
+            jQuery(".main-menu").addClass("mobile").removeClass("d-none");
+            jQuery(".main-menu.mobile .more-arrow").unbind("click");
+            jQuery(".main-menu.mobile .more-arrow").on("click",
+                function (e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        e.returnValue = false; // IE
+                    }
+                    jQuery(".sub-menu").hide();
+                    jQuery(this).parent("a").next(".sub-menu").show();
+                    e.stopPropagation();
+                });
+            jQuery(".main-menu").css("left", 0);
+            jQuery(".overlay-mobile").fadeIn();
+            jQuery(".overlay-mobile").on("click", function () {
+                jQuery(".main-menu").css("left", "-45%");
+                jQuery(".overlay-mobile").fadeOut();
+            });
+        });
+  
+   
     /*--
         Menu Sticky
     -----------------------------------*/

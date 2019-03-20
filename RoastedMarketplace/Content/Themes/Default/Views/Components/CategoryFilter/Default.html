@@ -1,5 +1,5 @@
 ﻿{% if categories.size > 0 %}
-<div class="category-filter margin-b-20">
+<div class="product-filter category-filter margin-b-20 ">
     <h5>
         {{"Browsing" | t}}
     </h5>
@@ -29,14 +29,13 @@
         </li>
         {% endfor %}
     </ul>
-
+    <script type="text/javascript">
+        ready(function () {
+            jQuery(".category-list a").click(function (e) {
+                e.preventDefault();
+                productSearch.setUrl(jQuery(this).attr("href"));
+            });
+        })
+    </script>
 </div>
-<script type="text/javascript">
-    ready(function () {
-        jQuery(".category-list a").click(function (e) {
-            e.preventDefault();
-            productSearch.setUrl(jQuery(this).attr("href"));
-        });
-    })
-</script>
 {% endif %}

@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <None Remove="App_Data\database.configex" />
+    <None Remove="Content\Themes\Default\Assets\js\popper.min.js" />
     <None Remove="Content\Themes\Default\Views\Authentication\ForgotPassword.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
@@ -69,6 +70,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\Themes\Default\Assets\js\popper.min.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\ForgotPassword.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

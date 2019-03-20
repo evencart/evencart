@@ -1,4 +1,4 @@
-﻿var root = "https://localhost:44387";
+﻿var root = "http://localhost:52886";
 var useHash = false; // Defaults to: false
 var hash = '#!'; // Defaults to: '#'
 var router = new Navigo(root, useHash, hash);
