@@ -4,48 +4,45 @@
     {{"Account Profile" | t}}
 </h3>
 <div class="page-section section pb-120">
-    <div class="row">
-        <form action="{% route api_AccountSaveUser %}" id="save-user-form" method="post">
-            <div>
-                <div class="col-xs-6 mb-20">
-                    {% control label text=@t"First Name" for="firstName" %}
-                    {% control text name="firstName" id="firstName" value="{{user.firstName}}" %}
-                    {% control validator for="firstName" required="true" %}
-                </div>
-                <div class="col-xs-6 mb-20">
-                    {% control label text=@t"Last Name" for="firstName" %}
-                    {% control text name="lastName" id="lastName" value="{{user.lastName}}" %}
-                    {% control validator for="lastName" required="true" %}
-                </div>
-                <div class="col-xs-12 mb-20">
-                    {% control label text=@t"Email" for="email" %}
-                    {% control text name="email" id="email" value="{{user.email}}" %}
-                    {% control validator for="email" required="true" email="true" %}
-                </div>
-                <div class="col-xs-12 mb-20">
-                    {% control label text=@t"Mobile Number" for="mobileNumber" %}
-                    {% control text name="mobileNumber" value="{{user.mobileNumber}}" %}
-                </div>
-                <div class="col-xs-12 mb-20">
-                    {% control label text=@t"Company Name" for="companyName" %}
-                    {% control text name="companyName" value="{{user.companyName}}" %}
-                </div>
-                <div class="col-xs-12 mb-20">
-                    {% control label text=@t"Date of birth" for="dateOfBirth" %}
-                    {% control datetime name="dateOfBirth" value="{{user.dateOfBirth}}" %}
-                </div>
-                <div class="col-xs-12 mb-20">
-                    {% control checkbox text=@t"Subscribe to newsletters" name="newslettersEnabled" value="user.newslettersEnabled" %}
-                </div>
+    <form action="{% route api_AccountSaveUser %}" id="save-user-form" method="post">
+        <div class="row">
+            <div class="col-6 mb-20">
+                {% control label text=@t"First Name" for="firstName" %}
+                {% control text name="firstName" id="firstName" value="{{user.firstName}}" %}
+                {% control validator for="firstName" required="true" %}
             </div>
-            <div class="action-button-container text-center">
-                <button type="submit" class="btn btn-default">
-                    {{"Save Profile" | t}}
-                </button>
+            <div class="col-6 mb-20">
+                {% control label text=@t"Last Name" for="firstName" %}
+                {% control text name="lastName" id="lastName" value="{{user.lastName}}" %}
+                {% control validator for="lastName" required="true" %}
             </div>
-        </form>
-
-    </div>
+            <div class="col-sm-12 mb-20">
+                {% control label text=@t"Email" for="email" %}
+                {% control text name="email" id="email" value="{{user.email}}" %}
+                {% control validator for="email" required="true" email="true" %}
+            </div>
+            <div class="col-sm-12 mb-20">
+                {% control label text=@t"Mobile Number" for="mobileNumber" %}
+                {% control text name="mobileNumber" value="{{user.mobileNumber}}" %}
+            </div>
+            <div class="col-sm-12 mb-20">
+                {% control label text=@t"Company Name" for="companyName" %}
+                {% control text name="companyName" value="{{user.companyName}}" %}
+            </div>
+            <div class="col-sm-12 mb-20">
+                {% control label text=@t"Date of birth" for="dateOfBirth" %}
+                {% control datetime name="dateOfBirth" value="{{user.dateOfBirth}}" %}
+            </div>
+            <div class="col-sm-12 mb-20">
+                {% control checkbox text=@t"Subscribe to newsletters" name="newslettersEnabled" value="user.newslettersEnabled" %}
+            </div>
+        </div>
+        <div class="action-button-container text-center">
+            <button type="submit" class="btn btn-default">
+                {{"Save Profile" | t}}
+            </button>
+        </div>
+    </form>
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function() {

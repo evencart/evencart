@@ -2,32 +2,35 @@
 <div class="page-section section wrapper">
     <div class="container">
         <div class="row">
-            <h3 class="text-center">
-                {{"Login" | t}}
-            </h3>
-            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+            <div class="col-12">
+                <h3 class="text-center">
+                    {{"Login" | t}}
+                </h3>
+            </div>
+           
+            <div class="col-sm-8 offset-2">
                 <div class="login-reg-form">
                     <form action="{% route api_Login %}" method="post" id="login-form">
                         <div class="row">
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 <label id="email">Email <span class="required">*</span></label>
                                 <input name="email" id="email" type="text">
                             </div>
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 <label id="password">Passwords <span class="required">*</span></label>
                                 <input name="password" id="password" type="password">
                             </div>
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 <input id="Login" name="login" class="inline" type="submit">
                                 <label class="inline" for="rememberme">
                                     <input id="rememberme" name="rememberme" value="true" type="checkbox"> Remember me
                                 </label>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 <a href="{% route ForgotPassword %}">{{"Lost your password?" | t}}</a>
                             </div>
-                            <div class="col-xs-12">
-                               {{"Don't have any account?" | t}} <a href="{% route Register %}">Create one</a>
+                            <div class="col-sm-12">
+                                {{"Don't have any account?" | t}} <a href="{% route Register %}">Create one</a>
                             </div>
                         </div>
                     </form>

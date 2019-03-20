@@ -3456,3 +3456,7 @@ div.tab button.active {
   .product-filters.mobile .product-filter {
     margin: 0 15px;
     min-width: 160px; }
+
+.form-control:focus {
+  outline: none;
+  box-shadow: none; }

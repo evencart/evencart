@@ -87,25 +87,25 @@
         </div>
         <div class="row">
             <div class="section">
-                <h3>
-                    {{"Description" | t}}
-                </h3>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{product.description}}
-                    </div>
+                <div class="col-12">
+                    <h3>
+                        {{"Description" | t}}
+                    </h3>
+                    {{product.description}}
                 </div>
             </div>
             <div class="section">
-                <h3>
-                    {{"Product Details" | t}}
-                </h3>
-                <div class="row">
+                <div class="margin-b-20">
+                  
                     {% for specGroup in product.productSpecificationGroups %}
-
-                    <div class="col-md-12">
+                  
+                    <div class="col-md-12 margin-b-20">
                         <h3>
+                            {% if forloop.index0 == 0 %}
+                            {{"Product Details" | t}}
+                            {% else %}
                             {{specGroup.name}}
+                            {% endif %}
                         </h3>
                         <table class="table-data-sheet">
                             {% for spec in specGroup.productSpecifications %}
@@ -121,15 +121,15 @@
             </div>
             {% if reviews && reviews.size > 0 %}
             <div class="section section-reviews" id="reviews">
-                <h3>
-                    {{"Reviews" | t}}
-                </h3>
-                <div class="row">
-                    <div class="col-md-12">
-                        {% for review in reviews %}
-                        {% partial "Reviews/_ReviewBox" %}
-                        {% endfor %}
-                    </div>
+                <div class="col-md-12">
+                    <h3>
+                        {{"Reviews" | t}}
+                    </h3>
+                    {% for review in reviews %}
+                    {% partial "Reviews/_ReviewBox" %}
+                    {% endfor %}
+                </div>
+                <div class="text-center">
                     <a href='{% route ReviewsList seName="{{product.seName}}" %}' class="btn btn-default">
                         {{"View All Reviews" | t}}
                     </a>

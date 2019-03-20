@@ -3,18 +3,14 @@
 <div class="product-section section pb-120">
     <div class="container">
         <div class="row">
-            <div class="section-title text-center col-xs-12 mb-60">
-                <h2>{{"Related Products" | t}}</h2>
+            <div class="section-title text-center col-12 mb-10">
+                <h3>{{"Related Products" | t}}</h3>
             </div>
-        </div>
-        <div class="row">
-            <div class="product-slider product-slider-4">
-                {% for product in relatedProducts %}
+            {% for product in relatedProducts %}
+            <div class="col-lg-4 col-md-6 col-sm-12">
                 {% partial "Products/_ProductBox" %}
-               
-                {% endfor %}
-               
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>

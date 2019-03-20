@@ -2,36 +2,39 @@
 <div class="page-section section wrapper">
     <div class="container">
         <div class="row">
-            <h3 class="text-center">
-                {{"Register" | t}}
-            </h3>
-            <div class="col-md-8 col-md-offset-2 col-xs-12">
+            <div class="col-12">
+                <h3 class="text-center">
+                    {{"Register" | t}}
+                </h3>
+            </div>
+           
+            <div class="col-sm-8 offset-2">
                 <div class="login-reg-form">
                     <div class="text-center">
                         {{"Already have an account?" | t}} <a href="{% route Login %}">{{"Login Now" | t }}</a>
                     </div>
                     <form action="{% route api_Register %}" method="post" id="formRegistration">
                         <div class="row">
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 {% control label text=@t"Email" for="email" %}
                                 {% control text name="email" id="email" %}
                                 {% control validator for="email" required="true" email="true" %}
                             </div>
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 {% control label text=@t"Password" for="password" %}
                                 {% control password name="password" id="password" %}
                                 {% control validator for="password" required="true" %}
                             </div>
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 {% control label text=@t"Confirm Password" for="confirmPassword" %}
                                 {% control password name="confirmPassword" id="confirmPassword" %}
                                 {% control validator for="confirmPassword" required="true" %}
                             </div>
-                            <div class="col-xs-12 mb-20">
+                            <div class="col-sm-12 mb-20">
                                 <input id="rememberme" type="checkbox">
                                 <label for="rememberme">I agree <a href="#">Terms &amp; Condition</a></label>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 <input value="register" type="submit">
                             </div>
                         </div>

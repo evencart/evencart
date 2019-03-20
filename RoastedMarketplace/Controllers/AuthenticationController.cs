@@ -65,7 +65,7 @@ namespace RoastedMarketplace.Controllers
         public IActionResult ForgotPassword(string code = null)
         {
             var response = R;
-            if (code != null || !ApplicationEngine.CurrentUser.IsVisitor())
+            if (code != null || ApplicationEngine.CurrentUser != null)
             {
                 UserCode userCode = null;
                 if (ApplicationEngine.CurrentUser.IsVisitor())

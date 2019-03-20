@@ -1,12 +1,12 @@
 ﻿{% layout "_AccountLayout" %}
 {% global active_menu="AccountWishlist" %}
-<h3>
+<h3 class="text-center">
     {{"Wishlist" | t}}
 </h3>
 <div class="page-section section pb-120">
-    <div class="row">
+    <div>
         {% if wishlist.items.size == 0 %}
-        <div>
+        <div class="text-center">
             <p>
                 {{"Your wishlist is empty." | t}}
             </p>

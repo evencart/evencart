@@ -4305,3 +4305,9 @@ div.tab button.active {
         }
     }
 }
+
+.form-control:focus
+{
+    outline:none;
+    box-shadow:none;
+}
