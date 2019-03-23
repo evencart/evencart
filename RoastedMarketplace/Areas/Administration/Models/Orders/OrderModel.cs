@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RoastedMarketplace.Areas.Administration.Models.Users;
 using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 
 namespace RoastedMarketplace.Areas.Administration.Models.Orders
@@ -42,6 +43,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Orders
         public decimal Tax { get; set; }
 
         public decimal OrderTotal => Subtotal + Tax - Discount + ShippingMethodFee ?? 0 + PaymentMethodFee ?? 0;
+
+        public string OrderTotalFormatted => OrderTotal.ToCurrency();
 
         public string UserGstNumber { get; set; }
 

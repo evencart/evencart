@@ -7,6 +7,9 @@ namespace RoastedMarketplace.Infrastructure
     {
         public static string FormatCurrency(this IFormatterService formatterService, decimal amount, bool includeSymbol = true)
         {
+            if (ApplicationEngine.IsAdmin())
+                return formatterService.FormatCurrency(amount, ApplicationEngine.BaseCurrency.CultureCode,
+                    includeSymbol);
             return formatterService.FormatCurrency(amount, ApplicationEngine.CurrentCurrency.CultureCode, includeSymbol);
         }
 

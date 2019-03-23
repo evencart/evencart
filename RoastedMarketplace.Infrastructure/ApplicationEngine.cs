@@ -198,7 +198,22 @@ namespace RoastedMarketplace.Infrastructure
                 currency = currency ?? currencyService.FirstOrDefault(x => true);
                 return currency;
             }
+        }
 
+        private static Currency _baseCurrency;
+        public static Currency BaseCurrency
+        {
+            get
+            {
+                if (_baseCurrency != null)
+                    return _baseCurrency;
+                var baseCurrencyId = DependencyResolver.Resolve<LocalizationSettings>().BaseCurrencyId;
+                var currencyService = DependencyResolver.Resolve<ICurrencyService>();
+                if (baseCurrencyId > 0)
+                    _baseCurrency = currencyService.Get(baseCurrencyId);
+                _baseCurrency = _baseCurrency ?? currencyService.FirstOrDefault(x => true);
+                return _baseCurrency;
+            }
         }
 
         public static LoginStatus GuestSignIn()
