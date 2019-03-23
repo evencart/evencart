@@ -6,6 +6,8 @@
         public const string GetTemplates = "GetTemplates";
         public const string GetProduct = "GetProduct";
 
+        public const string Dashboard = "Dashboard";
+
         public const string ProductsList = "ProductsList";
         public const string SaveProduct = "SaveProduct";
         public const string SaveProductMedia = "SaveProductMedia";

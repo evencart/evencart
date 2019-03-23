@@ -18,6 +18,11 @@
     <li>
         <a href="{% route ForgotPassword %}">{{"Change Password" | t}}</a>
     </li>
+    {% if currentUser.isAdministrator %}
+    <li>
+        <a href="{% route Dashboard %}">{{"Administration" | t}}</a>
+    </li>
+    {% endif %}
     <li>
         <a href="{% route Logout %}">{{"Signout" | t}}</a>
     </li>

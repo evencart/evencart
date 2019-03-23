@@ -13,7 +13,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         {
             _viewAccountant = viewAccountant;
         }
-
+        [DualGet("~/admin", Name = AdminRouteNames.Dashboard)]
         public IActionResult Index()
         {
             return Result();
