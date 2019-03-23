@@ -124,11 +124,5 @@ namespace RoastedMarketplace.Controllers
             var wishList = new CartObject(true).GetObject();
             return R.Success.With("wishlist", wishList).Result;
         }
-
-        [DualGet("reviews", Name = RouteNames.AccountReviews)]
-        public IActionResult Reviews()
-        {
-            return R.Result;
-        }
     }
 }

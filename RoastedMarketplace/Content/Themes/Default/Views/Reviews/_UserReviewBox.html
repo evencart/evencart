@@ -1,0 +1,57 @@
+﻿<div class="user-review mb-20">
+    <div class="row">
+        <div class="col-1">
+            <a href='{% route SingleProduct SeName="{{review.product.seName}}" %}'>
+                <img src="{{review.product.media[0].thumbnailUrl}}"/>
+            </a>
+        </div>
+        <div class="col-11">
+            <div class="product-title">
+                <a href='{% route SingleProduct SeName="{{review.product.seName}}" %}'>
+                    {{review.product.name}}
+                </a>
+            </div>
+            <div class="review-title">
+                {{review.title}}
+            </div>
+            {%- assign ratingWidth=review.ratingPercent -%}
+            {% partial "Products/_RatingStars" %}
+            <div class="review-description">
+                {{review.description}}
+            </div>
+            <div class="posted-by" title="{{'The customer purchased this product on this store' | t}}">
+                {{review.displayName}} {{"on" | t}} {{review.createdOn }}
+                {% if review.verifiedPurchase %}
+                <small>
+                    <span class="fa fa-check-circle"></span> {{"Verified Purchase" | t}}
+                </small>
+                {% endif %}
+            </div>
+            {% if store.reviewModificationAllowed %}
+            <div class="action-links">
+                <a href='{% route ReviewEditor productId="{{review.product.id}}" reviewId="{{review.id}}" %}'>
+                    {{"Edit" | t}}
+                </a>
+                &middot;
+                <a href="javascript:void(null)" onclick="deleteReview('{{review.id}}')">
+                    {{"Delete" | t}}
+                </a>
+                <script type="text/javascript">
+                    var deleteReview = function(id) {
+                        confirm('{{"Are you sure you wish to delete this review?" | t}}',
+                            function() {
+                                post({
+                                    url: '{% route api_DeleteReview reviewId="%id%" %}'.replace("%id%", id),
+                                    done: function() {
+                                        notify("success", '{{"The review was deleted successfully" | t}}', true);
+                                        window.location.reload();
+                                    }
+                                });
+                            });
+                    }
+                </script>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

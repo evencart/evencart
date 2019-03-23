@@ -40,7 +40,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
                 Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName),
                 WishlistEnabled = orderSettings.EnableWishlist,
-                RepeatOrdersEnabled = orderSettings.AllowReorder
+                RepeatOrdersEnabled = orderSettings.AllowReorder,
+                ReviewsEnabled = catalogSettings.EnableReviews,
+                ReviewModificationAllowed = catalogSettings.AllowReviewModification
             };
         }
     }

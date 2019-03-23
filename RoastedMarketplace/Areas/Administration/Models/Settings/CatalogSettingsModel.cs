@@ -16,6 +16,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Settings
 
         public bool EnableReviewModeration { get; set; }
 
+        public bool AllowReviewModification { get; set; }
+
         public bool AllowReviewsForStorePurchaseOnly { get; set; }
 
         public bool AllowOneReviewPerUserPerItem { get; set; }
@@ -27,5 +29,7 @@ namespace RoastedMarketplace.Areas.Administration.Models.Settings
         public int NumberOfReviewsToDisplayOnProductPage { get; set; }
 
         public string DisplayNameForPrivateReviews { get; set; }
+
+        public int NumberOfDaysForPendingReviews { get; set; }
     }
 }

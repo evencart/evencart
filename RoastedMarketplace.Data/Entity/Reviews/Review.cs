@@ -1,6 +1,7 @@
 ﻿using System;
 using RoastedMarketplace.Core.Data;
 using RoastedMarketplace.Data.Entity.Purchases;
+using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;
 
 namespace RoastedMarketplace.Data.Entity.Reviews
@@ -33,6 +34,8 @@ namespace RoastedMarketplace.Data.Entity.Reviews
         public virtual User User { get; set; }
 
         public virtual Order Order { get; set; }
+
+        public virtual Product Product { get; set; }
 
         #endregion
     }

@@ -21,6 +21,8 @@ namespace RoastedMarketplace.Data.Entity.Settings
 
         public bool AllowOneReviewPerUserPerItem { get; set; }
 
+        public bool AllowReviewModification { get; set; }
+
         public bool EnableRelatedProducts { get; set; }
 
         public int NumberOfRelatedProducts { get; set; }
@@ -28,5 +30,7 @@ namespace RoastedMarketplace.Data.Entity.Settings
         public int NumberOfReviewsToDisplayOnProductPage { get; set; }
 
         public string DisplayNameForPrivateReviews { get; set; }
+
+        public int NumberOfDaysForPendingReviews { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using FluentValidation;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
+using RoastedMarketplace.Models.Products;
 
 namespace RoastedMarketplace.Models.Reviews
 {
@@ -27,11 +28,11 @@ namespace RoastedMarketplace.Models.Reviews
 
         public int OrderId { get; set; }
 
+        public virtual ProductModel Product { get; set; }
         public void SetupValidationRules(ModelValidator<ReviewModel> v)
         {
             v.RuleFor(x => x.Rating).GreaterThan(0).LessThan(6);
             v.RuleFor(x => x.ProductId).GreaterThan(0);
-            v.RuleFor(x => x.OrderId).GreaterThan(0);
         }
     }
 }

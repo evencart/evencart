@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Services.Events;
+using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc.Breadcrumbs;
 
@@ -38,6 +39,8 @@ namespace RoastedMarketplace.Infrastructure.Mvc
         }
 
         public CustomResponse R => CustomResponse.Response(this);
+
+        protected User CurrentUser => ApplicationEngine.CurrentUser;
 
         /// <summary>
         /// Raises a named event so other services and plugins can capture

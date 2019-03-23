@@ -24,6 +24,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementa
 
         public bool ReviewsEnabled { get; set; }
 
+        public bool ReviewModificationAllowed { get; set; }
+
         public bool RelatedProductsEnabled { get; set; }
 
         public bool ChangeCurrencyEnabled { get; set; }

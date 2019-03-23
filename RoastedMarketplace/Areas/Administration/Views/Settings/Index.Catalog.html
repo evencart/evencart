@@ -32,12 +32,19 @@
             {% control checkbox name="allowOneReviewPerUserPerItem" text=@t"Allow one review per user per order item" value="{{settings.allowOneReviewPerUserPerItem}}"%}
         </div>
         <div class="form-group">
+            {% control checkbox name="allowReviewModification" text=@t"Allow users to edit reviews" value="{{settings.allowReviewModification}}"%}
+        </div>
+        <div class="form-group">
             {% control label text=@t"Number of reviews on product page" for="numberOfReviewsToDisplayOnProductPage" %}
             {% control number min="1" name="numberOfReviewsToDisplayOnProductPage" value="{{settings.numberOfReviewsToDisplayOnProductPage}}"%}
         </div>
         <div class="form-group">
             {% control label text=@t"User Name for Private Reviews" for="displayNameForPrivateReviews" %}
             {% control text name="displayNameForPrivateReviews" value="{{settings.displayNameForPrivateReviews}}" placeholder=@t"e.g. Verified Customer" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Number of days to show pending reviews" for="numberOfDaysForPendingReviews" %}
+            {% control number min="1" name="numberOfDaysForPendingReviews" value="{{settings.numberOfDaysForPendingReviews}}"%}
         </div>
         <div class="form-group">
             {% control checkbox name="enableRelatedProducts" text=@t"Enable Related Products" value="{{settings.enableRelatedProducts}}"%}

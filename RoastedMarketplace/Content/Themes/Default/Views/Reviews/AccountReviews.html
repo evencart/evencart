@@ -1,0 +1,23 @@
+﻿{% layout "_Layout" %}
+{% global active_menu="AccountReviews" %}
+<!-- PAGE SECTION START -->
+<div class="product-section section wrapper pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                {% partial "Reviews/_ReviewSummary" %}
+            </div>
+            <div class="col-md-8">
+                <h3>
+                    {{"Review Center" | t}}
+                </h3>
+                <div class="reviews">
+                    {% for review in reviews %}
+                    {% partial "Reviews/_UserReviewBox" %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGE SECTION END -->

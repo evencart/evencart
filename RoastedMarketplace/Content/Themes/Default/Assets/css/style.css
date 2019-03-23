@@ -3287,7 +3287,8 @@ div.tab button.active {
   .rating-container .inactive-stars {
     padding: 0;
     display: block;
-    z-index: 0; }
+    z-index: 0;
+    color: #999; }
 
 .product-carousel {
   margin: 20px 0; }
