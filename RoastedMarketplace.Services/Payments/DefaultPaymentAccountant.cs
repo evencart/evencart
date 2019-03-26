@@ -12,16 +12,16 @@ namespace RoastedMarketplace.Services.Payments
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IPaymentTransactionService _paymentTransactionService;
-        private readonly IPurchaseAccountant _purchaseAccountant;
-        public DefaultPaymentAccountant(ILogger logger, IOrderService orderService, IPaymentTransactionService paymentTransactionService, IPurchaseAccountant purchaseAccountant)
+        private readonly ICartService _cartService;
+        public DefaultPaymentAccountant(ILogger logger, IOrderService orderService, IPaymentTransactionService paymentTransactionService, ICartService cartService)
         {
             _logger = logger;
             _orderService = orderService;
             _paymentTransactionService = paymentTransactionService;
-            _purchaseAccountant = purchaseAccountant;
+            _cartService = cartService;
         }
 
-        public void ProcessTransactionResult(TransactionResult result)
+        public void ProcessTransactionResult(TransactionResult result, bool clearCart = false)
         {
             var order = _orderService.GetByGuid(result.OrderGuid);
             if (!result.Success)
@@ -38,15 +38,20 @@ namespace RoastedMarketplace.Services.Payments
                 UserIpAddress = order.UserIpAddress,
                 TransactionAmount = result.TransactionAmount,
                 TransactionGuid = result.TransactionGuid,
-                TransactionCodes = result.ResponseParameters,
                 TransactionCurrencyCode = result.TransactionCurrencyCode
             };
+            paymentTransaction.SetTransactionCodes(result.ResponseParameters);
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
 
             //update order
             order.CurrencyCode = result.TransactionCurrencyCode;
+            order.PaymentStatus = result.NewStatus;
             _orderService.Update(order);
+
+            //clear cart
+            if (clearCart)
+                _cartService.ClearCart(order.UserId);
         }
     }
 }

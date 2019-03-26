@@ -27,10 +27,14 @@ namespace RoastedMarketplace.Factories.Orders
         public OrderModel Create(Order order)
         {
             var model = _modelMapper.Map<OrderModel>(order);
-            model.BillingAddress = _modelMapper.Map<AddressInfoModel>(order.BillingAddress);
-            model.BillingAddress.StateProvinceName =
-                order.BillingAddress.StateOrProvince?.Name ?? order.BillingAddress.StateProvinceName;
-            model.BillingAddress.CountryName = order.BillingAddress.Country.Name;
+            if (order.BillingAddress != null)
+            {
+                model.BillingAddress = _modelMapper.Map<AddressInfoModel>(order.BillingAddress);
+                model.BillingAddress.StateProvinceName =
+                    order.BillingAddress.StateOrProvince?.Name ?? order.BillingAddress.StateProvinceName;
+                model.BillingAddress.CountryName = order.BillingAddress.Country.Name;
+            }
+
 
             if (order.ShippingAddress != null)
             {
@@ -40,7 +44,7 @@ namespace RoastedMarketplace.Factories.Orders
                 model.ShippingAddress.CountryName = order.ShippingAddress.Country.Name;
             }
             model.OrderItems = order.OrderItems?.Select(Create).ToList();
-            return model;   
+            return model;
         }
 
         public OrderItemModel Create(OrderItem orderItem)

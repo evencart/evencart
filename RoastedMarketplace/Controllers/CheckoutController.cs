@@ -273,7 +273,7 @@ namespace RoastedMarketplace.Controllers
                 ShippingMethodFee = cart.ShippingFee,
                 Tax = cart.CartItems.Sum(x => x.Tax),
                 UserIpAddress = WebHelper.GetClientIpAddress(),
-                CurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
+                CurrencyCode = ApplicationEngine.BaseCurrency.IsoCode,
                 Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
             };
             order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
@@ -291,6 +291,11 @@ namespace RoastedMarketplace.Controllers
             order.OrderNumber = orderNumber;
             _orderService.Update(order);
 
+            //load the addresses
+            var addressIds = new List<int>() {order.BillingAddressId, order.ShippingAddressId ?? 0};
+            var addresses = _addressService.Get(x => addressIds.Contains(x.Id)).ToList();
+            order.BillingAddress = addresses.First(x => x.Id == order.BillingAddressId);
+            order.ShippingAddress = addresses.FirstOrDefault(x => x.Id == order.ShippingAddressId);
             var orderItems = new List<OrderItem>();
             foreach (var cartItem in cart.CartItems)
             {
@@ -318,7 +323,11 @@ namespace RoastedMarketplace.Controllers
             if (transactionResult.Success)
             {
                 if (transactionResult.RequiresRedirection)
-                    return R.Redirect(transactionResult.RedirectionUrl);
+                    return Redirect(transactionResult.RedirectionUrl);
+            }
+            else
+            {
+                return Confirm();
             }
 
             //if we are here, payment has been done, so we can get the transaction data

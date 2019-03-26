@@ -4,6 +4,6 @@ namespace RoastedMarketplace.Services.Payments
 {
     public interface IPaymentAccountant
     {
-        void ProcessTransactionResult(TransactionResult result);
+        void ProcessTransactionResult(TransactionResult result, bool clearCart = false);
     }
 }
