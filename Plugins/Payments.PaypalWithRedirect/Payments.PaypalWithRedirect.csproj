@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Payments.PaypalWithRedirect</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Payments.PaypalWithRedirect</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Administration\PaypalWithRedirect\Settings.html" />
+    <None Remove="Views\Administration\PaypalWithRedirect\_Navigation.html" />
+    <None Remove="Views\PublicInfo.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Administration\PaypalWithRedirect\Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\PaypalWithRedirect\_Navigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaypalWithRedirect\PaymentInfoDisplayPage.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PayPal" Version="2.0.0-rc2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

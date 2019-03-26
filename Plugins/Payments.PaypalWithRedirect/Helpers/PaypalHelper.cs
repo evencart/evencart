@@ -1,0 +1,146 @@
+﻿using System;
+using System.Collections.Generic;
+using Payments.PaypalWithRedirect.Models;
+using PayPal.Core;
+using PayPal.v1.Payments;
+using RoastedMarketplace.Data.Entity.Payments;
+using RoastedMarketplace.Infrastructure;
+using Order = RoastedMarketplace.Data.Entity.Purchases.Order;
+namespace Payments.PaypalWithRedirect.Helpers
+{
+    public class PaypalHelper
+    {
+        private static PayPalEnvironment GetEnvironment(PaypalWithRedirectSettings settings)
+        {
+            if (settings.EnableSandbox)
+                return new SandboxEnvironment(settings.ClientId, settings.ClientSecret);
+
+            return new LiveEnvironment(settings.ClientId, settings.ClientSecret);
+        }
+
+        public static TransactionResult ProcessApproval(Order order, PaypalWithRedirectSettings settings)
+        {
+            var payer = new Payer()
+            {
+                PaymentMethod = "paypal",
+            };
+
+            var payment = new Payment()
+            {
+                Intent = "sale",
+                Transactions = new List<Transaction>()
+                {
+                    new Transaction()
+                    {
+                        Amount = new Amount()
+                        {
+                            Total = order.OrderTotal.ToString("N"),
+                            Currency = order.CurrencyCode
+                        }
+                    }
+                },
+                RedirectUrls = new RedirectUrls()
+                {
+                    ReturnUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectReturnUrlRouteName, new {orderGuid = order.Guid}, absoluteUrl: true),
+                    CancelUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectCancelUrlRouteName, absoluteUrl: true),
+                },
+                Payer = payer
+            };
+            var pcRequest = new PaymentCreateRequest();
+            pcRequest.RequestBody(payment);
+
+            var environment = GetEnvironment(settings);
+
+            var client = new PayPalHttpClient(environment);
+            var transactionResult = new TransactionResult();
+            try
+            {
+                var response = client.Execute(pcRequest).Result;
+                var result = response.Result<Payment>();
+
+                string redirectUrl = null;
+                foreach (var link in result.Links)
+                {
+                    if (link.Rel.Equals("approval_url"))
+                    {
+                        redirectUrl = link.Href;
+                    }
+                }
+
+                if (redirectUrl == null)
+                {
+                    transactionResult.Success = false;
+                    transactionResult.Exception = new Exception("Failed to get approval url");
+                }
+                else
+                {
+                    transactionResult.Success = true;
+                    transactionResult.NewStatus = PaymentStatus.Authorized;
+                    transactionResult.Redirect(redirectUrl);
+                }
+            }
+            catch (BraintreeHttp.HttpException ex)
+            {
+                transactionResult.Exception = ex;
+            }
+
+            return transactionResult;
+        }
+
+        public static TransactionResult ProcessExecution(Order order, PaymentReturnModel returnModel, PaypalWithRedirectSettings settings)
+        {
+            var payment = new PaymentExecution()
+            {
+                PayerId = returnModel.PayerId,
+                Transactions = new List<CartBase>()
+                {
+                    new CartBase()
+                    {
+                        Amount = new Amount()
+                        {
+                            Currency = order.CurrencyCode,
+                            Total = order.OrderTotal.ToString("N")
+                        }
+                    }
+                }
+            };
+            var pcRequest = new PaymentExecuteRequest(returnModel.PaymentId);
+            pcRequest.RequestBody(payment);
+
+            var environment = GetEnvironment(settings);
+
+            var client = new PayPalHttpClient(environment);
+            var transactionResult = new TransactionResult();
+            try
+            {
+                var response = client.Execute(pcRequest).Result;
+                var result = response.Result<Payment>();
+                transactionResult.Success = true;
+                transactionResult.NewStatus = PaymentStatus.Complete;
+                transactionResult.OrderGuid = order.Guid;
+                transactionResult.TransactionAmount = order.OrderTotal;
+                transactionResult.TransactionGuid = returnModel.PaymentId;
+                transactionResult.ResponseParameters = new Dictionary<string, object>()
+                {
+                    { "id", result.Id },
+                    { "payerId", returnModel.PayerId },
+                    { "paymentId", returnModel.PaymentId },
+                    { "createTime", result.CreateTime },
+                    { "failureReason", result.FailureReason },
+                    { "experienceProfileId", result.ExperienceProfileId },
+                    { "noteToPayer", result.NoteToPayer },
+                    { "intent", result.Intent },
+                    { "state", result.State},
+                    { "updateTime", result.UpdateTime },
+                };
+            }
+            catch (BraintreeHttp.HttpException ex)
+            {
+                transactionResult.Success = false;
+                transactionResult.Exception = ex;
+            }
+
+            return transactionResult;
+        }
+    }
+}

@@ -22,3 +22,5 @@ Plugins/Shipping.FedEx/obj/
 Plugins/Payments.PaypalDirect/obj/
 Plugins/Payments.PaypalDirect/bin/
 Plugins/Ui.Slider/obj/
+Plugins/Payments.PaypalWithRedirect/obj/
+Plugins/Payments.PaypalWithRedirect/bin/
