@@ -30,6 +30,7 @@ namespace RoastedMarketplace.Infrastructure.Plugins
         {
             if (_loadedPlugins != null)
                 return;
+            InitializeDependentAssemblyResolver();
             _loadedPlugins = new List<PluginInfo>();
             if (!Directory.Exists(_pluginsDirectory))
                 return;
@@ -71,10 +72,17 @@ namespace RoastedMarketplace.Infrastructure.Plugins
                 var pluginAssembly = Assembly.LoadFile(Path.Combine(_binDirectory, mainAssemblyFileInfo.Name));
                 //copy the dependent assemblies
                 var dependentAssemblies = GetDependentAssemblies(pluginAssembly);
+                var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (var da in dependentAssemblies)
                 {
-                    var assemblyFileInfo = new FileInfo(da.Location);
-                    SafeFileCopy(assemblyFileInfo, _binDirectory);
+                    if (loadedAssemblies.Any(x => x.FullName == da.Key))
+                        continue;
+                    var dAssemblyPath = Path.Combine(pluginInfo.PluginDirectory, da.Value);
+                    if (!File.Exists(dAssemblyPath))
+                        continue;
+                    var assemblyFileInfo = new FileInfo(dAssemblyPath);
+                    var targetPath = Path.Combine(_binDirectory, da.Value);
+                    SafeFileCopy(assemblyFileInfo, targetPath);
                 }
                 //set the assembly to the copied one
                 pluginInfo.Assembly = pluginAssembly;
@@ -106,13 +114,10 @@ namespace RoastedMarketplace.Infrastructure.Plugins
         {
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
-                var pluginName = e.RequestingAssembly.GetName().Name;
-                var assemblyDirectory = e.RequestingAssembly.Location;
-
                 var pluginDependencyName = e.Name.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).First();
 
                 var pluginDependencyFullName =
-                    Path.Combine(_hostingEnvironment.ContentRootPath, _pluginsDirectory, pluginName, $"{pluginDependencyName}.dll"
+                    Path.Combine(_binDirectory, $"{pluginDependencyName}.dll"
                     );
 
                 return
@@ -148,11 +153,11 @@ namespace RoastedMarketplace.Infrastructure.Plugins
             }
         }
 
-        private IEnumerable<Assembly> GetDependentAssemblies(Assembly analyzedAssembly)
+        private IDictionary<string, string> GetDependentAssemblies(Assembly analyzedAssembly)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => GetNamesOfAssembliesReferencedBy(a)
-                    .Contains(analyzedAssembly.FullName));
+            var referencedAssemblies = analyzedAssembly.GetReferencedAssemblies();
+            var dependentFileNames = referencedAssemblies.ToDictionary(x => x.FullName, x => $"{x.Name}.dll");
+            return dependentFileNames;
         }
 
         public IEnumerable<string> GetNamesOfAssembliesReferencedBy(Assembly assembly)

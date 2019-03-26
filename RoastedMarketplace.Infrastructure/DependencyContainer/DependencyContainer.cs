@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using DryIoc;
 using RoastedMarketplace.Core.Caching;
 using RoastedMarketplace.Core.Config;
@@ -70,7 +71,17 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             registrar.Register<IEmailSender, EmailSender>(reuse: Reuse.Transient);
 
             var asm = AssemblyLoader.GetAppDomainAssemblies();
-            var allTypes = asm.SelectMany(x => x.GetTypes()).ToList();
+            var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
+            {
+                try
+                {
+                    return x.GetTypes();
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    return new Type[0];
+                }
+            }).ToList();
             //find all event consumer types
             var allConsumerTypes = allTypes
                 .Where(type => type.IsPublic && // get public types 
@@ -137,11 +148,7 @@ namespace RoastedMarketplace.Infrastructure.DependencyContainer
             foreach (var moduleType in allModules)
             {
                 var type = moduleType;
-                registrar.RegisterDelegate(type, resolver =>
-                {
-                    var instance = Activator.CreateInstance(type);
-                    return instance;
-                }, reuse: Reuse.Singleton);
+                registrar.Register(type, reuse: Reuse.Singleton);
             }
         }
 
