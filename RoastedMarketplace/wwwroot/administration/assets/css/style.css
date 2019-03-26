@@ -40,12 +40,11 @@ body {
 .sidenav-links {
   margin: 15px 0;
   padding: 0;
-  text-align: center;
-  font-size: 15px; }
+  font-size: 14px; }
   .sidenav-links a {
     color: #fff;
     display: block;
-    padding: 10px 0; }
+    padding: 6px 20px; }
     .sidenav-links a:hover {
       text-decoration: none;
       background-color: #666; }

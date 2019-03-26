@@ -65,13 +65,12 @@ body {
 .sidenav-links {
     margin: 15px 0;
     padding: 0;
-    text-align: center;
-    font-size: 15px;
+    font-size: 14px;
 
     a {
         color: $foreground-for-primary-dark;
         display: block;
-        padding: 10px 0;
+        padding: 6px 20px;
 
         &:hover {
             text-decoration: none;
