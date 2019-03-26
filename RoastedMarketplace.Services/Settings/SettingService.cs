@@ -20,7 +20,7 @@ namespace RoastedMarketplace.Services.Settings
             return settings.SelectSingle();
         }
 
-        public void Save<T>(string keyName, string keyValue, bool clearCache = false) where T : ISettingGroup
+        public void Save<T>(string keyName, string keyValue) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
 
@@ -42,7 +42,7 @@ namespace RoastedMarketplace.Services.Settings
             }
         }
 
-        public void Save<T>(T settings, bool clearCache = false) where T : ISettingGroup
+        public void Save<T>(T settings) where T : ISettingGroup
         {
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = typeof(T).GetProperties();
@@ -56,7 +56,7 @@ namespace RoastedMarketplace.Services.Settings
             }
         }
 
-        public void Save(Type settingType, object settings, bool clearCache = false)
+        public void Save(Type settingType, object settings)
         {
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingType.GetProperties();
@@ -68,11 +68,9 @@ namespace RoastedMarketplace.Services.Settings
                 //save the property
                 Save(settingType, propertyName, value);
             }
-            if(clearCache)
-                DependencyResolver.ClearResolutionCache(settingType);
         }
 
-        public void Save(Type settingType, string keyName, string keyValue, bool clearCache = false)
+        public void Save(Type settingType, string keyName, string keyValue)
         {
             var groupName = settingType.Name;
 

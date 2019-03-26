@@ -9,13 +9,13 @@ namespace RoastedMarketplace.Services.Settings
     {
         Setting Get<T>(string keyName) where T : ISettingGroup;
 
-        void Save<T>(string keyName, string keyValue, bool clearCache = false) where T : ISettingGroup;
+        void Save<T>(string keyName, string keyValue) where T : ISettingGroup;
 
-        void Save<T>(T settings, bool clearCache = false) where T: ISettingGroup;
+        void Save<T>(T settings) where T: ISettingGroup;
 
-        void Save(Type settingType, object settings, bool clearCache = false);
+        void Save(Type settingType, object settings);
 
-        void Save(Type settingType, string keyName, string keyValue, bool clearCache = false);
+        void Save(Type settingType, string keyName, string keyValue);
 
         T GetSettings<T>() where T : ISettingGroup;
 

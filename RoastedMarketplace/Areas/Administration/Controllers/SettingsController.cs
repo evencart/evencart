@@ -196,7 +196,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             {
                 var resolvedSettings = DependencyResolver.Resolve(targetType);
                 _modelMapper.MapType(targetType, settingsModel, resolvedSettings);
-                _settingService.Save(targetType, resolvedSettings, true);
+                _settingService.Save(targetType, resolvedSettings);
             }
         }
         #endregion
