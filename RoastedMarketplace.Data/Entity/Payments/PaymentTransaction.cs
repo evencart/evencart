@@ -36,7 +36,11 @@ namespace RoastedMarketplace.Data.Entity.Payments
         #endregion
 
         //use serialized string to store data
-        public string TransactionCodesSerialized => JsonConvert.SerializeObject(TransactionCodes);
+        public string TransactionCodesSerialized
+        {
+            get => JsonConvert.SerializeObject(TransactionCodes);
+            set => TransactionCodes = JsonConvert.DeserializeObject<Dictionary<string, object>>(value);
+        }
 
         public string TransactionCurrencyCode { get; set; }
 

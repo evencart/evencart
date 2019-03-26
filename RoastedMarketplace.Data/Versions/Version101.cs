@@ -1,6 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Cultures;
+using RoastedMarketplace.Data.Entity.Payments;
 using RoastedMarketplace.Data.Entity.Shop;
 using RoastedMarketplace.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
@@ -10,7 +11,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<Product, bool>(nameof(Product.ReviewsDisabled), false, transaction);
+            Db.AddColumn<PaymentTransaction, string>(nameof(PaymentTransaction.TransactionCodesSerialized), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
