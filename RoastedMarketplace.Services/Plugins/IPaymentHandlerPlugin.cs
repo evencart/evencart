@@ -18,6 +18,8 @@ namespace RoastedMarketplace.Services.Plugins
 
         decimal GetPaymentHandlerFee(Cart cart);
 
+        decimal GetPaymentHandlerFee(Order order);
+
         bool ValidatePaymentInfo(Dictionary<string, string> parameters, out string error);
     }
 }

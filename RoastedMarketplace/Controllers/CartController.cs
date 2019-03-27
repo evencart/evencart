@@ -55,7 +55,7 @@ namespace RoastedMarketplace.Controllers
                 if (cartItemModel.IsWishlist || !_orderSettings.AllowGuestCheckout)
                 {
                     var loginUrl = ApplicationEngine.RouteUrl(RouteNames.Login);
-                    return R.Redirect(loginUrl);
+                    return R.Redirect(loginUrl).Result;
                 }
             }
             

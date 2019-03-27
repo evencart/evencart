@@ -19,6 +19,8 @@ namespace RoastedMarketplace.Models.Checkout
 
         public IFormCollection FormCollection { get; set; }
 
+        public string OrderGuid { get; set; }
+
         public void SetupValidationRules(ModelValidator<PaymentMethodModel> v)
         {
             v.RuleFor(x => x.SystemName).NotEmpty();

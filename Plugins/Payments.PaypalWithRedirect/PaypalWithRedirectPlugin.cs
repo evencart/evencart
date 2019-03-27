@@ -38,6 +38,11 @@ namespace Payments.PaypalWithRedirect
             return 0;
         }
 
+        public decimal GetPaymentHandlerFee(Order order)
+        {
+            return 0;
+        }
+
         public bool ValidatePaymentInfo(Dictionary<string, string> parameters, out string error)
         {
             //validation will be done at paypal

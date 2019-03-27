@@ -59,10 +59,10 @@ namespace Payments.PaypalWithRedirect.Controllers
             return R.Fail.Result;
         }
 
-        [HttpGet("cancel", Name = PaypalConfig.PaypalWithRedirectCancelUrlRouteName)]
-        public IActionResult Cancel()
+        [HttpGet("cancel/{orderGuid}", Name = PaypalConfig.PaypalWithRedirectCancelUrlRouteName)]
+        public IActionResult Cancel(string orderGuid, string token)
         {
-            return R.Success.Result;
+            return RedirectToRoute(RouteNames.CheckoutPayment, new {orderGuid, error = true});
         }
 
         [HttpGet("ipn", Name = PaypalConfig.PaypalWithRedirectIpnHandlerRouteName)]

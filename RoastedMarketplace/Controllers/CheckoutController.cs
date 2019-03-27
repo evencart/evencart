@@ -186,14 +186,30 @@ namespace RoastedMarketplace.Controllers
         }
 
         [HttpGet("payment", Name = RouteNames.CheckoutPayment)]
-        public IActionResult PaymentInfo()
+        public IActionResult PaymentInfo(string orderGuid, bool error = false)
         {
-            if (!CanCheckout(out Cart cart))
-                return RedirectToRoute(RouteNames.Home);
+            Order order = null;
+            Cart cart = null;
+            //if order guid is set, we need to make sure that order is new
+            if (!orderGuid.IsNullEmptyOrWhiteSpace())
+            {
+                order = _orderService.GetByGuid(orderGuid);
+                if (order == null || order.PaymentStatus != PaymentStatus.Pending)
+                {
+                    return RedirectToRoute(RouteNames.Home);
+                }
+            }
+            else
+            {
+                //we don't have orderGuid, so it's a fresh checkout
+                if (!CanCheckout(out cart))
+                    return RedirectToRoute(RouteNames.Home);
 
-            //is payment required
-            if (!CartHelper.IsPaymentRequired(cart))
-                return RedirectToRoute(RouteNames.CheckoutConfirm);
+                //is payment required
+                if (!CartHelper.IsPaymentRequired(cart))
+                    return RedirectToRoute(RouteNames.CheckoutConfirm);
+            }
+            
 
             //find available payment methods
             var paymentHandlers = _pluginAccountant.GetActivePlugins(typeof(IPaymentHandlerPlugin));
@@ -205,21 +221,46 @@ namespace RoastedMarketplace.Controllers
                         SystemName = x.SystemName,
                         Description = x.Description,
                         FriendlyName = x.Name,
-                        Fee = pluginHandlerInstance.GetPaymentHandlerFee(cart),
+                        Fee = order == null
+                            ? pluginHandlerInstance.GetPaymentHandlerFee(cart)
+                            : pluginHandlerInstance.GetPaymentHandlerFee(order),
                         Url = Url.RouteUrl(pluginHandlerInstance.PaymentHandlerComponentRouteName)
                     };
                     return model;
                 })
                 .ToList();
-            return R.Success.With("paymentMethods", paymentModels).Result;
+
+            //if order guid is set, it means a payment transaction has failed in previous attempt
+            //we can use this identifier to skip confirmation page for subsequent attempt
+            //this will be same as retry payment from a failed order page
+            return R.Success.With("paymentMethods", paymentModels)
+                .With("error", error)
+                .With("orderGuid", orderGuid).Result;
         }
 
         [DualPost("payment", Name = RouteNames.CheckoutPayment, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(PaymentMethodModel))]
         public IActionResult PaymentInfoSave(PaymentMethodModel requestModel)
         {
-            if (!CanCheckout(out Cart cart))
+            Order order = null;
+            Cart cart = null;
+            if (!requestModel.OrderGuid.IsNullEmptyOrWhiteSpace())
+            {
+                order = _orderService.GetByGuid(requestModel.OrderGuid);
+                if (order == null || order.PaymentStatus != PaymentStatus.Pending)
+                {
+                    return R.Fail.With("error", T("The order has been already paid")).Result;
+                }
+            }
+            else
+            {
+                if (!CanCheckout(out cart))
+                    return R.Fail.Result;
+            }
+
+            if (order == null && cart == null)
                 return R.Fail.Result;
+
             //check if payment method is valid
             var paymentHandler = PluginHelper.GetPaymentHandler(requestModel.SystemName);
             if (paymentHandler == null)
@@ -231,20 +272,44 @@ namespace RoastedMarketplace.Controllers
                 return R.Fail.With("error", error).Result;
             }
 
-            //if we are here, the payment method can be saved
-            cart.PaymentMethodName = requestModel.SystemName;
-            cart.PaymentMethodData = _dataSerializer.Serialize(formAsDictionary);
-            _cartService.Update(cart);
+            CustomResponse response;
+            if (cart == null)
+            {
+                order.PaymentMethodName = requestModel.SystemName;
+                order.PaymentMethodFee = paymentHandler.GetPaymentHandlerFee(order);
+                order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
+                                   order.ShippingMethodFee ?? 0;
+                _orderService.Update(order);
 
-            RaiseEvent(NamedEvent.OrderPaymentInfoSaved, cart);
-            return R.Success.Result;
+                //process the payment immediately
+                ProcessPayment(order, formAsDictionary.ToDictionary(x => x.Key, x => (object) x.Value), out response);
+                return response.Result;
+            }
+            else
+            {
+                //if we are here, the payment method can be saved
+                cart.PaymentMethodName = requestModel.SystemName;
+                cart.PaymentMethodData = _dataSerializer.Serialize(formAsDictionary);
+                _cartService.Update(cart);
+
+                RaiseEvent(NamedEvent.OrderPaymentInfoSaved, cart);
+            }
+           
+            response = R.Success;
+            if (!requestModel.OrderGuid.IsNullEmptyOrWhiteSpace())
+                response.With("orderGuid", requestModel.OrderGuid);
+            return response.Result;
         }
 
         [HttpGet("confirm", Name = RouteNames.CheckoutConfirm)]
-        public IActionResult Confirm()
+        public IActionResult Confirm(string orderGuid)
         {
+            if (!orderGuid.IsNullEmptyOrWhiteSpace())
+                return ConfirmSave();
+
             if (!CanCheckout(out Cart cart))
                 return RedirectToRoute(RouteNames.Home);
+
             return R.Success.Result;
         }
 
@@ -252,7 +317,7 @@ namespace RoastedMarketplace.Controllers
         public IActionResult ConfirmSave()
         {
             if (!CanCheckout(out Cart cart))
-                return R.Fail.Result;
+                return R.Fail.With("error", T("An error occurred while checking out")).Result;
 
             var currentUser = ApplicationEngine.CurrentUser;
             var order = new Order()
@@ -318,22 +383,11 @@ namespace RoastedMarketplace.Controllers
             var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()
                 ? null
                 : _dataSerializer.DeserializeAs<Dictionary<string, object>>(cart.PaymentMethodData);
-
-            var transactionResult = _paymentProcessor.ProcessPayment(order, paymentMethodData);
-            if (transactionResult.Success)
+            
+            if (!ProcessPayment(order, paymentMethodData, out CustomResponse response))
             {
-                if (transactionResult.RequiresRedirection)
-                    return Redirect(transactionResult.RedirectionUrl);
+                return response.Result;
             }
-            else
-            {
-                return Confirm();
-            }
-
-            //if we are here, payment has been done, so we can get the transaction data
-            //create payment transaction object and save it to database
-            _paymentAccountant.ProcessTransactionResult(transactionResult);
-
             //clear the user's cart
             _cartService.ClearCart(currentUser.Id);
 
@@ -352,7 +406,7 @@ namespace RoastedMarketplace.Controllers
 
             }
 
-            return R.Success.With("orderGuid", order.Guid).Result;
+            return response.With("orderGuid", order.Guid).Result;
         }
 
         [HttpGet("complete/{orderGuid}", Name = RouteNames.CheckoutComplete)]
@@ -380,6 +434,27 @@ namespace RoastedMarketplace.Controllers
 
             //do we have any items remaining
             return cart.CartItems.Any();
+        }
+
+        private bool ProcessPayment(Order order, Dictionary<string, object> paymentMethodData, out CustomResponse response)
+        {
+            var transactionResult = _paymentProcessor.ProcessPayment(order, paymentMethodData);
+            
+            if (transactionResult.Success)
+            {
+                response = R.Success;
+
+                if (transactionResult.RequiresRedirection)
+                    response.Redirect(transactionResult.RedirectionUrl);
+                else
+                    //if we are here, payment has been done, so we can get the transaction data
+                    //create payment transaction object and save it to database
+                    _paymentAccountant.ProcessTransactionResult(transactionResult);
+                return true;
+            }
+
+            response = R.Fail.With("error", T("An error occurred while checking out"));
+            return false;
         }
         #endregion
 

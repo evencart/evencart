@@ -88,11 +88,11 @@ namespace RoastedMarketplace.Infrastructure.Mvc
 
         public string Area { get; set; }
 
-        public IActionResult Redirect(string url)
+        public CustomResponse Redirect(string url)
         {
             With("redirect", true);
             With("url", url);
-            return Result;
+            return this;
         }
 
         public static implicit operator ExpandoObject(CustomResponse r)

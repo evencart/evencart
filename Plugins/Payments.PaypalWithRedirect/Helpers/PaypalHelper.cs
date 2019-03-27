@@ -42,7 +42,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                 RedirectUrls = new RedirectUrls()
                 {
                     ReturnUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectReturnUrlRouteName, new {orderGuid = order.Guid}, absoluteUrl: true),
-                    CancelUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectCancelUrlRouteName, absoluteUrl: true),
+                    CancelUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectCancelUrlRouteName, new { orderGuid = order.Guid }, absoluteUrl: true),
                 },
                 Payer = payer
             };
@@ -116,7 +116,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                 var response = client.Execute(pcRequest).Result;
                 var result = response.Result<Payment>();
                 transactionResult.Success = true;
-                transactionResult.NewStatus = PaymentStatus.Complete;
+                transactionResult.NewStatus = result.State == "approved" ? PaymentStatus.Complete : PaymentStatus.OnHold;
                 transactionResult.OrderGuid = order.Guid;
                 transactionResult.TransactionAmount = order.OrderTotal;
                 transactionResult.TransactionGuid = returnModel.PaymentId;

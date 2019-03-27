@@ -44,10 +44,13 @@ namespace RoastedMarketplace.Services.Payments
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
 
-            //update order
-            order.CurrencyCode = result.TransactionCurrencyCode;
-            order.PaymentStatus = result.NewStatus;
-            _orderService.Update(order);
+            if (order.CurrencyCode != result.TransactionCurrencyCode || order.PaymentStatus != result.NewStatus)
+            {
+                //update order
+                order.CurrencyCode = result.TransactionCurrencyCode;
+                order.PaymentStatus = result.NewStatus;
+                _orderService.Update(order);
+            }
 
             //clear cart
             if (clearCart)
