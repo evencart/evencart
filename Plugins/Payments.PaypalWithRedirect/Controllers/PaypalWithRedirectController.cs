@@ -65,11 +65,5 @@ namespace Payments.PaypalWithRedirect.Controllers
             return RedirectToRoute(RouteNames.CheckoutPayment, new {orderGuid, error = true});
         }
 
-        [HttpGet("ipn", Name = PaypalConfig.PaypalWithRedirectIpnHandlerRouteName)]
-        public IActionResult Ipn()
-        {
-            return R.Success.Result;
-        }
-
     }
 }

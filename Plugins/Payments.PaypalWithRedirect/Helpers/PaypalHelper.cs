@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using Payments.PaypalWithRedirect.Models;
 using PayPal.Core;
+using PayPal.v1.PaymentExperience;
 using PayPal.v1.Payments;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Entity.Payments;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Services.Settings;
 using Order = RoastedMarketplace.Data.Entity.Purchases.Order;
 namespace Payments.PaypalWithRedirect.Helpers
 {
@@ -141,6 +145,40 @@ namespace Payments.PaypalWithRedirect.Helpers
             }
 
             return transactionResult;
+        }
+
+        public static string FetchWebProfile(PaypalWithRedirectSettings paypalSettings)
+        {
+            if (!paypalSettings.CheckoutProfileId.IsNullEmptyOrWhiteSpace())
+                return paypalSettings.CheckoutProfileId;
+
+            var webProfileRequest = new WebProfileCreateRequest();
+            webProfileRequest.RequestBody(new WebProfile()
+            {
+                Temporary = false,
+                InputFields = new InputFields()
+                {
+                    NoShipping = 1,
+                    AddressOverride = 1
+                },
+                Name = Guid.NewGuid().ToString()
+            });
+            var environment = GetEnvironment(paypalSettings);
+            var client = new PayPalHttpClient(environment);
+            try
+            {
+                var response = client.Execute(webProfileRequest).Result;
+                var result = response.Result<WebProfile>();
+                var id = result.Id;
+                paypalSettings.CheckoutProfileId = id;
+                var settingService = DependencyResolver.Resolve<ISettingService>();
+                settingService.Save(paypalSettings);
+                return id;
+            }
+            catch (BraintreeHttp.HttpException ex)
+            {
+                return null;
+            }
         }
     }
 }
