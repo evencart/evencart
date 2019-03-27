@@ -8,6 +8,7 @@ using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
 using RoastedMarketplace.Models.Purchases;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Products;
@@ -261,6 +262,13 @@ namespace RoastedMarketplace.Controllers
             }
 
             return R.Fail.Result;
+        }
+
+        [DualGet("~/account/wishlist", Name = RouteNames.AccountWishlist)]
+        public IActionResult WishList()
+        {
+            var wishList = new CartObject(true).GetObject();
+            return R.Success.With("wishlist", wishList).Result;
         }
 
         #region Helpers

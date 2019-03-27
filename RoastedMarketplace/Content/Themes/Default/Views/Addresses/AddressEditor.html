@@ -8,6 +8,7 @@
         <div class="row">
             <div class="col-8 offset-2">
                 <div class="text-center">
+                    {% partial "Common/Breadcrumb" %}
                     <h3>
                         {% if address.id > 0 %}
                         {{"Edit Address" | t}}
@@ -15,11 +16,6 @@
                         {{"Add Address" | t}}
                         {% endif %}
                     </h3>
-                    <small>
-                        <a href='{% route AccountAddresses %}'>
-                            <i class="fa fa-angle-left"></i> {{"Back to addresses" | t}}
-                        </a>
-                    </small>
                 </div>
                 <form action="{% route api_AccountSaveAddress %}" id="save-address-form" method="post">
                     {% partial "Addresses/AddressForm" %}

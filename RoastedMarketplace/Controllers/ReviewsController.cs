@@ -186,6 +186,11 @@ namespace RoastedMarketplace.Controllers
 
             var reviewModel = _reviewModelFactory.Create(review);
             var productModel = _productModelFactory.Create(product);
+
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
+            SetBreadcrumbToRoute("Review Center", RouteNames.AccountReviews);
+            SetBreadcrumbToRoute("Edit Review", RouteNames.ReviewEditor);
             return response.With("review", reviewModel).With("product", productModel).Result;
         }
 
@@ -299,7 +304,10 @@ namespace RoastedMarketplace.Controllers
                     reviewsSummaryModel.OneStarCount = _reviewService.Count(x => x.Rating == 1 && x.UserId == CurrentUser.Id && x.Published);
                 }
             }
-          
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
+            SetBreadcrumbToRoute("Review Center", RouteNames.AccountReviews);
+
             return R.Success
                 .With("reviews", reviewModels)
                 .WithGridResponse(totalMatches, reviewSearchModel.Page, reviewSearchModel.Count)

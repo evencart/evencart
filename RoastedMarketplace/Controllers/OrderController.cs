@@ -1,16 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Factories.Orders;
-using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
-using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
-using RoastedMarketplace.Models.Addresses;
 using RoastedMarketplace.Models.Orders;
-using RoastedMarketplace.Services.Formatter;
 using RoastedMarketplace.Services.Purchases;
 
 namespace RoastedMarketplace.Controllers
@@ -43,6 +39,41 @@ namespace RoastedMarketplace.Controllers
             SetBreadcrumbToRoute(order.OrderNumber, RouteNames.SingleOrder, new { orderGuid }, localize: false);
 
             return R.Success.With("order", model).Result;
+        }
+
+        [DualGet("~/account/orders", Name = RouteNames.AccountOrders)]
+        public IActionResult Orders(OrderSearchModel searchModel)
+        {
+            var orderStatus = new List<OrderStatus>();
+            switch (searchModel.OrderStatus)
+            {
+                case "closed":
+                    orderStatus.Add(OrderStatus.Closed);
+                    orderStatus.Add(OrderStatus.Complete);
+                    break;
+                case "open":
+                    orderStatus.Add(OrderStatus.New);
+                    orderStatus.Add(OrderStatus.OnHold);
+                    orderStatus.Add(OrderStatus.Shipped);
+                    orderStatus.Add(OrderStatus.Processing);
+                    orderStatus.Add(OrderStatus.Delayed);
+                    orderStatus.Add(OrderStatus.PartiallyShipped);
+                    break;
+                case "returned":
+                    orderStatus.Add(OrderStatus.Returned);
+                    break;
+                case "cancelled":
+                    orderStatus.Add(OrderStatus.Cancelled);
+                    break;
+                default:
+                    break;//do nothing we'll show all orders by default
+            }
+
+            var orders = _orderService.GetOrders(out int totalResults, userId: CurrentUser.Id, startDate: searchModel.FromDate, endDate: searchModel.ToDate,
+                orderStatus: orderStatus, page: searchModel.Current, count: searchModel.RowCount);
+            var orderModels = orders.Select(x => _orderModelFactory.Create(x)).ToList();
+
+            return R.Success.With("orders", orderModels).Result;
         }
     }
 }

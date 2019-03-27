@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Infrastructure;
@@ -52,6 +53,41 @@ namespace RoastedMarketplace.Controllers
 
             _addressService.Delete(address);
             return R.Success.Result;
+        }
+
+        [DualGet("~/account/addresses", Name = RouteNames.AccountAddresses)]
+        public IActionResult Addresses()
+        {
+            var currentUser = ApplicationEngine.CurrentUser;
+            var addresses = _addressService.Get(x => x.UserId == currentUser.Id).ToList();
+            var models = addresses.Select(x =>
+            {
+                var model = _modelMapper.Map<AddressInfoModel>(x);
+                model.CountryName = x.Country.Name;
+                model.StateProvinceName = x.StateOrProvince?.Name ?? x.StateProvinceName;
+                return model;
+            }).ToList();
+            return R.Success.With("addresses", models).Result;
+        }
+
+        [DualGet("addresses/{addressId}", Name = RouteNames.SingleAddress)]
+        public IActionResult AddressEditor(int addressId)
+        {
+            var currentUser = ApplicationEngine.CurrentUser;
+            //find address
+            var address = addressId > 0 ? _addressService.Get(addressId) : new Address()
+            {
+                UserId = currentUser.Id
+            };
+            //only allow if current user can edit this address
+            if (address == null || address.UserId != ApplicationEngine.CurrentUser.Id)
+                return NotFound();
+            var model = _modelMapper.Map<AddressInfoModel>(address);
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
+            SetBreadcrumbToRoute("Addresses", RouteNames.AccountAddresses);
+            SetBreadcrumbToRoute("Edit Address", RouteNames.SingleAddress);
+            return R.Success.With("address", model).WithAvailableCountries().WithAvailableAddressTypes().Result;
         }
     }
 }
