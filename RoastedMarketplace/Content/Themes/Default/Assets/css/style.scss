@@ -4149,24 +4149,25 @@ div.tab button.active {
     margin-top: 16px;
 
     input {
-        width: 79%;
+        width: 85%;
         border: none;
         border-radius: 3px;
         padding: 8px;
         margin: 0;
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
+        float:left;
     }
 
     button {
-        width: 20%;
         display: inline-block;
         padding: 8px;
         border-radius: 5px;
         border: none;
         border-bottom-left-radius: 0px;
         border-top-left-radius: 0px;
-        color: black;
+        color: #999;
+        background:white;
     }
 }
 
