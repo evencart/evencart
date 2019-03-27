@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using RoastedMarketplace.Data.Entity.Cultures;
+using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
@@ -15,6 +16,7 @@ namespace RoastedMarketplace
         private const string BreadcrumbKey = "BreadcrumbKey";
         private const string CurrentLanguageKey = "CurrentLanguageKey";
         private const string CurrentCurrencyKey = "CurrentCurrencyKey";
+        private const string RequestSeoMetaKey = "RequestSeoMetaKey";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -58,6 +60,16 @@ namespace RoastedMarketplace
         {
             var nodes = (List<BreadcrumbNode>)httpContext.Items[BreadcrumbKey];
             return nodes;
+        }
+
+        public static void SetRequestSeoMeta(this HttpContext httpContext, SeoMeta seoMeta)
+        {
+            httpContext.Items[RequestSeoMetaKey] = seoMeta;
+        }
+
+        public static SeoMeta GetRequestSeoMeta(this HttpContext httpContext)
+        {
+            return (SeoMeta)httpContext.Items[RequestSeoMetaKey];
         }
     }
 }

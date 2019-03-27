@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Pages;
 using RoastedMarketplace.Data.Entity.Settings;
+using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -26,8 +27,8 @@ namespace RoastedMarketplace.Controllers
             if (contentPage == null)
                 return NotFound();
             var contentPageModel = _modelMapper.Map<ContentPageModel>(contentPage);
-            var seoMetaModel = _modelMapper.Map<SeoMetaModel>(contentPage.SeoMeta);
-            return R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id).WithSeoMeta(seoMetaModel).Result;
+            SeoMetaHelper.SetSeoData(contentPageModel.Name);
+            return R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id).Result;
         }
     }
 }

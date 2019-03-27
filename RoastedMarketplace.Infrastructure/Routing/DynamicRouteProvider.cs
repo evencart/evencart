@@ -131,6 +131,8 @@ namespace RoastedMarketplace.Infrastructure.Routing
                                                             x.EntityId == idAsInt);
                     if (seoMeta == null)
                         continue;
+                    //preserve seometa so we can serve it later
+                    routeContext.HttpContext.SetRequestSeoMeta(seoMeta);
                     routeContext.RouteData.Values["id"] = id;
                     return routeData;
                 }
@@ -149,6 +151,9 @@ namespace RoastedMarketplace.Infrastructure.Routing
                     routeContext.RouteData.Values["controller"] = routeData.ControllerName;
                     routeContext.RouteData.Values["action"] = routeData.ActionName;
                     routeContext.RouteData.Values[routeData.ParameterName] = seoMeta.EntityId;
+                    //preserve seometa so we can serve it later
+                    routeContext.HttpContext.SetRequestSeoMeta(seoMeta);
+
                     return routeData;
                 }
             }

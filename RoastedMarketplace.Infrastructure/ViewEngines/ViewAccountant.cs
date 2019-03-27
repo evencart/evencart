@@ -278,6 +278,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
                 resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
             }
 
+            //if there is an seometa, do that as well
+            var seoMeta = ApplicationEngine.CurrentHttpContext.GetRequestSeoMeta();
+            if (seoMeta != null)
+            {
+                resultHash.Add("pageTitle", seoMeta.PageTitle);
+                resultHash.Add("metaKeywords", seoMeta.MetaKeywords);
+                resultHash.Add("metaDescription", seoMeta.MetaDescription);
+            }
             return resultHash;
         }
     }

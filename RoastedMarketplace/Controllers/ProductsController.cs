@@ -137,18 +137,8 @@ namespace RoastedMarketplace.Controllers
                 BreadcrumbHelper.SetCategoryBreadcrumb(currentCategoryFull, categoryTree);
                 SetBreadcrumbToRoute(product.Name, RouteNames.SingleProduct, new {seName = product.SeoMeta.Slug}, localize: false);
             }
-
-            SeoMetaModel seoMetaModel = null;
-            if (product.SeoMeta != null)
-            {
-                seoMetaModel = _modelMapper.Map<SeoMetaModel>(product.SeoMeta);
-            }
-            seoMetaModel = seoMetaModel ?? new SeoMetaModel();
-            seoMetaModel.Description = product.Description;
-            seoMetaModel.PageTitle = seoMetaModel.PageTitle ?? product.Name;
-            seoMetaModel.MetaDescription = seoMetaModel.MetaDescription ?? product.Description;
-
-            response.WithSeoMeta(seoMetaModel);
+            //seo data
+            SeoMetaHelper.SetSeoData(product.Name, product.Description, product.Description);
             return response.Result;
         }
 
@@ -220,27 +210,18 @@ namespace RoastedMarketplace.Controllers
             searchModel.AvailableManufacturers = availableManufacturers;
             searchModel.AvailableVendors = availableVendors;
 
-            SeoMetaModel seoMetaModel = null;
             //get the category
             if (searchModel.CategoryId > 0)
             {
                 var category = _categoryService.Get(searchModel.CategoryId.Value);
-                var seoMeta = category?.SeoMeta;
-
-                if (seoMeta != null)
-                {
-                    seoMetaModel = _modelMapper.Map<SeoMetaModel>(seoMeta);
-                }
-                seoMetaModel = seoMetaModel ?? new SeoMetaModel();
-                seoMetaModel.Description = category?.Description;
-                seoMetaModel.PageTitle = seoMeta?.PageTitle ?? category?.Name;
+                if (category != null)
+                    SeoMetaHelper.SetSeoData(category.Name, category.Description, category.Description);
             }
 
             if (viewName.IsNullEmptyOrWhiteSpace())
                 viewName = "ProductsList";
 
             return R.Success.With("products", productModels)
-                .WithSeoMeta(seoMetaModel)
                 .WithParams(searchModel)
                 .WithGridResponse(totalResults, searchModel.Page, searchModel.Count)
                 .WithView(viewName)

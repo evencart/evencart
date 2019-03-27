@@ -81,11 +81,6 @@ namespace RoastedMarketplace.Infrastructure.Mvc
             return customResponse.With("rawView", cachedView.ToSplited());
         }
 
-        public static CustomResponse WithSeoMeta(this CustomResponse customResponse, object seoMeta)
-        {
-            return customResponse.With("seoMeta", seoMeta);
-        }
-
         public static CustomResponse WithTimezones(this CustomResponse customResponse)
         {
             return customResponse.With("timezones", SelectListHelper.GetTimezones());
