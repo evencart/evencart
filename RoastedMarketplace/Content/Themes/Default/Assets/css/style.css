@@ -135,25 +135,16 @@ input:focus, textarea:focus {
   transition: none 0s ease 0s; }
 
 /*-- Button --*/
-/*.btn {
-    border: 1px solid #636363;
-    border-radius: 0;
-    color: #636363;
-    font-size: 11px;
-    font-weight: 700;
-    height: 40px;
-    letter-spacing: 0.5px;
-    line-height: 24px;
-    padding: 8px 50px;
-    text-transform: uppercase;
-}
+.btn-default {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff; }
 
-.btn:hover {
-    background-color: #3f3f3f;
-    border: 1px solid #3f3f3f;
-    color: #fff;
-}
-*/
+.btn-default:hover {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc; }
+
 /*-- Margin Top --*/
 .mt-5 {
   margin-top: 5px; }
