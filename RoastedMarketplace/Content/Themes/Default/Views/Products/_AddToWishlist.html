@@ -2,7 +2,8 @@
     <i class="fa fa-heart-o" aria-hidden="true"></i>
 </a>
 <script type="text/javascript">
-    ready(function() {
+    ready(function () {
+        jQuery("#a-add-{{product.id}}-towishlist").unbind("click");
         jQuery("#a-add-{{product.id}}-towishlist").click(function (e) {
             e.preventDefault();
             post({

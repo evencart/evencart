@@ -3454,3 +3454,7 @@ div.tab button.active {
 .form-control:focus {
   outline: none;
   box-shadow: none; }
+
+.order-block {
+  padding: 15px;
+  border-bottom: solid 1px #eef; }
