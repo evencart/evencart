@@ -1,0 +1,89 @@
+﻿<div class="sort-box">
+    <span>
+        {{"Showing" | t}} {{rangeStart}} - {{rangeEnd}} {{"of total "}} {{total | pluralize : "product" : "products" | t}}
+    </span>
+    <div class="float-right">
+        <span>
+            {{"Sort by" | t}}
+        </span>
+        <div class="dropdown d-inline-block">
+            <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="user-info">
+                    {% if sortBy == "createdon" and sortOrder == "Descending" %}
+                    {{"New Arrivals" | t}}
+                    {% elsif sortBy == "name" and sortOrder == "Ascending" %}
+                    {{"Name: A to Z" | t}}
+                    {% elsif sortBy == "name" and sortOrder == "Descending" %}
+                    {{"Name: Z to A" | t}}
+                    {% elsif sortBy == "price" and sortOrder == "Ascending" %}
+                    {{"Price: Low to High" | t}}
+                    {% elsif sortBy == "price" and sortOrder == "Descending" %}
+                    {{"Price: High to Low" | t}}
+                    {% else %}
+                    {{"Popularity" | t}}
+                    {% endif %}
+                    <i class="fa fa-angle-down"></i>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-end" style="position: absolute; transform: translate3d(-107px, 46px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <ul>
+                    <li>
+                        <a href="#" onclick="updateSort(0)">{{"Popularity" | t}}</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="updateSort(1)"> {{"Name: A to Z" | t}}</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="updateSort(2)"> {{"Name: Z to A" | t}}</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="updateSort(3)"> {{"Price: Low to High" | t}}</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="updateSort(4)"> {{"Price: High to Low" | t}}</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="updateSort(5)"> {{"New Arrivals" | t}}</a>
+                    </li>
+                </ul>
+                <script type="text/javascript">
+                    var updateSort = function (sortIndex) {
+                        var column = "popularity";
+                        var sortOrder = "descending";
+                        switch (sortIndex) {
+                            case 0:
+                                column = "popularity";
+                                sortOrder = "descending";
+                                break;
+                            case 1:
+                                column = "name";
+                                sortOrder = "ascending";
+                                break;
+                            case 2:
+                                column = "name";
+                                sortOrder = "descending";
+                                break;
+                            case 3:
+                                column = "price";
+                                sortOrder = "ascending";
+                                break;
+                            case 4:
+                                column = "price";
+                                sortOrder = "descending";
+                                break;
+                            case 5:
+                                column = "createdon";
+                                sortOrder = "descending";
+                                break;
+                        }
+
+                        productSearch.setSort(column, sortOrder);
+                        return false;
+                    }
+                </script>
+            </div>
+        </div>
+
+
+    </div>
+</div>

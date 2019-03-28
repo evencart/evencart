@@ -13,6 +13,11 @@ var productSearch = {
         productSearch.data[key] = value;
         searchProducts();
     },
+    setSort: function(column, order) {
+        productSearch.data["sortColumn"] = column;
+        productSearch.data["sortOrder"] = order;
+        searchProducts();
+    },
     setPrices: function(from, to) {
         productSearch.data["fromPrice"] = from;
         productSearch.data["toPrice"] = to;

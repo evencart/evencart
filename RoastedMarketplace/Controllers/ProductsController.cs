@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Settings;
@@ -184,6 +186,30 @@ namespace RoastedMarketplace.Controllers
                 }
             }
 
+            //create order by expression
+            Expression<Func<Product, object>> orderByExpression = null;
+            if (!searchModel.SortColumn.IsNullEmptyOrWhiteSpace())
+            {
+                switch (searchModel.SortColumn.ToLower())
+                {
+                    case "name":
+                        orderByExpression = product => product.Name;
+                        break;
+                    case "createdon":
+                        orderByExpression = product => product.CreatedOn;
+                        break;
+                    case "price":
+                        orderByExpression = product => product.Price;
+                        break;
+                    case "popularity":
+                    default:
+                        orderByExpression = product => product.PopularityIndex;
+                        searchModel.SortOrder = SortOrder.Descending;
+                        searchModel.SortColumn = "popularity";
+                        break;
+                }
+            }
+
             var products = _productService.GetProducts(out int totalResults,
                 out decimal availableFromPrice,
                 out decimal availableToPrice,
@@ -199,6 +225,7 @@ namespace RoastedMarketplace.Controllers
                 fromPrice: searchModel.FromPrice,
                 toPrice: searchModel.ToPrice,
                 sortOrder: searchModel.SortOrder,
+                orderByExpression: orderByExpression,
                 page: searchModel.Page,
                 count: searchModel.Count);
 
@@ -223,7 +250,7 @@ namespace RoastedMarketplace.Controllers
 
             return R.Success.With("products", productModels)
                 .WithParams(searchModel)
-                .WithGridResponse(totalResults, searchModel.Page, searchModel.Count)
+                .WithGridResponse(totalResults, searchModel.Page, searchModel.Count, searchModel.SortColumn, searchModel.SortOrder)
                 .WithView(viewName)
                 .Result;
         }

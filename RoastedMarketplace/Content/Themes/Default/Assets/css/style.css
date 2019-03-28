@@ -3459,3 +3459,10 @@ div.tab button.active {
 .order-block {
   padding: 15px;
   border-bottom: solid 1px #eef; }
+
+.sort-box {
+  float: left;
+  width: 100%;
+  border-bottom: solid 1px #eee;
+  padding: 10px 0;
+  margin-bottom: 20px; }

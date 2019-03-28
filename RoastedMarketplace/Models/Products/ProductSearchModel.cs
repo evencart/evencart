@@ -16,6 +16,8 @@ namespace RoastedMarketplace.Models.Products
 
         public int? CategoryId { get; set; }
 
+        public string SortColumn { get; set; }
+
         public SortOrder SortOrder { get; set; }
 
         public string Filters { get; set; }
