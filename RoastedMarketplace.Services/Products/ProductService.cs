@@ -194,6 +194,7 @@ namespace RoastedMarketplace.Services.Products
             }
             query = query.OrderBy(orderByExpression,
                 sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+            query = query.OrderBy(x => x.DisplayOrder);
             //filter to include anything else in query
             query = _eventPublisherService.Filter(query);
 
