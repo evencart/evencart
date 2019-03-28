@@ -24,7 +24,6 @@ using RoastedMarketplace.Services.Reviews;
 
 namespace RoastedMarketplace.Controllers
 {
-    [Route("reviews")]
     public class ReviewsController : FoundationController
     {
         private readonly IReviewService _reviewService;
@@ -46,7 +45,7 @@ namespace RoastedMarketplace.Controllers
         }
 
         [ValidateModelState(ModelType = typeof(ReviewModel))]
-        [DualPost("", Name = RouteNames.SaveReview, OnlyApi = true)]
+        [DualPost("reviews", Name = RouteNames.SaveReview, OnlyApi = true)]
         [Authorize]
         public IActionResult SaveReview(ReviewModel reviewModel)
         {
@@ -119,7 +118,7 @@ namespace RoastedMarketplace.Controllers
         }
 
         [ValidateModelState(ModelType = typeof(ReviewModel))]
-        [DualPost("{reviewId}", Name = RouteNames.DeleteReview, OnlyApi = true)]
+        [DualPost("reviews/{reviewId}", Name = RouteNames.DeleteReview, OnlyApi = true)]
         [Authorize]
         public IActionResult DeleteReview(int reviewId)
         {
@@ -140,7 +139,7 @@ namespace RoastedMarketplace.Controllers
             }
             return R.Success.Result;
         }
-        [HttpGet("{productId}/{reviewId}", Name = RouteNames.ReviewEditor)]
+        [HttpGet("reviews/{productId}/{reviewId}", Name = RouteNames.ReviewEditor)]
         [Authorize]
         public IActionResult ReviewEditor(int productId, int reviewId)
         {
@@ -314,7 +313,7 @@ namespace RoastedMarketplace.Controllers
                 .With("summary", reviewsSummaryModel).Result;
         }
 
-        [DualGet("user/pending", Name = RouteNames.UserPendingReviewsList, OnlyApi = true)]
+        [DualGet("reviews/user/pending", Name = RouteNames.UserPendingReviewsList, OnlyApi = true)]
         [Authorize]
         public IActionResult UserPendingReviewsListApi()
         {
