@@ -1,36 +1,53 @@
 ﻿{% layout "_Layout" %}
 <!-- PAGE SECTION START -->
-<div class="product-section section pt-120 pb-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="product-block">
-                    <h3>
-                        <a href='{% route SingleProduct seName="{{product.seName}}" %}'>
-                            <span class="fa fa-angle-left"></span> 
-                            <img width="50px" src="{{product.media[0].thumbnailUrl}}"/>
-                            {{product.name}}
-                        </a>
-                    </h3>
-                    {{"Price : " | }} {{product.priceFormatted}}
+<div class="wrapper">
+    <div class="review-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% partial "Common/Breadcrumb" %}
                 </div>
-                {% partial "Reviews/_ReviewSummary" %}
-            </div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-6">
-                        {%- assign review=bestReview -%}
-                        {% partial "Reviews/_ReviewBox" %}
-                    </div>
-                    <div class="col-md-6">
-                        {%- assign review=worstReview -%}
-                        {% partial "Reviews/_ReviewBox" %}
-                    </div>
+                <div class="col-md-3">
+                    {% partial "Reviews/_ReviewSummary" %}
                 </div>
-                <div class="reviews">
-                    {% for review in reviews %}
-                    {% partial "Reviews/_ReviewBox" %}
-                    {% endfor %}
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="product-block">
+                                <h4>
+                                    <img width="50px" src="{{product.media[0].thumbnailUrl}}" />
+                                    {{product.name}}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    {% if reviews.size > 0 %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>
+                                {{"Best Rated" | t}}
+                            </h6>
+                            {%- assign review=bestReview -%}
+                            {% partial "Reviews/_ReviewBox" %}
+                        </div>
+                        <div class="col-md-6">
+                            <h6>
+                                {{"Least Rated" | t}}
+                            </h6>
+                            {%- assign review=worstReview -%}
+                            {% partial "Reviews/_ReviewBox" %}
+                        </div>
+                    </div>
+                    <div class="reviews">
+                        {% for review in reviews %}
+                        {% partial "Reviews/_ReviewBox" %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center">
+                        {{"The product has no visible reviews" | t}}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

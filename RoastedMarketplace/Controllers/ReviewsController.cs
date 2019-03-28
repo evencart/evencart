@@ -257,6 +257,12 @@ namespace RoastedMarketplace.Controllers
 
             var productModel = _productModelFactory.Create(product);
 
+            //breadcrumbs
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute(product.Name, RouteNames.SingleProduct,
+                new {seName = product.SeoMeta.Slug, id = product.Id}, localize: false);
+            SetBreadcrumbToUrl("Reviews", "");
+
             return R.Success
                 .With("product", productModel)
                 .With("reviews", reviewModels)

@@ -4320,3 +4320,19 @@ div.tab button.active {
     padding: 10px 0;
     margin-bottom: 20px;
 }
+
+.review-section {
+    .product-block{
+        border-bottom:solid 1px #ddd;
+        margin-bottom:30px;
+    }
+    .reviews {
+        border-top: solid 1px #ddd;
+        margin: 15px 0;
+
+        .review {
+            margin: 30px 0;
+        }
+    }
+}
+
