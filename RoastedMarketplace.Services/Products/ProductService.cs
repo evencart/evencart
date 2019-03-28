@@ -473,5 +473,18 @@ namespace RoastedMarketplace.Services.Products
 
             }
         }
+
+        public void UpdatePopularityIndex(bool increment = true, params int[] productIds)
+        {
+            if (!productIds.Any())
+                return;
+            var productIdStr = string.Join(",", productIds);
+            var piColumn = nameof(Product.PopularityIndex);
+            var direction = increment ? "+" : "-";
+            using (EntitySet.Query($"UPDATE {DotEntityDb.GetTableNameForType<Product>()} SET {piColumn} = {piColumn} {direction} 1 WHERE Id IN ({productIdStr})", null))
+            {
+
+            }
+        }
     }
 }

@@ -102,6 +102,17 @@ namespace RoastedMarketplace.Services.Purchases
             {
                 order.OrderStatus = orderStatus;
                 _orderService.Update(order);
+                //depending on the order status, we'll update the popularity
+                var productIds = order.OrderItems.Select(x => x.ProductId).ToArray();
+                switch (orderStatus)
+                {
+                    case OrderStatus.Complete:
+                        _productService.UpdatePopularityIndex(true, productIds);
+                        break;
+                    case OrderStatus.Returned:
+                        _productService.UpdatePopularityIndex(false, productIds);
+                        break;
+                }
             }
         }
 

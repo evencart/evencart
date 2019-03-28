@@ -65,6 +65,8 @@ namespace RoastedMarketplace.Data.Entity.Shop
 
         public bool ReviewsDisabled { get; set; }
 
+        public int PopularityIndex { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }

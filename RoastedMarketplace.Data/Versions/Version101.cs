@@ -11,7 +11,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<PaymentTransaction, string>(nameof(PaymentTransaction.TransactionCodesSerialized), "", transaction);
+            Db.AddColumn<Product, int>(nameof(Product.PopularityIndex), 0, transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

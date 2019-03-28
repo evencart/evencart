@@ -39,5 +39,6 @@ namespace RoastedMarketplace.Services.Products
 
         void PopulateReviewSummary(IList<Product> products);
 
+        void UpdatePopularityIndex(bool increment = true, params int[] productIds);
     }
 }
