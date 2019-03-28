@@ -13,6 +13,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
         private const string ContentWithoutLayoutKey = "ContentWithoutLayout";
         public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
+            var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
             var layoutMatches = regEx.Matches(inputContent);
 
             if (layoutMatches.Count == 0)
@@ -23,6 +24,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                     var layoutLessContent = readFile.GetMeta(nameof(LayoutExpander))
                         .FirstOrDefault(x => x.Key == ContentWithoutLayoutKey)
                         .Value?.ToString() ?? inputContent;
+
+                    //is there any ajax layout 
+                    var ajaxLayoutPath = viewAccountant.GetLayoutPath("_LayoutAjax");
+                    if (!ajaxLayoutPath.IsNullEmptyOrWhiteSpace())
+                    {
+                        var ajaxLayout = ReadFile.From(ajaxLayoutPath);
+                        return ajaxLayout.Content.Replace("{% bodyContent %}", layoutLessContent);
+                    }
                     return layoutLessContent;
                 }
                 return inputContent;
@@ -49,7 +58,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             }
 
             var layoutValue = straightParameters[0];
-            var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
+           
             //read the layout now
             var layoutPath = viewAccountant.GetLayoutPath(layoutValue);
             if (layoutPath.IsNullEmptyOrWhiteSpace())
