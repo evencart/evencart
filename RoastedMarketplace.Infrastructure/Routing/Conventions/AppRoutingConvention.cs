@@ -35,7 +35,12 @@ namespace RoastedMarketplace.Infrastructure.Routing.Conventions
                     if (dualRouteAttribute.OnlyApi)
                     {
                         var currentTemplate = ar.AttributeRouteModel.Template;
-                        ar.AttributeRouteModel.Template = area + "/" + ApplicationConfig.ApiEndpointName + "/[controller]/" + currentTemplate;
+                        if (currentTemplate.StartsWith("~/"))
+                            ar.AttributeRouteModel.Template =
+                                area + "/" + ApplicationConfig.ApiEndpointName + "/" + currentTemplate.Replace("~/", "");
+                        else
+                            ar.AttributeRouteModel.Template =
+                                area + "/" + ApplicationConfig.ApiEndpointName + "/[controller]/" + currentTemplate;
                         ar.AttributeRouteModel.Name = $"{ApplicationConfig.ApiEndpointName}_" +
                                                       ar.AttributeRouteModel.Name;
                         continue; //skip adding anything else
@@ -43,7 +48,10 @@ namespace RoastedMarketplace.Infrastructure.Routing.Conventions
                     //add another route for api
                     var selectorModel = new SelectorModel(ar);
                     var newAm = selectorModel.AttributeRouteModel;
-                    newAm.Template = area + "/" + ApplicationConfig.ApiEndpointName + "/[controller]/" + newAm.Template;
+                    if (newAm.Template.StartsWith("~/"))
+                        newAm.Template = area + "/" + ApplicationConfig.ApiEndpointName + "/" + newAm.Template.Replace("~/", "");
+                    else
+                        newAm.Template = area + "/" + ApplicationConfig.ApiEndpointName + "/[controller]/" + newAm.Template;
                     if (newAm.Name != null)
                         newAm.Name = $"{ApplicationConfig.ApiEndpointName}_" + newAm.Name;
 
