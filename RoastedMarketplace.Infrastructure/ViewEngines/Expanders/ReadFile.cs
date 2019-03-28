@@ -15,8 +15,6 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
         public string Content { get; set; }
 
-        public string RequestContent { get; private set; }
-
         private List<ReadFile> Children { get; } = new List<ReadFile>();
 
         private List<ReadFile> Parents { get; } = new List<ReadFile>();
@@ -69,21 +67,6 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                         yield return new KeyValuePair<string, object>(key, value);
                 }
             }    
-        }
-
-        public string GetRequestContent()
-        {
-            return RequestContent;
-        }
-
-        public void SetRequestContent(string content)
-        {
-            RequestContent = content;
-        }
-
-        public void ResetRequestContent()
-        {
-            SetRequestContent(null);
         }
 
         public bool IsModified()
