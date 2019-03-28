@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.ViewEngines;
@@ -11,11 +13,19 @@ namespace RoastedMarketplace.Infrastructure.Mvc
 {
     public static class CustomResponseExtensions
     {
-        public static CustomResponse WithGridResponse(this CustomResponse customResponse, int totalMatches, int currentPage, int count)
+        public static CustomResponse WithGridResponse(this CustomResponse customResponse, int totalMatches, int currentPage, int count, string sortBy = null, SortOrder? sortOrder = null)
         {
-            return customResponse.With("current", currentPage)
+            count = Math.Min(count, totalMatches);
+            var r = customResponse.With("current", currentPage)
                 .With("rowCount", count)
+                .With("rangeStart", (currentPage - 1) * count + 1)
+                .With("rangeEnd", currentPage * count)
                 .With("total", totalMatches);
+            if (!sortBy.IsNullEmptyOrWhiteSpace())
+                r.With("sortBy", sortBy);
+            if (sortOrder.HasValue)
+                r.With("sortOrder", sortOrder.Value);
+            return r;
         }
         /// <summary>
         /// Adds available countries to current response
