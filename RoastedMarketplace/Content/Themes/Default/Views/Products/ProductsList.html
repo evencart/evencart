@@ -38,7 +38,16 @@
                     </div>
                     {% endfor %}
                 </div>
-
+                <div class="row">
+                    <div class="col-12">
+                        {% component "Pagination" rowCount="@rowCount" total="@total" current="@current" callback="loadPage" %}
+                    </div>
+                    <script type="text/javascript">
+                        var loadPage = function(page) {
+                            productSearch.setPage(page, true);
+                        }
+                    </script>
+                </div>
             </div>
         </div>
     </div>

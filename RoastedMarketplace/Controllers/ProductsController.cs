@@ -164,6 +164,11 @@ namespace RoastedMarketplace.Controllers
         [DualGet("", Name = RouteNames.ProductsPage, OnlyApi = true)]
         public IActionResult ProductsListApi(ProductSearchModel searchModel, string viewName = null)
         {
+            if (searchModel.Count > 15)
+                searchModel.Count = 15;
+            else if (searchModel.Count < 5)
+                searchModel.Count = 15;
+
             IList<int> categoryIds = null;
             if (searchModel.CategoryId.HasValue && searchModel.CategoryId.Value > 0)
             {
@@ -188,26 +193,23 @@ namespace RoastedMarketplace.Controllers
 
             //create order by expression
             Expression<Func<Product, object>> orderByExpression = null;
-            if (!searchModel.SortColumn.IsNullEmptyOrWhiteSpace())
+            switch (searchModel.SortColumn?.ToLower())
             {
-                switch (searchModel.SortColumn.ToLower())
-                {
-                    case "name":
-                        orderByExpression = product => product.Name;
-                        break;
-                    case "createdon":
-                        orderByExpression = product => product.CreatedOn;
-                        break;
-                    case "price":
-                        orderByExpression = product => product.Price;
-                        break;
-                    case "popularity":
-                    default:
-                        orderByExpression = product => product.PopularityIndex;
-                        searchModel.SortOrder = SortOrder.Descending;
-                        searchModel.SortColumn = "popularity";
-                        break;
-                }
+                case "name":
+                    orderByExpression = product => product.Name;
+                    break;
+                case "createdon":
+                    orderByExpression = product => product.CreatedOn;
+                    break;
+                case "price":
+                    orderByExpression = product => product.Price;
+                    break;
+                case "popularity":
+                default:
+                    orderByExpression = product => product.PopularityIndex;
+                    searchModel.SortOrder = SortOrder.Descending;
+                    searchModel.SortColumn = "popularity";
+                    break;
             }
 
             var products = _productService.GetProducts(out int totalResults,

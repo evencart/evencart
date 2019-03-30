@@ -5,30 +5,42 @@ var router = new Navigo(root, useHash, hash);
 
 
 var productSearch = {
-    setUrl: function(url) {
-        productSearch.url = url;
-        searchProducts();
-    },
     set: function (key, value) {
         productSearch.data[key] = value;
         searchProducts();
     },
+    setPage: function (page, search) {
+        productSearch.data["page"] = page;
+        if (search) {
+            searchProducts();
+        }
+    },
+    setUrl: function(url) {
+        productSearch.url = url;
+        this.setPage(1);
+        searchProducts();
+    },
+   
     setSort: function(column, order) {
         productSearch.data["sortColumn"] = column;
         productSearch.data["sortOrder"] = order;
+        this.setPage(1);
         searchProducts();
     },
     setPrices: function(from, to) {
         productSearch.data["fromPrice"] = from;
         productSearch.data["toPrice"] = to;
+        this.setPage(1);
         searchProducts();
     },
     setFilter: function(key, value, skipLoad) {
         productSearch.filters[key] = productSearch.filters[key] || [];
         if (!productSearch.filters[key].includes(value))
             productSearch.filters[key].push(value);
-        if (!skipLoad)
+        if (!skipLoad) {
+            this.setPage(1);
             searchProducts();
+        }
     },
     resetFilter: function (key, value) {
         productSearch.filters[key] = productSearch.filters[key] || [];
@@ -38,6 +50,7 @@ var productSearch = {
                 break;
             }
         }
+        this.setPage(1);
         searchProducts();
     },
     clearFilter: function (key) {
@@ -46,6 +59,7 @@ var productSearch = {
         } else {
             productSearch.filters[key] = [];
         }
+        this.setPage(1);
         searchProducts();
     },
     data: {

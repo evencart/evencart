@@ -1,0 +1,26 @@
+﻿{% if pageEnd > 1 %}
+<nav aria-label="Page navigation" class="pagination">
+    <ul class="pagination">
+        {% if current > 1 %}
+        {% assign prev=current-1 %}
+        <li class="page-item"><a class="page-link" href="#" data-page="{{prev}}"><i class="fa fa-angle-left"></i></a></li>
+        {% endif %}
+        {% for i in (pageStart..pageEnd) %}
+        <li class="page-item {% if current == i %}active{% endif %}"><a href="#" class="page-link" data-page="{{i}}">{{i}}</a></li>
+        {% endfor %}
+        {% if current < pageEnd %}
+        {% assign next=current+1 %}
+        <li class="page-item"><a class="page-link" href="#" data-page="{{next}}"><i class="fa fa-angle-right"></i></a></li>
+        {% endif %}
+    </ul>
+</nav>
+<script type="text/javascript">
+    ready(function() {
+        jQuery(".pagination a").click(function (e) {
+            e.preventDefault();
+            var page = jQuery(this).data("page");
+            eval("{{callback}}(" + page + ")");
+        });
+    })
+</script>
+{% endif %}
