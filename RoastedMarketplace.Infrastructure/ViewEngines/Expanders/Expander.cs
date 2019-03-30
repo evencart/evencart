@@ -71,7 +71,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             //run the matchers again if required after expansion
             foreach (var e in Expanders)
             {
-                if (e.AssociatedRegEx.Matches(readFile.Content).Any())
+                if (e.AssociatedRegEx.Matches(inputContent).Any())
                     inputContent = SafeExpandView(readFile, inputContent, parameters);
             }
             return inputContent;
@@ -92,12 +92,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 keyValuePairs = new Dictionary<string, string>();
                 foreach (Capture capture in match.Groups[2].Captures)
                 {
-                    var pSplit = capture.Value.Split('=', 2).Select(x => x.Trim('"')).ToList();
+                    var pSplit = capture.Value.Split('=', 2)./*Select(x => x.Trim('"')).*/ToList();
                     if (pSplit[1].StartsWith("@t"))
                     {
                         //the value needs a translation
                         pSplit[1] = _localizer.Localize(pSplit[1].Substring(2).Trim('"'));
                     }
+                    else
+                        pSplit[1] = pSplit[1].Trim('"');
                     pSplit[0] = pSplit[0].Trim();
                     keyValuePairs.Add(pSplit[0], pSplit[1]);
                 }
