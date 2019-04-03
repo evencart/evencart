@@ -17,6 +17,7 @@ using RoastedMarketplace.Infrastructure.ViewEngines.Expanders;
 using RoastedMarketplace.Infrastructure.ViewEngines.Filters;
 using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects;
 using RoastedMarketplace.Infrastructure.ViewEngines.NamingConventions;
+using RoastedMarketplace.Infrastructure.ViewEngines.Tags;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines
 {
@@ -56,7 +57,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             }
 
             Template.RegisterFilter(typeof(TextFilters));
-
+            Template.RegisterTag<Increment>("increment");
             //register global objects
             GlobalObject.RegisterObject<StoreObject>(GlobalObjectKeys.Store);
             GlobalObject.RegisterObject<CartObject>(GlobalObjectKeys.Cart);
