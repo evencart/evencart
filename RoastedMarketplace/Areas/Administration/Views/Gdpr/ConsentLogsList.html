@@ -1,0 +1,63 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"User Consent Logs" active_menu="ConsentLogsList" parent_active_menu="UsersList" %}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Consent Logs" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="consentTitle" data-width="50%">{{"Consent" | t}}</th>
+                            <th data-column-id="activityType" data-formatter="activityType">{{"Activity" | t}}</th>
+                            <th data-column-id="createdOn">{{"Created On" | t}}</th>
+                            {% if withUserInfo %}
+                            <th data-column-id="userInfo">{{"User" | t}}</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                </table>
+                {{consentLogs | scriptJson : 'initData'}}
+                <script type="text/javascript">
+
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                consentLogs: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 2,
+                            selection: false,
+                            url: '{% route api_ConsentLogsList %}',
+                            responseObject: "consentLogs",
+                            formatters: {
+                                "activityType": function(column, row) {
+                                    switch (row["activityType"]) {
+                                        case "ConsentAccepted":
+                                            return "{{'Accepted' | t}}";
+                                        case "ConsentDenied":
+                                            return "{{'Denied' | t}}";
+                                        case "DataExportRequested":
+                                            return "{{'Data Export Requested' | t}}";
+                                        case "DataDeleteRequested":
+                                            return "{{'Account Deletion Requested' | t}}";
+
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

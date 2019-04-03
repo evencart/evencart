@@ -1,0 +1,113 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Consents" active_menu="ConsentsList" parent_active_menu="ConsentsList" %}
+{% partial "Navigation/ConsentSecondaryNavigation" %}
+<div class="row">
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Consents" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editConsent(0)">{{"Add consent" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="consent" data-formatter="consent" data-width="500px">{{"Consent" | t}}</th>
+                        <th data-column-id="enableLogging" data-formatter="binary"> {{"Logging Enabled" | t}}</th>
+                        <th data-column-id="isRequired" data-formatter="binary"> {{"Required" | t}}</th>
+                        <th data-column-id="oneTimeSelection" data-formatter="binary"> {{"One time selection" | t}}</th>
+                        <th data-column-id="published" data-formatter="binary"> {{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{consents | scriptJson : 'initData'}}
+                <script type="text/javascript">
+
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                consents: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_ConsentsList consentGroupId="{{consentGroupId}}" %}',
+                            responseObject: "consents",
+                            formatters: {
+                                "consent": function(column, row) {
+                                    return "<div><b>" + row["title"] + "</b></div>" + (row["description"] || "");
+                                },
+                                "binary": function (column, row) {
+                                    return gridFormatters.binary(column, row, column.id);
+                                },
+                                "commands": function (column, row) {
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editConsent(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteConsent(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button> ";;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-consent-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editConsent = function(id) {
+        jQuery("#edit-consent-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-consent-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Consent was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetConsent consentGroupId="{{consentGroupId}}" consentId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-consent-popup").html(response);
+                centerPopup();
+
+            });
+    }
+
+    var deleteConsent = function(id) {
+        confirm('{{"Are you sure you wish to delete this consent?" | t}}',
+            function() {
+                var url = '{% route api_DeleteConsent %}';
+                post({
+                    url: url,
+                    data: {
+                        consentId: id
+                    },
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Consent was deleted successfully" | t}}');
+                    }
+                });
+            });
+    }
+
+</script>

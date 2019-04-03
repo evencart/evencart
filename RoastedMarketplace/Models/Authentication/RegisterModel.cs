@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
 using RoastedMarketplace.Infrastructure.Mvc.Models;
 using RoastedMarketplace.Infrastructure.Mvc.Validator;
+using RoastedMarketplace.Models.Gdpr;
 
 namespace RoastedMarketplace.Models.Authentication
 {
@@ -12,6 +14,8 @@ namespace RoastedMarketplace.Models.Authentication
         public string Password { get; set; }
 
         public string ConfirmPassword { get; set; }
+
+        public IList<ConsentModel> Consents { get; set; }
 
         public void SetupValidationRules(ModelValidator<RegisterModel> v)
         {

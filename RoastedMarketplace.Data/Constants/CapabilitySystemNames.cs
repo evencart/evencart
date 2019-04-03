@@ -79,5 +79,9 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageCurrencies = "Currency.Manage";
 
+        public const string ManageGdpr = "GDPR.Manage";
+
+        public const string ManageGdprPrivate = "GDPR.ManagePrivate";
+
     }
 }

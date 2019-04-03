@@ -3,6 +3,9 @@
         <a href="{% route AccountProfile %}" class='{% if active_menu == "AccountProfile" %}active{% endif %}'>{{"Profile" | t}}</a>
     </li>
     <li>
+        <a href="{% route AccountGdpr %}" class='{% if active_menu == "AccountGdpr" %}active{% endif %}'>{{"Privacy" | t}}</a>
+    </li>
+    <li>
         <a href="{% route AccountAddresses %}" class='{% if active_menu == "AccountAddresses" %}active{% endif %}'>{{"Saved Addresses" | t}}</a>
     </li>
     <li>

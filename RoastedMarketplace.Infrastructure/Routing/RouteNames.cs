@@ -36,6 +36,7 @@
         public const string AccountOrders = "AccountOrders";
         public const string AccountReviews = "AccountReviews";
         public const string AccountWishlist = "AccountWishlist";
+        public const string AccountGdpr = "AccountGdpr";
         public const string SaveUser = "AccountSaveUser";
         public const string SaveAddress = "AccountSaveAddress";
         public const string DeleteAddress = "AccountDeleteAddress";
@@ -45,5 +46,8 @@
         public const string SingleAddress = "SingleAddress";
         public const string CountryStates = "CountryStates";
         public const string SetActiveCurrency = "SetActiveCurrency";
+        public const string SaveGdprPreferences = "SaveGdprPreferences";
+
+
     }
 }

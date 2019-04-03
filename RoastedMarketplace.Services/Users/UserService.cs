@@ -6,11 +6,30 @@ using DotEntity.Enumerations;
 using RoastedMarketplace.Core.Services;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Extensions;
+using RoastedMarketplace.Data.Helpers;
+using RoastedMarketplace.Services.Addresses;
+using RoastedMarketplace.Services.Emails;
+using RoastedMarketplace.Services.Purchases;
+using RoastedMarketplace.Services.Reviews;
 
 namespace RoastedMarketplace.Services.Users
 {
     public class UserService : FoundationEntityService<User>, IUserService
     {
+        private readonly IAddressService _addressService;
+        private readonly IOrderService _orderService;
+        private readonly IReviewService _reviewService;
+        private readonly IPreviousPasswordService _previousPasswordService;
+        private readonly IEmailService _emailService;
+        public UserService(IAddressService addressService, IOrderService orderService, IReviewService reviewService, IPreviousPasswordService previousPasswordService, IEmailService emailService)
+        {
+            _addressService = addressService;
+            _orderService = orderService;
+            _reviewService = reviewService;
+            _previousPasswordService = previousPasswordService;
+            _emailService = emailService;
+        }
+
         public IList<User> GetUsers(string searchText, int[] restrictToRoles, int page, int count, out int totalMatches)
         {
             var query = Repository.Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
@@ -40,6 +59,67 @@ namespace RoastedMarketplace.Services.Users
         {
             var userObject = GetByWhere(x => x.Email == email);
             return guid != null && userObject?.Guid.ToString() != guid ? null : userObject;
+        }
+
+        public void AnonymizeUser(int userId)
+        {
+            var user = Get(userId);
+            //addresses
+            var addresses = _addressService.Get(x => x.UserId == userId).ToList();
+            var orders = _orderService.Get(x => x.UserId == userId).ToList();
+            var reviews = _reviewService.Get(x => x.UserId == userId).ToList();
+            var email = user.Email;
+            Transaction.Initiate(transaction =>
+            {
+                //set deleted to true
+                user.Deleted = true;
+                //randomize email
+                user.Email = HtmlUtility.GetRandomEmail();
+                user.FirstName = string.Empty;
+                user.LastName = string.Empty;
+                user.Name = string.Empty;
+                user.Active = false;
+                user.CompanyName = string.Empty;
+                user.LastLoginIpAddress = string.Empty;
+                user.MobileNumber = string.Empty;
+                user.Remarks = string.Empty;
+                user.ReferrerId = 0;
+                user.NewslettersEnabled = false;
+                Update(user, transaction);
+
+                //delete sent emails
+                _emailService.Delete(
+                    x => x.TosSerialized.Contains(email) || x.CcsSerialized.Contains(email) ||
+                         x.BccsSerialized.Contains(email), transaction);
+
+                //delete previous passwords
+                _previousPasswordService.Delete(x => x.UserId == userId, transaction);
+
+                //delete addresses
+                foreach (var address in addresses)
+                {
+                    _addressService.Delete(address, transaction);
+                }
+
+                //orders
+                foreach (var order in orders)
+                {
+                    order.BillingAddressId = 0;
+                    order.ShippingAddressId = 0;
+                    order.UserIpAddress = string.Empty;
+                    order.UserGstNumber = string.Empty;
+                    _orderService.Update(order, transaction);
+                }
+
+                //review
+                foreach (var review in reviews)
+                {
+                    _reviewService.Delete(review, transaction);
+                }
+            });
+           
+            
+
         }
 
         public override User Get(int id)

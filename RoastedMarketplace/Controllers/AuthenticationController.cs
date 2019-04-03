@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Data.Entity.Gdpr;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Factories.Gdpr;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
@@ -11,6 +13,7 @@ using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Models.Authentication;
 using RoastedMarketplace.Services.Authentication;
 using RoastedMarketplace.Services.Extensions;
+using RoastedMarketplace.Services.Gdpr;
 using RoastedMarketplace.Services.Security;
 using RoastedMarketplace.Services.Users;
 
@@ -27,7 +30,11 @@ namespace RoastedMarketplace.Controllers
         private readonly ICryptographyService _cryptographyService;
         private readonly IUserCodeService _userCodeService;
         private readonly IPreviousPasswordService _previousPasswordService;
-        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService)
+        private readonly IConsentService _consentService;
+        private readonly IGdprService _gdprService;
+        private readonly IGdprModelFactory _gdprModelFactory;
+
+        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService, IConsentService consentService, IGdprService gdprService, IGdprModelFactory gdprModelFactory)
         {
             _appAuthenticationService = appAuthenticationService;
             _userSettings = userSettings;
@@ -38,6 +45,9 @@ namespace RoastedMarketplace.Controllers
             _cryptographyService = cryptographyService;
             _userCodeService = userCodeService;
             _previousPasswordService = previousPasswordService;
+            _consentService = consentService;
+            _gdprService = gdprService;
+            _gdprModelFactory = gdprModelFactory;
         }
 
         [HttpGet("login", Name = RouteNames.Login)]
@@ -149,7 +159,10 @@ namespace RoastedMarketplace.Controllers
         [DualGet("register", Name = RouteNames.Register)]
         public IActionResult Register()
         {
-            return R.Success.WithAvailableCountries().Result;
+            //get one time consents
+            var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
+            var models = consents.Select(_gdprModelFactory.Create).ToList();
+            return R.Success.With("consents", models).WithAvailableCountries().Result;
         }
 
         [DualGet("logout", Name = RouteNames.Logout)]
@@ -164,6 +177,18 @@ namespace RoastedMarketplace.Controllers
         [ValidateModelState(ModelType = typeof(RegisterModel))]
         public IActionResult Register(RegisterModel registerModel)
         {
+            //validate consents first
+            //get one time consents
+            var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
+            if (consents.Any(x => x.IsRequired))
+            {
+                foreach (var requiredConsent in consents.Where(x => x.IsRequired))
+                {
+                    var sentModel = registerModel.Consents.FirstOrDefault(x => x.Id == requiredConsent.Id);
+                    if (sentModel == null || sentModel.ConsentStatus != ConsentStatus.Accepted)
+                        return R.Fail.With("error", T("Please consent to '" + requiredConsent.Title + "'")).Result;
+                }
+            }
             var user = new User()
             {
                 Email = registerModel.Email,
@@ -182,6 +207,11 @@ namespace RoastedMarketplace.Controllers
             var roleId = _roleService.Get(x => x.SystemName == SystemRoleNames.Registered).First().Id;
             //assign role to the user
             _roleService.SetUserRoles(user.Id, new[] { roleId });
+
+            //save the consents
+            var consentDictionary = registerModel.Consents.ToDictionary(x => x.Id, x => x.ConsentStatus);
+            _gdprService.SetUserConsents(user.Id, consentDictionary);
+
             //raise the event
             RaiseEvent(NamedEvent.UserRegistered, user);
 

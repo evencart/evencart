@@ -1,9 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using RoastedMarketplace.Data.Entity.Cultures;
-using RoastedMarketplace.Data.Entity.Payments;
-using RoastedMarketplace.Data.Entity.Shop;
-using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Entity.Gdpr;
 using Db = DotEntity.DotEntity.Database;
 namespace RoastedMarketplace.Data.Versions
 {
@@ -11,7 +8,7 @@ namespace RoastedMarketplace.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<Product, int>(nameof(Product.PopularityIndex), 0, transaction);
+            Db.AddColumn<ConsentLog, string>(nameof(ConsentLog.EncryptedUserInfo), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

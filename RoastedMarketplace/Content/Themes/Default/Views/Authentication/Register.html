@@ -30,10 +30,16 @@
                                 {% control password name="confirmPassword" id="confirmPassword" %}
                                 {% control validator for="confirmPassword" required="true" %}
                             </div>
+                            {% for consent in consents %}
                             <div class="col-sm-12 mb-20">
-                                <input id="rememberme" type="checkbox">
-                                <label for="rememberme">I agree <a href="#">Terms &amp; Condition</a></label>
+                                <input id="consent_{{consent.id}}" name="Consents[{{forloop.index0}}].ConsentStatus" value="Accepted" type="checkbox">
+                                <input name="Consents[{{forloop.index0}}].Id" value="{{consent.id}}" type="hidden">
+                                <label for="consent_{{consent.id}}">{{consent.title}}</label>
+                                <small>
+                                    {{consent.description}}
+                                </small>
                             </div>
+                            {% endfor %}
                             <div class="col-sm-12">
                                 <input value="register" type="submit">
                             </div>

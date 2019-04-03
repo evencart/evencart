@@ -3,6 +3,7 @@ using DotEntity.Versioning;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Emails;
+using RoastedMarketplace.Data.Entity.Gdpr;
 using RoastedMarketplace.Data.Entity.Logs;
 using RoastedMarketplace.Data.Entity.MediaEntities;
 using RoastedMarketplace.Data.Entity.Navigation;
@@ -142,6 +143,15 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction, true);
 
             Db.CreateTable<Currency>(transaction);
+
+            //gdpr
+            Db.CreateTable<Consent>(transaction);
+            Db.CreateTable<ConsentLog>(transaction);
+            Db.CreateTable<UserConsent>(transaction);
+            Db.CreateTable<ConsentGroup>(transaction);
+            Db.CreateConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction, true);
 
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);

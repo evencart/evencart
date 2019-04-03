@@ -183,5 +183,19 @@
         public const string GetCurrency = "GetCurrency";
         public const string SaveCurrency = "SaveCurrency";
         public const string DeleteCurrency = "DeleteCurrency";
+
+        public const string ConsentsList = "ConsentsList";
+        public const string GetConsent = "GetConsent";
+        public const string SaveConsent = "SaveConsent";
+        public const string DeleteConsent = "DeleteConsent";
+        public const string UpdateConsentDisplayOrder = "UpdateConsentDisplayOrder";
+
+        public const string ConsentGroupsList = "ConsentGroupsList";
+        public const string GetConsentGroup = "GetConsentGroup";
+        public const string SaveConsentGroup = "SaveConsentGroup";
+        public const string DeleteConsentGroup = "DeleteConsentGroup";
+        public const string UpdateConsentGroupDisplayOrder = "UpdateConsentGroupDisplayOrder";
+
+        public const string ConsentLogsList = "ConsentLogsList";
     }
 }

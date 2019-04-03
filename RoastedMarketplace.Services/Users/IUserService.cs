@@ -9,5 +9,7 @@ namespace RoastedMarketplace.Services.Users
         IList<User> GetUsers(string searchText, int[] restrictToRoles, int page, int count, out int totalMatches);
 
         User GetByUserInfo(string email, string guid = null);
+
+        void AnonymizeUser(int userId);
     }
 }
