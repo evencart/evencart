@@ -68,5 +68,11 @@ namespace RoastedMarketplace.Data.Helpers
 
             return document.DocumentNode.InnerHtml;
         }
+
+        public static string GetRandomEmail()
+        {
+            var guestEmail = $"guest-{Guid.NewGuid():D}@localaccount.com";
+            return guestEmail;
+        }
     }
 }

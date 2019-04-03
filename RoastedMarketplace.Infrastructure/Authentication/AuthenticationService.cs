@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Helpers;
 using RoastedMarketplace.Services.Security;
 using RoastedMarketplace.Services.Users;
 using IAppAuthenticationService = RoastedMarketplace.Services.Authentication.IAppAuthenticationService;
@@ -91,7 +92,7 @@ namespace RoastedMarketplace.Infrastructure.Authentication
 
         public LoginStatus GuestSignIn()
         {
-            var guestEmail = $"guest-{Guid.NewGuid():D}@localaccount.com";
+            var guestEmail = HtmlUtility.GetRandomEmail();
             var status = SignIn(ApplicationConfig.VisitorAuthenticationScheme, guestEmail, null, true, true);
             return status;
         }
