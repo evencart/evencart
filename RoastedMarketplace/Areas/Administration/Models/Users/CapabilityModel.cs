@@ -4,6 +4,8 @@ namespace RoastedMarketplace.Areas.Administration.Models.Users
 {
     public class CapabilityModel : FoundationEntityModel
     {
-        public int Name { get; set; }
+        public string Name { get; set; }
+
+        public bool Active { get; set; }
     }
 }

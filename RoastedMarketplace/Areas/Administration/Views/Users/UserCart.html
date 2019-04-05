@@ -1,0 +1,63 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Cart" active_menu="UserCart" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Cart Items" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-addresses" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="imageUrl" data-formatter="image" data-width="80px">{{"" | t}}</th>
+                                <th data-column-id="name" data-formatter="product">{{"Product" | t}}</th>
+                                <th data-column-id="quantity">{{"Quantity" | t}}</th>
+                                <th data-column-id="priceFormatted">{{"Price per unit" | t}}</th>
+                                <th data-column-id="subTotalFormatted">{{"Total" | t}}</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{cartItems | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-addresses",
+            initialData: {
+                cartItems: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_UserCart userId="{{userId}}" %}',
+            responseObject: "cartItems",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {
+                "image": function(column, row) {
+                    var html = "<img src='" + row["imageUrl"] + "' style='width:50px' />";
+                    return html;
+                },
+                "product": function (column, row) {
+                    var url = '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                    var html = "<a href='" + url + "'>" + row["productName"] + "</a>";
+                    if (row.attributeText)
+                        html += "<div><span>" + row.attributeText + "</span></div>";
+                    return html;
+                }
+            }
+        });
+    });
+
+</script>

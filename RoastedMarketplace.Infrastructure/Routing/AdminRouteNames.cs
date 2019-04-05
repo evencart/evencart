@@ -84,13 +84,15 @@
         public const string GetRole = "GetRole";
         public const string CapabilitiesList = "CapabilitiesList";
         public const string RoleCapabilitiesList = "CapabilitiesList";
-        public const string SaveRoleCapability = "SaveRoleCapability";
+        public const string SaveCapabilities = "SaveCapabilities";
+        public const string UserCart = "UserCart";
+        public const string UserImitate = "UserImitate";
 
         public const string AddressList = "AddressList";
         public const string GetAddress = "GetAddress";
         public const string SaveAddress = "SaveAddress";
         public const string DeleteAddress = "DeleteAddress";
-
+        public const string UserOrdersList = "UserOrdersList";
       
         public const string VendorsList = "VendorsList";
         public const string GetVendor = "GetVendor";
@@ -197,5 +199,6 @@
         public const string UpdateConsentGroupDisplayOrder = "UpdateConsentGroupDisplayOrder";
 
         public const string ConsentLogsList = "ConsentLogsList";
+
     }
 }

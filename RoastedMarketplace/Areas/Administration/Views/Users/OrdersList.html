@@ -1,32 +1,27 @@
 ﻿{% layout "_Layout" %}
-{% global page_title=@t"Orders" active_menu="OrdersList" parent_active_menu="OrdersList" %}
-{% partial "Navigation/OrderSecondaryNavigation" %}
+{% global page_title=@t"Orders" active_menu="OrdersList" parent_active_menu="UsersList" %}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
 
-<div class="row">
-    <div class="col-md-3">
-        {% partial "Orders/OrdersList.FilterPanel" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"Orders" | t}}
     </div>
-    <div class="col-md-9">
-        <div class="panel">
-            <div class="panel-title">
-                {{"Orders" | t}}
-            </div>
-            <div class="panel-body no-padding">
-                <table id="grid-selection" class="table table-condensed table-hover no-margin">
-                    <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="number" data-formatter="number">{{"Order#" | t}}</th>
-                            <th data-column-id="createdOn">{{"Order Date" | t}}</th>
-                            <th data-column-id="userName" data-formatter="userName">{{"Customer" | t}}</th>
-                            <th data-column-id="orderStatusDisplay">{{"Order Status" | t}}</th>
-                            <th data-column-id="paymentStatusDisplay">{{"Payment Status" | t}}</th>
-                            <th data-column-id="orderTotalFormatted">{{"Order Total" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <script type="text/javascript">
+    <div class="panel-body no-padding">
+        <table id="grid-selection" class="table table-condensed table-hover no-margin">
+            <thead>
+            <tr>
+                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                <th data-column-id="number" data-formatter="number">{{"Order#" | t}}</th>
+                <th data-column-id="createdOn">{{"Order Date" | t}}</th>
+                <th data-column-id="orderStatusDisplay">{{"Order Status" | t}}</th>
+                <th data-column-id="paymentStatusDisplay">{{"Payment Status" | t}}</th>
+                <th data-column-id="orderTotalFormatted">{{"Order Total" | t}}</th>
+                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+            </tr>
+            </thead>
+        </table>
+        {{orders | scriptJson : 'initData'}}
+        <script type="text/javascript">
                     var editOrder = function(id) {
                         var url = '{% route GetOrder OrderId="order_id" %}';
                         url = url.replace("order_id", id);
@@ -45,11 +40,8 @@
                     /* {% for ps in params.paymentStatus %}*/
                     searchParams.paymentStatus.push("{{ps}}");
                     /* {% endfor %}*/
+                    
                     ready(function() {
-                        var initData = null;
-                        /*{% unless orders == blank %}*/
-                        initData = JSON.parse('{{orders}}');
-                        /*{% endunless %}*/
 
                         generateGrid({
                             element: "grid-selection",
@@ -75,13 +67,6 @@
                             },
                             selection:false,
                             formatters: {
-                                "userName": function(column, row) {
-                                    var name = row.user.name || "";
-                                    if (name !== "")
-                                        name = name + "<br/>";
-                                    name = name + row.user.email;
-                                    return name;
-                                },
                                 "number": function(column, row) {
                                     return row.orderNumber || row.id;
                                 },
@@ -96,9 +81,6 @@
                         });
                     });
 
-                </script>
-            </div>
-        </div>
+        </script>
     </div>
 </div>
-

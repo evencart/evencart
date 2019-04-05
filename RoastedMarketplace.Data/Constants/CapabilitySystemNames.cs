@@ -83,5 +83,7 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageGdprPrivate = "GDPR.ManagePrivate";
 
+        public const string ManageCart = "Cart.Manage";
+
     }
 }

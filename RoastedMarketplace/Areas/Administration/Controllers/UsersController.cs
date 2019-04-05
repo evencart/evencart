@@ -1,17 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DotEntity.Enumerations;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Areas.Administration.Factories.Orders;
+using RoastedMarketplace.Areas.Administration.Models.Orders;
 using RoastedMarketplace.Areas.Administration.Models.Users;
+using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Addresses;
+using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Factories.Users;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Infrastructure.Helpers;
+using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Services.Addresses;
+using RoastedMarketplace.Services.Formatter;
+using RoastedMarketplace.Services.Purchases;
 using RoastedMarketplace.Services.Serializers;
 using RoastedMarketplace.Services.Users;
 
@@ -26,7 +37,11 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private readonly IUserRegistrationService _userRegistrationService;
         private readonly IDataSerializer _dataSerializer;
         private readonly IAddressService _addressService;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService)
+        private readonly IOrderService _orderService;
+        private readonly IOrderModelFactory _orderModelFactory;
+        private readonly IRoleModelFactory _roleModelFactory;
+        private readonly ICartService _cartService;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -35,6 +50,10 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _userRegistrationService = userRegistrationService;
             _dataSerializer = dataSerializer;
             _addressService = addressService;
+            _orderService = orderService;
+            _orderModelFactory = orderModelFactory;
+            _roleModelFactory = roleModelFactory;
+            _cartService = cartService;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -183,6 +202,99 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _addressService.Delete(address);
             return R.Success.Result;
         }
+
+        [DualGet("{userId}/orders", Name = AdminRouteNames.UserOrdersList)]
+        [CapabilityRequired(CapabilitySystemNames.EditUser)]
+        public IActionResult OrdersList(int userId, OrderSearchModel orderSearchModel)
+        {
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+
+            var orders = _orderService.Get(out int totalResults, x => x.UserId == userId, x => x.CreatedOn,
+                RowOrder.Descending, orderSearchModel.Current, orderSearchModel.RowCount).ToList();
+            var ordersModel = orders.Select(_orderModelFactory.Create).ToList();
+            return R.Success.With("orders", ordersModel)
+                .WithGridResponse(totalResults, orderSearchModel.Current, orderSearchModel.RowCount).Result;
+        }
+
+        [DualGet("{userId}/capabilities", Name = AdminRouteNames.CapabilitiesList)]
+        [CapabilityRequired(CapabilitySystemNames.EditUser)]
+        public IActionResult CapabilitiesList(int userId)
+        {
+            User user = null;
+            if (userId <= 0 || (user = _userService.Get(userId)) == null)
+                return NotFound();
+
+            var roleIds = user.Roles.Select(x => x.Id).ToArray();
+            var roleCapabilities = _capabilityService.GetByRolesConsolidated(roleIds).OrderBy(x => x.Name);
+            var userCapabilities = _capabilityService.GetByUser(userId);
+            var allCapabilities = _capabilityService.Get(out int _, x => true, x => x.Name);
+            var availableCapabilities = allCapabilities.Where(x => roleCapabilities.All(y => y.Id != x.Id)).ToList();
+
+            var activeCapabilityModels = roleCapabilities.Select(_roleModelFactory.Create);
+
+            var availableCapabilitiesModel = availableCapabilities.Select(x =>
+            {
+                var model = _roleModelFactory.Create(x);
+                model.Active = userCapabilities?.Any(y => y.Id == x.Id) ?? false;
+                return model;
+            }).ToList();
+            var roleModels = user.Roles.Select(_roleModelFactory.Create);
+            return R.Success.With("capabilities", activeCapabilityModels)
+                .With("availableCapabilities", availableCapabilitiesModel)
+                .With("roles", roleModels).Result;
+
+        }
+
+        [DualPost("{userId}/capabilities", Name = AdminRouteNames.SaveCapabilities)]
+        [CapabilityRequired(CapabilitySystemNames.EditUser)]
+        public IActionResult SaveCapabilities(int userId, IList<int> capabilityIds)
+        {
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            _capabilityService.SetUserCapabilities(userId, capabilityIds.ToArray());
+            return R.Success.Result;
+        }
+
+        [DualGet("{userId}/cart", Name = AdminRouteNames.UserCart)]
+        [CapabilityRequired(CapabilitySystemNames.ManageCart)]
+        public IActionResult UserCart(int userId)
+        {
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
+            var formatterService = DependencyResolver.Resolve<IFormatterService>();
+            var cart = _cartService.GetCart(userId);
+            var models = cart.CartItems.Select(x =>
+            {
+
+                var cartItem = new CartItemModel()
+                {
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    ProductName = x.Product.Name,
+                    Price = x.Price + x.Tax,
+                    Quantity = x.Quantity,
+                    Discount = x.Discount,
+                    Tax = x.Tax,
+                    TaxPercent = x.TaxPercent,
+                    ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(), ApplicationEngine.ActiveTheme.CartItemImageSize, true),
+                    Slug = x.Product.SeoMeta.Slug,
+                    AttributeText = formatterService.FormatProductAttributes(x.AttributeJson)
+                };
+                cartItem.SubTotal = cartItem.Price * cartItem.Quantity;
+                cartItem.FinalPrice = cartItem.SubTotal + cartItem.Tax - cartItem.Discount;
+                return cartItem;
+            }).ToList();
+            return R.Success.With("cartItems", models).WithGridResponse(models.Count, 1, models.Count).Result;
+        }
+
+        [HttpGet("{userId}/imitate", Name = AdminRouteNames.UserImitate)]
+        public IActionResult Imitate(int userId)
+        {
+            return R.Success.Result;
+        }
+
         #region Helpers
 
         private AddressModel MapAddressModel(Address address)

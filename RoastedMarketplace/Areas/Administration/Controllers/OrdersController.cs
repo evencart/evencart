@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Areas.Administration.Factories.Orders;
 using RoastedMarketplace.Areas.Administration.Models.Orders;
 using RoastedMarketplace.Areas.Administration.Models.Users;
 using RoastedMarketplace.Data.Constants;
@@ -27,7 +28,8 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         private readonly IShipmentService _shipmentService;
         private readonly IShipmentItemService _shipmentItemService;
         private readonly IShipmentStatusHistoryService _shipmentStatusHistoryService;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService)
+        private readonly IOrderModelFactory _orderModelFactory;
+        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory)
         {
             _orderService = orderService;
             _modelMapper = modelMapper;
@@ -36,6 +38,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _shipmentService = shipmentService;
             _shipmentItemService = shipmentItemService;
             _shipmentStatusHistoryService = shipmentStatusHistoryService;
+            _orderModelFactory = orderModelFactory;
         }
 
         [DualGet("", Name = AdminRouteNames.OrdersList)]
@@ -48,13 +51,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 searchModel.OrderStatus, searchModel.PaymentStatus, searchModel.VendorIds, searchModel.FromDate,
                 searchModel.ToDate, searchModel.Current, searchModel.RowCount);
 
-            var orderModels = orders.Select(x =>
-                {
-                    var model = _modelMapper.Map<OrderModel>(x);
-                    model.User = _modelMapper.Map<UserModel>(x.User);
-                    return model;
-                })
-                .ToList();
+            var orderModels = orders.Select(_orderModelFactory.Create).ToList();
 
             return R.Success.WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .With("orders", () => orderModels, () => _dataSerializer.Serialize(orderModels))
@@ -72,20 +69,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var order = orderId > 0 ? _orderService.Get(orderId) : new Order();
             if (order == null)
                 return NotFound();
-            var orderModel = _modelMapper.Map<OrderModel>(order);
-            orderModel.User = _modelMapper.Map<UserModel>(order.User);
-            orderModel.BillingAddress = _modelMapper.Map<AddressModel>(order.BillingAddress);
-            orderModel.ShippingAddress = _modelMapper.Map<AddressModel>(order.ShippingAddress);
-            orderModel.OrderItems = order.OrderItems?.Select(x =>
-                {
-                    var orderItemModel = _modelMapper.Map<OrderItemModel>(x);
-                    orderItemModel.ProductName = x.Product.Name;
-                    orderItemModel.AttributeText = _formatterService.FormatProductAttributes(x.AttributeJson);
-                    orderItemModel.TotalPrice = orderItemModel.Price * orderItemModel.Quantity;
-                    return orderItemModel;
-                })
-                .ToList();
-
+            var orderModel = _orderModelFactory.Create(order);
             return R.Success.With("order", orderModel).Result;
         }
         [DualGet("{orderId}/shipments", Name = AdminRouteNames.ShipmentsList)]

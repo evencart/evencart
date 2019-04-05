@@ -65,14 +65,14 @@
                     return address;
                 },
                 "commands": function (column, row) {
-                    return "<a class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                         row.id +
                         "\" onclick='editAddress(" +
                         row.id +
-                        ")'><span class=\"rbicon-edit\"></span></a> " +
-                        "<a class=\"btn btn-secondary btn-sm command-preview\" data-row-id=\"" +
+                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                         row.id +
-                        "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></a>";
+                        "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
                 }
             }
         });

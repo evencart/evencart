@@ -10,6 +10,10 @@ namespace RoastedMarketplace.Services.Users
 
         IEnumerable<Capability> GetByRolesConsolidated(int[] roleIds);
 
+        IEnumerable<Capability> GetByUser(int userId);
+
         void SetRoleCapabilities(int roleId, int[] capabilityIds);
+
+        void SetUserCapabilities(int userId, int[] capabilityIds);
     }
 }

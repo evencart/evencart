@@ -5,10 +5,10 @@ using RoastedMarketplace.Areas.Administration.Models.Users;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Extensions;
+using RoastedMarketplace.Factories.Users;
 using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
-using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using RoastedMarketplace.Infrastructure.Routing;
 using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Services.Serializers;
@@ -20,14 +20,14 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
     {
         private readonly IRoleService _roleService;
         private readonly ICapabilityService _capabilityService;
-        private readonly IModelMapper _modelMapper;
         private readonly IDataSerializer _dataSerializer;
-        public RolesController(IRoleService roleService, ICapabilityService capabilityService, IModelMapper modelMapper, IDataSerializer dataSerializer)
+        private readonly IRoleModelFactory _roleModelFactory;
+        public RolesController(IRoleService roleService, ICapabilityService capabilityService, IDataSerializer dataSerializer, IRoleModelFactory roleModelFactory)
         {
             _roleService = roleService;
             _capabilityService = capabilityService;
-            _modelMapper = modelMapper;
             _dataSerializer = dataSerializer;
+            _roleModelFactory = roleModelFactory;
         }
 
         [DualGet("", Name = AdminRouteNames.RolesList)]
@@ -35,7 +35,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         public IActionResult RolesList()
         {
             var roles = _roleService.Get(x => true);
-            var roleModels = roles.Select(x => _modelMapper.Map<RoleModel>(x)).ToList();
+            var roleModels = roles.Select(_roleModelFactory.Create).ToList();
             return R.Success.With("roles", () => roleModels, () => _dataSerializer.Serialize(roleModels))
                 .WithGridResponse(roleModels.Count, 1, roleModels.Count)
                 .Result;
@@ -96,7 +96,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var role = roleId > 0 ? _roleService.Get(roleId) : new Role();
             if (role == null)
                 return NotFound();
-            var roleModel = _modelMapper.Map<RoleModel>(role);
+            var roleModel = _roleModelFactory.Create(role);
             roleModel.Capabilities = role.Capabilities?.Select(x => x.Id.ToString()).ToList();
             var availableCapabilities = _capabilityService.Get(x => true).ToList();
             var availableCapabilitiesModel =

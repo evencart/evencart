@@ -1,0 +1,70 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Capabilities" active_menu="CapabilitiesList" parent_active_menu="UsersList" %}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+
+<form action='{% route api_SaveCapabilities userId="{{userId}}" %}' id="form-capabilities">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Role Based Capabilities" | t}}
+                </div>
+                <div class="panel-body">
+                    {% if capabilities.size == 0 %}
+                    <div class="text-center alert alert-info">
+                        {{"The user's role doesn't have any assigned capabilities" | t}}
+                    </div>
+                    {% endif %}
+                    {% for c in capabilities %}
+                    <label>
+                        <label>
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            {{c.name}}
+                        </label>
+                    </label>
+                   
+                    {% endfor %}
+                </div>
+            </div>
+    
+        </div>
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Additional Capabilities" | t}}
+                </div>
+                <div class="panel-body">
+                    {% if availableCapabilities.size == 0 %}
+                    <div class="text-center alert alert-info">
+                        {{"There are no additional capabilities to activate" | t}}
+                    </div>
+                    {% endif %}
+                    {% for c in availableCapabilities %}
+                    <div>
+                        <label>
+                            <input type="checkbox" {% if c.active %}checked{% endif %} name="capabilityIds[{{forloop.index0}}]" value="{{c.id}}" />
+                            {{c.name}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("form-capabilities",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Successfully saved capabilities" | t}}');
+                }
+            });
+
+        jQuery("#form-capabilities input").change(function() {
+            jQuery("#form-capabilities").submit();
+        });
+    })
+</script>
+

@@ -1,8 +1,8 @@
 ﻿{% global back_page="{% route UsersList %}" back_link_title=@t"Back to users" %}
 {% secondary_navigation url="{% route GetUser userId="{{userId}}" %}" title=@t"User Info" systemName="GetUser" %}
 {% secondary_navigation url="{% route AddressList  userId="{{userId}}" %}" title=@t"Addresses" systemName="AddressList" %}
-{% secondary_navigation url="{% route UsersList %}" title=@t"Orders" systemName="VendorsList" %}
-{% secondary_navigation url="" title=@t"Capabilities" systemName="UsersList" %}
-{% secondary_navigation url="" title=@t"Current Cart" systemName="UsersList" %}
-{% secondary_navigation url="" title=@t"Impersonation" systemName="UsersList" %}
+{% secondary_navigation url="{% route UserOrdersList userId="{{userId}}" %}" title=@t"Orders" systemName="OrdersList" %}
+{% secondary_navigation url="{% route CapabilitiesList userId="{{userId}}" %}" title=@t"Capabilities" systemName="CapabilitiesList" %}
+{% secondary_navigation url="{% route UserCart userId="{{userId}}" %}" title=@t"Current Cart" systemName="UserCart" %}
+{% secondary_navigation url="{% route UserImitate userId="{{userId}}" %}" title=@t"Imitation" systemName="Imitate" %}
 {% secondary_navigation url="{% route ConsentLogsList userId="{{userId}}" %}" title=@t"GDPR Consent Log" systemName="ConsentLogsList" %}

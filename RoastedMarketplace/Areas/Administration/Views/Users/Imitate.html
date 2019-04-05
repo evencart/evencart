@@ -1,0 +1,20 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Imitate" active_menu="Imitate" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+
+<form action='{% route UserImitate userId="{{userId}}" %}' method="post" id="edit-address-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Imitation Mode" | t}}
+        </div>
+        <div class="panel-body">
+            <p>
+                {{"The imitation mode logs you in as if you were the user. You can operate the site as if the user you are imitating is operating." | t}}
+            </p>
+            <button type="submit" class="btn btn-primary btn-sm">
+                {{"Start Imitation" | t}}
+            </button>
+        </div>
+    </div>
+</form>
+
