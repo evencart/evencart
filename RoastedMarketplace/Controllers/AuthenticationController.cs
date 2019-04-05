@@ -5,8 +5,10 @@ using RoastedMarketplace.Data.Entity.Gdpr;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Factories.Gdpr;
 using RoastedMarketplace.Infrastructure;
+using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
 using RoastedMarketplace.Infrastructure.Routing;
@@ -53,6 +55,9 @@ namespace RoastedMarketplace.Controllers
         [HttpGet("login", Name = RouteNames.Login)]
         public IActionResult Login()
         {
+            //if already logged in, redirect to home
+            if (CurrentUser.IsRegistered())
+                return RedirectToRoute(RouteNames.Home);
             return R.Success.Result;
         }
 
@@ -168,7 +173,17 @@ namespace RoastedMarketplace.Controllers
         [DualGet("logout", Name = RouteNames.Logout)]
         public IActionResult Logout()
         {
+            //gather some data before signing out
+            var currentUserId = CurrentUser.Id;
+            var imitation = CurrentUser.IsImitator(out _);
+            //sign out active session now
             _appAuthenticationService.SignOut();
+
+            //do we have an imitation active/
+            if (imitation)
+            {
+                return RedirectToRoute(AdminRouteNames.UserImitate, new {userId = currentUserId});
+            }
             return Redirect(Url.RouteUrl(RouteNames.Home));
         }
 

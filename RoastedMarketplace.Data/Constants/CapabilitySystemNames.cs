@@ -85,5 +85,7 @@ namespace RoastedMarketplace.Data.Constants
 
         public const string ManageCart = "Cart.Manage";
 
+        public const string ImitateUser = "User.Imitate";
+
     }
 }

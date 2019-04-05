@@ -20,6 +20,8 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementa
         
         public bool IsVendor { get; set; }
 
+        public bool IsImitator { get; set; }
+
         public string ImageUrl { get; set; }
     }
 }

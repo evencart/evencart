@@ -56,6 +56,7 @@
     <Compile Include="Mvc\Validator\IRequiresValidations.cs" />
     <Compile Include="Security\Attributes\AuthorizeAdministratorAttribute.cs" />
     <Compile Include="Security\Attributes\CapabilityRequiredAttribute.cs" />
+    <Compile Include="Security\Attributes\RejectForImitatorAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>

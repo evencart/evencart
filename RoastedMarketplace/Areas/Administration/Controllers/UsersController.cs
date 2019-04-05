@@ -11,6 +11,7 @@ using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Addresses;
 using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Users;
+using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Factories.Users;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Helpers;
@@ -290,11 +291,29 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         }
 
         [HttpGet("{userId}/imitate", Name = AdminRouteNames.UserImitate)]
+        [CapabilityRequired(CapabilitySystemNames.ImitateUser)]
         public IActionResult Imitate(int userId)
         {
-            return R.Success.Result;
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            return R.Success.With("userId", userId).Result;
         }
 
+        [HttpPost("{userId}/imitate", Name = AdminRouteNames.UserImitate)]
+        [CapabilityRequired(CapabilitySystemNames.ImitateUser)]
+        public IActionResult ImitatePost(int userId)
+        {
+            //can't imitate one's self
+            if (CurrentUser.Id == userId)
+                return R.Fail.WithView("Imitate").Result;
+
+            User user;
+            if (userId <= 0 || (user = _userService.FirstOrDefault(x => x.Id == userId)) == null)
+                return NotFound();
+            if (ApplicationEngine.ImitationModeSignIn(user.Email) == LoginStatus.Success)
+                return RedirectToRoute(RouteNames.Home);
+            return R.Fail.WithView("Imitate").Result;
+        }
         #region Helpers
 
         private AddressModel MapAddressModel(Address address)

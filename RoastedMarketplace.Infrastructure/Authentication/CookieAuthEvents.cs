@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Services.Extensions;
 using RoastedMarketplace.Services.Users;
 
@@ -16,7 +17,7 @@ namespace RoastedMarketplace.Infrastructure.Authentication
             var claimsPrincipal = context.Principal;
             var emailClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.Email);
             var guidClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
-
+            
             if (emailClaim == null || guidClaim == null)
             {
                 context.RejectPrincipal();
@@ -34,6 +35,13 @@ namespace RoastedMarketplace.Infrastructure.Authentication
                 context.RejectPrincipal();
                 return Task.CompletedTask;
             }
+
+            var actorClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.Actor);
+            if (actorClaim != null && !actorClaim.Value.IsNullEmptyOrWhiteSpace())
+                user.SetMeta(ApplicationConfig.ImitatorKey, actorClaim.Value);
+            var persistanceClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.IsPersistent);
+            var isPersistant = persistanceClaim?.Value == (true).ToString();
+            user.SetMeta(ApplicationConfig.PersistanceKey, isPersistant);
             //preserve user
             ApplicationEngine.CurrentHttpContext.SetCurrentUser(user);
             //but reject for a visitor. This way we allow anonymous activity like adding products and guest checkout 

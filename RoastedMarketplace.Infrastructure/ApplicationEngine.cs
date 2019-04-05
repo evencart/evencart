@@ -15,6 +15,7 @@ using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Core.Plugins;
 using RoastedMarketplace.Core.Services;
+using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Purchases;
 using RoastedMarketplace.Data.Entity.Settings;
@@ -274,6 +275,12 @@ namespace RoastedMarketplace.Infrastructure
                 }
             }
             return signinStatus;
+        }
+
+        public static LoginStatus ImitationModeSignIn(string email)
+        {
+            var authenticationService = DependencyResolver.Resolve<IAppAuthenticationService>();
+            return authenticationService.ImitationModeSignIn(email, CurrentUser.Email);
         }
     }
 }

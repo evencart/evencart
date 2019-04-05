@@ -8,6 +8,11 @@
             {{"Imitation Mode" | t}}
         </div>
         <div class="panel-body">
+            {% if success == "False" %}
+            <div class="alert alert-danger">
+                {{"Unable to imitate requested user." | t}}
+            </div>
+            {% endif %}
             <p>
                 {{"The imitation mode logs you in as if you were the user. You can operate the site as if the user you are imitating is operating." | t}}
             </p>

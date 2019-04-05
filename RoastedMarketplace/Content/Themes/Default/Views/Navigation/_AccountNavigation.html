@@ -26,9 +26,15 @@
         <a href="{% route Dashboard %}">{{"Administration" | t}}</a>
     </li>
     {% endif %}
+    {% if currentUser.isImitator %}
+    <li>
+        <a href="{% route Logout %}">{{"Exit Imitation Mode" | t}}</a>
+    </li>
+    {% else %}
     <li>
         <a href="{% route Logout %}">{{"Signout" | t}}</a>
     </li>
+    {% endif %}
     {% assign withSignout=false %}
     {% endif %}
 </ul>

@@ -1,4 +1,6 @@
-﻿using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementations;
+﻿using RoastedMarketplace.Data.Extensions;
+using RoastedMarketplace.Infrastructure.Helpers;
+using RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using RoastedMarketplace.Services.Extensions;
 
 namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
@@ -17,7 +19,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 Email = currentUser?.Email ?? null,
                 FirstName = currentUser?.FirstName ?? null,
                 LastName = currentUser?.LastName ?? null,
+                IsImitator = !currentUser?.GetMeta<string>(ApplicationConfig.ImitatorKey).IsNullEmptyOrWhiteSpace() ?? false
             };
+            if (currentUserImpl.Name.IsNullEmptyOrWhiteSpace())
+                currentUserImpl.Name = currentUserImpl.Email ??
+                                       (LocalizationHelper.Localize("Imitated User # ",
+                                           ApplicationEngine.CurrentLanguageCultureCode) + currentUser?.Id);
+            if (currentUserImpl.FirstName.IsNullEmptyOrWhiteSpace())
+                currentUserImpl.FirstName = currentUserImpl.Name;
             return currentUserImpl;
         }
     }

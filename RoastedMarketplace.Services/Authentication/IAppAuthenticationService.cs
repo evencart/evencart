@@ -16,6 +16,11 @@ namespace RoastedMarketplace.Services.Authentication
         LoginStatus SignIn(string authenticationScheme, string email, string name = "", bool isPersistent = false, bool forceCreateNewAccount = false);
 
         /// <summary>
+        /// Signs in the user in imitation mode
+        /// </summary>
+        LoginStatus ImitationModeSignIn(string targetUserEmail, string imitatorEmail);
+
+        /// <summary>
         /// Signs out the current logged in user
         /// </summary>
         void SignOut();

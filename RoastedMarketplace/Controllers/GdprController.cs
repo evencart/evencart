@@ -6,6 +6,7 @@ using RoastedMarketplace.Data.Entity.Gdpr;
 using RoastedMarketplace.Factories.Gdpr;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Routing;
+using RoastedMarketplace.Infrastructure.Security.Attributes;
 using RoastedMarketplace.Models.Gdpr;
 using RoastedMarketplace.Services.Gdpr;
 
@@ -48,6 +49,7 @@ namespace RoastedMarketplace.Controllers
         }
 
         [DualPost("save-consents", Name = RouteNames.SaveGdprPreferences, OnlyApi = true)]
+        [RejectForImitator]
         public IActionResult SaveConsents(IList<ConsentModel> consents)
         {
             if (consents == null)

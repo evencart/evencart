@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Data.Helpers;
+using RoastedMarketplace.Infrastructure.Extensions;
 using RoastedMarketplace.Services.Security;
 using RoastedMarketplace.Services.Users;
 using IAppAuthenticationService = RoastedMarketplace.Services.Authentication.IAppAuthenticationService;
@@ -13,7 +15,6 @@ namespace RoastedMarketplace.Infrastructure.Authentication
 {
     public class AuthenticationService : IAppAuthenticationService
     {
-
         private readonly IUserService _userService;
         private readonly IUserRegistrationService _userRegistrationService;
         private readonly SecuritySettings _securitySettings;
@@ -38,6 +39,80 @@ namespace RoastedMarketplace.Infrastructure.Authentication
 
         public LoginStatus SignIn(string authenticationScheme, string email, string name = "", bool isPersistent = false,
             bool forceCreateNewAccount = false)
+        {
+            return SignInImpl(authenticationScheme, email, name, isPersistent, forceCreateNewAccount);
+        }
+
+        public LoginStatus ImitationModeSignIn(string targetUserEmail, string imitatorEmail)
+        {
+            return SignInImpl(ApplicationConfig.DefaultAuthenticationScheme, targetUserEmail, "", false, false,
+                imitatorEmail);
+        }
+
+        public virtual void SignOut()
+        {
+            var user = GetCurrentUser();
+            ClearAuthenticationTicket();
+
+            //is imitator?
+            if (user.IsImitator(out var imitatorEmail))
+            {
+                //signin the imitator
+                var isPersistantLogin = user.GetMeta<bool>(ApplicationConfig.PersistanceKey);
+                SignIn(imitatorEmail, "", isPersistantLogin);
+            }
+        }
+
+        public LoginStatus GuestSignIn()
+        {
+            var guestEmail = HtmlUtility.GetRandomEmail();
+            var status = SignIn(ApplicationConfig.VisitorAuthenticationScheme, guestEmail, null, true, true);
+            return status;
+        }
+
+        public virtual async void CreateAuthenticationTicket(User user, bool isPersistent = false, string authenticationScheme = ApplicationConfig.DefaultAuthenticationScheme, string imitatorEmail = null)
+        {
+            //sign in the user. this will create the authentication cookie
+            await ApplicationEngine.CurrentHttpContext.SignInAsync(authenticationScheme,
+                new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Guid.ToString()),
+                    new Claim(ClaimTypes.Actor, imitatorEmail ?? ""),
+                    new Claim(ClaimTypes.IsPersistent, isPersistent.ToString()), 
+                }, authenticationScheme)), new AuthenticationProperties()
+                {
+                    IsPersistent = isPersistent
+                });
+        }
+
+        public virtual async void ClearAuthenticationTicket()
+        {
+            await ApplicationEngine.CurrentHttpContext.SignOutAsync(ApplicationConfig.DefaultAuthenticationScheme);
+            await ApplicationEngine.CurrentHttpContext.SignOutAsync(ApplicationConfig.VisitorAuthenticationScheme);
+        }
+
+        public virtual User GetCurrentUser()
+        {
+            var hc = ApplicationEngine.CurrentHttpContext;
+
+            var user = hc.GetCurrentUser();
+            if (user != null)
+                return user;
+
+            var authenticationResult = hc.AuthenticateAsync(ApplicationConfig.DefaultAuthenticationScheme).Result;
+            if (!authenticationResult.Succeeded)
+            {
+                //is there a visitor there?
+                hc.AuthenticateAsync(ApplicationConfig.VisitorAuthenticationScheme);
+            }
+
+            return hc.GetCurrentUser();
+        }
+
+        #region Helpers
+        private LoginStatus SignInImpl(string authenticationScheme, string email, string name = "", bool isPersistent = false,
+            bool forceCreateNewAccount = false, string imitatorEmail = null)
         {
             var user = _userService.FirstOrDefault(x => x.Email == email);
             if (user == null)
@@ -77,64 +152,15 @@ namespace RoastedMarketplace.Infrastructure.Authentication
                 return LoginStatus.FailedInactiveUser;
 
             //create the authentication ticket for the user
-            CreateAuthenticationTicket(user, isPersistent, authenticationScheme);
+            CreateAuthenticationTicket(user, isPersistent, authenticationScheme, imitatorEmail);
 
+            if (!imitatorEmail.IsNullEmptyOrWhiteSpace())
+                user.SetMeta(ApplicationConfig.ImitatorKey, imitatorEmail);
             //persist user
             ApplicationEngine.CurrentHttpContext.SetCurrentUser(user);
 
             return LoginStatus.Success;
         }
-
-        public virtual void SignOut()
-        {
-            ClearAuthenticationTicket();
-        }
-
-        public LoginStatus GuestSignIn()
-        {
-            var guestEmail = HtmlUtility.GetRandomEmail();
-            var status = SignIn(ApplicationConfig.VisitorAuthenticationScheme, guestEmail, null, true, true);
-            return status;
-        }
-
-        public virtual async void CreateAuthenticationTicket(User user, bool isPersistent = false, string authenticationScheme = ApplicationConfig.DefaultAuthenticationScheme)
-        {
-            //sign in the user. this will create the authentication cookie
-            await ApplicationEngine.CurrentHttpContext.SignInAsync(authenticationScheme,
-                new ClaimsPrincipal(new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Guid.ToString()),
-                }, authenticationScheme)), new AuthenticationProperties()
-                {
-                    IsPersistent = isPersistent
-                });
-        }
-
-        public virtual async void ClearAuthenticationTicket()
-        {
-            await ApplicationEngine.CurrentHttpContext.SignOutAsync(ApplicationConfig.DefaultAuthenticationScheme);
-            await ApplicationEngine.CurrentHttpContext.SignOutAsync(ApplicationConfig.VisitorAuthenticationScheme);
-        }
-
-        public virtual User GetCurrentUser()
-        {
-            var hc = ApplicationEngine.CurrentHttpContext;
-
-            var user = hc.GetCurrentUser();
-            if (user != null)
-                return user;
-
-            var authenticationResult = hc.AuthenticateAsync(ApplicationConfig.DefaultAuthenticationScheme).Result;
-            if (!authenticationResult.Succeeded)
-            {
-                //is there a visitor there?
-                hc.AuthenticateAsync(ApplicationConfig.VisitorAuthenticationScheme);
-
-            }
-
-            return hc.GetCurrentUser();
-        }
-
+        #endregion
     }
 }
