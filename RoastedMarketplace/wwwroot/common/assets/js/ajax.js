@@ -195,7 +195,11 @@ var ajax = function (options) {
             if (options.done)
                 options.done(response);
         })
-        .fail(options.fail)
+        .fail(function (response) {
+            notify("error", "Something didn't go right there", true);
+            if (options.fail)
+                options.fail(response);
+        })
         .always(options.always);
     return jqxhr;
 }
