@@ -171,7 +171,12 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             var product = model.Id > 0 ? _productService.Get(model.Id) : new Product();
             //is that a non-existent product?
             if (product == null)
-                return BadRequest();
+                return NotFound();
+            if (model.Published && (model.SeoMeta?.Slug.IsNullEmptyOrWhiteSpace() ?? true))
+            {
+                if (model.Id > 0)
+                    return R.Fail.With("error", "Can't publish product without slug").Result;
+            }
             //do we have manufacturer?
             if (model.ManufacturerId == null && !model.ManufacturerName.IsNullEmptyOrWhiteSpace())
             {

@@ -6,6 +6,7 @@ using RoastedMarketplace.Areas.Administration.Models.Pages;
 using RoastedMarketplace.Areas.Administration.Models.Users;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Pages;
+using RoastedMarketplace.Data.Extensions;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
@@ -70,7 +71,12 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
         {
             var contentPage = model.Id > 0 ? _contentPageService.Get(model.Id) : new ContentPage();
             if (contentPage == null)
-                return BadRequest();
+                return NotFound();
+            if (model.Published && (model.SeoMeta?.Slug.IsNullEmptyOrWhiteSpace() ?? true))
+            {
+                if (model.Id > 0)
+                    return R.Fail.With("error", T("Can't publish page without slug")).Result;
+            }
             _modelMapper.Map(model, contentPage, nameof(ContentPage.CreatedOn), nameof(ContentPage.PublishedOn), nameof(ContentPage.UserId));
             if (contentPage.Id == 0)
             {

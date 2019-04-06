@@ -38,7 +38,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                 id = context.Values["id"].ToString();
 
             if (context.Values.ContainsKey("seName"))
-                seName = context.Values["seName"].ToString();
+                seName = context.Values["seName"]?.ToString();
 
             if (context.Values.ContainsKey("categoryPath"))
                 categoryPath = context.Values["categoryPath"].ToString();
