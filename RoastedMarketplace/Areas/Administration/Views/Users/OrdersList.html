@@ -53,7 +53,7 @@
                             },
                             method: "GET",
                             navigation: 3,
-                            url: '{% route api_OrdersList %}',
+                            url: '{% route api_UserOrdersList userId="{{userId}}" %}',
                             data: function() {
                                 return searchParams;
                             },

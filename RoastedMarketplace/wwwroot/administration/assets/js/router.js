@@ -5,6 +5,9 @@
     var hash = '#!'; // Defaults to: '#'
     var router = new Navigo(root, useHash, hash);
     var liquidEngine = window.Liquid();
+    //remove init data filter from client side,
+    liquidEngine.registerFilter("scriptJson",
+        (init, arg1) => "");
     var api = "api";
     window.templates = window.templates || [];
     window.contexts = window.contexts || [];
