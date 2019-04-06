@@ -17,6 +17,7 @@
         public const string CheckoutConfirm = "CheckoutConfirm";
         public const string CheckoutComplete = "CheckoutComplete";
         public const string SingleProduct = "SingleProduct";
+        public const string PreviewProduct = "PreviewProduct";
         public const string SinglePage = "SinglePage";
         public const string ProductsPage = "ProductsPage";
         public const string ProductsSearchPage = "ProductsSearchPage";

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
+using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Promotions;
 using RoastedMarketplace.Data.Entity.Settings;
 using RoastedMarketplace.Data.Entity.Shop;
@@ -58,13 +59,20 @@ namespace RoastedMarketplace.Controllers
             _productModelFactory = productModelFactory;
         }
 
+        [HttpGet("product-preview/{id}", Name = RouteNames.PreviewProduct)]
+        public IActionResult Preview(int id)
+        {
+            var url = ApplicationEngine.RouteUrl(RouteNames.SingleProduct, new {id = id});
+            return Redirect(url);
+        }
+
         [DynamicRoute(Name = RouteNames.SingleProduct, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate))]
         public IActionResult Index(int id)
         {
             if (id < 1)
                 return NotFound();
             var product = _productService.Get(id);
-            if (!product.IsPublic())
+            if (!product.IsPublic() && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
                 return NotFound();
 
             var productModel = _productModelFactory.Create(product);
