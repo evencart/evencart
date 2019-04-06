@@ -55,8 +55,6 @@ namespace RoastedMarketplace.Core.Services
             }
             else
             {
-                //publish the event so they can be handled
-                _eventPublisherService.Publish(entity, EventType.Delete);
                 if (transaction == null)
                     EntitySet<T>.Delete(entity);
                 else
@@ -64,6 +62,8 @@ namespace RoastedMarketplace.Core.Services
                     EntitySet<T>.Delete(entity, transaction.Value);
                 }
             }
+            //publish the event so they can be handled
+            _eventPublisherService.Publish(entity, EventType.Delete);
         }
 
         public virtual void Delete(Expression<Func<T, bool>> where, Transaction transaction = null)
