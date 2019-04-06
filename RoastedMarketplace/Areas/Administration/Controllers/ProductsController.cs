@@ -210,6 +210,17 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
             _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
             return R.Success.Result;
         }
+
+        [DualPost("{productId}/delete", Name = AdminRouteNames.DeleteProduct, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.DeleteProduct)]
+        public IActionResult DeleteProduct(int productId)
+        {
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+            _productService.Delete(product);
+            return R.Success.Result;
+        }
         #endregion
 
         #region Product Attributes

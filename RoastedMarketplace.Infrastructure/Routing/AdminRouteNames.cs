@@ -11,6 +11,7 @@
         public const string ProductsList = "ProductsList";
         public const string SaveProduct = "SaveProduct";
         public const string SaveProductMedia = "SaveProductMedia";
+        public const string DeleteProduct = "DeleteProduct";
 
         public const string UploadMedia = "UploadMedia";
         public const string UpdateMediaDisplayOrder = "UpdateMediaDisplayOrder";

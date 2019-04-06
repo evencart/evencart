@@ -15,6 +15,8 @@ namespace RoastedMarketplace.Data.Constants
     {
         public const string EditProduct = "Product.Edit";
 
+        public const string DeleteProduct = "Product.Delete";
+
         public const string ViewProducts = "Product.View";
 
         public const string ViewUsers = "User.View";

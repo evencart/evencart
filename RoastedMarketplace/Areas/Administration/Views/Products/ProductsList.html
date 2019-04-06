@@ -3,7 +3,7 @@
 {% partial "Navigation/ProductSecondaryNavigation" %}
 
 <div class="row">
-    <div class="col-md-10 col-offset-2">
+    <div class="col-md-12">
         <div class="panel">
             <div class="panel-title">
                 {{"Products" | t}}
@@ -27,6 +27,19 @@
                         url = url.replace("product_id", id);
                         navigate(url);
                     }
+                    var deleteProduct = function (id) {
+                        if (confirm("{{'The products are soft deleted to maintain cross references with order. Are you sure proceed with soft delete?' | t}}")) {
+                            var url = '{% route DeleteProduct productId="product_id" %}';
+                            url = url.replace("product_id", id);
+                            post({
+                                url: url,
+                                done: function() {
+                                    reloadGrid("#grid-selection");
+                                }
+                            });
+                        }
+                        
+                    }
                     ready(function() {
                         var initData = null;
                         /*{% unless products == blank %}*/
@@ -46,15 +59,17 @@
                             url: "{% route api_ProductsList %}",
                             responseObject: "products",
                             formatters: {
-                                "commands": function(column, row) {
+                                "commands": function (column, row) {
                                     return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editProduct(" +
                                         row.id +
                                         ")'><span class=\"rbicon-edit\"></span></button> " +
-                                        "<button class=\"btn btn-secondary btn-sm command-preview\" data-row-id=\"" +
+                                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                                         row.id +
-                                        "\"><span class=\"rbicon-external-link\"></span></button>";
+                                        "\" onclick='deleteProduct(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button>";
                                 }
                             }
                         });
