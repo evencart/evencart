@@ -523,23 +523,25 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
 
             //also find out groups with no specifications so far
             var groupIds = aModel.Select(x => x.ProductSpecificationGroupId).Distinct().ToList();
-            if (groupIds.Any())
+
+            var otherGroups = groupIds.Any() ?
+                _productSpecificationGroupService.Get(x => x.ProductId == productId && !groupIds.Contains(x.Id)) :
+                _productSpecificationGroupService.Get(x => x.ProductId == productId);
+
+            specsList = specsList.Concat(otherGroups.Select(x => new ProductSpecificationListModel()
             {
-                var otherGroups =
-                    _productSpecificationGroupService.Get(x => x.ProductId == productId && !groupIds.Contains(x.Id));
+                ProductSpecificationGroup = new ProductSpecificationGroupModel()
+                {
+                    Name = x.Name,
+                    ProductId = x.ProductId,
+                    DisplayOrder = x.DisplayOrder,
+                    Id = x.Id
+                },
+                ProductSpecifications = null,
+                ProductSpecificationsSerialized = "[]"
+            }));
 
-                specsList = specsList.Concat(otherGroups.Select(x => new ProductSpecificationListModel() {
-                    ProductSpecificationGroup = new ProductSpecificationGroupModel() {
-                        Name = x.Name,
-                        ProductId = x.ProductId,
-                        DisplayOrder = x.DisplayOrder,
-                        Id = x.Id
-                    },
-                    ProductSpecifications = null,
-                    ProductSpecificationsSerialized = "[]"
-                }));
-
-            }
+           
             var nullProductSpecGroup = new ProductSpecificationGroupModel();
 
             var productSpecificationListModels = specsList as IList<ProductSpecificationListModel> ?? specsList.ToList();
