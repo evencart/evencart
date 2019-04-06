@@ -2,13 +2,6 @@
 {% global page_title=@t"Order Editor" active_menu="GetOrder" parent_active_menu="OrdersList"%}
 {% partial "Navigation/OrderEditSecondaryNavigation" %}
 
-<h3 class="page-title">
-    {% if order.id != 0 %}
-    {{ "Edit Order" | t }}
-    {% else %}
-    {{"Add Order" | t }}
-    {% endif %}
-</h3>
 <div class="row">
     <div class="col-lg-5">
         <div class="panel">
@@ -90,6 +83,7 @@
                                 {{order.subTotal | withCurrency}}
                             </td>
                         </tr>
+                        {% if order.discount > 0 %}
                         <tr>
                             <td>
                                 {{"Cart Discount" | t}}
@@ -108,7 +102,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-
+                        {% endif %}
                         <tr>
                             <td>
                                 {{"Tax" | t}}

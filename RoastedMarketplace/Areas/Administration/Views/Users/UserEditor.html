@@ -2,17 +2,13 @@
 {% global page_title=@t"User Editor" active_menu="GetUser" parent_active_menu="UsersList"%}
 {% partial "Navigation/UserEditSecondaryNavigation" %}
 
-<h3 class="page-title">
-    {% if user.id != 0 %}
-    {{ user.name }}
-    {% else %}
-    {{"Add User" | t }}
-    {% endif %}
-</h3>
 <form action="{% route api_SaveUser %}" method="post" id="save-user-form">
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">
+                <div class="panel-title">
+                    {{"Basic Info" | t}}
+                </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">

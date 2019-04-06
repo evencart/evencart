@@ -44,8 +44,8 @@
                     {% control hidden name="productId" value="{{productId}}" %}
                     {% control hidden name="productspecification.id" value="{{productSpecification.id}}" %}
                     {% control hidden name="productspecification.productspecificationgroupid" value="{{productSpecification.productspecificationgroupid}}" %}
-                    <button type="submit" class="btn btn-primary">{{"Save Specification" | t}}</button>
-                    <button class="btn btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Specification" | t}}</button>
+                    <button class="btn btn-sm btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
                 </div>
             </div>
         </div>
@@ -82,7 +82,8 @@
                     productSpecification :  { values: values}
                 }
             },
-            onSuccess: function() {
+            onSuccess: function () {
+                window.location.reload();
                 hidePopup("edit-spec");
             }
         });

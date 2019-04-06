@@ -8,10 +8,10 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Product Specifications" | t}}
-                {% if hasGroup == "false" %}
-                <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, 0)">{{"Add New" | t}}</button>
+                {% if hasGroup == "false"  %}
+                <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, 0)">{{"Add Specification" | t}}</button>
                 {% endif %}
-                <button class="btn btn-primary float-right btn-sm" onclick="editSpecGroup(0)">{{"Add New Group" | t}}</button>
+                <button class="btn btn-primary float-right btn-sm margin-r-5" onclick="editSpecGroup(0)">{{"Add New Group" | t}}</button>
             </div>
             <div class="panel-body">
                
@@ -29,7 +29,7 @@
                     <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, '{{psl.productSpecificationGroup.id}}')">{{"Add Specification" | t}}</button>
                     {% endif %}
                 </h6>
-                <table id="grid-selection-{{psl.productSpecificationGroup.id}}" class="table table-hover table-condensed table-bordered">
+                <table id="grid-selection-{{psl.productSpecificationGroup.id}}" class="table table-hover table-condensed table-bordered margin-t-10">
                     <thead>
                     <tr>
                         <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
