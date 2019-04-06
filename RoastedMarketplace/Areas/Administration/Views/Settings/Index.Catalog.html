@@ -6,33 +6,33 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
-            {% control checkbox name="displayProductsFromChildCategories" text=@t"Display products from child categories" value="{{settings.displayProductsFromChildCategories}}"%}
+            {% control checkbox name="displayProductsFromChildCategories" text=@t"Display products from child categories" value="settings.displayProductsFromChildCategories"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Number of products per page" for="numberOfProductsPerPage" %}
             {% control number min="1" name="numberOfProductsPerPage" value="{{settings.numberOfProductsPerPage}}"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="displaySortOptions" text=@t"Display sort options on catalog pages" value="{{settings.displaySortOptions}}"%}
+            {% control checkbox name="displaySortOptions" text=@t"Display sort options on catalog pages" value="settings.displaySortOptions"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Pagination Style" for="catalogPaginationType" %}
             {% control select name="catalogPaginationType" value="settings.catalogPaginationType" items="catalogPaginationTypes" required="true" %}
         </div>
         <div class="form-group">
-            {% control checkbox name="enableReviews" text=@t"Enable Reviews" value="{{settings.enableReviews}}"%}
+            {% control checkbox name="enableReviews" text=@t"Enable Reviews" value="settings.enableReviews"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="enableReviewModeration" text=@t"Moderate Reviews" value="{{settings.enableReviewModeration}}"%}
+            {% control checkbox name="enableReviewModeration" text=@t"Moderate Reviews" value="settings.enableReviewModeration"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="allowReviewsForStorePurchaseOnly" text=@t"Allow Reviews For Store Purchase Only" value="{{settings.allowReviewsForStorePurchaseOnly}}"%}
+            {% control checkbox name="allowReviewsForStorePurchaseOnly" text=@t"Allow Reviews For Store Purchase Only" value="settings.allowReviewsForStorePurchaseOnly"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="allowOneReviewPerUserPerItem" text=@t"Allow one review per user per order item" value="{{settings.allowOneReviewPerUserPerItem}}"%}
+            {% control checkbox name="allowOneReviewPerUserPerItem" text=@t"Allow one review per user per order item" value="settings.allowOneReviewPerUserPerItem"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="allowReviewModification" text=@t"Allow users to edit reviews" value="{{settings.allowReviewModification}}"%}
+            {% control checkbox name="allowReviewModification" text=@t"Allow users to edit reviews" value="settings.allowReviewModification"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Number of reviews on product page" for="numberOfReviewsToDisplayOnProductPage" %}
@@ -47,7 +47,7 @@
             {% control number min="1" name="numberOfDaysForPendingReviews" value="{{settings.numberOfDaysForPendingReviews}}"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="enableRelatedProducts" text=@t"Enable Related Products" value="{{settings.enableRelatedProducts}}"%}
+            {% control checkbox name="enableRelatedProducts" text=@t"Enable Related Products" value="settings.enableRelatedProducts"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Number of related products" for="numberOfRelatedProducts" %}

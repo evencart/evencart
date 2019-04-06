@@ -8,21 +8,21 @@
         
             {% if settingType == "general" %}
                 {% partial "Settings/Index.General" %}
-            {% elseif settingType == "user" %}
+            {% elsif settingType == "user" %}
                 {% partial "Settings/Index.User" %}
-            {% elseif settingType == "tax" %}
+            {% elsif settingType == "tax" %}
                 {% partial "Settings/Index.Tax" %}
-            {% elseif settingType == "media" %}
+            {% elsif settingType == "media" %}
                 {% partial "Settings/Index.Media" %}
-            {% elseif settingType == "order" %}
+            {% elsif settingType == "order" %}
                 {% partial "Settings/Index.Order" %}
-            {% elseif settingType == "catalog" %}
+            {% elsif settingType == "catalog" %}
                 {% partial "Settings/Index.Catalog" %}
-            {% elseif settingType == "email" %}
+            {% elsif settingType == "email" %}
                 {% partial "Settings/Index.Email" %}
-            {% elseif settingType == "url" %}
+            {% elsif settingType == "url" %}
                 {% partial "Settings/Index.Url" %}
-            {% elseif settingType == "localization" %}
+            {% elsif settingType == "localization" %}
                 {% partial "Settings/Index.Localization" %}
             {% endif %}
         </div>
