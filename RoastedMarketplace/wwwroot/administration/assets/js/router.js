@@ -59,7 +59,7 @@
 }
 
 var getApiUrl = function (url) {
-    return url.replace("/admin", "/admin/" + api + "?storeMeta=currentUser&storeMeta=store");
+    return url.replace("/admin", "/admin/" + api) + "?storeMeta=currentUser&storeMeta=store";
 }
 var setupLinks = function () {
     ready(function () {
