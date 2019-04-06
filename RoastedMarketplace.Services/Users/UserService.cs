@@ -32,7 +32,9 @@ namespace RoastedMarketplace.Services.Users
 
         public IList<User> GetUsers(string searchText, int[] restrictToRoles, int page, int count, out int totalMatches)
         {
-            var query = Repository.Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
+            var query = Repository
+                .Where(x => !x.Deleted)
+                .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<User, Role>());
 
