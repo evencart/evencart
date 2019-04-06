@@ -37,13 +37,18 @@
     {% widget "head_end" %}
 </head>
 <body>
+    {% if preview %}
+    <div class="preview">
+        {{"Preview" | t}}
+    </div>
+    {% endif %}
     {% widget "body_start" %}
     {% bodyContent %}
-<!-- Placed JS at the end of the document so the pages load faster -->
+    <!-- Placed JS at the end of the document so the pages load faster -->
     <script src="{{store.theme.url}}/assets/js/popper.min.js"></script>
     <!-- Bootstrap js -->
     <script src="{{store.theme.url}}/assets/js/bootstrap.min.js"></script>
-    
+
     <!-- Plugins js -->
     <script src="{{store.theme.url}}/assets/js/plugins.js"></script>
     <!-- Ajax Mail js -->

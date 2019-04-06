@@ -12,13 +12,14 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                    <tr>
-                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="name">{{"Product" | t}}</th>
-                        <th data-column-id="sku">{{"Sku" | t}}</th>
-                        <th data-column-id="priceFormatted">{{"Price" | t}}</th>
-                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                    </tr>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name">{{"Product" | t}}</th>
+                            <th data-column-id="sku">{{"Sku" | t}}</th>
+                            <th data-column-id="priceFormatted">{{"Price" | t}}</th>
+                            <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
                     </thead>
                 </table>
                 <script type="text/javascript">
@@ -38,7 +39,7 @@
                                 }
                             });
                         }
-                        
+
                     }
                     ready(function() {
                         var initData = null;
@@ -59,6 +60,9 @@
                             url: "{% route api_ProductsList %}",
                             responseObject: "products",
                             formatters: {
+                                "binary": function(column, row) {
+                                    return gridFormatters.binary(column, row, column.id);
+                                },
                                 "commands": function (column, row) {
                                     return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
                                         row.id +

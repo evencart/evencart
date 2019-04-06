@@ -20,6 +20,7 @@
         public const string PreviewProduct = "PreviewProduct";
         public const string SinglePage = "SinglePage";
         public const string ProductsPage = "ProductsPage";
+        public const string PreviewPage = "PreviewPage";
         public const string ProductsSearchPage = "ProductsSearchPage";
         public const string AddToCart = "AddToCart";
         public const string UpdateCart = "UpdateCart";

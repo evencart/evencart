@@ -3476,3 +3476,12 @@ div.tab button.active {
   margin: 15px 0; }
   .review-section .reviews .review {
     margin: 30px 0; }
+
+.preview {
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+  background-color: red;
+  color: white;
+  padding: 5px 0;
+  font-weight: bold; }

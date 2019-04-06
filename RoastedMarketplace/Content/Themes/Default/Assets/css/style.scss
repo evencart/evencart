@@ -4336,3 +4336,12 @@ div.tab button.active {
     }
 }
 
+.preview {
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+    background-color: red;
+    color: white;
+    padding: 5px 0;
+    font-weight: bold;
+}

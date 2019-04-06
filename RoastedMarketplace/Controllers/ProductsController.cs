@@ -149,7 +149,7 @@ namespace RoastedMarketplace.Controllers
             }
             //seo data
             SeoMetaHelper.SetSeoData(product.Name, product.Description, product.Description);
-            return response.Result;
+            return response.With("preview", !product.Published).Result;
         }
 
         [DynamicRoute(Name = RouteNames.ProductsPage, SeoEntityName = nameof(Category),

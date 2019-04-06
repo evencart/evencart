@@ -28,6 +28,12 @@
             </div>
             {% control hidden name="id" value="{{contentPage.id}}" %}
             <div class="save-button-container">
+                {% if contentPage.id > 0 %}
+                <a class="btn btn-primary" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
+                    <i class="rbicon rbicon-external-link"></i>
+                    {{"Preview" | t}}
+                </a>
+                {% endif %}
                 <button type="submit" class="btn btn-success">{{"Save Page" | t}}</button>
                 <a class="btn btn-default" href='{% route ContentPagesList %}'>{{"Cancel" | t}}</a>
             </div>
@@ -54,10 +60,9 @@
             {
                 onSuccess: function () {
                     notify("success", '{{"Content was saved successfully." | t }}');
-                    setTimeout(function () {
-                        navigate("{% route ContentPagesList %}");
-                    }, 500);
-
+                    //{% if contentPage.id == 0 %}
+                    window.location.reload();
+                    //{% endif %}
                 }
             });
     })
