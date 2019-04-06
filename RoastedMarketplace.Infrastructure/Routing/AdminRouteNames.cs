@@ -87,6 +87,7 @@
         public const string SaveCapabilities = "SaveCapabilities";
         public const string UserCart = "UserCart";
         public const string UserImitate = "UserImitate";
+        public const string AnonymizeUser = "AnonymizeUser";
 
         public const string AddressList = "AddressList";
         public const string GetAddress = "GetAddress";

@@ -1,0 +1,40 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Anonymize User" active_menu="AnonymizeUser" parent_active_menu="UsersList"%}
+{% partial "Navigation/UserEditSecondaryNavigation" %}
+
+<form action='{% route api_AnonymizeUser userId="{{userId}}" %}' method="post" id="edit-user-form">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Anonymize User" | t}}
+        </div>
+        <div class="panel-body">
+            {% if success == "False" %}
+            <div class="alert alert-danger">
+                {{"Unable to anonymize requested user." | t}}
+            </div>
+            {% endif %}
+            <p>
+                {{"The anonymization completely removes any identifiable information of the user. This will also delete the addresses, comments and reviews made by the user on this site." | t}}
+            </p>
+            <div class="alert alert-danger">
+                {{"WARNING: THE PROCESS IS TOTALLY IRREVERSIBLE. ONCE YOU ANONYMIZE A USER, YOU'LL NO LONGER BE ABLE TO IDENTIFY THE USER." | t}}
+            </div>
+            <button type="submit" class="btn btn-danger btn-sm">
+                {{"Anonymize User" | t}}
+            </button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("edit-user-form",
+            {
+                beforeSubmit: function() {
+                    if (confirm('{{"Are you sure you wish to proceed with anonymization of this user?" | t}}'))
+                        return true;
+                    return false;
+                }
+            });
+    })
+</script>
+

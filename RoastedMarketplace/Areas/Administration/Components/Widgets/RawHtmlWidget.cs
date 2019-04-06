@@ -36,7 +36,7 @@ namespace RoastedMarketplace.Areas.Administration.Components.Widgets
             //validate consent if required
             if (widgetSettings.AcceptedConsentId > 0)
             {
-                if (!_gdprService.IsConsentAccepted(CurrentUser.Id, widgetSettings.AcceptedConsentId))
+                if (CurrentUser == null || !_gdprService.IsConsentAccepted(CurrentUser.Id, widgetSettings.AcceptedConsentId))
                 {
                     return R.Success.ComponentResult;
                 }

@@ -9,12 +9,10 @@ using RoastedMarketplace.Areas.Administration.Models.Users;
 using RoastedMarketplace.Core.Infrastructure;
 using RoastedMarketplace.Data.Constants;
 using RoastedMarketplace.Data.Entity.Addresses;
-using RoastedMarketplace.Data.Entity.Cultures;
 using RoastedMarketplace.Data.Entity.Users;
 using RoastedMarketplace.Data.Enum;
 using RoastedMarketplace.Factories.Users;
 using RoastedMarketplace.Infrastructure;
-using RoastedMarketplace.Infrastructure.Helpers;
 using RoastedMarketplace.Infrastructure.MediaServices;
 using RoastedMarketplace.Infrastructure.Mvc;
 using RoastedMarketplace.Infrastructure.Mvc.Attributes;
@@ -215,6 +213,7 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 RowOrder.Descending, orderSearchModel.Current, orderSearchModel.RowCount).ToList();
             var ordersModel = orders.Select(_orderModelFactory.Create).ToList();
             return R.Success.With("orders", ordersModel)
+                .With("userId", userId)
                 .WithGridResponse(totalResults, orderSearchModel.Current, orderSearchModel.RowCount).Result;
         }
 
@@ -314,6 +313,31 @@ namespace RoastedMarketplace.Areas.Administration.Controllers
                 return RedirectToRoute(RouteNames.Home);
             return R.Fail.WithView("Imitate").Result;
         }
+        [HttpGet("{userId}/anonymize", Name = AdminRouteNames.AnonymizeUser)]
+        [CapabilityRequired(CapabilitySystemNames.ManageGdprPrivate)]
+        public IActionResult Anonymize(int userId)
+        {
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            return R.Success.With("userId", userId).Result;
+        }
+
+        [DualPost("{userId}/anonymize", Name = AdminRouteNames.AnonymizeUser, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageGdprPrivate)]
+        public IActionResult AnonymizePost(int userId)
+        {
+            //can't delete one's self
+            if (CurrentUser.Id == userId)
+                return R.Fail.WithView("Anonymize").Result;
+
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+
+            _userService.AnonymizeUser(userId);
+            return R.Success.With("userId", userId).Result;
+        }
+
+
         #region Helpers
 
         private AddressModel MapAddressModel(Address address)
