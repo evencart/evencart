@@ -67,5 +67,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
             }
             return navigation;
         }
+
+        public override bool RenderInAdmin => false;
+
+        public override bool RenderInPublic => true;
     }
 }

@@ -6,5 +6,9 @@
         {
             return ApplicationEngine.CurrentHttpContext.GetBreadcrumb();
         }
+
+        public override bool RenderInAdmin => false;
+
+        public override bool RenderInPublic => true;
     }
 }

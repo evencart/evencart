@@ -29,5 +29,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 currentUserImpl.FirstName = currentUserImpl.Name;
             return currentUserImpl;
         }
+
+        public override bool RenderInAdmin => true;
+
+        public override bool RenderInPublic => true;
     }
 }

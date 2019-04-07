@@ -45,5 +45,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
                 ReviewModificationAllowed = catalogSettings.AllowReviewModification
             };
         }
+
+        public override bool RenderInAdmin => true;
+
+        public override bool RenderInPublic => true;
     }
 }

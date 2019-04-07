@@ -160,7 +160,9 @@ namespace RoastedMarketplace.Infrastructure
             var relativePath = path.Replace(contentRootPath, "");
             return relativePath.Replace("\\", "/");
         }
-
+        /// <summary>
+        /// Checks if the user is inside administration area
+        /// </summary>
         public static bool IsAdmin()
         {
             var isAdmin = DependencyResolver.Resolve<IActionContextAccessor>().ActionContext.IsAdminArea();

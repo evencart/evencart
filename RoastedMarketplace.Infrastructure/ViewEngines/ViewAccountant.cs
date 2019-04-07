@@ -273,9 +273,14 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines
             else
                 resultHash = new Hash();
 
+            var isAdmin = ApplicationEngine.IsAdmin();
             //add global objects
             foreach (var globalObjectKp in GlobalObject.RegisteredObjects)
             {
+                if (isAdmin && !globalObjectKp.Value.RenderInAdmin)
+                    continue;
+                if (!isAdmin && !globalObjectKp.Value.RenderInPublic)
+                    continue;
                 resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
             }
 

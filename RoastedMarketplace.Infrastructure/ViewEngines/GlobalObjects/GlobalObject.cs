@@ -8,6 +8,10 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
     {
         public abstract object GetObject();
 
+        public abstract bool RenderInAdmin { get; }
+
+        public abstract bool RenderInPublic { get; }
+
         public static readonly Dictionary<string, GlobalObject> RegisteredObjects = new Dictionary<string, GlobalObject>();
 
         public static void RegisterObject<T>(string key) where T : GlobalObject
