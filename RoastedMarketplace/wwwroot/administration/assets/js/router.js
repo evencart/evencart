@@ -7,7 +7,7 @@
     var liquidEngine = window.Liquid();
     //remove init data filter from client side,
     liquidEngine.registerFilter("scriptJson",
-        (init, arg1) => "");
+        (init, arg1) => "<script type='text/javascript'>var " + arg1+ "=null;</script>");
     var api = "api";
     window.templates = window.templates || [];
     window.contexts = window.contexts || [];

@@ -96,7 +96,7 @@ var generateGrid = function (options) {
         return rows;
     }
 
-    if (options.initialData)
+    if (options.initialData && options.initialData[options.responseObject])
         options.initialData["success"] = true;
 
     jQuery("#" + options.element).bootgrid({

@@ -203,7 +203,7 @@
             that.element._bgBusyAria(false).trigger("loaded" + namespace);
         }
 
-        if (that.options.initialData) {
+        if (that.options.initialData && that.options.success) {
             //customized, if there is initial data, render that rather than making an ajax call,
             //the ajax call won't be made till a reload is called
             var response = that.options.responseHandler(that.options.initialData);
