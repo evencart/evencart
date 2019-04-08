@@ -22,7 +22,15 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.GlobalObjects
 
         public static object ExecuteObject(string key)
         {
-            return RegisteredObjects.ContainsKey(key) ? RegisteredObjects[key].GetObject() : null;
+            if (!RegisteredObjects.ContainsKey(key))
+                return null;
+            var globalObj = RegisteredObjects[key];
+            var isAdmin = ApplicationEngine.IsAdmin();
+            if (isAdmin && !globalObj.RenderInAdmin)
+                return null;
+            if (!isAdmin && !globalObj.RenderInPublic)
+                return null;
+            return globalObj.GetObject();
         }
     }
 }

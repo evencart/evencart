@@ -37,6 +37,7 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 NavigationType = ApplicationConfig.SecondaryNavigationName
             },
             new GlobalExpander() {TagName = "global"},
+            new JsonExpander() { TagName = "json"}
         };
 
         private const string TagMatcherPattern =
