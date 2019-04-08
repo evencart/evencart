@@ -41,7 +41,7 @@ namespace RoastedMarketplace.Infrastructure.Routing
                 seName = context.Values["seName"]?.ToString();
 
             if (context.Values.ContainsKey("categoryPath"))
-                categoryPath = context.Values["categoryPath"].ToString();
+                categoryPath = context.Values["categoryPath"]?.ToString();
 
             if (context.Values.ContainsKey("date"))
                 date = Convert.ToDateTime(context.Values["date"]);
