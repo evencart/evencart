@@ -31,7 +31,7 @@ body {
 .sidenav {
   background-color: #555;
   color: #fff;
-  width: 120px;
+  width: 140px;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -44,7 +44,8 @@ body {
   .sidenav-links a {
     color: #fff;
     display: block;
-    padding: 6px 20px; }
+    padding: 6px 20px;
+    letter-spacing: 0.06rem; }
     .sidenav-links a:hover {
       text-decoration: none;
       background-color: #666; }
@@ -52,6 +53,12 @@ body {
     font-size: 1.3em; }
   .sidenav-links li {
     list-style: none; }
+    .sidenav-links li.group-item {
+      margin: 10px 0;
+      text-transform: uppercase;
+      color: #aaa;
+      font-size: 0.8rem;
+      padding: 0 20px; }
   .sidenav-links li.active a {
     background-color: #11a266; }
 
@@ -66,7 +73,7 @@ body {
 .client-main-navlinks {
   position: fixed;
   top: 0;
-  left: 120px;
+  left: 140px;
   right: 0;
   padding: 0px 15px 0;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
@@ -115,7 +122,7 @@ body {
   bottom: 0;
   top: 43px;
   right: 0;
-  left: 120px;
+  left: 140px;
   padding-left: 30px;
   padding-top: 25px;
   padding-right: 30px;

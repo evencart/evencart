@@ -41,21 +41,32 @@
                 </div>
             </div>
             {% json source="primary_navigation" var="primary_navigation" %}
+            {% json source="primary_navigation_groups" var="primary_navigation_groups" %}
             <script type="text/javascript">
                 ready(function () {
                     var parent_active_menu = "{{parent_active_menu}}";
-                    for (var i = 0; i < primary_navigation.length; i++) {
-                        var menuItem = primary_navigation[i];
-                        var li = "<li class='" + (menuItem.systemName == parent_active_menu ? "active" : "") + "'>";
-                        li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
-                        li += "</li>";
-                        jQuery("#primaryNavigationUl").append(li);
+                    for (var j = 0; j < primary_navigation_groups.length; j++)
+                    {
+                        var groupItem = primary_navigation_groups[j];
+                        if (groupItem.name != '') {
+                            var groupLi = "<li class='group-item'>" + groupItem.name + "</li>";
+                            jQuery("#primaryNavigationUl").append(groupLi);
+                        }
+
+                        for (var i = 0; i < primary_navigation.length; i++) {
+                            var menuItem = primary_navigation[i];
+                            if (menuItem.groupId != groupItem.id)
+                                continue;
+                            var li = "<li class='" + (menuItem.systemName == parent_active_menu ? "active" : "") + "'>";
+                            li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
+                            li += "</li>";
+                            jQuery("#primaryNavigationUl").append(li);
+                        }
                     }
+                   
                 });
             </script>
-            <ul id="primaryNavigationUl" class="sidenav-links">
-
-            </ul>
+            <ul id="primaryNavigationUl" class="sidenav-links"></ul>
         </div>
         <div class="client-main">
             <div class="client-main-navlinks">

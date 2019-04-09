@@ -20,6 +20,9 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 var navMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == "navigation_" + NavigationType);
                 if (navMeta.Key != null)
                     paramsAsDict?.Add(NavigationType, navMeta.Value);
+                var groupMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == "group_" + NavigationType);
+                if (navMeta.Key != null)
+                    paramsAsDict?.Add(NavigationType + "_groups", groupMeta.Value);
                 return inputContent;
             }
         
@@ -33,6 +36,16 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                 paramsAsDict.Add(NavigationType, menuList);
             }
 
+            List<NavigationGroup> groupList = null;
+            if (!paramsAsDict.ContainsKey("group_" + NavigationType))
+            {
+                groupList = new List<NavigationGroup>()
+                {
+                    new NavigationGroup() { Name = "", Id = null , DisplayOrder = 0}
+                };
+                paramsAsDict.Add("group_" + NavigationType, groupList);
+            }
+
             menuList = (List<Navigation>)paramsAsDict[NavigationType];
             //it's not possible to preserve and serve different navigation because of cached views and clearing
             //of navigation on each request. 
@@ -41,20 +54,37 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
 
             foreach (Match match in matches)
             {
-                ExtractMatch(match, out string[] _, out Dictionary<string, string> keyValuePairs);
+                ExtractMatch(match, out var _, out var keyValuePairs);
 
+                //first for groups
+                keyValuePairs.TryGetValue("group", out var group);
+                keyValuePairs.TryGetValue("order", out var displayOrderValue);
+                keyValuePairs.TryGetValue("id", out var id);
+                int.TryParse(displayOrderValue, out var displayOrder);
+
+                if (!group.IsNullEmptyOrWhiteSpace())
+                {
+                    groupList.Add(new NavigationGroup()
+                    {
+                        Name = group,
+                        DisplayOrder = displayOrder,
+                        Id = id
+                    });
+
+                    continue;
+                }
                 //do we have route parameter?
-                keyValuePairs.TryGetValue("url", out string url);
-                keyValuePairs.TryGetValue("title", out string title);
-                keyValuePairs.TryGetValue("systemName", out string systemName);
-                keyValuePairs.TryGetValue("order", out string displayOrderValue);
-                int.TryParse(displayOrderValue, out int displayOrder);
+                keyValuePairs.TryGetValue("url", out var url);
+                keyValuePairs.TryGetValue("title", out var title);
+                keyValuePairs.TryGetValue("systemName", out var systemName);
+                keyValuePairs.TryGetValue("groupId", out var groupId);
+
                 if (url.IsNullEmptyOrWhiteSpace())
                 {
                     //use the current url if it's empty url
                     url = ApplicationEngine.CurrentHttpContext.Request.Path + ApplicationEngine.CurrentHttpContext.Request.QueryString;
                 }
-
+              
                 title = title ?? "";
                 systemName = systemName ?? "";
                 menuList.Add(new Navigation()
@@ -62,13 +92,18 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
                    Title = title,
                    Url = url,
                    SystemName = systemName,
-                   DisplayOrder = displayOrder
+                   DisplayOrder = displayOrder,
+                   GroupId = groupId
                 });
             }
 
-            var orderedMenuList = menuList.OrderBy(x => x.DisplayOrder).ToList();
-            paramsAsDict[NavigationType] = orderedMenuList;
-            readFile.AddMeta($"navigation_" + NavigationType, orderedMenuList, $"{nameof(NavigationExpander)}");
+            menuList = menuList.OrderBy(x => x.DisplayOrder).ToList();
+            paramsAsDict[NavigationType] = menuList;
+            readFile.AddMeta($"navigation_" + NavigationType, menuList, $"{nameof(NavigationExpander)}");
+
+            groupList = groupList.OrderBy(x => x.DisplayOrder).ToList();
+            paramsAsDict[NavigationType + "_groups"] = groupList;
+            readFile.AddMeta($"group_" + NavigationType, groupList, $"{nameof(NavigationExpander)}");
             //remove the tags
             readFile.Content = regEx.Replace(readFile.Content, "");
             inputContent = regEx.Replace(inputContent, "");
@@ -90,6 +125,17 @@ namespace RoastedMarketplace.Infrastructure.ViewEngines.Expanders
             public int DisplayOrder { get; set; }
 
             public string SystemName { get; set; }
+
+            public string GroupId { get; set; }
+        }
+
+        internal class NavigationGroup : FoundationModel
+        {
+            public string Name { get; set; }
+
+            public int DisplayOrder { get; set; }
+
+            public string Id { get; set; }
         }
     }
 }
