@@ -13,12 +13,19 @@ namespace RoastedMarketplace.Core.Infrastructure.Utils
         /// <returns></returns>
         public static object CastPropertyValue(PropertyInfo property, object value)
         {
-            if (property == null || value == null)
+            if (property == null)
+                return null;
+            return CastValue(property.PropertyType, value);
+        }
+
+        public static object CastValue(Type type, object value)
+        {
+            if (value == null)
                 return null;
             //enumeration?
-            if (property.PropertyType.IsEnum)
+            if (type.IsEnum)
             {
-                var enumType = property.PropertyType;
+                var enumType = type;
 
                 if (Enum.IsDefined(enumType, value))
                     return Enum.Parse(enumType, value.ToString());
@@ -31,32 +38,32 @@ namespace RoastedMarketplace.Core.Infrastructure.Utils
                 }
             }
             //boolean?
-            if (property.PropertyType == typeof(bool))
+            if (type == typeof(bool))
             {
                 var strValue = value.ToString().ToLowerInvariant();
                 return strValue == "1" || strValue == "true" || strValue == "on" || strValue == "checked";
             }
 
             //nullable int?
-            if (property.PropertyType == typeof(int?))
+            if (type == typeof(int?))
                 return Convert.ToInt32(value);
 
             //uri?
-            if (property.PropertyType == typeof(Uri))
+            if (type == typeof(Uri))
                 return new Uri(value.ToString());
 
             //int list
-            if (property.PropertyType == typeof(IList<int>))
+            if (type == typeof(IList<int>))
             {
                 if (typeof(JArray) == value.GetType())
                 {
                     var jArrayValue = (JArray)value;
                     return jArrayValue.ToObject<List<int>>();
                 }
-               
+
             }
             //string list
-            if (property.PropertyType == typeof(IList<string>))
+            if (type == typeof(IList<string>))
             {
                 if (typeof(JArray) == value.GetType())
                 {
@@ -66,7 +73,7 @@ namespace RoastedMarketplace.Core.Infrastructure.Utils
 
             }
             //fallback
-            return Convert.ChangeType(value, property.PropertyType);
-        } 
+            return Convert.ChangeType(value, type);
+        }
     }
 }

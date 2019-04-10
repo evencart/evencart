@@ -67,7 +67,15 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<ProductSpecificationValue>(transaction);
             Db.CreateTable<ProductRelation>(transaction);
 
-            
+            //cart
+            Db.CreateTable<Cart>(transaction);
+            Db.CreateTable<CartItem>(transaction);
+            Db.CreateTable<Order>(transaction);
+            Db.CreateTable<OrderItem>(transaction);
+            Db.CreateTable<Shipment>(transaction);
+            Db.CreateTable<ShipmentItem>(transaction);
+            Db.CreateTable<ShipmentHistory>(transaction);
+            Db.CreateTable<PaymentTransaction>(transaction);
 
             Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction, true);
@@ -93,7 +101,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<AvailableAttribute, ProductSpecification>("Id", "AvailableAttributeId"), transaction, true);
             Db.CreateConstraint(Relation.Create<AvailableAttributeValue, ProductSpecificationValue>("Id", "AvailableAttributeValueId"), transaction);
             Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
-            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, false);
 
             Db.CreateTable<DiscountCoupon>(transaction);
             Db.CreateTable<RestrictionValue>(transaction);
@@ -103,14 +111,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateTable<TaxRate>(transaction);
             Db.CreateConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction, true);
 
-            //cart
-            Db.CreateTable<Cart>(transaction);
-            Db.CreateTable<CartItem>(transaction);
-            Db.CreateTable<Order>(transaction);
-            Db.CreateTable<OrderItem>(transaction);
-            Db.CreateTable<Shipment>(transaction);
-            Db.CreateTable<ShipmentItem>(transaction);
-            Db.CreateTable<PaymentTransaction>(transaction);
+           
 
             //content
             Db.CreateTable<ContentPage>(transaction);
@@ -125,7 +126,7 @@ namespace RoastedMarketplace.Data.Versions
             Db.CreateConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Order, OrderItem>("Id", "OrderId"), transaction, true);
-            Db.CreateConstraint(Relation.Create<User, Order>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Order>("Id", "UserId"), transaction, false);
             Db.CreateConstraint(Relation.Create<Product, CartItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction, true);

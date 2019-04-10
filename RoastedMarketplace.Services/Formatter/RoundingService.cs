@@ -29,8 +29,13 @@ namespace RoastedMarketplace.Services.Formatter
                     if (roundingType == Rounding.RoundDot50Or00 || roundingType == Rounding.RoundDot99Or49)
                     {
                         var refPoint = roundingType == Rounding.RoundDot50Or00 ? 50 : 49;
+                        var endPoint = roundingType == Rounding.RoundDot50Or00 ? 100 : 99;
+
                         var leftDiff = lastTwoDigits > refPoint ? lastTwoDigits - refPoint : lastTwoDigits;
-                        var rightDiff = lastTwoDigits > refPoint ? 100 - lastTwoDigits : refPoint - lastTwoDigits;
+                        var rightDiff = lastTwoDigits > refPoint ? endPoint - lastTwoDigits : refPoint - lastTwoDigits;
+
+                        if (roundingType == Rounding.RoundDot99Or49 && lastTwoDigits < refPoint)
+                            leftDiff++;
 
                         var diff = Math.Min(leftDiff, rightDiff);
 

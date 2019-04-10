@@ -5,13 +5,6 @@ namespace RoastedMarketplace.Core
 {
     public static class Randomizer
     {
-        // Generate a random number between two numbers
-        public static int NewNumber(int min, int max)
-        {
-            var random = new Random();
-            return random.Next(min, max);
-        }
-        
         public static string NewString(int size, bool lowerCase = false)
         {
             var builder = new StringBuilder();

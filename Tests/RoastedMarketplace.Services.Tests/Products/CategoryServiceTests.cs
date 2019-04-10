@@ -30,9 +30,9 @@ namespace RoastedMarketplace.Services.Tests.Products
     }
 
     [TestFixture]
-    public class SqlServerCategoryPersistanceTests : CategoryServiceTests
+    public class SqlServerCategoryServiceTests : CategoryServiceTests
     {
-        public SqlServerCategoryPersistanceTests()
+        public SqlServerCategoryServiceTests()
         {
             TestDbInit.SqlServer(MsSqlConnectionString);
         }

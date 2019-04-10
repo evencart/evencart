@@ -19,17 +19,17 @@
 
         public static decimal CeilHundred(this decimal num)
         {
-            return decimal.Ceiling(num / 100.0m) * 10;
+            return decimal.Ceiling(num / 100.0m) * 100;
         }
 
         public static decimal FloorHundred(this decimal num)
         {
-            return decimal.Floor(num / 10.0m) * 10;
+            return decimal.Floor(num / 100.0m) * 100;
         }
 
         public static decimal RoundHundred(this decimal num)
         {
-            return decimal.Round(num / 10.0m) * 10;
+            return decimal.Round(num / 100.0m) * 100;
         }
     }
 }

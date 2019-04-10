@@ -12,7 +12,7 @@ namespace RoastedMarketplace.Services.Tests
             //seed data
             var installationService = new InstallationService(new TestDatabaseSettings(connectionString, "sqlserver"));
             installationService.Install();
-            installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost");
+            installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
         }
 
         private class TestDatabaseSettings : IDatabaseSettings

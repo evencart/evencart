@@ -9,11 +9,6 @@ namespace RoastedMarketplace.Core.Plugins
 
         public virtual string ConfigurationUrl { get; } = null;
 
-        /// <summary>
-        /// A system module can't be deactivated or uninstalled. It's install method is called immediately on application restart
-        /// </summary>
-        public virtual bool IsSystemModule => false;
-
         public virtual void Install() { }
 
         public virtual void Uninstall() { }

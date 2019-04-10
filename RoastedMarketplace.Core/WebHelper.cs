@@ -17,6 +17,9 @@ namespace RoastedMarketplace.Core
         {
             if (rootDomain.StartsWith("//"))
                 rootDomain = protocol + ":" + rootDomain;
+            if(!string.IsNullOrEmpty(rootDomain))
+                if (!rootDomain.StartsWith("http") && !rootDomain.StartsWith("https") && !rootDomain.StartsWith("ftp"))
+                    rootDomain = protocol + "://" + rootDomain;
             //we need to see if the path is relative or absolute
             if (path.StartsWith("~"))
             {

@@ -98,7 +98,8 @@ namespace RoastedMarketplace.Services.Tests.Products
                 DateUpdated = DateTime.UtcNow
             };
             _userService.Insert(user);
-            _roleService.AssignRoleToUser(SystemRoleNames.Registered, user);
+            var registeredUserRole = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Registered);
+            _roleService.SetUserRoles(user.Id, new[] {registeredUserRole.Id});
             _users = new User[] { user };
             //add address
             var address1 = new Address()

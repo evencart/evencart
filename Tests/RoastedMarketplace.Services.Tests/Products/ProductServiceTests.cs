@@ -152,19 +152,23 @@ namespace RoastedMarketplace.Services.Tests.Products
 
             _productAttributeService.Insert(productAttributeColor);
 
+           
             //generate variations
             // s + red
-            var sRedVariant = _productVariantService.AddVariant(product, new List<ProductVariantAttribute>()
+            var sRedVariant = _productVariantService.AddVariant(product, new ProductVariant()
             {
-                new ProductVariantAttribute()
+                ProductVariantAttributes = new List<ProductVariantAttribute>()
                 {
-                    ProductAttributeId = productAttributeSize.Id,
-                    ProductAttributeValueId = productAttributeValuesSize[0].Id
-                },
-                new ProductVariantAttribute()
-                {
-                    ProductAttributeId = productAttributeColor.Id,
-                    ProductAttributeValueId = productAttributeValuesColor[0].Id
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeSize.Id,
+                        ProductAttributeValueId = productAttributeValuesSize[0].Id,
+                    },
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeColor.Id,
+                        ProductAttributeValueId = productAttributeValuesColor[0].Id
+                    }
                 }
             });
             sRedVariant.TrackInventory = true;
@@ -172,34 +176,40 @@ namespace RoastedMarketplace.Services.Tests.Products
             _productVariantService.Update(sRedVariant);
 
             // s + green
-            var sGreenVariant = _productVariantService.AddVariant(product, new List<ProductVariantAttribute>()
+            var sGreenVariant = _productVariantService.AddVariant(product, new ProductVariant()
             {
-                new ProductVariantAttribute()
+                ProductVariantAttributes = new List<ProductVariantAttribute>()
                 {
-                    ProductAttributeId = productAttributeSize.Id,
-                    ProductAttributeValueId = productAttributeValuesSize[0].Id
-                },
-                new ProductVariantAttribute()
-                {
-                    ProductAttributeId = productAttributeColor.Id,
-                    ProductAttributeValueId = productAttributeValuesColor[1].Id
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeSize.Id,
+                        ProductAttributeValueId = productAttributeValuesSize[0].Id
+                    },
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeColor.Id,
+                        ProductAttributeValueId = productAttributeValuesColor[1].Id
+                    }
                 }
             });
             sGreenVariant.TrackInventory = false;
             sGreenVariant.StockQuantity = 0;
             _productVariantService.Update(sGreenVariant);
             // m + red
-            var mRedVariant = _productVariantService.AddVariant(product, new List<ProductVariantAttribute>()
+            var mRedVariant = _productVariantService.AddVariant(product, new ProductVariant()
             {
-                new ProductVariantAttribute()
+                ProductVariantAttributes = new List<ProductVariantAttribute>()
                 {
-                    ProductAttributeId = productAttributeSize.Id,
-                    ProductAttributeValueId = productAttributeValuesSize[1].Id
-                },
-                new ProductVariantAttribute()
-                {
-                    ProductAttributeId = productAttributeColor.Id,
-                    ProductAttributeValueId = productAttributeValuesColor[0].Id
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeSize.Id,
+                        ProductAttributeValueId = productAttributeValuesSize[1].Id
+                    },
+                    new ProductVariantAttribute()
+                    {
+                        ProductAttributeId = productAttributeColor.Id,
+                        ProductAttributeValueId = productAttributeValuesColor[0].Id
+                    }
                 }
             });
             mRedVariant.TrackInventory = true;

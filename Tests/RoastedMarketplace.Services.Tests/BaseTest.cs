@@ -1,8 +1,12 @@
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
+using RoastedMarketplace.Core;
 using RoastedMarketplace.Core.Infrastructure;
+using RoastedMarketplace.Core.Infrastructure.Providers;
 using RoastedMarketplace.Data.Database;
 using RoastedMarketplace.Infrastructure;
 using RoastedMarketplace.Services.Installation;
@@ -34,14 +38,27 @@ namespace RoastedMarketplace.Services.Tests
 
                 MsSqlConnectionString = IsAppVeyor
                     ? @"Server=(local)\SQL2016;Database=master;User ID=sa;Password=Password12!"
-                    : @"Data Source=.\sqlexpress;Initial Catalog=unittest_db;Integrated Security=False;Persist Security Info=False;User ID=iis_user;Password=iis_user";
+                    : @"Data Source=.;Initial Catalog=unittest_db;Integrated Security=False;Persist Security Info=False;User ID=iis_user;Password=iis_user";
 
 
                 SqliteConnectionString = $"Data Source={_sqliteFile};";
             }
 
             var serviceCollection = new ServiceCollection();
-            ApplicationEngine.ConfigureServices(serviceCollection, null);
+            //mock the hosting env
+            var hostingEnvironment = new Mock<IHostingEnvironment>();
+            
+            hostingEnvironment.Setup(x => x.ApplicationName)
+                .Returns("Hosting:UnitTestEnvironment");
+
+            hostingEnvironment.Setup(x => x.ContentRootPath)
+                .Returns(AppDomain.CurrentDomain.BaseDirectory);
+
+            hostingEnvironment.Setup(x => x.ContentRootFileProvider)
+                .Returns(new LocalFileProvider(hostingEnvironment.Object));
+
+            serviceCollection.AddSingleton<IHostingEnvironment>(provider => hostingEnvironment.Object);
+            ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object);
         }
 
         [OneTimeSetUp]
