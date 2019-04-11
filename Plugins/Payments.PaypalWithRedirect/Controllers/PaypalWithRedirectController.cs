@@ -1,12 +1,12 @@
 ﻿using System;
+using EvenCart.Services.Payments;
+using EvenCart.Services.Purchases;
+using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Payments.PaypalWithRedirect.Helpers;
 using Payments.PaypalWithRedirect.Models;
-using RoastedMarketplace.Infrastructure.Mvc;
-using RoastedMarketplace.Infrastructure.Routing;
-using RoastedMarketplace.Services.Payments;
-using RoastedMarketplace.Services.Purchases;
 
 namespace Payments.PaypalWithRedirect.Controllers
 {

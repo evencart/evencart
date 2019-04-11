@@ -1,0 +1,18 @@
+﻿// #region Author Information
+// // ExtraFieldValidationResult.cs
+// // 
+// // (c) Apexol Technologies. All Rights Reserved.
+// // 
+// #endregion
+namespace EvenCart.Services.Enum
+{
+    public enum ExtraFieldValidationResult
+    {
+        EmptyValueForRequiredField,
+        InvalidValueForFieldType,
+        OutOfRangeValue,
+        NonEditableField,
+        UnknownError,
+        ValidField
+    }
+}

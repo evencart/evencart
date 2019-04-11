@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Entity.Payments;
+using EvenCart.Data.Extensions;
+using EvenCart.Services.Settings;
+using EvenCart.Infrastructure;
 using Payments.PaypalWithRedirect.Models;
 using PayPal.Core;
 using PayPal.v1.PaymentExperience;
 using PayPal.v1.Payments;
-using RoastedMarketplace.Core.Infrastructure;
-using RoastedMarketplace.Data.Entity.Payments;
-using RoastedMarketplace.Data.Extensions;
-using RoastedMarketplace.Infrastructure;
-using RoastedMarketplace.Services.Settings;
-using Order = RoastedMarketplace.Data.Entity.Purchases.Order;
+using Order = EvenCart.Data.Entity.Purchases.Order;
 namespace Payments.PaypalWithRedirect.Helpers
 {
     public class PaypalHelper

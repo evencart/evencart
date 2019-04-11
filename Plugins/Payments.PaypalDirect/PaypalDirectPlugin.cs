@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RoastedMarketplace.Core.Plugins;
-using RoastedMarketplace.Data.Entity.Payments;
-using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Data.Extensions;
-using RoastedMarketplace.Infrastructure;
-using RoastedMarketplace.Infrastructure.Helpers;
-using RoastedMarketplace.Infrastructure.Plugins;
-using RoastedMarketplace.Services.Payments;
-using RoastedMarketplace.Services.Plugins;
+using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Payments;
+using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Extensions;
+using EvenCart.DataServices.Payments;
+using EvenCart.DataServices.Plugins;
+using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 
 namespace Payments.PaypalDirect
 {

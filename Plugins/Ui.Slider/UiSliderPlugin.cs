@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotEntity.Versioning;
-using RoastedMarketplace.Core.Plugins;
-using RoastedMarketplace.Infrastructure;
-using RoastedMarketplace.Services.Plugins;
+using EvenCart.Services.Plugins;
+using EvenCart.Infrastructure;
 using Ui.Slider.Versions;
 
 namespace Ui.Slider

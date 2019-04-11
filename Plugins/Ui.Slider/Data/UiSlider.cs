@@ -1,5 +1,5 @@
-﻿using RoastedMarketplace.Core.Data;
-using RoastedMarketplace.Data.Entity.MediaEntities;
+﻿using EvenCart.Core.Data;
+using EvenCart.Data.Entity.MediaEntities;
 
 namespace Ui.Slider.Data
 {

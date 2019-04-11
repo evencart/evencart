@@ -1,6 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using RoastedMarketplace.Data.Entity.MediaEntities;
+using EvenCart.Data.Entity.MediaEntities;
 using Ui.Slider.Data;
 using Db = DotEntity.DotEntity.Database;
 namespace Ui.Slider.Versions

@@ -1,4 +1,4 @@
-﻿using RoastedMarketplace.Core.Services;
+﻿using EvenCart.Core.Services;
 using Ui.Slider.Data;
 
 namespace Ui.Slider.Services

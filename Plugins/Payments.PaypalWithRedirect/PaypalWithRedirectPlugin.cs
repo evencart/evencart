@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Payments;
+using EvenCart.Data.Entity.Purchases;
+using EvenCart.Services.Payments;
+using EvenCart.Services.Plugins;
+using EvenCart.Infrastructure;
 using Payments.PaypalWithRedirect.Helpers;
-using RoastedMarketplace.Core.Plugins;
-using RoastedMarketplace.Data.Entity.Payments;
-using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Infrastructure;
-using RoastedMarketplace.Services.Payments;
-using RoastedMarketplace.Services.Plugins;
 
 namespace Payments.PaypalWithRedirect
 {

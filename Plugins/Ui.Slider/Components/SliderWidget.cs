@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Plugins;
+using EvenCart.Infrastructure.MediaServices;
+using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Mvc.ModelFactories;
 using Microsoft.AspNetCore.Mvc;
-using RoastedMarketplace.Core.Plugins;
-using RoastedMarketplace.Infrastructure.MediaServices;
-using RoastedMarketplace.Infrastructure.Mvc;
-using RoastedMarketplace.Infrastructure.Mvc.ModelFactories;
 using Ui.Slider.Models;
 using Ui.Slider.Services;
 

@@ -1,6 +1,6 @@
-﻿using RoastedMarketplace.Core.Plugins;
-using RoastedMarketplace.Data.Entity.Purchases;
-using RoastedMarketplace.Services.Plugins;
+﻿using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Purchases;
+using EvenCart.Services.Plugins;
 
 namespace Shipping.FedEx
 {

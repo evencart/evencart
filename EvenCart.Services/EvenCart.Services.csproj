@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Configuration\**" />
+    <Compile Remove="MediaServices\**" />
+    <Compile Remove="VerboseReporter\**" />
+    <EmbeddedResource Remove="Configuration\**" />
+    <EmbeddedResource Remove="MediaServices\**" />
+    <EmbeddedResource Remove="VerboseReporter\**" />
+    <None Remove="Configuration\**" />
+    <None Remove="MediaServices\**" />
+    <None Remove="VerboseReporter\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logger\RollingFileLogger.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Configuration\XmlConfigurationFileService.cs" />
+    <Compile Include="MediaServices\IMediaService.cs" />
+    <Compile Include="MediaServices\IProductMediaService.cs" />
+    <Compile Include="MediaServices\MediaService.cs" />
+    <Compile Include="MediaServices\ProductMediaService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentScheduler" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\EvenCart.Data\EvenCart.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

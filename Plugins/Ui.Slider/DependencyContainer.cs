@@ -1,5 +1,5 @@
 ﻿using DryIoc;
-using RoastedMarketplace.Core.Infrastructure;
+using EvenCart.Core.Infrastructure;
 using Ui.Slider.Services;
 
 namespace Ui.Slider

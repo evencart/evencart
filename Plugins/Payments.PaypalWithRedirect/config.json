@@ -4,7 +4,7 @@
   "version": "1.0",
   "supportedVersions": [ "1.0"],
   "assemblyName": "Payments.PaypalWithRedirect.dll",
-  "systemName": "RoastedBytes.Payments.PaypalWithRedirect",
+  "systemName": "EvenCart.Payments.PaypalWithRedirect",
   "author": "RoastedBytes.com",
   "authorUri": "https://www.roastedbytes.com",
   "pluginUri": ""

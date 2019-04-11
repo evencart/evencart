@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace EvenCart.Data.Attributes
+{
+    /// <summary>
+    /// Specifies a field that can be used for token replacements processing
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class NonTokenFieldAttribute : Attribute
+    {
+    }
+}

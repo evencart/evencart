@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\RoastedMarketplace.Services\EvenCart.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

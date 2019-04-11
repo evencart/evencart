@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Payments.PaypalWithRedirect</OutputPath>
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\EvenCart\Plugins\Payments.PaypalWithRedirect</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>F:\SourceRepositories\RoastedMarketplace\RoastedMarketplace\Plugins\Payments.PaypalWithRedirect</OutputPath>
+    <OutputPath>F:\SourceRepositories\RoastedMarketplace\EvenCart\Plugins\Payments.PaypalWithRedirect</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
@@ -40,10 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RoastedMarketplace.Core\RoastedMarketplace.Core.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Data\RoastedMarketplace.Data.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Infrastructure\RoastedMarketplace.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\RoastedMarketplace.Services\RoastedMarketplace.Services.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

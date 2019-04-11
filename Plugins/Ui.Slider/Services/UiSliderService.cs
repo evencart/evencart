@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DotEntity.Enumerations;
-using RoastedMarketplace.Core.Services;
-using RoastedMarketplace.Data.Entity.MediaEntities;
-using RoastedMarketplace.Data.Extensions;
+using EvenCart.Core.Services;
+using EvenCart.Data.Entity.MediaEntities;
+using EvenCart.Data.Extensions;
 using Ui.Slider.Data;
 
 namespace Ui.Slider.Services

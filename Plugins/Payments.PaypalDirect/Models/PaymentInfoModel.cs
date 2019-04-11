@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using EvenCart.Infrastructure.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RoastedMarketplace.Infrastructure.Mvc.Models;
 
 namespace Payments.PaypalDirect.Models
 {

@@ -1,4 +1,4 @@
-﻿using RoastedMarketplace.Core.Config;
+﻿using EvenCart.Core.Config;
 
 namespace Payments.PaypalWithRedirect
 {
