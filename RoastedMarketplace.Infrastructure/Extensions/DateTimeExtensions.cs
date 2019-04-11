@@ -8,7 +8,7 @@
 using System;
 using RoastedMarketplace.Data.Entity.Users;
 
-namespace RoastedMarketplace.Services.Extensions
+namespace RoastedMarketplace.Infrastructure.Extensions
 {
     public static class DateTimeExtensions
     {
