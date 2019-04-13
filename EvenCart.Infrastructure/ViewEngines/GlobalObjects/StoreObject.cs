@@ -42,7 +42,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 WishlistEnabled = orderSettings.EnableWishlist,
                 RepeatOrdersEnabled = orderSettings.AllowReorder,
                 ReviewsEnabled = catalogSettings.EnableReviews,
-                ReviewModificationAllowed = catalogSettings.AllowReviewModification
+                ReviewModificationAllowed = catalogSettings.AllowReviewModification,
+                ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode
             };
         }
 

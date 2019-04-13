@@ -1,0 +1,48 @@
+﻿<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "{{product.name}}",
+        "image": [
+            {% for media in product.media %}
+            "{{media.url | absoluteUrl}}" {% if forloop.last == false %},{% endif %}
+            {% endfor %}
+        ],
+        "description": "{{product.description}}",
+        "sku": "{{product.sku}}",
+        "mpn": "{{product.mpn}}",
+        {% if reviews.size > 0 %}
+        "review": {
+            "@type": "Review",
+            "reviewBody":"{{reviews[0].description}}",
+            "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "{{reviews[0].rating}}",
+            "bestRating": "5"
+            },
+            "author": {
+            "@type": "Person",
+            "name": "{{reviews[0].displayName}}"
+            }
+        },
+        {% endif %}
+
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{product.reviewSummary.averageRating}}",
+            "reviewCount": "{{product.reviewSummary.totalRatings}}"
+        },
+      "offers": {
+        "@type": "Offer",
+        "url": "{% route SingleProduct seName="{{product.seName}}" absolute="true" %}",
+        "priceCurrency": "{{store.activeCurrencyCode}}",
+        "price": "{{product.price}}",
+        "itemCondition": "https://schema.org/UsedCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "{{store.name}}"
+        }
+    }
+    }
+</script>

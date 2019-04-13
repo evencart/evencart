@@ -29,5 +29,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public bool RelatedProductsEnabled { get; set; }
 
         public bool ChangeCurrencyEnabled { get; set; }
+
+        public string ActiveCurrencyCode { get; set; }
     }
 }

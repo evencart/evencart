@@ -22,7 +22,14 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     throw new Exception($"A route name must be specified in the view {readFile.FileName}");
 
                 var routeName = straightParameters[0];
-                var routeUrl = ApplicationEngine.RouteUrl(routeName, keyValuePairs);
+                var absoluteValue = "false";
+                if (keyValuePairs != null)
+                {
+                    keyValuePairs.TryGetValue("absolute", out absoluteValue);
+                    if (!absoluteValue.IsNullEmptyOrWhiteSpace())
+                        keyValuePairs.Remove("absolute");
+                }
+                var routeUrl = ApplicationEngine.RouteUrl(routeName, keyValuePairs, absoluteValue == "true");
                 routeUrl = HttpUtility.UrlDecode(routeUrl);
                 //we are using lower case urls and this causes the liquid parameters to convert to lower case like {{userId}} converts to {{userid}}
                 //we need to fix those otherwise the liquid urls break.

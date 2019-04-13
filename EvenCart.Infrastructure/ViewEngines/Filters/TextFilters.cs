@@ -1,6 +1,8 @@
 ﻿using System;
 using DotLiquid;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Localization;
@@ -35,6 +37,12 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
             var serializer = DependencyResolver.Resolve<IDataSerializer>();
             var json = serializer.Serialize(input);
             return $"<script type='text/javascript'>var {variableName}={json};</script>";
+        }
+
+        public static string AbsoluteUrl(string input)
+        {
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+            return WebHelper.GetUrlFromPath(input, generalSettings.StoreDomain);
         }
     }
 }
