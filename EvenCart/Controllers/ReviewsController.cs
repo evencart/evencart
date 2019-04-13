@@ -44,7 +44,7 @@ namespace EvenCart.Controllers
         }
 
         [ValidateModelState(ModelType = typeof(ReviewModel))]
-        [DualPost("reviews", Name = RouteNames.SaveReview, OnlyApi = true)]
+        [DualPost("reviews", Name = RouteNames.SaveUserReview, OnlyApi = true)]
         [Authorize]
         public IActionResult SaveReview(ReviewModel reviewModel)
         {
@@ -117,7 +117,7 @@ namespace EvenCart.Controllers
         }
 
         [ValidateModelState(ModelType = typeof(ReviewModel))]
-        [DualPost("reviews/{reviewId}", Name = RouteNames.DeleteReview, OnlyApi = true)]
+        [DualPost("reviews/{reviewId}", Name = RouteNames.DeleteUserReview, OnlyApi = true)]
         [Authorize]
         public IActionResult DeleteReview(int reviewId)
         {
@@ -192,13 +192,13 @@ namespace EvenCart.Controllers
             return response.With("review", reviewModel).With("product", productModel).Result;
         }
 
-        [DynamicRoute(Name = RouteNames.ReviewsList, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate), TemplateSuffix = "/reviews", ParameterName = nameof(ReviewSearchModel.ProductId))]
+        [DynamicRoute(Name = RouteNames.UserReviewsList, SeoEntityName = nameof(Product), SettingName = nameof(UrlSettings.ProductUrlTemplate), TemplateSuffix = "/reviews", ParameterName = nameof(ReviewSearchModel.ProductId))]
         public IActionResult ReviewsList(ReviewSearchModel reviewSearchModel)
         {
             return ReviewsListApi(reviewSearchModel);
         }
 
-        [DualGet("{productId}", Name = RouteNames.ReviewsList, OnlyApi = true)]
+        [DualGet("{productId}", Name = RouteNames.UserReviewsList, OnlyApi = true)]
         public IActionResult ReviewsListApi(ReviewSearchModel reviewSearchModel)
         {
             //check if the product is valid

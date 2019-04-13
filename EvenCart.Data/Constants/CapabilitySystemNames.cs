@@ -85,5 +85,6 @@ namespace EvenCart.Data.Constants
 
         public const string ImitateUser = "User.Imitate";
 
+        public const string ManageReviews = "ManageReviews";
     }
 }

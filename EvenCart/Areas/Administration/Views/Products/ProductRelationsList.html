@@ -47,7 +47,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ProductRelationsList %}',
+                            url: '{% route api_ProductRelationsList productId="{{productId}}" relationType="{{relationType}}" %}',
                             responseObject: "relations",
                             selection: false,
                             navigation: 0,

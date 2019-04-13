@@ -202,5 +202,10 @@
 
         public const string ConsentLogsList = "ConsentLogsList";
 
+        public const string ReviewsList = "ReviewsList";
+        public const string SaveReview = "SaveReview";
+        public const string DeleteReview = "DeleteReview";
+        public const string GetReview = "GetReview";
+
     }
 }

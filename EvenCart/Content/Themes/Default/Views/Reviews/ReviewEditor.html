@@ -19,7 +19,7 @@
                         {% endif %}
                     </h3>
                 </div>
-                <form action="{% route api_SaveReview %}" id="save-review-form" method="post">
+                <form action="{% route api_SaveUserReview %}" id="save-review-form" method="post">
                     <div class="col-lg-12">
                         <div class="form-group">
                             {% control label text=@t"Rating" for="rating" %}

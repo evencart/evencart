@@ -41,6 +41,33 @@ namespace EvenCart.Services.Reviews
             return GetSingleReview(productId, RowOrder.Ascending);
         }
 
+        public IEnumerable<Review> GetReviews(out int totalResults, string reviewSearch = null, string productSearch = null, bool? publishStatus = null, int productId = 0,
+            int page = 1, int count = Int32.MaxValue)
+        {
+            var query = GetByWhere(x => true, x => x.CreatedOn, RowOrder.Descending);
+
+            if (!reviewSearch.IsNullEmptyOrWhiteSpace())
+            {
+                query = query.Where(x => x.Title.Contains(reviewSearch) || x.Description.Contains(reviewSearch));
+            }
+
+            if (!productSearch.IsNullEmptyOrWhiteSpace())
+            {
+                Expression<Func<Product, bool>> productWhere = product => product.Name.Contains(productSearch);
+                query = query.Where(productWhere);
+            }
+
+            if (publishStatus.HasValue)
+            {
+                query = publishStatus.Value ? query.Where(x => x.Published) : query.Where(x => !x.Published);
+            }
+
+            if (productId > 0)
+                query = query.Where(x => x.ProductId == productId);
+
+            return query.SelectNestedWithTotalMatches(out totalResults, page, count);
+        }
+
         private Review GetSingleReview(int productId, RowOrder ratingOrder)
         {
             return GetByWhere(x => x.ProductId == productId && x.Published, x => x.Rating, ratingOrder)

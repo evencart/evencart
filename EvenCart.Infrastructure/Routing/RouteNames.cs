@@ -27,9 +27,8 @@
         public const string RenderComponent = "RenderComponent";
         public const string Templates = "Templates";
         public const string RawView = "RawView";
-        public const string SaveReview = "SaveReview";
-        public const string DeleteReview = "DeleteReview";
-        public const string ReviewsList = "ReviewsList";
+        public const string SaveUserReview = "SaveUserReview";
+        public const string DeleteUserReview = "DeleteUserReview";
         public const string UserReviewsList = "UserReviewsList";
         public const string UserPendingReviewsList = "UserPendingReviewsList";
         public const string ReviewEditor = "ReviewEditor";

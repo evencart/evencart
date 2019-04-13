@@ -1,0 +1,18 @@
+﻿<select %attributes% class="form-control">
+    <option value="5" {% if %value% == 5 %}selected{% endif %}>
+        &#9733;&#9733;&#9733;&#9733;&#9733; - {{"Awesome" | t}}
+    </option>
+    <option value="4" {% if %value% == 4 %}selected{% endif %}>
+        &#9733;&#9733;&#9733;&#9733; - {{"Good" | t}}
+    </option>
+    <option value="3" {% if %value% == 3 %}selected{% endif %}>
+        &#9733;&#9733;&#9733; - {{"Average" | t}}
+    </option>
+    <option value="2" {% if %value% == 2 %}selected{% endif %}>
+        &#9733;&#9733; - {{"Not Good" | t}}
+    </option>
+    <option value="1" {% if %value% == 1 %}selected{% endif %}>
+        &#9733; - {{"Disappointed" | t}}
+    </option>
+</select>
+

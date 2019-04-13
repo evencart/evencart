@@ -1,0 +1,149 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Reviews" active_menu="ReviewsList" parent_active_menu="ProductsList" %}
+{% partial "Navigation/ProductSecondaryNavigation" %}
+
+<div class="row">
+    <div class="col-md-3">
+        {% partial "Reviews/ReviewsList.FilterPanel" %}
+    </div>
+    <div class="col-md-9">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Reviews" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="product" data-formatter="product" data-width="15%">{{"Product" | t}}</th>
+                        <th data-column-id="review" data-formatter="review" data-width="45%">{{"Review" | t}}</th>
+                        <th data-column-id="private" data-formatter="binary">{{"Private" | t}}</th>
+                        <th data-column-id="verifiedPurchase" data-formatter="binary">{{"Verified" | t}}</th>
+                        <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {% json source="reviews" var="initData" %}
+                <script type="text/javascript">
+
+                    ready(function() {
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                reviews: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_ReviewsList countryId="{{countryId}}" %}',
+                            responseObject: "reviews",
+                            formatters: {
+                                "binary": function(column, row) {
+                                    return gridFormatters.binary(column, row, column.id);
+                                },
+                                "product": function(column, row) {
+                                    var productName = row.productName;
+                                    var productUrl =
+                                        '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                                    return "<a href='" + productUrl + "'>" + productName + "</a>";
+                                },
+                                "review": function(column, row) {
+                                    var html = "<strong>" + row.title + "</strong>";
+                                    html += "<div style='white-space: pre-wrap;'>" + row.description + "</div>";
+                                    if (row.userId > 0) {
+                                        html += "<div>";
+                                        var userUrl = '{% route GetUser userId="%id%" %}'.replace("%id%", row.userId);
+                                        html += "{{'Posted by' | t}} : ";
+                                        html += "<a href='" + userUrl + "'>" + row.userName + "</a>";
+                                        html += "</div>";
+                                    }
+                                    //append rating stars
+                                    html += "<div>";
+                                    for (var i = 0; i < row.rating; i++) {
+                                        html += " &#9733;";
+                                    }
+                                    html += "</div>";
+                                    return html;
+                                },
+                                "commands": function(column, row) {
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editReview(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteReview(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button> ";;
+                                }
+                            },
+                            templates: {
+                                "search":""
+                            },
+                            data: function() {
+                                return {
+                                    productSearch: jQuery("#productSearch").val(),
+                                    published: jQuery("#published").val(),
+                                    searchPhrase: jQuery("#searchPhrase").val()
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-review-popup" style="width:600px">
+</div>
+
+<script type="text/javascript">
+
+    var editReview = function(id) {
+        jQuery("#edit-review-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-review-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Review was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetReview reviewId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-review-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteReview = function(id) {
+        confirm('{{"Are you sure you wish to delete this review?" | t}}',
+            function() {
+                var url = '{% route api_DeleteReview %}';
+                post({
+                    url: url,
+                    data: {
+                        reviewId: id
+                    },
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Review was deleted successfully" | t}}');
+                    }
+                });
+            });
+
+
+    }
+</script>

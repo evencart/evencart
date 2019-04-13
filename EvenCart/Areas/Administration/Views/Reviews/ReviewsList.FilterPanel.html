@@ -1,0 +1,25 @@
+﻿<div class="panel no-border">
+    <div class="panel-body">
+        <div class="form-group">
+            {% control label text=@t"Search Review" %}
+            <input type="text" id="searchPhrase" />
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Product" %}
+            {% control text id="productSearch" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Publish Status" %}
+            <select id="published">
+                <option>{{"All" | t}}</option>
+                <option value="true">{{"Published Only" | t}}</option>
+                <option value="false">{{"Pending Only" | t}}</option>
+            </select>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" id="btnSearch" onclick="reloadGrid('grid-selection')">
+                {{"Search" | t}}
+            </button>
+        </div>
+    </div>
+</div>
