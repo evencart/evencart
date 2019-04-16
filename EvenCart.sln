@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Data", "EvenCart.D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Core.Tests", "Tests\EvenCart.Core.Tests\EvenCart.Core.Tests.csproj", "{A0D2A383-52E9-4FC4-8D67-4DE93F4C0FA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Common.Tests", "Tests\EvenCart.Core.Tests\EvenCart.Common.Tests.csproj", "{A0D2A383-52E9-4FC4-8D67-4DE93F4C0FA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Services.Tests", "Tests\EvenCart.Services.Tests\EvenCart.Services.Tests.csproj", "{CA05CE5C-692E-489D-B243-A60F4C5163B6}"
 EndProject

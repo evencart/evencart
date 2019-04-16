@@ -40,5 +40,9 @@ namespace EvenCart.Services.Products
         void PopulateReviewSummary(IList<Product> products);
 
         void UpdatePopularityIndex(bool increment = true, params int[] productIds);
+
+        IList<Product> GetProductsWithVariants(out int totalResults, string searchText = null, bool? published = null, bool? trackInventory = null,
+            Expression<Func<Product, object>> orderByExpression = null, SortOrder sortOrder = SortOrder.Descending,
+            int page = 1, int count = int.MaxValue);
     }
 }

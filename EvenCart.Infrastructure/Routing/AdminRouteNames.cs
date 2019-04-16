@@ -207,5 +207,12 @@
         public const string DeleteReview = "DeleteReview";
         public const string GetReview = "GetReview";
 
+        public const string StockReport = "StockReport";
+        public const string OrdersReport = "OrdersReport";
+        public const string UserOrdersReport = "UserOrdersReport";
+        public const string ProductOrdersReport = "ProductOrdersReport";
+        public const string ProductWishReport = "ProductWishReport";
+        public const string TaxReport = "TaxReport";
+
     }
 }

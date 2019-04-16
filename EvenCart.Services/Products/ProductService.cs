@@ -487,5 +487,97 @@ namespace EvenCart.Services.Products
 
             }
         }
+
+        public IList<Product> GetProductsWithVariants(out int totalResults, string searchText = null, bool? published = null, bool? trackInventory = null, Expression<Func<Product, object>> orderByExpression = null,
+            SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
+        {
+            var query = Repository;
+            if (!searchText.IsNullEmptyOrWhiteSpace())
+            {
+                query = query.Where(x => x.Name.Contains(searchText));
+            }
+            if (published.HasValue)
+            {
+                query = published.Value ? query.Where(x => x.Published) : query.Where(x => !x.Published);
+            }
+            if (trackInventory.HasValue)
+            {
+                query = trackInventory.Value ? query.Where(x => x.TrackInventory) : query.Where(x => !x.TrackInventory);
+            }
+            orderByExpression = orderByExpression ?? (product => product.Id);
+         
+            return query.Join<ProductVariant>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
+                .Join<ProductAttribute>("ProductAttributeId", "Id", typeof(ProductVariantAttribute), JoinType.LeftOuter)
+                .Join<ProductAttributeValue>("ProductAttributeValueId", "Id", typeof(ProductVariantAttribute),
+                    joinType: JoinType.LeftOuter)
+                .Join<AvailableAttribute>("AvailableAttributeId", "Id", typeof(ProductAttribute),
+                    joinType: JoinType.LeftOuter)
+                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", typeof(ProductAttributeValue),
+                    joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<Product, ProductVariant>())
+                .Relate<ProductVariantAttribute>((product, attribute) =>
+                {
+                    var variant = product.ProductVariants.FirstOrDefault(x => x.Id == attribute.ProductVariantId);
+                    if (variant != null)
+                    {
+                        attribute.ProductVariant = variant;
+                        variant.ProductVariantAttributes =
+                            variant.ProductVariantAttributes ?? new List<ProductVariantAttribute>();
+                        if (!variant.ProductVariantAttributes.Contains(attribute))
+                            variant.ProductVariantAttributes.Add(attribute);
+                    }
+                })
+                .Relate<ProductAttribute>((product, attribute) =>
+                {
+                    foreach (var variantAttribute in product.ProductVariants.SelectMany(x => x.ProductVariantAttributes))
+                    {
+                        if (variantAttribute.ProductAttributeId == attribute.Id)
+                        {
+                            variantAttribute.ProductAttribute = attribute;
+                        }
+                    }
+                })
+                .Relate<ProductAttributeValue>((product, attributeValue) =>
+                {
+                    foreach (var variantAttribute in product.ProductVariants.SelectMany(x => x.ProductVariantAttributes)
+                    )
+                    {
+                        if (variantAttribute.ProductAttributeValueId == attributeValue.Id)
+                        {
+                            variantAttribute.ProductAttributeValue = attributeValue;
+                        }
+                    }
+                })
+                .Relate<AvailableAttribute>((product, attribute) =>
+                {
+                    foreach (var variantAttribute in product.ProductVariants.SelectMany(x => x.ProductVariantAttributes)
+                    )
+                    {
+                        if (variantAttribute.ProductAttribute.AvailableAttributeId == attribute.Id)
+                        {
+                            variantAttribute.ProductAttribute.AvailableAttribute = attribute;
+                            if (variantAttribute.ProductAttribute.Label.IsNullEmptyOrWhiteSpace())
+                                variantAttribute.ProductAttribute.Label = attribute.Name;
+                        }
+                    }
+                })
+                .Relate<AvailableAttributeValue>((product, attributeValue) =>
+                {
+                    foreach (var variantAttribute in product.ProductVariants.SelectMany(x => x.ProductVariantAttributes)
+                    )
+                    {
+                        if (variantAttribute.ProductAttributeValue.AvailableAttributeValueId == attributeValue.Id)
+                        {
+                            variantAttribute.ProductAttributeValue.AvailableAttributeValue = attributeValue;
+                            if (variantAttribute.ProductAttributeValue.Label.IsNullEmptyOrWhiteSpace())
+                                variantAttribute.ProductAttributeValue.Label = attributeValue.Value;
+                        }
+                    }
+                })
+                .OrderBy(orderByExpression, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending)
+                .SelectNestedWithTotalMatches(out totalResults, page, count)
+                .ToList();
+        }
     }
 }

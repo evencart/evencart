@@ -1,1 +1,13 @@
-﻿<input type="date" class="form-control" %attributes% value="%value%"/>
+﻿<input type="text" class="form-control" %attributes% />
+
+<script type="text/javascript">
+    ready(function() {
+        jQuery("#{{id}}").datepicker({
+            autoclose: true
+        });
+        var date = new Date("{{ %value% | date : 'o'}}");
+        if(date == "Invalid Date")
+        date = new Date("{{ %value% }}");
+        jQuery("#{{id}}").datepicker('setDate', date);
+    });
+</script>

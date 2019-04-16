@@ -1,0 +1,84 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Stock Report" active_menu="StockReport" parent_active_menu="Reports" %}
+{% partial "Navigation/ReportsSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-3">
+        {% partial "Reports/StockReport.FilterPanel" %}
+    </div>
+    <div class="col-md-9">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Stock Report" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="product" data-formatter="product" data-width="40%">{{"Product" | t}}</th>
+                            <th data-column-id="stockQuantity" data-width="40%" data-formatter="stock">{{"Stock Quantity" | t}}</th>
+                            <th data-column-id="published" data-width="20%" data-formatter="binary">{{"Published" | t}}</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% json source="reportItems" var="initData" %}
+                <script type="text/javascript">
+
+                    ready(function() {
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                reportItems: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_StockReport %}',
+                            responseObject: "reportItems",
+                            formatters: {
+                                "binary": function(column, row) {
+                                    return gridFormatters.binary(column, row, column.id);
+                                },
+                                "product": function(column, row) {
+                                    var productName = row.productName;
+                                    var productUrl =
+                                        '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                                    var productLink = "<a href='" + productUrl + "'>" + productName + "</a>";
+                                    return productLink;
+                                },
+                                "stock": function(column, row) {
+                                    if (!row.hasVariants)
+                                        return row.stockQuantity;
+                                    var html = "<table class='table table-bordered'>";
+                                    for (var index = 0; index < row.variants.length; index++) {
+                                        var variant = row.variants[index];
+                                        html += "<tr>";
+                                        html += "<td>" + variant.attributeText.replace('\n', "<br/>") + "</td>";
+                                        html += "<td>" + variant.stockQuantity + "</td>";
+                                        html += "</tr>";
+                                    }
+                                    html += "</table>";
+                                    return html;
+                                }
+                            },
+                            templates: {
+                                "search":""
+                            },
+                            data: function() {
+                                return {
+                                    productSearch: jQuery("#productSearch").val(),
+                                    published: jQuery("#published").val()
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

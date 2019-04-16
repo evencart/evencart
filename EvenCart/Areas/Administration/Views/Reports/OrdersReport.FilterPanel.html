@@ -1,0 +1,38 @@
+﻿<div class="panel no-border">
+    <div class="panel-body">
+        <div class="form-group">
+            {% control label text=@t"Product" %}
+            {% control text id="searchPhrase" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"From Date" %}
+            {% control datetime id="fromDate" value="startDate" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"To Date" %}
+            {% control datetime id="toDate" value="endDate" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Order Status" %}
+            {% control select id="orderStatus" items="orderStatusTypes" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Payment Status" %}
+            {% control select id="paymentStatus" items="paymentStatusTypes" %}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Group by" %}
+            <select id="groupBy">
+                <option value="days" selected="selected">{{"Days" | t}}</option>
+                <option value="weeks">{{"Weeks" | t}}</option>
+                <option value="months">{{"Months" | t}}</option>
+                <option value="years">{{"Years" | t}}</option>
+            </select>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" id="btnSearch" onclick="reloadGrid('grid-selection')">
+                {{"Search" | t}}
+            </button>
+        </div>
+    </div>
+</div>

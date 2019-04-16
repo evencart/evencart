@@ -85,6 +85,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public virtual IList<ProductSpecification> ProductSpecifications { get; set; }
 
+        public virtual IList<ProductVariant> ProductVariants { get; set; }
+
         #endregion
 
 

@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using EvenCart.Core;
+using NUnit.Framework;
 
-namespace EvenCart.Core.Tests
+namespace EvenCart.Common.Tests
 {
     [TestFixture]
     public class CommonHelperTests

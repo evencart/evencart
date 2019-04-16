@@ -22,6 +22,12 @@ namespace EvenCart.Services.Formatter
             return amount.ToString("C", culture);
         }
 
+        public string FormatDateTime(DateTime dateTime, string languageCultureCode, bool onlyDate = false)
+        {
+            var culture = new CultureInfo(languageCultureCode);
+            return onlyDate ? dateTime.ToString(culture.DateTimeFormat.ShortDatePattern) : dateTime.ToString(culture);
+        }
+
         public string FormatProductAttributes(string attributeJson)
         {
             if (string.IsNullOrEmpty(attributeJson))

@@ -3,7 +3,7 @@ using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Data.Extensions;
 using NUnit.Framework;
 
-namespace EvenCart.Core.Tests
+namespace EvenCart.Common.Tests
 {
     [TestFixture]
     public class TypeConverterTests

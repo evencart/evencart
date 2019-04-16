@@ -1,0 +1,81 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"User Orders Report" active_menu="UserOrdersReport" parent_active_menu="Reports" %}
+{% partial "Navigation/ReportsSecondaryNavigation" %}
+<div class="row">
+    <div class="col-md-3">
+        {% partial "Reports/UserOrdersReport.FilterPanel" %}
+    </div>
+    <div class="col-md-9">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Purchase Report" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="customer" data-formatter="customer">{{"Customer" | t}}</th>
+                            <th data-column-id="totalOrders">{{"Total Orders" | t}}</th>
+                            <th data-column-id="totalProducts">{{"Total Products" | t}}</th>
+                            <th data-column-id="totalAmountFormatted">{{"Total Amount" | t}}</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% json source="reportItems" var="initData" %}
+                <script type="text/javascript">
+
+                    ready(function() {
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                reportItems: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_UserOrdersReport %}',
+                            responseObject: "reportItems",
+                            formatters: {
+                                "binary": function(column, row) {
+                                    return gridFormatters.binary(column, row, column.id);
+                                },
+                                "customer": function (column, row) {
+                                    var userUrl = '{% route GetUser userId="%id%" %}'.replace("%id%", row.id);
+                                    return "<a href='" + userUrl + "'>" + row.name + "</a><div>" + row.email + "</div>";
+                                }
+                            },
+                            templates: {
+                                "search":""
+                            },
+                            data: function () {
+                                var startDate = jQuery("#fromDate").datepicker("getDate");
+                                if (startDate)
+                                    startDate = startDate.toISOString();
+                                var endDate = jQuery("#toDate").datepicker("getDate");
+                                if (endDate)
+                                    endDate = endDate.toISOString();
+                                return {
+                                    searchPhrase: jQuery("#searchPhrase").val(),
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    orderStatus: [
+                                        jQuery("#orderStatus").val()
+                                    ],
+                                    paymentStatus: [
+                                        jQuery("#paymentStatus").val()
+                                    ],
+                                    groupBy: jQuery("#groupBy").val()
+                                }
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

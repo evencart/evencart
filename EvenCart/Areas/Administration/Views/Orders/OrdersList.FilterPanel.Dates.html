@@ -9,11 +9,13 @@
 <script type="text/javascript">
     ready(function() {
         jQuery("#fromDate").change(function () {
-            searchParams.fromDate = jQuery(this).val();
+            var date = jQuery(this).datepicker("getDate");
+            searchParams.fromDate = date ? date.toISOString() : null;
             reloadGrid("grid-selection");
         });
         jQuery("#toDate").change(function () {
-            searchParams.toDate = jQuery(this).val();
+            var date = jQuery(this).datepicker("getDate");
+            searchParams.toDate = date ? date.toISOString() : null;
             reloadGrid("grid-selection");
         });
     });

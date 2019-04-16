@@ -30,7 +30,7 @@ namespace EvenCart.Areas.Administration.Factories.Orders
         public OrderItemModel Create(OrderItem entity)
         {
             var orderItemModel = _modelMapper.Map<OrderItemModel>(entity);
-            orderItemModel.ProductName = entity.Product.Name;
+            orderItemModel.ProductName = entity.Product?.Name;
             orderItemModel.AttributeText = _formatterService.FormatProductAttributes(entity.AttributeJson);
             orderItemModel.TotalPrice = orderItemModel.Price * orderItemModel.Quantity;
             return orderItemModel;

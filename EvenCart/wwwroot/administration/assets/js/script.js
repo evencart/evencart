@@ -95,9 +95,10 @@ var generateGrid = function (options) {
         }
         return rows;
     }
-
-    if (options.initialData && options.initialData[options.responseObject])
+    if (options.initialData && options.initialData[options.responseObject]) {
+       
         options.initialData["success"] = true;
+    }
 
     jQuery("#" + options.element).bootgrid({
         ajax: options.url != null,

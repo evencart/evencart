@@ -17,6 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj" />
     <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
   </ItemGroup>
 
 </Project>

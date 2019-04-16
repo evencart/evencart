@@ -72,19 +72,27 @@ namespace EvenCart.Services.Purchases
                 query = query.Where(x => x.CreatedOn <= endDate);
             }
 
+            query = query.Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<Order, OrderItem>());
+
+            query = query.Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
+                .Relate<Product>((order, product) =>
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        if (orderItem.ProductId == product.Id)
+                            orderItem.Product = product;
+                    }
+                });
+
             if (productIds?.Any() ?? false)
             {
-                query = query.Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter);
                 Expression<Func<OrderItem, bool>> whereProductIdMatches = (orderItem) => productIds.Contains(orderItem.ProductId);
                 query = query.Where(whereProductIdMatches);
             }
             if (!productName.IsNullEmptyOrWhiteSpace() || (vendorIds?.Any() ?? false))
             {
-                if (productIds == null || !productIds.Any())
-                {
-                    query = query.Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter);
-                }
-                query = query.Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter);
+                
                 if (vendorIds?.Any() ?? false)
                 {
                     Expression<Func<ProductVendor, bool>> whereVendorIdMatches = (vendorItem) => vendorIds.Contains(vendorItem.VendorId);
