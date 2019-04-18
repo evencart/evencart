@@ -46,10 +46,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             }
 
             menuList = (List<Navigation>)paramsAsDict[NavigationType];
-            //it's not possible to preserve and serve different navigation because of cached views and clearing
-            //of navigation on each request. 
-            //as a workaround, we create a string pattern and spit it no the liquid page
-            //then liquid uses that variable to render the menus
+
 
             foreach (Match match in matches)
             {
