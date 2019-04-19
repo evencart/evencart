@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using EvenCart.Data.Extensions;
@@ -12,8 +13,12 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
         public string NavigationType { get; set; }
         public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
+            if (!ApplicationEngine.IsAdmin())
+                return inputContent;
             var matches = regEx.Matches(inputContent);
             var paramsAsDict = (IDictionary<string, object>)parameters;
+            if (paramsAsDict == null)
+                return inputContent;
             if (matches.Count == 0)
             {
                 var navMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == "navigation_" + NavigationType);
@@ -24,9 +29,6 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     paramsAsDict?.Add(NavigationType + "_groups", groupMeta.Value);
                 return inputContent;
             }
-        
-            if (paramsAsDict == null)
-                return inputContent;
 
             List<Navigation> menuList = null;
             if (!paramsAsDict.ContainsKey(NavigationType))
@@ -58,7 +60,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 keyValuePairs.TryGetValue("id", out var id);
                 int.TryParse(displayOrderValue, out var displayOrder);
 
-                if (!group.IsNullEmptyOrWhiteSpace())
+                if (group != null)
                 {
                     groupList.Add(new NavigationGroup()
                     {
@@ -74,7 +76,8 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 keyValuePairs.TryGetValue("title", out var title);
                 keyValuePairs.TryGetValue("systemName", out var systemName);
                 keyValuePairs.TryGetValue("groupId", out var groupId);
-
+                keyValuePairs.TryGetValue("capability", out var capability);
+                keyValuePairs.TryGetValue("iconClass", out var iconClass);
                 if (url.IsNullEmptyOrWhiteSpace())
                 {
                     //use the current url if it's empty url
@@ -89,7 +92,9 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                    Url = url,
                    SystemName = systemName,
                    DisplayOrder = displayOrder,
-                   GroupId = groupId
+                   GroupId = groupId,
+                   Capabilities = capability?.Split(" or ", StringSplitOptions.RemoveEmptyEntries),
+                   IconClass = iconClass
                 });
             }
 
@@ -123,6 +128,10 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             public string SystemName { get; set; }
 
             public string GroupId { get; set; }
+
+            public string[] Capabilities { get; set; }
+
+            public string IconClass { get; set; }
         }
 
         internal class NavigationGroup : FoundationModel
