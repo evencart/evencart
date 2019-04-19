@@ -75,13 +75,16 @@
                 <script type="text/javascript">
                     ready(function () {
                         var active_menu = "{{active_menu}}";
-                        for (var i = 0; i < secondary_navigation.length; i++) {
-                            var menuItem = secondary_navigation[i];
-                            var li = "<li class='" + (menuItem.systemName == active_menu ? "active" : "") + "'>";
-                            li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
-                            li += "</li>";
-                            jQuery("#secondaryNavigationUl").append(li);
+                        if (secondary_navigation) {
+                            for (var i = 0; i < secondary_navigation.length; i++) {
+                                var menuItem = secondary_navigation[i];
+                                var li = "<li class='" + (menuItem.systemName == active_menu ? "active" : "") + "'>";
+                                li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
+                                li += "</li>";
+                                jQuery("#secondaryNavigationUl").append(li);
+                            }
                         }
+                       
                     });
                 </script>
                 <ul id="secondaryNavigationUl" class="list-inline">
