@@ -10,6 +10,7 @@ using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Purchases;
@@ -124,7 +125,14 @@ namespace EvenCart.Areas.Administration.Controllers
                 _userRegistrationService.Register(user, ApplicationConfig.DefaultPasswordFormat);
             }
             else
-                _userService.Update(user);
+            {
+               _userService.Update(user);
+               //update password if so
+               if (!userModel.Password.IsNullEmptyOrWhiteSpace())
+               {
+                   _userRegistrationService.UpdatePassword(user.Id, userModel.Password, ApplicationConfig.DefaultPasswordFormat);
+               }
+            }
 
             //get the role ids
             var roleIds = userModel.Roles?.Select(x => x.Id).ToArray() ?? null;
