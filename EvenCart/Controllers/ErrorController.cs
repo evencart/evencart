@@ -11,7 +11,7 @@ namespace EvenCart.Controllers
             statusCode = statusCode ?? 404;
             if (statusCode == 404)
                 return R.WithView("404").Result;
-            return R.Result;
+            return R.With("statusCode", statusCode).Result;
         }
     }
 }
