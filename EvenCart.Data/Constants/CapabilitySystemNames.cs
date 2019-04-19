@@ -65,7 +65,7 @@ namespace EvenCart.Data.Constants
 
         public const string ViewOrder = "Order.View";
 
-        public const string ManageShipment = "Shpment.Manage";
+        public const string ManageShipment = "Shipment.Manage";
 
         public const string EditContentPage = "ContentPage.Edit";
 
@@ -86,5 +86,7 @@ namespace EvenCart.Data.Constants
         public const string ImitateUser = "User.Imitate";
 
         public const string ManageReviews = "ManageReviews";
+
+        public const string AccessAdministration = "User.AccessAdministration";
     }
 }

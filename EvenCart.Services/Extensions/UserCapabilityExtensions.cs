@@ -13,7 +13,7 @@ namespace EvenCart.Services.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <param name="capabilityName"></param>
-        /// <returns>True if all the provided capabilities are possesed by user. False otherwise.</returns>
+        /// <returns>True if all the provided capabilities are possessed by user. False otherwise.</returns>
         public static bool Can(this User user, params string[] capabilityName)
         {
             if (user == null)
@@ -23,14 +23,22 @@ namespace EvenCart.Services.Extensions
             if (user.IsAdministrator())
                 return true;
 
-            var roleCapabilityService = DependencyResolver.Resolve<IRoleCapabilityService>();
+            var capabilityService = DependencyResolver.Resolve<ICapabilityService>();
             
             //get user's role ids (only active roles)
             var roleIds = user.Roles.Where(x=>  x.IsActive).Select(x => x.Id);
 
             //and now the capabilities
-            var capabilities = roleCapabilityService.GetConsolidatedCapabilities(roleIds.ToArray());
+            var capabilities = capabilityService.GetByRolesConsolidated(roleIds.ToArray()).ToList();
 
+            var result = capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
+
+            if (!result)
+            {
+                //search for user specific caps
+                var userCapabilities = capabilityService.GetByUser(user.Id);
+                capabilities = capabilities.Concat(userCapabilities).ToList();
+            }
             return capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
         }
 
@@ -49,14 +57,21 @@ namespace EvenCart.Services.Extensions
             if (user.IsAdministrator())
                 return true;
 
-            var roleCapabilityService = DependencyResolver.Resolve<IRoleCapabilityService>();
+            var capabilityService = DependencyResolver.Resolve<ICapabilityService>();
 
             //get user's role ids (only active roles)
             var roleIds = user.Roles.Where(x => x.IsActive).Select(x => x.Id);
 
             //and now the capabilities
-            var capabilities = roleCapabilityService.GetConsolidatedCapabilities(roleIds.ToArray());
+            var capabilities = capabilityService.GetByRolesConsolidated(roleIds.ToArray()).ToList();
 
+            var result = capabilities.Select(x => x.Name).Intersect(capabilityName).Any();
+            if (!result)
+            {
+                //search for user specific caps
+                var userCapabilities = capabilityService.GetByUser(user.Id);
+                capabilities = capabilities.Concat(userCapabilities).ToList();
+            }
             return capabilities.Select(x => x.Name).Intersect(capabilityName).Any();
         }
 

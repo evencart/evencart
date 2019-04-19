@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Services.Users;
@@ -15,7 +16,7 @@ namespace EvenCart.Infrastructure.Helpers
             foreach (var cp in capabilityProviders)
             {
                 var providerCapabilityNames = cp.GetRawCapabilities();
-                foreach (var newCapability in providerCapabilityNames.Except(savedCapabilitiesNames))
+                foreach (var newCapability in providerCapabilityNames.Except(savedCapabilitiesNames, StringComparer.InvariantCultureIgnoreCase))
                 {
                     capabilityService.Insert(new Capability()
                     {

@@ -1,4 +1,5 @@
 ﻿using EvenCart.Core.Extensions;
+using EvenCart.Data.Constants;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Infrastructure.Helpers;
@@ -15,7 +16,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             {
                 Name = currentUser?.Name,
                 IsVisitor = currentUser?.IsVisitor() ?? true,
-                IsAdministrator = currentUser?.IsAdministrator() ?? false,
+                IsAdministrator = currentUser?.Can(CapabilitySystemNames.AccessAdministration) ?? false,
                 Id = currentUser?.Id ?? 0,
                 Email = currentUser?.Email ?? null,
                 FirstName = currentUser?.FirstName ?? null,

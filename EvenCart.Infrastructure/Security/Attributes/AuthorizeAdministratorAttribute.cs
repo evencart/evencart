@@ -6,6 +6,7 @@
 #endregion
 
 using System;
+using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
 using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace EvenCart.Infrastructure.Security.Attributes
                 base.OnActionExecuting(context);
                 return;
             }
-            if (!ApplicationEngine.CurrentUser.IsAdministrator())
+            if (!ApplicationEngine.CurrentUser.Can(CapabilitySystemNames.AccessAdministration))
             {
                 context.Result = new UnauthorizedResult();
             }

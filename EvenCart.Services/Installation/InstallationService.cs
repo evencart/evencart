@@ -55,7 +55,6 @@ namespace EvenCart.Services.Installation
         private void SeedRoles()
         {
             var roleService = DependencyResolver.Resolve<IRoleService>();
-            var roleCapabilityService = DependencyResolver.Resolve<IRoleCapabilityService>();
             var capabilityService = DependencyResolver.Resolve<ICapabilityService>();
             var capabilityProvider = DependencyResolver.Resolve<ICapabilityProvider>();
 
@@ -141,7 +140,7 @@ namespace EvenCart.Services.Installation
                     continue;
                 var roleId = roles.Values.Where(x => x.Name == c.Key).Select(x => x.Id).First();
                 var cIds = savedCapabilities.Where(x => c.Value.Contains(x.Name)).Select(x => x.Id);
-                roleCapabilityService.SetRoleCapabilities(roleId, cIds.ToArray());
+                capabilityService.SetRoleCapabilities(roleId, cIds.ToArray());
             }
 
         }

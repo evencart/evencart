@@ -4,6 +4,7 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Settings;
 using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Navigation;
@@ -14,6 +15,7 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Infrastructure.Security.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -45,6 +47,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualGet("{settingType}", Name = AdminRouteNames.GetSettings)]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult Index(string settingType = "general")
         {
             return GetSettingResult(settingType);
@@ -52,6 +55,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "general")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(GeneralSettingsModel generalSettings)
         {
             SaveSetting(generalSettings);
@@ -60,6 +64,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "order")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(OrderSettingsModel orderSettings)
         {
             SaveSetting(orderSettings);
@@ -68,6 +73,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "user")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(UserSettingsModel userSettings)
         {
             SaveSetting(userSettings);
@@ -76,6 +82,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "tax")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(TaxSettingsModel taxSettings)
         {
             SaveSetting(taxSettings);
@@ -84,6 +91,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "url")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(UrlSettingsModel urlSettings)
         {
             SaveSetting(urlSettings);
@@ -92,6 +100,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "media")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(MediaSettingsModel mediaSettings)
         {
             SaveSetting(mediaSettings);
@@ -100,6 +109,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "catalog")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(CatalogSettingsModel catalogSettings)
         {
             SaveSetting(catalogSettings);
@@ -108,6 +118,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "email")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(EmailSettingsModel emailSettings)
         {
             SaveSetting(emailSettings);
@@ -115,6 +126,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
         [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
         [FieldRequired("settingType", "localization")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSettings(LocalizationSettingsModel localizationSettings)
         {
             SaveSetting(localizationSettings);
