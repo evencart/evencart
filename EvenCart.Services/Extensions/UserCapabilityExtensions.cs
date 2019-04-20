@@ -16,7 +16,7 @@ namespace EvenCart.Services.Extensions
         /// <returns>True if all the provided capabilities are possessed by user. False otherwise.</returns>
         public static bool Can(this User user, params string[] capabilityName)
         {
-            if (user == null)
+            if (user?.Roles == null || !user.Roles.Any())
                 return false;
 
             //if the user is administrator, he or she should have all capabilities by default
