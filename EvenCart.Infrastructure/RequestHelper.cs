@@ -2,6 +2,7 @@
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 
 namespace EvenCart.Infrastructure
 {
@@ -14,19 +15,13 @@ namespace EvenCart.Infrastructure
 
         public static bool IsApiCall(out bool withStoreMeta, out string[] types)
         {
-            var actionContextAccessor = DependencyResolver.Resolve<IActionContextAccessor>();
-            var actionContext = actionContextAccessor.ActionContext;
             var httpContext = ApplicationEngine.CurrentHttpContext;
-            var area = "";
-            if (actionContext?.RouteData.Values.ContainsKey("area") ?? false)
+            var area = httpContext.GetRouteValue("area")?.ToString() ?? "";
+            if (!area.IsNullEmptyOrWhiteSpace())
             {
-                area = actionContext.RouteData.Values["area"]?.ToString();
-                if (!area.IsNullEmptyOrWhiteSpace())
-                {
-                    area = "/" + area;
-                }
+                area = "/" + area;
             }
-            var isApiCall = httpContext.Request.Path.Value.StartsWith(area + "/" + ApplicationConfig.ApiEndpointName);
+            var isApiCall = httpContext.Request.Path.Value.StartsWith(area + "/" + ApplicationConfig.ApiEndpointName + "/");
             withStoreMeta = isApiCall && httpContext.Request.Query["storeMeta"].Any();
             if (!withStoreMeta)
                 types = null;
