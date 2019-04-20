@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
+using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
@@ -32,7 +33,7 @@ namespace EvenCart.Services.Emails
         public override EmailTemplate FirstOrDefault(Expression<Func<EmailTemplate, bool>> @where)
         {
             return Repository.Join<EmailAccount>("EmailAccountId", "Id")
-                .Join<EmailTemplate>("ParentEmailTemplateId", "Id", typeof(EmailTemplate))
+                .Join<EmailTemplate>("ParentEmailTemplateId", "Id", typeof(EmailTemplate), JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<EmailTemplate, EmailAccount>())
                 .Relate<EmailTemplate>((template, emailTemplate) =>
                 {
