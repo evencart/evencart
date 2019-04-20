@@ -6,10 +6,12 @@ using EvenCart.Core.Exception;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
+using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Notifications;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Services.Cultures;
 using EvenCart.Services.Notifications;
 using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
@@ -45,6 +47,9 @@ namespace EvenCart.Services.Installation
 
             //seed email templates
             SeedEmailTemplates(defaultUserEmail, installDomain);
+
+            //seed currency
+            SeedCurrency();
 
             //seed notification events
             //SeedNotificationEvents();
@@ -145,6 +150,33 @@ namespace EvenCart.Services.Installation
 
         }
 
+        private void SeedCurrency()
+        {
+            var currencyService = DependencyResolver.Resolve<ICurrencyService>();
+            currencyService.Insert(new Currency()
+            {
+                Name = "US Dollar",
+                CultureCode = "en-US",
+                ExchangeRate = 1,
+                Flag = "us.png",
+                IsoCode = "USD",
+                NumberOfDecimalPlaces = 2,
+                RoundingType = Rounding.Default,
+                Published = true
+            });
+
+            currencyService.Insert(new Currency()
+            {
+                Name = "Indian Rupee",
+                CultureCode = "en-IN",
+                ExchangeRate = 68,
+                Flag = "in.png",
+                IsoCode = "INR",
+                NumberOfDecimalPlaces = 2,
+                RoundingType = Rounding.Default,
+                Published = true
+            });
+        }
         /// <summary>
         /// Seed default user
         /// </summary>
@@ -280,6 +312,47 @@ namespace EvenCart.Services.Installation
               CatalogPaginationType = CatalogPaginationType.Numbered,
               NumberOfProductsPerPage = 15
             });
+
+            //tax
+            settingService.Save(new TaxSettings()
+            {
+                ShippingTaxId = null,
+                ChargeTaxOnShipping = false,
+                DefaultTaxRate = 0,
+                DisplayProductPricesWithoutTax = false,
+                PricesIncludeTax = true,
+                ShippingPricesIncludeTax = true
+            });
+
+            settingService.Save(new LocalizationSettings()
+            {
+                AllowUserToSelectCurrency = true,
+                AllowUserToSelectLanguage = false,
+            });
+
+            settingService.Save(new EmailSenderSettings()
+            {
+                DefaultEmailAccountId = 0,
+                OrderPaidEmailEnabled = false,
+                OrderPaidEmailToAdminEnabled = true,
+                OrderPlacedEmailEnabled = true,
+                OrderPlacedEmailToAdminEnabled = true,
+                PasswordChangedEmailEnabled = true,
+                ProductOutOfStockToAdminEnabled = true,
+                ShipmentDeliveredEmailEnabled = true,
+                ShipmentDeliveredEmailToAdminEnabled = false,
+                ShipmentDeliveryFailedEmailEnabled = true,
+                ShipmentDeliveryFailedToAdminEmailEnabled = true,
+                ShipmentShippedEmailEnabled = true,
+                UserActivationEmailEnabled = true,
+                UserDeactivationEmailEnabled = false,
+                UserDeactivationEmailToAdminEnabled = false,
+                UserDeletedEmailEnabled = false,
+                UserDeletedEmailToAdminEnabled = true,
+                UserRegisteredEmailEnabled = true,
+                UserRegisteredEmailToAdminEnabled = true
+            });
+
 
         }
 
