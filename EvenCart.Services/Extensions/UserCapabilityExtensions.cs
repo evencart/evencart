@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Interfaces;
@@ -23,22 +25,26 @@ namespace EvenCart.Services.Extensions
             if (user.IsAdministrator())
                 return true;
 
-            var capabilityService = DependencyResolver.Resolve<ICapabilityService>();
-            
-            //get user's role ids (only active roles)
-            var roleIds = user.Roles.Where(x=>  x.IsActive).Select(x => x.Id);
-
-            //and now the capabilities
-            var capabilities = capabilityService.GetByRolesConsolidated(roleIds.ToArray()).ToList();
-
-            var result = capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
-
-            if (!result)
+            var capabilities = user.Capabilities;
+            if (capabilities == null)
             {
-                //search for user specific caps
-                var userCapabilities = capabilityService.GetByUser(user.Id);
-                capabilities = capabilities.Concat(userCapabilities).ToList();
+                var capabilityService = DependencyResolver.Resolve<ICapabilityService>();
+                //get user's role ids (only active roles)
+                var roleIds = user.Roles.Where(x => x.IsActive).Select(x => x.Id);
+
+                //and now the capabilities
+                capabilities = capabilityService.GetByRolesConsolidated(roleIds.ToArray()).ToList();
+
+                var result = capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
+
+                if (!result)
+                {
+                    //search for user specific caps
+                    var userCapabilities = capabilityService.GetByUser(user.Id);
+                    capabilities = capabilities.Concat(userCapabilities).ToList();
+                }
             }
+           
             return capabilities.Select(x => x.Name).Intersect(capabilityName).Count() == capabilityName.Length;
         }
 

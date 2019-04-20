@@ -46,7 +46,11 @@ namespace EvenCart.Core.Infrastructure.Utils
 
             //nullable int?
             if (type == typeof(int?))
+            {
+                if (value.ToString() == "")
+                    return null;
                 return Convert.ToInt32(value);
+            }
 
             //uri?
             if (type == typeof(Uri))

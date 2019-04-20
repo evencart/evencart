@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PaypalWithRedirect
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Services", "EvenCart.Services\EvenCart.Services.csproj", "{7BF02EED-4F28-447C-952A-395E53710D7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvenCart.WebHost.Tests", "Tests\EvenCart.WebHost.Tests\EvenCart.WebHost.Tests.csproj", "{2DE0BF14-5386-4C67-A181-84B3561C6C03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{7BF02EED-4F28-447C-952A-395E53710D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BF02EED-4F28-447C-952A-395E53710D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BF02EED-4F28-447C-952A-395E53710D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE0BF14-5386-4C67-A181-84B3561C6C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE0BF14-5386-4C67-A181-84B3561C6C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE0BF14-5386-4C67-A181-84B3561C6C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE0BF14-5386-4C67-A181-84B3561C6C03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{E3992960-ED94-4B76-9590-3AAF061F129C} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{6B272832-8C62-4B95-9615-F54FCD96F2DB} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{91BA7EEF-EB02-46E9-BCB6-BB27463270B2} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
+		{2DE0BF14-5386-4C67-A181-84B3561C6C03} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {646273F8-A252-4654-8A29-F5380A2FCDB0}

@@ -8,7 +8,6 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<ConsentLog, string>(nameof(ConsentLog.EncryptedUserInfo), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

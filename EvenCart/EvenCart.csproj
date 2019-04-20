@@ -51,6 +51,7 @@
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Error\_404.html" />
     <None Remove="Content\Themes\Default\Views\Home\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
@@ -119,6 +120,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\ContentPages\Index.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Error\_404.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Error\Index.html">

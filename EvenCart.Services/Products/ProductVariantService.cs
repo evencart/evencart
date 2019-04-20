@@ -48,7 +48,7 @@ namespace EvenCart.Services.Products
 
         public ProductVariant AddVariant(Product product, ProductVariant productVariant, Transaction transaction = null)
         {
-          
+            productVariant.ProductId = product.Id;
             Insert(productVariant, transaction);
 
             foreach (var variantAttribute in productVariant.ProductVariantAttributes)

@@ -6,13 +6,12 @@ namespace EvenCart.Services.Tests.Users
 {
     public abstract class UserAuthenticationTests : BaseTest
     {
-        private readonly IUserRegistrationService _userRegistrationService;
-        private readonly IUserService _userService;
+        private IUserRegistrationService _userRegistrationService;
 
-        public UserAuthenticationTests()
+        [SetUp]
+        public void Setup()
         {
             _userRegistrationService = Resolve<IUserRegistrationService>();
-            _userService = Resolve<IUserService>();
         }
 
         [Test]

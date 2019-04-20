@@ -30,7 +30,7 @@ namespace EvenCart.Services.Users
             if (!roleIds.Any())
                 return null;
             var roleIdsAsList = roleIds.ToList();
-            Expression<Func<RoleCapability, bool>> rcWhere = rc => roleIdsAsList.Contains(rc.Id);
+            Expression<Func<RoleCapability, bool>> rcWhere = rc => roleIdsAsList.Contains(rc.RoleId);
             return Repository.Join<RoleCapability>("Id", "CapabilityId")
                 .Where(rcWhere)
                 .SelectNested()

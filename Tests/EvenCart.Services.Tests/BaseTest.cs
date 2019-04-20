@@ -1,23 +1,26 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests
 {
-    public abstract class BaseTest
+    public class BaseTest
     {
         protected bool IsAppVeyor;
         protected string MySqlConnectionString;
         protected string MsSqlConnectionString;
         protected string SqliteConnectionString;
-        protected const string ContextKey = "EvenCart.Services.Tests.BaseTest";
+        protected const string ContextKey = "EvenCart";
         private readonly string _sqliteFile;
 
         protected BaseTest()
@@ -56,6 +59,7 @@ namespace EvenCart.Services.Tests
                 .Returns(new LocalFileProvider(hostingEnvironment.Object));
 
             serviceCollection.AddSingleton<IHostingEnvironment>(provider => hostingEnvironment.Object);
+            serviceCollection.AddSingleton<IConfiguration>(new TestConfiguration());
             ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object);
         }
 
@@ -74,6 +78,30 @@ namespace EvenCart.Services.Tests
         public T Resolve<T>()
         {
             return DependencyResolver.Resolve<T>();
+        }
+    }
+
+    public class TestConfiguration : IConfiguration
+    {
+        public IConfigurationSection GetSection(string key)
+        {
+            return null;
+        }
+
+        public IEnumerable<IConfigurationSection> GetChildren()
+        {
+            return null;
+        }
+
+        public IChangeToken GetReloadToken()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string this[string key]
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
     }
 }
