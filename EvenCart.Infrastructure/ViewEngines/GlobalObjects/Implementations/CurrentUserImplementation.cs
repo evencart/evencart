@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using System.Collections.Generic;
+using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 {
@@ -23,5 +24,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public bool IsImitator { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public IList<string> Capabilities { get; set; }
     }
 }

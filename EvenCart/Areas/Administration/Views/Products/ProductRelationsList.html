@@ -4,9 +4,8 @@
 {% global page_title=@t"Upsell Products" active_menu="UpSell" parent_active_menu="ProductsList" if="relationType == 'UpSell'" %}
 {% global page_title=@t"Frequently Bought Together" active_menu="FbtProducts" parent_active_menu="ProductsList" if="relationType == 'FrequentlyBoughtTogether'" %}
 
-{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to product" %}
+{% global menu_group="ProductEdit" %}
 
-{% partial "Navigation/ProductEditSecondaryNavigation" %}
 <div class="row">
     <div class="col-md-12 col-offset-2">
         <div class="panel">

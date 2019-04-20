@@ -2,6 +2,7 @@
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
+using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
@@ -14,6 +15,7 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Infrastructure.Security.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -44,6 +46,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         #region EmailTemplates
         [DualGet("emailtemplates", Name = AdminRouteNames.EmailTemplatesList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult EmailTemplatesList(EmailTemplateSearchModel searchModel)
         {
             var emailTemplates = _emailTemplateService.Get(out int totalResults, x => true, page: searchModel.Current, count: searchModel.RowCount)
@@ -56,6 +59,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualGet("emailtemplates/{emailTemplateId}", Name = AdminRouteNames.GetEmailTemplate)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult EmailTemplateEditor(int emailTemplateId)
         {
             var emailTemplate = emailTemplateId > 0 ? _emailTemplateService.Get(emailTemplateId) : new EmailTemplate();
@@ -83,6 +87,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("emailtemplates", Name = AdminRouteNames.SaveEmailTemplate, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(EmailTemplateModel))]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult SaveEmailTemplate(EmailTemplateModel model)
         {
             var emailTemplate = model.Id > 0 ? _emailTemplateService.Get(model.Id) : new EmailTemplate();
@@ -102,6 +107,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualPost("emailtemplates/delete", Name = AdminRouteNames.DeleteEmailTemplate, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult DeleteEmailTemplate(int id)
         {
             var emailTemplate = id > 0 ? _emailTemplateService.Get(id) : null;
@@ -119,6 +125,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         #region Email Accounts
         [DualGet("emailaccounts", Name = AdminRouteNames.EmailAccountsList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailAccounts)]
         public IActionResult EmailAccountsList()
         {
             var emailAccounts = _emailAccountService.Get(x => true)
@@ -135,6 +142,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualGet("emailaccounts/{emailAccountId}", Name = AdminRouteNames.GetEmailAccount)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailAccounts)]
         public IActionResult EmailAccountEditor(int emailAccountId)
         {
             var emailAccount = emailAccountId > 0 ? _emailAccountService.Get(emailAccountId) : new EmailAccount();
@@ -147,6 +155,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("emailaccounts", Name = AdminRouteNames.SaveEmailAccount, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(EmailAccountModel))]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailAccounts)]
         public IActionResult SaveEmailAccount(EmailAccountModel model)
         {
             var emailAccount = model.Id > 0 ? _emailAccountService.Get(model.Id) : new EmailAccount();
@@ -169,6 +178,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualPost("emailaccounts/delete", Name = AdminRouteNames.DeleteEmailAccount, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailAccounts)]
         public IActionResult DeleteEmailAccount(int id)
         {
             var emailAccount = id > 0 ? _emailAccountService.Get(id) : null;
@@ -181,6 +191,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("emailaccounts/test", Name = AdminRouteNames.TestEmailAccount, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(EmailAccountModel))]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailAccounts)]
         public IActionResult SendTestEmail(EmailAccountModel emailAccountModel)
         {
             var emailAccount = _modelMapper.Map<EmailAccount>(emailAccountModel);
@@ -207,6 +218,7 @@ namespace EvenCart.Areas.Administration.Controllers
         #region Email Queue
 
         [DualGet("emailmessages", Name = AdminRouteNames.EmailMessagesList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult EmailMessagesList(EmailMessageSearchModel searchModel)
         {
             var emailMessages = _emailService.Get(out int totalResults, x => true, x => x.SendingDate,
@@ -227,6 +239,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualGet("emailmessages/{emailMessageId}", Name = AdminRouteNames.GetEmailMessage)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult EmailMessageEditor(int emailMessageId)
         {
             var emailMessage = emailMessageId > 0 ? _emailService.Get(emailMessageId) : null;
@@ -238,6 +251,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("emailmessages", Name = AdminRouteNames.SaveEmailMessage, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(EmailMessageModel))]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult SaveEmailMessage(EmailMessageModel model)
         {
             var emailMessage = model.Id > 0 ? _emailService.Get(model.Id) : new EmailMessage();
@@ -249,6 +263,7 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         [DualPost("emailmessages/delete", Name = AdminRouteNames.DeleteEmailMessage, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult DeleteEmailMessage(int emailMessageId)
         {
             var emailMessage = emailMessageId > 0 ? _emailService.Get(emailMessageId) : null;

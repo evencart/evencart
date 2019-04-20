@@ -21,9 +21,13 @@ namespace EvenCart.Data.Constants
 
         public const string ManageSettings = "Setting.Manage";
 
-        public const string ManagePlugins = "Plugins.Manage";
+        public const string ManagePlugins = "Plugin.Manage";
 
         public const string ManageEmailAccounts = "EmailAccount.Manage";
+
+        public const string ManageEmailTemplates = "EmailTemplate.Manage";
+
+        public const string ManageEmailMessage = "EmailMessage.Manage";
 
         public const string ManageTaxes = "Tax.Manage";
 
@@ -85,8 +89,10 @@ namespace EvenCart.Data.Constants
 
         public const string ImitateUser = "User.Imitate";
 
-        public const string ManageReviews = "ManageReviews";
+        public const string ManageReviews = "Review.Manage";
 
         public const string AccessAdministration = "User.AccessAdministration";
+
+        public const string ManageReports = "Report.Manage";
     }
 }

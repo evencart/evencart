@@ -1,6 +1,5 @@
 ﻿{% layout "_Layout"%}
-{% global page_title=@t"Imitate" active_menu="Imitate" parent_active_menu="UsersList"%}
-{% partial "Navigation/UserEditSecondaryNavigation" %}
+{% global page_title=@t"Imitate" active_menu="Imitate" parent_active_menu="UsersList" menu_group="UserEdit"%}
 
 <form action='{% route UserImitate userId="{{userId}}" %}' method="post" id="edit-address-form">
     <div class="panel">

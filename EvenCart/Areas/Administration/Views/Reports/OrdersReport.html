@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                 </table>
-                {% json source="reportItems" var="initData" %}
+                {{reportItems | scriptJson : "initData"}}
                 <script type="text/javascript">
 
                     ready(function() {

@@ -2,15 +2,18 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Reports;
 using EvenCart.Areas.Administration.Models.Reports;
+using EvenCart.Data.Constants;
 using EvenCart.Data.Enum;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
+    [CapabilityRequired(CapabilitySystemNames.ManageReports)]
     public class ReportsController : FoundationAdminController
     {
         private readonly IProductService _productService;

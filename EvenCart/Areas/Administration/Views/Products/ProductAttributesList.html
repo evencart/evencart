@@ -1,8 +1,6 @@
 ﻿{% layout "_Layout" %}
-{% global page_title=@t"Product Attributes" active_menu="ProductAttributesList" parent_active_menu="ProductsList" %}
-{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to product" %}
+{% global page_title=@t"Product Attributes" active_menu="ProductAttributesList" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
 
-{% partial "Navigation/ProductEditSecondaryNavigation" %}
 <div class="row">
     <div class="col-md-12 col-offset-2">
         <div class="panel">
@@ -12,15 +10,15 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed">
                     <thead>
-                    <tr>
-                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="name">{{"Name" | t}}</th>
-                        <th data-column-id="label">{{"Display Text" | t}}</th>
-                        <th data-column-id="inputFieldTypeDisplay">{{"Type" | t}}</th>
-                        <th data-column-id="isRequired" data-formatter="isrequired">{{"Required" | t}}</th>
-                        <th data-column-id="values" data-formatter="values">{{"Values" | t}}</th>
-                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                    </tr>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name">{{"Name" | t}}</th>
+                            <th data-column-id="label">{{"Display Text" | t}}</th>
+                            <th data-column-id="inputFieldTypeDisplay">{{"Type" | t}}</th>
+                            <th data-column-id="isRequired" data-formatter="isrequired">{{"Required" | t}}</th>
+                            <th data-column-id="values" data-formatter="values">{{"Values" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
                     </thead>
                 </table>
                 <script type="text/javascript">
@@ -95,7 +93,7 @@
 </div>
 
 <script type="text/javascript">
-   
+
     var editAttribute = function(id) {
         jQuery("#add-attribute").html("{{'Please wait...'}}");
         var centerPopup = showAsPopup("add-attribute",
@@ -124,7 +122,7 @@
                 post({
                     url: "{% route api_DeleteProductAttribute %}",
                     data: {
-                      productAttributeId: id  
+                      productAttributeId: id
                     },
                     done: function(response) {
                         if (response.success) {
@@ -144,7 +142,7 @@
                 post({
                     url: "{% route api_DeleteProductAttributeValue %}",
                     data: {
-                        productAttributeValueId: id  
+                        productAttributeValueId: id
                     },
                     done: function(response) {
                         if (response.success) {

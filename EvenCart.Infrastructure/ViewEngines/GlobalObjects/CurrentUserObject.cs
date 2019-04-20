@@ -1,4 +1,5 @@
-﻿using EvenCart.Core.Extensions;
+﻿using System.Linq;
+using EvenCart.Core.Extensions;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
@@ -29,6 +30,11 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                                            ApplicationEngine.CurrentLanguageCultureCode) + currentUser?.Id);
             if (currentUserImpl.FirstName.IsNullEmptyOrWhiteSpace())
                 currentUserImpl.FirstName = currentUserImpl.Name;
+
+            if (currentUserImpl.IsAdministrator)
+            {
+               currentUserImpl.Capabilities = currentUser?.Capabilities?.Select(x => x.Name).ToList();
+            }
             return currentUserImpl;
         }
 

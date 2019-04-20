@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Users;
@@ -134,7 +135,17 @@ namespace EvenCart.Services.Users
             var query = Repository.Where(where)
                 .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToMany<User, Role>());
+                .Join<RoleCapability>("Id", "RoleId", joinType: JoinType.LeftOuter)
+                .Join<Capability>("CapabilityId", "Id", joinType: JoinType.LeftOuter)
+                .Join<UserCapability>("Id", "UserId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Capability>("CapabilityId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<User, Role>())
+                .Relate<Capability>((user, capability) =>
+                {
+                    user.Capabilities = user.Capabilities ?? new List<Capability>();
+                    if (user.Capabilities.All(x => x.Id != capability.Id))
+                        user.Capabilities.Add(capability);
+                });
 
             var userObject = query.SelectNested().FirstOrDefault();
             return userObject;

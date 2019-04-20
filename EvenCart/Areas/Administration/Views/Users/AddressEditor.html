@@ -1,6 +1,5 @@
 ﻿{% layout "_Layout"%}
-{% global page_title=@t"Addresses" active_menu="GetAddress" parent_active_menu="UsersList"%}
-{% partial "Navigation/AddressEditSecondaryNavigation" %}
+{% global page_title=@t"Addresses" active_menu="GetAddress" parent_active_menu="UsersList" menu_group="AddressEdit" %}
 
 <form action="{% route api_SaveAddress %}" method="post" id="edit-address-form">
     <div class="panel">

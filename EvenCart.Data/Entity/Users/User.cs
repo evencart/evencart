@@ -60,6 +60,8 @@ namespace EvenCart.Data.Entity.Users
 
         #region Virtual Properties
         public virtual IList<Role> Roles { get; set; }
+
+        public virtual IList<Capability> Capabilities { get; set; }
         #endregion
     }
 }

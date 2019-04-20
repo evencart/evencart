@@ -1,6 +1,6 @@
 ﻿{% layout "_Layout"%}
-{% global page_title=@t"Email Account Editor" active_menu="GetEmailAccount" parent_active_menu="EmailsList"%}
-{% partial "Navigation/EmailAccountEditSecondaryNavigation" %}
+{% global page_title=@t"Email Account Editor" active_menu="GetEmailAccount" parent_active_menu="EmailsList" menu_group="EmailAccountEdit" %}
+
 
 
 <form action="{% route api_SaveEmailAccount %}" method="post" id="account-editor-form">

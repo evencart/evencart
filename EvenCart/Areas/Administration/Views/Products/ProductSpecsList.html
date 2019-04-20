@@ -1,8 +1,6 @@
 ﻿{% layout "_Layout" %}
-{% global page_title=@t"Product Specifications" active_menu="ProductSpecificationsList" parent_active_menu="ProductsList" %}
-{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to product" %}
+{% global page_title=@t"Product Specifications" active_menu="ProductSpecificationsList" parent_active_menu="ProductsList" menu_group="ProductEdit"%}
 
-{% partial "Navigation/ProductEditSecondaryNavigation" %}
 <div class="row">
     <div class="col-md-12 col-offset-2">
         <div class="panel">
@@ -14,7 +12,7 @@
                 <button class="btn btn-primary float-right btn-sm margin-r-5" onclick="editSpecGroup(0)">{{"Add New Group" | t}}</button>
             </div>
             <div class="panel-body">
-               
+
                 {% for psl in productSpecificationsList %}
                 <h6 class="text-center">
                     {% if psl.productSpecificationGroup.id == 0 %}
@@ -31,14 +29,14 @@
                 </h6>
                 <table id="grid-selection-{{psl.productSpecificationGroup.id}}" class="table table-hover table-condensed table-bordered margin-t-10">
                     <thead>
-                    <tr>
-                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="name" data-formatter="name" data-width="20%">{{"Name" | t}}</th>
-                        <th data-column-id="isVisible" data-formatter="isvisible" data-width="10%">{{"Visible" | t}}</th>
-                        <th data-column-id="isFilterable" data-formatter="isfilterable" data-width="10%">{{"Filterable" | t}}</th>
-                        <th data-column-id="values" data-width="50%" data-formatter="values">{{"Values" | t}}</th>
-                        <th data-column-id="commands" data-width="10%" data-formatter="commands" data-sortable="false"></th>
-                    </tr>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="name" data-width="20%">{{"Name" | t}}</th>
+                            <th data-column-id="isVisible" data-formatter="isvisible" data-width="10%">{{"Visible" | t}}</th>
+                            <th data-column-id="isFilterable" data-formatter="isfilterable" data-width="10%">{{"Filterable" | t}}</th>
+                            <th data-column-id="values" data-width="50%" data-formatter="values">{{"Values" | t}}</th>
+                            <th data-column-id="commands" data-width="10%" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
                     </thead>
                 </table>
                 <script type="text/javascript">

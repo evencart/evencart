@@ -10,6 +10,8 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {
     public class NavigationExpander : Expander
     {
+        private const string NavigationKey = "AdminNavigation";
+        private const string NavigationGroupKey = "AdminNavigationGroup";
         public string NavigationType { get; set; }
         public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
@@ -21,34 +23,34 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 return inputContent;
             if (matches.Count == 0)
             {
-                var navMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == "navigation_" + NavigationType);
-                if (navMeta.Key != null)
-                    paramsAsDict?.Add(NavigationType, navMeta.Value);
-                var groupMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == "group_" + NavigationType);
-                if (navMeta.Key != null)
-                    paramsAsDict?.Add(NavigationType + "_groups", groupMeta.Value);
+                var navMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == NavigationKey);
+                if (navMeta.Key != null && !paramsAsDict.ContainsKey(NavigationKey))
+                    paramsAsDict.Add(NavigationKey, navMeta.Value);
+                var groupMeta = readFile.GetMeta(nameof(NavigationExpander)).FirstOrDefault(x => x.Key == NavigationGroupKey);
+                if (navMeta.Key != null && !paramsAsDict.ContainsKey(NavigationGroupKey))
+                    paramsAsDict.Add(NavigationGroupKey, groupMeta.Value);
                 return inputContent;
             }
 
             List<Navigation> menuList = null;
-            if (!paramsAsDict.ContainsKey(NavigationType))
+            if (!paramsAsDict.ContainsKey(NavigationKey))
             {
                 menuList = new List<Navigation>();
-                paramsAsDict.Add(NavigationType, menuList);
+                paramsAsDict.Add(NavigationKey, menuList);
             }
 
             List<NavigationGroup> groupList = null;
-            if (!paramsAsDict.ContainsKey("group_" + NavigationType))
+            if (!paramsAsDict.ContainsKey(NavigationGroupKey))
             {
                 groupList = new List<NavigationGroup>()
                 {
                     new NavigationGroup() { Name = "", Id = null , DisplayOrder = 0}
                 };
-                paramsAsDict.Add("group_" + NavigationType, groupList);
+                paramsAsDict.Add(NavigationGroupKey, groupList);
             }
 
-            menuList = (List<Navigation>)paramsAsDict[NavigationType];
-
+            menuList = (List<Navigation>)paramsAsDict[NavigationKey];
+            groupList = (List<NavigationGroup>)paramsAsDict[NavigationGroupKey];
 
             foreach (Match match in matches)
             {
@@ -78,6 +80,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 keyValuePairs.TryGetValue("groupId", out var groupId);
                 keyValuePairs.TryGetValue("capability", out var capability);
                 keyValuePairs.TryGetValue("iconClass", out var iconClass);
+                keyValuePairs.TryGetValue("parent", out var parent);
                 if (url.IsNullEmptyOrWhiteSpace())
                 {
                     //use the current url if it's empty url
@@ -94,27 +97,23 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                    DisplayOrder = displayOrder,
                    GroupId = groupId,
                    Capabilities = capability?.Split(" or ", StringSplitOptions.RemoveEmptyEntries),
-                   IconClass = iconClass
+                   IconClass = iconClass,
+                   Type = NavigationType,
+                   Parent = parent
                 });
             }
 
             menuList = menuList.OrderBy(x => x.DisplayOrder).ToList();
-            paramsAsDict[NavigationType] = menuList;
-            readFile.AddMeta($"navigation_" + NavigationType, menuList, $"{nameof(NavigationExpander)}");
+            paramsAsDict[NavigationKey] = menuList;
+            readFile.AddMeta(NavigationKey, menuList, $"{nameof(NavigationExpander)}");
 
             groupList = groupList.OrderBy(x => x.DisplayOrder).ToList();
-            paramsAsDict[NavigationType + "_groups"] = groupList;
-            readFile.AddMeta($"group_" + NavigationType, groupList, $"{nameof(NavigationExpander)}");
+            paramsAsDict[NavigationGroupKey] = groupList;
+            readFile.AddMeta(NavigationGroupKey, groupList, $"{nameof(NavigationExpander)}");
             //remove the tags
             readFile.Content = regEx.Replace(readFile.Content, "");
             inputContent = regEx.Replace(inputContent, "");
             return inputContent;
-        }
-
-        public override void PreRun(ReadFile readFile)
-        {
-            //clear the menu
-            AdminMenuBuilder.Instance.Clear(NavigationType);
         }
 
         internal class Navigation : FoundationModel
@@ -132,6 +131,10 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             public string[] Capabilities { get; set; }
 
             public string IconClass { get; set; }
+
+            public string Type { get; set; }
+
+            public string Parent { get; set; }
         }
 
         internal class NavigationGroup : FoundationModel

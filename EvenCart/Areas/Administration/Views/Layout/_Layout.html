@@ -41,14 +41,42 @@
                     <a class="dropdown-item" href="{% route Logout %}">{{"Logout" | t}}</a>
                 </div>
             </div>
-            {% json source="primary_navigation" var="primary_navigation" %}
-            {% json source="primary_navigation_groups" var="primary_navigation_groups" %}
+            {% json source="AdminNavigation" var="navigation" %}
+            {% json source="AdminNavigationGroup" var="navigation_groups" %}
+
+
             <script type="text/javascript">
+                var capabilities = null;
+                /*{% for c in currentUser.Capabilities %}*/
+                capabilities = capabilities || [];
+                capabilities.push("{{c}}");
+                /*{% endfor %}*/
+                var applyNavigationFilters = function (nav, type) {
+                    if (!nav)
+                        return null;
+                    var newNav = [];
+                    for (var i = 0; i < nav.length; i++) {
+                        var menuItem = nav[i];
+                        if (menuItem.type !== type)
+                            continue;
+                        if (menuItem.capabilities != null && capabilities != null) {
+                            if (menuItem.capabilities.filter(function (c) { return capabilities.includes(c); }).length == 0) {
+
+                                continue;
+                            }
+                        }
+                        newNav.push(menuItem);
+                    }
+                    return newNav;
+                }
+                var primary_navigation = applyNavigationFilters(navigation, "primary_navigation");
+                var secondary_navigation = applyNavigationFilters(navigation, "secondary_navigation");
                 ready(function () {
+
                     var parent_active_menu = "{{parent_active_menu}}";
-                    for (var j = 0; j < primary_navigation_groups.length; j++)
+                    for (var j = 0; j < navigation_groups.length; j++)
                     {
-                        var groupItem = primary_navigation_groups[j];
+                        var groupItem = navigation_groups[j];
                         if (groupItem.name != '') {
                             var groupLi = "<li class='group-item'>" + groupItem.name + "</li>";
                             jQuery("#primaryNavigationUl").append(groupLi);
@@ -58,8 +86,20 @@
                             var menuItem = primary_navigation[i];
                             if (menuItem.groupId != groupItem.id)
                                 continue;
+                            for (var k = 0; k < secondary_navigation.length; k++) {
+                                var sMenuItem = secondary_navigation[k];
+                                if (sMenuItem.parent === menuItem.systemName) {
+                                    menuItem.url = sMenuItem.url;
+                                    break;
+                                }
+                            }
                             var li = "<li class='" + (menuItem.systemName == parent_active_menu ? "active" : "") + "'>";
-                            li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
+                            li += "<a href='" + menuItem.url + "'>";
+                            if (menuItem.iconClass) {
+                                li += "<span class='" + menuItem.iconClass + "'></span>";
+                            }
+                            li += menuItem.title;
+                            li += "</a>";
                             li += "</li>";
                             jQuery("#primaryNavigationUl").append(li);
                         }
@@ -71,15 +111,32 @@
         </div>
         <div class="client-main">
             <div class="client-main-navlinks">
-                {% json source="secondary_navigation" var="secondary_navigation" %}
+               
                 <script type="text/javascript">
                     ready(function () {
                         var active_menu = "{{active_menu}}";
+                        var parent_active_menu = "{{parent_active_menu}}";
+                        var menu_group = "{{menu_group}}";
                         if (secondary_navigation) {
                             for (var i = 0; i < secondary_navigation.length; i++) {
                                 var menuItem = secondary_navigation[i];
+                                if (menu_group != "") {
+                                    if (menuItem.groupId !== menu_group) {
+
+                                        continue;
+                                    }
+                                } else {
+                                    if (menuItem.parent != parent_active_menu) {
+                                        continue;
+                                    }
+                                }
                                 var li = "<li class='" + (menuItem.systemName == active_menu ? "active" : "") + "'>";
-                                li += "<a href='" + menuItem.url + "'>" + menuItem.title + "</a>";
+                                li += "<a href='" + menuItem.url + "'>";
+                                if (menuItem.iconClass) {
+                                    li += "<span class='" + menuItem.iconClass + "'></span>";
+                                }
+                                li += menuItem.title;
+                                li += "</a>";
                                 li += "</li>";
                                 jQuery("#secondaryNavigationUl").append(li);
                             }

@@ -25,7 +25,7 @@
                     </tr>
                     </thead>
                 </table>
-                {% json source="reviews" var="initData" %}
+                {{reviews | scriptJson : 'initData'}}
                 <script type="text/javascript">
 
                     ready(function() {

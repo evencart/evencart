@@ -14,7 +14,8 @@ namespace EvenCart.Services.Serializers
             Converters = new List<JsonConverter>()
             {
                 new StringEnumConverter()
-            }
+            },
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
         public string Serialize(object obj, bool camelCase = true)

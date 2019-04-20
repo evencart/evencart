@@ -1,6 +1,6 @@
 ﻿{% layout "_Layout"%}
-{% global page_title=@t"Product Editor" active_menu="GetProduct" parent_active_menu="ProductsList"%}
-{% partial "Navigation/ProductEditSecondaryNavigation" %}
+{% global page_title=@t"Product Editor" active_menu="GetProduct" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
+
 
 <form action="{% route api_SaveProduct %}" method="post" id="product-editor-form">
     <div class="row">

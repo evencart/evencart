@@ -1,6 +1,5 @@
 ﻿{% layout "_Layout"%}
-{% global page_title=@t"Anonymize User" active_menu="AnonymizeUser" parent_active_menu="UsersList"%}
-{% partial "Navigation/UserEditSecondaryNavigation" %}
+{% global page_title=@t"Anonymize User" active_menu="AnonymizeUser" parent_active_menu="UsersList" menu_group="UserEdit"%}
 
 <form action='{% route api_AnonymizeUser userId="{{userId}}" %}' method="post" id="edit-user-form">
     <div class="panel">
