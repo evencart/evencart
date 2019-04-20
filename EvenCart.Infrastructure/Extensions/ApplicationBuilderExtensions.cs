@@ -15,6 +15,8 @@ namespace EvenCart.Infrastructure.Extensions
     {
         public static void UseStatusPages(this IApplicationBuilder app)
         {
+            app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
+
             app.UseStatusCodePages(async context =>
             {
                 var response = context.HttpContext.Response;
@@ -26,12 +28,10 @@ namespace EvenCart.Infrastructure.Extensions
                     else
                     {
                         response.ContentType = "application/json";
-                        await response.WriteAsync("{ message : \"Unauthorized access\" }");
+                        await response.WriteAsync("{ \"message\" : \"Unauthorized access\", \"success\" : \"false\" }");
                     }
                 }
             });
-
-            app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
         }
 
         public static void UseAppAuthentication(this IApplicationBuilder app)

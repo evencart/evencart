@@ -68,9 +68,11 @@ namespace EvenCart.Controllers
             if (!ShouldSignIn(loginModel.Email, loginModel.Password, out User user))
                 return R.Fail.With("message", T("Invalid email or password provided")).Result;
 
-            var loginStatus = ApplicationEngine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe);
+            var loginStatus = ApplicationEngine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe, loginModel.Token);
+            //get api token if it was requested
+            var token = ApplicationEngine.CurrentHttpContext.GetApiToken();
             if (loginStatus == LoginStatus.Success)
-                return R.Success.Result;
+                return R.Success.With("token", token).Result;
 
             return R.Fail.With("message", T("An error occured while login")).Result;
         }

@@ -16,6 +16,7 @@ namespace EvenCart.Infrastructure.Extensions
         private const string CurrentLanguageKey = "CurrentLanguageKey";
         private const string CurrentCurrencyKey = "CurrentCurrencyKey";
         private const string RequestSeoMetaKey = "RequestSeoMetaKey";
+        private const string ApiTokenKey = "ApiTokenKey";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -69,6 +70,16 @@ namespace EvenCart.Infrastructure.Extensions
         public static SeoMeta GetRequestSeoMeta(this HttpContext httpContext)
         {
             return (SeoMeta)httpContext.Items[RequestSeoMetaKey];
+        }
+
+        public static void SetApiToken(this HttpContext httpContext, string apiToken)
+        {
+            httpContext.Items[ApiTokenKey] = apiToken;
+        }
+
+        public static string GetApiToken(this HttpContext httpContext)
+        {
+            return httpContext.Items[ApiTokenKey]?.ToString();
         }
     }
 }

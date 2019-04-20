@@ -1,18 +1,9 @@
 ﻿{% layout "_Layout" %}
-<div class="wrapper pb-100">
-    <div class="container">
-        <h1 class="text-center">
-            <div>
-                <span class="fa fa-times-circle-o"></span>
-            </div>
-            {% if statusCode == 401 %}
-            {{"Unauthorized Access" | t}}
-            {% else %}
-            {{"Access Error" | t}}
-            {% endif %}
-        </h1>
-        <p class="text-center">
-            {{"The page you are trying to view doesn't exist or you do not have permission to access it" | t}}
-        </p>
-    </div>
-</div>
+
+{% if statusCode == 401 %}
+{{"Unauthorized Access" | t}}
+{% elseif statusCode == 404 %}
+{% partial "Error/_404" %}
+{% else %}
+{{"Access Error" | t}}
+{% endif %}

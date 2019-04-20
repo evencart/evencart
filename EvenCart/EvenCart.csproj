@@ -50,7 +50,6 @@
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
-    <None Remove="Content\Themes\Default\Views\Error\404.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Home\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
@@ -123,9 +122,6 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Error\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Include="Content\Themes\Default\Views\Error\404.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Include="Content\Themes\Default\Views\Home\Index.html">

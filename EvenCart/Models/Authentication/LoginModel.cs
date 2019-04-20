@@ -14,6 +14,8 @@ namespace EvenCart.Models.Authentication
 
         public string ReturnUrl { get; set; }
 
+        public bool Token { get; set; }
+
         public void SetupValidationRules(ModelValidator<LoginModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();

@@ -1,9 +1,15 @@
-﻿using EvenCart.Core.Plugins;
+﻿using System.Text;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Plugins;
 using EvenCart.Infrastructure.Authentication;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing.Conventions;
 using EvenCart.Infrastructure.ViewEngines;
+using EvenCart.Services.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 namespace EvenCart.Infrastructure.Extensions
@@ -36,7 +43,33 @@ namespace EvenCart.Infrastructure.Extensions
                     options.AccessDeniedPath = new PathString(ApplicationConfig.DefaultLoginUrl);
                     options.Events = new CookieAuthEvents();
                 });
-            services.AddAuthorization();
+
+            services.AddAuthentication(ApplicationConfig.ApiAuthenticationScheme)
+                .AddJwtBearer(ApplicationConfig.ApiAuthenticationScheme, x =>
+                {
+                    var configuration = DependencyResolver.Resolve<IApplicationConfiguration>();
+                    var key = Encoding.UTF8.GetBytes(configuration.GetSetting("apiSecret"));
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                    x.Events = new JwtAuthEvents();
+                });
+            services.AddAuthorization(options =>
+            {
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                    ApplicationConfig.VisitorAuthenticationScheme,
+                    ApplicationConfig.DefaultAuthenticationScheme,
+                    ApplicationConfig.ApiAuthenticationScheme);
+                defaultAuthorizationPolicyBuilder =
+                    defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
         }
 
         public static IMvcBuilder AddAppMvc(this IServiceCollection services, IHostingEnvironment hostingEnvironment)

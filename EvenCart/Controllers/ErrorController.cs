@@ -9,8 +9,6 @@ namespace EvenCart.Controllers
         public IActionResult Index(int? statusCode = null)
         {
             statusCode = statusCode ?? 404;
-            if (statusCode == 404)
-                return R.WithView("404").Result;
             return R.With("statusCode", statusCode).Result;
         }
     }

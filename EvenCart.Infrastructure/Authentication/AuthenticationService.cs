@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
@@ -9,6 +12,8 @@ using EvenCart.Services.Security;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EvenCart.Infrastructure.Authentication
 {
@@ -18,16 +23,17 @@ namespace EvenCart.Infrastructure.Authentication
         private readonly IUserRegistrationService _userRegistrationService;
         private readonly SecuritySettings _securitySettings;
         private readonly ICryptographyService _cryptographyService;
-
+        private readonly IApplicationConfiguration _applicationConfiguration;
         public AuthenticationService(IUserService userService,
             IUserRegistrationService userRegistrationService,
             SecuritySettings securitySettings,
-            ICryptographyService cryptographyService)
+            ICryptographyService cryptographyService, IApplicationConfiguration applicationConfiguration)
         {
             _userService = userService;
             _userRegistrationService = userRegistrationService;
             _securitySettings = securitySettings;
             _cryptographyService = cryptographyService;
+            _applicationConfiguration = applicationConfiguration;
         }
 
         public virtual LoginStatus SignIn(string email, string name = "", bool isPersistent = false, bool forceCreateNewAccount = false)
@@ -39,6 +45,8 @@ namespace EvenCart.Infrastructure.Authentication
         public LoginStatus SignIn(string authenticationScheme, string email, string name = "", bool isPersistent = false,
             bool forceCreateNewAccount = false)
         {
+            if (authenticationScheme.IsNullEmptyOrWhiteSpace())
+                authenticationScheme = ApplicationConfig.DefaultAuthenticationScheme;
             return SignInImpl(authenticationScheme, email, name, isPersistent, forceCreateNewAccount);
         }
 
@@ -71,18 +79,36 @@ namespace EvenCart.Infrastructure.Authentication
 
         public virtual async void CreateAuthenticationTicket(User user, bool isPersistent = false, string authenticationScheme = ApplicationConfig.DefaultAuthenticationScheme, string imitatorEmail = null)
         {
-            //sign in the user. this will create the authentication cookie
-            await ApplicationEngine.CurrentHttpContext.SignInAsync(authenticationScheme,
-                new ClaimsPrincipal(new ClaimsIdentity(new[]
+            var subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Guid.ToString()),
+                new Claim(ClaimTypes.Actor, imitatorEmail ?? ""),
+                new Claim(ClaimTypes.IsPersistent, isPersistent.ToString()),
+            }, authenticationScheme);
+
+            if (authenticationScheme == ApplicationConfig.ApiAuthenticationScheme)
+            {
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_applicationConfiguration.GetSetting("apiSecret"));
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Guid.ToString()),
-                    new Claim(ClaimTypes.Actor, imitatorEmail ?? ""),
-                    new Claim(ClaimTypes.IsPersistent, isPersistent.ToString()), 
-                }, authenticationScheme)), new AuthenticationProperties()
-                {
-                    IsPersistent = isPersistent
-                });
+                    Subject = subject,
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+                ApplicationEngine.CurrentHttpContext.SetApiToken(tokenString);
+            }
+            else
+            {
+                //sign in the user. this will create the authentication cookie
+                await ApplicationEngine.CurrentHttpContext.SignInAsync(authenticationScheme,
+                    new ClaimsPrincipal(subject), new AuthenticationProperties() { IsPersistent = isPersistent });
+            }
+        
         }
 
         public virtual async void ClearAuthenticationTicket()
@@ -98,8 +124,13 @@ namespace EvenCart.Infrastructure.Authentication
             var user = hc.GetCurrentUser();
             if (user != null)
                 return user;
-
-            var authenticationResult = hc.AuthenticateAsync(ApplicationConfig.DefaultAuthenticationScheme).Result;
+            //is there a token there?
+            var authenticationResult = hc.AuthenticateAsync(ApplicationConfig.ApiAuthenticationScheme).Result;
+            if (!authenticationResult.Succeeded)
+            {
+                //is there a cookie there?
+                authenticationResult = hc.AuthenticateAsync(ApplicationConfig.DefaultAuthenticationScheme).Result;
+            }
             if (!authenticationResult.Succeeded)
             {
                 //is there a visitor there?

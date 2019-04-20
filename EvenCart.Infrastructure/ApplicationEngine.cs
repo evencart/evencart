@@ -226,7 +226,7 @@ namespace EvenCart.Infrastructure
             return authenticationService.GuestSignIn();
         }
 
-        public static LoginStatus SignIn(string email, string name, bool rememberMe)
+        public static LoginStatus SignIn(string email, string name, bool rememberMe, bool tokenAuth = false)
         {
             if (CurrentUser != null && !CurrentUser.IsVisitor())
                 return LoginStatus.Success; //user is already logged in
@@ -236,7 +236,9 @@ namespace EvenCart.Infrastructure
 
             var authenticationService = DependencyResolver.Resolve<IAppAuthenticationService>();
             authenticationService.SignOut();
-            var signinStatus = authenticationService.SignIn(email, name, rememberMe);
+            var signinStatus = authenticationService.SignIn(
+                tokenAuth ? ApplicationConfig.ApiAuthenticationScheme : ApplicationConfig.DefaultAuthenticationScheme,
+                email, name, rememberMe);
             if (signinStatus != LoginStatus.Success)
                 return signinStatus;
 

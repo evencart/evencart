@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Authentication\ApiAuthenticationHandler.cs" />
     <Compile Remove="Mvc\Formatters\ExtraFieldFormatter.cs" />
     <Compile Remove="Mvc\Formatters\PatchFormatter.cs" />
     <Compile Remove="Mvc\FoundationWidget.cs" />
@@ -72,12 +73,19 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EvenCart.Core\EvenCart.Core.csproj" />
     <ProjectReference Include="..\EvenCart.Data\EvenCart.Data.csproj" />
     <ProjectReference Include="..\EvenCart.Services\EvenCart.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authentication.jwtbearer\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
