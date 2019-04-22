@@ -4,6 +4,7 @@ using System.Linq;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
+using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -31,8 +32,8 @@ namespace EvenCart.Services.Products
         private readonly ICartService _cartService;
         private readonly IProductVariantService _productVariantService;
         private readonly IRoundingService _roundingService;
-
-        public PriceAccountant(IDiscountCouponService discountCouponService, IUserService userService, ICartItemService cartItemService, IProductService productService, ITaxAccountant taxAccountant, TaxSettings taxSettings, ICartService cartService, IProductVariantService productVariantService, IRoundingService roundingService)
+        private readonly IOrderService _orderService;
+        public PriceAccountant(IDiscountCouponService discountCouponService, IUserService userService, ICartItemService cartItemService, IProductService productService, ITaxAccountant taxAccountant, TaxSettings taxSettings, ICartService cartService, IProductVariantService productVariantService, IRoundingService roundingService, IOrderService orderService)
         {
             _discountCouponService = discountCouponService;
             _userService = userService;
@@ -43,6 +44,7 @@ namespace EvenCart.Services.Products
             _cartService = cartService;
             _productVariantService = productVariantService;
             _roundingService = roundingService;
+            _orderService = orderService;
         }
 
         public DiscountApplicationStatus ApplyDiscountCoupon(string couponCode, Cart cart)
@@ -69,6 +71,22 @@ namespace EvenCart.Services.Products
                 return DiscountApplicationStatus.InvalidCode;
             if (discountCoupon.EndDate.HasValue && discountCoupon.EndDate < DateTime.UtcNow)
                 return DiscountApplicationStatus.Expired;
+
+            //number of usages
+            if (discountCoupon.TotalNumberOfTimes > 0)
+            {
+                var orderCount = _orderService.Count(x =>
+                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete);
+                if (orderCount >= discountCoupon.TotalNumberOfTimes)
+                    return DiscountApplicationStatus.Exhausted;
+            }
+            if (discountCoupon.NumberOfTimesPerUser > 0)
+            {
+                var orderCount = _orderService.Count(x =>
+                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete && x.UserId == cart.UserId);
+                if (orderCount >= discountCoupon.NumberOfTimesPerUser)
+                    return DiscountApplicationStatus.Exhausted;
+            }
 
             var cartItemUpdated = false;
             var cartUpdated = false;
@@ -176,18 +194,18 @@ namespace EvenCart.Services.Products
                                     _cartService.RemoveFromCart(ci.Id, transaction);
                                 }
                             }
-                            if (ci.Quantity < product.MinimumPurchaseQuantity)
+                            if (ci.Quantity < product.MinimumPurchaseQuantity && product.MinimumPurchaseQuantity > 0)
                             {
                                 //is there a difference in quantity that's required
                                 ci.Quantity = product.MinimumPurchaseQuantity;
                             }
-                            if (ci.Quantity > product.MaximumPurchaseQuantity)
+                            if (ci.Quantity > product.MaximumPurchaseQuantity && product.MaximumPurchaseQuantity > 0)
                             {
                                 //is there a difference in quantity that's required
                                 ci.Quantity = product.MaximumPurchaseQuantity;
                             }
                             //are there any discounted price for product
-                            var basePrice =  GetAutoDiscountedPriceForUser(product, cart.User, ref discountCoupons, out decimal discount);
+                            var basePrice =  GetAutoDiscountedPriceForUser(product, cart.User, ci.Quantity, ref discountCoupons, out decimal discount);
                             if (product.HasVariants && ci.ProductVariantId > 0)
                             {
                                 //find the product variants
@@ -237,7 +255,7 @@ namespace EvenCart.Services.Products
                     cart.FinalAmount = cart.CartItems.Sum(x => x.FinalPrice);
                     cart.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
 
-                    //do we have an discount coupon
+                    //do we have a discount coupon
                     if (cart.DiscountCoupon != null && cart.DiscountCoupon.Enabled && !cart.DiscountCoupon.Expired)
                     {
                         if (ApplyDiscountCoupon(cart.DiscountCoupon, cart) == DiscountApplicationStatus.Success)
@@ -264,14 +282,14 @@ namespace EvenCart.Services.Products
             }
         }
 
-        public decimal GetAutoDiscountedPriceForUser(Product product, User user, ref IList<DiscountCoupon> discountCoupons, out decimal discount)
+        public decimal GetAutoDiscountedPriceForUser(Product product, User user, int quantity, ref IList<DiscountCoupon> discountCoupons, out decimal discount)
         {
             //get active discount coupons which don't have any code
             discountCoupons = discountCoupons ?? _discountCouponService.Get(x => x.Enabled && !x.HasCouponCode).Where(x => !x.Expired).ToList();
             discount = decimal.Zero;
             foreach (var dc in discountCoupons)
             {
-                var currentDiscount = GetProductDiscountedPrice(dc, product, user);
+                var currentDiscount = GetProductDiscountedPrice(dc, product, user, quantity);
                 if (currentDiscount > discount)
                     discount = currentDiscount;
             }
@@ -306,39 +324,34 @@ namespace EvenCart.Services.Products
 
         #region Helpers
 
-        private decimal GetProductDiscountedPrice(DiscountCoupon discountCoupon, Product product, User user)
+        private decimal GetProductDiscountedPrice(DiscountCoupon discountCoupon, Product product, User user, int quantity)
         {
             switch (discountCoupon.RestrictionType)
             {
                 case RestrictionType.Products:
-                    return discountCoupon.RestrictionIds().Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price) : 0;
+                    return discountCoupon.RestrictionIds().Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
                 case RestrictionType.Categories:
                     var categoryIds = discountCoupon.RestrictionIds().ToArray();
                     var categoryProductIds = _productService.GetProductIdsByCategoryIds(categoryIds);
-                    return categoryProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price) : 0;
+                    return categoryProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
                 case RestrictionType.Users:
-                    return discountCoupon.RestrictionIds().Contains(user.Id) ? discountCoupon.GetDiscountAmount(product.Price) : 0;
+                    return discountCoupon.RestrictionIds().Contains(user.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
                 case RestrictionType.UserGroups:
                     return 0;
                 case RestrictionType.Roles:
                     var roleIds = discountCoupon.RestrictionIds();
-                    return user.Roles.Any(x => roleIds.Contains(x.Id)) ? discountCoupon.GetDiscountAmount(product.Price) : 0;
+                    return user.Roles.Any(x => roleIds.Contains(x.Id)) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
                 case RestrictionType.Vendors:
                     var vendorIds = discountCoupon.RestrictionIds().ToArray();
                     var vendorProductIds = _productService.GetProductIdsByVendorIds(vendorIds);
-                    return vendorProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price) : 0;
+                    return vendorProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
                 case RestrictionType.Manufacturers:
                     return product.ManufacturerId.HasValue &&
                            discountCoupon.RestrictionIds().Contains(product.ManufacturerId.Value)
-                        ? discountCoupon.GetDiscountAmount(product.Price)
+                        ? discountCoupon.GetDiscountAmount(product.Price, quantity)
                         : 0;
-                case RestrictionType.PaymentMethods:
-                case RestrictionType.ShippingMethods:
-                case RestrictionType.OrderTotal:
-                case RestrictionType.OrderSubTotal:
-                    return 0;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return 0;
             }
         }
 
@@ -350,7 +363,7 @@ namespace EvenCart.Services.Products
             {
                 if (!productIds.Contains(cartItem.ProductId))
                     continue;
-                cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
+                cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
                 cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
                 cartItemUpdated = true;
             }
@@ -366,8 +379,7 @@ namespace EvenCart.Services.Products
             {
                 if (categoryProductIds.Contains(cartItem.ProductId))
                 {
-                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
-                    cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
+                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
                     cartUpdated = true;
                 }
             }
@@ -381,9 +393,18 @@ namespace EvenCart.Services.Products
             {
                 foreach (var cartItem in cart.CartItems)
                 {
-                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
-                    cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
+                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
                 }
+                if (discountCoupon.MaximumDiscountAmount > 0 &&
+                    cart.CartItems.Sum(x => x.Discount) > discountCoupon.MaximumDiscountAmount)
+                {
+                    cart.Discount = discountCoupon.MaximumDiscountAmount;
+                    foreach (var cartItem in cart.CartItems)
+                    {
+                        cartItem.Discount = 0;
+                    }
+                }
+
                 return true;
             }
             return false;
@@ -403,8 +424,17 @@ namespace EvenCart.Services.Products
             {
                 foreach (var cartItem in cart.CartItems)
                 {
-                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
-                    cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
+                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
+                }
+
+                if (discountCoupon.MaximumDiscountAmount > 0 &&
+                    cart.CartItems.Sum(x => x.Discount) > discountCoupon.MaximumDiscountAmount)
+                {
+                    cart.Discount = discountCoupon.MaximumDiscountAmount;
+                    foreach (var cartItem in cart.CartItems)
+                    {
+                        cartItem.Discount = 0;
+                    }
                 }
                 return true;
             }
@@ -420,9 +450,18 @@ namespace EvenCart.Services.Products
             {
                 if (vendorProductIds.Contains(cartItem.ProductId))
                 {
-                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
-                    cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
+                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
                     cartUpdated = true;
+                }
+            }
+
+            if (cartUpdated && discountCoupon.MaximumDiscountAmount > 0 &&
+                cart.CartItems.Sum(x => x.Discount) > discountCoupon.MaximumDiscountAmount)
+            {
+                cart.Discount = discountCoupon.MaximumDiscountAmount;
+                foreach (var cartItem in cart.CartItems)
+                {
+                    cartItem.Discount = 0;
                 }
             }
             return cartUpdated;
@@ -437,9 +476,17 @@ namespace EvenCart.Services.Products
                 if (cartItem.Product.ManufacturerId.HasValue &&
                     manufacturerIds.Contains(cartItem.Product.ManufacturerId.Value))
                 {
-                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price);
-                    cartItem.FinalPrice = cartItem.Price - cartItem.Discount;
+                    cartItem.Discount = discountCoupon.GetDiscountAmount(cartItem.Price, cartItem.Quantity);
                     cartItemUpdated = true;
+                }
+            }
+            if (cartItemUpdated && discountCoupon.MaximumDiscountAmount > 0 &&
+                cart.CartItems.Sum(x => x.Discount) > discountCoupon.MaximumDiscountAmount)
+            {
+                cart.Discount = discountCoupon.MaximumDiscountAmount;
+                foreach (var cartItem in cart.CartItems)
+                {
+                    cartItem.Discount = 0;
                 }
             }
             return cartItemUpdated;
@@ -451,7 +498,7 @@ namespace EvenCart.Services.Products
             if (paymentMethodNames.Contains(cart.PaymentMethodName))
             {
                 var paymentHandler = PluginHelper.GetPaymentHandler(cart.PaymentMethodName);
-                var discount = discountCoupon.GetDiscountAmount(paymentHandler.GetPaymentHandlerFee(cart));
+                var discount = discountCoupon.GetDiscountAmount(paymentHandler.GetPaymentHandlerFee(cart), 1);
                 if (discountCoupon.HasCouponCode)
                     cart.Discount = discount;
                 cart.PaymentMethodFee = cart.PaymentMethodFee - discount;
@@ -466,7 +513,7 @@ namespace EvenCart.Services.Products
             if (shippingMethodNames.Contains(cart.ShippingMethodName))
             {
                 var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
-                var discount = discountCoupon.GetDiscountAmount(shippingHandler.GetShippingHandlerFee(cart));
+                var discount = discountCoupon.GetDiscountAmount(shippingHandler.GetShippingHandlerFee(cart), 1);
                 if (discountCoupon.HasCouponCode)
                     cart.Discount = discount;
                 cart.ShippingFee = cart.ShippingFee - discount;
@@ -489,7 +536,7 @@ namespace EvenCart.Services.Products
                 orderTotalForDiscount += cartItem.Tax + cartItem.Price * cartItem.Quantity;
             }
 
-            cart.Discount = discountCoupon.GetDiscountAmount(orderTotalForDiscount);
+            cart.Discount = discountCoupon.GetDiscountAmount(orderTotalForDiscount, 1);
             return true;
         }
 

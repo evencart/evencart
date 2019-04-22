@@ -98,14 +98,14 @@ namespace EvenCart.Services.Promotions
         public override void Insert(DiscountCoupon entity, Transaction transaction = null)
         {
             //always save in lower case
-            entity.CouponCode = entity.CouponCode.ToLower();
+            entity.CouponCode = entity.CouponCode?.ToLower();
             base.Insert(entity, transaction);
         }
 
         public override void Update(DiscountCoupon entity, Transaction transaction = null)
         {
             //always save in lower case
-            entity.CouponCode = entity.CouponCode.ToLower();
+            entity.CouponCode = entity.CouponCode?.ToLower();
             base.Update(entity, transaction);
         }
     }

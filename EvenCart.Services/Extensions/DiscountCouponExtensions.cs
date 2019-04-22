@@ -9,17 +9,17 @@ namespace EvenCart.Services.Extensions
 {
     public static class DiscountCouponExtensions
     {
-        public static decimal GetDiscountAmount(this DiscountCoupon discountCoupon, decimal amount)
+        public static decimal GetDiscountAmount(this DiscountCoupon discountCoupon, decimal amount, int times)
         {
             if (amount == 0)
                 return 0;
-
+            amount = times * amount;
             var maxAmount = discountCoupon.MaximumDiscountAmount;
             if (maxAmount == 0)
                 maxAmount = decimal.MaxValue;
 
             var discountAmount = discountCoupon.CalculationType == CalculationType.FixedAmount
-                ? discountCoupon.DiscountValue
+                ? discountCoupon.DiscountValue * times
                 : (amount * discountCoupon.DiscountValue) / 100;
 
             if (discountAmount > maxAmount)

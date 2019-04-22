@@ -177,13 +177,13 @@ namespace EvenCart.Controllers
             else
             {
                 //can we add this item to cart?
-                ValidateQuantityRange(cartItem.Quantity + 1, product, out validationResult);
+                ValidateQuantityRange(cartItem.Quantity + cartItemModel.Quantity, product, out validationResult);
                 if (validationResult != null)
                 {
                     return validationResult;
                 }
                 //we can, increment and save
-                cartItem.Quantity++;
+                cartItem.Quantity = cartItem.Quantity + cartItemModel.Quantity;
                 _cartService.UpdateCart(ApplicationEngine.CurrentUser.Id, cartItem);
             }
             return R.Success.Result;

@@ -11,6 +11,7 @@ using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
@@ -44,63 +45,72 @@ namespace EvenCart.Services.Purchases
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
             Expression<Func<Product, bool>> productWhere = product => product.Published;
             var userCart = Repository.Where(x => x.UserId == userId && x.IsWishlist == isWishlist)
-                               .Join<CartItem>("Id", "CartId", joinType: JoinType.LeftOuter)
-                               .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
-                               .Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)
-                               .Join<ProductMedia>("EntityId", "ProductId", joinType: JoinType.LeftOuter)
-                               .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
-                               .Join<DiscountCoupon>("DiscountCouponId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
-                               .Join<RestrictionValue>("Id", "DiscountCouponId", joinType: JoinType.LeftOuter)
-                               .Relate(RelationTypes.OneToMany<Cart, CartItem>())
-                               .Relate<Product>((cart, product) =>
-                               {
-                                   var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == product.Id && x.Product == null);
-                                   if (cartItem != null)
-                                       cartItem.Product = product;
-                               })
-                               .Relate<SeoMeta>((cart, meta) =>
-                               {
-                                   var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == meta.EntityId);
-                                   if (cartItem != null)
-                                       cartItem.Product.SeoMeta = meta;
-                               })
-                               .Relate<ProductMedia>((cart, media) =>
-                               {
-                                   var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == media.ProductId);
-                                   if (cartItem?.Product != null)
-                                   {
-                                       //temporary storage for media ids
-                                       cartItem.Tag = cartItem.Tag ?? new List<int>();
-                                       cartItem.Product.MediaItems = cartItem.Product.MediaItems ?? new List<Media>();
+                .Join<CartItem>("Id", "CartId", joinType: JoinType.LeftOuter)
+                .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
+                .Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)
+                .Join<ProductMedia>("EntityId", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                .Join<DiscountCoupon>("DiscountCouponId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<RestrictionValue>("Id", "DiscountCouponId", joinType: JoinType.LeftOuter)
+                .Join<User>("UserId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
+                .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<Cart, CartItem>())
+                .Relate<Product>((cart, product) =>
+                {
+                    var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == product.Id && x.Product == null);
+                    if (cartItem != null)
+                        cartItem.Product = product;
+                })
+                .Relate<SeoMeta>((cart, meta) =>
+                {
+                    var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == meta.EntityId);
+                    if (cartItem != null)
+                        cartItem.Product.SeoMeta = meta;
+                })
+                .Relate<ProductMedia>((cart, media) =>
+                {
+                    var cartItem = cart.CartItems.FirstOrDefault(x => x.ProductId == media.ProductId);
+                    if (cartItem?.Product != null)
+                    {
+                        //temporary storage for media ids
+                        cartItem.Tag = cartItem.Tag ?? new List<int>();
+                        cartItem.Product.MediaItems = cartItem.Product.MediaItems ?? new List<Media>();
 
-                                       (cartItem.Tag as List<int>).Add(media.MediaId);
-                                   }
+                        (cartItem.Tag as List<int>).Add(media.MediaId);
+                    }
 
-                               })
-                               .Relate<Media>((cart, media) =>
-                               {
-                                   var cartItem =
-                                       cart.CartItems.FirstOrDefault(
-                                           x => x.Tag != null && (x.Tag as List<int>).Contains(media.Id));
-                                   if (cartItem != null)
-                                   {
-                                       if (cartItem.Product.MediaItems.All(x => x.Id != media.Id))
-                                       {
-                                           cartItem.Product.MediaItems.Add(media);
-                                       }
-                                   }
-                               })
-                               .Relate(RelationTypes.OneToOne<Cart, DiscountCoupon>())
-                               .Relate<RestrictionValue>((cart, value) =>
-                                   {
-                                       cart.DiscountCoupon.RestrictionValues =
-                                           cart.DiscountCoupon.RestrictionValues ?? new List<RestrictionValue>();
-                                       cart.DiscountCoupon.RestrictionValues.Add(value);
-                                   })
-                               .Where(seoMetaWhere)
-                               .Where(productWhere)
-                               .SelectNested()
-                               .FirstOrDefault();
+                })
+                .Relate<Media>((cart, media) =>
+                {
+                    var cartItem =
+                        cart.CartItems.FirstOrDefault(
+                            x => x.Tag != null && (x.Tag as List<int>).Contains(media.Id));
+                    if (cartItem != null)
+                    {
+                        if (cartItem.Product.MediaItems.All(x => x.Id != media.Id))
+                        {
+                            cartItem.Product.MediaItems.Add(media);
+                        }
+                    }
+                })
+                .Relate(RelationTypes.OneToOne<Cart, DiscountCoupon>())
+                .Relate<RestrictionValue>((cart, value) =>
+                {
+                    cart.DiscountCoupon.RestrictionValues =
+                        cart.DiscountCoupon.RestrictionValues ?? new List<RestrictionValue>();
+                    cart.DiscountCoupon.RestrictionValues.Add(value);
+                })
+                .Relate(RelationTypes.OneToOne<Cart, User>())
+                .Relate<Role>((cart, role) =>
+                {
+                    cart.User.Roles = cart.User.Roles ?? new List<Role>();
+                    cart.User.Roles.Add(role);
+                })
+                .Where(seoMetaWhere)
+                .Where(productWhere)
+                .SelectNested()
+                .FirstOrDefault();
 
             //do we have an empty cart
             userCart = userCart ?? Repository.Where(x => x.UserId == userId && x.IsWishlist == isWishlist).SelectSingle() ?? new Cart();
@@ -206,6 +216,7 @@ namespace EvenCart.Services.Purchases
             cart.FinalAmount = 0;
             cart.ShippingFee = 0;
             cart.Discount = 0;
+            cart.DiscountCouponId = 0;
             Update(cart);
         }
     }

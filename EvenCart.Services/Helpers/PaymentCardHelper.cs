@@ -60,13 +60,13 @@ namespace EvenCart.Services.Helpers
            
         }
 
-        private const string cardRegex = @"^(?:(?<Visa>4\\d{3})|(?<MasterCard>5[1-5]\\d{2})|(?<Maestro>(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15})|(?<Discover>6011)|(?<DinersClub>(?:3[68]\\d{2})|(?:30[0-5]\\d))|(?<Amex>3[47]\\d{2}))([ -]?)(?(DinersClub)(?:\\d{6}\\1\\d{4})|(?(Amex)(?:\\d{6}\\1\\d{5})|(?:\\d{4}\\1\\d{4}\\1\\d{4})))$";
+        private const string CardRegex = @"^(?:(?<Visa>4\\d{3})|(?<MasterCard>5[1-5]\\d{2})|(?<Maestro>(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15})|(?<Discover>6011)|(?<DinersClub>(?:3[68]\\d{2})|(?:30[0-5]\\d))|(?<Amex>3[47]\\d{2}))([ -]?)(?(DinersClub)(?:\\d{6}\\1\\d{4})|(?(Amex)(?:\\d{6}\\1\\d{5})|(?:\\d{4}\\1\\d{4}\\1\\d{4})))$";
 
         public static CreditCardType? GetCardTypeFromNumber(string cardNum)
         {
             //Create new instance of Regex comparer with our
             //credit card regex patter
-            var cardTest = new Regex(cardRegex);
+            var cardTest = new Regex(CardRegex);
 
             //Compare the supplied card number with the regex
             //pattern and get reference regex named groups
@@ -103,15 +103,15 @@ namespace EvenCart.Services.Helpers
             }
         }
 
-        public static string StripCharacters(string CardNumber)
+        public static string StripDashes(string cardNumber)
         {
-            var strippedCardNumber =  CardNumber.Trim().Replace("-", "");
+            var strippedCardNumber =  cardNumber.Trim().Replace("-", "");
             return strippedCardNumber;
         }
-        public static string MaskCardNumber(string CardNumber)
+        public static string MaskCardNumber(string cardNumber)
         {
             //find last 4 digits
-            string lastFour = CardNumber.Substring(CardNumber.Length - 4);
+            string lastFour = cardNumber.Substring(cardNumber.Length - 4);
             return string.Concat("xxxx-xxxx-xxxx-", lastFour);
         }
     }

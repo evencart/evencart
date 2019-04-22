@@ -64,13 +64,13 @@ namespace EvenCart.Services.Tests
         }
 
         [OneTimeSetUp]
-        public void Setup()
+        public void OnetimeSetup()
         {
            
         }
 
         [OneTimeTearDown]
-        public void Setdown()
+        public void OnetimeTeardown()
         {
             DatabaseManager.CleanupDatabase(ContextKey);
         }

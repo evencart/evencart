@@ -6,6 +6,7 @@
         AlreadyApplied = 2,
         Expired = 3,
         NotEligibleForCart = 4,
-        InvalidCode = 5
+        InvalidCode = 5,
+        Exhausted = 6
     }
 }

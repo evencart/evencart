@@ -119,7 +119,7 @@ namespace EvenCart.Factories.Products
 
             IList<DiscountCoupon> coupons = null;
             //any autodiscounted price
-            var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, ref coupons, out decimal discount);
+            var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, 1, ref coupons, out decimal discount);
             if (price < product.Price)
             {
                 productModel.ComparePrice = product.Price;
