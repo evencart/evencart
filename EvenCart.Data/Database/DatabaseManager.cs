@@ -41,36 +41,47 @@ namespace EvenCart.Data.Database
         }
 
         private static bool _versionsAdded = false;
-        public static void AppendVersions()
+        public static void AppendVersions(bool withPlugins = false)
         {
             if (_versionsAdded)
                 return;
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
-
+           
             var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
             var pluginInfos = pluginLoader.GetAvailablePlugins();
             foreach (var pluginInfo in pluginInfos)
             {
-                var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
-                if (versions.Any())
-                    DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                try
+                {
+                    var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
+                    if (versions.Any())
+                        DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                }
+                catch
+                {
+                    // ignored
+                }
             }
             _versionsAdded = true;
         }
 
-        public static void UpgradeDatabase()
+        public static void UpgradeDatabase(bool withPlugins = true)
         {
             UpgradeDatabase(DatabaseContextKey);
-            //upgrade the installed plugin's database as well.
-            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-            var pluginInfos = pluginLoader.GetAvailablePlugins();
-            foreach (var pluginInfo in pluginInfos)
+            if (withPlugins)
             {
-                if (pluginInfo.Installed)
+                //upgrade the installed plugin's database as well.
+                var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
+                var pluginInfos = pluginLoader.GetAvailablePlugins();
+                foreach (var pluginInfo in pluginInfos)
                 {
-                    UpgradeDatabase(pluginInfo.SystemName);
+                    if (pluginInfo.Installed)
+                    {
+                        UpgradeDatabase(pluginInfo.SystemName);
+                    }
                 }
             }
+          
         }
 
         public static void UpgradeDatabase(string callingContextName)

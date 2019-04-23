@@ -6,6 +6,7 @@ using DryIoc.Microsoft.DependencyInjection;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -67,6 +68,9 @@ namespace EvenCart.Infrastructure
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.CheckInstallation();
+            
             //use response pages
             app.UseStatusPages();
 

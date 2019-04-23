@@ -3,6 +3,7 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace EvenCart.Infrastructure
 {
@@ -27,6 +28,17 @@ namespace EvenCart.Infrastructure
                 types = null;
             types = httpContext.Request.Query["storeMeta"].ToArray();
             return isApiCall;
+        }
+
+        public static bool IsRequestForStaticResource()
+        {
+            if (ApplicationEngine.CurrentHttpContext.Request == null)
+                return false;
+            var provider = new FileExtensionContentTypeProvider();
+            var path = ApplicationEngine.CurrentHttpContext.Request.Path.Value;
+
+            var success = provider.TryGetContentType(path, out var contentType);
+            return success;
         }
     }
 }

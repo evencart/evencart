@@ -4,6 +4,7 @@ using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Localization;
+using EvenCart.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +16,8 @@ namespace EvenCart.Infrastructure.Extensions
     {
         public static void UseStatusPages(this IApplicationBuilder app)
         {
+            if (!DatabaseManager.IsDatabaseInstalled())
+                return;
             app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 
             app.UseStatusCodePages(async context =>
@@ -67,6 +70,11 @@ namespace EvenCart.Infrastructure.Extensions
         {
             var taskManager = DependencyResolver.Resolve<ITaskManager>();
             taskManager.Start();
+        }
+
+        public static void CheckInstallation(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<InstallMiddleware>();
         }
     }
 }

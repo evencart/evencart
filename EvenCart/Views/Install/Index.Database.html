@@ -1,0 +1,109 @@
+﻿<div class="before-leave" data-callback="setDatabaseSettings()"></div>
+<h4>Database Configuration</h4>
+<fieldset>
+    <div class="box-body">
+        <div class="form-group">
+            <label for="serverUrl" class="control-label">Connection Type</label>
+            <div>
+                <select id="connectionType" class="form-control">
+                    <option value="0">Use Provider Settings</option>
+                    <option value="1">Use Connection String</option>
+                </select>
+            </div>
+        </div>
+        <div id="provider-settings">
+            <div class="form-group">
+                <label for="serverUrl" class="control-label">Database Server</label>
+                <div>
+                    <input type="text" class="form-control" id="serverUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dbName" class="control-label">Database Name</label>
+                <div>
+                    <input type="text" class="form-control" id="dbName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="useSampleData" class="control-label">
+                    <input type="checkbox" id="integratedSecurity">
+                    Integrated Security
+                </label>
+            </div>
+            <div id="db-user-details">
+                <div class="form-group">
+                    <label for="dbUser" class="control-label">Database User</label>
+                    <div>
+                        <input type="text" class="form-control" id="dbUser">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dbPassword" class="control-label">Database Password</label>
+                    <div>
+                        <input type="text" class="form-control" id="dbPassword">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="connection-string">
+            <div class="form-group">
+                <label for="connectionString" class="control-label">Connection String</label>
+                <div>
+                    <textarea id="connectionString" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</fieldset>
+<div class="wizard-navigation">
+    <a href="" class="btn btn-secondary float-left prev-link" onclick="stepDown()">Back</a>
+    <a href="" class="btn btn-primary float-right next-link" onclick="setDatabaseSettings()">Next</a>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("#integratedSecurity").change(function() {
+            if (jQuery(this).is(":checked"))
+                jQuery("#db-user-details").hide();
+            else
+                jQuery("#db-user-details").show();
+        });
+        jQuery("#connectionType").change(function () {
+            if (jQuery(this).val() == "0") {
+                jQuery("#connection-string").hide();
+                jQuery("#provider-settings").show();
+            } else {
+                jQuery("#connection-string").show();
+                jQuery("#provider-settings").hide();
+            }
+        }).trigger("change");
+    })
+</script>
+<script type="text/javascript">
+    var setDatabaseSettings = function () {
+        installSettings.isConnectionString = jQuery("#connectionType").val() == "1";
+        installSettings.connectionString = jQuery("#connectionString").val();
+        installSettings.serverUrl = jQuery("#serverUrl").val();
+        installSettings.databaseName = jQuery("#dbName").val();
+        installSettings.databaseUserName = jQuery("#dbUser").val();
+        installSettings.databasePassword = jQuery("#dbPassword").val();
+        installSettings.integratedSecurity = jQuery("#integratedSecurity").is(":checked");
+       
+        testDatabaseSettings(function(success) {
+            if (success)
+                stepUp();
+        });
+    }
+
+    var testDatabaseSettings = function(callback) {
+        post({
+            url: "{% route TestDatabaseConnection %}",
+            data: installSettings,
+            done: function (response) {
+                hideProgress();
+                callback(response.success);
+            },
+            fail: hideProgress
+        });
+    }
+</script>

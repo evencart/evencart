@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Authentication;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Plugins;
@@ -76,8 +77,12 @@ namespace EvenCart.Infrastructure.Extensions
         {
             var mvcBuilder = services.AddMvc(options =>
                 {
-                    options.Conventions.Add(new AppRoutingConvention());
-                    options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
+                    if (DatabaseManager.IsDatabaseInstalled())
+                    {
+                        options.Conventions.Add(new AppRoutingConvention());
+                        options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
+                    }
+
                 })
                 .AddJsonOptions(options =>
                 {

@@ -189,6 +189,8 @@ var ajax = function (options) {
                     else
                         errMsg = "An error occured while completing operation";
                     notify("error", errMsg);
+                    if (options.fail)
+                        options.fail(response);
                 }
                 
             }

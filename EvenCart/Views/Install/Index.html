@@ -1,0 +1,244 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/administration/assets/lib/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/administration/assets/lib/rbicon/style.css">
+
+    <script src="/administration/assets/lib/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        //helper for quick calls
+        var ready = function (callback) {
+            jQuery(document).ready(callback);
+        }
+    </script>
+    <title>EvenCart Installation Wizard</title>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="progress"></div>
+        <div class="container">
+            <div class="installation-wizard-area">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="wizard-links-area">
+                            <ul>
+                                <li>
+                                    <a href="#step1" class="active">
+                                        1. Welcome
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#step2">
+                                        2. License Agreement
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#step3">
+                                        3. Database Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#step4">
+                                        4. Store Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#step5">
+                                        5. Review & Install
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="wizard-pages">
+
+                            <div class="wizard-page" id="step1">
+                                {% partial "Install/Index.Welcome" %}
+                            </div>
+                            <div class="wizard-page" id="step2">
+                                {% partial "Install/Index.License" %}
+                            </div>
+                            <div class="wizard-page" id="step3">
+                                {% partial "Install/Index.Database" %}
+                            </div>
+                            <div class="wizard-page" id="step4">
+                                {% partial "Install/Index.Store" %}
+                            </div>
+                            <div class="wizard-page" id="step5">
+                                {% partial "Install/Index.Review" %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<style type="text/css">
+    .page-wrapper {
+        position: relative;
+    }
+    .progress {
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        width: 100%;
+        height: 100%;
+        background-image: url("/common/assets/images/loading.gif");
+        background-position: center center;
+        background-repeat: no-repeat;
+        display: none;
+        z-index: 5;
+    }
+    .wizard-pages {
+        padding-top: 30px;
+        position: relative;
+        min-height: 700px;
+    }
+    
+    .wizard-links-area {
+        background-color: #555;
+        height: 700px;
+        padding-top: 25px;
+    }
+    .wizard-links-area ul {
+        padding: 0;
+    }
+    .wizard-links-area ul li {
+        list-style: none;
+        color: gray;
+    }
+
+    .wizard-links-area ul li {
+        list-style: none;
+        color: white;
+    }
+
+    .wizard-links-area ul li a {
+        color: gray;
+        cursor: default;
+        padding: 10px 15px;
+        display: block;
+    }
+
+    .wizard-links-area ul li a.active {
+        color: white;
+        font-size: 1.2rem;
+        border: solid 7px #555;
+        border-left: solid 7px #fff;
+    }
+
+    .wizard-links-area ul li a.done {
+        color: white;
+    }
+
+    .wizard-links-area ul li a:hover {
+        text-decoration: none;
+    }
+
+    .installation-wizard-area {
+        width: 1024px;
+    }
+    .notification {
+        position: fixed;
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+        padding: 10px 20px;
+        top: 10px;
+        border-radius: 15px;
+        display: none;
+        z-index: 2;
+        cursor: pointer;
+    }
+</style>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/administration/assets/lib/popper.min.js"></script>
+    <script src="/administration/assets/lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script src="/administration/assets/lib/jquery-validator/jquery.validate.js"></script>
+    <script src="/administration/assets/lib/jquery-validator/additional-methods.js"></script>
+    <script src="/common/assets/js/helpers.js"></script>
+    <script src="/common/assets/js/ajax.js"></script>
+    <script src="/administration/assets/js/script.js"></script>
+    <script type="text/javascript">
+        var installSettings = {
+            licenseAgreed: false,
+            providerName: "",
+            serverName: "",
+            databaseUserName: "",
+            databasePassword: "",
+            integratedSecurity: false,
+            databaseName: "",
+            isConnectionString: false,
+            connectionString: "",
+            requiresPassword: true,
+            storeName: "",
+            adminEmail: "",
+            password: "",
+            installSampleData: false
+        };
+        var nav = {
+            currentPage: 1,
+            maxPage: 5,
+            minPage: 1
+        }
+
+        var stepUp = function () {
+            nav.currentPage = nav.currentPage + 1;
+            setPage(nav.currentPage);
+        }
+
+        var stepDown = function () {
+            nav.currentPage = nav.currentPage - 1;
+            setPage(nav.currentPage);
+        }
+
+        var setPage = function (page) {
+            var pageObj = jQuery("#step" + page);
+            jQuery(".wizard-page").hide();
+            pageObj.show();
+            jQuery(".prev-link,.next-link").show();
+            jQuery(".wizard-links-area a").removeClass("active");
+            jQuery(".wizard-links-area a").removeClass("done");
+
+            if (page == nav.minPage) {
+                jQuery(".prev-link").hide();
+            }
+            if (page == nav.maxPage) {
+                jQuery(".next-link").hide();
+            }
+            if (page > nav.minPage) {
+                for (var i = nav.minPage; i < page; i++) {
+                    jQuery(".wizard-links-area a[href='#step" + i + "']").addClass("done");
+                }
+            }
+            jQuery(".wizard-links-area a[href='#step" + page + "']").addClass("active");
+
+        }
+
+        var showProgress = function () {
+            jQuery(".progress").show();
+        }
+        var hideProgress = function () {
+            jQuery(".progress").hide();
+        }
+        jQuery(".wizard-links-area a").on("click",
+            function (e) {
+                e.preventDefault();
+            });
+        jQuery(".prev-link, .next-link").on("click",
+            function(e) {
+                e.preventDefault();
+            });
+        setPage(nav.currentPage);
+    </script>
+</body>
+
+
+</html>	

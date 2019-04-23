@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
@@ -16,6 +17,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 
         public static void RegisterObject<T>(string key) where T : GlobalObject
         {
+            if (!DatabaseManager.IsDatabaseInstalled())
+                return;
             if(!RegisteredObjects.ContainsKey(key))
                 RegisteredObjects.Add(key, Activator.CreateInstance<T>());
         }

@@ -24,6 +24,8 @@ namespace EvenCart.Models.Installation
 
         public string DatabasePassword { get; set; }
 
+        public bool IntegratedSecurity { get; set; }
+
         public bool IsConnectionString { get; set; }
 
         public bool InstallSampleData { get; set; }
@@ -34,8 +36,8 @@ namespace EvenCart.Models.Installation
         {
             v.RuleFor(x => x.AdminEmail).NotEmpty().EmailAddress();
             v.RuleFor(x => x.Password).Equal(x => x.ConfirmPassword);
-            v.RuleFor(x => x.DatabaseName).NotEmpty();
-            v.RuleFor(x => x.ServerUrl).NotEmpty();
+            v.RuleFor(x => x.DatabaseName).NotEmpty().When(x => !x.IsConnectionString);
+            v.RuleFor(x => x.ServerUrl).NotEmpty().When(x => !x.IsConnectionString);
             v.RuleFor(x => x.StoreName).NotEmpty();
         }
     }

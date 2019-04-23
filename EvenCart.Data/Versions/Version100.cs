@@ -12,6 +12,7 @@ using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Reviews;
+using EvenCart.Data.Entity.ScheduledTasks;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Taxes;
@@ -158,6 +159,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<Setting>(transaction);
             Db.CreateTable<Log>(transaction);
             Db.CreateTable<SeoMeta>(transaction);
+            Db.CreateTable<ScheduledTask>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -307,7 +309,7 @@ namespace EvenCart.Data.Versions
             Db.DropTable<Setting>(transaction);
             Db.DropTable<Log>(transaction);
             Db.DropTable<SeoMeta>(transaction);
-
+            Db.DropTable<ScheduledTask>(transaction);
 
         }
 

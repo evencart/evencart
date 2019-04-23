@@ -1,0 +1,68 @@
+﻿<div class="before-leave" data-callback="setStoreSettings()"></div>
+<h4>Store Configuration</h4>
+<fieldset>
+    <div class="box-body">
+        <div class="form-group">
+            <label for="serverUrl" class="control-label">Store Name</label>
+            <div>
+                <input type="text" class="form-control" id="storeName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="adminEmail" class="control-label">Administrator Email</label>
+            <div>
+                <input type="text" class="form-control" id="adminEmail">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="adminPassword" class="control-label">Administrator Password</label>
+            <div>
+                <input type="password" class="form-control" id="adminPassword">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="adminPassword" class="control-label">Confirm Password</label>
+            <div>
+                <input type="password" class="form-control" id="adminConfirmPassword">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="useSampleData" class="control-label">
+                <input type="checkbox" id="useSampleData">
+                Install Sample Data
+            </label>
+        </div>
+    </div>
+</fieldset>
+<div class="wizard-navigation">
+    <a href="" class="btn btn-secondary float-left prev-link" onclick="stepDown()">Back</a>
+    <a href="" class="btn btn-primary float-right next-link" onclick="setStoreSettings()">Next</a>
+</div>
+<script type="text/javascript">
+    var setStoreSettings = function () {
+        installSettings.storeName = jQuery("#storeName").val();
+        installSettings.adminEmail = jQuery("#adminEmail").val();
+        installSettings.password = jQuery("#adminPassword").val();
+        installSettings.confirmPassword = jQuery("#adminConfirmPassword").val();
+        if (jQuery("#useSampleData").is(":checked"))
+            installSettings.installSampleData = true;
+
+        jQuery("#review-server").html(installSettings.serverUrl);
+        jQuery("#review-dbUser").html(installSettings.databaseUserName);
+        jQuery("#review-dbName").html(installSettings.databaseName);
+        jQuery("#review-dbPassword").html(installSettings.databasePassword);
+        jQuery("#review-adminEmail").html(installSettings.adminEmail);
+        jQuery("#review-storeName").html(installSettings.storeName);
+        jQuery("#review-connectionString").html(installSettings.connectionString);
+        jQuery("#review-sampleData").html(installSettings.installSampleData ? "Yes" : "No");
+
+        if (installSettings.isConnectionString) {
+            jQuery(".for-non-cs").hide();
+            jQuery(".for-cs").show();
+        } else {
+            jQuery(".for-cs").hide();
+            jQuery(".for-non-cs").show();
+        }
+        stepUp();
+    }
+</script>

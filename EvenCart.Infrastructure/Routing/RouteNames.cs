@@ -2,6 +2,8 @@
 {
     public static class RouteNames
     {
+        public const string Install = "Install";
+        public const string TestDatabaseConnection = "TestDatabaseConnection";
         public const string Home = "Home";
         public const string Login = "Login";
         public const string Logout = "Logout";

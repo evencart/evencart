@@ -13,15 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Middleware\**" />
     <Compile Remove="Mvc\UI\Extensions\**" />
     <Compile Remove="Mvc\Validator\**" />
     <Compile Remove="Security\**" />
-    <EmbeddedResource Remove="Middleware\**" />
     <EmbeddedResource Remove="Mvc\UI\Extensions\**" />
     <EmbeddedResource Remove="Mvc\Validator\**" />
     <EmbeddedResource Remove="Security\**" />
-    <None Remove="Middleware\**" />
     <None Remove="Mvc\UI\Extensions\**" />
     <None Remove="Mvc\Validator\**" />
     <None Remove="Security\**" />

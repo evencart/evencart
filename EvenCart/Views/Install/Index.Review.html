@@ -1,0 +1,94 @@
+﻿<h4>Review</h4>
+<p>Great! We have all the information required to perform the installation. Here are the details you filled in.</p>
+<table class="table">
+    <tr>
+        <th colspan="2">Database Configuration</th>
+    </tr>
+    <tr  class="for-non-cs">
+        <td>Server</td>
+        <td width="30%">
+            <span id="review-server"></span>
+        </td>
+    </tr>
+    <tr class="for-non-cs">
+        <td>Database Name</td>
+        <td>
+            <span id="review-dbName"></span>
+        </td>
+    </tr>
+    <tr  class="for-non-cs">
+        <td>Database User</td>
+        <td>
+            <span id="review-dbUser"></span>
+        </td>
+    </tr>
+    <tr  class="for-non-cs">
+        <td>Database Password</td>
+        <td>
+            <span id="review-dbPassword"></span>
+        </td>
+    </tr>
+    <tr  class="for-cs">
+        <td width="30%" >Connection String</td>
+        <td>
+            <span id="review-connectionString"></span>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="2">Site Info</th>
+    </tr>
+    <tr>
+        <td>Store Name</td>
+        <td>
+            <span id="review-storeName"></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Admin Email</td>
+        <td>
+            <span id="review-adminEmail"></span>
+        </td>
+    </tr>
+    <tr>
+        <td>Password</td>
+        <td>
+            <span id="review-password">(your chosen password)</span>
+        </td>
+    </tr>
+    <tr>
+        <td>Install Sample Data</td>
+        <td>
+            <span id="review-sampleData"></span>
+        </td>
+    </tr>
+</table>
+<div class="wizard-navigation">
+    <a href="" class="btn btn-secondary float-left prev-link" onclick="stepDown()">Back</a>
+    <a href="" class="btn btn-primary btn-lg float-right install-btn">Install Now</a>
+</div>
+
+<script type="text/javascript">
+    
+    var install = function () {
+        showProgress();
+        post({
+            url: "{% route Install %}",
+            data: installSettings,
+            done: function (response) {
+                if (response.success) {
+                    notify("success", "The installation was successful. Redirecting to home...");
+                    setTimeout(function() {
+                        window.location.href = "{% route Home %}";
+                    }, 3000);
+                }
+            },
+            fail: hideProgress
+
+        });
+    }
+
+    jQuery(".install-btn").click(function (e) {
+        e.preventDefault();
+        install();
+    });
+</script>
