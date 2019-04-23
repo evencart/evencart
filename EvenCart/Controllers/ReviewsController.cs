@@ -198,7 +198,7 @@ namespace EvenCart.Controllers
             return ReviewsListApi(reviewSearchModel);
         }
 
-        [DualGet("{productId}", Name = RouteNames.UserReviewsList, OnlyApi = true)]
+        [DualGet("reviews/{productId}", Name = RouteNames.UserReviewsList, OnlyApi = true)]
         public IActionResult ReviewsListApi(ReviewSearchModel reviewSearchModel)
         {
             //check if the product is valid
