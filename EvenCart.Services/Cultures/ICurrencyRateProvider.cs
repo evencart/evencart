@@ -9,5 +9,7 @@ namespace EvenCart.Services.Cultures
         Task<IList<CurrencyRate>> GetLatestRates(string baseCurrencyCode);
 
         string ProviderName { get; }
+
+        string ProviderSystemName { get; }
     }
 }

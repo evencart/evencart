@@ -63,7 +63,12 @@
                                         row.id +
                                         "' onclick='editTask(" +
                                         row.id +
-                                        ")'><span class='rbicon-edit'></span></button> ";
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                    "<button type='button' class='btn btn-sm btn-primary command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='runTask(\"" +
+                                        row.systemName +
+                                        "\")'><span class='rbicon-refresh-cw'></span></button> ";
 
                                 }
                             }
@@ -100,5 +105,16 @@
                 jQuery("#edit-task").html(response);
                 centerPopup();
             });
+    }
+
+    var runTask = function(name) {
+        var url = '{% route api_RunScheduledTask scheduledTaskSystemName="%name%" %}'.replaceAll("%name%", name);
+        post({
+            url: url,
+            done: function(response) {
+                if (response.success)
+                    notify("success", "{{'The scheduled task completed successfully' | t}}");
+            }
+        });
     }
 </script>

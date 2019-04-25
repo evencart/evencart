@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Infrastructure;
 using FluentScheduler;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.ScheduledTasks;
 using EvenCart.Services.Extensions;
+using EvenCart.Services.Helpers;
 using EvenCart.Services.Logger;
 
 namespace EvenCart.Services.ScheduledTasks
@@ -23,73 +25,52 @@ namespace EvenCart.Services.ScheduledTasks
 
         public void Start()
         {
-           //only start tasks if we have db installed
+            //only start tasks if we have db installed
             if (!DatabaseManager.IsDatabaseInstalled())
                 return;
-            var availableTasksTypes = TypeFinder.ClassesOfType<ITask>();
+            var availableTasks = DependencyResolver.ResolveMany<ITask>().ToList();
             var scheduledTasks = _scheduledTaskService.Get(x => true).ToList();
             //first sync available tasks and database tasks
-            UpdateTasksInDatabase(availableTasksTypes, scheduledTasks);
+            UpdateTasksInDatabase(availableTasks, scheduledTasks);
             if (!scheduledTasks.Any(x => x.Enabled))
                 return;
             var registry = new Registry();
-                //add each enabled task to the scheduler
-                foreach (var sTask in scheduledTasks.Where(x => x.Enabled))
+            //add each enabled task to the scheduler
+            foreach (var sTask in scheduledTasks.Where(x => x.Enabled))
+            {
+                var task = availableTasks.FirstOrDefault(x => x.SystemName == sTask.SystemName);
+                if (task == null)
+                    continue;
+
+                if (sTask.Seconds < 10)
+                    sTask.Seconds = 10;
+                //schedule the task
+                registry.Schedule(() =>
                 {
-                    var taskType = availableTasksTypes.FirstOrDefault(x => x.FullName == sTask.SystemName);
-                    if (taskType != null)
+                    
+                    try
                     {
-                        if (sTask.Seconds < 10)
-                            sTask.Seconds = 10;
-                        //schedule the task
-                        registry.Schedule(() =>
-                        {
-                            using (var task = (ITask)Activator.CreateInstance(taskType))
-                            {
-                                try
-                                {
-                                    sTask.LastStartDateTime = DateTime.UtcNow;
-                                    sTask.IsRunning = true;
-                                    _scheduledTaskService.Update(sTask);
-                                    task.Run();
-                                    sTask.LastSuccessDateTime = DateTime.UtcNow;
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.LogError<ScheduledTask>(ex, "Failed to complete the task '{0}'", null, task.SystemName);
-                                    //check if task should be stopped
-                                    if (sTask.StopOnError)
-                                    {
-                                        sTask.Enabled = false;
-                                        sTask.LastEndDateTime = DateTime.UtcNow;
-                                    }
-                                }
-                                finally
-                                {
-                                    sTask.IsRunning = false;
-                                    //update the task
-                                    _scheduledTaskService.Update(sTask);
-                                }
-                            }
-
-                        }).ToRunEvery(sTask.Seconds).Seconds();
-
+                        ScheduledTaskHelper.RunScheduledTask(sTask, task, _scheduledTaskService, _logger);
                     }
-                }
-                //initialize the jobmanager
-                JobManager.Initialize(registry);
-            
+                    catch (Exception ex)
+                    {
+                        //do nothing here
+                    }
+
+                }).ToRunEvery(sTask.Seconds).Seconds();
+            }
+            //initialize the jobmanager
+            JobManager.Initialize(registry);
+
         }
 
-        private void UpdateTasksInDatabase(IList<Type> allTaskTypes, IList<ScheduledTask> availableScheduledTasks)
+        private void UpdateTasksInDatabase(IList<ITask> allTaskTypes, IList<ScheduledTask> availableScheduledTasks)
         {
-            var taskNames = allTaskTypes.Select(x => x.FullName).ToArray();
-            foreach (var taskName in taskNames)
+            foreach (var iTask in allTaskTypes)
             {
-                var iTask = (ITask)Activator.CreateInstance(allTaskTypes.First(x => x.FullName == taskName));
-                if (availableScheduledTasks.Any(x => x.SystemName == taskName))
+                if (availableScheduledTasks.Any(x => x.SystemName == iTask.SystemName))
                 {
-                    var t = availableScheduledTasks.First(x => x.SystemName == taskName);
+                    var t = availableScheduledTasks.First(x => x.SystemName == iTask.SystemName);
                     if (t.Name != iTask.Name)
                     {
                         t.Name = iTask.Name;
@@ -104,7 +85,7 @@ namespace EvenCart.Services.ScheduledTasks
                     Enabled = false,
                     IsRunning = false,
                     Name = iTask.Name,
-                    SystemName = taskName,
+                    SystemName = iTask.SystemName,
                     StopOnError = false,
                     Seconds = iTask.DefaultCycleDurationInSeconds
                 };

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace EvenCart.Core.Tasks
 {
     public interface ITask : IDisposable
     {
-        void Run();
+        Task Run();
 
         string SystemName { get; }
 

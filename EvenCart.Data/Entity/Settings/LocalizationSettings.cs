@@ -13,5 +13,7 @@ namespace EvenCart.Data.Entity.Settings
         public int PrimaryCurrencyId { get; set; }
 
         public string DefaultLanguage { get; set; }
+
+        public string DefaultCurrencyRateProvider { get; set; }
     }
 }

@@ -5,10 +5,12 @@ using DryIoc;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Infrastructure.Extensions;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
 using EvenCart.Core.Services.Events;
+using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Services.Authentication;
 using EvenCart.Services.Emails;
@@ -26,8 +28,10 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Routing.Parsers;
+using EvenCart.Infrastructure.Tasks;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines;
+using EvenCart.Services.Cultures;
 
 namespace EvenCart.Infrastructure.DependencyContainer
 {
@@ -108,6 +112,25 @@ namespace EvenCart.Infrastructure.DependencyContainer
                                              !type.IsAbstract));// which implementing some interface(s)
             //all providers which are not interfaces
             registrar.RegisterMany(allCapabilityProviderTypes);
+
+            //tasks
+            var allTaskTypes = allTypes
+                .Where(type => type.IsPublic && // get public types 
+                               type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ITask)) &&
+                                             !type.IsAbstract));// which implementing some interface(s)
+            //all providers which are not interfaces
+            registrar.RegisterMany<ITask>(allTaskTypes, type => type.FullName);
+            
+            //currency providers
+            var allCurrencyProviders = allTypes
+                .Where(type => type.IsPublic && // get public types 
+                               type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ICurrencyRateProvider)) &&
+                                             !type.IsAbstract));// which implementing some interface(s)
+            //all providers which are not interfaces
+            registrar.RegisterMany(allCurrencyProviders);
+
 
             //services
             //to register services, we need to get all types from services assembly and register each of them;

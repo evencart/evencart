@@ -8,7 +8,7 @@ namespace EvenCart.Services.ScheduledTasks
 {
     public class ScheduledTaskService : FoundationEntityService<ScheduledTask>, IScheduledTaskService
     {
-        public IEnumerable<ScheduledTask> GeScheduledTasks(out int totalMatches, string searchText = null, bool? enableStatus = null, int page = 1,
+        public IEnumerable<ScheduledTask> GetScheduledTasks(out int totalMatches, string searchText = null, bool? enableStatus = null, int page = 1,
             int count = Int32.MaxValue)
         {
             var query = Repository;

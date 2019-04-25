@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using DotEntity.Enumerations;
 using EvenCart.Core.Exception;
 using EvenCart.Core.Services;
@@ -32,6 +33,84 @@ namespace EvenCart.Services.Emails
         public bool SendEmail(EmailMessage emailMessage, out Exception exception)
         {
             exception = null;
+
+            var mailObjectResult = GetMailObjects(emailMessage, out var message, out var smtpClient);
+            if (!mailObjectResult)
+                return false;
+            try
+            {
+                smtpClient.Send(message);
+                //update the send status
+                emailMessage.IsSent = true;
+                if (emailMessage.Id > 0)
+                    Update(emailMessage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                //log the error
+                _logger.Log<EmailService>(LogLevel.Error, $"Failed to send email to {emailMessage.TosSerialized}", ex);
+                return false;
+            }
+            finally
+            {
+                smtpClient.Dispose();
+            }
+        }
+
+        public bool SendEmail(EmailMessage emailMessage)
+        {
+            return SendEmail(emailMessage, out Exception _);
+        }
+
+        public async Task<bool> SendEmailAsync(EmailMessage emailMessage)
+        {
+            var mailObjectResult = GetMailObjects(emailMessage, out var message, out var smtpClient);
+            if (!mailObjectResult)
+                return false;
+            try
+            {
+                await smtpClient.SendMailAsync(message);
+                //update the send status
+                emailMessage.IsSent = true;
+                if (emailMessage.Id > 0)
+                    Update(emailMessage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //log the error
+                _logger.Log<EmailService>(LogLevel.Error, $"Failed to send email to {emailMessage.TosSerialized}", ex);
+                return false;
+            }
+            finally
+            {
+                smtpClient.Dispose();
+            }
+        }
+
+        public void Queue(EmailMessage emailMessage)
+        {
+            Insert(emailMessage);
+        }
+
+        public override IEnumerable<EmailMessage> Get(Expression<Func<EmailMessage, bool>> @where, int page = 1, int count = Int32.MaxValue)
+        {
+            return Repository.Join<EmailAccount>("EmailAccountId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToOne<EmailMessage, EmailAccount>())
+                .Where(where)
+                .OrderBy(x => x.Id)
+
+                .SelectNested(page, count);
+        }
+
+        #region helpers
+
+        private bool GetMailObjects(EmailMessage emailMessage, out MailMessage mailMessage, out SmtpClient smtpClient)
+        {
+            mailMessage = null;
+            smtpClient = null;
             //we need an email account
             var emailAccount = emailMessage.EmailAccount ??
                                _emailAccountService.Get(_emailSenderSettings.DefaultEmailAccountId) ??
@@ -94,52 +173,20 @@ namespace EvenCart.Services.Emails
             //send email
 
             var password = _cryptographyService.Decrypt(emailAccount.Password);
-            using (var smtpClient = new SmtpClient())
+            smtpClient = new SmtpClient
             {
-                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-                smtpClient.Host = emailAccount.Host;
-                smtpClient.Port = emailAccount.Port;
-                smtpClient.EnableSsl = emailAccount.UseSsl;
-                smtpClient.Credentials = emailAccount.UseDefaultCredentials ?
-                    CredentialCache.DefaultNetworkCredentials :
-                    new NetworkCredential(emailAccount.UserName, password);
-                try
-                {
-                    smtpClient.Send(message);
-                    //update the send status
-                    emailMessage.IsSent = true;
-                    if (emailMessage.Id > 0)
-                        Update(emailMessage);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                    //log the error
-                    _logger.Log<EmailService>(LogLevel.Error, $"Failed to send email to {emailMessage.TosSerialized}", ex);
-                    return false;
-                }
-            }
+                UseDefaultCredentials = emailAccount.UseDefaultCredentials,
+                Host = emailAccount.Host,
+                Port = emailAccount.Port,
+                EnableSsl = emailAccount.UseSsl,
+                Credentials = emailAccount.UseDefaultCredentials
+                    ? CredentialCache.DefaultNetworkCredentials
+                    : new NetworkCredential(emailAccount.UserName, password)
+            };
+            mailMessage = message;
+            return true;
         }
+        #endregion
 
-        public bool SendEmail(EmailMessage emailMessage)
-        {
-            return SendEmail(emailMessage, out Exception _);
-        }
-
-        public void Queue(EmailMessage emailMessage)
-        {
-            Insert(emailMessage);
-        }
-
-        public override IEnumerable<EmailMessage> Get(Expression<Func<EmailMessage, bool>> @where, int page = 1, int count = Int32.MaxValue)
-        {
-            return Repository.Join<EmailAccount>("EmailAccountId", "Id", joinType: JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToOne<EmailMessage, EmailAccount>())
-                .Where(where)
-                .OrderBy(x => x.Id)
-
-                .SelectNested(page, count);
-        }
     }
 }

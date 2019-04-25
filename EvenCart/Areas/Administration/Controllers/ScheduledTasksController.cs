@@ -1,12 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EvenCart.Areas.Administration.Models.ScheduledTasks;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Tasks;
 using EvenCart.Data.Entity.ScheduledTasks;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.ScheduledTasks;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Services.Helpers;
+using EvenCart.Services.Logger;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -16,17 +22,19 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IScheduledTaskService _scheduledTaskService;
         private readonly IModelMapper _modelMapper;
         private readonly IDataSerializer _dataSerializer;
-        public ScheduledTasksController(IScheduledTaskService scheduledTaskService, IModelMapper modelMapper, IDataSerializer dataSerializer)
+        private readonly ILogger _logger;
+        public ScheduledTasksController(IScheduledTaskService scheduledTaskService, IModelMapper modelMapper, IDataSerializer dataSerializer, ILogger logger)
         {
             _scheduledTaskService = scheduledTaskService;
             _modelMapper = modelMapper;
             _dataSerializer = dataSerializer;
+            _logger = logger;
         }
 
         [DualGet("", Name = AdminRouteNames.ScheduledTasksList)]
         public IActionResult ScheduledTasksList(ScheduledTaskSearchModel searchModel)
         {
-            var tasks = _scheduledTaskService.GeScheduledTasks(out int totalMatches, searchModel.SearchPhrase,
+            var tasks = _scheduledTaskService.GetScheduledTasks(out int totalMatches, searchModel.SearchPhrase,
                 searchModel.EnableStatus, searchModel.Current, searchModel.RowCount);
             var models = tasks.Select(x => _modelMapper.Map<ScheduledTaskModel>(x)).ToList();
             return R.Success.With("tasks", () => models, () => _dataSerializer.Serialize(models))
@@ -58,6 +66,25 @@ namespace EvenCart.Areas.Administration.Controllers
             task.StopOnError = taskModel.StopOnError;
             task.Seconds = taskModel.Seconds;
             _scheduledTaskService.Update(task);
+            return R.Success.Result;
+        }
+
+        [DualPost("run", Name = AdminRouteNames.RunScheduledTask, OnlyApi = true)]
+        public IActionResult RunNow(string scheduledTaskSystemName)
+        {
+            if (scheduledTaskSystemName.IsNullEmptyOrWhiteSpace())
+                return BadRequest();
+            var scheduledTask = _scheduledTaskService.FirstOrDefault(x => x.SystemName == scheduledTaskSystemName);
+            var iTask = DependencyResolver.Resolve<ITask>(scheduledTaskSystemName);
+            try
+            {
+                ScheduledTaskHelper.RunScheduledTask(scheduledTask, iTask, _scheduledTaskService, _logger, false);
+            }
+            catch (Exception)
+            {
+                return R.Fail.With("error",
+                    T("An error occurred while running the task. Please check the log for details")).Result;
+            }
             return R.Success.Result;
         }
     }

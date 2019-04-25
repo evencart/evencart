@@ -153,6 +153,7 @@
         public const string ScheduledTasksList = "ScheduledTasksList";
         public const string GetScheduledTask = "GetScheduledTask";
         public const string SaveScheduledTask = "SaveScheduledTask";
+        public const string RunScheduledTask = "RunScheduledTask";
 
         public const string TaxesList = "TaxesList";
         public const string GetTax = "GetTax";

@@ -53,5 +53,7 @@ namespace EvenCart.Services.Cultures
         }
 
         public string ProviderName => "Default Provider";
+
+        public string ProviderSystemName => "EvenCart.Services.Cultures.DefaultCurrencyRateProvider";
     }
 }
