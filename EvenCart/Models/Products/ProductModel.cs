@@ -61,6 +61,8 @@ namespace EvenCart.Models.Products
 
         public bool HasVariants { get; set; }
 
+        public bool IsAvailable { get; set; }
+
         public string SeName { get; set; }
 
         public ReviewSummaryModel ReviewSummary { get; set; }

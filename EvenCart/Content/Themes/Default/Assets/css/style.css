@@ -3485,3 +3485,6 @@ div.tab button.active {
   color: white;
   padding: 5px 0;
   font-weight: bold; }
+
+.product-unavailable {
+  display: none; }

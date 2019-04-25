@@ -61,12 +61,23 @@
                     <form action="{% route api_AddToCart %}" method="post" id="form-add-to-cart">
                         <input type="hidden" name="productId" value="{{product.id}}"/>
                         {% partial "Products/Index.ProductAttributes" %}
+                        {% if product.isAvailable %}
                         <!-- Quantity Cart -->
                         <div class="quantity-cart section">
                             <div class="product-quantity">
                                 <input name="quantity" type="text" value="{{product.minimumPurchaseQuantity}}">
                             </div>
                             <button class="add-to-cart">{{"add to cart" | t }}</button>
+                        </div>
+                        {% else %}
+                        <script type="text/javascript">
+                            ready(function() {
+                                jQuery(".product-unavailable").show();
+                            });
+                        </script>
+                        {% endif %}
+                        <div class="product-unavailable">
+                            {{"The product is currently not available" | t}}
                         </div>
                     </form>
                     <script type="text/javascript">

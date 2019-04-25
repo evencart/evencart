@@ -86,16 +86,25 @@
                         {% control label text=@t"Mpn" for="mpn" %}
                         {% control text name="mpn" value="{{product.mpn}}" %}
                     </div>
+
+                    {% if product.hasVariants == false %}
                     <div class="form-group">
                         {% control checkbox name="trackInventory" text=@t"Track Inventory" value="product.track_inventory" %}
                     </div>
+                    {% else %}
+                    <div class="form-group">
+                        <div class="alert alert-info">{{"The inventory of this product is being tracked by it's variants" | t}}</div>
+                    </div>
+                    {% endif %}
                     <div class="row">
+                        {% if product.hasVariants == false %}
                         <div class="col-md-4">
                             <div class="form-group">
                                 {% control label text=@t"Stock Quantity" for="stockQuantity" %}
                                 {% control number name="stockQuantity" value="{{product.stockQuantity}}" min="0" %}
                             </div>
                         </div>
+                        {% endif %}
                         <div class="col-md-4">
                             <div class="form-group">
                                 {% control label text=@t"Min. Purchase Qty." for="minimumPurchaseQuantity" %}

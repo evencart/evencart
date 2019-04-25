@@ -62,6 +62,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public string ManufacturerName { get; set; }
 
+        public bool HasVariants { get; set; }
+
         public IList<MediaModel> Media { get; set; }
 
         public IList<CategoryModel> Categories { get; set; }

@@ -51,7 +51,18 @@
                                     }
                                     if (variant != null) {
                                         jQuery("#priceFormatted").html(variant.price);
+                                        if (variant.isAvailable) {
+                                            jQuery(".quantity-cart").show();
+                                            jQuery(".product-unavailable").hide();
+                                        } else {
+                                            jQuery(".quantity-cart").hide();
+                                            jQuery(".product-unavailable").show();
+                                        }
                                     } else {
+                                        if (variants.length > 0) {
+                                            jQuery(".quantity-cart").hide();
+                                            jQuery(".product-unavailable").show();
+                                        }
                                         jQuery("#priceFormatted").html("{{product.priceFormatted}}");
                                     }
                                 }

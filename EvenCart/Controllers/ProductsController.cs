@@ -99,7 +99,10 @@ namespace EvenCart.Controllers
                     {
                         attributes = new Dictionary<string, string>(),
                         price = (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax).ToCurrency(),
-                        isAvailable = variant.TrackInventory && (variant.StockQuantity > 0 || variant.CanOrderWhenOutOfStock)
+                        isAvailable = variant.TrackInventory && (variant.StockQuantity > 0 || variant.CanOrderWhenOutOfStock),
+                        sku = !variant.Sku.IsNullEmptyOrWhiteSpace() ? variant.Sku : product.Sku,
+                        gtin = !variant.Gtin.IsNullEmptyOrWhiteSpace() ? variant.Gtin : product.Gtin,
+                        mpn = !variant.Mpn.IsNullEmptyOrWhiteSpace() ? variant.Mpn : product.Mpn
                     };
                     foreach (var pva in variant.ProductVariantAttributes)
                     {
