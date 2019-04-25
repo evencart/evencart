@@ -55,7 +55,7 @@ namespace EvenCart.Infrastructure
 
             //set dependency resolver for core functions
             DependencyResolver.ServiceProvider = serviceProvider;
-            DependencyResolver.Container = container;
+            DependencyResolver.Container = serviceProvider.GetService<IContainer>();
             return serviceProvider;
         }
 

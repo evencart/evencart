@@ -8,7 +8,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
 {
     public class CompositionRoot
     {
-        public CompositionRoot(IRegistrator registrar)
+        public CompositionRoot(IContainer registrar)
         {
             //now the other dependencies by other modules or system
             var dependencies = TypeFinder.ClassesOfType<IDependencyContainer>();

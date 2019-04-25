@@ -17,6 +17,11 @@ namespace EvenCart.Core.Infrastructure
             return ServiceProvider.GetRequiredService<T>();
         }
 
+        public static T Resolve<T>(object serviceKey)
+        {
+            return Container.Resolve<T>(serviceKey: serviceKey);
+        }
+
         public static T ResolveOptional<T>()
         {
             return ServiceProvider.GetService<T>();
@@ -40,10 +45,6 @@ namespace EvenCart.Core.Infrastructure
             instance = Instantiator.GetInstance(type);
             return instance;
         }
-
-        public static void ClearResolutionCache(Type type)
-        {
-            Container.ClearCache(type);
-        }
+     
     }
 }
