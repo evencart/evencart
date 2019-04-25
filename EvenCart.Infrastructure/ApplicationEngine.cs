@@ -71,6 +71,9 @@ namespace EvenCart.Infrastructure
 
             app.CheckInstallation();
             
+            //https redirection
+            app.UseHttps();
+
             //use response pages
             app.UseStatusPages();
 

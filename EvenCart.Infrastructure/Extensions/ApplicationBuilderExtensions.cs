@@ -2,6 +2,7 @@
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.Middleware;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-
+using Microsoft.AspNetCore.Http.Features;
 namespace EvenCart.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
@@ -76,5 +77,11 @@ namespace EvenCart.Infrastructure.Extensions
         {
             app.UseMiddleware<InstallMiddleware>();
         }
+
+        public static void UseHttps(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<HttpsRedirectionMiddleware>();
+        }
+
     }
 }
