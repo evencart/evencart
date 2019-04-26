@@ -64,7 +64,7 @@ namespace EvenCart.Controllers
 
             //then feed the data
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,
-                ApplicationEngine.CurrentHttpContext.Request.Host.Value, model.StoreName);
+                "//" + ApplicationEngine.CurrentHttpContext.Request.Host.Value, model.StoreName);
 
             //restart the app
             ServerHelper.RestartApplication();
