@@ -1,0 +1,12 @@
+﻿<script type='application/ld+json'>
+    {
+    "@context" : "https://schema.org",
+    "@type" : "WebSite",
+    "url" : "{{store.url}}",
+    "name" : "{{store.name}}",
+    "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{% route ProductsSearchPage search="{search_term}" %}",
+    "query-input": "required name=search_term"    
+    }
+</script>

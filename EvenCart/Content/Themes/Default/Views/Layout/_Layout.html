@@ -22,9 +22,10 @@
                         <form method="get" action="{% route ProductsSearchPage %}">
                             <input type="text" name="search" placeholder="{{'Search products or brands' | t}}" />
                             <button type="submit">
-                               <i class="fa fa-search"></i>
+                                <i class="fa fa-search"></i>
                             </button>
                         </form>
+                        {% partial JsonLd/_SearchJsonLd  %}
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">

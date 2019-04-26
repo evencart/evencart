@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.MediaServices;
@@ -15,6 +17,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
             var catalogSettings = DependencyResolver.Resolve<CatalogSettings>();
             var orderSettings = DependencyResolver.Resolve<OrderSettings>();
+            var urlSettings = DependencyResolver.Resolve<UrlSettings>();
 
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
@@ -29,12 +32,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 LocalizationHelper.Localize("All Categories", ApplicationEngine.CurrentLanguageCultureCode);
             return new StoreImplementation()
             {
-                Url = generalSettings.StoreDomain,
+                Url = WebHelper.GetUrlFromPath("/", generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),
                 Name = generalSettings.StoreName,
                 Theme = new ThemeImplementation()
                 {
                     Name = "Default",
-                    Url = "/default"
+                    Url = WebHelper.GetUrlFromPath("/default", generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),
                 },
                 LogoUrl = logoUrl,
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
