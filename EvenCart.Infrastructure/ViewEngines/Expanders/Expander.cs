@@ -37,7 +37,10 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 NavigationType = ApplicationConfig.SecondaryNavigationName
             },
             new GlobalExpander() {TagName = "global"},
-            new JsonExpander() { TagName = "json"}
+            new JsonExpander() { TagName = "json"},
+            new CssExpander() { TagName = "css" },
+            new JsExpander() { TagName = "js" },
+            new BundleExpander() { TagName = "bundle" }
         };
 
         private const string TagMatcherPattern =

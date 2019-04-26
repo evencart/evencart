@@ -24,6 +24,8 @@ namespace EvenCart.Infrastructure
 
         public const string FlagsDirectory = "~/common/flags";
 
+        public const string BundlesDirectory = "~/bundles";
+
         public const string MediaDirectory = "~/Content/Uploads";
 
         public const string MediaServeDirectory = "~/Content/Uploads/Serves";

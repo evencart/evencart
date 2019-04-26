@@ -30,5 +30,7 @@ namespace EvenCart.Core.Infrastructure.Providers
         string GetFileName(string filePath);
 
         string[] GetFiles(string directoryName, string pattern = "*.*");
+
+        void DeleteFiles(string directoryName, string pattern);
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services;
-using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -27,7 +25,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 namespace EvenCart.Infrastructure
 {
@@ -77,37 +74,9 @@ namespace EvenCart.Infrastructure
             //use response pages
             app.UseStatusPages();
 
-            app.UseStaticFiles();
+            //use static files
+            app.UseStaticFiles(_hostingEnvironment);
 
-            //get all the theme's directories, they'll be used for static files
-            var themesDir = Path.Combine(_hostingEnvironment.ContentRootPath, "Content", "Themes");
-            var allThemes = Directory.GetDirectories(themesDir);
-            foreach (var themeDir in allThemes)
-            {
-                var directoryInfo = new DirectoryInfo(themeDir);
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(
-                    Path.Combine(themesDir, themeDir, "Assets")),
-                    RequestPath = new PathString($"/{directoryInfo.Name}/assets")
-                });
-            }
-
-            //also plugin's assets directories
-            var pluginsDir = Path.Combine(_hostingEnvironment.ContentRootPath, "Plugins");
-            var allPlugins = Directory.GetDirectories(pluginsDir);
-            foreach (var pluginDir in allPlugins)
-            {
-                var directoryInfo = new DirectoryInfo(pluginDir);
-                var assetDir = Path.Combine(pluginsDir, pluginDir, "Assets");
-                if (!Directory.Exists(assetDir))
-                    continue;
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(assetDir),
-                    RequestPath = new PathString($"/plugins/{directoryInfo.Name}/assets")
-                });
-            }
             //init database
             app.InitializeDatabase();
             

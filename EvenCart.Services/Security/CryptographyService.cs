@@ -193,5 +193,10 @@ namespace EvenCart.Services.Security
             var salt = _applicationConfiguration.GetSetting("encryptionSalt");
             return Decrypt(cipherText, key, salt);
         }
+
+        public string GetMd5Hash(string plainText)
+        {
+            return GetMd5Hash(MD5.Create(), plainText);
+        }
     }
 }

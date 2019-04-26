@@ -171,6 +171,7 @@
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
     <Folder Include="Widgets\" />
+    <Folder Include="wwwroot\bundles\" />
   </ItemGroup>
 
   <ItemGroup>

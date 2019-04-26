@@ -8,32 +8,32 @@
     <meta name="description" content="{{metaDescription}}">
     <meta name="keywords" content="{{metaKeywords}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Favicon -->
-    <!-- All CSS Files -->
-    <!-- Bootstrap css -->
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/bootstrap.min.css">
-    <!-- Icon Font -->
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/font-awesome.css">
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/pe-icon-7-stroke.css">
-    <!-- Plugins css file -->
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/plugins.css">
-    <!-- Theme main style -->
-    <link rel="stylesheet" href="{{store.theme.url}}/assets/css/style.min.css">
-    <!-- Responsive css -->
-    <!-- jQuery latest version -->
-    <script src="{{store.theme.url}}/assets/js/jquery-3.1.1.min.js"></script>
-    <!-- Modernizr JS -->
-    <script src="{{store.theme.url}}/assets/js/modernizr-2.8.3.min.js"></script>
+    <!--external css-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:300,400,500,600,700|Lato:300,400,700|Montserrat:300,400,500,600,700" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    {% css "/default/assets/css/bootstrap.min.css" %}
+    {% css "/default/assets/css/font-awesome.min.css" %}
+    {% css "/default/assets/css/pe-icon-7-stroke.css" %}
+    {% css "/default/assets/css/plugins.css" %}
+    {% css "/default/assets/css/style.min.css" %}
+
+    <!--Render CSS-->
+    {% bundle render="css" %}
+
+    <!-- jQuery latest version -->
+    {% js "/default/assets/js/jquery-3.1.1.min.js" bundle="headScripts" %}
+    <!-- Modernizr JS -->
+    {% js "/assets/js/modernizr-2.8.3.min.js" bundle="headScripts" %}
+
+    {% bundle render="js" bundle="headScripts" %}
     <script type="text/javascript">
         //helper for quick calls
         var ready = function (callback) {
             jQuery(document).ready(callback);
         }
     </script>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
     {% widget "head_end" %}
 </head>
 <body>
@@ -44,25 +44,28 @@
     {% endif %}
     {% widget "body_start" %}
     {% bodyContent %}
+
     <!-- Placed JS at the end of the document so the pages load faster -->
-    <script src="{{store.theme.url}}/assets/js/popper.min.js"></script>
+    {% js "/default/assets/js/popper.min.js" bundle="footerScripts" %}
     <!-- Bootstrap js -->
-    <script src="{{store.theme.url}}/assets/js/bootstrap.min.js"></script>
+    {% js "/default/assets/js/bootstrap.min.js" bundle="footerScripts" %}
 
     <!-- Plugins js -->
-    <script src="{{store.theme.url}}/assets/js/plugins.js"></script>
+    {% js "/default/assets/js/plugins.js" bundle="footerScripts" %}
     <!-- Ajax Mail js -->
-    <script src="{{store.theme.url}}/assets/js/ajax-mail.js"></script>
+    {% js "/default/assets/js/ajax-mail.js" bundle="footerScripts" %}
     <!-- Main js -->
-    <script src="{{store.theme.url}}/assets/js/main.js"></script>
-    <script src="{{store.theme.url}}/assets/js/wow.min.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/jquery-validator/jquery.validate.min.js"></script>
-    <script src="{{store.url}}/administration/assets/lib/jquery-validator/additional-methods.js"></script>
-    <script src="{{store.url}}/common/assets/lib/navigo/navigo.js"></script>
-    <script src="{{store.url}}/common/assets/lib/liquidjs/liquid.js"></script>
-    <script src="{{store.url}}/common/assets/js/ajax.js"></script>
-    <script src="{{store.url}}/common/assets/js/helpers.js"></script>
-    <script src="{{store.url}}/common/assets/js/catalog.js"></script>
+    {% js "/default/assets/js/main.js" bundle="footerScripts" %}
+    {% js "/default/assets/js/wow.min.js" bundle="footerScripts" %}
+    {% js "/administration/assets/lib/jquery-validator/jquery.validate.min.js" bundle="footerScripts" %}
+    {% js "/administration/assets/lib/jquery-validator/additional-methods.js" bundle="footerScripts" %}
+    {% js "/common/assets/lib/navigo/navigo.js" bundle="footerScripts" %}
+    {% js "/common/assets/lib/liquidjs/liquid.js" bundle="footerScripts" %}
+    {% js "/common/assets/js/ajax.js" bundle="footerScripts" %}
+    {% js "/common/assets/js/helpers.js" bundle="footerScripts" %}
+    {% js "/common/assets/js/catalog.js" bundle="footerScripts" %}
+    <!--render scripts-->
+    {% bundle render="js" bundle="footerScripts" %}
     {% widget "body_end" %}
 </body>
 </html>

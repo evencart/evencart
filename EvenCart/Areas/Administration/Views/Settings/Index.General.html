@@ -44,5 +44,14 @@
             {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
         </div>
         {% endif %}
+        <div class="form-group">
+            {% control checkbox name="enableJsBundling" text=@t"Enable JS Bundling" value="settings.enableJsBundling"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="enableCssBundling" text=@t"Enable CSS Bundling" value="settings.enableCssBundling"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="enableHtmlMinification" text=@t"Enable Html Minification" value="settings.enableHtmlMinification"%}
+        </div>
     </div>
 </div>

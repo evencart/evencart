@@ -22,5 +22,11 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public bool EnableBreadcrumbs { get; set; }
 
         public int PrimaryNavigationId { get; set; }
+
+        public bool EnableJsBundling { get; set; }
+
+        public bool EnableCssBundling { get; set; }
+
+        public bool EnableHtmlMinification { get; set; }
     }
 }

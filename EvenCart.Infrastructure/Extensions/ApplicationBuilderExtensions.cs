@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
@@ -8,9 +9,12 @@ using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
+
 namespace EvenCart.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
@@ -81,6 +85,49 @@ namespace EvenCart.Infrastructure.Extensions
         public static void UseHttps(this IApplicationBuilder app)
         {
             app.UseMiddleware<HttpsRedirectionMiddleware>();
+        }
+
+        public static void UseStaticFiles(this IApplicationBuilder app, IHostingEnvironment hostingEnvironment)
+        {
+            app.UseStaticFiles();
+
+            //bundles directory
+            var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "Bundles");
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(bundleDir),
+                RequestPath = new PathString($"/bundles")
+            });
+
+            //get all the theme's directories, they'll be used for static files
+            var themesDir = Path.Combine(hostingEnvironment.ContentRootPath, "Content", "Themes");
+            var allThemes = Directory.GetDirectories(themesDir);
+            foreach (var themeDir in allThemes)
+            {
+                var directoryInfo = new DirectoryInfo(themeDir);
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(themesDir, themeDir, "Assets")),
+                    RequestPath = new PathString($"/{directoryInfo.Name}/assets")
+                });
+            }
+
+            //also plugin's assets directories
+            var pluginsDir = Path.Combine(hostingEnvironment.ContentRootPath, "Plugins");
+            var allPlugins = Directory.GetDirectories(pluginsDir);
+            foreach (var pluginDir in allPlugins)
+            {
+                var directoryInfo = new DirectoryInfo(pluginDir);
+                var assetDir = Path.Combine(pluginsDir, pluginDir, "Assets");
+                if (!Directory.Exists(assetDir))
+                    continue;
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(assetDir),
+                    RequestPath = new PathString($"/plugins/{directoryInfo.Name}/assets")
+                });
+            }
         }
 
     }

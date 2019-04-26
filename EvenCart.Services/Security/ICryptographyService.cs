@@ -60,5 +60,10 @@ namespace EvenCart.Services.Security
         /// Encrypts plain text with default encryption key & salt from application configuration
         /// </summary>
         string Decrypt(string cipherText);
+
+        /// <summary>
+        /// Gets the MD5 hash of the provided text
+        /// </summary>
+        string GetMd5Hash(string plainText);
     }
 }

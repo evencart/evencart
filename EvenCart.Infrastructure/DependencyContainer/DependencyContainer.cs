@@ -18,6 +18,7 @@ using EvenCart.Services.Search;
 using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Authentication;
+using EvenCart.Infrastructure.Bundle;
 using EvenCart.Infrastructure.Database;
 using EvenCart.Infrastructure.Emails;
 using EvenCart.Infrastructure.Localization;
@@ -73,6 +74,8 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IHtmlProcessor, HtmlProcessor>(reuse: Reuse.Singleton);
             //email sender
             registrar.Register<IEmailSender, EmailSender>(reuse: Reuse.Transient);
+            //bundler
+            registrar.Register<IBundleService, BundleService>(reuse: Reuse.Transient);
 
             var asm = AssemblyLoader.GetAppDomainAssemblies();
             var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
