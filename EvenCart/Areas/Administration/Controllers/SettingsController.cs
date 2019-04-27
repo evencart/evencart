@@ -16,6 +16,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Gdpr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -35,6 +36,7 @@ namespace EvenCart.Areas.Administration.Controllers
             { typeof(TaxSettingsModel), typeof(TaxSettings) },
             { typeof(UserSettingsModel), typeof(UserSettings) },
             { typeof(LocalizationSettingsModel), typeof(LocalizationSettings) },
+            { typeof(GdprSettingsModel), typeof(GdprSettings) },
         };
 
 
@@ -133,6 +135,15 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
+        [FieldRequired("settingType", "gdpr")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
+        public IActionResult SaveSettings(GdprSettingsModel gdprSettings)
+        {
+            SaveSetting(gdprSettings);
+            return R.Success.Result;
+        }
+
         #region Helpers
         private IActionResult GetSettingResult(string settingType)
         {
@@ -195,6 +206,14 @@ namespace EvenCart.Areas.Administration.Controllers
                     result.With("availableCurrencies", currenciesSelectList);
 
                     result.WithCatalogPaginationTypes();
+                    break;
+                case "gdpr":
+                    settings = DependencyResolver.Resolve<GdprSettings>();
+                    model = _modelMapper.Map<GdprSettingsModel>(settings);
+                    var consentGroupService = DependencyResolver.Resolve<IConsentGroupService>();
+                    var consentGroups = consentGroupService.Get(x => true).ToList();
+                    var groupSelectList = SelectListHelper.GetSelectItemList(consentGroups, x => x.Id, x => x.Name);
+                    result.With("availableConsentGroups", groupSelectList);
                     break;
             }
 

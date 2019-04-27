@@ -12,5 +12,7 @@ namespace EvenCart.Services.Gdpr
         IList<Consent> GetPendingConsents(int userId);
 
         bool IsConsentAccepted(int userId, int consentId);
+
+        bool AreConsentsActedUpon(int userId, params int[] consentIds);
     }
 }

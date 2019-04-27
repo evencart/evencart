@@ -18,7 +18,7 @@ namespace EvenCart.Core.Extensions
 
         public static T GetMeta<T>(this FoundationEntity entity, string key)
         {
-            if (entity == null || !entity.MetaData.ContainsKey(key))
+            if (entity == null || entity.MetaData == null || !entity.MetaData.ContainsKey(key))
                 return default(T);
             var value = entity.MetaData[key];
             if (value.GetType() == typeof(T))

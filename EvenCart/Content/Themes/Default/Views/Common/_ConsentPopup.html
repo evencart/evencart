@@ -1,0 +1,68 @@
+﻿{% if store.showCookieConsent %}
+<div class="cookie-consent-popup">
+    <div class="consent-text">
+        {{store.cookiePopupText}}
+    </div>
+    {% if store.useConsentGroup %}
+    <a class="preference-toggle">
+        <span class="fa fa-angle-right margin-r-5"></span>
+        {{"Preferences" | t}}
+    </a>
+    <script type="text/javascript">
+        ready(function() {
+            jQuery(".preference-toggle").on("click",
+                function () {
+                    jQuery(".cookie-consent-popup").toggleClass("expanded");
+                    jQuery(".consent-text").toggle();
+                    jQuery(".preference-details").toggle();
+                    jQuery(".preference-toggle .fa").toggleClass("fa-angle-right");
+                    jQuery(".preference-toggle .fa").toggleClass("fa-angle-left");
+                });
+        });
+    </script>
+    <div class="preference-details">
+        <strong>
+            {{store.consentGroup.name}}
+        </strong>
+        <p>
+            {{store.consentGroup.description}}
+        </p>
+        {% for consent in store.consentGroup.consents %}
+        <div class="form-group">
+            <label>
+                <input type="checkbox" value="{{consent.id}}" class="consent-checkbox" checked="checked" {% if consent.isRequired %}disabled{% endif %} /> <strong>{{consent.title}}</strong>
+            </label>
+            <div>{{consent.description}}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form method="post" action="{% route api_SaveGdprPreferences %}" id="cookie-consent-form">
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">{{"Accept" | t}}</button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        ready(function() {
+            initAjaxForm("cookie-consent-form",
+                {
+                    extraData: function () {
+                        var consents = [];
+                        jQuery(".consent-checkbox").each(function() {
+                            var status = jQuery(this).is(":checked") ? "accepted" : "denied";
+                            var id = jQuery(this).val();
+                            consents.push({
+                                id: id,
+                                consentStatus: status
+                            });
+                        });
+                        return { consents: consents};
+                    },
+                    onSuccess: function() {
+                        jQuery(".cookie-consent-popup").fadeOut();
+                    }
+                });
+        })
+    </script>
+</div>
+{% endif %}

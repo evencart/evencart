@@ -1,7 +1,5 @@
 ﻿{% layout "_Layout" %}
 
-{% partial "Navigation/SettingsSecondaryNavigation" %}
-
 <form action='{% route api_SaveSettings settingType="{{settingType}}" %}' method="post" id="save-setting-form">
     <div class="row">
         <div class="col-md-12 col-offset-2">
@@ -24,6 +22,8 @@
                 {% partial "Settings/Index.Url" %}
             {% elsif settingType == "localization" %}
                 {% partial "Settings/Index.Localization" %}
+            {% elsif settingType == "gdpr" %}
+                {% partial "Settings/Index.Gdpr" %}
             {% endif %}
         </div>
     </div>

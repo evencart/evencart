@@ -16,7 +16,7 @@ namespace EvenCart.Infrastructure
 
         public const string ApiAuthenticationScheme = "ApiAuthentication";
 
-        public const string ExternalAuthenticationScheme = "External";
+        public const string ExternalAuthenticationScheme = "ExternalAuthentication";
 
         public const string DefaultLoginUrl = "/login";
 
@@ -43,5 +43,7 @@ namespace EvenCart.Infrastructure
         public const string SecondaryNavigationName = "secondary_navigation";
 
         public const PasswordFormat DefaultPasswordFormat = PasswordFormat.Sha256Hashed;
+
+        public const string ConsentCookieName = "_gdprc";
     }
 }

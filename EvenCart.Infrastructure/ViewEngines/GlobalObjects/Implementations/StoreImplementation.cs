@@ -31,5 +31,13 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public bool ChangeCurrencyEnabled { get; set; }
 
         public string ActiveCurrencyCode { get; set; }
+
+        public bool ShowCookieConsent { get; set; }
+
+        public bool UseConsentGroup { get; set; }
+
+        public string CookiePopupText { get; set; }
+
+        public ConsentGroupImplementation ConsentGroup { get; set; }
     }
 }

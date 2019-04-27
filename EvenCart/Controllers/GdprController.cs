@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Services.Gdpr;
 using EvenCart.Factories.Gdpr;
+using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Models.Gdpr;
+using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,12 +54,28 @@ namespace EvenCart.Controllers
 
         [DualPost("save-consents", Name = RouteNames.SaveGdprPreferences, OnlyApi = true)]
         [RejectForImitator]
+        [AllowAnonymous]
         public IActionResult SaveConsents(IList<ConsentModel> consents)
         {
             if (consents == null)
                 return BadRequest();
-            var consentDictionary = consents.Where(x => x.Id != 0).ToDictionary(x => x.Id, x => x.ConsentStatus);
-            _gdprService.SetUserConsents(CurrentUser.Id, consentDictionary);
+            if (consents.Any())
+            {
+                //if user is not logged in, guest signin
+                ApplicationEngine.GuestSignIn();
+                var consentDictionary = consents.Where(x => x.Id != 0).ToDictionary(x => x.Id, x => x.ConsentStatus);
+                _gdprService.SetUserConsents(CurrentUser.Id, consentDictionary);
+            }
+            else
+            {
+                if (CurrentUser == null)
+                {
+                    //there were no consents, so just create a cookie to track
+                    CookieHelper.SetResponseCookie(ApplicationConfig.ConsentCookieName, Guid.NewGuid().ToString(), false);
+                }
+
+            }
+         
             return R.Success.Result;
         }
 

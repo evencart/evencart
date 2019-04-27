@@ -100,5 +100,17 @@ namespace EvenCart.Services.Gdpr
             return EntitySet<UserConsent>.Where(x => x.UserId == userId && x.ConsentId == consentId && x.ConsentStatus == ConsentStatus.Accepted).Count() > 0;
         }
 
+        public bool AreConsentsActedUpon(int userId, params int[] consentIds)
+        {
+            var actedUponConsents = EntitySet<UserConsent>.Where(x => x.UserId == userId).Select().ToList();
+            foreach (var consentId in consentIds)
+            {
+                if (actedUponConsents.All(x => x.ConsentId != consentId))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

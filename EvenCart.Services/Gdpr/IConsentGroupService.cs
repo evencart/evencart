@@ -5,6 +5,6 @@ namespace EvenCart.Services.Gdpr
 {
     public interface IConsentGroupService : IFoundationEntityService<ConsentGroup>
     {
-        
+        ConsentGroup GetWithConsents(int consentGroupId);
     }
 }

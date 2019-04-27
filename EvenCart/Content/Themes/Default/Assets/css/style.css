@@ -3487,3 +3487,24 @@ div.tab button.active {
 
 .product-unavailable {
   display: none; }
+
+.cookie-consent-popup {
+  position: fixed;
+  left: 15px;
+  bottom: 25px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 10px 30px;
+  width: 100%;
+  max-width: 430px;
+  color: #fff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+  border-radius: 3px; }
+  .cookie-consent-popup a {
+    cursor: pointer; }
+  .cookie-consent-popup p, .cookie-consent-popup h1, .cookie-consent-popup h2, .cookie-consent-popup h3, .cookie-consent-popup h4, .cookie-consent-popup h, .cookie-consent-popup h6, .cookie-consent-popup strong, .cookie-consent-popup span {
+    color: #fff; }
+  .cookie-consent-popup .preference-details {
+    display: none; }
+  .cookie-consent-popup.expanded {
+    max-width: 800px;
+    background-color: #333; }
