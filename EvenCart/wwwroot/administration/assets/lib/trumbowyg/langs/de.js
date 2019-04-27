@@ -28,6 +28,7 @@ jQuery.trumbowyg.langs.de = {
     unorderedList: 'Ungeordnete Liste',
     orderedList: 'Geordnete Liste',
 
+    image: 'Bild',
     insertImage: 'Bild einfügen',
     insertVideo: 'Video einfügen',
     link: 'Link',
@@ -40,13 +41,14 @@ jQuery.trumbowyg.langs.de = {
     justifyFull: 'Blocksatz',
 
     horizontalRule: 'Horizontale Linie einfügen',
-
+    removeformat: 'Format entfernen',
+    
     fullscreen: 'Vollbild',
 
     close: 'Schließen',
 
     submit: 'Bestätigen',
-    reset: 'Zurücksetzen',
+    reset: 'Abbrechen',
 
     required: 'Erforderlich',
     description: 'Beschreibung',

@@ -10,5 +10,9 @@
   {
     "outputFile": "Content/Themes/Default/Assets/css/style.css",
     "inputFile": "Content/Themes/Default/Assets/css/style.scss"
+  },
+  {
+    "outputFile": "wwwroot/administration/assets/lib/trumbowyg/plugins/colors/ui/sass/trumbowyg.colors.css",
+    "inputFile": "wwwroot/administration/assets/lib/trumbowyg/plugins/colors/ui/sass/trumbowyg.colors.scss"
   }
 ]

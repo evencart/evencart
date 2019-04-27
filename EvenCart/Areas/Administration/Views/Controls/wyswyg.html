@@ -1,6 +1,33 @@
 ﻿<textarea rel="wyswyg" %attributes%>%value%</textarea>
 <script type="text/javascript">
     ready(function() {
-        jQuery("#{{id}}").trumbowyg();
+        jQuery("#{{id}}").trumbowyg({
+            btnsDef: {
+                // Create a new dropdown
+                image: {
+                    dropdown: ['insertImage', 'upload'],
+                    ico: 'insertImage'
+                }
+            },
+            // Redefine the button pane
+            btns: [
+                ['viewHTML'],
+                ['formatting'],
+                ['strong', 'em', 'del'],
+                ['superscript', 'subscript'],
+                ['link'],
+                ['image'], // Our fresh created dropdown
+                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                ['unorderedList', 'orderedList'],
+                ['horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ],
+            plugins: {
+                upload: {
+
+                }
+            }
+        });
     });
 </script>

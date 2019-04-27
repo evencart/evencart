@@ -10,6 +10,9 @@
 jQuery.trumbowyg.langs.nl = {
     viewHTML: 'HTML bekijken',
 
+    undo: 'Ongedaan maken',
+    redo: 'Opnieuw',
+
     formatting: 'Opmaak',
     p: 'Paragraaf',
     blockquote: 'Citaat',
@@ -46,11 +49,13 @@ jQuery.trumbowyg.langs.nl = {
 
     close: 'Sluiten',
 
-    submit: 'Verzenden',
-    reset: 'Herstellen',
+    submit: 'Opslaan',
+    reset: 'Annuleren',
 
     required: 'Verplicht',
     description: 'Omschrijving',
     title: 'Titel',
-    text: 'Tekst'
+    text: 'Tekst',
+    target: 'Doel',
+    width: 'Breedte'
 };
