@@ -13,6 +13,11 @@
                     <div class="text-center">
                         {{"Already have an account?" | t}} <a href="{% route Login %}">{{"Login Now" | t }}</a>
                     </div>
+                    {% if registrationDisabled %}
+                    <div class="alert alert-danger mt-10">
+                        {{"New registrations are not allowed at the moment" | t}}
+                    </div>
+                    {% else %}
                     <form action="{% route api_Register %}" method="post" id="formRegistration">
                         <div class="row">
                             <div class="col-sm-12 mb-20">
@@ -45,24 +50,25 @@
                             </div>
                         </div>
                     </form>
+                    <script type="text/javascript">
+                        ready(function () {
+                            initAjaxForm("formRegistration",
+                                {
+                                    onSuccess: function () {
+                                        var loginUrl = "{% route Login %}";
+                                        window.location.href = loginUrl;
+                                    },
+                                    errorPlacement: function (error, element) {
+                    
+                                    }
+                                });
+                        });
+   
+                    </script>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-    ready(function () {
-        initAjaxForm("formRegistration",
-            {
-                onSuccess: function () {
-                    var loginUrl = "{% route Login %}";
-                    window.location.href = loginUrl;
-                },
-                errorPlacement: function (error, element) {
-                    
-                }
-            });
-    });
-   
-</script>

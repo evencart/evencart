@@ -56,7 +56,7 @@ namespace EvenCart.Controllers
         public IActionResult Login()
         {
             //if already logged in, redirect to home
-            if (CurrentUser.IsRegistered())
+            if (!CurrentUser.IsVisitor())
                 return RedirectToRoute(RouteNames.Home);
             return R.Success.Result;
         }
@@ -166,6 +166,13 @@ namespace EvenCart.Controllers
         [DualGet("register", Name = RouteNames.Register)]
         public IActionResult Register()
         {
+            //if already logged in, redirect to home
+            if (!CurrentUser.IsVisitor())
+                return RedirectToRoute(RouteNames.Home);
+            //are registrations enabled?
+            if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.Disabled)
+                return R.Success.With("registrationDisabled", true).Result;
+
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
             var models = consents.Select(_gdprModelFactory.Create).ToList();
@@ -184,7 +191,7 @@ namespace EvenCart.Controllers
             //do we have an imitation active/
             if (imitation)
             {
-                return RedirectToRoute(AdminRouteNames.UserImitate, new {userId = currentUserId});
+                return RedirectToRoute(AdminRouteNames.UserImitate, new { userId = currentUserId });
             }
             return Redirect(Url.RouteUrl(RouteNames.Home));
         }
@@ -194,6 +201,9 @@ namespace EvenCart.Controllers
         [ValidateModelState(ModelType = typeof(RegisterModel))]
         public IActionResult Register(RegisterModel registerModel)
         {
+            //are registrations enabled?
+            if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.Disabled)
+                return R.Fail.With("error", T("New registrations are disabled at the moment")).Result;
             //validate consents first
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();

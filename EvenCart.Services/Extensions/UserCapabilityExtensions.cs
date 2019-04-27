@@ -88,7 +88,7 @@ namespace EvenCart.Services.Extensions
 
         public static bool IsVisitor(this User user)
         {
-            return user.Roles == null || !user.Roles.Any();
+            return user?.Roles == null || !user.Roles.Any();
         }
 
         public static bool IsRegistered(this User user)

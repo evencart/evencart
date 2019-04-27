@@ -8,7 +8,9 @@ namespace EvenCart.Data.Enum
         Immediate,
         [Description("With activation email to the user")]
         WithActivationEmail,
-        [Description("Manual")]
-        ManualApproval
+        [Description("Manually approve the registered user")]
+        ManualApproval,
+        [Description("Disable Registrations")]
+        Disabled
     }
 }

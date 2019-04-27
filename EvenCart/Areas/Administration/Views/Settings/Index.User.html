@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
             {% control label text=@t"Registration Mode" for="userRegistrationDefaultMode" %}
-            {% control select name="userRegistrationDefaultMode" value="settings.userRegistrationDefaultMode" items="registrationModes" %}
+            {% control select name="userRegistrationDefaultMode" value="settings.userRegistrationDefaultMode" items="registrationModes" required="true" %}
         </div>
     </div>
 </div>
