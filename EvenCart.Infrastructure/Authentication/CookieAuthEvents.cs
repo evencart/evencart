@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using EvenCart.Core;
 using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
@@ -19,7 +21,7 @@ namespace EvenCart.Infrastructure.Authentication
             var claimsPrincipal = context.Principal;
             var emailClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.Email);
             var guidClaim = claimsPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
-            
+
             if (emailClaim == null || guidClaim == null)
             {
                 context.RejectPrincipal();
@@ -46,6 +48,16 @@ namespace EvenCart.Infrastructure.Authentication
             user.SetMeta(ApplicationConfig.PersistanceKey, isPersistant);
             //preserve user
             ApplicationEngine.CurrentHttpContext.SetCurrentUser(user);
+
+            if (!user.IsImitator(out _))
+            {
+                //update last activity date
+                user.LastActivityDate = DateTime.UtcNow;
+                user.LastActivityIpAddress = WebHelper.GetClientIpAddress();
+                userService.Update(user);
+            }
+
+
             //but reject for a visitor. This way we allow anonymous activity like adding products and guest checkout 
             //while still rejecting the authorization so the secure area can't be accessed without login
             if (user.IsVisitor())

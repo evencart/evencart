@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using EvenCart.Core;
 using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
@@ -189,6 +190,15 @@ namespace EvenCart.Infrastructure.Authentication
             //persist user
             ApplicationEngine.CurrentHttpContext.SetCurrentUser(user);
 
+            if (!user.IsImitator(out _))
+            {
+                //update last login date & details
+                user.LastLoginDate = DateTime.UtcNow;
+                user.LastLoginIpAddress = WebHelper.GetClientIpAddress();
+                user.LastActivityDate = DateTime.UtcNow;
+                _userService.Update(user);
+            }
+        
             return LoginStatus.Success;
         }
         #endregion

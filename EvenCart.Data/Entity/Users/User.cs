@@ -38,6 +38,10 @@ namespace EvenCart.Data.Entity.Users
 
         public DateTime? LastLoginDate { get; set; }
 
+        public DateTime? LastActivityDate { get; set; }
+
+        public string LastActivityIpAddress { get; set; }
+
         public bool IsSystemAccount { get; set; }
 
         public string Remarks { get; set; }
