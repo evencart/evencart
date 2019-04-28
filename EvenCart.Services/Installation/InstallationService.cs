@@ -293,7 +293,7 @@ namespace EvenCart.Services.Installation
             settingService.Save(new UrlSettings() {
               CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
               ProductUrlTemplate = "/product/{SeName}",
-              ContentPageUrlTemplate = "{SeName}"
+              ContentPageUrlTemplate = "/{SeName}"
             });
 
             //catalog settings
