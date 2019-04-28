@@ -83,7 +83,10 @@ namespace EvenCart.Services.Gdpr
 
         public IList<Consent> GetPendingConsents(int userId)
         {
-            Expression<Func<UserConsent, bool>> userWhere = consent => consent.UserId == userId;
+            Expression<Func<UserConsent, bool>> userWhere = consent => consent.UserId == userId || consent.UserId == null;
+            //though integer can't be null
+            //and so here the comparison might not make sense, but in sql server, because it's a join,
+            //the user id of the columns will be null and so it's necessary to include this check above
 
             return EntitySet<Consent>.Just().Join<UserConsent>("Id", "ConsentId", joinType: JoinType.LeftOuter)
                 .Relate<UserConsent>((consent, userConsent) =>

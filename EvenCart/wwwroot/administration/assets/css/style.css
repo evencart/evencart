@@ -44,8 +44,7 @@ body {
   .sidenav-links a {
     color: #fff;
     display: block;
-    padding: 6px 20px;
-    letter-spacing: 0.06rem; }
+    padding: 4px 20px; }
     .sidenav-links a:hover {
       text-decoration: none;
       background-color: #666; }
