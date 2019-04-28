@@ -25,7 +25,9 @@
             ],
             plugins: {
                 upload: {
-
+                    serverPath: "{% route api_UploadMedia %}",
+                    fileFieldName: "mediaFile",
+                    urlPropertyName: "media.imageUrl"
                 }
             }
         });

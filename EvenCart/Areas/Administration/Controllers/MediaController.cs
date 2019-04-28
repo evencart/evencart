@@ -68,6 +68,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var model = _modelMapper.Map<MediaModel>(media);
             model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationConfig.AdminThumbnailWidth,
                 ApplicationConfig.AdminThumbnailHeight);
+            model.ImageUrl = _mediaAccountant.GetPictureUrl(media);
             return R.Success.With("media", model).Result;
         }
 
