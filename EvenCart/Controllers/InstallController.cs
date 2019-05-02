@@ -7,6 +7,7 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Installation;
+using EvenCart.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -14,9 +15,13 @@ namespace EvenCart.Controllers
     public class InstallController : FoundationController
     {
         private readonly IInstallationService _installationService;
-        public InstallController(IInstallationService installationService)
+        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ICryptographyService _cryptographyService;
+        public InstallController(IInstallationService installationService, IApplicationConfiguration applicationConfiguration, ICryptographyService cryptographyService)
         {
             _installationService = installationService;
+            _applicationConfiguration = applicationConfiguration;
+            _cryptographyService = cryptographyService;
         }
 
         [HttpGet("install", Name = RouteNames.Install)]
@@ -61,6 +66,11 @@ namespace EvenCart.Controllers
 
             //perform the installation
             _installationService.Install();
+
+            //save app settings
+            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionKey, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionSalt, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsApiSecret, _cryptographyService.GetRandomPassword(32));
 
             //then feed the data
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,

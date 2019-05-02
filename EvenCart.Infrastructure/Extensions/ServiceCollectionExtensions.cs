@@ -50,7 +50,7 @@ namespace EvenCart.Infrastructure.Extensions
                 .AddJwtBearer(ApplicationConfig.ApiAuthenticationScheme, x =>
                 {
                     var configuration = DependencyResolver.Resolve<IApplicationConfiguration>();
-                    var key = Encoding.UTF8.GetBytes(configuration.GetSetting("apiSecret"));
+                    var key = Encoding.UTF8.GetBytes(configuration.GetSetting(ApplicationConfig.AppSettingsApiSecret));
                     var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;

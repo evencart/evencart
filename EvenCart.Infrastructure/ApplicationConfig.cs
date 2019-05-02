@@ -45,5 +45,12 @@ namespace EvenCart.Infrastructure
         public const PasswordFormat DefaultPasswordFormat = PasswordFormat.Sha256Hashed;
 
         public const string ConsentCookieName = "_gdprc";
+
+        public const string AppSettingsEncryptionKey = "encryptionKey";
+
+        public const string AppSettingsEncryptionSalt = "encryptionSalt";
+
+        public const string AppSettingsApiSecret = "apiSecret";
+
     }
 }

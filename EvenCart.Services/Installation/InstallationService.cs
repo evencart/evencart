@@ -13,6 +13,7 @@ using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Notifications;
+using EvenCart.Services.Security;
 using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
 
@@ -229,6 +230,12 @@ namespace EvenCart.Services.Installation
             //media settings
             settingService.Save(new MediaSettings() {
 
+            });
+
+            //vendor settings
+            settingService.Save(new VendorSettings()
+            {
+                EnableVendorSignup = true
             });
 
             //order settings

@@ -95,7 +95,7 @@ namespace EvenCart.Infrastructure.Authentication
             {
                 // authentication successful so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.UTF8.GetBytes(_applicationConfiguration.GetSetting("apiSecret"));
+                var key = Encoding.UTF8.GetBytes(_applicationConfiguration.GetSetting(ApplicationConfig.AppSettingsApiSecret));
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = subject,
