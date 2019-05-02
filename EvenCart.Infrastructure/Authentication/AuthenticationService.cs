@@ -25,16 +25,19 @@ namespace EvenCart.Infrastructure.Authentication
         private readonly SecuritySettings _securitySettings;
         private readonly ICryptographyService _cryptographyService;
         private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly GeneralSettings _generalSettings;
+
         public AuthenticationService(IUserService userService,
             IUserRegistrationService userRegistrationService,
             SecuritySettings securitySettings,
-            ICryptographyService cryptographyService, IApplicationConfiguration applicationConfiguration)
+            ICryptographyService cryptographyService, IApplicationConfiguration applicationConfiguration, GeneralSettings generalSettings)
         {
             _userService = userService;
             _userRegistrationService = userRegistrationService;
             _securitySettings = securitySettings;
             _cryptographyService = cryptographyService;
             _applicationConfiguration = applicationConfiguration;
+            _generalSettings = generalSettings;
         }
 
         public virtual LoginStatus SignIn(string email, string name = "", bool isPersistent = false, bool forceCreateNewAccount = false)
@@ -98,6 +101,7 @@ namespace EvenCart.Infrastructure.Authentication
                     Subject = subject,
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = _generalSettings.StoreDomain
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);

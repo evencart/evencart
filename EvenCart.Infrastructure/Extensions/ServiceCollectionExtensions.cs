@@ -2,6 +2,7 @@
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Database;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Authentication;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Plugins;
@@ -50,14 +51,16 @@ namespace EvenCart.Infrastructure.Extensions
                 {
                     var configuration = DependencyResolver.Resolve<IApplicationConfiguration>();
                     var key = Encoding.UTF8.GetBytes(configuration.GetSetting("apiSecret"));
+                    var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidIssuer = generalSettings.StoreDomain
                     };
                     x.Events = new JwtAuthEvents();
                 });
