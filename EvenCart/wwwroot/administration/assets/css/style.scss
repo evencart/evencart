@@ -39,7 +39,7 @@ $node-meta-color: #999;
 
 body {
     letter-spacing: 0.02rem;
-    font-size: 0.9rem;
+    font-size: 0.9rem;   
 }
 
 
@@ -59,7 +59,7 @@ body {
     position: fixed;
     top: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
 .sidenav-links {
@@ -197,6 +197,9 @@ body {
     padding-bottom: 25px;
     overflow: auto;
     background-color: #ecf0f5;
+    &.active-dialog{
+        overflow:hidden;
+    }
 }
 
 .node-list {

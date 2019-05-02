@@ -62,7 +62,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult EmailTemplateEditor(int emailTemplateId)
         {
-            var emailTemplate = emailTemplateId > 0 ? _emailTemplateService.Get(emailTemplateId) : new EmailTemplate();
+            var emailTemplate = emailTemplateId > 0 ? _emailTemplateService.Get(emailTemplateId) : null;
             if (emailTemplate == null)
                 return NotFound();
             var model = _modelMapper.Map<EmailTemplateModel>(emailTemplate);

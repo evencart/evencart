@@ -35,7 +35,7 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 1; }
+  z-index: 0; }
 
 .sidenav-links {
   margin: 15px 0;
@@ -128,6 +128,8 @@ body {
   padding-bottom: 25px;
   overflow: auto;
   background-color: #ecf0f5; }
+  .client-main-content.active-dialog {
+    overflow: hidden; }
 
 .node-list {
   display: table;

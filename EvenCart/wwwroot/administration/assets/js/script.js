@@ -16,7 +16,8 @@ var showAsPopup = function (id, ajax, onClose, onOpen) {
     element.addClass("popup");
     jQuery("body").append(overlay);
     jQuery("body").append(element);
-    element.center();
+    jQuery(".client-main-content").addClass("active-dialog");
+    element.center('absolute');
     element.show();
     if (onOpen)
         onOpen();
@@ -39,7 +40,12 @@ var showAsPopup = function (id, ajax, onClose, onOpen) {
     if (ajax) {
         //if this is an ajax call, return a callback that user can call, in which we recenter the popup
         return function () {
-            element.center();
+            element.hide();
+            setTimeout(function () {
+                element.center('absolute');
+                element.show();
+            }, 300);
+           
             element.find(".close-popup, .popup-close").click(function () {
                 hidePopup(id, "cancel");
             });
@@ -54,7 +60,7 @@ var hidePopup = function (id, result, data) {
     var element = jQuery("#" + id);
     element.removeClass("popup");
     element.hide();
-
+    jQuery(".client-main-content").removeClass("active-dialog");
     if (element.data("popup.onclose")) {
         element.data("popup.onclose")(result, data);
     }

@@ -90,6 +90,9 @@
 {% secondary_navigation url="{% route CountriesList %}" title=@t"Back to countries" iconClass="rbicon-chevron-left" groupId="StateEdit"  %}
 {% secondary_navigation url="" title="{{countryName}} States" systemName="StatesList" groupId="StateEdit" %}
 
+{% primary_navigation title=@t"Currencies" systemName="CurrenciesList" groupId="masters" capability="Currency.Manage" %}
+{% secondary_navigation url="{% route CurrenciesList %}" title=@t"All Currencies" systemName="CurrenciesList" parent="CurrenciesList" %}
+
 <!--Taxes-->
 {% primary_navigation title=@t"Taxes" systemName="TaxesList" groupId="masters" capability="Tax.Manage" %}
 {% secondary_navigation url="{% route TaxesList %}" title=@t"All Taxes" systemName="TaxesList" parent="TaxesList" %}
