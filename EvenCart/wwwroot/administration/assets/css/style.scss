@@ -743,9 +743,15 @@ table.table-borderless {
 .ui-sortable-handle {
     border: solid 1px #ddd;
     padding: 10px;
-    margin: 5px 0;
-    background-color: #eee;
+    margin: 5px 0;    
     cursor: grab;
+}
+tr.ui-sortable-handle td:first-child:before {
+    font-family: 'rbicon' !important;
+    content: "\e92e";
+    float: left;
+    margin-right: 15px;
+    height: 25px;
 }
 
 .menu-page {

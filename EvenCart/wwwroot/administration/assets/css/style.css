@@ -551,8 +551,14 @@ table.table-borderless {
   border: solid 1px #ddd;
   padding: 10px;
   margin: 5px 0;
-  background-color: #eee;
   cursor: grab; }
+
+tr.ui-sortable-handle td:first-child:before {
+  font-family: 'rbicon' !important;
+  content: "\e92e";
+  float: left;
+  margin-right: 15px;
+  height: 25px; }
 
 .menu-page #categories-container, .menu-page #pages-container {
   max-height: 250px;

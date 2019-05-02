@@ -9,19 +9,39 @@
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
-                    <thead>
-                    <tr>
-                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="name" data-formatter="name" data-width="80%">{{"Name" | t}}</th>
-                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                    </tr>
+                    <thead style="display: none;">
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="name" data-width="80%">{{"Name" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                        </tr>
                     </thead>
                 </table>
                 {{consentGroups | scriptJson : 'initData'}}
                 <script type="text/javascript">
-
+                    var enableSortable = function (refresh) {
+                        if (refresh) {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                refresh: true
+                            });
+                        } else {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                itemSelector: "tr",
+                                update: function() {
+                                    post({
+                                        url: "{% route api_UpdateConsentGroupDisplayOrder %}",
+                                        data: jQuery("#grid-selection input").serialize()
+                                    });
+                                }
+                            });
+                        }
+                        
+                    }
                     ready(function() {
-                  
+
                         generateGrid({
                             element: "grid-selection",
                             initialData: {
@@ -39,7 +59,7 @@
                                 "name": function(column, row) {
                                     return "<div><b>" + row["name"] + "</b></div>" + (row["description"] || "");
                                 },
-                                "commands": function (column, row) {
+                                "commands": function(column, row) {
                                     var html = "";
                                     if (!row.isSystemGroup)
                                         html +=
@@ -59,13 +79,25 @@
                                     html +=
                                         "<a class=\"btn btn-sm btn-primary\" data-row-id=\"" +
                                         row.id +
-                                    "\" href=\"" + consentListUrl + "\"><span class=\"rbicon-external-link\"></span></a> ";
+                                        "\" href=\"" +
+                                        consentListUrl +
+                                        "\"><span class=\"rbicon-external-link\"></span></a> ";
                                     return html;
+                                },
+                                "hiddenFields": function(column, row, index) {
+                                    return "<input type='hidden' data-type='displayorder' name='groupModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                                        "<input type='hidden' data-type='id'  name='groupModels[" + index + "].id' value='" + row.id + "' />";
                                 }
+                            },
+                            events: {
+                                "loaded": function () { enableSortable(true); }
                             }
                         });
+
+                        enableSortable();
                     });
 
+                  
                 </script>
             </div>
         </div>

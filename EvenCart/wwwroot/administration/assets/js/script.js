@@ -82,7 +82,8 @@ var generateGrid = function (options) {
         navigation: true,
         initialData: null,
         keepSelection: false,
-        done: null
+        done: null,
+        events: null
     }, options);
     if (options.reload) {
         jQuery("#" + options.element).bootgrid("reload");
@@ -104,12 +105,12 @@ var generateGrid = function (options) {
         options.initialData["success"] = true;
     }
 
-    jQuery("#" + options.element).bootgrid({
+    var grid = jQuery("#" + options.element).bootgrid({
         ajax: options.url != null,
         ajaxSettings: {
             method: options.method,
             cache: true,
-            traditional:true
+            traditional: true
         },
         rowCount: [15, 30, 50, 100],
         initialData: options.initialData,
@@ -121,12 +122,12 @@ var generateGrid = function (options) {
         formatters: options.formatters,
         navigation: options.navigation,
         keepSelection: options.keepSelection,
-        requestHandler: function (request) {
+        requestHandler: function(request) {
             if (options.data)
                 request = jQuery.extend(request, typeof options.data == "function" ? options.data() : "");
             return request;
         },
-        responseHandler: function (response) {
+        responseHandler: function(response) {
             if (response.success) {
                 if (options.done)
                     options.done(response);
@@ -145,6 +146,18 @@ var generateGrid = function (options) {
             paginationButton: "page-link"
         }
     });
+    if (options.events) {
+        for (var event in options.events) {
+            
+            if (options.events.hasOwnProperty(event)) {
+                var callback = options.events[event];
+                if (callback) {
+                    grid.on(event + ".rs.jquery.bootgrid", callback);
+                }
+            }
+            
+        }
+    }
 }
 
 var getGridRows = function(id) {

@@ -199,7 +199,6 @@
             renderRows.call(that, rows);
             renderInfos.call(that);
             renderPagination.call(that);
-
             that.element._bgBusyAria(false).trigger("loaded" + namespace);
         }
 
@@ -630,7 +629,7 @@
                     if (column.visible)
                     {
                         var value = ($.isFunction(column.formatter)) ?
-                                column.formatter.call(that, column, row) :
+                                column.formatter.call(that, column, row, index) : //added index to formatter to know the row index
                                     column.converter.to(row[column.id]),
                             cssClass = (column.cssClass.length > 0) ? " " + column.cssClass : "";
                         cells += tpl.cell.resolve(getParams.call(that, {

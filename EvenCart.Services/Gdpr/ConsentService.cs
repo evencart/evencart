@@ -13,6 +13,7 @@ namespace EvenCart.Services.Gdpr
     {
         public override IEnumerable<Consent> Get(Expression<Func<Consent, bool>> @where, int page = 1, int count = Int32.MaxValue)
         {
+            Expression<Func<ConsentGroup, object>> orderByConsentGroup = x => x.DisplayOrder;
             return Repository.Join<ConsentGroup>("ConsentGroupId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<Consent, ConsentGroup>((consent, group) =>
                     {
@@ -21,6 +22,7 @@ namespace EvenCart.Services.Gdpr
                     }))
                 .Where(where)
                 .OrderBy(x => x.DisplayOrder)
+                .OrderBy(orderByConsentGroup)
                 .SelectNested(page, count);}
 
         public override Consent Get(int id)

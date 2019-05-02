@@ -10,19 +10,40 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                    <tr>
-                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="consent" data-formatter="consent" data-width="500px">{{"Consent" | t}}</th>
-                        <th data-column-id="enableLogging" data-formatter="binary"> {{"Logging Enabled" | t}}</th>
-                        <th data-column-id="isRequired" data-formatter="binary"> {{"Required" | t}}</th>
-                        <th data-column-id="oneTimeSelection" data-formatter="binary"> {{"One time selection" | t}}</th>
-                        <th data-column-id="published" data-formatter="binary"> {{"Published" | t}}</th>
-                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                    </tr>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="consent" data-formatter="consent" data-width="500px">{{"Consent" | t}}</th>
+                            <th data-column-id="enableLogging" data-formatter="binary"> {{"Logging Enabled" | t}}</th>
+                            <th data-column-id="isRequired" data-formatter="binary"> {{"Required" | t}}</th>
+                            <th data-column-id="oneTimeSelection" data-formatter="binary"> {{"One time selection" | t}}</th>
+                            <th data-column-id="published" data-formatter="binary"> {{"Published" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                        </tr>
                     </thead>
                 </table>
                 {{consents | scriptJson : 'initData'}}
                 <script type="text/javascript">
+                    var enableSortable = function (refresh) {
+                        if (refresh) {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                refresh: true
+                            });
+                        } else {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                itemSelector: "tr",
+                                update: function() {
+                                    post({
+                                        url: "{% route api_UpdateConsentDisplayOrder %}",
+                                        data: jQuery("#grid-selection input").serialize()
+                                    });
+                                }
+                            });
+                        }
+                        
+                    }
 
                     ready(function() {
                         generateGrid({
@@ -56,9 +77,18 @@
                                         "\" onclick='deleteConsent(" +
                                         row.id +
                                         ")'><span class=\"rbicon-trash-2\"></span></button> ";;
+                                },
+                                "hiddenFields": function (column, row, index) {
+                                    return "<input type='hidden' data-type='displayorder' name='consentModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                                        "<input type='hidden' data-type='id'  name='consentModels[" + index + "].id' value='" + row.id + "' />";
                                 }
+                            },
+                            events: {
+                                "loaded": function () { enableSortable(true); }
                             }
                         });
+
+                        enableSortable();
                     });
 
                 </script>
