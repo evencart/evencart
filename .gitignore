@@ -24,3 +24,7 @@ Plugins/Payments.PaypalDirect/bin/
 Plugins/Ui.Slider/obj/
 Plugins/Payments.PaypalWithRedirect/obj/
 Plugins/Payments.PaypalWithRedirect/bin/
+Tests/EvenCart.WebHost.Tests/bin/
+Tests/EvenCart.WebHost.Tests/obj/
+EvenCart/wwwroot/bundles/*.js
+EvenCart/wwwroot/bundles/*.css
