@@ -32,7 +32,7 @@
 
         public const string OrderPaidMessage = "Order.Paid";
 
-        public const string OrderPaidMessageToAdmin = OrderPlacedMessage + AdminSuffix;
+        public const string OrderPaidMessageToAdmin = OrderPaidMessage + AdminSuffix;
 
         public const string ShipmentShippedMessage = "Shipment.Shipped";
 

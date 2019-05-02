@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
@@ -24,7 +23,63 @@ namespace EvenCart.Services.Emails
             return GetProcessedContentTemplate(parentTemplate)
                 .Replace(EmailTokenNames.MessageContent, emailTemplate.Template);
         }
-        
+
+        public IList<string> GetTemplateTokens(string templateName)
+        {
+            switch (templateName)
+            {
+                case EmailTemplateNames.UserRegisteredMessage:
+                case EmailTemplateNames.UserRegisteredMessageToAdmin:
+                case EmailTemplateNames.UserActivatedMessage:
+                case EmailTemplateNames.PasswordChangedMessage: 
+                case EmailTemplateNames.UserDeactivatedMessage:
+                case EmailTemplateNames.UserDeactivatedMessageToAdmin:
+                case EmailTemplateNames.UserAccountDeletedMessage:
+                case EmailTemplateNames.UserAccountDeletedMessageToAdmin:
+                    return new List<string>()
+                    {
+                        "user",
+                        "store"
+                    };
+                case EmailTemplateNames.UserActivationLinkMessage:
+                    return new List<string>()
+                    {
+                        "user",
+                        "store",
+                        "activationLink"
+                    };
+                case EmailTemplateNames.PasswordRecoveryLinkMessage:
+                    return new List<string>()
+                    {
+                        "user",
+                        "store",
+                        "passwordResetLink"
+                    };
+                case EmailTemplateNames.OrderPlacedMessage: 
+                case EmailTemplateNames.OrderPlacedMessageToAdmin:
+                case EmailTemplateNames.OrderPaidMessage: 
+                case EmailTemplateNames.OrderPaidMessageToAdmin:
+                    return new List<string>()
+                    {
+                        "user",
+                        "store",
+                        "order"
+                    };
+              
+                case EmailTemplateNames.ShipmentShippedMessage:
+                case EmailTemplateNames.ShipmentDeliveredMessage:
+                case EmailTemplateNames.ShipmentDeliveredMessageToAdmin:
+                    return new List<string>()
+                    {
+                        "user",
+                        "orders",
+                        "shipment",
+                        "store"
+                    };
+                default: return null;
+            }
+        }
+
         public override EmailTemplate Get(int id)
         {
             return FirstOrDefault(x => x.Id == id);

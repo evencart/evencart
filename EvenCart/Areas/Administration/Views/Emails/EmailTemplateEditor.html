@@ -31,6 +31,14 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Template" for="template" %}
+                        {% if availableTokens.size > 0 %}
+                        <small class="text-muted text-sm">
+                            <span>
+                                {{"Available objects : " | t}}
+                            </span>
+                            <strong> {{availableTokens | join : ", "}}</strong>
+                        </small>
+                        {% endif %}
                         {% control wyswyg id="emailTemplate_template" name="template" value="{{emailTemplate.template}}"%}
                     </div>
                     <div class="form-group">

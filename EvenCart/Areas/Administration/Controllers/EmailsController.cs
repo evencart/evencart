@@ -79,9 +79,12 @@ namespace EvenCart.Areas.Administration.Controllers
             var availableMasterTemplates =
                 SelectListHelper.GetSelectItemList(masterTemplates, x => x.Id, x => x.TemplateName);
 
+            //available tokens
+            var tokens = _emailTemplateService.GetTemplateTokens(emailTemplate.TemplateSystemName).OrderBy(x => x);
             return R.Success.With("emailTemplate", model)
                 .With("availableEmailAccounts", availableEmailAccounts)
                 .With("availableMasterTemplates", availableMasterTemplates)
+                .With("availableTokens", tokens)
                 .Result;
         }
 
