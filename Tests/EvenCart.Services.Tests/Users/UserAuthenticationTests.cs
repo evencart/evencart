@@ -62,4 +62,13 @@ namespace EvenCart.Services.Tests.Users
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+    [TestFixture]
+    public class MySqlUserAuthenticationTests : UserAuthenticationTests
+    {
+        public MySqlUserAuthenticationTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }

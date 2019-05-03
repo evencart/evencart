@@ -36,7 +36,7 @@ namespace EvenCart.Services.Tests.Purchases
         private DiscountCoupon _autoCoupon;
         private DiscountCoupon _validCoupon;
 
-        [SetUp]
+        [OneTimeSetUp]
         protected void Setup()
         {
             _cartService = Resolve<ICartService>();
@@ -174,6 +174,7 @@ namespace EvenCart.Services.Tests.Purchases
         public void Auto_Discount_OrderTotal_Succeeds()
         {
             _autoCoupon.RestrictionType = RestrictionType.OrderTotal;
+            _autoCoupon.MaximumDiscountAmount = 0;
             _discountCouponService.Update(_autoCoupon);
 
             //clear cart
@@ -199,6 +200,8 @@ namespace EvenCart.Services.Tests.Purchases
         public void Auto_Discount_Product_Succeeds()
         {
             _autoCoupon.RestrictionType = RestrictionType.Products;
+            _autoCoupon.Enabled = true;
+            _autoCoupon.MaximumDiscountAmount = 0;
             _discountCouponService.Update(_autoCoupon);
 
             _discountCouponService.SetRestrictionIdentifiers(_autoCoupon.Id, new List<string>() { _product2.Id.ToString() });
@@ -875,6 +878,15 @@ namespace EvenCart.Services.Tests.Purchases
         public SqlServerPriceAccountantTests()
         {
             TestDbInit.SqlServer(MsSqlConnectionString);
+        }
+    }
+
+    [TestFixture]
+    public class MySqlPriceAccountantTests : PriceAccountantTests
+    {
+        public MySqlPriceAccountantTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
         }
     }
 }

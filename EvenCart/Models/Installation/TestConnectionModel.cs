@@ -4,6 +4,8 @@ namespace EvenCart.Models.Installation
 {
     public class TestConnectionModel : FoundationModel
     {
+        public string ProviderName { get; set; }
+
         public string ConnectionString { get; set; }
 
         public string DatabaseName { get; set; }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Localization;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
@@ -18,30 +19,35 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             _localizer = DependencyResolver.Resolve<ILocalizer>();
         }
 
-        private static readonly List<Expander> Expanders = new List<Expander>()
+        static Expander()
         {
-            new LayoutExpander() {TagName = "layout"},
-            new PartialExpander() {TagName = "partial"},
-            new WidgetExpander() {TagName = "widget"},
-            new ComponentExpander() {TagName = "component"},
-            new ControlExpander() {TagName = "control"},
-            new UrlRouteExpander() {TagName = "route"},
-            new NavigationExpander()
+            var dbInstalled = DatabaseManager.IsDatabaseInstalled();
+            Expanders = new List<Expander>();
+            //the sequence of addition is important
+            Expanders.Add(new LayoutExpander() { TagName = "layout" });
+            Expanders.Add(new PartialExpander() { TagName = "partial" });
+            if (dbInstalled)
             {
-                TagName = ApplicationConfig.PrimaryNavigationName,
-                NavigationType = ApplicationConfig.PrimaryNavigationName
-            },
-            new NavigationExpander()
+                Expanders.Add(new WidgetExpander() { TagName = "widget" });
+                Expanders.Add(new ComponentExpander() { TagName = "component" });
+                Expanders.Add(new ControlExpander() { TagName = "control" });
+            }
+           
+            Expanders.Add(new UrlRouteExpander() { TagName = "route" });
+
+            if (dbInstalled)
             {
-                TagName = ApplicationConfig.SecondaryNavigationName,
-                NavigationType = ApplicationConfig.SecondaryNavigationName
-            },
-            new GlobalExpander() {TagName = "global"},
-            new JsonExpander() { TagName = "json"},
-            new CssExpander() { TagName = "css" },
-            new JsExpander() { TagName = "js" },
-            new BundleExpander() { TagName = "bundle" }
-        };
+                Expanders.Add(new NavigationExpander() { TagName = ApplicationConfig.PrimaryNavigationName, NavigationType = ApplicationConfig.PrimaryNavigationName });
+                Expanders.Add(new NavigationExpander() { TagName = ApplicationConfig.SecondaryNavigationName, NavigationType = ApplicationConfig.SecondaryNavigationName });
+                Expanders.Add(new GlobalExpander() { TagName = "global" });
+                Expanders.Add(new JsonExpander() { TagName = "json" });
+                Expanders.Add(new CssExpander() { TagName = "css" });
+                Expanders.Add(new JsExpander() { TagName = "js" });
+                Expanders.Add(new BundleExpander() { TagName = "bundle" });
+            }
+         
+        }
+        private static readonly List<Expander> Expanders;
 
         private const string TagMatcherPattern =
             @"{%\s*{tagName}(?:\s+([\w\d._\\/]+|""[^""]+"")(?!\w*=))*(\s+[\w\d\s_]+(?>=(?:@t)?"")[^""]*(?="")"")*\s*%}";

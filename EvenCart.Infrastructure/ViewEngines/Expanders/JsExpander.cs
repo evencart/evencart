@@ -15,12 +15,10 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
 
         public override string Expand(ReadFile readFile, Regex regEx, string inputContent, object parameters = null)
         {
-            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
-
             var jsMatches = regEx.Matches(inputContent);
             if (!jsMatches.Any())
                 return inputContent;
-
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
             var jsFiles = new Dictionary<string, List<string>>();
             foreach (Match match in jsMatches)
             {
@@ -52,7 +50,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 }
             }
 
-            if (bundleUrl != null)
+            if (bundleUrls != null)
             {
                 inputContent = regEx.Replace(inputContent, "");
                 readFile.Content = regEx.Replace(readFile.Content, "");

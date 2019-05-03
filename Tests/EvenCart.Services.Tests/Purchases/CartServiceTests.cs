@@ -93,4 +93,13 @@ namespace EvenCart.Services.Tests.Purchases
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+    [TestFixture]
+    public class MySqlCartServiceTests : CartServiceTests
+    {
+        public MySqlCartServiceTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }

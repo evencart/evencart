@@ -42,6 +42,9 @@
     <Reference Include="DotEntity">
       <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
     </Reference>
+    <Reference Include="DotEntity.MySql">
+      <HintPath>..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
+    </Reference>
     <Reference Include="DotEntity.SqlServer">
       <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
     </Reference>

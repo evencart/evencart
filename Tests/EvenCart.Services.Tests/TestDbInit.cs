@@ -1,4 +1,5 @@
-﻿using EvenCart.Data.Database;
+﻿using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Database;
 using EvenCart.Services.Installation;
 
 namespace EvenCart.Services.Tests
@@ -7,18 +8,30 @@ namespace EvenCart.Services.Tests
     {
         public static void SqlServer(string connectionString)
         {
+            Db(connectionString, "SqlServer");
+        }
+
+        public static void MySql(string connectionString)
+        {
+            Db(connectionString, "MySql");
+        }
+
+        public static void Db(string connectionString, string providerName)
+        {
             //seed data
-            var installationService = new InstallationService(new TestDatabaseSettings(connectionString, "sqlserver"));
+            var dbSettings = DependencyResolver.Resolve<IDatabaseSettings>() as TestDatabaseSettings;
+            dbSettings.SetSettings(connectionString, providerName);
+
+            var installationService = new InstallationService(dbSettings);
             installationService.Install();
             installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
         }
-
-        private class TestDatabaseSettings : IDatabaseSettings
+        public class TestDatabaseSettings : IDatabaseSettings
         {
-            public string ConnectionString { get; }
-            public string ProviderName { get; }
+            public string ConnectionString { get; private set; }
+            public string ProviderName { get; private set; }
 
-            public TestDatabaseSettings(string connectionString, string providerName)
+            public void SetSettings(string connectionString, string providerName)
             {
                 ConnectionString = connectionString;
                 ProviderName = providerName;

@@ -89,4 +89,13 @@ namespace EvenCart.Services.Tests.Users
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+    [TestFixture]
+    public class MySqlRoleCapabilityTests : RoleCapabilityTests
+    {
+        public MySqlRoleCapabilityTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }

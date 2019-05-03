@@ -47,13 +47,21 @@ namespace EvenCart.Controllers
 
             //lets save the database settings to config file
             var connectionString = model.ConnectionString;
-            var providerName = "SqlServer"; //todo: make it selectable to allow sqlite and other providers
+            var providerName = model.ProviderName; // "SqlServer"; //todo: make it selectable to allow sqlite and other providers
 
             //create the connection string if required
             if (!model.IsConnectionString)
             {
-                connectionString = DatabaseManager.CreateSqlServerConnectionString(model.ServerUrl, model.DatabaseName,
-                    model.DatabaseUserName, model.DatabasePassword, model.IntegratedSecurity, 0);
+                connectionString = DatabaseManager.CreateConnectionString(new ConnectionStringRequest()
+                {
+                    IntegratedSecurity = model.IntegratedSecurity,
+                    Timeout = 0,
+                    ProviderName = model.ProviderName,
+                    Password = model.DatabasePassword,
+                    ServerName = model.ServerUrl,
+                    UserName = model.DatabaseUserName,
+                    DatabaseName = model.DatabaseName
+                });
             }
 
             //check if we have correct connection string
@@ -87,13 +95,21 @@ namespace EvenCart.Controllers
         {
             //lets save the database settings to config file
             var connectionString = model.ConnectionString;
-            var providerName = "SqlServer"; //todo: make it selectable to allow sqlite and other providers
+            var providerName = model.ProviderName;
 
             //create the connection string if required
             if (!model.IsConnectionString)
             {
-                connectionString = DatabaseManager.CreateSqlServerConnectionString(model.ServerUrl, model.DatabaseName,
-                    model.DatabaseUserName, model.DatabasePassword, model.IntegratedSecurity, 0);
+                connectionString = DatabaseManager.CreateConnectionString(new ConnectionStringRequest()
+                {
+                    IntegratedSecurity = model.IntegratedSecurity,
+                    Timeout = 0,
+                    ProviderName = model.ProviderName,
+                    Password = model.DatabasePassword,
+                    ServerName = model.ServerUrl,
+                    UserName = model.DatabaseUserName,
+                    DatabaseName = model.DatabaseName
+                });
             }
 
             //check if we have correct connection string

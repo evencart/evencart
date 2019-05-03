@@ -99,4 +99,13 @@ namespace EvenCart.Services.Tests.Gdpr
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+    [TestFixture]
+    public class MySqlGdprServiceTests : GdprServiceTests
+    {
+        public MySqlGdprServiceTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }

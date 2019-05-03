@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
 using DotEntity;
+using DotEntity.MySql;
 using DotEntity.Providers;
 using DotEntity.SqlServer;
 using EvenCart.Core.Infrastructure;
@@ -12,10 +13,30 @@ namespace EvenCart.Data.Database
     public class DatabaseManager
     {
         private const string DatabaseContextKey = "EvenCart";
+        private const string TablePrefix = "";
+
+        public const string SqlServerProvider = "SqlServer";
+        public const string MySqlProvider = "MySql";
+
         public static void InitDatabase(IDatabaseSettings dbSettings)
         {
             if (dbSettings.HasSettings())
+            {
+                DotEntityDb.GlobalTableNamePrefix = TablePrefix;
                 DotEntityDb.Initialize(dbSettings.ConnectionString, GetProvider(dbSettings.ProviderName));
+            }
+        }
+
+        public static bool IsMySqlProvider()
+        {
+            var dbSettings = DependencyResolver.Resolve<IDatabaseSettings>();
+            return dbSettings.ProviderName == MySqlProvider;
+        }
+
+        public static bool IsSqlServerProvider()
+        {
+            var dbSettings = DependencyResolver.Resolve<IDatabaseSettings>();
+            return dbSettings.ProviderName == SqlServerProvider;
         }
 
         public static bool IsDatabaseInstalled()
@@ -35,6 +56,8 @@ namespace EvenCart.Data.Database
 
                 case "sqlserver":
                     return new SqlServerDatabaseProvider();
+                case "mysql":
+                    return new MySqlDatabaseProvider();
 
             }
             return null;
@@ -121,24 +144,24 @@ namespace EvenCart.Data.Database
         /// <summary>
         /// Creates connection string from the provider values
         /// </summary>
-        public static string CreateSqlServerConnectionString(string server, string databaseName, string userName, string password, bool integratedSecurity, int timeOut)
+        public static string CreateSqlServerConnectionString(ConnectionStringRequest request)
         {
             try
             {
                 var builder = new SqlConnectionStringBuilder {
-                    IntegratedSecurity = integratedSecurity,
-                    DataSource = server,
-                    InitialCatalog = databaseName
+                    IntegratedSecurity = request.IntegratedSecurity,
+                    DataSource = request.ServerName,
+                    InitialCatalog = request.DatabaseName
                 };
-                if (!integratedSecurity)
+                if (!request.IntegratedSecurity)
                 {
-                    builder.UserID = userName;
-                    builder.Password = password;
+                    builder.UserID = request.UserName;
+                    builder.Password = request.Password;
                 }
                 builder.PersistSecurityInfo = false;
-                if (timeOut > 0)
+                if (request.Timeout > 0)
                 {
-                    builder.ConnectTimeout = timeOut;
+                    builder.ConnectTimeout = request.Timeout;
                 }
                 return builder.ConnectionString;
             }
@@ -146,6 +169,20 @@ namespace EvenCart.Data.Database
             {
                 return string.Empty;
             }
+        }
+
+        public static string CreateMysqlConnectionString(ConnectionStringRequest request)
+        {
+            return $"Server={request.ServerName};Database={request.DatabaseName};Uid={request.UserName};Pwd={request.Password};";
+        }
+
+        public static string CreateConnectionString(ConnectionStringRequest request)
+        {
+            if (request.ProviderName == SqlServerProvider)
+                return CreateSqlServerConnectionString(request);
+            if (request.ProviderName == MySqlProvider)
+                return CreateMysqlConnectionString(request);
+            return null;
         }
     }
 }

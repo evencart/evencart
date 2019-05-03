@@ -11,6 +11,15 @@
                 </select>
             </div>
         </div>
+        <div class="form-group">
+            <label for="provider" class="control-label">Provider</label>
+            <div>
+                <select id="provider" class="form-control">
+                    <option value="MySql">MySql</option>
+                    <option value="SqlServer">MsSql</option>
+                </select>
+            </div>
+        </div>
         <div id="provider-settings">
             <div class="form-group">
                 <label for="serverUrl" class="control-label">Database Server</label>
@@ -88,7 +97,16 @@
         installSettings.databaseUserName = jQuery("#dbUser").val();
         installSettings.databasePassword = jQuery("#dbPassword").val();
         installSettings.integratedSecurity = jQuery("#integratedSecurity").is(":checked");
-       
+        installSettings.providerName = jQuery("#provider").val();
+
+        installSettings.serverUrl = "localhost";
+        installSettings.databaseName = "ms";
+        installSettings.databaseUserName = "root";
+        installSettings.databasePassword = "admin";
+        installSettings.integratedSecurity = true;
+        installSettings.providerName = "MySql";
+
+
         testDatabaseSettings(function(success) {
             if (success)
                 stepUp();

@@ -101,7 +101,7 @@ namespace EvenCart.Services.Products
             }
             //and available manufacturers
             availableManufacturers = new Dictionary<int, string>();
-            var manufacturerValues = query.CustomSelectNested($"DISTINCT(Manufacturer_Name + '{Sep}' + CAST(Manufacturer_Id AS VARCHAR))");
+            var manufacturerValues = query.CustomSelectNested($"DISTINCT(Manufacturer_Name + '{Sep}' + CAST(Manufacturer_Id AS CHAR(200)))");
             foreach (var manufacturerValue in manufacturerValues)
             {
                 var manufacturerRow = manufacturerValue[0].ToString();
@@ -115,7 +115,7 @@ namespace EvenCart.Services.Products
 
             //and available vendors
             availableVendors = new Dictionary<int, string>();
-            var vendorValues = query.CustomSelectNested($"DISTINCT(Vendor_Name + '{Sep}' + CAST(Vendor_Id AS VARCHAR))");
+            var vendorValues = query.CustomSelectNested($"DISTINCT(Vendor_Name + '{Sep}' + CAST(Vendor_Id AS CHAR(200)))");
             foreach (var vendorValue in vendorValues)
             {
                 var vendorRow = vendorValue[0].ToString();

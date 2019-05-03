@@ -32,4 +32,14 @@ namespace EvenCart.Services.Tests.Products
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+
+    [TestFixture]
+    public class MySqlPersistanceTests : ProductPersistanceTests
+    {
+        public MySqlPersistanceTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }

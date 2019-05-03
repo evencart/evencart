@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using EvenCart.Core.DataStructures;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Bundle;
 
@@ -18,7 +19,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             var cssMatches = regEx.Matches(inputContent);
             if (!cssMatches.Any())
                 return inputContent;
-            
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
             var cssFiles = new Dictionary<string, List<string>>();
             foreach (Match match in cssMatches)
             {
@@ -36,7 +37,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 }
             }
 
-            var canBundle = cssFiles.Any();
+            var canBundle = generalSettings.EnableCssBundling && cssFiles.Any();
             string bundleUrl = null;
             Dictionary<string, string> bundleUrls = null;
             if (canBundle)
@@ -50,7 +51,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 }
             }
 
-            if (bundleUrl != null)
+            if (bundleUrls != null)
             {
                 inputContent = regEx.Replace(inputContent, "");
                 readFile.Content = regEx.Replace(readFile.Content, "");

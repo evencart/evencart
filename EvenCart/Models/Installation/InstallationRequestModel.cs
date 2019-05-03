@@ -32,6 +32,8 @@ namespace EvenCart.Models.Installation
 
         public string StoreName { get; set; }
 
+        public string ProviderName { get; set; }
+
         public void SetupValidationRules(ModelValidator<InstallationRequestModel> v)
         {
             v.RuleFor(x => x.AdminEmail).NotEmpty().EmailAddress();
@@ -39,6 +41,7 @@ namespace EvenCart.Models.Installation
             v.RuleFor(x => x.DatabaseName).NotEmpty().When(x => !x.IsConnectionString);
             v.RuleFor(x => x.ServerUrl).NotEmpty().When(x => !x.IsConnectionString);
             v.RuleFor(x => x.StoreName).NotEmpty();
+            v.RuleFor(x => x.ProviderName).NotEmpty().Must(x => x == "MySql" || x == "SqlServer");
         }
     }
 }

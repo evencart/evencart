@@ -35,7 +35,7 @@ namespace EvenCart.Services.Tests
                 IsAppVeyor = Environment.GetEnvironmentVariable("appveyor") == "true";
                 MySqlConnectionString = this.IsAppVeyor
                     ? @"Server=127.0.0.1;Uid=root;Pwd=Password12!;Database=mytest;"
-                    : @"Server=127.0.0.1;Uid=root;Pwd=admin;Database=mytest;";
+                    : @"Server=localhost;Uid=root;Pwd=admin;Database=unittest;";
 
                 MsSqlConnectionString = IsAppVeyor
                     ? @"Server=(local)\SQL2016;Database=master;User ID=sa;Password=Password12!"
@@ -60,6 +60,7 @@ namespace EvenCart.Services.Tests
 
             serviceCollection.AddSingleton<IHostingEnvironment>(provider => hostingEnvironment.Object);
             serviceCollection.AddSingleton<IConfiguration>(new TestConfiguration());
+            serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());
             ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object);
         }
 

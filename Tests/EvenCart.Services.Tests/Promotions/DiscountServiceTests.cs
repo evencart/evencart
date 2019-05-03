@@ -85,4 +85,13 @@ namespace EvenCart.Services.Tests.Promotions
             TestDbInit.SqlServer(MsSqlConnectionString);
         }
     }
+
+    [TestFixture]
+    public class MySqlDiscountServiceTests : DiscountServiceTests
+    {
+        public MySqlDiscountServiceTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
+    }
 }
