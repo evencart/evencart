@@ -16,10 +16,6 @@ namespace EvenCart.Models.Orders
 
         public int UserId { get; set; }
 
-        public int BillingAddressId { get; set; }
-
-        public int? ShippingAddressId { get; set; }
-
         public DateTime CreatedOn { get; set; }
 
         public DateTime? PaidOn { get; set; }

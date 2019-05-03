@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Services.Formatter;
@@ -6,6 +7,7 @@ using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Orders;
+using EvenCart.Services.Serializers;
 
 namespace EvenCart.Factories.Orders
 {
@@ -15,33 +17,37 @@ namespace EvenCart.Factories.Orders
         private readonly IMediaAccountant _mediaAccountant;
         private readonly IFormatterService _formatterService;
         private readonly TaxSettings _taxSettings;
+        private readonly IDataSerializer _dataSerializer;
 
-        public OrderModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, IFormatterService formatterService, TaxSettings taxSettings)
+        public OrderModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, IFormatterService formatterService, TaxSettings taxSettings, IDataSerializer dataSerializer)
         {
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
             _formatterService = formatterService;
             _taxSettings = taxSettings;
+            _dataSerializer = dataSerializer;
         }
 
         public OrderModel Create(Order order)
         {
             var model = _modelMapper.Map<OrderModel>(order);
-            if (order.BillingAddress != null)
+            if (order.BillingAddressSerialized != null)
             {
-                model.BillingAddress = _modelMapper.Map<AddressInfoModel>(order.BillingAddress);
+                var billingAddress = _dataSerializer.DeserializeAs<Address>(order.BillingAddressSerialized);
+                model.BillingAddress = _modelMapper.Map<AddressInfoModel>(billingAddress);
                 model.BillingAddress.StateProvinceName =
-                    order.BillingAddress.StateOrProvince?.Name ?? order.BillingAddress.StateProvinceName;
-                model.BillingAddress.CountryName = order.BillingAddress.Country.Name;
+                    billingAddress.StateOrProvince?.Name ?? billingAddress.StateProvinceName;
+                model.BillingAddress.CountryName = billingAddress.Country.Name;
             }
 
 
-            if (order.ShippingAddress != null)
+            if (order.ShippingAddressSerialized != null)
             {
-                model.ShippingAddress = _modelMapper.Map<AddressInfoModel>(order.ShippingAddress);
+                var shippingAddress = _dataSerializer.DeserializeAs<Address>(order.ShippingAddressSerialized);
+                model.ShippingAddress = _modelMapper.Map<AddressInfoModel>(shippingAddress);
                 model.ShippingAddress.StateProvinceName =
-                    order.ShippingAddress.StateOrProvince?.Name ?? order.ShippingAddress.StateProvinceName;
-                model.ShippingAddress.CountryName = order.ShippingAddress.Country.Name;
+                    shippingAddress.StateOrProvince?.Name ?? shippingAddress.StateProvinceName;
+                model.ShippingAddress.CountryName = shippingAddress.Country.Name;
             }
             model.OrderItems = order.OrderItems?.Select(Create).ToList();
             return model;

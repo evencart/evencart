@@ -29,16 +29,8 @@ namespace EvenCart.Services.Purchases
             return Repository.Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter)
                 .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
                 .Join<User>("UserId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
-                .Join<Address>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Order, OrderItem>())
                 .Relate(RelationTypes.OneToOne<Order, User>())
-                .Relate<Address>((order, address) =>
-                {
-                    if (order.BillingAddressId == address.Id)
-                        order.BillingAddress = address;
-                    if (order.ShippingAddressId == address.Id)
-                        order.ShippingAddress = address;
-                })
                 .Relate<Product>((order, product) =>
                 {
                     var orderItem = order.OrderItems.FirstOrDefault(x => x.ProductId == product.Id);
@@ -152,9 +144,6 @@ namespace EvenCart.Services.Purchases
                 .Join<ProductMedia>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", typeof(Product))
-                .Join<Address>("UserId", "UserId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
-                .Join<Country>("CountryId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
-                .Join<StateOrProvince>("CountryId", "Id", typeof(Address), JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Order, OrderItem>())
                 .Relate(RelationTypes.OneToMany<Order, Shipment>())
                 .Relate(RelationTypes.OneToOne<Order, User>())
@@ -199,29 +188,6 @@ namespace EvenCart.Services.Purchases
                     var orderItem = order.OrderItems.FirstOrDefault(x => x.ProductId == meta.EntityId);
                     if (orderItem != null)
                         orderItem.Product.SeoMeta = meta;
-                })
-                .Relate<Address>((order, address) =>
-                {
-                    if (order.BillingAddressId == address.Id)
-                        order.BillingAddress = address;
-                    if (order.ShippingAddressId == address.Id)
-                        order.ShippingAddress = address;
-                })
-                .Relate<Country>((order, country) =>
-                {
-                    if (order.BillingAddress.CountryId == country.Id)
-                        order.BillingAddress.Country = country;
-
-                    if (order.ShippingAddress.CountryId == country.Id)
-                        order.ShippingAddress.Country = country;
-                })
-                .Relate<StateOrProvince>((order, province) =>
-                {
-                    if (order.BillingAddress.StateProvinceId == province.Id)
-                        order.BillingAddress.StateOrProvince = province;
-
-                    if (order.ShippingAddress.StateProvinceId == province.Id)
-                        order.ShippingAddress.StateOrProvince = province;
                 })
                 .Where(meteWhere);
         }

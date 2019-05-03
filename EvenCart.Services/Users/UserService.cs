@@ -107,8 +107,8 @@ namespace EvenCart.Services.Users
                 //orders
                 foreach (var order in orders)
                 {
-                    order.BillingAddressId = 0;
-                    order.ShippingAddressId = 0;
+                    order.BillingAddressSerialized = null;
+                    order.ShippingAddressSerialized = null;
                     order.UserIpAddress = string.Empty;
                     order.UserGstNumber = string.Empty;
                     _orderService.Update(order, transaction);

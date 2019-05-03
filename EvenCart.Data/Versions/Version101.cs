@@ -1,8 +1,6 @@
-﻿using System;
-using DotEntity;
+﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Entity.Purchases;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -10,7 +8,10 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<User, string>(nameof(User.LastActivityIpAddress), null, transaction);
+            Db.AddColumn<Order, string>(nameof(Order.BillingAddressSerialized), null, transaction);
+            Db.AddColumn<Order, string>(nameof(Order.ShippingAddressSerialized), null, transaction);
+            Db.DropColumn<Order>("BillingAddressId", transaction);
+            Db.DropColumn<Order>("ShippingAddressId", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

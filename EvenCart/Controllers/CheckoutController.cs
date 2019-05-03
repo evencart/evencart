@@ -325,8 +325,6 @@ namespace EvenCart.Controllers
                 PaymentMethodName = cart.PaymentMethodName,
                 ShippingMethodName = cart.ShippingMethodName,
                 CreatedOn = DateTime.UtcNow,
-                BillingAddressId = cart.BillingAddressId,
-                ShippingAddressId = cart.ShippingAddressId,
                 DiscountId = cart.DiscountCouponId,
                 Guid = Guid.NewGuid().ToString(),
                 UserId = cart.UserId,
@@ -343,6 +341,14 @@ namespace EvenCart.Controllers
             };
             order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
                                order.ShippingMethodFee ?? 0;
+            //load the addresses
+            var addressIds = new List<int>() { cart.BillingAddressId, cart.ShippingAddressId };
+            var addresses = _addressService.Get(x => addressIds.Contains(x.Id)).ToList();
+            var billingAddress = addresses.First(x => x.Id == cart.BillingAddressId);
+            var shippingAddress = addresses.FirstOrDefault(x => x.Id == cart.ShippingAddressId);
+            order.BillingAddressSerialized = _dataSerializer.Serialize(billingAddress);
+            order.ShippingAddressSerialized =
+                shippingAddress == null ? null : _dataSerializer.Serialize(shippingAddress);
 
             _orderService.Insert(order);
             //generate order number & update it
@@ -356,11 +362,7 @@ namespace EvenCart.Controllers
             order.OrderNumber = orderNumber;
             _orderService.Update(order);
 
-            //load the addresses
-            var addressIds = new List<int>() {order.BillingAddressId, order.ShippingAddressId ?? 0};
-            var addresses = _addressService.Get(x => addressIds.Contains(x.Id)).ToList();
-            order.BillingAddress = addresses.First(x => x.Id == order.BillingAddressId);
-            order.ShippingAddress = addresses.FirstOrDefault(x => x.Id == order.ShippingAddressId);
+           
             var orderItems = new List<OrderItem>();
             foreach (var cartItem in cart.CartItems)
             {
@@ -394,7 +396,6 @@ namespace EvenCart.Controllers
             if (currentUser.IsVisitor())
             {
                 //if current user is visitor, change the email to billing address and change it to registered user
-                var billingAddress = _addressService.Get(order.BillingAddressId);
                 currentUser.Email = billingAddress.Email;
                 _userService.Update(currentUser);
 

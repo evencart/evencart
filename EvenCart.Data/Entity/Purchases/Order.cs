@@ -15,10 +15,6 @@ namespace EvenCart.Data.Entity.Purchases
 
         public int UserId { get; set; }
 
-        public int BillingAddressId { get; set; }
-
-        public int? ShippingAddressId { get; set; }
-
         public DateTime CreatedOn { get; set; }
 
         public DateTime? PaidOn { get; set; }
@@ -57,15 +53,15 @@ namespace EvenCart.Data.Entity.Purchases
 
         public PaymentStatus PaymentStatus { get; set; }
 
+        public string BillingAddressSerialized { get; set; }
+
+        public string ShippingAddressSerialized { get; set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }
 
         public virtual IList<OrderItem> OrderItems { get; set; }
-
-        public virtual Address BillingAddress { get; set; }
-
-        public virtual Address ShippingAddress { get; set; }
 
         public virtual IList<Shipment> Shipments { get; set; }
         
