@@ -48,7 +48,7 @@ namespace EvenCart.Infrastructure.Extensions
                     new BreadcrumbNode()
                     {
                         DisplayText = LocalizationHelper.Localize("Home", ApplicationEngine.CurrentLanguageCultureCode),
-                        Url = ApplicationEngine.RouteUrl(RouteNames.Home)
+                        Url = ApplicationEngine.RouteUrl(RouteNames.Home, absoluteUrl: true)
                     }
                 };
                 httpContext.Items[BreadcrumbKey] = nodes;

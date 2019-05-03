@@ -10,6 +10,7 @@ using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Authentication;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
@@ -109,7 +110,8 @@ namespace EvenCart.Infrastructure
             if (!absoluteUrl)
                 return relativeUrl;
             var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
-            return WebHelper.GetUrlFromPath(relativeUrl, generalSettings.StoreDomain);
+            var urlSettings = DependencyResolver.Resolve<UrlSettings>();
+            return WebHelper.GetUrlFromPath(relativeUrl, generalSettings.StoreDomain, urlSettings.GetUrlProtocol());
         }
 
         public static string MapPath(string relativePath, bool isWebRootPath = false)

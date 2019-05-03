@@ -72,7 +72,7 @@ namespace EvenCart.Infrastructure.Mvc
         [NonAction]
         protected void SetBreadcrumbToRoute(string displayText, string routeName, object routeParams = null, string description = null, bool localize = true)
         {
-           SetBreadcrumbToUrl(displayText, Url.RouteUrl(routeName, routeParams), description, localize);
+           SetBreadcrumbToUrl(displayText, ApplicationEngine.RouteUrl(routeName, routeParams, true), description, localize);
         }
     }
    

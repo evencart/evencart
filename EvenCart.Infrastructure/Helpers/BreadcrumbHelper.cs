@@ -22,7 +22,7 @@ namespace EvenCart.Infrastructure.Helpers
                     {
                         seName = category.SeoMeta.Slug,
                         categoryPath = category.GetCategoryPath(allCategories)
-                    }) : ""
+                    }, true) : ""
                 });
                 category = category.ParentCategory;
             }
