@@ -59,7 +59,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 XsrfToken = antiforgery.GetToken()
             };
             var currentUser = ApplicationEngine.CurrentUser;
-            if (!RequestHelper.IsApiCall() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
+            if (!ApplicationEngine.CurrentHttpContext.IsTokenAuthenticated() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
             {
                 store.CookiePopupText = gdprSettings.CookiePopupText;
                 store.UseConsentGroup = gdprSettings.UseConsentGroup;
