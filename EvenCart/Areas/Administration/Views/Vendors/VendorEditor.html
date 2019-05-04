@@ -2,7 +2,7 @@
 {% global page_title=@t"Vendors" active_menu="GetVendor" parent_active_menu="UsersList" menu_group="VendorEdit" %}
 
 <form action="{% route api_SaveVendor %}" method="post" id="edit-vendor-form">
-
+    {% control xsrf %}
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">

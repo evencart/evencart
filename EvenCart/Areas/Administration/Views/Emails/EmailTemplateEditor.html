@@ -2,6 +2,7 @@
 {% global page_title=@t"Email Template Editor" active_menu="GetEmailTemplate" parent_active_menu="EmailsList" menu_group="EmailTemplateEdit" %}
 
 <form action="{% route api_SaveEmailTemplate %}" method="post" id="template-editor-form">
+    {% control xsrf %}
     <div class="row">
         <div class="col-md-8">
             <div class="panel">

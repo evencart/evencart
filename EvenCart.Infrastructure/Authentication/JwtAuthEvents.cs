@@ -54,7 +54,7 @@ namespace EvenCart.Infrastructure.Authentication
             var isPersistant = persistanceClaim?.Value == (true).ToString();
             user.SetMeta(ApplicationConfig.PersistanceKey, isPersistant);
             //preserve user
-            ApplicationEngine.CurrentHttpContext.SetCurrentUser(user);
+            ApplicationEngine.CurrentHttpContext.SetCurrentUser(user, true);
             //but reject for a visitor. This way we allow anonymous activity like adding products and guest checkout 
             //while still rejecting the authorization so the secure area can't be accessed without login
             if (user.IsVisitor())

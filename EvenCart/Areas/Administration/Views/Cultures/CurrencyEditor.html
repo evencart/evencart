@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveCurrency %}" method="post" id="currency-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Currency Editor" | t}}

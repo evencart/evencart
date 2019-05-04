@@ -59,7 +59,8 @@
                         </p>
                     </div>
                     <form action="{% route api_AddToCart %}" method="post" id="form-add-to-cart">
-                        <input type="hidden" name="productId" value="{{product.id}}"/>
+                        {% control xsrf %}
+                        <input type="hidden" name="productId" value="{{product.id}}" />
                         {% partial "Products/Index.ProductAttributes" %}
                         {% if product.isAvailable %}
                         <!-- Quantity Cart -->

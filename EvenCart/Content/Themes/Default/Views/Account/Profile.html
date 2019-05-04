@@ -5,6 +5,7 @@
 </h3>
 <div class="page-section section pb-120">
     <form action="{% route api_AccountSaveUser %}" id="save-user-form" method="post">
+        {% control xsrf %}
         <div class="row">
             <div class="col-6 mb-20">
                 {% control label text=@t"First Name" for="firstName" %}

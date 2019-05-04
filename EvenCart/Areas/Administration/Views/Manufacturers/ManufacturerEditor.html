@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveManufacturer %}" method="post" id="manufacturer-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Manufacturer Editor" | t}}

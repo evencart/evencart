@@ -135,5 +135,14 @@ namespace EvenCart.Infrastructure.Extensions
             });
             return mvcBuilder;
         }
+
+        public static void AddAntiforgeryTokens(this IServiceCollection services)
+        {
+            services.AddAntiforgery(options =>
+            {
+                options.FormFieldName = "__RequestVerificationToken";
+                options.Cookie.Name = "_xsrf";
+            });
+        }
     }
 }

@@ -10,7 +10,8 @@
                 url: '{% route api_AddToCart %}',
                 data: {
                     productId: "{{product.id}}",
-                    isWishlist: true
+                    isWishlist: true,
+                    __RequestVerificationToken: "{{xsrf}}"
                 },
                 done: function(response) {
                     notify("success", '{{"Successfully added to wishlist" | t}}');

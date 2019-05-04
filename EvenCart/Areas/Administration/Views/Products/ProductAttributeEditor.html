@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveProductAttribute %}" method="post" id="add-attribute-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Attributes Editor" | t}}

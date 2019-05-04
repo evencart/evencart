@@ -16,6 +16,7 @@ using EvenCart.Infrastructure.ViewEngines.Filters;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
 using EvenCart.Infrastructure.ViewEngines.NamingConventions;
 using EvenCart.Infrastructure.ViewEngines.Tags;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -32,14 +33,16 @@ namespace EvenCart.Infrastructure.ViewEngines
         private readonly IThemeProvider _themeProvider;
         private readonly IPluginLoader _pluginLoader;
         private readonly IHtmlProcessor _htmlProcessor;
+        private readonly IAntiforgery _antiforgery;
 
-        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor)
+        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery)
         {
             _localFileProvider = localFileProvider;
             _actionContextAccessor = actionContextAccessor;
             _themeProvider = themeProvider;
             _pluginLoader = pluginLoader;
             _htmlProcessor = htmlProcessor;
+            _antiforgery = antiforgery;
             _parsedTemplateCache = new ConcurrentDictionary<CachedViewKey, CachedView>();
 
             //set the file system
@@ -292,6 +295,9 @@ namespace EvenCart.Infrastructure.ViewEngines
                 resultHash.Add("metaKeywords", seoMeta.MetaKeywords);
                 resultHash.Add("metaDescription", seoMeta.MetaDescription);
             }
+
+            //and antiforgery token as well
+            resultHash.Add("xsrf", _antiforgery.GetToken());
             return resultHash;
         }
     }

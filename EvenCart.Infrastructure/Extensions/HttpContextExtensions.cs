@@ -17,6 +17,7 @@ namespace EvenCart.Infrastructure.Extensions
         private const string CurrentCurrencyKey = "CurrentCurrencyKey";
         private const string RequestSeoMetaKey = "RequestSeoMetaKey";
         private const string ApiTokenKey = "ApiTokenKey";
+        private const string IsTokenAuthenticatedKey = "IsTokenAuthenticated";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -28,9 +29,10 @@ namespace EvenCart.Infrastructure.Extensions
             return (Currency)httpContext.Items[CurrentCurrencyKey];
         }
 
-        public static void SetCurrentUser(this HttpContext httpContext, User user)
+        public static void SetCurrentUser(this HttpContext httpContext, User user, bool isTokenValidation = false)
         {
             httpContext.Items[CurrentUserKey] = user;
+            httpContext.Items[IsTokenAuthenticatedKey] = isTokenValidation;
         }
 
         public static User GetCurrentUser(this HttpContext httpContext)
@@ -80,6 +82,11 @@ namespace EvenCart.Infrastructure.Extensions
         public static string GetApiToken(this HttpContext httpContext)
         {
             return httpContext.Items[ApiTokenKey]?.ToString();
+        }
+
+        public static bool IsTokenAuthenticated(this HttpContext httpContext)
+        {
+            return httpContext.Items.ContainsKey(IsTokenAuthenticatedKey) && (bool) httpContext.Items[IsTokenAuthenticatedKey];
         }
     }
 }

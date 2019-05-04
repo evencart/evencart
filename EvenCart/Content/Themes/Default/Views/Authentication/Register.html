@@ -19,6 +19,7 @@
                     </div>
                     {% else %}
                     <form action="{% route api_Register %}" method="post" id="formRegistration">
+                        {% control xsrf %}
                         <div class="row">
                             <div class="col-sm-12 mb-20">
                                 {% control label text=@t"Email" for="email" %}

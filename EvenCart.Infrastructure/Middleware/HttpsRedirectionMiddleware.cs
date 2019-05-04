@@ -27,6 +27,12 @@ namespace EvenCart.Infrastructure.Middleware
                     var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
                     if (context.Request.Scheme != "https")
                     {
+                        if (RequestHelper.IsApiCall())
+                        {
+                            context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
+                            await context.Response.WriteAsync("API calls must be made over Https");
+                            return;
+                        }
                         var getUrl = context.Request.GetEncodedPathAndQuery();
                         var newUrl = WebHelper.GetUrlFromPath(getUrl, generalSettings.StoreDomain, "https");
                         context.Response.Redirect(newUrl);

@@ -1,6 +1,7 @@
 ﻿{% layout "_LayoutCheckout" %}
 {% global active_menu="BillingShipping" step_index="0" %}
 <form method="post" id="form-billing-shipping" action="{% route api_CheckoutAddress %}">
+    {% control xsrf %}
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -20,7 +21,8 @@
                 </select>
                 {% endif %}
                 {% if shippingRequired %}
-                <div id="billing-address-container" class="address-container" {% if addresses.size > 0 %}style="display: none"{% endif %}>
+                <div id="billing-address-container" class="address-container" {% if addresses.size>
+                    0 %}style="display: none"{% endif %}>
                     {% partial "Addresses/AddressForm" prefix="BillingAddress." %}
                 </div>
                 {% control checkbox name="UseDifferentShippingAddress" id="UseDifferentShippingAddress" text=@t"Use different address for shipping" value="false" %}
@@ -40,15 +42,16 @@
                         </option>
                     </select>
                     {% endif %}
-                    <div id="shipping-address-container" class="address-container" {% if addresses.size > 0 %}style="display: none"{% endif %}>
+                    <div id="shipping-address-container" class="address-container" {% if addresses.size>
+                        0 %}style="display: none"{% endif %}>
                         {% partial "Addresses/AddressForm" prefix="ShippingAddress." %}
                     </div>
                 </div>
                 {% endif %}
                 <script type="text/javascript">
-                    ready(function () {
+                    ready(function() {
                         //{% if shippingRequired %}
-                        jQuery("#UseDifferentShippingAddress").change(function () {
+                        jQuery("#UseDifferentShippingAddress").change(function() {
                             if (jQuery(this).is(":checked")) {
                                 jQuery("#delivery-address-container").show();
                             } else {
@@ -56,7 +59,7 @@
                             }
                         });
                         //{% endif %}
-                        jQuery("#BillingAddressId, #ShippingAddressId").change(function () {
+                        jQuery("#BillingAddressId, #ShippingAddressId").change(function() {
                             if (jQuery(this).val() == 0) {
                                 jQuery(this).next(".address-container").show();
                             } else {
@@ -75,7 +78,7 @@
                     {% for shippingMethod in shippingMethods %}
                     <li>
                         <label>
-                            <input name="ShippingMethod.SystemName" value="{{shippingMethod.systemName}}" type="radio" {% if forloop.index0 == 0 %}checked{% endif %} />
+                            <input name="ShippingMethod.SystemName" value="{{shippingMethod.systemName}}" type="radio" {% if forloop.index0= =0 %}checked{% endif %} />
                             {{shippingMethod.description}}
                             {% if shippingMethod.fee > 0 %}
                             [ + {{shippingMethod.fee | withCurrency}} ]

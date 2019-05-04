@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveScheduledTask %}" method="post" id="edit-task-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Task Editor" | t}}

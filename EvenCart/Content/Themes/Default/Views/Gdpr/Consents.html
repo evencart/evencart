@@ -5,6 +5,7 @@
 </h3>
 <div class="page-section section pb-120">
     <form action="{% route api_SaveGdprPreferences %}" id="save-pref-form" method="post">
+        {% control xsrf %}
         <div class="row">
             <div class="col-12">
                 {%- assign index = 0 -%}
@@ -39,10 +40,10 @@
                             </select>
                             {% else %}
                             <select class="form-control" name="Consents[{{index}}].ConsentStatus">
-                                <option value="Denied" {% if consent.consentStatus == "Denied" %}selected{% endif %}>
+                                <option value="Denied" {% if consent.consentStatus= ="Denied" %}selected{% endif %}>
                                     {{"No" | t}}
                                 </option>
-                                <option value="Accepted" {% if consent.consentStatus == "Accepted" %}selected{% endif %}>
+                                <option value="Accepted" {% if consent.consentStatus= ="Accepted" %}selected{% endif %}>
                                     {{"Yes" | t}}
                                 </option>
                             </select>
@@ -53,11 +54,11 @@
                     </tr>
                     {% endfor %}
                 </table>
-               
+
                 {% endfor %}
             </div>
         </div>
-       
+
         <div class="action-button-container text-center">
             <button type="submit" class="btn btn-default">
                 {{"Save Preferences" | t}}

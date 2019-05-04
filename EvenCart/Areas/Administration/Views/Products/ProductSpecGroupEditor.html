@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveProductSpecificationGroup %}" method="post" id="add-spec-group-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Specification Group Editor" | t}}
@@ -18,7 +19,7 @@
                         {% endif %}
                         {% control hidden id="product-productSpecification-group" %}
                         {% control validator for="product-productSpecification-group-selector" required="true" %}
-                    </div>                  
+                    </div>
                 </div>
             </div>
         </div>

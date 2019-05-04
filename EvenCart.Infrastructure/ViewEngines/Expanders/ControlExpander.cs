@@ -30,6 +30,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     throw new Exception($"Can't find the view {viewName} in view file {readFile.FileName}");
                 var controlFile = ReadFile.From(viewName);
                 readFile.AddChild(controlFile);
+                keyValuePairs = keyValuePairs ?? new Dictionary<string, string>();
                 var keyValuePairsString = keyValuePairs.Where(x => !NonAttributeNames.Contains(x.Key))
                     .Select(x => $"{x.Key}=\"{x.Value}\"").ToList();
                 var attributeString = string.Join(" ", keyValuePairsString);
