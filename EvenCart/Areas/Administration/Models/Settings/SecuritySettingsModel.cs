@@ -1,20 +1,11 @@
-﻿using System.Collections.Generic;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
-
-namespace EvenCart.Areas.Administration.Models.Settings
+﻿namespace EvenCart.Areas.Administration.Models.Settings
 {
-    public class SecuritySettingsModel : FoundationModel
+    public class SecuritySettingsModel : SettingsModel
     {
-        public SecuritySettingsModel()
-        {
-            AvailablePasswordStorageFormats = new List<PasswordFormat>();
-        }
-        /// <summary>
-        /// Default password format
-        /// </summary>
-        public PasswordFormat DefaultPasswordStorageFormat { get; set; }
+        public bool EnableCaptcha { get; set; }
 
-        public List<PasswordFormat> AvailablePasswordStorageFormats { get; set; }
+        public string BannedIps { get; set; }
+
+        public string AdminRestrictedIps { get; set; }
     }
 }

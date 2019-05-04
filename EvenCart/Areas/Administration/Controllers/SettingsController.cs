@@ -144,6 +144,15 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
+        [FieldRequired("settingType", "security")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
+        public IActionResult SaveSettings(SecuritySettingsModel securitySettings)
+        {
+            SaveSetting(securitySettings);
+            return R.Success.Result;
+        }
+
         #region Helpers
         private IActionResult GetSettingResult(string settingType)
         {
@@ -214,6 +223,10 @@ namespace EvenCart.Areas.Administration.Controllers
                     var consentGroups = consentGroupService.Get(x => true).ToList();
                     var groupSelectList = SelectListHelper.GetSelectItemList(consentGroups, x => x.Id, x => x.Name);
                     result.With("availableConsentGroups", groupSelectList);
+                    break;
+                case "security":
+                    settings = DependencyResolver.Resolve<SecuritySettings>();
+                    model = _modelMapper.Map<SecuritySettingsModel>(settings);
                     break;
             }
 

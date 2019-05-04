@@ -15,5 +15,11 @@ namespace EvenCart.Data.Entity.Settings
         public int EmailVerificationLinkExpirationHours { get; set; }
 
         public int PasswordResetLinkExpirationHours { get; set; }
+
+        public bool EnableCaptcha { get; set; }
+
+        public string BannedIps { get; set; }
+
+        public string AdminRestrictedIps { get; set; }
     }
 }

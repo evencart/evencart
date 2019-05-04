@@ -1,6 +1,7 @@
 ﻿{% layout "_Layout" %}
 
 <form action='{% route api_SaveSettings settingType="{{settingType}}" %}' method="post" id="save-setting-form">
+    {% control xsrf %}
     <div class="row">
         <div class="col-md-12 col-offset-2">
         
@@ -24,6 +25,8 @@
                 {% partial "Settings/Index.Localization" %}
             {% elsif settingType == "gdpr" %}
                 {% partial "Settings/Index.Gdpr" %}
+            {% elsif settingType == "security" %}
+                {% partial "Settings/Index.Security" %}
             {% endif %}
         </div>
     </div>

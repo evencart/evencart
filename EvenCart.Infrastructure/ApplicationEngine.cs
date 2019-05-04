@@ -75,8 +75,8 @@ namespace EvenCart.Infrastructure
             //https redirection
             app.UseHttps();
 
-            //anti-forgery validation
-            app.UseAntiforgeryTokens();
+            //ip filtering
+            app.UseIpFilter();
 
             //use response pages
             app.UseStatusPages();
@@ -89,6 +89,9 @@ namespace EvenCart.Infrastructure
             
             //use authentication
             app.UseAppAuthentication();
+
+            //anti-forgery validation
+            app.UseAntiforgeryTokens();
 
             //use mvc
             app.UseMvc(builder =>

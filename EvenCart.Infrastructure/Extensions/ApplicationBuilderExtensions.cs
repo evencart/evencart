@@ -134,5 +134,10 @@ namespace EvenCart.Infrastructure.Extensions
         {
             app.UseMiddleware<AntiforgeryValidationMiddleware>();
         }
+
+        public static void UseIpFilter(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<IpAddressValidationMiddleware>();
+        }
     }
 }

@@ -8,6 +8,11 @@ namespace EvenCart.Infrastructure.Extensions
     {
         public static bool IsAdminArea(this ActionContext actionContext)
         {
+            if (actionContext == null)
+            {
+                return ApplicationEngine.CurrentHttpContext.Request.Path.Value.StartsWith(
+                    "/" + ApplicationConfig.AdminAreaName);
+            }
             var descriptor = actionContext.ActionDescriptor as ControllerActionDescriptor;
             var areaName = descriptor.ControllerTypeInfo.GetCustomAttribute<AreaAttribute>()?.RouteValue;
             return areaName == "admin";

@@ -1,0 +1,20 @@
+﻿{% global page_title=@t"Security Settings" active_menu="SecuritySettings" parent_active_menu="Settings" if="settingType == 'security'" %}
+
+<div class="panel">
+    <div class="panel-title">
+        {{"Security Settings" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {% control checkbox name="enableCaptcha" text=@t"Enable Captcha" value="settings.enableCaptcha"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Banned Ip Addresses" for="banned-ips" %}
+            {% control text name="bannedIps" value="{{settings.bannedIps}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Admin Access Ip Addresses" for="adminRestrictedIps" %}
+            {% control text name="adminRestrictedIps" value="{{settings.adminRestrictedIps}}"%}
+        </div>
+    </div>
+</div>
