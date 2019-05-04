@@ -28,6 +28,7 @@
 
     {% bundle render="js" bundle="headScripts" %}
     <script type="text/javascript">
+        window._xsrf = "{{xsrf}}";
         //helper for quick calls
         var ready = function (callback) {
             jQuery(document).ready(callback);

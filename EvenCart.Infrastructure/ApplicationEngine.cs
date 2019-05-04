@@ -34,6 +34,9 @@ namespace EvenCart.Infrastructure
         #region Initialization
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
+            //antiforgery
+            services.AddAntiforgeryTokens();
+
             //add authentications
             services.AddAppAuthentication();
 
@@ -71,6 +74,9 @@ namespace EvenCart.Infrastructure
             
             //https redirection
             app.UseHttps();
+
+            //anti-forgery validation
+            app.UseAntiforgeryTokens();
 
             //use response pages
             app.UseStatusPages();

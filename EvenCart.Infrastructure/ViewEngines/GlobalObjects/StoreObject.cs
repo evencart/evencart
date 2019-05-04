@@ -4,6 +4,7 @@ using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.MediaServices;
@@ -11,6 +12,7 @@ using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Gdpr;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Antiforgery;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {
@@ -26,6 +28,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
+            var antiforgery = DependencyResolver.Resolve<IAntiforgery>();
+
             var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
             var logoUrl = "";
             if (generalSettings.LogoId > 0)
@@ -51,10 +55,11 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 RepeatOrdersEnabled = orderSettings.AllowReorder,
                 ReviewsEnabled = catalogSettings.EnableReviews,
                 ReviewModificationAllowed = catalogSettings.AllowReviewModification,
-                ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode
+                ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
+                XsrfToken = antiforgery.GetToken()
             };
             var currentUser = ApplicationEngine.CurrentUser;
-            if (gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
+            if (!RequestHelper.IsApiCall() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
             {
                 store.CookiePopupText = gdprSettings.CookiePopupText;
                 store.UseConsentGroup = gdprSettings.UseConsentGroup;

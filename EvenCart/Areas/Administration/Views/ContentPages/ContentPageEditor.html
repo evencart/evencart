@@ -2,6 +2,7 @@
 {% global page_title=@t"Page Editor" active_menu="GetContentPage" parent_active_menu="ContentPagesList" menu_group="ContentPageEdit" %}
 
 <form action="{% route api_SaveContentPage %}" method="post" id="content-editor-form">
+    {% control xsrf %}
     <div class="row">
         <div class="col-lg-8">
             <div class="panel">
@@ -21,7 +22,7 @@
                         {% control label text=@t"Description" for="content" %}
                         {% control wyswyg name="content" id="contentPage-content" value="{{contentPage.content}}" %}
                     </div>
-                  
+
                 </div>
             </div>
             {% control hidden name="id" value="{{contentPage.id}}" %}

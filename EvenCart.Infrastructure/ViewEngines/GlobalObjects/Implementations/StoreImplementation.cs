@@ -39,5 +39,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public string CookiePopupText { get; set; }
 
         public ConsentGroupImplementation ConsentGroup { get; set; }
+
+        public string XsrfToken { get; set; }
     }
 }

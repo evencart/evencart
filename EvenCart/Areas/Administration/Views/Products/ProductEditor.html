@@ -3,6 +3,7 @@
 
 
 <form action="{% route api_SaveProduct %}" method="post" id="product-editor-form">
+    {% control xsrf %}
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">

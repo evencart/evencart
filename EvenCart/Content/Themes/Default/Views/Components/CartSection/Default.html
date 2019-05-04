@@ -46,6 +46,7 @@
                             <td class="pro-quantity">
                                 <div class="product-quantity">
                                     <form action="{% route api_UpdateCart %}" method="post" id="form-cart-{{cartItem.id}}">
+                                        {% control xsrf %}
                                         <input name="quantity" id="quantity-{{cartItem.id}}" class="no-spinner" type="number" min="1" value="{{cartItem.quantity}}" />
                                         {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
                                     </form>
@@ -76,6 +77,7 @@
                             {% if checkout == "false" %}
                             <td class="pro-remove">
                                 <form action="{% route api_UpdateCart %}" method="post" id="remove-form-cart-{{cartItem.id}}">
+                                    {% control xsrf %}
                                     <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
                                     {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
                                     <span href="#" id="a-remove-form-cart-{{cartItem.id}}" class="clickable">
@@ -120,6 +122,7 @@
                 <h4>{{"Discount Coupon" | t}}</h4>
 
                 <form action="{% route api_UpdateCart %}" method="post" id="form-discount-coupon">
+                    {% control xsrf %}
                     {% if cart.discountCoupon != "" %}
                     <span class="text-uppercase">
                         {{cart.discountCoupon}}

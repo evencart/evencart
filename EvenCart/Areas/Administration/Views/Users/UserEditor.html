@@ -2,6 +2,7 @@
 {% global page_title=@t"User Editor" active_menu="GetUser" parent_active_menu="UsersList" menu_group="UserEdit"%}
 
 <form action="{% route api_SaveUser %}" method="post" id="save-user-form">
+    {% control xsrf %}
     <div class="row">
         <div class="col-lg-6">
             <div class="panel">

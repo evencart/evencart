@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveAvailableAttribute %}" method="post" id="attribute-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Attribute Editor" | t}}
@@ -21,7 +22,7 @@
                         {% control label text=@t"Values" for="" %}
                         {% control text id="attribute-value-selector" placeholder=@t"Enter values"%}
                     </div>
-                    
+
                 </div>
             </div>
         </div>

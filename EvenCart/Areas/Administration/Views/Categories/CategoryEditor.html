@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveCategory %}" method="post" id="category-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Category Editor" | t}}

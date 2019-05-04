@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveTax %}" method="post" id="tax-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Tax Editor" | t}}

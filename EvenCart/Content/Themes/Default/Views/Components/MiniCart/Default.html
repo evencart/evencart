@@ -30,7 +30,8 @@
                         </div>
                         <div class="col-xs-2">
                             <form action="{% route api_UpdateCart %}" method="post" id="mini-remove-form-cart-{{cartItem.id}}">
-                                <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0"/>
+                                {% control xsrf %}
+                                <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
                                 {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
                                 <span href="#" id="a-mini-remove-form-cart-{{cartItem.id}}" class="remove-from-cart clickable">
                                     <i class="fa fa-times"></i>

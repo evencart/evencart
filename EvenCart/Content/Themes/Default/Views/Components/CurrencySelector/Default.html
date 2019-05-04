@@ -25,6 +25,7 @@
 </div>
 
 <form action="{% route api_SetActiveCurrency %}" method="post" id="form-currency-selector">
+    {% control xsrf %}
     <input type="hidden" name="currencyId" id="currency-selector" />
 </form>
 <script type="text/javascript">

@@ -18,6 +18,7 @@
                     </h3>
                 </div>
                 <form action="{% route api_AccountSaveAddress %}" id="save-address-form" method="post">
+                    {% control xsrf %}
                     {% partial "Addresses/AddressForm" %}
                     <div class="action-button-container text-center">
                         {% control hidden name="id" value="{{address.id}}" %}

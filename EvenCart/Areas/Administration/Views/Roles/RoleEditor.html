@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveRole %}" method="post" id="role-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Role Editor" | t}}
@@ -20,7 +21,7 @@
                         {% control text id="systemName" name="systemName" value="{{role.systemName}}" %}
                         {% control validator for="systemName" required="true" %}
                     </div>
-                    {% endunless %}                  
+                    {% endunless %}
                     <div class="form-group">
                         {% control label text=@t"Capabilities" %}
                         <div class="capabilities-selector-box">

@@ -43,6 +43,7 @@
                         </td>
                         <td class="pro-remove">
                             <form action="{% route api_UpdateCart %}" method="post" id="remove-form-cart-{{cartItem.id}}">
+                                {% control xsrf %}
                                 <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
                                 {% control hidden name="cartItemId" value="{{cartItem.id}}" %}
                                 {% control hidden name="isWishlist" value="true" %}

@@ -130,5 +130,9 @@ namespace EvenCart.Infrastructure.Extensions
             }
         }
 
+        public static void UseAntiforgeryTokens(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AntiforgeryValidationMiddleware>();
+        }
     }
 }
