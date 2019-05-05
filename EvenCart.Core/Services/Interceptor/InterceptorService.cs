@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Interceptor;
 using EvenCart.Core.Infrastructure.Utils;
 
@@ -27,10 +28,10 @@ namespace EvenCart.Core.Services.Interceptor
 
             var interceptorTasks = TypeFinder.ClassesOfType<IInterceptor>();
             var tasks =
-                interceptorTasks.Select(iTask => (IInterceptor)Activator.CreateInstance(iTask)).ToList();
-
+                interceptorTasks.Select(iTask => (IInterceptor) DependencyResolver.Resolve(iTask)).ToList();
+            var service = DependencyResolver.Resolve<IInterceptorService>();
             foreach (var task in tasks)
-                task.SetupInterceptors();
+                task.SetupInterceptors(service);
         }
 
         public string LastError { get; set; }
@@ -69,20 +70,24 @@ namespace EvenCart.Core.Services.Interceptor
         public void SetInterceptor(InterceptorAction action)
         {
             var interceptors = Interceptors;
-            if(!interceptors.ContainsKey(action.InterceptorLocationName))
-                interceptors.Add(action.InterceptorLocationName, new List<InterceptorAction>());
-
-            var existingInterceptor =
-                interceptors[action.InterceptorLocationName].FirstOrDefault(x => x.InterceptorName == action.InterceptorName);
-            
-            //if an interceptor with the same name exists, replace it
-            if (existingInterceptor != null)
+            foreach (var interceptorLocation in action.InterceptorLocations)
             {
-                interceptors[action.InterceptorLocationName].Remove(existingInterceptor);
-            }
+                if (!interceptors.ContainsKey(interceptorLocation))
+                    interceptors.Add(interceptorLocation, new List<InterceptorAction>());
 
-            //add this interceptor to the list
-            interceptors[action.InterceptorLocationName].Add(action);
+                var existingInterceptor =
+                    interceptors[interceptorLocation].FirstOrDefault(x => x.InterceptorName == action.InterceptorName);
+
+                //if an interceptor with the same name exists, replace it
+                if (existingInterceptor != null)
+                {
+                    interceptors[interceptorLocation].Remove(existingInterceptor);
+                }
+
+                //add this interceptor to the list
+                interceptors[interceptorLocation].Add(action);
+            }
+          
         }
     }
 }

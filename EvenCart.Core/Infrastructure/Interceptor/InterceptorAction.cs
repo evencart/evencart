@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace EvenCart.Core.Infrastructure.Interceptor
 {
@@ -17,10 +18,12 @@ namespace EvenCart.Core.Infrastructure.Interceptor
 
         public int Priority { get; set; }
 
-        public string InterceptorLocationName { get; set; }
+        public IList<string> InterceptorLocations { get; set; }
 
-        public Func<object[], bool> Action { get; set; }
+        public InterceptorFunc Action { get; set; }
 
         public string Error { get; set; }
     }
+
+    public delegate bool InterceptorFunc(params object[] parameters);
 }

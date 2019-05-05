@@ -7,10 +7,12 @@
 // Last Modified: 01 07 2016 08:12 PM
 #endregion
 
+using EvenCart.Core.Services.Interceptor;
+
 namespace EvenCart.Core.Infrastructure.Interceptor
 {
     public interface IInterceptor
     {
-        void SetupInterceptors();
+        void SetupInterceptors(IInterceptorService interceptorService);
     }
 }

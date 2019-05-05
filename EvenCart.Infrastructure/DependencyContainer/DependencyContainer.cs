@@ -6,10 +6,12 @@ using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Extensions;
+using EvenCart.Core.Infrastructure.Interceptor;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
 using EvenCart.Core.Services.Events;
+using EvenCart.Core.Services.Interceptor;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Services.Authentication;
@@ -76,61 +78,62 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IEmailSender, EmailSender>(reuse: Reuse.Transient);
             //bundler
             registrar.Register<IBundleService, BundleService>(reuse: Reuse.Transient);
+            //interceptor
+            registrar.Register<IInterceptorService, InterceptorService>(reuse: Reuse.Singleton);
 
             var asm = AssemblyLoader.GetAppDomainAssemblies();
             var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
-            {
-                try
                 {
-                    return x.GetTypes();
-                }
-                catch (ReflectionTypeLoadException)
-                {
-                    return new Type[0];
-                }
-            }).ToList();
+                    try
+                    {
+                        return x.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException)
+                    {
+                        return new Type[0];
+                    }
+                })
+                .Where(x => x.IsPublic && !x.IsAbstract).ToList();
             //find all event consumer types
             var allConsumerTypes = allTypes
-                .Where(type => type.IsPublic && // get public types 
-                               type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent)) &&
-                                             !type.IsAbstract));// which implementing some interface(s)
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent))));// which implementing some interface(s)
             //all consumers which are not interfaces
             registrar.RegisterMany(allConsumerTypes);
 
             //find all the model factories
             var allModelFactories = allTypes
-                .Where(type => type.IsPublic && // get public types 
-                               type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(IModelFactory)) &&
-                                             !type.IsAbstract));// which implementing some interface(s)
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(IModelFactory))));// which implementing some interface(s)
             //all consumers which are not interfaces
             registrar.RegisterMany(allModelFactories);
             
             //capability providers
             var allCapabilityProviderTypes = allTypes
-                .Where(type => type.IsPublic && // get public types 
-                               type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(ICapabilityProvider)) &&
-                                             !type.IsAbstract));// which implementing some interface(s)
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ICapabilityProvider))));// which implementing some interface(s)
             //all providers which are not interfaces
             registrar.RegisterMany(allCapabilityProviderTypes);
 
             //tasks
             var allTaskTypes = allTypes
-                .Where(type => type.IsPublic && // get public types 
-                               type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(ITask)) &&
-                                             !type.IsAbstract));// which implementing some interface(s)
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ITask))));// which implementing some interface(s)
             //all providers which are not interfaces
             registrar.RegisterMany<ITask>(allTaskTypes, type => type.FullName);
-            
+
+            //interceptors
+            var allInterceptorTypes = allTypes
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(IInterceptor))));// which implementing some interface(s)
+            //all providers which are not interfaces
+            registrar.RegisterMany<IInterceptor>(allInterceptorTypes, type => type.FullName);
+
             //currency providers
             var allCurrencyProviders = allTypes
                 .Where(type => type.IsPublic && // get public types 
                                type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(ICurrencyRateProvider)) &&
-                                             !type.IsAbstract));// which implementing some interface(s)
+                                   .Any(x => x.IsAssignableTo(typeof(ICurrencyRateProvider))));// which implementing some interface(s)
             //all providers which are not interfaces
             registrar.RegisterMany(allCurrencyProviders);
 
@@ -148,9 +151,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             //components
             //find all event consumer types
             var allComponents = allTypes
-                .Where(type => type.IsPublic && // get public types 
-                               !type.IsAbstract &&
-                               type.IsAssignableTo(typeof(FoundationComponent)));// which implementing some interface(s)
+                .Where(type => type.IsClass && type.IsAssignableTo(typeof(FoundationComponent)));// which implementing some interface(s)
 
             registrar.RegisterMany(allComponents, Reuse.Transient);
 

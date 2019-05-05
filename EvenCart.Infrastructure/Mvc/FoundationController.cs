@@ -1,6 +1,7 @@
 ﻿using System;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services.Events;
+using EvenCart.Core.Services.Interceptor;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
@@ -52,6 +53,11 @@ namespace EvenCart.Infrastructure.Mvc
             DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName.ToString(), eventData);
         }
 
+        [NonAction]
+        protected void Intercept(string location, params object[] parameters)
+        {
+            DependencyResolver.Resolve<IInterceptorService>().Intercept(location, parameters);
+        }
         /// <summary>
         /// Creates a breadcrumb node with the provided data
         /// </summary>
