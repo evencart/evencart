@@ -43,7 +43,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             // settings register for access across app
             registrar.Register<IDatabaseSettings, DatabaseSettings>(reuse: Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
             //caching
-            registrar.Register<ICacheProvider, DefaultCacheProvider>(reuse: Reuse.Singleton);
+            registrar.Register<ICacheProvider, MemoryCacheProvider>(reuse: Reuse.Singleton);
             //events
             registrar.Register<IEventPublisherService, EventPublisherService>(reuse: Reuse.Singleton);
             //file access

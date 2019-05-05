@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Compile Remove="Caching\HttpCacheProvider.cs" />
-    <Compile Remove="Caching\MemoryCacheProvider.cs" />
     <Compile Remove="Plugins\PluginEngine.cs" />
     <Compile Remove="Startup\IOwinStartupTask.cs" />
   </ItemGroup>
@@ -30,6 +29,7 @@
   <ItemGroup>
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />

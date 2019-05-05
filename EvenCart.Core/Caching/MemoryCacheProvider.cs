@@ -7,20 +7,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Caching;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace RoastedMarketplace.Core.Caching
+namespace EvenCart.Core.Caching
 {
-    public class MemoryCacheProvider : FoundationCacheProvider<IMemory>
+    public class MemoryCacheProvider : FoundationCacheProvider<MemoryCache>
     {
         protected override MemoryCache InitializeCacheProvider()
         {
-            return MemoryCache.Default;
-        }
-
-        public override void Dispose()
-        {
-           
+            return _CreateCacheObject();
         }
 
         public override T Get<T>(string cacheKey)
@@ -45,10 +40,17 @@ namespace RoastedMarketplace.Core.Caching
 
         public override void Clear()
         {
-            foreach (KeyValuePair<string, object> item in _cache)
-            {
-                Remove(item.Key);
-            }
+           //dispose existing cache
+           var existingCache = _cache;
+           _cache = _CreateCacheObject();
+           existingCache.Dispose();
         }
+
+        #region Helpers
+        private static MemoryCache _CreateCacheObject()
+        {
+            return new MemoryCache(new MemoryCacheOptions());
+        } 
+        #endregion
     }
 }

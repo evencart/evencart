@@ -11,7 +11,10 @@
 
         protected abstract TCache InitializeCacheProvider();
 
-        public abstract void Dispose();
+        public virtual void Dispose()
+        {
+            //do nothing..children can use if they want to do anything
+        }
 
         public abstract T Get<T>(string cacheKey);
 
