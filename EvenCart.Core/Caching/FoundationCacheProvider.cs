@@ -1,4 +1,6 @@
-﻿namespace EvenCart.Core.Caching
+﻿using System;
+
+namespace EvenCart.Core.Caching
 {
     public abstract class FoundationCacheProvider<TCache> : ICacheProvider
     {
@@ -13,6 +15,7 @@
 
         public virtual void Dispose()
         {
+            GC.Collect();
             //do nothing..children can use if they want to do anything
         }
 
