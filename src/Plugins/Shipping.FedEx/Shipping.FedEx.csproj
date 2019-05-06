@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>F:\SourceRepositories\RoastedMarketplace\EvenCart\Plugins\Shipping.FedEx\</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.FedEx\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>F:\SourceRepositories\RoastedMarketplace\EvenCart\Plugins\Shipping.FedEx\</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.FedEx\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
