@@ -31,12 +31,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var antiforgery = DependencyResolver.Resolve<IAntiforgery>();
 
             var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
-            var logoUrl = "";
-            if (generalSettings.LogoId > 0)
-            {
-                logoUrl = mediaAccountant.GetPictureUrl(generalSettings.LogoId);
-            }
-
+            var logoUrl = generalSettings.LogoId > 0
+                ? mediaAccountant.GetPictureUrl(generalSettings.LogoId)
+                : ApplicationEngine.MapUrl(ApplicationConfig.DefaultLogoUrl, true);
+            var faviconUrl = generalSettings.LogoId > 0
+                ? mediaAccountant.GetPictureUrl(generalSettings.FaviconId)
+                : ApplicationEngine.MapUrl(ApplicationConfig.DefaultFaviconUrl, true);
             var categoryDefaultName =
                 LocalizationHelper.Localize("All Categories", ApplicationEngine.CurrentLanguageCultureCode);
             var store = new StoreImplementation()
@@ -49,6 +49,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                     Url = WebHelper.GetUrlFromPath("/default", generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),
                 },
                 LogoUrl = logoUrl,
+                FaviconUrl = faviconUrl,
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
                 Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName),
                 WishlistEnabled = orderSettings.EnableWishlist,

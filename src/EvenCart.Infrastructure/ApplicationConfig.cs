@@ -52,5 +52,9 @@ namespace EvenCart.Infrastructure
 
         public const string AppSettingsApiSecret = "apiSecret";
 
+        public const string DefaultLogoUrl = "~/common/assets/images/logo.png";
+
+        public const string DefaultFaviconUrl = "~/common/assets/images/favicon.png";
+
     }
 }

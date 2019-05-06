@@ -14,6 +14,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public string LogoUrl { get; set; }
 
+        public string FaviconUrl { get; set; }
+
         public string CurrentPage { get; set; }
 
         public IList<SelectListItem> Categories { get; set; }
