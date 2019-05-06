@@ -281,9 +281,10 @@
     <None Remove="Views\Install\Index.Review.html" />
     <None Remove="Views\Install\Index.Store.html" />
     <None Remove="Views\Install\Index.Welcome.html" />
-    <None Remove="Views\JsonLd\_BreadcrumbJsonLd.html" />
-    <None Remove="Views\JsonLd\_ProductJsonLd.html" />
-    <None Remove="Views\JsonLd\_SearchJsonLd.html" />
+    <None Remove="Views\Seo\_BreadcrumbJsonLd.html" />
+    <None Remove="Views\Seo\_ProductJsonLd.html" />
+    <None Remove="Views\Seo\_ProductOgTags.html" />
+    <None Remove="Views\Seo\_SearchJsonLd.html" />
     <None Remove="Views\_Layout.liquid" />
   </ItemGroup>
 
@@ -1035,13 +1036,16 @@
     <Content Include="Views\Install\Index.Welcome.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\JsonLd\_BreadcrumbJsonLd.html">
+    <Content Include="Views\Seo\_BreadcrumbJsonLd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\JsonLd\_ProductJsonLd.html">
+    <Content Include="Views\Seo\_ProductOgTags.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\JsonLd\_SearchJsonLd.html">
+    <Content Include="Views\Seo\_ProductJsonLd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Seo\_SearchJsonLd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Layout\_Layout.html">

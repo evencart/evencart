@@ -1,0 +1,13 @@
+﻿{%- assign imageUrl = product.media[0].url | absoluteUrl -%}
+<meta property="og:type" content="product" />
+<meta property="og:title" content="{{product.name}}" />
+<meta property="og:description" content="{{product.description}}" />
+<meta property="og:image" content="{{imageUrl}}" />
+<meta property="og:url" content='{% route SingleProduct seName="{{product.seName}}" id="{{product.id}}" absolute="true" %}' />
+<meta property="og:site_name" content="{{store.name}}" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:site" content="{{store.name}}" />
+<meta property="twitter:title" content="{{product.name}}" />
+<meta property="twitter:description" content="{{product.description}}" />
+<meta property="twitter:image" content="{{imageUrl}}" />
+<meta property="twitter:url" content='{% route SingleProduct seName="{{product.seName}}" id="{{product.id}}" absolute="true" %}' />

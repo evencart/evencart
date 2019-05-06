@@ -35,7 +35,10 @@
             jQuery(document).ready(callback);
         }
     </script>
-
+    <!--og tags-->
+    {% if store.currentPage == "SingleProduct" %}
+    {% partial "Seo/_ProductOgTags" %}
+    {% endif %}
     {% widget "head_end" %}
 </head>
 <body>
