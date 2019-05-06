@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PaypalWithRedirect
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Services", "EvenCart.Services\EvenCart.Services.csproj", "{7BF02EED-4F28-447C-952A-395E53710D7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvenCart.WebHost.Tests", "Tests\EvenCart.WebHost.Tests\EvenCart.WebHost.Tests.csproj", "{2DE0BF14-5386-4C67-A181-84B3561C6C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.WebHost.Tests", "Tests\EvenCart.WebHost.Tests\EvenCart.WebHost.Tests.csproj", "{2DE0BF14-5386-4C67-A181-84B3561C6C03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

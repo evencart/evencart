@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -32,16 +32,193 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App_Data\database.config.ex" />
     <None Remove="App_Data\database.configex" />
+    <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
+    <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
+    <None Remove="Areas\Administration\Views\Categories\CategoriesList.html" />
+    <None Remove="Areas\Administration\Views\Categories\CategoryEditor.html" />
+    <None Remove="Areas\Administration\Views\ContentPages\ContentPageEditor.html" />
+    <None Remove="Areas\Administration\Views\ContentPages\ContentPagesList.html" />
+    <None Remove="Areas\Administration\Views\Controls\ajaxedcontent.html" />
+    <None Remove="Areas\Administration\Views\Controls\checkbox.html" />
+    <None Remove="Areas\Administration\Views\Controls\checkboxlist.html" />
+    <None Remove="Areas\Administration\Views\Controls\currency.html" />
+    <None Remove="Areas\Administration\Views\Controls\datetime.html" />
+    <None Remove="Areas\Administration\Views\Controls\hidden.html" />
+    <None Remove="Areas\Administration\Views\Controls\imageupload.html" />
+    <None Remove="Areas\Administration\Views\Controls\label.html" />
+    <None Remove="Areas\Administration\Views\Controls\number.html" />
+    <None Remove="Areas\Administration\Views\Controls\password.html" />
+    <None Remove="Areas\Administration\Views\Controls\radiolist.html" />
+    <None Remove="Areas\Administration\Views\Controls\rating.html" />
+    <None Remove="Areas\Administration\Views\Controls\select.html" />
+    <None Remove="Areas\Administration\Views\Controls\text.html" />
+    <None Remove="Areas\Administration\Views\Controls\textarea.html" />
+    <None Remove="Areas\Administration\Views\Controls\validator.html" />
+    <None Remove="Areas\Administration\Views\Controls\wyswyg.html" />
+    <None Remove="Areas\Administration\Views\Controls\xsrf.html" />
+    <None Remove="Areas\Administration\Views\Countries\CountriesList.html" />
+    <None Remove="Areas\Administration\Views\Countries\CountryEditor.html" />
+    <None Remove="Areas\Administration\Views\Countries\StateEditor.html" />
+    <None Remove="Areas\Administration\Views\Countries\StatesList.html" />
+    <None Remove="Areas\Administration\Views\Cultures\CurrenciesList.html" />
+    <None Remove="Areas\Administration\Views\Cultures\CurrencyEditor.html" />
+    <None Remove="Areas\Administration\Views\Dashboard.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.html" />
+    <None Remove="Areas\Administration\Views\Dialog\Selector.html" />
+    <None Remove="Areas\Administration\Views\Discounts\DiscountEditor.html" />
+    <None Remove="Areas\Administration\Views\Discounts\DiscountsList.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailAccountEditor.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailAccountsList.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailMessagesList.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailTemplateEditor.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailTemplatesList.html" />
+    <None Remove="Areas\Administration\Views\Gdpr\ConsentEditor.html" />
+    <None Remove="Areas\Administration\Views\Gdpr\ConsentGroupEditor.html" />
+    <None Remove="Areas\Administration\Views\Gdpr\ConsentGroupsList.html" />
+    <None Remove="Areas\Administration\Views\Gdpr\ConsentLogsList.html" />
+    <None Remove="Areas\Administration\Views\Gdpr\ConsentsList.html" />
+    <None Remove="Areas\Administration\Views\Layout\_Layout.html" />
+    <None Remove="Areas\Administration\Views\Layout\_PluginLayout.html" />
+    <None Remove="Areas\Administration\Views\Layout\_WidgetLayout.html" />
+    <None Remove="Areas\Administration\Views\Manufacturers\ManufacturerEditor.html" />
+    <None Remove="Areas\Administration\Views\Manufacturers\ManufacturersList.html" />
+    <None Remove="Areas\Administration\Views\Navigation\AddressEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ConsentSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ContentPageEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ContentPagesSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\CountrySecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\DiscountEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\EmailAccountEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\EmailsSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\EmailTemplateEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\GDPRSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\MenuEditor.html" />
+    <None Remove="Areas\Administration\Views\Navigation\MenuEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\MenuItemEditor.html" />
+    <None Remove="Areas\Administration\Views\Navigation\MenuList.html" />
+    <None Remove="Areas\Administration\Views\Navigation\OrderEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\OrderSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\PluginSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\PrimaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ProductEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ProductSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\PromotionSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\ReportsSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\SettingsSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\StatesSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\TaxRatesSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\TaxSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\UserEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\UserSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\VendorEditSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderEditor.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderEditor.ShippedProductsPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.Dates.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.OrderStatus.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.PaymentStatus.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrdersList.html" />
+    <None Remove="Areas\Administration\Views\Orders\ShipmentEditor.html" />
+    <None Remove="Areas\Administration\Views\Orders\ShipmentsList.html" />
+    <None Remove="Areas\Administration\Views\Pages\SeoMetaPanel.html" />
+    <None Remove="Areas\Administration\Views\Plugins\PluginsList.html" />
+    <None Remove="Areas\Administration\Views\Plugins\WidgetsList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductAttributeEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductAttributesList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.ImagePanel.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.ManufacturerPanel.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductRelationEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductRelationsList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductsList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductSpecEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductSpecGroupEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductSpecsList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductVariantEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductVariantsList.html" />
+    <None Remove="Areas\Administration\Views\Reports\OrdersReport.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Reports\OrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\ProductOrdersReport.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Reports\ProductOrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\StockReport.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Reports\StockReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reviews\ReviewEditor.html" />
+    <None Remove="Areas\Administration\Views\Reviews\ReviewsList.FilterPanel.html" />
+    <None Remove="Areas\Administration\Views\Reviews\ReviewsList.html" />
+    <None Remove="Areas\Administration\Views\Roles\RoleEditor.html" />
+    <None Remove="Areas\Administration\Views\Roles\RolesList.html" />
+    <None Remove="Areas\Administration\Views\ScheduledTasks\ScheduledTaskEditor.html" />
+    <None Remove="Areas\Administration\Views\ScheduledTasks\ScheduledTasksList.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Catalog.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Email.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Gdpr.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.General.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Localization.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Media.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Order.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Security.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Tax.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.Url.html" />
+    <None Remove="Areas\Administration\Views\Settings\Index.User.html" />
+    <None Remove="Areas\Administration\Views\Taxes\TaxEditor.html" />
+    <None Remove="Areas\Administration\Views\Taxes\TaxesList.html" />
+    <None Remove="Areas\Administration\Views\Taxes\TaxRateEditor.html" />
+    <None Remove="Areas\Administration\Views\Taxes\TaxRatesList.html" />
+    <None Remove="Areas\Administration\Views\Users\AddressEditor.html" />
+    <None Remove="Areas\Administration\Views\Users\AddressList.html" />
+    <None Remove="Areas\Administration\Views\Users\Anonymize.html" />
+    <None Remove="Areas\Administration\Views\Users\CapabilitiesList.html" />
+    <None Remove="Areas\Administration\Views\Users\Imitate.html" />
+    <None Remove="Areas\Administration\Views\Users\OrdersList.html" />
+    <None Remove="Areas\Administration\Views\Users\UserCart.html" />
+    <None Remove="Areas\Administration\Views\Users\UserEditor.html" />
+    <None Remove="Areas\Administration\Views\Users\UserEditor.RolesPanel.html" />
+    <None Remove="Areas\Administration\Views\Users\UsersList.html" />
+    <None Remove="Areas\Administration\Views\Vendors\VendorEditor.html" />
+    <None Remove="Areas\Administration\Views\Vendors\VendorsList.html" />
+    <None Remove="Areas\Administration\Views\Widget\CustomHtml.Settings.html" />
+    <None Remove="Areas\Administration\Views\Widget\Menu.Settings.html" />
+    <None Remove="Areas\Administration\Views\Widget\ProductCarousel.Settings.html" />
+    <None Remove="Areas\Administration\Views\Widget\RawHtml.Settings.html" />
+    <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.eot" />
+    <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.svg" />
+    <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.ttf" />
+    <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.woff" />
+    <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.woff2" />
+    <None Remove="Content\Themes\Default\Assets\fonts\FontAwesome.otf" />
+    <None Remove="Content\Themes\Default\Assets\js\ajax-mail.js" />
+    <None Remove="Content\Themes\Default\Assets\js\bootstrap.min.js" />
+    <None Remove="Content\Themes\Default\Assets\js\jquery-3.1.1.min.js" />
+    <None Remove="Content\Themes\Default\Assets\js\main.js" />
+    <None Remove="Content\Themes\Default\Assets\js\modernizr-2.8.3.min.js" />
+    <None Remove="Content\Themes\Default\Assets\js\plugins.js" />
     <None Remove="Content\Themes\Default\Assets\js\popper.min.js" />
+    <None Remove="Content\Themes\Default\Assets\js\wow.js" />
+    <None Remove="Content\Themes\Default\Assets\js\wow.min.js" />
+    <None Remove="Content\Themes\Default\Views\Account\Profile.html" />
+    <None Remove="Content\Themes\Default\Views\Addresses\AddressEditor.html" />
+    <None Remove="Content\Themes\Default\Views\Addresses\Addresses.html" />
+    <None Remove="Content\Themes\Default\Views\Addresses\AddressForm.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\ForgotPassword.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\Register.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Cart\Wishlist.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
+    <None Remove="Content\Themes\Default\Views\Common\Breadcrumb.html" />
+    <None Remove="Content\Themes\Default\Views\Common\_ConsentPopup.html" />
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\CategoryFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CurrencySelector\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\Menu\Default.html" />
@@ -49,20 +226,64 @@
     <None Remove="Content\Themes\Default\Views\Components\Pagination\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\RawHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\_404.html" />
+    <None Remove="Content\Themes\Default\Views\Gdpr\Consents.html" />
     <None Remove="Content\Themes\Default\Views\Home\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Layout\_AccountLayout.html" />
+    <None Remove="Content\Themes\Default\Views\Layout\_Layout.html" />
+    <None Remove="Content\Themes\Default\Views\Layout\_LayoutAjax.html" />
+    <None Remove="Content\Themes\Default\Views\Layout\_LayoutCheckout.html" />
+    <None Remove="Content\Themes\Default\Views\Layout\_RootLayout.html" />
+    <None Remove="Content\Themes\Default\Views\Navigation\_AccountNavigation.html" />
+    <None Remove="Content\Themes\Default\Views\Order\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Order\Orders.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Products\Index.ProductAttributes.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_AddToWishlist.html" />
     <None Remove="Content\Themes\Default\Views\Products\_ProductBox.html" />
     <None Remove="Content\Themes\Default\Views\Products\_Rating.html" />
     <None Remove="Content\Themes\Default\Views\Products\_RatingMini.html" />
     <None Remove="Content\Themes\Default\Views\Products\_RatingStars.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_RelatedProducts.html" />
+    <None Remove="Content\Themes\Default\Views\Products\_SortBox.html" />
+    <None Remove="Content\Themes\Default\Views\Reviews\AccountReviews.html" />
+    <None Remove="Content\Themes\Default\Views\Reviews\ReviewEditor.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\ReviewsList.html" />
+    <None Remove="Content\Themes\Default\Views\Reviews\_ReviewBox.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\_ReviewSummary.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\Login.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\Product - Copy.html" />
+    <None Remove="Content\Themes\Default\Views\Reviews\_UserReviewBox.html" />
+    <None Remove="Content\Themes\Default\Views\Widgets\Index.html" />
+    <None Remove="Views\Controls\checkbox.html" />
+    <None Remove="Views\Controls\checkboxlist.html" />
+    <None Remove="Views\Controls\currency.html" />
+    <None Remove="Views\Controls\datetime.html" />
+    <None Remove="Views\Controls\hidden.html" />
+    <None Remove="Views\Controls\label.html" />
+    <None Remove="Views\Controls\number.html" />
+    <None Remove="Views\Controls\password.html" />
+    <None Remove="Views\Controls\radiolist.html" />
+    <None Remove="Views\Controls\rating.html" />
+    <None Remove="Views\Controls\select.html" />
+    <None Remove="Views\Controls\text.html" />
+    <None Remove="Views\Controls\textarea.html" />
+    <None Remove="Views\Controls\validator.html" />
+    <None Remove="Views\Controls\wyswyg.html" />
+    <None Remove="Views\Controls\xsrf.html" />
+    <None Remove="Views\Install\Index.Database.html" />
+    <None Remove="Views\Install\Index.html" />
+    <None Remove="Views\Install\Index.License.html" />
+    <None Remove="Views\Install\Index.Review.html" />
+    <None Remove="Views\Install\Index.Store.html" />
+    <None Remove="Views\Install\Index.Welcome.html" />
+    <None Remove="Views\JsonLd\_BreadcrumbJsonLd.html" />
+    <None Remove="Views\JsonLd\_ProductJsonLd.html" />
+    <None Remove="Views\JsonLd\_SearchJsonLd.html" />
     <None Remove="Views\_Layout.liquid" />
   </ItemGroup>
 
@@ -71,102 +292,766 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\AvailableAttributes\AttributesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Data\database.config.ex" />
+    <Content Include="Areas\Administration\Views\Categories\CategoriesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Categories\CategoryEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\ContentPages\ContentPageEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\ContentPages\ContentPagesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\ajaxedcontent.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\checkbox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\checkboxlist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\currency.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\datetime.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\hidden.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\imageupload.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\label.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\number.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\password.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\radiolist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\rating.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\select.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\text.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\textarea.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\validator.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\wyswyg.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Controls\xsrf.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Countries\CountriesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Countries\CountryEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Countries\StateEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Countries\StatesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Cultures\CurrenciesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Cultures\CurrencyEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dialog\Selector.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Discounts\DiscountEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Discounts\DiscountsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailAccountEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailAccountsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailMessagesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailTemplateEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailTemplatesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Gdpr\ConsentEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Gdpr\ConsentGroupEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Gdpr\ConsentGroupsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Gdpr\ConsentLogsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Gdpr\ConsentsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Layout\_Layout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Layout\_PluginLayout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Layout\_WidgetLayout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Manufacturers\ManufacturerEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Manufacturers\ManufacturersList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\AddressEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ConsentSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ContentPageEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ContentPagesSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\CountrySecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\DiscountEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\EmailAccountEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\EmailsSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\EmailTemplateEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\GDPRSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\MenuEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\MenuEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\MenuItemEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\MenuList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\OrderEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\OrderSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\PluginSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\PrimaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ProductEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ProductSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\PromotionSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\ReportsSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\SettingsSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\StatesSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\TaxRatesSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\TaxSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\UserEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\UserSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\VendorEditSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderEditor.ShippedProductsPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrdersList.FilterPanel.Dates.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrdersList.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrdersList.FilterPanel.OrderStatus.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrdersList.FilterPanel.PaymentStatus.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrdersList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\ShipmentEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\ShipmentsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Pages\SeoMetaPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Plugins\PluginsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Plugins\WidgetsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductAttributeEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductAttributesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.ImagePanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.ManufacturerPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductRelationEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductRelationsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductSpecEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductSpecGroupEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductSpecsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductVariantEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductVariantsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\OrdersReport.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\OrdersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\ProductOrdersReport.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\ProductOrdersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\StockReport.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\StockReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\UserOrdersReport.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\UserOrdersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reviews\ReviewEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reviews\ReviewsList.FilterPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reviews\ReviewsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Roles\RoleEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Roles\RolesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\ScheduledTasks\ScheduledTaskEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\ScheduledTasks\ScheduledTasksList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Catalog.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Email.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Gdpr.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.General.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Localization.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Media.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Order.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Security.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Tax.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.Url.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Settings\Index.User.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Taxes\TaxEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Taxes\TaxesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Taxes\TaxRateEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Taxes\TaxRatesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\AddressEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\AddressList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\Anonymize.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\CapabilitiesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\Imitate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\OrdersList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UserCart.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UserEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UserEditor.RolesPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UsersList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Vendors\VendorEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Vendors\VendorsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Widget\CustomHtml.Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Widget\Menu.Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Widget\ProductCarousel.Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Widget\RawHtml.Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\fonts\FontAwesome.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\ajax-mail.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\bootstrap.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\jquery-3.1.1.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\main.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\modernizr-2.8.3.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\plugins.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Assets\js\popper.min.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\wow.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\js\wow.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Account\Profile.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Addresses\AddressEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Addresses\Addresses.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Addresses\AddressForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\ForgotPassword.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Authentication\Register.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Cart\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Cart\Wishlist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\Complete.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\Confirm.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\PaymentInfo.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\AddressInfo.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Common\Breadcrumb.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Common\_ConsentPopup.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\AttributeFilter\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CartSection\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\CategoryFilter\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CurrencySelector\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\CustomHtml\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\Menu\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\MiniCart\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\Pagination\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\PriceFilter\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\ProductCarousel\Default.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\RawHtml\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\ContentPages\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Error\_404.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Error\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Gdpr\Consents.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Home\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Layout\_AccountLayout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Layout\_Layout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Layout\_LayoutAjax.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Layout\_LayoutCheckout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Layout\_RootLayout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Navigation\_AccountNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Order\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Order\Orders.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\Index.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\Index.ProductAttributes.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_AddToWishlist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\_RatingMini.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\_RatingStars.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\_Rating.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\_ProductBox.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\ProductsList.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_RelatedProducts.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Products\_SortBox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Reviews\AccountReviews.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Reviews\ReviewEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Reviews\_ReviewBox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Reviews\_ReviewSummary.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Reviews\ReviewsList.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\Login.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Reviews\_UserReviewBox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Widgets\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\checkbox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\checkboxlist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\currency.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\datetime.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\hidden.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\label.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\number.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\password.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\radiolist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\rating.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\select.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\text.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\textarea.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\validator.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\wyswyg.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\xsrf.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.Database.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.License.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.Review.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.Store.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Install\Index.Welcome.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\JsonLd\_BreadcrumbJsonLd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\JsonLd\_ProductJsonLd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\JsonLd\_SearchJsonLd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Layout\_Layout.html">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="App_Data\Install\" />
     <Folder Include="Areas\Administration\Data\" />
-    <Folder Include="Areas\Administration\Views\Discounts\" />
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
@@ -365,6 +1250,12 @@
     <Reference Include="DotEntity.SqlServer">
       <HintPath>..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="App_Data\Languages\en-US.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
