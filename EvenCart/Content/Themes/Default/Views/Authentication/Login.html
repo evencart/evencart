@@ -24,14 +24,14 @@
                             <div class="col-sm-12 mb-20">
                                 <input id="Login" name="login" class="inline" type="submit">
                                 <label class="inline" for="rememberme">
-                                    <input id="rememberme" name="rememberme" value="true" type="checkbox"> Remember me
+                                    <input id="rememberme" name="rememberme" value="true" type="checkbox"> {{"Remember me" | t}}
                                 </label>
                             </div>
                             <div class="col-sm-12">
                                 <a href="{% route ForgotPassword %}">{{"Lost your password?" | t}}</a>
                             </div>
                             <div class="col-sm-12">
-                                {{"Don't have any account?" | t}} <a href="{% route Register %}">Create one</a>
+                                {{"Don't have any account?" | t}} <a href="{% route Register %}">{{"Create one" | t}}</a>
                             </div>
                         </div>
                     </form>
