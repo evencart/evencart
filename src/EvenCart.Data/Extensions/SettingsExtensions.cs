@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Policy;
 using EvenCart.Data.Entity.Settings;
 
@@ -13,12 +14,12 @@ namespace EvenCart.Data.Extensions
 
         public static IList<string> GetBannedIps(this SecuritySettings securitySettings)
         {
-            return securitySettings.BannedIps?.Split(';');
+            return securitySettings.BannedIps?.Split(';', StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static IList<string> GetAdminRestrictedIps(this SecuritySettings securitySettings)
         {
-            return securitySettings.AdminRestrictedIps?.Split(';');
+            return securitySettings.AdminRestrictedIps?.Split(';', StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

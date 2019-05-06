@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using EvenCart.Core;
 using EvenCart.Data.Entity.Settings;
@@ -25,14 +26,14 @@ namespace EvenCart.Infrastructure.Middleware
             //is it one of the banned ips?
             var ip = WebHelper.GetClientIpAddress();
 
-            var blockRequest = bannedIps != null && bannedIps.Contains(ip);
+            var blockRequest = bannedIps != null && bannedIps.Any() && bannedIps.Contains(ip);
 
             if (!blockRequest)
             {
                 //is admin area ip restricted?
                 var adminIps = _securitySettings.GetAdminRestrictedIps();
                 var isAdminArea = ApplicationEngine.IsAdmin();
-                if (isAdminArea && adminIps != null && !adminIps.Contains(ip))
+                if (isAdminArea && adminIps != null && adminIps.Any() && !adminIps.Contains(ip))
                 {
                     blockRequest = true;
                 }
