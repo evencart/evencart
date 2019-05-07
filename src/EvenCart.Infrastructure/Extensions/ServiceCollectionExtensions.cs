@@ -80,11 +80,15 @@ namespace EvenCart.Infrastructure.Extensions
         {
             var mvcBuilder = services.AddMvc(options =>
                 {
+#if !DEBUGWS
                     if (DatabaseManager.IsDatabaseInstalled())
                     {
+#endif
                         options.Conventions.Add(new AppRoutingConvention());
                         options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
+#if !DEBUGWS
                     }
+#endif
 
                 })
                 .AddJsonOptions(options =>

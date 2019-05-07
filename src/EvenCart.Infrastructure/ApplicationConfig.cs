@@ -4,6 +4,10 @@ namespace EvenCart.Infrastructure
 {
     public static class ApplicationConfig
     {
+        public const string Version = "1.0.0";
+
+        public const string ApiVersion = "1.0";
+
         public const string ApiEndpointName = "api";
 
         public const string DefaultAuthenticationScheme = "AppAuthentication";

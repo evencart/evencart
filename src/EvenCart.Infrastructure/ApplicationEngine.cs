@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace EvenCart.Infrastructure
 {
@@ -46,6 +47,17 @@ namespace EvenCart.Infrastructure
             //add MVC and routing convention for api access
             services.AddAppMvc(hostingEnvironment);
             services.AddAppRouting();
+
+            //swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "EvenCart Api Documentation", Version = ApplicationConfig.ApiVersion });
+                c.CustomSchemaIds(x => x.FullName);
+                c.ResolveConflictingActions(x => x.First());
+                c.IncludeXmlComments($"Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
+                c.SwaggerGeneratorOptions.DocInclusionPredicate = (s, description) => description.ActionDescriptor.AttributeRouteInfo?.Name?.StartsWith("api_") ?? false;
+            });
+
 
             //fire up dependency injector
             var container = new Container();
@@ -69,9 +81,9 @@ namespace EvenCart.Infrastructure
             {
                 app.UseDeveloperExceptionPage();
             }
-
+#if !DEBUGWS
             app.CheckInstallation();
-            
+
             //https redirection
             app.UseHttps();
 
@@ -86,24 +98,30 @@ namespace EvenCart.Infrastructure
 
             //init database
             app.InitializeDatabase();
-            
+
             //use authentication
             app.UseAppAuthentication();
 
             //anti-forgery validation
             app.UseAntiforgeryTokens();
-
+#endif
             //use mvc
             app.UseMvc(builder =>
             {
+#if !DEBUGWS
                 builder.Routes.Add(new AppRouter(builder.DefaultHandler));
+#endif
             });
 
-            //load language files
-            app.LoadLocalizations();
+          
+
+            app.UseSwagger();
 
             //run the schedule tasks
             app.RunScheduledTasks();
+
+            //load language files
+            app.LoadLocalizations();
         }
 
         #endregion

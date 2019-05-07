@@ -59,6 +59,9 @@ namespace EvenCart.Infrastructure.Routing.Conventions
                 }
                 else if (ar.AttributeRouteModel.Attribute is DynamicRouteAttribute)
                 {
+#if DEBUGWS
+    continue;
+#endif
                     var dynamicRoute = (DynamicRouteAttribute) ar.AttributeRouteModel.Attribute;
                     var settingService = DependencyResolver.Resolve<ISettingService>();
                     var settingName = dynamicRoute.SettingName;
