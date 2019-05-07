@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EvenCart.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="M:EvenCart.Infrastructure.ApplicationEngine.IsAdmin">
+            <summary>
+            Checks if the user is inside administration area
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Emails.EmailSender.LoadAndProcessTemplate(System.String,System.Object)">
+            <summary>
+            Loads a named email template from database and replaces tokens with passed entities, and returns a new email message object with template values
+            </summary>
+            <param name="templateName"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvenCart.Infrastructure.Mvc.Attributes.ValidateModelStateAttribute">
+            <summary>
+            Validates the model of the requested action and returns a 400 if it's an invalid model 
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponse.With(System.String,System.Func{System.Object},System.Func{System.Object})">
+            <summary>
+            Attaches specified parameter to the response
+            </summary>
+            <param name="key">The key of the parameter</param>
+            <param name="apiAction">The function that'll be called if request is an api request</param>
+            <param name="mvcAction">The function that'll be called if request is a mvc request</param>
+            <returns>The response object</returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithAvailableCountries(EvenCart.Infrastructure.Mvc.CustomResponse)">
+            <summary>
+            Adds available countries to current response
+            </summary>
+            <param name="customResponse">The response object</param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithAvailableAddressTypes(EvenCart.Infrastructure.Mvc.CustomResponse)">
+            <summary>
+            Adds available address types to current response
+            </summary>
+            <param name="customResponse">The response object</param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithAvailableInputTypes(EvenCart.Infrastructure.Mvc.CustomResponse)">
+            <summary>
+            Adds available input types to current response
+            </summary>
+            <param name="customResponse">The response object</param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithParams(EvenCart.Infrastructure.Mvc.CustomResponse,System.Object)">
+            <summary>
+            Adds available input types to current response
+            </summary>
+            <param name="customResponse">The response object</param>
+            <param name="paramsModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.RaiseEvent(System.Enum,System.Object[])">
+            <summary>
+            Raises a named event so other services and plugins can capture
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.SetBreadcrumbToUrl(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Creates a breadcrumb node with the provided data
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.SetBreadcrumbToRoute(System.String,System.String,System.Object,System.String,System.Boolean)">
+            <summary>
+            Creates a breadcrumb node with the provided data
+            </summary>
+        </member>
+        <member name="T:EvenCart.Infrastructure.Mvc.Models.AdminSearchModel">
+            <summary>
+            The common search class that is used across administration queries
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Mvc.Models.AdminSearchModel.SearchPhrase">
+            <summary>
+            The text to search within the query
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Mvc.Models.AdminSearchModel.Current">
+            <summary>
+            The page being requested in a paginated request. Default is 1.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Mvc.Models.AdminSearchModel.RowCount">
+            <summary>
+            The total number of result rows to be returned
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Mvc.Models.FoundationPatchModel.PatchFields">
+            <summary>
+            Stores the patched fields with values
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.Models.PatchModel`1.Patch(`0)">
+            <summary>
+            Patches the entity and returns true if entire patch has been applied. Returns false if any patch fails
+            </summary>
+            <param name="targetInstance"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvenCart.Infrastructure.Routing.Conventions.AppRoutingConvention">
+            <summary>
+            Adds additional routes for api access
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.SettingName">
+            <summary>
+            The setting name under UrlSettings group that contains the dynamic route template
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.SeoEntityName">
+            <summary>
+            The entity type that the parameter to the action uses
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.TemplateSuffix">
+            <summary>
+            The suffix that'll be added to the dynamic template. Default is blank.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.TemplatePrefix">
+            <summary>
+            The prefix that'll be added to the dynamic template. Default is blank.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.ParameterName">
+            <summary>
+            The parameter name passed to the method. Default is id
+            </summary>
+        </member>
+        <member name="F:EvenCart.Infrastructure.Routing.Parsers.RouteTemplateParser._templateMap">
+            <summary>
+            Stores mapping of template to corresponding regex
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.ViewEngines.GlobalObjects.NavigationObject.GetNavigationImpl(System.Collections.Generic.IList{EvenCart.Data.Entity.Navigation.MenuItem},System.Int32,System.Collections.Generic.IList{EvenCart.Data.Entity.Shop.Category})">
+            Making this method static so we can use the same method in MenuWidget.
+             todo: is there a better way of doing this? may be move this to a helper function
+        </member>
+        <member name="T:EvenCart.Infrastructure.ViewEngines.Tags.Increment">
+             <summary>
+             Increments an integer in your template. If not assigned initializes it from 0
+            
+             {% increment counter %}
+            
+             </summary>
+        </member>
+        <member name="T:EvenCart.Infrastructure.Security.Attributes.AuthorizeAdministratorAttribute">
+            <summary>
+            Specifies tha logged in user must be administrator to access this area
+            </summary>
+        </member>
+        <member name="T:EvenCart.Infrastructure.Security.Attributes.CapabilityRequiredAttribute">
+            <summary>
+            Executes an action only if the logged in user has the provided capabilities
+            </summary>
+        </member>
+    </members>
+</doc>

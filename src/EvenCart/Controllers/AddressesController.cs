@@ -70,6 +70,10 @@ namespace EvenCart.Controllers
             return R.Success.With("addresses", models).Result;
         }
 
+        /// <summary>
+        /// Gets a single address from the server
+        /// </summary>
+        /// <param name="addressId">The id of the address to retrieve</param>
         [DualGet("addresses/{addressId}", Name = RouteNames.SingleAddress)]
         public IActionResult AddressEditor(int addressId)
         {

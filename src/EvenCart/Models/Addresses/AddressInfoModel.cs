@@ -7,6 +7,9 @@ namespace EvenCart.Models.Addresses
 {
     public class AddressInfoModel : FoundationEntityModel, IRequiresValidations<AddressInfoModel>
     {
+        /// <summary>
+        /// The name of the addressee
+        /// </summary>
         public string Name { get; set; }
 
         public string Address1 { get; set; }

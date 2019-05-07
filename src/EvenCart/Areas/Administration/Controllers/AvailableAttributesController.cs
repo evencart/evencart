@@ -30,7 +30,11 @@ namespace EvenCart.Areas.Administration.Controllers
             _dataSerializer = dataSerializer;
         }
 
-
+        /// <summary>
+        /// Get attribute suggestions based on the query parameter
+        /// </summary>
+        /// <param name="q">The search string for query</param>
+        /// <returns>An array of <see cref="AutocompleteModel"/> items</returns>
         [DualGet("suggestions", Name = AdminRouteNames.GetAttributeSuggestions, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributeSuggestions(string q = null)
@@ -68,7 +72,11 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.With("suggestions", model.OrderBy(x => x.Text)).Result;
         }
 
-
+        /// <summary>
+        /// Get the available attributes
+        /// </summary>
+        /// <param name="searchModel">The search parameters to filter results. <see cref="AttributeSearchModel"></see></param>
+        /// <returns></returns>
         [DualGet("", Name = AdminRouteNames.AvailableAttributesList)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributesList(AttributeSearchModel searchModel)

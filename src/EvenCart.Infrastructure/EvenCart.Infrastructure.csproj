@@ -11,11 +11,13 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.3</LangVersion>
+    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\Documentation\1.0\XmlComments.Infrastructure.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
     <DefineConstants>DEBUGWS</DefineConstants>
     <LangVersion>7.3</LangVersion>
+    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\Documentation\1.0\XmlComments.Infrastructure.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

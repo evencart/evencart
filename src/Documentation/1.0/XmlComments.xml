@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EvenCart</name>
+    </assembly>
+    <members>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeSuggestions(System.String)">
+            <summary>
+            Get attribute suggestions based on the query parameter
+            </summary>
+            <param name="q">The search string for query</param>
+            <returns>An array of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel"/> items</returns>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributesList(EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel)">
+            <summary>
+            Get the available attributes
+            </summary>
+            <param name="searchModel">The search parameters to filter results. <see cref="T:EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel"></see></param>
+            <returns></returns>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Settings.UserSettingsModel.UserRegistrationDefaultMode">
+            <summary>
+            Default registration mode for users
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Settings.UserSettingsModel.AreUserNamesEnabled">
+            <summary>
+            Specifies if user names are enabled for site
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.AddressesController.AddressEditor(System.Int32)">
+            <summary>
+            Gets a single address from the server
+            </summary>
+            <param name="addressId">The id of the address to retrieve</param>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Name">
+            <summary>
+            The name of the addressee
+            </summary>
+        </member>
+    </members>
+</doc>

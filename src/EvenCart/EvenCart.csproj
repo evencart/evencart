@@ -6,11 +6,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\Documentation\1.0\XmlComments.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
     <DefineConstants>DEBUGWS</DefineConstants>
-    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\EvenCart\Documentation\1.0\XmlComments.xml</DocumentationFile>
+    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\Documentation\1.0\XmlComments.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -1068,7 +1069,6 @@
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
-    <Folder Include="Documentation\" />
     <Folder Include="Widgets\" />
     <Folder Include="wwwroot\bundles\" />
   </ItemGroup>
@@ -1274,7 +1274,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
-    <Exec Command="dotnet C:\Users\apexol\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output Documentation\1.0\swagger.json $(OutputPath)\$(AssemblyName).dll v1" />
+    <Exec Command="dotnet C:\Users\apexol\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output ..\Documentation\1.0\swagger.json $(OutputPath)\$(AssemblyName).dll v1" />
   </Target>
 
 </Project>
