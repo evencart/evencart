@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using DotLiquid;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace EvenCart.Infrastructure.Swagger
+namespace EvenCart.Swagger
 {
     public class SwaggerCommonFilter : IParameterFilter,IDocumentFilter
     {
@@ -26,7 +24,6 @@ namespace EvenCart.Infrastructure.Swagger
                 parameter.Name = ExcludeKey + parameter.Name;
                 return;
             }
-            var name = context.PropertyInfo.Name == "Consents";
             if (typeof(IEnumerable).IsAssignableFrom(context.PropertyInfo.PropertyType) && context.PropertyInfo.PropertyType.IsGenericType)
             {
                 var genericType = context.PropertyInfo.PropertyType.GenericTypeArguments[0];
