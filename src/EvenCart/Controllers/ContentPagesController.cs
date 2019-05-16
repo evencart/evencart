@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows users to get the content pages
+    /// </summary>
     public class ContentPagesController : FoundationController
     {
         private readonly IContentPageService _contentPageService;
@@ -40,6 +43,11 @@ namespace EvenCart.Controllers
             return R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id).With("preview", !contentPage.Published).Result;
         }
 
+        /// <summary>
+        /// Gets the content page with provided identifier
+        /// </summary>
+        /// <param name="contentPageId">The id of the page to retrieve.</param>
+        /// <response code="200">The <see cref="ContentPageModel">contentPage</see> object.</response>
         [DualGet("contentpages/{contentPageId}", Name = RouteNames.SinglePage, OnlyApi = true)]
         public IActionResult IndexApi(int contentPageId)
         {

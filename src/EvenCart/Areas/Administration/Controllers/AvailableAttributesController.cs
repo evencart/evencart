@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
+    /// <summary>
+    /// Available attributes are the attributes which are available for creation of product attributes. An available attribute can have multiple pre-defined values.
+    /// </summary>
     public class AvailableAttributesController : FoundationAdminController
     {
         private readonly IAvailableAttributeService _availableAttributeService;
@@ -34,7 +37,7 @@ namespace EvenCart.Areas.Administration.Controllers
         /// Get attribute suggestions based on the query parameter
         /// </summary>
         /// <param name="q">The search string for query</param>
-        /// <returns>An array of <see cref="AutocompleteModel"/> items</returns>
+        /// <response code="200">A list of <see cref="AutocompleteModel">suggestion</see> objects</response>
         [DualGet("suggestions", Name = AdminRouteNames.GetAttributeSuggestions, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributeSuggestions(string q = null)
@@ -51,7 +54,11 @@ namespace EvenCart.Areas.Administration.Controllers
             }
             return R.Success.With("suggestions", model.OrderBy(x => x.Text)).Result;
         }
-
+        /// <summary>
+        /// Gets suggestions for values corresponding to an attribute
+        /// </summary>
+        /// <param name="attributeId">The id of the attribute</param>
+        /// <response code="200">A list of <see cref="AutocompleteModel">suggestion</see> objects</response>
         [DualGet("values/suggestions/{attributeId}", Name = AdminRouteNames.GetAttributeValueSuggestions, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributeValueSuggestions(int attributeId)
@@ -73,10 +80,10 @@ namespace EvenCart.Areas.Administration.Controllers
         }
 
         /// <summary>
-        /// Get the available attributes
+        /// Gets the available attributes
         /// </summary>
-        /// <param name="searchModel">The search parameters to filter results. <see cref="AttributeSearchModel"></see></param>
-        /// <returns></returns>
+        /// <param name="searchModel">The <see cref="AttributeSearchModel">search parameters</see> to filter results.</param>
+        /// <response code="200">A list of <see cref="AvailableAttributeModel">attributes</see> objects</response>
         [DualGet("", Name = AdminRouteNames.AvailableAttributesList)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributesList(AttributeSearchModel searchModel)
@@ -92,6 +99,11 @@ namespace EvenCart.Areas.Administration.Controllers
                 .Result;
         }
 
+        /// <summary>
+        /// Gets a single attribute
+        /// </summary>
+        /// <param name="availableAttributeId">The id of available attribute</param>
+        /// <response code="200">The <see cref="AvailableAttributeModel">attribute</see> object with specified availableAttributeId</response>
         [DualGet("{availableAttributeId}", Name = AdminRouteNames.GetAvailableAttribute)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributeEditor(int availableAttributeId)
@@ -104,6 +116,11 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.With("attribute", model).With("attributeId", availableAttributeId).Result;
         }
 
+        /// <summary>
+        /// Saves the available attribute to the database
+        /// </summary>
+        /// <param name="attributeModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("", Name = AdminRouteNames.SaveAvailableAttribute, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         [ValidateModelState(ModelType = typeof(AvailableAttributeModel))]
@@ -147,6 +164,11 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Deletes an available attribute
+        /// </summary>
+        /// <param name="attributeId">The id of the attribute to be deleted</param>
+        /// <response code="200">A success response object</response>
         [DualPost("delete", Name = AdminRouteNames.DeleteAvailableAttribute, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult DeleteAvailableAttribute(int attributeId)

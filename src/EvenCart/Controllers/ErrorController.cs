@@ -6,6 +6,7 @@ namespace EvenCart.Controllers
     [Route("error")]
     public class ErrorController : FoundationController
     {
+        [HttpGet]
         public IActionResult Index(int? statusCode = null)
         {
             statusCode = statusCode ?? 404;

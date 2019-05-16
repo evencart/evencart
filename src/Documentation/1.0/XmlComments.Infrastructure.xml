@@ -95,6 +95,11 @@
             The total number of result rows to be returned
             </summary>
         </member>
+        <member name="P:EvenCart.Infrastructure.Mvc.Models.FoundationEntityModel.Id">
+            <summary>
+            The unique id of the resource
+            </summary>
+        </member>
         <member name="P:EvenCart.Infrastructure.Mvc.Models.FoundationPatchModel.PatchFields">
             <summary>
             Stores the patched fields with values

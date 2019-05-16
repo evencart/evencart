@@ -27,9 +27,12 @@ namespace EvenCart
                 c.ResolveConflictingActions(x => x.First());
                 c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
                 c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Infrastructure.xml", true);
+                c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Data.xml", true);
                 c.SwaggerGeneratorOptions.DocInclusionPredicate = (s, description) => description.ActionDescriptor.AttributeRouteInfo?.Name?.StartsWith("api_") ?? false;
                 c.ParameterFilter<SwaggerCommonFilter>();
                 c.DocumentFilter<SwaggerCommonFilter>();
+                c.OperationFilter<SwaggerCommonFilter>();
+                c.SchemaFilter<SwaggerCommonFilter>();
             });
 
             return ApplicationEngine.ConfigureServices(services, _hostingEnvironment);

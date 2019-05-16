@@ -14,7 +14,35 @@ namespace EvenCart.Core.Infrastructure.Utils
 
 
         private static IList<Assembly> _allAssemblies;
-        
+
+        private IList<Type> _allTypes;
+        IList<Type> AllTypes()
+        {
+            if (_allTypes != null)
+                return _allTypes;
+
+            var loadedTypes = new List<Type>();
+            foreach (var assembly in _allAssemblies)
+            {
+                //exclude if it's a system assembly
+                if (AssemblyLoader.IsSystemAssembly(assembly.FullName))
+                    continue;
+                try
+                {
+                    //if error occurs while loading the assembly, continue or throw error
+                    var types = assembly.GetTypes();
+                    loadedTypes = loadedTypes.Concat(types).ToList();
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            _allTypes = loadedTypes;
+            return loadedTypes;
+        }
+
         IList<Type> OfType<T>(bool excludeAbstract = true)
         {
             var loadedTypes = new List<Type>();
@@ -46,6 +74,11 @@ namespace EvenCart.Core.Infrastructure.Utils
             return loadedTypes;
         }
 
+        IList<Type> GetByNamesImpl(IList<string> typeNames)
+        {
+            var allTypes = AllTypes().Where(x => typeNames.Contains(x.FullName)).ToList();
+            return allTypes;
+        }
         public static Type OfType<T>(Assembly assembly, bool excludeAbstract = true)
         {
             //exclude if it's a system assembly
@@ -94,7 +127,7 @@ namespace EvenCart.Core.Infrastructure.Utils
 
         public static IList<Type> ClassesOfType<T>(bool excludeAbstract = true)
         {
-            _allAssemblies = AssemblyLoader.GetAppDomainAssemblies();
+            _allAssemblies = _allAssemblies ?? AssemblyLoader.GetAppDomainAssemblies();
             return _finder.OfType<T>(excludeAbstract);
         }
 
@@ -121,6 +154,11 @@ namespace EvenCart.Core.Infrastructure.Utils
                 }
             }
             return loadedTypes;
+        }
+
+        public static IList<Type> GetByNames(IList<string> typeNames)
+        {
+            return _finder.GetByNamesImpl(typeNames);
         }
     }
 }

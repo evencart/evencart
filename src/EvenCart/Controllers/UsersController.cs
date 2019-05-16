@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows authenticated user to manage their personal info
+    /// </summary>
     [Route("users")]
     [Authorize]
     public class UsersController : FoundationController
@@ -20,6 +23,11 @@ namespace EvenCart.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Saves authenticated user's information
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <response code="200">A success response object</response>
         [ValidateModelState(ModelType = typeof(UserModel))]
         [DualPost("", Name = RouteNames.SaveUser, OnlyApi = true)]
         public IActionResult SaveUser(UserModel userModel)

@@ -17,12 +17,16 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows authenticated users to view and post reviews
+    /// </summary>
     public class ReviewsController : FoundationController
     {
         private readonly IReviewService _reviewService;
@@ -42,7 +46,11 @@ namespace EvenCart.Controllers
             _productModelFactory = productModelFactory;
             _reviewModelFactory = reviewModelFactory;
         }
-
+        /// <summary>
+        /// Saves a product review
+        /// </summary>
+        /// <param name="reviewModel"></param>
+        /// <response code="200">A success response object</response>
         [ValidateModelState(ModelType = typeof(ReviewModel))]
         [DualPost("reviews", Name = RouteNames.SaveUserReview, OnlyApi = true)]
         [Authorize]
@@ -116,6 +124,11 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Deletes a product review
+        /// </summary>
+        /// <param name="reviewId">The id of the review</param>
+        /// <response code="200">A success response object</response>
         [ValidateModelState(ModelType = typeof(ReviewModel))]
         [DualPost("reviews/{reviewId}", Name = RouteNames.DeleteUserReview, OnlyApi = true)]
         [Authorize]
@@ -138,6 +151,8 @@ namespace EvenCart.Controllers
             }
             return R.Success.Result;
         }
+
+
         [HttpGet("reviews/{productId}/{reviewId}", Name = RouteNames.ReviewEditor)]
         [Authorize]
         public IActionResult ReviewEditor(int productId, int reviewId)
@@ -198,6 +213,12 @@ namespace EvenCart.Controllers
             return ReviewsListApi(reviewSearchModel);
         }
 
+        /// <summary>
+        /// Gets product reviews
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <param name="reviewSearchModel"></param>
+        /// <response code="200">A list of <see cref="ReviewModel">reviews</see> objects, a best and a worst <see cref="ReviewModel">review</see> object, a <see cref="ProductModel">product</see> object and a <see cref="AllReviewsSummaryModel">summary</see> object.</response>
         [DualGet("reviews/{productId}", Name = RouteNames.UserReviewsList, OnlyApi = true)]
         public IActionResult ReviewsListApi(ReviewSearchModel reviewSearchModel)
         {
@@ -271,6 +292,11 @@ namespace EvenCart.Controllers
                 .With("summary", reviewsSummaryModel).Result;
         }
 
+        /// <summary>
+        /// Gets the reviews by authenticated user
+        /// </summary>
+        /// <param name="reviewSearchModel"></param>
+        /// <response code="200">A list of <see cref="ReviewModel">reviews</see> objects and a <see cref="AllReviewsSummaryModel">summary</see> object.</response>
         [DualGet("~/account/reviews", Name = RouteNames.AccountReviews)]
         [Authorize]
         public IActionResult AccountReviews(ReviewSearchModel reviewSearchModel)
@@ -318,6 +344,10 @@ namespace EvenCart.Controllers
                 .With("summary", reviewsSummaryModel).Result;
         }
 
+        /// <summary>
+        /// Gets pending reviews for authenticated user
+        /// </summary>
+        /// <response code="200">A list of <see cref="PendingReviewModel">pendingReviews</see> objects.</response>
         [DualGet("reviews/user/pending", Name = RouteNames.UserPendingReviewsList, OnlyApi = true)]
         [Authorize]
         public IActionResult UserPendingReviewsListApi()

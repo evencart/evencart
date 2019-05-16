@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows to manage GDPR settings for the authenticated user
+    /// </summary>
     [Authorize]
     [Route("gdpr")]
     public class GdprController : FoundationController
@@ -30,6 +33,10 @@ namespace EvenCart.Controllers
             _gdprModelFactory = gdprModelFactory;
         }
 
+        /// <summary>
+        /// Gets the current GDPR consents for authenticated user
+        /// </summary>
+        /// <response code="200">A list of <see cref="ConsentGroupModel">consentGroups</see> objects</response>
         [DualGet("~/account/privacy", Name = RouteNames.AccountGdpr)]
         public IActionResult Consents()
         {
@@ -52,6 +59,11 @@ namespace EvenCart.Controllers
             return R.Success.With("consentGroups", consentGroups).Result;
         }
 
+        /// <summary>
+        /// Saves the GDPR consents for authenticated users
+        /// </summary>
+        /// <param name="consents">List of <see cref="ConsentModel">consent</see> objects that need to be saved</param>
+        /// <response code="200">A success response object.</response>
         [DualPost("save-consents", Name = RouteNames.SaveGdprPreferences, OnlyApi = true)]
         [RejectForImitator]
         [AllowAnonymous]

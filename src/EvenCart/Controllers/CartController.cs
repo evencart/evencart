@@ -13,11 +13,15 @@ using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
+using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Models.Purchases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows authenticated user to manage cart
+    /// </summary>
     [Route("Cart")]
     public class CartController : FoundationController
     {
@@ -43,7 +47,11 @@ namespace EvenCart.Controllers
         {
             return R.Success.Result;
         }
-
+        /// <summary>
+        /// Adds a product to the cart of authenticated user
+        /// </summary>
+        /// <param name="cartItemModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("add", Name = RouteNames.AddToCart, OnlyApi = true)]
         public IActionResult AddToCart(CartItemModel cartItemModel)
         {
@@ -189,6 +197,11 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Updates a cart item for authenticated user
+        /// </summary>
+        /// <param name="cartModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("update", Name = RouteNames.UpdateCart, OnlyApi = true)]
         public IActionResult UpdateCart(UpdateCartModel cartModel)
         {
@@ -263,7 +276,10 @@ namespace EvenCart.Controllers
 
             return R.Fail.Result;
         }
-
+        /// <summary>
+        /// Gets the wishlist of the authenticated user
+        /// </summary>
+        /// <response code="200">The <see cref="CartImplementation">wishlist</see> object</response>
         [DualGet("~/account/wishlist", Name = RouteNames.AccountWishlist)]
         public IActionResult WishList()
         {

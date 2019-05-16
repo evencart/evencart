@@ -4,19 +4,52 @@
         <name>EvenCart</name>
     </assembly>
     <members>
+        <member name="T:EvenCart.Areas.Administration.Controllers.AvailableAttributesController">
+            <summary>
+            Available attributes are the attributes which are available for creation of product attributes. An available attribute can have multiple pre-defined values.
+            </summary>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeSuggestions(System.String)">
             <summary>
             Get attribute suggestions based on the query parameter
             </summary>
             <param name="q">The search string for query</param>
-            <returns>An array of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel"/> items</returns>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel">suggestion</see> objects</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeValueSuggestions(System.Int32)">
+            <summary>
+            Gets suggestions for values corresponding to an attribute
+            </summary>
+            <param name="attributeId">The id of the attribute</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel">suggestion</see> objects</response>
         </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributesList(EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel)">
             <summary>
-            Get the available attributes
+            Gets the available attributes
             </summary>
-            <param name="searchModel">The search parameters to filter results. <see cref="T:EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel"></see></param>
-            <returns></returns>
+            <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel">search parameters</see> to filter results.</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel">attributes</see> objects</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeEditor(System.Int32)">
+            <summary>
+            Gets a single attribute
+            </summary>
+            <param name="availableAttributeId">The id of available attribute</param>
+            <response code="200">The <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel">attribute</see> object with specified availableAttributeId</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.SaveAvailableAttribute(EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel)">
+            <summary>
+            Saves the available attribute to the database
+            </summary>
+            <param name="attributeModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.DeleteAvailableAttribute(System.Int32)">
+            <summary>
+            Deletes an available attribute
+            </summary>
+            <param name="attributeId">The id of the attribute to be deleted</param>
+            <response code="200">A success response object</response>
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Settings.UserSettingsModel.UserRegistrationDefaultMode">
             <summary>
@@ -28,15 +61,1001 @@
             Specifies if user names are enabled for site
             </summary>
         </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel.Id">
+            <summary>
+            The id of the result item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel.Text">
+            <summary>
+            The display text for the result item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel.Name">
+            <summary>
+            The name of the attribute
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel.Description">
+            <summary>
+            The description of the attribute
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel.AttributeValues">
+            <summary>
+            A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel">attributeValues</see> objects
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel.Value">
+            <summary>
+            A single value for the attribute
+            </summary>
+        </member>
+        <member name="T:EvenCart.Controllers.AddressesController">
+            <summary>
+            Allows users to manage addresses
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.AddressesController.SaveAddress(EvenCart.Models.Addresses.AddressInfoModel)">
+            <summary>
+            Saves an address to the database
+            </summary>
+            <param name="addressModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AddressesController.DeleteAddress(System.Int32)">
+            <summary>
+            Deletes an address
+            </summary>
+            <param name="addressId">The identifier of the address to be deleted</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AddressesController.Addresses">
+            <summary>
+            Gets the addresses of authenticated user
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">addresses</see></response>
+        </member>
         <member name="M:EvenCart.Controllers.AddressesController.AddressEditor(System.Int32)">
             <summary>
-            Gets a single address from the server
+            Gets a single address for authenticated user
             </summary>
             <param name="addressId">The id of the address to retrieve</param>
+            <response code="200">The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">address</see> object along with availableCountries and availableAddressTypes as <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.SelectListItem">items</see> lists.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.AuthenticationController">
+            <summary>
+            Provides authentication related services including registration, login, password recovery etc.
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.Login(EvenCart.Models.Authentication.LoginModel)">
+            <summary>
+            Authenticates a user
+            </summary>
+            <param name="loginModel"></param>
+            <response code="200">An authentication cookie if token was set to false. Returns a token string if token parameter was sent as true.</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.ForgotPassword(EvenCart.Models.Authentication.ForgotPasswordModel)">
+            <summary>
+            Sends a password recovery email to the user
+            </summary>
+            <param name="forgotPasswordModel"></param>
+            <response code="200">a success response object and sends password reset email to the user</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.ChangePassword(EvenCart.Models.Authentication.PasswordChangeModel)">
+            <summary>
+            Resets the password of the user
+            </summary>
+            <param name="changeModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.Register">
+            <summary>
+            Gets the consents(if any) required to complete the registration
+            </summary>
+            <response>A list of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see></response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.Logout">
+            <summary>
+            Logs the current user out. Valid only for cookie authentication
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.Register(EvenCart.Models.Authentication.RegisterModel)">
+            <summary>
+            Registers a new user on the site
+            </summary>
+            <param name="registerModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="T:EvenCart.Controllers.CartController">
+            <summary>
+            Allows authenticated user to manage cart
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.CartController.AddToCart(EvenCart.Models.Purchases.CartItemModel)">
+            <summary>
+            Adds a product to the cart of authenticated user
+            </summary>
+            <param name="cartItemModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CartController.UpdateCart(EvenCart.Models.Purchases.UpdateCartModel)">
+            <summary>
+            Updates a cart item for authenticated user
+            </summary>
+            <param name="cartModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CartController.WishList">
+            <summary>
+            Gets the wishlist of the authenticated user
+            </summary>
+            <response code="200">The <see cref="T:EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations.CartImplementation">wishlist</see> object</response>
+        </member>
+        <member name="T:EvenCart.Controllers.CheckoutController">
+            <summary>
+            Allows authenticated users to perform checkout activities
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.CheckoutController.AddressInfoSave(EvenCart.Models.Checkout.BillingShippingModel)">
+            <summary>
+            Saves the address information for the authenticated user's cart
+            </summary>
+            <param name="requestModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CheckoutController.PaymentInfoSave(EvenCart.Models.Checkout.PaymentMethodModel)">
+            <summary>
+            Saves the payment information for the authenticated user's cart
+            </summary>
+            <param name="requestModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CheckoutController.ConfirmSave">
+            <summary>
+            Completes the checkout process
+            </summary>
+            <response code="200">Depending on the payment method type, user may be returned with a url to complete the payment with redirection. Returns a unique orderGuid otherwise.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.ComponentController">
+            <summary>
+            Manages component operations for the website
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.ComponentController.Index(System.String)">
+            <summary>
+            Renders the component with provided component name
+            </summary>
+            <param name="componentName">The name of component to render</param>
+            <response code="200">The html for the rendered component</response>
+        </member>
+        <member name="T:EvenCart.Controllers.ContentPagesController">
+            <summary>
+            Allows users to get the content pages
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.ContentPagesController.IndexApi(System.Int32)">
+            <summary>
+            Gets the content page with provided identifier
+            </summary>
+            <param name="contentPageId">The id of the page to retrieve.</param>
+            <response code="200">The <see cref="T:EvenCart.Models.Pages.ContentPageModel">contentPage</see> object.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.CountriesController">
+            <summary>
+            Allows to retrieve list of available countries and states from store database
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.CountriesController.StatesList(System.Int32)">
+            <summary>
+            Gets the states for a country
+            </summary>
+            <param name="countryId">The id of country for which states to be retrieved</param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Countries.StateOrProvinceModel">states</see> of the country</response>
+        </member>
+        <member name="T:EvenCart.Controllers.DashboardController">
+            <summary>
+            Allows user to set global preferences
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.DashboardController.SetActiveCurrency(System.Int32)">
+            <summary>
+            Sets the active currency for user
+            </summary>
+            <param name="currencyId">The id of the currency</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="T:EvenCart.Controllers.GdprController">
+            <summary>
+            Allows to manage GDPR settings for the authenticated user
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.GdprController.Consents">
+            <summary>
+            Gets the current GDPR consents for authenticated user
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Gdpr.ConsentGroupModel">consentGroups</see> objects</response>
+        </member>
+        <member name="M:EvenCart.Controllers.GdprController.SaveConsents(System.Collections.Generic.IList{EvenCart.Models.Gdpr.ConsentModel})">
+            <summary>
+            Saves the GDPR consents for authenticated users
+            </summary>
+            <param name="consents">List of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consent</see> objects that need to be saved</param>
+            <response code="200">A success response object.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.OrdersController">
+            <summary>
+            Allows authenticated users to manage orders
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.Index(System.String)">
+            <summary>
+            Gets the order with provided order identifier
+            </summary>
+            <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <response code="200">The <see cref="T:EvenCart.Models.Orders.OrderModel">order</see> object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.Orders(EvenCart.Models.Orders.OrderSearchModel)">
+            <summary>
+            Gets orders for the authenticated user
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Orders.OrderModel">orders</see> objects.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.ProductsController">
+            <summary>
+            Allows user to get catalog data such as products
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.ProductsController.ProductSearch(EvenCart.Models.Products.ProductSearchModel)">
+            <summary>
+            Searches for specific products in the catalog
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Products.ProductModel">products</see> objects</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ProductsController.ProductsListApi(EvenCart.Models.Products.ProductSearchModel,System.String)">
+            <summary>
+            Gets products from catalog.
+            </summary>
+            <param name="searchModel"></param>
+            <param name="viewName"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Products.ProductModel">products</see> objects</response>
+        </member>
+        <member name="T:EvenCart.Controllers.ReviewsController">
+            <summary>
+            Allows authenticated users to view and post reviews
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.ReviewsController.SaveReview(EvenCart.Models.Reviews.ReviewModel)">
+            <summary>
+            Saves a product review
+            </summary>
+            <param name="reviewModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ReviewsController.DeleteReview(System.Int32)">
+            <summary>
+            Deletes a product review
+            </summary>
+            <param name="reviewId">The id of the review</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ReviewsController.ReviewsListApi(EvenCart.Models.Reviews.ReviewSearchModel)">
+            <summary>
+            Gets product reviews
+            </summary>
+            <param name="productId">The id of the product</param>
+            <param name="reviewSearchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Reviews.ReviewModel">reviews</see> objects, a best and a worst <see cref="T:EvenCart.Models.Reviews.ReviewModel">review</see> object, a <see cref="T:EvenCart.Models.Products.ProductModel">product</see> object and a <see cref="T:EvenCart.Models.Reviews.AllReviewsSummaryModel">summary</see> object.</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ReviewsController.AccountReviews(EvenCart.Models.Reviews.ReviewSearchModel)">
+            <summary>
+            Gets the reviews by authenticated user
+            </summary>
+            <param name="reviewSearchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Reviews.ReviewModel">reviews</see> objects and a <see cref="T:EvenCart.Models.Reviews.AllReviewsSummaryModel">summary</see> object.</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ReviewsController.UserPendingReviewsListApi">
+            <summary>
+            Gets pending reviews for authenticated user
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Reviews.PendingReviewModel">pendingReviews</see> objects.</response>
+        </member>
+        <member name="T:EvenCart.Controllers.UsersController">
+            <summary>
+            Allows authenticated user to manage their personal info
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.UsersController.SaveUser(EvenCart.Models.Users.UserModel)">
+            <summary>
+            Saves authenticated user's information
+            </summary>
+            <param name="userModel"></param>
+            <response code="200">A success response object</response>
         </member>
         <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Name">
             <summary>
             The name of the addressee
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Address1">
+            <summary>
+            House number, apartment/building name
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Address2">
+            <summary>
+            Street name, locality
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Landmark">
+            <summary>
+            A nearby landmark for easy location
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.StateProvinceId">
+            <summary>
+            The state or province id
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.StateProvinceName">
+            <summary>
+            The state or province name if state or province id is not known
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.City">
+            <summary>
+            The name of city
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.ZipPostalCode">
+            <summary>
+            The postal code 
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.CountryId">
+            <summary>
+            The country id. See <a href="#countries">Country</a> endpoints to get country info.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.CountryName">
+            <summary>
+            The name of the country
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Phone">
+            <summary>
+            The phone number of the addressee
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Website">
+            <summary>
+            The website address of the addressee
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Email">
+            <summary>
+            The emai laddress of the addressee
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Addresses.AddressInfoModel.AddressType">
+            <summary>
+            The address type
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.ForgotPasswordModel.Email">
+            <summary>
+            The email whose password needs to be recovered.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.LoginModel.Email">
+            <summary>
+            The email of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.LoginModel.Password">
+            <summary>
+            The password of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.LoginModel.RememberMe">
+            <summary>
+            If a long live cookie should be created. The parameter is ignored if token is set to true
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.LoginModel.ReturnUrl">
+            <summary>
+            The url where the user be redirected after login. The parameter is sent with response.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.LoginModel.Token">
+            <summary>
+            If true sends an authentication token in the response. If false, sends an authentication cookie.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.PasswordChangeModel.CurrentPassword">
+            <summary>
+            The current password of the user. Ignore if a valid code parameter is being passed
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.PasswordChangeModel.Code">
+            <summary>
+            The code for changing the password. Ignore if currentPassword parameter is being passed
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.PasswordChangeModel.Password">
+            <summary>
+            The new password for the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.PasswordChangeModel.ConfirmPassword">
+            <summary>
+            The confirm password for the user. Should be same as password field
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.Email">
+            <summary>
+            The email of new user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.Password">
+            <summary>
+            The password that'll be used for login. It is case sensitive.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.ConfirmPassword">
+            <summary>
+            The password that'll be used for login. This should be same as <see cref="P:EvenCart.Models.Authentication.RegisterModel.Password"></see> and is case sensitive.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.Consents">
+            <summary>
+            The <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see> that the user has agreed or denied to. 
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.BillingShippingModel.UseDifferentShippingAddress">
+            <summary>
+            Set to true to use a different shipping address than the billing address
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.BillingShippingModel.BillingAddress">
+            <summary>
+            The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">billingAddress</see> of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.BillingShippingModel.ShippingAddress">
+            <summary>
+            The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">shippingAddress</see> of the user. Ignore if useDifferentShippingAddress is set to false.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.BillingShippingModel.ShippingMethod">
+            <summary>
+            The <see cref="T:EvenCart.Models.Checkout.ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.SystemName">
+            <summary>
+            The payment method system name
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.FriendlyName">
+            <summary>
+            The friendly name for payment method. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.Description">
+            <summary>
+            The description of payment method. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.Fee">
+            <summary>
+            The additional fee for payment method. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.Url">
+            <summary>
+            The url to redirect for payment method processing. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.FormCollection">
+            <summary>
+            The payment information in key-value format. 
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.OrderGuid">
+            <summary>
+            The order guid for which this payment method is being used. This is used only for retrying a previously failed order.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.CountryId">
+            <summary>
+            The country id of the state
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.Name">
+            <summary>
+            The name of the state
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.Published">
+            <summary>
+            The publish status of state
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.ShippingEnabled">
+            <summary>
+            If shipping is available for the state or not
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.DisplayOrder">
+            <summary>
+            The display order of the state in the list
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentGroupModel.Name">
+            <summary>
+            The name of consent group
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentGroupModel.Description">
+            <summary>
+            The description of the group
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentGroupModel.Consents">
+            <summary>
+            List of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see> that belong to this group
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentModel.Title">
+            <summary>
+            The title of the consent. It can include html tags. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentModel.Description">
+            <summary>
+            The description of the consent. It can include html tags. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentModel.IsRequired">
+            <summary>
+            Specifies if the consent is required. Default is false. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentModel.OneTimeSelection">
+            <summary>
+            If true, the consent is required to be provided during user registration. Default is false. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.ProductId">
+            <summary>
+            The id of product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.ImageUrl">
+            <summary>
+            The url of product image
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.ProductName">
+            <summary>
+            The name of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.SeName">
+            <summary>
+            The seo slug of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.AttributeText">
+            <summary>
+            The attributes representing the product variant
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.Price">
+            <summary>
+            The price of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.TotalPrice">
+            <summary>
+            The total price of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.Quantity">
+            <summary>
+            The quantity of the product ordered
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.Tax">
+            <summary>
+            The tax amount specific to this product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.TaxPercent">
+            <summary>
+            The tax percent specific to this product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.ShipmentStatus">
+            <summary>
+            The shipment status of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.OrderNumber">
+            <summary>
+            The displayable order number
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Guid">
+            <summary>
+            The unique identifier for the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.UserId">
+            <summary>
+            The id of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.CreatedOn">
+            <summary>
+            Date when order was created
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaidOn">
+            <summary>
+            Date when order was paid
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.ShippingMethodName">
+            <summary>
+            The shipping method name used while placing the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaymentMethodName">
+            <summary>
+            The payment method name used while placing the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Discount">
+            <summary>
+            The discount amount for the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.DiscountCoupon">
+            <summary>
+            The discount coupon that was used in the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.DiscountId">
+            <summary>
+            The id of the discount coupon used in the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Subtotal">
+            <summary>
+            The subtotal of the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.ShippingMethodFee">
+            <summary>
+            Any additional fee for shipping method
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaymentMethodFee">
+            <summary>
+            Any additional fee for payment method
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Tax">
+            <summary>
+            The tax amount for the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.OrderTotal">
+            <summary>
+            The order total amount
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.UserGstNumber">
+            <summary>
+            The GST number provided by user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.UserIpAddress">
+            <summary>
+            The IP address used for placing the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.CurrencyCode">
+            <summary>
+            The ISO currency code for the currency used
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.OrderStatus">
+            <summary>
+            The order status
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaymentStatus">
+            <summary>
+            The payment status
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.OrderItems">
+            <summary>
+            List of <see cref="T:EvenCart.Models.Orders.OrderItemModel">orderItems</see> for this order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.User">
+            <summary>
+            The <see cref="T:EvenCart.Models.Users.UserModel">user</see> information
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.BillingAddress">
+            <summary>
+            The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">billingAddress</see> used while placing the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.ShippingAddress">
+            The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">shippingAddress</see> used while placing the order
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderSearchModel.FromDate">
+            <summary>
+            The start date to search the orders from. Defaults to 6 months old
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderSearchModel.ToDate">
+            <summary>
+            The end date to search the orders to. Defaults to today.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderSearchModel.OrderStatus">
+            <summary>
+            The status of order. Can be one of all, open, closed, returned or cancelled
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderSearchModel.Current">
+            <summary>
+            The page being requested in a paginated request. Default is 1.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderSearchModel.RowCount">
+            <summary>
+            The total number of result rows to be returned
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.FromPrice">
+            <summary>
+            The lowest price for price range search
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.ToPrice">
+            <summary>
+            The highest price for price range search
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.ManufacturerIds">
+            <summary>
+            A list of manufacturer ids to restrict the search to
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.VendorIds">
+            <summary>
+            A list of vendor ids to restrict the search to
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.CategoryId">
+            <summary>
+            The category id if the search is restricted to a category
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.SortColumn">
+            <summary>
+            The order of sorting the result. Can be one of name, createdon, price or popularity
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.SortOrder">
+            <summary>
+            The sort order of result
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.Filters">
+            <summary>
+            The filter string to filter products. The format should be encoded string of attribute-name1:value1,value2 attribute-name2:value3
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.ProductId">
+            <summary>
+            The id of product to be added
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.AttributeJson">
+            <summary>
+            The list of product attributes as json.  Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.ComparePrice">
+            <summary>
+            The price that'll be used for comparison. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.Price">
+            <summary>
+            The price of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.Quantity">
+            <summary>
+            The quantity that needs to be added to the cart.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.Tax">
+            <summary>
+            The calculated tax for the product. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.TaxPercent">
+            <summary>
+            The tax percent for product.  Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.Discount">
+            <summary>
+            The discount for the product.  Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.FinalPrice">
+            <summary>
+            The final price of the product.  Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.IsWishlist">
+            <summary>
+            Set to true if product should be added to wishlist instead of cart.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.CartItemModel.Attributes">
+            <summary>
+            A collection of <see cref="T:EvenCart.Models.Products.ProductAttributeModel">attributes</see> that identify a product variant
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.DiscountCoupon">
+            <summary>
+            The discount coupon to be applied to the cart
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.GiftCode">
+            <summary>
+            The gift card to be applied to the cart
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.CartItemId">
+            <summary>
+            If a cart item is being updated, the id of cart item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.Quantity">
+            <summary>
+            The updated quantity of the cart item to be updated
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.RemoveCoupon">
+            <summary>
+            Set to true if an already applied coupon needs to be removed from the cart
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Purchases.UpdateCartModel.IsWishlist">
+            <summary>
+            Set to true if updates are being done on wishlist. Set to false if updates are being done on cart
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.Rating">
+            <summary>
+            The rating value between 1 and 5
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.Title">
+            <summary>
+            The title of the review
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.Description">
+            <summary>
+            The description of the review
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.VerifiedPurchase">
+            <summary>
+            Specifies if the review was posted by the user who bought from the store. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.CreatedOn">
+            <summary>
+            The creation date of review. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.Private">
+            <summary>
+            Specifies if user information should be kept private or public
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.DisplayName">
+            <summary>
+            The display name of user for review. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.ProductId">
+            <summary>
+            The id of product for which review is being posted
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.OrderId">
+            <summary>
+            The id of order for which review is being posted
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewSearchModel.ProductId">
+            <summary>
+            The id of the product
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewSearchModel.VerifiedPurchase">
+            <summary>
+            true if only reviews with verified purchase should be returned. false otherwise.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewSearchModel.Rating">
+            <summary>
+            Set to a value to search reviews of that rating value
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.FirstName">
+            <summary>
+            The first name of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.LastName">
+            <summary>
+            The last name of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.Name">
+            <summary>
+            The full name of the user. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.Email">
+            <summary>
+            The email of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.CompanyName">
+            <summary>
+            The company name of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.MobileNumber">
+            <summary>
+            The mobile number of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.DateOfBirth">
+            <summary>
+            The date of birth of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.Referrer">
+            <summary>
+            The referrer of the user. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.NewslettersEnabled">
+            <summary>
+            true if user has subscribed to newsletters. false otherwise.
             </summary>
         </member>
     </members>

@@ -7,12 +7,24 @@ namespace EvenCart.Models.Checkout
 {
     public class BillingShippingModel : FoundationModel, IRequiresValidations<BillingShippingModel>
     {
+        /// <summary>
+        /// Set to true to use a different shipping address than the billing address
+        /// </summary>
         public bool UseDifferentShippingAddress { get; set; }
 
+        /// <summary>
+        /// The <see cref="AddressInfoModel">billingAddress</see> of the user
+        /// </summary>
         public AddressInfoModel BillingAddress { get; set; }
 
+        /// <summary>
+        /// The <see cref="AddressInfoModel">shippingAddress</see> of the user. Ignore if useDifferentShippingAddress is set to false.
+        /// </summary>
         public AddressInfoModel ShippingAddress { get; set; }
 
+        /// <summary>
+        /// The <see cref="ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.
+        /// </summary>
         public ShippingMethodModel ShippingMethod { get; set; }
 
         public void SetupValidationRules(ModelValidator<BillingShippingModel> v)

@@ -17,10 +17,14 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Authentication;
+using EvenCart.Models.Gdpr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Provides authentication related services including registration, login, password recovery etc.
+    /// </summary>
     public class AuthenticationController : FoundationController
     {
         private readonly IAppAuthenticationService _appAuthenticationService;
@@ -61,6 +65,11 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Authenticates a user
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <response code="200">An authentication cookie if token was set to false. Returns a token string if token parameter was sent as true.</response>
         [DualPost("login", Name = RouteNames.Login, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(LoginModel))]
         public IActionResult Login(LoginModel loginModel)
@@ -104,6 +113,11 @@ namespace EvenCart.Controllers
             return response.Result;
         }
 
+        /// <summary>
+        /// Sends a password recovery email to the user
+        /// </summary>
+        /// <param name="forgotPasswordModel"></param>
+        /// <response code="200">a success response object and sends password reset email to the user</response>
         [DualPost("password-reset", Name = RouteNames.ForgotPassword, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(ForgotPasswordModel))]
         public IActionResult ForgotPassword(ForgotPasswordModel forgotPasswordModel)
@@ -120,6 +134,11 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Resets the password of the user
+        /// </summary>
+        /// <param name="changeModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("password-change", Name = RouteNames.ChangePassword, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(PasswordChangeModel))]
         public IActionResult ChangePassword(PasswordChangeModel changeModel)
@@ -162,7 +181,10 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
-
+        /// <summary>
+        /// Gets the consents(if any) required to complete the registration
+        /// </summary>
+        /// <response>A list of <see cref="ConsentModel">consents</see></response>
         [DualGet("register", Name = RouteNames.Register)]
         public IActionResult Register()
         {
@@ -171,14 +193,17 @@ namespace EvenCart.Controllers
                 return RedirectToRoute(RouteNames.Home);
             //are registrations enabled?
             if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.Disabled)
-                return R.Success.With("registrationDisabled", true).Result;
+                return R.Fail.With("registrationDisabled", true).Result;
 
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
             var models = consents.Select(_gdprModelFactory.Create).ToList();
             return R.Success.With("consents", models).WithAvailableCountries().Result;
         }
-
+        /// <summary>
+        /// Logs the current user out. Valid only for cookie authentication
+        /// </summary>
+        /// <returns></returns>
         [DualGet("logout", Name = RouteNames.Logout)]
         public IActionResult Logout()
         {
@@ -196,7 +221,11 @@ namespace EvenCart.Controllers
             return Redirect(Url.RouteUrl(RouteNames.Home));
         }
 
-
+        /// <summary>
+        /// Registers a new user on the site
+        /// </summary>
+        /// <param name="registerModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("register", Name = RouteNames.Register, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(RegisterModel))]
         public IActionResult Register(RegisterModel registerModel)

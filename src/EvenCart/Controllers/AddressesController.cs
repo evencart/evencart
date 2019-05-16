@@ -9,9 +9,13 @@ using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Addresses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows users to manage addresses
+    /// </summary>
     [Route("addresses")]
     [Authorize]
     public class AddressesController : FoundationController
@@ -23,7 +27,11 @@ namespace EvenCart.Controllers
             _addressService = addressService;
             _modelMapper = modelMapper;
         }
-
+        /// <summary>
+        /// Saves an address to the database
+        /// </summary>
+        /// <param name="addressModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("", Name = RouteNames.SaveAddress, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(AddressInfoModel))]
         public IActionResult SaveAddress(AddressInfoModel addressModel)
@@ -41,7 +49,11 @@ namespace EvenCart.Controllers
             _addressService.InsertOrUpdate(address);
             return R.Success.Result;
         }
-
+        /// <summary>
+        /// Deletes an address
+        /// </summary>
+        /// <param name="addressId">The identifier of the address to be deleted</param>
+        /// <response code="200">A success response object</response>
         [DualPost("{addressId}", Name = RouteNames.DeleteAddress, OnlyApi = true)]
         public IActionResult DeleteAddress(int addressId)
         {
@@ -54,7 +66,10 @@ namespace EvenCart.Controllers
             _addressService.Delete(address);
             return R.Success.Result;
         }
-
+        /// <summary>
+        /// Gets the addresses of authenticated user
+        /// </summary>
+        /// <response code="200">A list of <see cref="AddressInfoModel">addresses</see></response>
         [DualGet("~/account/addresses", Name = RouteNames.AccountAddresses)]
         public IActionResult Addresses()
         {
@@ -71,10 +86,11 @@ namespace EvenCart.Controllers
         }
 
         /// <summary>
-        /// Gets a single address from the server
+        /// Gets a single address for authenticated user
         /// </summary>
         /// <param name="addressId">The id of the address to retrieve</param>
-        [DualGet("addresses/{addressId}", Name = RouteNames.SingleAddress)]
+        /// <response code="200">The <see cref="AddressInfoModel">address</see> object along with availableCountries and availableAddressTypes as <see cref="SelectListItem">items</see> lists.</response>
+        [DualGet("{addressId}", Name = RouteNames.SingleAddress)]
         public IActionResult AddressEditor(int addressId)
         {
             var currentUser = ApplicationEngine.CurrentUser;

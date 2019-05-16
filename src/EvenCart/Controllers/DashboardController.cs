@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows user to set global preferences
+    /// </summary>
     [Route("")]
     public class DashboardController : FoundationController
     {
@@ -29,6 +32,11 @@ namespace EvenCart.Controllers
         {
             return R.Success.WithRawView(viewPath).Result;
         }
+        /// <summary>
+        /// Sets the active currency for user
+        /// </summary>
+        /// <param name="currencyId">The id of the currency</param>
+        /// <response code="200">A success response object</response>
         [DualPost("set-active-currency", Name = RouteNames.SetActiveCurrency, OnlyApi = true)]
         public IActionResult SetActiveCurrency(int currencyId)
         {

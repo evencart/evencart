@@ -5,6 +5,10 @@
     <Configurations>Debug;Release;DebugWithSwagger</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\SourceRepositories\RoastedMarketplace\src\Documentation\1.0\XmlComments.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
   </ItemGroup>

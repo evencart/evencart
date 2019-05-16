@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using EvenCart.Core.Infrastructure.Utils;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EvenCart.Swagger
 {
-    public class SwaggerCommonFilter : IParameterFilter,IDocumentFilter
+    public class SwaggerCommonFilter : IParameterFilter,IDocumentFilter, IOperationFilter, ISchemaFilter
     {
         private bool IsDotLiquidType(Type type)
         {
@@ -19,7 +20,7 @@ namespace EvenCart.Swagger
             if (context.PropertyInfo == null)
                 return;
             //we'll exclude dotliquid types and virtual properties from parameters
-            if (IsDotLiquidType(context.PropertyInfo.DeclaringType) || context.PropertyInfo.GetGetMethod().IsVirtual)
+            if (IsDotLiquidType(context.PropertyInfo.DeclaringType) || context.PropertyInfo.GetGetMethod().IsVirtual || !context.PropertyInfo.CanWrite)
             {
                 parameter.Name = ExcludeKey + parameter.Name;
                 return;
@@ -58,6 +59,27 @@ namespace EvenCart.Swagger
                     pathItem.Delete.Parameters =
                         pathItem.Delete.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
             }
+            
+        }
+
+        public void Apply(Operation operation, OperationFilterContext context)
+        {
+            foreach (var response in operation.Responses)
+            {
+                var description = response.Value.Description;
+                var crefTypes = SwaggerHelper.GetCrefTypes(description);
+                if (!crefTypes.Any())
+                    continue;
+                var types = TypeFinder.GetByNames(crefTypes);
+                foreach (var type in types)
+                    context.SchemaRegistry.GetOrRegister(type);
+            }
+           
+            operation.Produces.Add("application/json");
+        }
+
+        public void Apply(Schema schema, SchemaFilterContext context)
+        {
             
         }
     }

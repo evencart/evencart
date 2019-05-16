@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EvenCart.Data</name>
+    </assembly>
+    <members>
+        <member name="T:EvenCart.Data.Attributes.NonTokenFieldAttribute">
+            <summary>
+            Specifies a field that can be used for token replacements processing
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Database.DatabaseManager.CreateSqlServerConnectionString(EvenCart.Data.Database.ConnectionStringRequest)">
+            <summary>
+            Creates connection string from the provider values
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Addresses.Address">
+            <summary>
+            Addresses associated with various entities such as User, Page etc.
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Emails.EmailMessage">
+            <summary>
+            Specifies fields used for sending emails
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Emails.EmailMessage.UserInfo">
+            <summary>
+            Specifies a user in email communication
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Gdpr.ConsentStatus">
+            <summary>
+            Represents status of a GDPR consent
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Gdpr.ConsentStatus.Accepted">
+            <summary>
+            Specifies that consent has been accepted
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Gdpr.ConsentStatus.Denied">
+            <summary>
+            Specifies that consent has been denied
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Gdpr.ConsentStatus.NotSelected">
+            <summary>
+            Specifies that consent is not yet acted upon
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Payments.TransactionRequest">
+            <summary>
+            A single request class to implement all types of transaction requests
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.StoreDomain">
+            <summary>
+            The domain where public website has been installed
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.DefaultTimeZoneId">
+            <summary>
+            Default timezone to be used for network
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.LogoId">
+            <summary>
+            The logo id of the website
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.DefaultPasswordStorageFormat">
+            <summary>
+            Default password format
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.IsInstalled">
+            <summary>
+            Is the application installed?
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.MinimumLogLevel">
+            <summary>
+            Specifies minimum log level that should be used for logging
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.UserSettings.UserRegistrationDefaultMode">
+            <summary>
+            Default registration mode for users
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.UserSettings.AreUserNamesEnabled">
+            <summary>
+            Specifies if user names are enabled for site
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Enum.CreditTransactionType.Issued">
+            <summary>
+            Credits are issued to user
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Enum.CreditTransactionType.IssuedRevert">
+            <summary>
+            Some issued credits have been taken back
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Enum.CreditTransactionType.Spent">
+            <summary>
+            Credits are spent by user
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Enum.CreditTransactionType.Refund">
+            <summary>
+            Credits are refunded to user's account
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.LinqExtensions.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Returns last n elements from a sequence
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.LinqExtensions.TakeLast``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Returns last n elements from a sequence
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.LinqExtensions.TakeFromPage``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Returns specified number of elements after skipping previous pages
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.LinqExtensions.TakeFromLastPage``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Returns elements from the last page considering specified count per page
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.LinqExtensions.SelectManyRecursive``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Selects many elements recursively
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Extensions.StringExtensions.CleanUpSpaces(System.String)">
+            <summary>
+            Replaces multiple space occurances with single space in a string
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Data.Helpers.HtmlUtility.StripHtml(System.String)">
+            <summary>
+            Strips all html from the provided html content
+            </summary>
+            <param name="htmlContent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Data.Helpers.HtmlUtility.RemoveUnwantedTags(System.String,System.String[])">
+            <summary>
+            Safely removes tags other than acceptable tags from the provided html content
+            </summary>
+            <param name="htmlContent"></param>
+            <param name="acceptableTags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Data.Helpers.StringUtility.Arity(System.Int32,System.String,System.String)">
+            <summary>
+            Returns appropriate string based on arity of the value passed
+            </summary>
+        </member>
+        <member name="M:EvenCart.Data.Helpers.StringUtility.FormattedJoin(System.Collections.Generic.ICollection{System.String},System.String,System.String)">
+            <summary>
+            Joins a string collection and returns a formatted string with separator character and words
+            </summary>
+        </member>
+    </members>
+</doc>

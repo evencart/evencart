@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows to retrieve list of available countries and states from store database
+    /// </summary>
     [Route("countries")]
     public class CountriesController : FoundationController
     {
@@ -21,7 +24,11 @@ namespace EvenCart.Controllers
             _stateOrProvinceService = stateOrProvinceService;
             _modelMapper = modelMapper;
         }
-
+        /// <summary>
+        /// Gets the states for a country
+        /// </summary>
+        /// <param name="countryId">The id of country for which states to be retrieved</param>
+        /// <response code="200">A list of <see cref="StateOrProvinceModel">states</see> of the country</response>
         [DualGet("{countryId}/states", Name = RouteNames.CountryStates, OnlyApi = true)]
         public IActionResult StatesList(int countryId)
         {

@@ -12,30 +12,69 @@ namespace EvenCart.Models.Addresses
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// House number, apartment/building name
+        /// </summary>
         public string Address1 { get; set; }
 
+        /// <summary>
+        /// Street name, locality
+        /// </summary>
         public string Address2 { get; set; }
 
+        /// <summary>
+        /// A nearby landmark for easy location
+        /// </summary>
         public string Landmark { get; set; }
 
+        /// <summary>
+        /// The state or province id
+        /// </summary>
         public int? StateProvinceId { get; set; }
 
+        /// <summary>
+        /// The state or province name if state or province id is not known
+        /// </summary>
         public string StateProvinceName { get; set; }
 
+        /// <summary>
+        /// The name of city
+        /// </summary>
         public string City { get; set; }
 
+        /// <summary>
+        /// The postal code 
+        /// </summary>
         public string ZipPostalCode { get; set; }
 
+        /// <summary>
+        /// The country id. See <a href="#countries">Country</a> endpoints to get country info.
+        /// </summary>
         public int CountryId { get; set; }
 
+        /// <summary>
+        /// The name of the country
+        /// </summary>
         public string CountryName { get; set; }
 
+        /// <summary>
+        /// The phone number of the addressee
+        /// </summary>
         public string Phone { get; set; }
 
+        /// <summary>
+        /// The website address of the addressee
+        /// </summary>
         public string Website { get; set; }
 
+        /// <summary>
+        /// The emai laddress of the addressee
+        /// </summary>
         public string Email { get; set; }
 
+        /// <summary>
+        /// The address type
+        /// </summary>
         public AddressType AddressType { get; set; } = AddressType.Home;
 
         public void SetupValidationRules(ModelValidator<AddressInfoModel> v)

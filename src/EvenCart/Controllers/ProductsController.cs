@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows user to get catalog data such as products
+    /// </summary>
     public class ProductsController : FoundationController
     {
         private readonly IProductService _productService;
@@ -159,6 +162,11 @@ namespace EvenCart.Controllers
         {
             return ProductsListApi(searchModel);
         }
+        /// <summary>
+        /// Searches for specific products in the catalog
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <response code="200">A list of <see cref="ProductModel">products</see> objects</response>
         [DualGet("~/s", Name = RouteNames.ProductsSearchPage)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult ProductSearch(ProductSearchModel searchModel)
@@ -167,7 +175,12 @@ namespace EvenCart.Controllers
                 return RedirectToRoute(RouteNames.Home);
             return ProductsListApi(searchModel);
         }
-
+        /// <summary>
+        /// Gets products from catalog.
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <param name="viewName"></param>
+        /// <response code="200">A list of <see cref="ProductModel">products</see> objects</response>
         [DualGet("", Name = RouteNames.ProductsPage, OnlyApi = true)]
         public IActionResult ProductsListApi(ProductSearchModel searchModel, string viewName = null)
         {

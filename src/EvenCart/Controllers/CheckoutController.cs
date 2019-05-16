@@ -30,6 +30,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows authenticated users to perform checkout activities
+    /// </summary>
     [Route("checkout")]
     public class CheckoutController : FoundationController
     {
@@ -102,6 +105,11 @@ namespace EvenCart.Controllers
                 .Result;
         }
 
+        /// <summary>
+        /// Saves the address information for the authenticated user's cart
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("billing-shipping", Name = RouteNames.CheckoutAddress, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(BillingShippingModel))]
         public IActionResult AddressInfoSave(BillingShippingModel requestModel)
@@ -238,6 +246,11 @@ namespace EvenCart.Controllers
                 .With("orderGuid", orderGuid).Result;
         }
 
+        /// <summary>
+        /// Saves the payment information for the authenticated user's cart
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("payment", Name = RouteNames.CheckoutPayment, OnlyApi = true)]
         [ValidateModelState(ModelType = typeof(PaymentMethodModel))]
         public IActionResult PaymentInfoSave(PaymentMethodModel requestModel)
@@ -313,6 +326,10 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Completes the checkout process
+        /// </summary>
+        /// <response code="200">Depending on the payment method type, user may be returned with a url to complete the payment with redirection. Returns a unique orderGuid otherwise.</response>
         [DualPost("confirm", Name = RouteNames.CheckoutConfirm, OnlyApi = true)]
         public IActionResult ConfirmSave()
         {

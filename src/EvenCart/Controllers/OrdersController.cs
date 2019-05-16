@@ -11,19 +11,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
+    /// <summary>
+    /// Allows authenticated users to manage orders
+    /// </summary>
     [Authorize]
     [Route("orders")]
-    public class OrderController : FoundationController
+    public class OrdersController : FoundationController
     {
         private readonly IOrderService _orderService;
         private readonly IOrderModelFactory _orderModelFactory;
 
-        public OrderController(IOrderService orderService, IOrderModelFactory orderModelFactory)
+        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory)
         {
             _orderService = orderService;
             _orderModelFactory = orderModelFactory;
         }
 
+        /// <summary>
+        /// Gets the order with provided order identifier
+        /// </summary>
+        /// <param name="orderGuid">The unique order identifier. It's a guid.</param>
+        /// <response code="200">The <see cref="OrderModel">order</see> object</response>
         [DualGet("{orderGuid}", Name = RouteNames.SingleOrder)]
         public IActionResult Index(string orderGuid)
         {
@@ -40,7 +48,11 @@ namespace EvenCart.Controllers
 
             return R.Success.With("order", model).Result;
         }
-
+        /// <summary>
+        /// Gets orders for the authenticated user
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <response code="200">A list of <see cref="OrderModel">orders</see> objects.</response>
         [DualGet("~/account/orders", Name = RouteNames.AccountOrders)]
         public IActionResult Orders(OrderSearchModel searchModel)
         {
