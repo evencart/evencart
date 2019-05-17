@@ -7,5 +7,7 @@
         public string BannedIps { get; set; }
 
         public string AdminRestrictedIps { get; set; }
+
+        public string SharedVerificationKey { get; set; }
     }
 }

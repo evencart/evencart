@@ -6,6 +6,7 @@ using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Navigation;
 using EvenCart.Services.Settings;
@@ -17,6 +18,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.Gdpr;
+using EvenCart.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -42,10 +44,12 @@ namespace EvenCart.Areas.Administration.Controllers
 
         private readonly ISettingService _settingService;
         private readonly IModelMapper _modelMapper;
-        public SettingsController(ISettingService settingService, IModelMapper modelMapper)
+        private readonly ICryptographyService _cryptographyService;
+        public SettingsController(ISettingService settingService, IModelMapper modelMapper, ICryptographyService cryptographyService)
         {
             _settingService = settingService;
             _modelMapper = modelMapper;
+            _cryptographyService = cryptographyService;
         }
 
         [DualGet("{settingType}", Name = AdminRouteNames.GetSettings)]
@@ -151,6 +155,22 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             SaveSetting(securitySettings);
             return R.Success.Result;
+        }
+
+        [DualPost("security/shared-key", Name = AdminRouteNames.SaveSharedSecuritySetting, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
+        public IActionResult SaveSharedSecurityKey(string sharedKey)
+        {
+            //we don't actually save the key, rather we save hash of the key
+            //generate a key if nothing was provided
+            if (sharedKey.IsNullEmptyOrWhiteSpace())
+                sharedKey = _cryptographyService.GetRandomPassword(50);
+
+            var cryptedKey = _cryptographyService.GetMd5Hash(sharedKey);
+            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
+            securitySettings.SharedVerificationKey = cryptedKey;
+            _settingService.Save(securitySettings);
+            return R.Success.With("key", sharedKey).Result;
         }
 
         #region Helpers

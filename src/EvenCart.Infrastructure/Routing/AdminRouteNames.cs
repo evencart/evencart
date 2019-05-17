@@ -124,6 +124,7 @@
         public const string UploadPlugin = "UploadPlugin";
         public const string GetSettings = "GetSettings";
         public const string SaveSettings = "SaveSettings";
+        public const string SaveSharedSecuritySetting = "SaveSharedSecuritySetting";
 
         public const string GetWidgetSettings = "GetWidgetSettings";
         public const string SaveWidgetSettings = "SaveWidgetSettings";

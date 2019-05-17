@@ -16,5 +16,37 @@
             {% control label text=@t"Admin Access Ip Addresses" for="adminRestrictedIps" %}
             {% control text name="adminRestrictedIps" value="{{settings.adminRestrictedIps}}"%}
         </div>
+        <div class="form-group">
+            {% control label text=@t"Shared Api Access key" for="apiAccessKey" %}
+            <div class="shared-api-key alert alert-info" style="display: none"></div>
+            <button type="button" class="generate-new-key btn btn-danger btn-sm">{{"Generate New Key" | t}}</button>
+        </div>
+        <script type="text/javascript">
+            ready(function () {
+                var generateKey = function() {
+                    post({
+                        url: "{% route api_SaveSharedSecuritySetting %}",
+                        done: function(response) {
+                            notify("success",
+                                "{{'Successfully generated the following key. Please save the key as it will not be displayed again' | t}}");
+                            jQuery(".shared-api-key").html(response.key).show();
+                        }
+                    });
+                }
+                jQuery(".generate-new-key").click(function () {
+                    //{% if settings.sharedVerificationKey %}
+                    var msg =
+                        '{{"Regenerating a new key will cause the existing key to be reset and your existing api clients will stop working. EvenCart does not store the keys. Therefore you will need to save the keys at some safe place. Continue with reset?" | t}}';
+                    confirm(msg,
+                        function() {
+                            generateKey();
+                        });
+                    //{% else %}
+                        generateKey();
+                    //{% endif %}
+
+                });
+                });
+        </script>
     </div>
 </div>
