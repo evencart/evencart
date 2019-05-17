@@ -203,7 +203,7 @@ namespace EvenCart.Controllers
         /// <summary>
         /// Logs the current user out. Valid only for cookie authentication
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">A success response object</response>
         [DualGet("logout", Name = RouteNames.Logout)]
         public IActionResult Logout()
         {

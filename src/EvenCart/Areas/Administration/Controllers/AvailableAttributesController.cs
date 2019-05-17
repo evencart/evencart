@@ -83,7 +83,7 @@ namespace EvenCart.Areas.Administration.Controllers
         /// Gets the available attributes
         /// </summary>
         /// <param name="searchModel">The <see cref="AttributeSearchModel">search parameters</see> to filter results.</param>
-        /// <response code="200">A list of <see cref="AvailableAttributeModel">attributes</see> objects</response>
+        /// <response code="200">A list of <see cref="AvailableAttributeModel">attribute</see> objects as 'attributes'</response>
         [DualGet("", Name = AdminRouteNames.AvailableAttributesList)]
         [CapabilityRequired(CapabilitySystemNames.ManageAvailableAttributes)]
         public IActionResult AttributesList(AttributeSearchModel searchModel)

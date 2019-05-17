@@ -28,7 +28,7 @@
             Gets the available attributes
             </summary>
             <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel">search parameters</see> to filter results.</param>
-            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel">attributes</see> objects</response>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel">attribute</see> objects as 'attributes'</response>
         </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeEditor(System.Int32)">
             <summary>
@@ -83,13 +83,24 @@
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel.AttributeValues">
             <summary>
-            A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel">attributeValues</see> objects
+            A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel">attributeValue</see> objects
             </summary>
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel.Value">
             <summary>
             A single value for the attribute
             </summary>
+        </member>
+        <member name="T:EvenCart.Controllers.AccountController">
+            <summary>
+            Allows authenticated user to manage personal information
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.AccountController.Profile">
+            <summary>
+            Gets the account information for authenticated user
+            </summary>
+            <response code="200">The <see cref="T:EvenCart.Models.Users.UserModel">user</see> object</response>
         </member>
         <member name="T:EvenCart.Controllers.AddressesController">
             <summary>
@@ -159,7 +170,7 @@
             <summary>
             Logs the current user out. Valid only for cookie authentication
             </summary>
-            <returns></returns>
+            <response code="200">A success response object</response>
         </member>
         <member name="M:EvenCart.Controllers.AuthenticationController.Register(EvenCart.Models.Authentication.RegisterModel)">
             <summary>
@@ -623,6 +634,11 @@
         <member name="P:EvenCart.Models.Gdpr.ConsentModel.IsRequired">
             <summary>
             Specifies if the consent is required. Default is false. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Gdpr.ConsentModel.ConsentStatus">
+            <summary>
+            The consent status of consent
             </summary>
         </member>
         <member name="P:EvenCart.Models.Gdpr.ConsentModel.OneTimeSelection">

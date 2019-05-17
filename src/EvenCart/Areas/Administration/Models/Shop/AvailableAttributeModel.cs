@@ -19,7 +19,7 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public string Description { get; set; }
 
         /// <summary>
-        /// A list of <see cref="AvailableAttributeValueModel">attributeValues</see> objects
+        /// A list of <see cref="AvailableAttributeValueModel">attributeValue</see> objects
         /// </summary>
         public IList<AvailableAttributeValueModel> AttributeValues { get; set; }
 
