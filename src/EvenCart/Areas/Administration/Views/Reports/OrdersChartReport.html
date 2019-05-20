@@ -1,0 +1,86 @@
+﻿<canvas id="canvas-orders-chart"></canvas>
+{{reportItems | scriptJson : "reportItems"}}
+<script type="text/javascript">
+    var xData = [];
+    var yDataOrders = [];
+    var yDataProducts = [];
+    var label = "";
+    //{% if groupBy == "Years" %}
+    label = "{{'Year' | t}}";;
+    //{% elsif groupBy == "Months" %}
+    label = "{{'Month' | t}}";
+    //{% elsif groupBy == "Days" %}
+    label = "{{'Day' | t}}";
+    //{% elsif groupBy == "Weeks" %}
+    label = "{{'Week' | t}}";
+    //{% endif %}
+    for (var i = 0; i < reportItems.length; i++) {
+        xData.push(reportItems[i].groupName);
+        yDataOrders.push(reportItems[i].totalOrders);
+        yDataProducts.push(reportItems[i].totalProducts);
+    }
+    var config = {
+        type: 'line',
+        data: {
+            labels: xData,
+            datasets: [{
+                label: '{{"Orders" | t}}',
+                backgroundColor: "#11a266",
+                borderColor: "#11a266",
+                data: yDataOrders,
+                fill: false,
+                display: false,
+                lineTension:0
+            }, {
+                    label: '{{"Products" | t}}',
+                    backgroundColor: "#555",
+                    borderColor: "#555",
+                    data: yDataProducts,
+                    fill: false,
+                    display: false,
+                    lineTension:0
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false
+            },
+            title: {
+                display: false
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: label
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: '{{"Number of orders" | t}}'
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        min: 0
+                    }
+                }]
+            }
+        }
+    };
+
+    var ctx = document.getElementById('canvas-orders-chart').getContext('2d');
+    window.canvasOrdersChart = new Chart(ctx, config);
+
+</script>

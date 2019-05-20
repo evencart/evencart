@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
@@ -122,6 +123,25 @@ namespace EvenCart.Services.Purchases
                 .FirstOrDefault();
         }
 
+        public Dictionary<OrderStatus, int> GetOrderCountsByStatus()
+        {
+            var tableName = DotEntityDb.GetTableNameForType<Order>();
+            var enclosedTableName = DotEntityDb.Provider.SafeEnclose(tableName);
+            var orderStatusCounts = new Dictionary<OrderStatus, int>();
+            foreach (OrderStatus status in System.Enum.GetValues(typeof(OrderStatus)))
+            {
+                orderStatusCounts.Add(status, 0);
+            }
+            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} GROUP BY OrderStatus", null))
+            {
+                var totals = result.SelectAllAs<OrderStatusTotal>().ToList();
+                foreach (var t in totals)
+                    orderStatusCounts[t.OrderStatus] = t.OrderCount;
+            }
+
+            return orderStatusCounts;
+        }
+
         public override IEnumerable<Order> Get(out int totalResults, Expression<Func<Order, bool>> @where, Expression<Func<Order, object>> orderBy = null,
             RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
         {
@@ -190,6 +210,14 @@ namespace EvenCart.Services.Purchases
                         orderItem.Product.SeoMeta = meta;
                 })
                 .Where(meteWhere);
+        }
+
+
+        private class OrderStatusTotal
+        {
+            public OrderStatus OrderStatus { get; set; }
+
+            public int OrderCount { get; set; }
         }
     }
 }

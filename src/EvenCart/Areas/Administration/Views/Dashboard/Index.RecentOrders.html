@@ -1,0 +1,22 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Latest Orders" | t}}
+    </div>
+    <div class="panel-body no-padding">
+        <div id="target-latest-orders-chart"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var loadRecentOrdersChart = function() {
+        get({
+            url: '{% route RecentOrdersReport %}',
+            done: function(response) {
+                jQuery("#target-latest-orders-chart").html(response);
+            }
+        });
+    }
+    ready(function() {
+        loadRecentOrdersChart();
+    });
+</script>

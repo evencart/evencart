@@ -490,7 +490,9 @@ h3.page-title {
     border-top: solid 1px #ddd; }
 
 select {
-  border: solid 1px #eee;
+  border: solid 1px #eee; }
+
+select.form-control {
   border-radius: 3px;
   padding: .5em;
   display: block;
@@ -579,3 +581,27 @@ tr.ui-sortable-handle td:first-child:before {
   /* for "disabled" effect */
   opacity: 0.5;
   background: #CCC; }
+
+.total-badge {
+  padding: 15px;
+  text-align: center;
+  margin: 0 0 20px 0;
+  position: relative;
+  border-radius: 7px; }
+  .total-badge .count {
+    font-size: 3em; }
+  .total-badge .heading {
+    text-align: center;
+    font-size: 1.2em; }
+  .total-badge.red {
+    background-color: #dd4b39;
+    color: #fff; }
+  .total-badge.golden {
+    background-color: #db752c;
+    color: #fff; }
+  .total-badge.green {
+    background-color: #28a745;
+    color: #fff; }
+  .total-badge.blue {
+    background-color: #247edf;
+    color: #fff; }

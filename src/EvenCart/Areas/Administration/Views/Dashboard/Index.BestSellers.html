@@ -1,0 +1,22 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Best Selling Products" | t}}
+    </div>
+    <div class="panel-body no-padding">
+        <div id="target-bestsellers-chart"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var loadBestSellersChart = function() {
+        get({
+            url: '{% route BestSellersReport %}',
+            done: function(response) {
+                jQuery("#target-bestsellers-chart").html(response);
+            }
+        });
+    }
+    ready(function() {
+        loadBestSellersChart();
+    });
+</script>

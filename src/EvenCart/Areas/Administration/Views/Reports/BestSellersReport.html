@@ -1,0 +1,20 @@
+﻿<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{"Product" | t}}</th>
+        <th>{{"Total Orders" | t}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+        <tr>
+            <td>
+                <a href='{% route GetProduct productId="{{product.id}}" %}'>{{product.name}}</a>
+            </td>
+            <td>
+                {{product.totalOrders}}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

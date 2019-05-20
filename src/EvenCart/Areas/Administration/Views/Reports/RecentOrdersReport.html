@@ -1,0 +1,32 @@
+﻿<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{"Order #" | t}}</th>
+        <th>{{"Customer" | t}}</th>
+        <th>{{"Order Status" | t}}</th>
+        <th>{{"Payment Status" | t}}</th>
+        <th>{{"Order Total" | t}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td>
+                <a href='{% route GetOrder orderId="{{order.id}}" %}'>{{order.orderNumber}}</a>
+            </td>
+            <td>
+                <a href='{% route GetUser userId="{{order.user.id}}" %}'>{{order.user.name}}</a>
+            </td>
+            <td>
+                {{order.orderStatus}}
+            </td>
+            <td>
+                {{order.paymentStatus}}
+            </td>
+            <td>
+                {{order.orderTotal | currency}}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

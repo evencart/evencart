@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
@@ -126,6 +127,15 @@ namespace EvenCart.Services.Helpers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(timeUnit), timeUnit, null);
             }
+        }
+        /// <summary>
+        /// Gets dates between two dates
+        /// </summary>
+        public static IEnumerable<DateTime> DatesBetween(DateTime start, DateTime end)
+        {
+            var step = start > end ? -1 : 1;
+            for (var day = start.Date; day <= end; day = day.AddDays(step))
+                yield return day;
         }
     }
 }

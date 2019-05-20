@@ -1,0 +1,137 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Store Numbers" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="total-badge green">
+                            <span class="count">
+                                <span class="rbicon rbicon-shopping-bag"></span>
+                                {{totals.totalOrders}}
+                            </span>
+
+                            <div class="heading">{{"Total Orders" | t}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="total-badge red">
+                            <span class="count">
+                                <span class="rbicon rbicon-shopping-cart"></span>
+                                {{totals.totalNewOrders}}
+                            </span>
+
+                            <div class="heading">{{"New Orders" | t}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="total-badge golden">
+                            <span class="count">
+                                <span class="rbicon rbicon-user"></span>
+                                {{totals.totalUsers}}
+                            </span>
+
+                            <div class="heading">{{"Total Users" | t}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="total-badge blue">
+                            <span class="count">
+                                {{totals.totalPaidAmount | currency}}
+                            </span>
+
+                            <div class="heading">{{"Total Amount" | t}}</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Orders Distribution" | t}}
+            </div>
+            <div class="panel-body">
+                <canvas id="canvas-orders-pie-chart"></canvas>
+                <script type="text/javascript">
+            var totalsData = [];
+            totalsData.push("{{totals.totalCancelledOrders}}");
+            totalsData.push("{{totals.totalNewOrders}}");
+            totalsData.push("{{totals.totalClosedOrders}}");
+            totalsData.push("{{totals.totalCompleteOrders}}");
+            totalsData.push("{{totals.totalOnholdOrders}}");
+            totalsData.push("{{totals.totalDelayedOrders}}");
+            totalsData.push("{{totals.totalProcessingOrders}}");
+            totalsData.push("{{totals.totalReturnedOrders}}");
+            totalsData.push("{{totals.totalPartiallyShippedOrders}}");
+            totalsData.push("{{totals.totalShippedOrders}}");
+            var config = {
+                type: 'pie',
+                data: {
+                    datasets: [
+                        {
+                            data: totalsData,
+                            label: "Orders",
+                            backgroundColor: [
+                                "#dd4b39",
+                                "#ff6384",
+                                "#f39c12",
+                                "#00a65a",
+                                "#ffcd56",
+                                "#dfb024",
+                                "#bb24df",
+                                "#df2481",
+                                "#1f8c98",
+                                "#68a4e4"
+                            ],
+                        }
+                    ],
+                    labels: [
+                        'Cancelled',
+                        'New',
+                        'Closed',
+                        'Complete',
+                        'OnHold',
+                        "Delayed",
+                        "Processing",
+                        "Returned",
+                        "Partially Shipped",
+                        "Shipped"
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: "left"
+                    },
+                    title: {
+                        display: false
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            };
+
+            var ctx = document.getElementById('canvas-orders-pie-chart').getContext('2d');
+            window.canvasOrdersPieChart = new Chart(ctx, config);
+
+                </script>
+            </div>
+        </div>
+
+    </div>
+</div>

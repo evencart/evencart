@@ -61,7 +61,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ViewUsers)]
         public IActionResult UsersList([FromQuery] UserSearchModel searchModel)
         {
-            var users = _userService.GetUsers(searchModel.SearchPhrase, searchModel.RoleIds, searchModel.Current,
+            var users = _userService.GetUsers(searchModel.SearchPhrase, searchModel.RoleIds, null, SortOrder.Ascending, searchModel.Current,
                 searchModel.RowCount, out int totalMatches);
 
             //convert to model

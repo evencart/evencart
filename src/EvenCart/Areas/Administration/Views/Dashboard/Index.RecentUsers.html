@@ -1,0 +1,22 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Latest Registrations" | t}}
+    </div>
+    <div class="panel-body no-padding">
+        <div id="target-latest-users-chart"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var loadRecentUsersChart = function() {
+        get({
+            url: '{% route RecentUsersReport %}',
+            done: function(response) {
+                jQuery("#target-latest-users-chart").html(response);
+            }
+        });
+    }
+    ready(function() {
+        loadRecentUsersChart();
+    });
+</script>

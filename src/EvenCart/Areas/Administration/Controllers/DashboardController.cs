@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
+    /// <summary>
+    /// Allows store admins to view dashboard summaries
+    /// </summary>
     public class DashboardController : FoundationAdminController
     {
         private readonly IViewAccountant _viewAccountant;

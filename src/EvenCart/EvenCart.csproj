@@ -150,14 +150,19 @@
     <None Remove="Areas\Administration\Views\Products\ProductSpecsList.html" />
     <None Remove="Areas\Administration\Views\Products\ProductVariantEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductVariantsList.html" />
+    <None Remove="Areas\Administration\Views\Reports\BestSellersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\OrdersChartReport.html" />
     <None Remove="Areas\Administration\Views\Reports\OrdersReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\OrdersReport.html" />
     <None Remove="Areas\Administration\Views\Reports\ProductOrdersReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\ProductOrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\RecentOrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\RecentUsersReport.html" />
     <None Remove="Areas\Administration\Views\Reports\StockReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\StockReport.html" />
     <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\UsersChartReport.html" />
     <None Remove="Areas\Administration\Views\Reviews\ReviewEditor.html" />
     <None Remove="Areas\Administration\Views\Reviews\ReviewsList.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reviews\ReviewsList.html" />
@@ -623,6 +628,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductVariantsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\BestSellersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\RecentUsersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\RecentOrdersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\UsersChartReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\OrdersChartReport.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Reports\OrdersReport.FilterPanel.html">

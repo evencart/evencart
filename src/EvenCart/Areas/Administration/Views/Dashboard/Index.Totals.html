@@ -1,0 +1,14 @@
+﻿<div id="target-totals"></div>
+<script type="text/javascript">
+    var loadTotals = function () {
+        get({
+            url: '{% route TotalsReport %}',
+            done: function (response) {
+                jQuery("#target-totals").html(response);
+            }
+        });
+    }
+    ready(function () {
+        loadTotals();
+    });
+</script>

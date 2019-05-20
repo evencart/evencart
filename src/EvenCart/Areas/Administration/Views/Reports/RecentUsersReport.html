@@ -1,0 +1,26 @@
+﻿<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{"Customer" | t}}</th>
+        <th>{{"Registered On" | t}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>
+                <a href='{% route GetUser userId="{{user.id}}" %}'>
+                    {% if user.name %}
+                    {{user.name}}
+                    {% else %}
+                    {{user.email}}
+                    {% endif %}
+                </a>
+            </td>
+            <td>
+                {{user.DateCreated}}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

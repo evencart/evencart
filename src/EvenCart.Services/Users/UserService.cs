@@ -6,6 +6,7 @@ using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Data.Helpers;
 using EvenCart.Services.Addresses;
@@ -31,7 +32,7 @@ namespace EvenCart.Services.Users
             _emailService = emailService;
         }
 
-        public IList<User> GetUsers(string searchText, int[] restrictToRoles, int page, int count, out int totalMatches)
+        public IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false)
         {
             var query = Repository
                 .Where(x => !x.Deleted)
@@ -51,10 +52,19 @@ namespace EvenCart.Services.Users
             if (restrictToRoles != null && restrictToRoles.Any())
             {
                 var roleIds = restrictToRoles.ToList();
-                Expression<Func<Role, bool>> roleWhere = role => roleIds.Contains(role.Id);
+                Expression<Func<Role, bool>> roleWhere;
+                if(negateRoleRestriction)
+                    roleWhere = role => !roleIds.Contains(role.Id);
+                else
+                {
+                    roleWhere = role => roleIds.Contains(role.Id);
+                }
                 query = query.Where(roleWhere);
             }
-            query = query.OrderBy(x => x.Name);
+
+            if (orderBy == null)
+                orderBy = x => x.Name;
+            query = query.OrderBy(orderBy, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
             return query.SelectNestedWithTotalMatches(out totalMatches, page, count).ToList();
         }
 

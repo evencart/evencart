@@ -1,0 +1,41 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Orders Summary" | t}}
+        <small class="float-right">
+            <select id="orders-chart-group-by">
+                <option value="years">
+                    {{"Yearly"}}
+                </option>
+                <option value="months" selected="selected">
+                    {{"Monthly"}}
+                </option>
+                <option value="weeks">
+                    {{"Weekly"}}
+                </option>
+                <option value="days">
+                    {{"Daily"}}
+                </option>
+            </select>
+        </small>
+    </div>
+    <div class="panel-body">
+        <div id="target-orders-chart"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var loadOrdersChart = function() {
+        get({
+            url: '{% route OrdersChartReport %}',
+            data: {
+                groupBy : jQuery("#orders-chart-group-by").val()
+            },
+            done: function(response) {
+                jQuery("#target-orders-chart").html(response);
+            }
+        });
+    }
+    ready(function() {
+        jQuery("#orders-chart-group-by").change(loadOrdersChart).trigger("change");
+    });
+</script>

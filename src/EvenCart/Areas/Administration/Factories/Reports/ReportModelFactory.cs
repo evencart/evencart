@@ -4,8 +4,10 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Services.Helpers;
 
 namespace EvenCart.Areas.Administration.Factories.Reports
 {
@@ -40,49 +42,70 @@ namespace EvenCart.Areas.Administration.Factories.Reports
 
         public IList<OrderReportModel> CreateOrderReportModels(out int totalResults, IList<Order> orders, GroupUnit groupBy, int page = 1, int count = 15)
         {
+            totalResults = 0;
+            if (!orders.Any())
+                return null;
             orders = orders.OrderBy(x => x.CreatedOn).ToList();
             IEnumerable<IGrouping<string, Order>> groupedOrders;
+            List<string> allValidGroupNames = null;
+            var minDate = orders.Min(x => x.CreatedOn);
+            var maxDate = orders.Max(x => x.CreatedOn);
+            var allDates = DateTimeHelper.DatesBetween(minDate, maxDate);
             switch (groupBy)
             {
                 case GroupUnit.Days:
                     groupedOrders = orders.GroupBy(x => x.CreatedOn.ToFormattedString());
+                    allValidGroupNames = allDates.Select(x => x.ToFormattedString()).ToList();
                     break;
                 case GroupUnit.Months:
                     groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.GetMonthName()} {x.CreatedOn.Year}");
+                    allValidGroupNames = allDates.Select(x => $"{x.GetMonthName()} {x.Year}").Distinct().ToList();
                     break;
                 case GroupUnit.Years:
                     groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.Year}");
+                    allValidGroupNames = allDates.Select(x => $"{x.Year}").Distinct().ToList();
                     break;
                 case GroupUnit.Weeks:
                 default:
-                    var minDate = orders.Min(x => x.CreatedOn);
-                    var maxDate = orders.Max(x => x.CreatedOn);
+                    minDate.GetWeekRangeDates(out var minWeekDate, out var maxWeekDate);
+                    var weekStartDate = minWeekDate;
+                    allValidGroupNames = new List<string>();
+                    while (weekStartDate < maxDate)
+                    {
+                        allValidGroupNames.Add($"{weekStartDate.ToFormattedString()} - {weekStartDate.AddDays(6).ToFormattedString()}");
+                        //next week
+                        weekStartDate = weekStartDate.AddDays(7);
+                    }
                     groupedOrders = orders.GroupBy(x =>
                     {
                         x.CreatedOn.GetWeekRangeDates(out var startDate, out var endDate);
-                        if (startDate < minDate)
-                            startDate = minDate;
-                        if (endDate > maxDate)
-                            endDate = maxDate;
                         return $"{startDate.ToFormattedString()} - {endDate.ToFormattedString()}";
                     });
                     break;
             }
 
+            var groupedOrdersAsList = groupedOrders.ToList();
             var orderReports = new List<OrderReportModel>();
-            foreach (var go in groupedOrders)
+            foreach (var groupName in allValidGroupNames)
             {
-                var groupOrders = go.ToList();
-                var groupName = go.Key;
-                orderReports.Add(new OrderReportModel()
+                var reportModel = new OrderReportModel()
                 {
                     GroupName = groupName,
-                    TotalOrders = groupOrders.Count,
-                    TotalProducts = groupOrders.SelectMany(x => x.OrderItems).Count(),
-                    TotalAmount = groupOrders.Sum(x => x.OrderTotal)
-                });
+                    TotalOrders = 0,
+                    TotalProducts = 0,
+                    TotalAmount = 0
+                };
+                var group = groupedOrdersAsList.FirstOrDefault(x => x.Key == groupName);
+                if (group != null)
+                {
+                    var groupOrders = group.ToList();
+                    reportModel.TotalOrders = groupOrders.Count;
+                    reportModel.TotalProducts = groupOrders.SelectMany(x => x.OrderItems).Count();
+                    reportModel.TotalAmount = groupOrders.Sum(x => x.OrderTotal);
+                }
+                orderReports.Add(reportModel);
             }
-
+           
             totalResults = orderReports.Count;
             return orderReports.Skip(count * (page - 1)).Take(count).ToList();
         }
@@ -131,6 +154,72 @@ namespace EvenCart.Areas.Administration.Factories.Reports
 
             totalResults = productReports.Count;
             return productReports.OrderByDescending(x => x.TotalOrders).Skip(count * (page - 1)).Take(count).ToList();
+        }
+
+        public IList<UserRegistrationReportModel> CreateUserRegistrationReportModels(out int totalResults,  IList<User> users, GroupUnit groupBy, int page = 1, int count = 15)
+        {
+            var minDate = users.Min(x => x.DateCreated);
+            var maxDate = users.Max(x => x.DateCreated);
+            var allDates = DateTimeHelper.DatesBetween(minDate, maxDate);
+            IEnumerable<IGrouping<string, User>> groupedUsers;
+            List<string> allValidGroupNames = null;
+            switch (groupBy)
+            {
+                case GroupUnit.Days:
+                    groupedUsers = users.GroupBy(x => x.DateCreated.ToFormattedString());
+                    allValidGroupNames = allDates.Select(x => x.ToFormattedString()).ToList();
+                    break;
+                case GroupUnit.Months:
+                    groupedUsers = users.GroupBy(x => $"{x.DateCreated.GetMonthName()} {x.DateCreated.Year}");
+                    allValidGroupNames = allDates.Select(x => $"{x.GetMonthName()} {x.Year}").Distinct().ToList();
+                    break;
+                case GroupUnit.Years:
+                    groupedUsers = users.GroupBy(x => $"{x.DateCreated.Year}");
+                    allValidGroupNames = allDates.Select(x => $"{x.Year}").Distinct().ToList();
+                    break;
+                case GroupUnit.Weeks:
+                default:
+                    minDate.GetWeekRangeDates(out var minWeekDate, out var maxWeekDate);
+                    var weekStartDate = minWeekDate;
+                    allValidGroupNames = new List<string>();
+                    while (weekStartDate < maxDate)
+                    {
+                        allValidGroupNames.Add($"{weekStartDate.ToFormattedString()} - {weekStartDate.AddDays(6).ToFormattedString()}");
+                        //next week
+                        weekStartDate = weekStartDate.AddDays(7);
+                    }
+                    groupedUsers = users.GroupBy(x =>
+                    {
+                        x.DateCreated.GetWeekRangeDates(out var startDate, out var endDate);
+                        if (startDate < minDate)
+                            startDate = minDate;
+                        if (endDate > maxDate)
+                            endDate = maxDate;
+                        return $"{startDate.ToFormattedString()} - {endDate.ToFormattedString()}";
+                    });
+                    break;
+            }
+
+            var registrationReports = new List<UserRegistrationReportModel>();
+            var groupedUsersAsList = groupedUsers.ToList();
+            foreach (var groupName in allValidGroupNames)
+            {
+                var reportModel = new UserRegistrationReportModel()
+                {
+                    GroupName = groupName,
+                    TotalUsers = 0
+                };
+                var group = groupedUsersAsList.FirstOrDefault(x => x.Key == groupName);
+                if (group != null)
+                {
+                    var groupUsers = group.ToList();
+                    reportModel.TotalUsers = groupUsers.Count;
+                }
+                registrationReports.Add(reportModel);
+            }
+
+            totalResults = registrationReports.Count;
+            return registrationReports.Skip(count * (page - 1)).Take(count).ToList();
         }
     }
 }

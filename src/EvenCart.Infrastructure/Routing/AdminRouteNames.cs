@@ -215,6 +215,11 @@
         public const string ProductOrdersReport = "ProductOrdersReport";
         public const string ProductWishReport = "ProductWishReport";
         public const string TaxReport = "TaxReport";
-
+        public const string TotalsReport = "TotalsReport";
+        public const string RecentOrdersReport = "RecentOrdersReport";
+        public const string RecentUsersReport = "RecentUsersReport";
+        public const string BestSellersReport = "BestSellersReport";
+        public const string OrdersChartReport = "OrdersChartReport";
+        public const string UsersChartReport = "UsersChartReport";
     }
 }

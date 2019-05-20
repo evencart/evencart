@@ -658,9 +658,11 @@ h3.page-title {
         border-top: solid 1px #ddd;
     }
 }
-
 select {
     border: solid 1px #eee;
+}
+select.form-control {
+   
     border-radius: 3px;
     padding: .5em;
     display: block;
@@ -782,5 +784,42 @@ tr.ui-sortable-handle td:first-child:before {
         /* for "disabled" effect */
         opacity: 0.5;
         background: #CCC;
+    }
+}
+
+.total-badge {
+    padding: 15px;
+    text-align: center;
+    margin: 0 0 20px 0;
+    position: relative;
+    border-radius: 7px;
+
+    .count {
+        font-size: 3em;
+    }
+
+    .heading {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    &.red {
+        background-color: #dd4b39;
+        color: #fff;
+    }
+
+    &.golden {
+        background-color: #db752c;
+        color: #fff;
+    }
+
+    &.green {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    &.blue {
+        background-color: #247edf;
+        color: #fff;
     }
 }

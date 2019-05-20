@@ -51,6 +51,154 @@
             <param name="attributeId">The id of the attribute to be deleted</param>
             <response code="200">A success response object</response>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.DashboardController">
+            <summary>
+            Allows store admins to view dashboard summaries
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.TotalsReport">
+            <summary>
+            Gets totals for various entities
+            </summary>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">totals</see> object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.RecentOrdersReport">
+            <summary>
+            Gets most recent 5 orders
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Orders.OrderModel">order</see> objects as 'orders'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.RecentUsersReport">
+            <summary>
+            Gets most recent 5 user registrations
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Users.UserModel">user</see> objects as 'users'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.BestSellersReport">
+            <summary>
+            Gets 5 best sellers products for last year
+            </summary>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Reports.ProductOrderReportModel">product</see> objects as 'products'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.OrdersChartReport(EvenCart.Areas.Administration.Models.Reports.OrderReportSearchModel)">
+            <summary>
+            Gets orders report based on provided date type 
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Reports.OrderReportModel">order report</see> objects as 'reportItems'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.UsersChartReport(EvenCart.Areas.Administration.Models.Reports.UsersReportSearchModel)">
+            <summary>
+            Gets orders report based on provided date type 
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Reports.UserRegistrationReportModel">user report</see> objects as 'reportItems'</response>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">
+            <summary>
+            Contains information about various totals
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalUsers">
+            <summary>
+            The total users in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalOrders">
+            <summary>
+            Total orders in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalPendingOrders">
+            <summary>
+            Total pending orders in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalPaidAmount">
+            <summary>
+            Total paid amount in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalPaidOrders">
+            <summary>
+            Total paid orders in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalCancelledOrders">
+            <summary>
+            Total cancelled orders in the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalReturnedOrders">
+            <summary>
+            Total returned orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalShippedOrders">
+            <summary>
+            Total shipped orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalPartiallyShippedOrders">
+            <summary>
+            Total partially shipped orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalCompleteOrders">
+            <summary>
+            Total complete orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalDelayedOrders">
+            <summary>
+            Total delayed orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalClosedOrders">
+            <summary>
+            Total closed orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalOnholdOrders">
+            <summary>
+            Total closed orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalNewOrders">
+            <summary>
+            Total new orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel.TotalProcessingOrders">
+            <summary>
+            Total processing orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.UserRegistrationReportModel.GroupName">
+            <summary>
+            The group name of the response object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.UserRegistrationReportModel.TotalUsers">
+            <summary>
+            Total number of users registered
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.UsersReportSearchModel.StartDate">
+            <summary>
+            The start date for search.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.UsersReportSearchModel.EndDate">
+            <summary>
+            The end date for search
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Reports.UsersReportSearchModel.GroupBy">
+            <summary>
+            The unit by which results should be grouped
+            </summary>
+        </member>
         <member name="P:EvenCart.Areas.Administration.Models.Settings.UserSettingsModel.UserRegistrationDefaultMode">
             <summary>
             Default registration mode for users
@@ -842,6 +990,36 @@
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.RowCount">
             <summary>
             The total number of result rows to be returned
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeModel.Name">
+            <summary>
+            The name of attribute
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeModel.IsRequired">
+            <summary>
+            Is the attribute required
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeModel.AvailableValues">
+            <summary>
+            A collection of <see cref="T:EvenCart.Models.Products.ProductAttributeValueModel">available value</see> objects. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeModel.SelectedValues">
+            <summary>
+            A collection of <see cref="T:EvenCart.Models.Products.ProductAttributeValueModel">selected value</see> objects.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeModel.InputFieldType">
+            <summary>
+            The type of input field
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductAttributeValueModel.Name">
+            <summary>
+            The name of attribute value
             </summary>
         </member>
         <member name="P:EvenCart.Models.Products.ProductSearchModel.FromPrice">
