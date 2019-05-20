@@ -31,6 +31,7 @@
         <td>
             <div class="form-group">
                 <form id="form-shipping-{{shipment.id}}" action="{% route api_SaveShipmentHistory %}" method="post">
+                    {% control xsrf %}
                     {% control hidden name="shipmentId" value="{{shipment.id}}" %}
                     {% case shipment.shipmentStatusId %}
                     {% when 0 %}
