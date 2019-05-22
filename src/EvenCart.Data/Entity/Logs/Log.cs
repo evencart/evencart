@@ -25,7 +25,7 @@ namespace EvenCart.Data.Entity.Logs
 
         public string ReferralUrl { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 
 }

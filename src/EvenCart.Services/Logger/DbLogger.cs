@@ -23,7 +23,7 @@ namespace EvenCart.Services.Logger
                 return;
 
             var logEntry = new Log() {
-                DateCreated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
                 IpAddress = WebHelper.GetClientIpAddress(),
                 LogLevel = logLevel,
                 ShortMessage = $"{typeof(T).Name} {message}",

@@ -116,12 +116,12 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             user = _modelMapper.Map(userModel, user,
                 excludeProperties: new[]
-                    {nameof(user.DateCreated), nameof(user.DateUpdated), nameof(user.LastLoginDate)});
+                    {nameof(user.CreatedOn), nameof(user.UpdatedOn), nameof(user.LastLoginDate)});
             if (user.Id == 0)
             {
                 user.Guid = Guid.NewGuid();
-                user.DateCreated = DateTime.UtcNow;
-                user.DateUpdated = DateTime.UtcNow;
+                user.CreatedOn = DateTime.UtcNow;
+                user.UpdatedOn = DateTime.UtcNow;
                 _userRegistrationService.Register(user, ApplicationConfig.DefaultPasswordFormat);
             }
             else

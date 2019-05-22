@@ -172,7 +172,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var guestRole = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Visitor);
 
-            var users = _userService.GetUsers(null, new[] { guestRole.Id }, x => x.DateCreated, SortOrder.Descending, 1,
+            var users = _userService.GetUsers(null, new[] { guestRole.Id }, x => x.CreatedOn, SortOrder.Descending, 1,
                 5, out _, true);
             var userModels = users.Select(_userModelFactory.Create).ToList();
             return R.Success.With("users", userModels).Result;
@@ -255,7 +255,7 @@ namespace EvenCart.Areas.Administration.Controllers
             searchModel.RowCount = int.MaxValue;
             searchModel.Current = 1;
             var users = _userService.Get(out _,
-                x => x.DateCreated >= searchModel.StartDate && x.DateCreated <= searchModel.EndDate).ToList();
+                x => x.CreatedOn >= searchModel.StartDate && x.CreatedOn <= searchModel.EndDate).ToList();
             var models = _reportModelFactory.CreateUserRegistrationReportModels(out int totalResults, users,
                 searchModel.GroupBy, searchModel.Current, searchModel.RowCount);
 

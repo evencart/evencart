@@ -158,23 +158,23 @@ namespace EvenCart.Areas.Administration.Factories.Reports
 
         public IList<UserRegistrationReportModel> CreateUserRegistrationReportModels(out int totalResults,  IList<User> users, GroupUnit groupBy, int page = 1, int count = 15)
         {
-            var minDate = users.Min(x => x.DateCreated);
-            var maxDate = users.Max(x => x.DateCreated);
+            var minDate = users.Min(x => x.CreatedOn);
+            var maxDate = users.Max(x => x.CreatedOn);
             var allDates = DateTimeHelper.DatesBetween(minDate, maxDate);
             IEnumerable<IGrouping<string, User>> groupedUsers;
             List<string> allValidGroupNames = null;
             switch (groupBy)
             {
                 case GroupUnit.Days:
-                    groupedUsers = users.GroupBy(x => x.DateCreated.ToFormattedString());
+                    groupedUsers = users.GroupBy(x => x.CreatedOn.ToFormattedString());
                     allValidGroupNames = allDates.Select(x => x.ToFormattedString()).ToList();
                     break;
                 case GroupUnit.Months:
-                    groupedUsers = users.GroupBy(x => $"{x.DateCreated.GetMonthName()} {x.DateCreated.Year}");
+                    groupedUsers = users.GroupBy(x => $"{x.CreatedOn.GetMonthName()} {x.CreatedOn.Year}");
                     allValidGroupNames = allDates.Select(x => $"{x.GetMonthName()} {x.Year}").Distinct().ToList();
                     break;
                 case GroupUnit.Years:
-                    groupedUsers = users.GroupBy(x => $"{x.DateCreated.Year}");
+                    groupedUsers = users.GroupBy(x => $"{x.CreatedOn.Year}");
                     allValidGroupNames = allDates.Select(x => $"{x.Year}").Distinct().ToList();
                     break;
                 case GroupUnit.Weeks:
@@ -190,7 +190,7 @@ namespace EvenCart.Areas.Administration.Factories.Reports
                     }
                     groupedUsers = users.GroupBy(x =>
                     {
-                        x.DateCreated.GetWeekRangeDates(out var startDate, out var endDate);
+                        x.CreatedOn.GetWeekRangeDates(out var startDate, out var endDate);
                         if (startDate < minDate)
                             startDate = minDate;
                         if (endDate > maxDate)

@@ -24,9 +24,9 @@ namespace EvenCart.Areas.Administration.Models.Users
 
         public bool Active { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        public DateTime DateUpdated { get; set; }
+        public DateTime UpdatedOn { get; set; }
 
         public DateTime? LastLoginDate { get; set; }
 

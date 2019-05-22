@@ -14,6 +14,6 @@ namespace EvenCart.Data.Entity.Users
 
         public PasswordFormat PasswordFormat { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

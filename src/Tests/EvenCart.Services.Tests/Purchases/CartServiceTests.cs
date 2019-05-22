@@ -26,8 +26,8 @@ namespace EvenCart.Services.Tests.Purchases
             _testUser = new User()
             {
                 Email = "cartservicetests@teststore.com",
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
             };
             _userService.Insert(_testUser);
         }

@@ -167,7 +167,7 @@ namespace EvenCart.Controllers
                 Password = userCode.User.Password,
                 PasswordSalt = userCode.User.PasswordSalt,
                 PasswordFormat = userCode.User.PasswordFormat,
-                DateCreated = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow
             });
 
             //reset the password now
@@ -249,8 +249,8 @@ namespace EvenCart.Controllers
             {
                 Email = registerModel.Email,
                 Password = registerModel.Password,
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
                 IsSystemAccount = false,
                 Guid = Guid.NewGuid(),
                 Active = _userSettings.UserRegistrationDefaultMode == RegistrationMode.Immediate
@@ -299,7 +299,7 @@ namespace EvenCart.Controllers
             {
                 return false;
             }
-            return _securitySettings.PasswordResetLinkExpirationHours <= 0 || DateTime.UtcNow.Subtract(userCode.DateCreated).Hours <= _securitySettings.PasswordResetLinkExpirationHours;
+            return _securitySettings.PasswordResetLinkExpirationHours <= 0 || DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <= _securitySettings.PasswordResetLinkExpirationHours;
         }
         #endregion
     }

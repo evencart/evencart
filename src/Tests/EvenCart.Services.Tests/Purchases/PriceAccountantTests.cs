@@ -52,8 +52,8 @@ namespace EvenCart.Services.Tests.Purchases
             _registeredUser = new User()
             {
                 Email = "priceaccountanttests_registered@teststore.com",
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
             };
             _userService.Insert(_registeredUser);
             _registeredRole = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Registered);
@@ -63,8 +63,8 @@ namespace EvenCart.Services.Tests.Purchases
             _visitor = new User()
             {
                 Email = "priceaccountanttests_visitor@teststore.com",
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
             };
 
             _userService.Insert(_visitor);

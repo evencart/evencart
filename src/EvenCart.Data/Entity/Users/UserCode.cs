@@ -9,7 +9,7 @@ namespace EvenCart.Data.Entity.Users
 
         public string Code { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public UserCodeType CodeType { get; set; }
 

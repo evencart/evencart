@@ -94,8 +94,8 @@ namespace EvenCart.Services.Tests.Products
             {
                 Email = "taxpayer@ecomm.com",
                 Active = true,
-                DateCreated = DateTime.Today,
-                DateUpdated = DateTime.UtcNow
+                CreatedOn = DateTime.Today,
+                UpdatedOn = DateTime.UtcNow
             };
             _userService.Insert(user);
             var registeredUserRole = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Registered);

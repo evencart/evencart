@@ -20,7 +20,7 @@ namespace EvenCart.Services.Users
             userCode.UserId = userId;
             userCode.Code = Guid.NewGuid().ToString("D");
             userCode.CodeType = userCodeType;
-            userCode.DateCreated = DateTime.UtcNow;
+            userCode.CreatedOn = DateTime.UtcNow;
             InsertOrUpdate(userCode);
             return userCode;
         }

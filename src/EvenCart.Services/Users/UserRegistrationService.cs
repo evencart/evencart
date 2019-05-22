@@ -36,8 +36,8 @@ namespace EvenCart.Services.Users
             var user = new User()
             {
                 Email = email,
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
                 LastLoginDate = DateTime.UtcNow,
                 LastLoginIpAddress = WebHelper.GetClientIpAddress(),
                 Password = hashedPassword,
