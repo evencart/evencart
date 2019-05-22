@@ -2,6 +2,7 @@
 using System.Linq;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Constants;
+using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
@@ -169,6 +170,25 @@ namespace EvenCart.Events
                         _emailSender.SendEmail(EmailTemplateNames.PasswordChangedMessage, userInfo, model);
                     }
                     break;
+                case nameof(NamedEvent.InvitationRequested):
+                    {
+                        var email = eventData[0].ToString();
+                        var userInfo = new EmailMessage.UserInfo("", email);
+                        var model = R.Result;
+                        _emailSender.SendEmail(EmailTemplateNames.InvitationRequestedMessage, userInfo, model,
+                            _emailSenderSettings.InviteRequestCreatedEmailEnabled,
+                            _emailSenderSettings.InviteRequestCreatedEmailToAdminEnabled);
+                    }
+                    break;
+                case nameof(NamedEvent.Invitation):
+                    {
+                        var userCode = (UserCode)eventData[0];
+                        var invitationLink = eventData[1].ToString();
+                        var userInfo = new EmailMessage.UserInfo("", userCode.Email);
+                        var model = R.With("invitationLink", invitationLink).Result;
+                        _emailSender.SendEmail(EmailTemplateNames.InvitationMessage, userInfo, model);
+                    }
+                    break;
             }
         }
 
@@ -180,7 +200,9 @@ namespace EvenCart.Events
             NamedEvent.ShipmentShipped.ToString(),
             NamedEvent.ShipmentDelivered.ToString(),
             NamedEvent.PasswordReset.ToString(),
-            NamedEvent.PasswordResetRequested.ToString()
+            NamedEvent.PasswordResetRequested.ToString(),
+            NamedEvent.InvitationRequested.ToString(),
+            NamedEvent.Invitation.ToString()
         };
 
 

@@ -32,6 +32,7 @@
 {% secondary_navigation url="{% route VendorsList %}" title=@t"Vendors" systemName="VendorsList" parent="UsersList" %}
 {% secondary_navigation url="{% route ManufacturersList %}" title=@t"Manufacturers" systemName="ManufacturersList" parent="UsersList" %}
 {% secondary_navigation url="{% route RolesList %}" title=@t"Roles" systemName="RolesList" parent="UsersList" %}
+{% secondary_navigation url="{% route InvitationRequestsList %}" title=@t"Invitation Requests" systemName="InvitationRequestsList" parent="UsersList" %}
 
 {% secondary_navigation url="{% route UsersList %}" title=@t"Back to users" iconClass="rbicon-chevron-left" groupId="UserEdit" capability="User.Edit" %}
 {% secondary_navigation url="{% route GetUser userId="{{userId}}" %}" title=@t"User Info" systemName="GetUser" groupId="UserEdit" capability="User.Edit" %}

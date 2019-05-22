@@ -14,9 +14,19 @@
                         {{"Already have an account?" | t}} <a href="{% route Login %}">{{"Login Now" | t }}</a>
                     </div>
                     {% if registrationDisabled %}
-                    <div class="alert alert-danger mt-10">
+                    <div class="alert alert-danger mt-10 text-center">
                         {{"New registrations are not allowed at the moment" | t}}
                     </div>
+                    {% if allowInvites %}
+                    <div class="text-center">
+                        <p>
+                            {{"You can however request an invite if you would like to create the account early."}}
+                        </p>
+                        <a href="{% route RequestInvite %}">
+                            {{"Request Invite"}}
+                        </a>
+                    </div>
+                    {% endif %}
                     {% else %}
                     <form action="{% route api_Register %}" method="post" id="formRegistration">
                         {% control xsrf %}
@@ -47,6 +57,7 @@
                             </div>
                             {% endfor %}
                             <div class="col-sm-12">
+                                {% control hidden name="inviteCode" value="{{inviteCode}}" %}
                                 <input value="register" type="submit">
                             </div>
                         </div>
@@ -55,9 +66,23 @@
                         ready(function () {
                             initAjaxForm("formRegistration",
                                 {
-                                    onSuccess: function () {
-                                        var loginUrl = "{% route Login %}";
-                                        window.location.href = loginUrl;
+                                    onSuccess: function (response) {
+                                        var msg = "{{'Thank you for joining us.' | t}}";
+                                        if (response.mode == "Immediate" || response.mode == "InviteOnly") {
+                                            msg += "{{'You will be redirected to login page to proceed.' | t}}";
+                                        }
+                                        else if (response.mode == "WithActivationEmail") {
+                                            msg += "{{'Please check your email inbox for activation link.' | t}}";
+                                        }
+                                        else if (response.mode == "ManualApproval") {
+                                            msg += "{{'You will get an email once your account is approved.' | t}}";
+                                        }
+                                        notify("success", msg);
+                                        setTimeout(function() {
+                                                var loginUrl = "{% route Login %}";
+                                                window.location.href = loginUrl;
+                                            },
+                                            1000);
                                     },
                                     errorPlacement: function (error, element) {
                     

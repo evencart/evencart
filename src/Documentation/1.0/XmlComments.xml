@@ -94,6 +94,11 @@
             <param name="searchModel"></param>
             <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Reports.UserRegistrationReportModel">user report</see> objects as 'reportItems'</response>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.UsersController">
+            <summary>
+            Allows admins to manage users
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">
             <summary>
             Contains information about various totals
@@ -239,6 +244,36 @@
             A single value for the attribute
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Users.GenerateInvitationLinkModel">
+            <summary>
+            The parameters for invitation
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Users.GenerateInvitationLinkModel.Email">
+            <summary>
+            The email address to which invite link needs to be sent
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Users.InvitationRequestModel.Email">
+            <summary>
+            The email which sent the request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Users.InvitationRequestModel.CreatedOn">
+            <summary>
+            The date of request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Users.InvitationRequestModel.Accepted">
+            <summary>
+            Was the request accepted previously
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Users.InvitationRequestsSearchModel">
+            <summary>
+            The search parameters for invitation requests
+            </summary>
+        </member>
         <member name="T:EvenCart.Controllers.AccountController">
             <summary>
             Allows authenticated user to manage personal information
@@ -308,10 +343,11 @@
             <param name="changeModel"></param>
             <response code="200">A success response object</response>
         </member>
-        <member name="M:EvenCart.Controllers.AuthenticationController.Register">
+        <member name="M:EvenCart.Controllers.AuthenticationController.Register(EvenCart.Models.Authentication.RegisterRequestModel)">
             <summary>
             Gets the consents(if any) required to complete the registration
             </summary>
+            <param name="requestModel"></param>
             <response>A list of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see></response>
         </member>
         <member name="M:EvenCart.Controllers.AuthenticationController.Logout">
@@ -326,6 +362,20 @@
             </summary>
             <param name="registerModel"></param>
             <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.RequestInvite(EvenCart.Models.Authentication.InviteRequestModel)">
+            <summary>
+            Adds an invitation request to join the site
+            </summary>
+            <param name="requestModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.VerifyEmail(System.String)">
+            <summary>
+            Verifies the email address
+            </summary>
+            <param name="code">The verification code</param>
+            <returns></returns>
         </member>
         <member name="T:EvenCart.Controllers.CartController">
             <summary>
@@ -672,6 +722,26 @@
         <member name="P:EvenCart.Models.Authentication.RegisterModel.Consents">
             <summary>
             The <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see> that the user has agreed or denied to. 
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.InviteCode">
+            <summary>
+            The invite code if any for registration
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterModel.AffiliateCode">
+            <summary>
+            The affiliate code if any for registration
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterRequestModel.InviteCode">
+            <summary>
+            The invite code if any for the request.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.RegisterRequestModel.AffiliateCode">
+            <summary>
+            The affiliate code if any for the request
             </summary>
         </member>
         <member name="P:EvenCart.Models.Checkout.BillingShippingModel.UseDifferentShippingAddress">

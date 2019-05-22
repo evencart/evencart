@@ -11,6 +11,8 @@
         public const string NotFound = "NotFound";
         public const string ForgotPassword = "ForgotPassword";
         public const string ChangePassword = "ChangePassword";
+        public const string VerifyEmail = "VerifyEmail";
+        public const string RequestInvite = "RequestInvite";
 
         public const string Cart = "Cart";
         public const string CheckoutAddress = "CheckoutAddress";

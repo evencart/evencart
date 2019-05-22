@@ -89,6 +89,9 @@
         public const string UserCart = "UserCart";
         public const string UserImitate = "UserImitate";
         public const string AnonymizeUser = "AnonymizeUser";
+        public const string GenerateInviteLink = "GenerateInviteLink";
+        public const string InvitationRequestsList = "InvitationRequestsList";
+        public const string DeleteInvitationRequest = "DeleteInvitationRequest";
 
         public const string AddressList = "AddressList";
         public const string GetAddress = "GetAddress";

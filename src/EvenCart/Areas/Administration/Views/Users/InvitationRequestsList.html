@@ -1,0 +1,97 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Invitation Requests" active_menu="InvitationRequestsList" parent_active_menu="UsersList" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Invitation Requests" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-requests" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="email">{{"Email" | t }}</th>
+                                <th data-column-id="createdOn">{{"Created On" | t }}</th>
+                                <th data-column-id="accepted" data-formatter="binary">{{"Request accepted" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{invitationRequests | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-requests",
+            initialData: {
+                invitationRequests: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_InvitationRequestsList %}',
+            responseObject: "invitationRequests",
+            selection: false,
+            navigation: 2,
+            columnSelection: false,
+            formatters: {
+                "binary": function(column, row) {
+                    return gridFormatters.binary(column, row, column.id);
+                },
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='generateLink(\"" +
+                        row.email +
+                        "\")'><span class=\"rbicon-check\"></span></button> " +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteRequest(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                }
+            }
+        });
+    });
+
+
+    var generateLink = function (email) {
+        post({
+            url: '{% route api_GenerateInviteLink %}',
+            data: {
+                email: email
+            },
+            onSuccess: function(response) {
+                notify("success", "{{'Invite link was successfully sent to ' | t}}" + email);
+            }
+        });
+    }
+
+    var deleteRequest = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this request? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteInvitationRequest %}",
+                    data: {
+                        invitationRequestId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-requests');
+                            notify("success", '{{"Request was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

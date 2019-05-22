@@ -4,6 +4,7 @@ using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Authentication;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Gdpr;
@@ -39,8 +40,9 @@ namespace EvenCart.Controllers
         private readonly IConsentService _consentService;
         private readonly IGdprService _gdprService;
         private readonly IGdprModelFactory _gdprModelFactory;
+        private readonly IInviteRequestService _inviteRequestService;
 
-        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService, IConsentService consentService, IGdprService gdprService, IGdprModelFactory gdprModelFactory)
+        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService, IConsentService consentService, IGdprService gdprService, IGdprModelFactory gdprModelFactory, IInviteRequestService inviteRequestService)
         {
             _appAuthenticationService = appAuthenticationService;
             _userSettings = userSettings;
@@ -54,6 +56,7 @@ namespace EvenCart.Controllers
             _consentService = consentService;
             _gdprService = gdprService;
             _gdprModelFactory = gdprModelFactory;
+            _inviteRequestService = inviteRequestService;
         }
 
         [HttpGet("login", Name = RouteNames.Login)]
@@ -85,7 +88,6 @@ namespace EvenCart.Controllers
 
             return R.Fail.With("message", T("An error occured while login")).Result;
         }
-
 
         [HttpGet("password-reset", Name = RouteNames.ForgotPassword)]
         public IActionResult ForgotPassword(string code = null)
@@ -184,9 +186,10 @@ namespace EvenCart.Controllers
         /// <summary>
         /// Gets the consents(if any) required to complete the registration
         /// </summary>
+        /// <param name="requestModel"></param>
         /// <response>A list of <see cref="ConsentModel">consents</see></response>
         [DualGet("register", Name = RouteNames.Register)]
-        public IActionResult Register()
+        public IActionResult Register(RegisterRequestModel requestModel)
         {
             //if already logged in, redirect to home
             if (!CurrentUser.IsVisitor())
@@ -194,12 +197,23 @@ namespace EvenCart.Controllers
             //are registrations enabled?
             if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.Disabled)
                 return R.Fail.With("registrationDisabled", true).Result;
+            var inviteCode = requestModel?.InviteCode;
+            if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.InviteOnly)
+            {
+                if (inviteCode.IsNullEmptyOrWhiteSpace())
+                    return R.Fail.With("registrationDisabled", true).With("allowInvites", true).Result;
+                var userCode = _userCodeService.GetUserCode(inviteCode, UserCodeType.RegistrationInvitation);
+                if(!IsCodeValid(userCode))
+                    return R.Fail.With("registrationDisabled", true).With("allowInvites", true).Result;
+
+            }
 
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
             var models = consents.Select(_gdprModelFactory.Create).ToList();
-            return R.Success.With("consents", models).WithAvailableCountries().Result;
+            return R.Success.With("consents", models).With("inviteCode", inviteCode).WithAvailableCountries().Result;
         }
+
         /// <summary>
         /// Logs the current user out. Valid only for cookie authentication
         /// </summary>
@@ -233,6 +247,17 @@ namespace EvenCart.Controllers
             //are registrations enabled?
             if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.Disabled)
                 return R.Fail.With("error", T("New registrations are disabled at the moment")).Result;
+            var inviteCode = registerModel.InviteCode;
+            UserCode userCode = null;
+            if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.InviteOnly)
+            {
+                if (inviteCode.IsNullEmptyOrWhiteSpace())
+                    return R.Fail.With("error", T("Registrations are allowed only by invitation")).Result;
+                userCode = _userCodeService.GetUserCode(inviteCode, UserCodeType.RegistrationInvitation);
+                if (userCode.Email != registerModel.Email || !IsCodeValid(userCode))
+                    return R.Fail.With("error", T("Registrations are allowed only by invitation")).Result;
+
+            }
             //validate consents first
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
@@ -253,7 +278,7 @@ namespace EvenCart.Controllers
                 UpdatedOn = DateTime.UtcNow,
                 IsSystemAccount = false,
                 Guid = Guid.NewGuid(),
-                Active = _userSettings.UserRegistrationDefaultMode == RegistrationMode.Immediate
+                Active = _userSettings.UserRegistrationDefaultMode == RegistrationMode.Immediate || _userSettings.UserRegistrationDefaultMode == RegistrationMode.InviteOnly
             };
             //register this user
             var registrationStatus = _userRegistrationService.Register(user, _securitySettings.DefaultPasswordStorageFormat);
@@ -268,12 +293,78 @@ namespace EvenCart.Controllers
             var consentDictionary = registerModel.Consents.ToDictionary(x => x.Id, x => x.ConsentStatus);
             _gdprService.SetUserConsents(user.Id, consentDictionary);
 
+            //delete the invite code & user code if any
+            _inviteRequestService.Delete(x => x.Email == registerModel.Email);
+            if (userCode != null)
+                _userCodeService.Delete(userCode);
+
             //raise the event
             RaiseEvent(NamedEvent.UserRegistered, user);
 
+            return R.Success.With("mode", _userSettings.UserRegistrationDefaultMode).Result;
+        }
+
+        [HttpGet("request-invite", Name = RouteNames.RequestInvite)]
+        public IActionResult RequestInvite()
+        {
+            //if already logged in, redirect to home
+            if (!CurrentUser.IsVisitor() || _userSettings.UserRegistrationDefaultMode != RegistrationMode.InviteOnly)
+                return RedirectToRoute(RouteNames.Home);
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Adds an invitation request to join the site
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <response code="200">A success response object</response>
+        [DualPost("request-invite", Name = RouteNames.RequestInvite, OnlyApi = true)]
+        public IActionResult RequestInvite(InviteRequestModel requestModel)
+        {
+            //if already logged in, redirect to home
+            if (!CurrentUser.IsVisitor())
+                return R.Fail.Result;
+            //check if the email being requested is already a regsitered user
+            var user = _userService.GetByUserInfo(requestModel.Email);
+            if (user != null)
+            {
+                return R.Fail.With("error", T("A user with this email is already registered")).Result;
+            }
+            //do we already have a request with this email
+            var inviteRequest = _inviteRequestService.FirstOrDefault(x => x.Email == requestModel.Email);
+            if (inviteRequest == null)
+            {
+                inviteRequest = new InviteRequest()
+                {
+                    Email = requestModel.Email,
+                    CreatedOn = DateTime.UtcNow
+                };
+                _inviteRequestService.Insert(inviteRequest);
+                RaiseEvent(NamedEvent.InvitationRequested, requestModel.Email);
+            }
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Verifies the email address
+        /// </summary>
+        /// <param name="code">The verification code</param>
+        /// <returns></returns>
+        [HttpGet("verify-email", Name = RouteNames.VerifyEmail)]
+        public IActionResult VerifyEmail(string code)
+        {
+            if (code.IsNullEmptyOrWhiteSpace())
+                return RedirectToRoute(RouteNames.Home);
+            var userCode = _userCodeService.GetUserCode(code, UserCodeType.EmailVerification);
+            if (!IsCodeValid(userCode))
+                return RedirectToRoute(RouteNames.Home);
+            //activate the user
+            userCode.User.Active = true;
+            _userService.Update(userCode.User);
+            //delete the user code
+            _userCodeService.Delete(userCode);
+            return R.Success.Result;
+        }
         #region Helpers
 
         [NonAction]
@@ -299,7 +390,23 @@ namespace EvenCart.Controllers
             {
                 return false;
             }
-            return _securitySettings.PasswordResetLinkExpirationHours <= 0 || DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <= _securitySettings.PasswordResetLinkExpirationHours;
+
+            if (userCode.CodeType == UserCodeType.PasswordReset)
+                return _securitySettings.PasswordResetLinkExpirationHours <= 0 ||
+                       DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
+                       _securitySettings.PasswordResetLinkExpirationHours;
+
+            if (userCode.CodeType == UserCodeType.RegistrationInvitation)
+                return _securitySettings.InviteLinkExpirationHours <= 0 ||
+                       DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
+                       _securitySettings.InviteLinkExpirationHours;
+
+            if (userCode.CodeType == UserCodeType.EmailVerification)
+                return _securitySettings.EmailVerificationLinkExpirationHours <= 0 ||
+                       DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
+                       _securitySettings.EmailVerificationLinkExpirationHours;
+
+            return false;
         }
         #endregion
     }

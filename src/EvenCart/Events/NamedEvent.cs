@@ -15,7 +15,10 @@
         ShipmentDeliveryFailed,
 
         PasswordResetRequested,
-        PasswordReset
+        PasswordReset,
+
+        InvitationRequested,
+        Invitation
         
     }
 }

@@ -40,5 +40,11 @@
 
         public const string ShipmentDeliveredMessageToAdmin = ShipmentDeliveredMessage + AdminSuffix;
 
+        public const string InvitationRequestedMessage = "Invitation.Requested";
+
+        public const string InvitationRequestedMessageToAdmin = InvitationRequestedMessage + AdminSuffix;
+
+        public const string InvitationMessage = "Invitation";
+
     }
 }

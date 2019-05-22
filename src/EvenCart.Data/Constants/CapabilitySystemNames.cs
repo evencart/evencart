@@ -94,5 +94,7 @@ namespace EvenCart.Data.Constants
         public const string AccessAdministration = "User.AccessAdministration";
 
         public const string ManageReports = "Report.Manage";
+
+        public const string ManageInvitationRequests = "InvitationRequest.Manage";
     }
 }

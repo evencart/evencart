@@ -74,6 +74,46 @@
             Default password format
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.ExpirePasswordDays">
+            <summary>
+            Specifies the number of days after last change, that user must change password
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.EmailVerificationLinkExpirationHours">
+            <summary>
+            The number of hours after which email verification link should expire. Set to 0 for no expiration.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.PasswordResetLinkExpirationHours">
+            <summary>
+            The number of hours after which password reset link should expire. Set to 0 for no expiration.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.InviteLinkExpirationHours">
+            <summary>
+            The number of hours after which invite link should expire. Set to 0 for no expiration.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.EnableCaptcha">
+            <summary>
+            If captcha should be enabled
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.BannedIps">
+            <summary>
+            The IP Address which are banned from accessing the site. Leave empty to allow all IP addresses.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.AdminRestrictedIps">
+            <summary>
+            The IP Addresses which are allowed to access admin area. Leave empty to allow all IP addresses.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.SharedVerificationKey">
+            <summary>
+            The private key that'll be required for POST requests if no verification token is passed
+            </summary>
+        </member>
         <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.IsInstalled">
             <summary>
             Is the application installed?
@@ -92,6 +132,41 @@
         <member name="P:EvenCart.Data.Entity.Settings.UserSettings.AreUserNamesEnabled">
             <summary>
             Specifies if user names are enabled for site
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Users.InviteRequest">
+            <summary>
+            Represents a request to join the store
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Users.InviteRequest.Email">
+            <summary>
+            The email which sent the request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Users.InviteRequest.CreatedOn">
+            <summary>
+            The date of request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Users.InviteRequest.Accepted">
+            <summary>
+            If the request has been accepted or not
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Users.UserCodeType.PasswordReset">
+            <summary>
+            Specifies a code for resetting password
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Users.UserCodeType.EmailVerification">
+            <summary>
+            Specifies a code for email verification
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Users.UserCodeType.RegistrationInvitation">
+            <summary>
+            Specifies a code for registration by invitation
             </summary>
         </member>
         <member name="F:EvenCart.Data.Enum.CreditTransactionType.Issued">

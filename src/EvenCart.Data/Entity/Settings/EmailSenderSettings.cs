@@ -42,5 +42,9 @@ namespace EvenCart.Data.Entity.Settings
 
         public bool ProductOutOfStockToAdminEnabled { get; set; }
 
+        public bool InviteRequestCreatedEmailEnabled { get; set; }
+
+        public bool InviteRequestCreatedEmailToAdminEnabled { get; set; }
+
     }
 }

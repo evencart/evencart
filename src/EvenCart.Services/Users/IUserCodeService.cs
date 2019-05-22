@@ -9,5 +9,6 @@ namespace EvenCart.Services.Users
 
         UserCode GetUserCode(string code, UserCodeType userCodeType);
 
+        UserCode GetUserCodeByEmail(string email, UserCodeType userCodeType);
     }
 }

@@ -33,5 +33,18 @@ namespace EvenCart.Services.Users
                 .SelectNested()
                 .FirstOrDefault();
         }
+
+        public UserCode GetUserCodeByEmail(string email, UserCodeType userCodeType)
+        {
+            var userCode = Repository.Where(x => x.Email == email && x.CodeType == userCodeType)
+                .Select()
+                .FirstOrDefault() ?? new UserCode();
+            userCode.Code = Guid.NewGuid().ToString("D");
+            userCode.CodeType = userCodeType;
+            userCode.CreatedOn = DateTime.UtcNow;
+            userCode.Email = email;
+            InsertOrUpdate(userCode);
+            return userCode;
+        }
     }
 }

@@ -191,6 +191,7 @@
     <None Remove="Areas\Administration\Views\Users\Anonymize.html" />
     <None Remove="Areas\Administration\Views\Users\CapabilitiesList.html" />
     <None Remove="Areas\Administration\Views\Users\Imitate.html" />
+    <None Remove="Areas\Administration\Views\Users\InvitationRequestsList.html" />
     <None Remove="Areas\Administration\Views\Users\OrdersList.html" />
     <None Remove="Areas\Administration\Views\Users\UserCart.html" />
     <None Remove="Areas\Administration\Views\Users\UserEditor.html" />
@@ -223,6 +224,7 @@
     <None Remove="Content\Themes\Default\Views\Addresses\AddressForm.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\ForgotPassword.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\Register.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\RequestInvite.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Wishlist.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
@@ -741,6 +743,9 @@
     <Content Include="Areas\Administration\Views\Users\AddressEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Users\InvitationRequestsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Users\AddressList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -842,6 +847,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Addresses\AddressForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Authentication\RequestInvite.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\ForgotPassword.html">

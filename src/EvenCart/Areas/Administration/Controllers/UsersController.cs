@@ -11,6 +11,7 @@ using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
+using EvenCart.Events;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Purchases;
@@ -28,6 +29,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
+    /// <summary>
+    /// Allows admins to manage users
+    /// </summary>
     public class UsersController : FoundationAdminController
     {
         private readonly IUserService _userService;
@@ -41,7 +45,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IRoleModelFactory _roleModelFactory;
         private readonly ICartService _cartService;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService)
+        private readonly IUserCodeService _userCodeService;
+        private readonly IInviteRequestService _inviteRequestService;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -54,6 +60,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _orderModelFactory = orderModelFactory;
             _roleModelFactory = roleModelFactory;
             _cartService = cartService;
+            _userCodeService = userCodeService;
+            _inviteRequestService = inviteRequestService;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -61,8 +69,13 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ViewUsers)]
         public IActionResult UsersList([FromQuery] UserSearchModel searchModel)
         {
+            var negate = searchModel.RoleIds == null;
+            searchModel.RoleIds = searchModel.RoleIds ?? new int[]
+            {
+                _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Visitor)?.Id ?? 0
+            };
             var users = _userService.GetUsers(searchModel.SearchPhrase, searchModel.RoleIds, null, SortOrder.Ascending, searchModel.Current,
-                searchModel.RowCount, out int totalMatches);
+                searchModel.RowCount, out int totalMatches, negate);
 
             //convert to model
             var userModels = users.Select(x =>
@@ -321,6 +334,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return RedirectToRoute(RouteNames.Home);
             return R.Fail.WithView("Imitate").Result;
         }
+
         [HttpGet("{userId}/anonymize", Name = AdminRouteNames.AnonymizeUser)]
         [CapabilityRequired(CapabilitySystemNames.ManageGdprPrivate)]
         public IActionResult Anonymize(int userId)
@@ -345,6 +359,53 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.With("userId", userId).Result;
         }
 
+        [DualGet("invitation-requests", Name = AdminRouteNames.InvitationRequestsList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageInvitationRequests)]
+        public IActionResult InvitationRequestsList(InvitationRequestsSearchModel searchModel)
+        {
+            searchModel = searchModel ?? new InvitationRequestsSearchModel();
+            var requests = _inviteRequestService.Get(out int totalResults, x => true, page: searchModel.Current,
+                count: searchModel.RowCount);
+            var models = requests.Select(x => new InvitationRequestModel()
+            {
+                CreatedOn = x.CreatedOn,
+                Email = x.Email,
+                Accepted = x.Accepted,
+                Id = x.Id
+            }).ToList();
+            return R.Success.With("invitationRequests", models)
+                .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount).Result;
+        }
+
+        [DualPost("invitation-requests", Name = AdminRouteNames.DeleteInvitationRequest, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageInvitationRequests)]
+        public IActionResult DeleteInvitationRequest(int invitationRequestId)
+        {
+            var request = _inviteRequestService.Get(invitationRequestId);
+            if (request == null)
+            {
+                return NotFound();
+            }
+            _inviteRequestService.Delete(request);
+            return R.Success.Result;
+        }
+
+        [DualPost("generate-invite-link", Name = AdminRouteNames.GenerateInviteLink, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageInvitationRequests)]
+        public IActionResult GenerateInviteLink(GenerateInvitationLinkModel generateModel)
+        {
+            //check if user with this email already exists
+            var user = _userService.GetByUserInfo(generateModel.Email);
+            if (user != null)
+            {
+                return R.Fail.With("error", T("A user with this email is already registered")).Result;
+            }
+
+            var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, UserCodeType.RegistrationInvitation);
+            var invitationLink = ApplicationEngine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code});
+            RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
+            return R.Success.Result;
+        }
 
         #region Helpers
 

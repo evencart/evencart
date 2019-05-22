@@ -1,0 +1,43 @@
+﻿{% layout "_Layout" %}
+<div class="page-section section wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-center">
+                    {{"Request Invitation" | t}}
+                </h3>
+            </div>
+            <div class="col-sm-8 offset-2">
+                <div class="login-reg-form">
+                    <div class="text-center">
+                        {{"Thank you for your interest. Please provide your email so we can send your an invite link." | t}}
+                    </div>
+                    <form action="{% route api_RequestInvite %}" method="post" id="request-form">
+                        {% control xsrf %}
+                        <div class="col-sm-12 mb-20">
+                            {% control label text=@t"Email" for="email" %}
+                            {% control text name="email" id="email" %}
+                            {% control validator for="email" required="true" email="true" %}
+                        </div>
+                        <div class="col-sm-12 mb-20 text-center">
+                            <input id="requestInvite" name="requestInvite" type="submit" value='{{"Request Invite" | t}}'>
+                        </div>
+                    </form>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function() {
+                            initAjaxForm("request-form",
+                                {
+                                    onSuccess: function(response) {
+                                        jQuery("#requestInvite").hide();
+                                        notify("success",
+                                            '{{"Thank you for your interest. We will notify you soon with your invitation link." | t}}');
+                                    }
+                                });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

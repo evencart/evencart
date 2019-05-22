@@ -10,6 +10,8 @@ namespace EvenCart.Data.Enum
         WithActivationEmail,
         [Description("Manually approve the registered user")]
         ManualApproval,
+        [Description("Only users with invitation link will be allowed to register")]
+        InviteOnly,
         [Description("Disable Registrations")]
         Disabled
     }

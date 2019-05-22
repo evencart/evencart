@@ -13,6 +13,8 @@ namespace EvenCart.Data.Entity.Users
 
         public UserCodeType CodeType { get; set; }
 
+        public string Email { get; set; }
+
         #region Virtual Properties
         public virtual User User { get; set; }
         #endregion

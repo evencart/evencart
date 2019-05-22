@@ -36,6 +36,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<Address>(transaction);
             Db.CreateTable<Country>(transaction);
             Db.CreateTable<StateOrProvince>(transaction);
+            Db.CreateTable<InviteRequest>(transaction);
 
             Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction, true);
@@ -141,7 +142,6 @@ namespace EvenCart.Data.Versions
             //old password and active codes
             Db.CreateTable<PreviousPassword>(transaction);
             Db.CreateTable<UserCode>(transaction);
-            Db.CreateConstraint(Relation.Create<User, UserCode>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction, true);
 
             Db.CreateTable<Currency>(transaction);
@@ -232,6 +232,7 @@ namespace EvenCart.Data.Versions
             Db.DropTable<Address>(transaction);
             Db.DropTable<Country>(transaction);
             Db.DropTable<StateOrProvince>(transaction);
+            Db.DropTable<InviteRequest>(transaction);
 
             //shop
             Db.DropTable<Product>(transaction);
