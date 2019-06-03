@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Linq;
 using EvenCart.Core.Config;
-using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Settings
 {
     public class SettingService : FoundationEntityService<Setting>, ISettingService
     {
+        private readonly IDataSerializer _dataSerializer;
+        public SettingService(IDataSerializer dataSerializer)
+        {
+            _dataSerializer = dataSerializer;
+        }
+
         public Setting Get<T>(string keyName) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
@@ -50,7 +57,15 @@ namespace EvenCart.Services.Settings
             {
                 var propertyName = property.Name;
                 var valueObj = property.GetValue(settings);
-                var value = valueObj == null ? "" : valueObj.ToString();
+                var value = "";
+                if (!property.PropertyType.IsPrimitive())
+                {
+                    value = valueObj != null ? _dataSerializer.Serialize(valueObj) : "";
+                }
+                else
+                {
+                    value = valueObj != null ? valueObj.ToString() : "";
+                }
                 //save the property
                 Save<T>(propertyName, value);
             }
@@ -121,8 +136,18 @@ namespace EvenCart.Services.Settings
                 var savedSettingEntity = allSettings.FirstOrDefault(x => x.Key == propertyName);
 
                 if (savedSettingEntity != null)
-                    //set the property
-                    property.SetValue(settingsInstance, TypeConverter.CastPropertyValue(property, savedSettingEntity.Value));
+                {
+                    if (property.PropertyType.IsPrimitive())
+                    {
+                        //set the property
+                        property.SetValue(settingsInstance, TypeConverter.CastPropertyValue(property, savedSettingEntity.Value));
+                    }
+                    else
+                    {
+                        property.SetValue(settingsInstance, _dataSerializer.Deserialize(savedSettingEntity.Value, property.PropertyType));
+                    }
+                   
+                }
             }
         }
     }
