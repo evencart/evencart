@@ -1,0 +1,108 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Warehouses" active_menu="GetWarehouse" parent_active_menu="WarehouseList" menu_group="WarehouseEdit" %}
+
+<form action="{% route api_SaveWarehouse %}" method="post" id="edit-address-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Warehouse Editor" | t}}
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Full Name" for="name" %}
+                        {% control text id="name" name="address.name" value="{{warehouse.address.name}}" %}
+                        {% control validator for="name" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% control label text=@t"Address Line 1" for="address1" %}
+                                {% control text id="address1" name="address.address1" value="{{warehouse.address.address1}}" placeholder=@t"e.g. 123, South Avenue" %}
+                                {% control validator for="address1" required="true" %}
+                            </div>
+                            <div class="col-md-4">
+                                {% control label text=@t"Address Line 2" for="address1" %}
+                                {% control text id="address2" name="address.address2" value="{{warehouse.address.address2}}" placeholder=@t"e.g. Necklace Road" %}
+                            </div>
+                            <div class="col-md-4">
+                                {% control label text=@t"Landmark" for="landmark" %}
+                                {% control text id="landmark" name="address.landmark" value="{{warehouse.address.landmark}}" placeholder=@t"e.g. Opp. luxury gas station" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% control label text=@t"Country" for="country" %}
+                                {% control select id="country" name="address.countryId" value="warehouse.address.countryId" required="true" items="availableCountries" %}
+                            </div>
+                            <div class="col-md-4">
+                                {% control label text=@t"State or Province" for="state" %}
+                                {% control select id="state" name="address.stateOrProvinceId" value="warehouse.address.stateOrProvinceId" items="items" %}
+                            </div>
+                            <div class="col-md-4" id="other-state-container">
+                                {% control label text=@t"State or Province" for="state" %}
+                                {% control text name="stateProvinceName" value="{{warehouse.address.stateProvinceName}}" %}
+                            </div>
+                            <script type="text/javascript">
+                                ready(function () {
+                                    initCountryState("country", "state", "other-state-container", "{{warehouse.address.stateProvinceId}}");
+                                });
+                            </script>
+                            <div class="col-md-4">
+                                {% control label text=@t"City" for="city" %}
+                                {% control text id="city" name="address.city" value="{{warehouse.address.city}}" %}
+                                {% control validator for="city" required="true" %}
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                 
+                  
+                    <div class="form-group">
+                        {% control label text=@t"Zip / Postal Code" for="zippostalcode" %}
+                        {% control text id="zippostalcode" name="address.zippostalcode" value="{{warehouse.address.zipPostalCode}}" %}
+                        {% control validator for="zippostalcode" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Phone" for="phone" %}
+                        {% control text id="phone" name="address.phone" value="{{warehouse.address.phone}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email" for="email" %}
+                        {% control text id="email" name="address.email" value="{{warehouse.address.email}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Website" for="website" %}
+                        {% control text id="website" name="address.website" value="{{warehouse.address.website}}" %}
+                    </div>                  
+                </div>
+            </div>
+        </div>
+        <div class="save-button-container">
+            {% control hidden name="id" value="{{warehouse.id}}" %}
+            <button type="submit" class="btn btn-success">{{"Save Warehouse" | t}}</button>
+            <a class="btn btn-default" href='{% route WarehouseList %}'>{{"Cancel" | t}}</a>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("edit-address-form",
+            {
+                onSuccess: function() {
+                    
+                    notify("success", '{{"Warehouse was saved successfully" | t}}');
+                    setTimeout(function() {
+                            navigate('{% route WarehouseList %}');
+                        },
+                        1000);
+                }
+            });
+    });
+ 
+</script>

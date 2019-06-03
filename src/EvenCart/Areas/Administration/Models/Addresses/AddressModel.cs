@@ -3,7 +3,7 @@ using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
 
-namespace EvenCart.Areas.Administration.Models.Users
+namespace EvenCart.Areas.Administration.Models.Addresses
 {
     public class AddressModel : FoundationEntityModel, IRequiresValidations<AddressModel>
     {

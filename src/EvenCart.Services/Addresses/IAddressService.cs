@@ -5,6 +5,6 @@ namespace EvenCart.Services.Addresses
 {
     public interface IAddressService : IFoundationEntityService<Address>
     {
-        
+        Address Get<T>(int id);
     }
 }

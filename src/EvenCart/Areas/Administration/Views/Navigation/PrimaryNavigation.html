@@ -85,6 +85,13 @@
 {% secondary_navigation url="{% route EmailTemplatesList %}" iconClass="rbicon-chevron-left" title=@t"Back to email templates" groupId="EmailTemplateEdit" %}
 {% secondary_navigation url="{% route GetEmailTemplate emailTemplateId="{{emailTemplateId}}" %}" title=@t"Edit Email Template" systemName="GetEmailTemplate" groupId="EmailTemplateEdit" %}
 
+<!--Warehouses-->
+{% primary_navigation title=@t"Warehouses" systemName="WarehouseList" groupId="masters" capability="Warehouse.Manage" %}
+{% secondary_navigation url="{% route WarehouseList %}" title=@t"All Warehouses" systemName="WarehouseList" parent="WarehouseList" %}
+
+{% secondary_navigation url="{% route WarehouseList %}" iconClass="rbicon-chevron-left" title=@t"Back to warehouses" groupId="WarehouseEdit" %}
+{% secondary_navigation url="{% route GetWarehouse warehouseId="{{warehouseId}}" %}" title=@t"Warehouse Info" systemName="GetWarehouse" groupId="WarehouseEdit" %}
+
 <!--Countries-->
 {% primary_navigation title=@t"Countries" systemName="CountriesList" groupId="masters" capability="Country.Manage" %}
 {% secondary_navigation url="{% route CountriesList %}" title=@t"All Countries" systemName="CountriesList" parent="CountriesList" %}

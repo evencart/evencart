@@ -6,6 +6,7 @@ using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Promotions;
@@ -44,6 +45,7 @@ namespace EvenCart.Services.Purchases
         {
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
             Expression<Func<Product, bool>> productWhere = product => product.Published;
+            Expression<Func<Address, bool>> addressWhere = address => address.EntityName == nameof(User);
             var userCart = Repository.Where(x => x.UserId == userId && x.IsWishlist == isWishlist)
                 .Join<CartItem>("Id", "CartId", joinType: JoinType.LeftOuter)
                 .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
@@ -55,6 +57,10 @@ namespace EvenCart.Services.Purchases
                 .Join<User>("UserId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Address>("BillingAddressId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Country>("CountryId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Address>("ShippingAddressId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Country>("CountryId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Cart, CartItem>())
                 .Relate<Product>((cart, product) =>
                 {
@@ -107,8 +113,23 @@ namespace EvenCart.Services.Purchases
                     cart.User.Roles = cart.User.Roles ?? new List<Role>();
                     cart.User.Roles.Add(role);
                 })
+                .Relate<Address>((cart, address) =>
+                {
+                    if (cart.BillingAddressId == address.Id)
+                        cart.BillingAddress = address;
+                    if (cart.ShippingAddressId == address.Id)
+                        cart.ShippingAddress = address;
+                })
+                .Relate<Country>((cart, country) =>
+                {
+                    if (cart.BillingAddress?.CountryId == country.Id)
+                        cart.BillingAddress.Country = country;
+                    if (cart.ShippingAddress != null && cart.ShippingAddress?.CountryId == country.Id)
+                        cart.ShippingAddress.Country = country;
+                })
                 .Where(seoMetaWhere)
                 .Where(productWhere)
+                .Where(addressWhere)
                 .SelectNested()
                 .FirstOrDefault();
 

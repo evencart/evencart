@@ -20,5 +20,11 @@ namespace EvenCart.Services.Addresses
                 .Relate(RelationTypes.OneToOne<Address, StateOrProvince>())
                 .SelectNested(page, count);
         }
+
+        public Address Get<T>(int id)
+        {
+            var entityName = typeof(T).Name;
+            return FirstOrDefault(x => x.EntityName == entityName && x.Id == id);
+        }
     }
 }

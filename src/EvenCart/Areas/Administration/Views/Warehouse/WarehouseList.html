@@ -1,0 +1,106 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Warehouses" active_menu="WarehouseList" parent_active_menu="WarehouseList" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Warehouses" | t}}
+                <a class="btn btn-primary btn-sm float-right" href="" onclick="editAddress(0); return false;">{{"Add new warehouse" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-addresses" class="table table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="name">{{"Name" | t }}</th>
+                            <th data-column-id="address" data-formatter="address">{{"Address" | t }}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{warehouses | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-addresses",
+            initialData: {
+                addresses: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_WarehouseList userId="{{userId}}" %}',
+            responseObject: "warehouses",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {
+                "name": function(c, r) {
+                    return r.address.name;
+                },
+                "address": function(column, row) {
+                    var address = "";
+                    if (row.address.address1)
+                        address += "<div><span>" + row.address.address1 + "</span></div>";
+                    if (row.address.address2)
+                        address += "<div><span>" + row.address.address2 + "</span></div>";
+                    if (row.address.city)
+                        address += "<div><span>" + row.address.city + "</span></div>";
+                    if (row.address.stateProvinceName)
+                        address += "<div><span>" + row.address.stateProvinceName + "</span></div>";
+                    if (row.address.countryName)
+                        address += "<div><span>" + row.address.countryName + "</span></div>";
+                    if (row.address.zipPostalCode)
+                        address += "<div><span>" + row.address.zipPostalCode + "</span></div>";
+                    return address;
+                },
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editAddress(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                }
+            }
+        });
+    });
+
+
+    var editAddress = function (id) {
+        var url = '{% route GetWarehouse warehouseId="?" %}';
+        navigate(url.replace("?", id));
+    }
+
+    var deleteAddress = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this warehouse? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteWarehouse %}",
+                    data: {
+                        warehouseId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-addresses');
+                            notify("success", '{{"Warehouse was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

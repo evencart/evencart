@@ -21,8 +21,7 @@
                 </select>
                 {% endif %}
                 {% if shippingRequired %}
-                <div id="billing-address-container" class="address-container" {% if addresses.size>
-                    0 %}style="display: none"{% endif %}>
+                <div id="billing-address-container" class="address-container" {% if addresses.size> 0 %}style="display: none"{% endif %}>
                     {% partial "Addresses/AddressForm" prefix="BillingAddress." %}
                 </div>
                 {% control checkbox name="UseDifferentShippingAddress" id="UseDifferentShippingAddress" text=@t"Use different address for shipping" value="false" %}
@@ -42,8 +41,7 @@
                         </option>
                     </select>
                     {% endif %}
-                    <div id="shipping-address-container" class="address-container" {% if addresses.size>
-                        0 %}style="display: none"{% endif %}>
+                    <div id="shipping-address-container" class="address-container" {% if addresses.size>0 %}style="display: none"{% endif %}>
                         {% partial "Addresses/AddressForm" prefix="ShippingAddress." %}
                     </div>
                 </div>
@@ -72,9 +70,9 @@
             </div>
             <div class="col-md-6">
                 <h3>
-                    {{"Delivery Speed" | t}}
+                    {{"Delivery Provider" | t}}
                 </h3>
-                <ul>
+                <ul id="shipping-methods-list">
                     {% for shippingMethod in shippingMethods %}
                     <li>
                         <label>

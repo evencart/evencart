@@ -779,6 +779,12 @@
     <Content Include="Areas\Administration\Views\Vendors\VendorsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Warehouse\WarehouseEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Warehouse\WarehouseList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Widget\CustomHtml.Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

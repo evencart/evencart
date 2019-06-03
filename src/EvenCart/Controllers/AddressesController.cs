@@ -40,9 +40,10 @@ namespace EvenCart.Controllers
             //get the address first
             var address = addressModel.Id > 0 ? _addressService.Get(addressModel.Id) : new Address()
             {
-                UserId = currentUser.Id
+                EntityId = currentUser.Id,
+                EntityName = nameof(User)
             };
-            if (address == null || address.UserId != currentUser.Id)
+            if (address == null || address.EntityId != currentUser.Id)
                 return NotFound();
 
             _modelMapper.Map(addressModel, address);
@@ -60,7 +61,7 @@ namespace EvenCart.Controllers
             var currentUser = ApplicationEngine.CurrentUser;
             //get the address first
             var address = addressId > 0 ? _addressService.Get(addressId) : null;
-            if (address == null || address.UserId != currentUser.Id)
+            if (address?.EntityName != nameof(User) || address.EntityId != currentUser.Id)
                 return NotFound();
 
             _addressService.Delete(address);
@@ -74,7 +75,7 @@ namespace EvenCart.Controllers
         public IActionResult Addresses()
         {
             var currentUser = ApplicationEngine.CurrentUser;
-            var addresses = _addressService.Get(x => x.UserId == currentUser.Id).ToList();
+            var addresses = _addressService.Get(x => x.EntityId == currentUser.Id && x.EntityName == nameof(User)).ToList();
             var models = addresses.Select(x =>
             {
                 var model = _modelMapper.Map<AddressInfoModel>(x);
@@ -97,10 +98,10 @@ namespace EvenCart.Controllers
             //find address
             var address = addressId > 0 ? _addressService.Get(addressId) : new Address()
             {
-                UserId = currentUser.Id
+                EntityId = currentUser.Id
             };
             //only allow if current user can edit this address
-            if (address == null || address.UserId != ApplicationEngine.CurrentUser.Id)
+            if (address == null || address.EntityId != ApplicationEngine.CurrentUser.Id)
                 return NotFound();
             var model = _modelMapper.Map<AddressInfoModel>(address);
             //set breadcrumb nodes

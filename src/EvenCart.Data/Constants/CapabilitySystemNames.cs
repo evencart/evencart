@@ -96,5 +96,7 @@ namespace EvenCart.Data.Constants
         public const string ManageReports = "Report.Manage";
 
         public const string ManageInvitationRequests = "InvitationRequest.Manage";
+
+        public const string ManageWarehouses = "Warehouse.Manage";
     }
 }

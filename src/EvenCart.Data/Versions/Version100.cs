@@ -154,7 +154,10 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction, true);
-
+            
+            //warehouses
+            Db.CreateTable<Warehouse>(transaction);
+            Db.CreateConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction, true);
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
             Db.CreateTable<Log>(transaction);
@@ -219,6 +222,7 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction);
+            Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);

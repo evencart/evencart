@@ -110,7 +110,7 @@ namespace EvenCart.Services.Tests.Products
                 CountryId = _countries[0].Id,
                 StateProvinceId = _states[0].Id,
                 ZipPostalCode = "452000",
-                UserId = user.Id
+                EntityId = user.Id
             };
             _addressService.Insert(address1);
 
@@ -121,7 +121,7 @@ namespace EvenCart.Services.Tests.Products
                 CountryId = _countries[0].Id,
                 StateProvinceId = _states[0].Id,
                 ZipPostalCode = "452001",
-                UserId = user.Id
+                EntityId = user.Id
             };
             _addressService.Insert(address2);
 
@@ -132,7 +132,7 @@ namespace EvenCart.Services.Tests.Products
                 CountryId = _countries[1].Id,
                 StateProvinceId = _states[0].Id,
                 ZipPostalCode = "452001",
-                UserId = user.Id
+                EntityId = user.Id
             };
             _addressService.Insert(address3);
             _addresses = new Address[] {address1, address2, address3};

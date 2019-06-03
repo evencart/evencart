@@ -99,6 +99,39 @@
             Allows admins to manage users
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.WarehouseController">
+            <summary>
+            Allows store admin to manage warehouses
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.WarehouseController.WarehouseList(EvenCart.Areas.Administration.Models.Warehouse.WarehouseSearchModel)">
+            <summary>
+            Get the ware house list
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel">warehouse</see> objects as 'warehouses'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.WarehouseController.WarehouseEditor(System.Int32)">
+            <summary>
+            Gets a warehouse with specific id
+            </summary>
+            <param name="warehouseId">The id of the warehouse</param>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel">warehouse</see> object as 'warehouse'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.WarehouseController.SaveWarehouse(EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel)">
+            <summary>
+            Saves a warehouse to database
+            </summary>
+            <param name="warehouseModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.WarehouseController.DeleteWarehouse(System.Int32)">
+            <summary>
+            Deletes specific warehouse
+            </summary>
+            <param name="warehouseId">The id of the warehouse</param>
+            <response code="200">A success response object</response>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">
             <summary>
             Contains information about various totals
@@ -272,6 +305,16 @@
         <member name="T:EvenCart.Areas.Administration.Models.Users.InvitationRequestsSearchModel">
             <summary>
             The search parameters for invitation requests
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel.Address">
+            <summary>
+            The address details of the warehouse
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseSearchModel">
+            <summary>
+            A warehouse search object
             </summary>
         </member>
         <member name="T:EvenCart.Controllers.AccountController">

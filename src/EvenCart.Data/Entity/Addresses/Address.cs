@@ -7,7 +7,9 @@ namespace EvenCart.Data.Entity.Addresses
     /// </summary>
     public class Address : FoundationEntity
     {
-        public int UserId { get; set; }
+        public string EntityName { get; set; }
+
+        public int EntityId { get; set; }
 
         public string Name { get; set; }
 

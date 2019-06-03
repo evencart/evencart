@@ -78,7 +78,7 @@ namespace EvenCart.Services.Users
         {
             var user = Get(userId);
             //addresses
-            var addresses = _addressService.Get(x => x.UserId == userId).ToList();
+            var addresses = _addressService.Get(x => x.EntityId == userId && x.EntityName == nameof(User)).ToList();
             var orders = _orderService.Get(x => x.UserId == userId).ToList();
             var reviews = _reviewService.Get(x => x.UserId == userId).ToList();
             var email = user.Email;

@@ -224,5 +224,11 @@
         public const string BestSellersReport = "BestSellersReport";
         public const string OrdersChartReport = "OrdersChartReport";
         public const string UsersChartReport = "UsersChartReport";
+
+
+        public const string WarehouseList = "WarehouseList";
+        public const string GetWarehouse = "GetWarehouse";
+        public const string SaveWarehouse = "SaveWarehouse";
+        public const string DeleteWarehouse = "DeleteWarehouse";
     }
 }

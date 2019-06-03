@@ -74,7 +74,7 @@ namespace EvenCart.Controllers
                 return RedirectToRoute(RouteNames.Home);
             var currentUser = ApplicationEngine.CurrentUser;
             //get addresses for current user
-            var addresses = _addressService.Get(x => x.UserId == currentUser.Id);
+            var addresses = _addressService.Get(x => x.EntityId == currentUser.Id && x.EntityName == nameof(User));
             var addressModels = addresses.Select(x =>
             {
                 var model = _modelMapper.Map<AddressInfoModel>(x);
@@ -104,7 +104,7 @@ namespace EvenCart.Controllers
                 .WithAvailableCountries()
                 .Result;
         }
-
+       
         /// <summary>
         /// Saves the address information for the authenticated user's cart
         /// </summary>
@@ -124,7 +124,7 @@ namespace EvenCart.Controllers
             {
                 //is it the valid address of current user?
                 var billingAddressId = requestModel.BillingAddress.Id;
-                if (_addressService.Count(x => x.UserId == currentUser.Id && x.Id == billingAddressId) == 0)
+                if (_addressService.Count(x => x.EntityId == currentUser.Id && x.Id == billingAddressId) == 0)
                     return R.Fail.With("error", T("Invalid billing address provided")).Result;
             }
 
@@ -135,7 +135,7 @@ namespace EvenCart.Controllers
                     //is it the valid address of current user?
                     var shippingAddressId = requestModel.ShippingAddress.Id;
                     Address shippingAddress = null;
-                    if ((shippingAddress = _addressService.Get(x => x.UserId == currentUser.Id && x.Id == shippingAddressId, 1, 1).FirstOrDefault()) == null)
+                    if ((shippingAddress = _addressService.Get(x => x.EntityId == currentUser.Id && x.Id == shippingAddressId, 1, 1).FirstOrDefault()) == null)
                         return R.Fail.With("error", T("Invalid shipping address provided")).Result;
 
                     if (!shippingAddress.StateOrProvince?.ShippingEnabled ?? false)
@@ -150,25 +150,17 @@ namespace EvenCart.Controllers
                 }
             }
 
-            //shipping handler validation
-            if (requestModel.ShippingMethod != null)
-            {
-
-                //validate shipping method
-                var shippingHandler = PluginHelper.GetShipmentHandler(requestModel.ShippingMethod.SystemName);
-                if (shippingHandler == null)
-                    return R.Fail.With("error", T("Shipping method unavailable")).Result;
-                cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
-                cart.ShippingFee = shippingHandler.GetShippingHandlerFee(cart);
-            }
+            
 
             //save addresses if required
             if (requestModel.BillingAddress.Id == 0)
             {
                 var address = _modelMapper.Map<Address>(requestModel.BillingAddress);
-                address.UserId = currentUser.Id;
+                address.EntityId = currentUser.Id;
+                address.EntityName = nameof(User);
                 _addressService.Insert(address);
                 requestModel.BillingAddress.Id = address.Id;
+                cart.BillingAddress = address;
             }
            
             if (requestModel.UseDifferentShippingAddress)
@@ -176,18 +168,37 @@ namespace EvenCart.Controllers
                 if (requestModel.ShippingAddress.Id == 0)
                 {
                     var address = _modelMapper.Map<Address>(requestModel.ShippingAddress);
-                    address.UserId = currentUser.Id;
+                    address.EntityId = currentUser.Id;
+                    address.EntityName = nameof(User);
                     _addressService.Insert(address);
+                    cart.ShippingAddress = address;
                 }
             }
             else
             {
                 requestModel.ShippingAddress = requestModel.BillingAddress;
+                cart.ShippingAddress = cart.BillingAddress;
             }
+
             //save the address in the cart now
             cart.BillingAddressId = requestModel.BillingAddress.Id;
             cart.ShippingAddressId = requestModel.ShippingAddress.Id;
             _cartService.Update(cart);
+            //reload the cart
+            cart = _cartService.GetCart(currentUser.Id);
+            //shipping handler validation
+            if (requestModel.ShippingMethod != null)
+            {
+                //validate shipping method
+                var shippingHandler = PluginHelper.GetShipmentHandler(requestModel.ShippingMethod.SystemName);
+                if (shippingHandler == null)
+                    return R.Fail.With("error", T("Shipping method unavailable")).Result;
+                cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
+                cart.ShippingFee = shippingHandler.GetShippingHandlerFee(cart);
+                cart.ShippingMethodDisplayName = shippingHandler.PluginInfo.Name;
+            }
+
+         
 
             RaiseEvent(NamedEvent.OrderAddressSaved, cart);
             return R.Success.Result;

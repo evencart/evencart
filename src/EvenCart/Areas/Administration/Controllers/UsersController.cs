@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity.Enumerations;
+using EvenCart.Areas.Administration.Factories.Addresses;
 using EvenCart.Areas.Administration.Factories.Orders;
+using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Core.Infrastructure;
@@ -47,7 +49,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly ICartService _cartService;
         private readonly IUserCodeService _userCodeService;
         private readonly IInviteRequestService _inviteRequestService;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService)
+        private readonly IAddressModelFactory _addressModelFactory;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -62,6 +65,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _cartService = cartService;
             _userCodeService = userCodeService;
             _inviteRequestService = inviteRequestService;
+            _addressModelFactory = addressModelFactory;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -173,13 +177,8 @@ namespace EvenCart.Areas.Administration.Controllers
             if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
 
-            var addresses = _addressService.Get(x => x.UserId == userId).ToList();
-            var addressesModel = addresses.Select(x =>
-            {
-                var aModel = MapAddressModel(x);
-                aModel.CountryName = x.Country.Name;
-                return aModel;
-            }).ToList();
+            var addresses = _addressService.Get(x => x.EntityId == userId && x.EntityName == nameof(User)).ToList();
+            var addressesModel = addresses.Select(_addressModelFactory.Create).ToList();
             return R.Success.With("addresses", () => addressesModel, () => _dataSerializer.Serialize(addressesModel)).Result;
         }
 
@@ -191,7 +190,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
 
             var address = addressId > 0 ? _addressService.Get(addressId) : new Address();
-            if (address == null)
+            if (address?.EntityName != nameof(User) || address.EntityId != userId)
                 return NotFound();
 
             var addressModel = _modelMapper.Map<AddressModel>(address);
@@ -208,6 +207,7 @@ namespace EvenCart.Areas.Administration.Controllers
             if (address == null)
                 return NotFound();
             _modelMapper.Map(addressModel, address);
+            address.EntityName = nameof(User);
             _addressService.InsertOrUpdate(address);
             return R.Success.Result;
         }
@@ -406,15 +406,5 @@ namespace EvenCart.Areas.Administration.Controllers
             RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
             return R.Success.Result;
         }
-
-        #region Helpers
-
-        private AddressModel MapAddressModel(Address address)
-        {
-            var addressModel = _modelMapper.Map<AddressModel>(address);
-            addressModel.CountryName = address.Country.Name;
-            return addressModel;
-        }
-        #endregion
     }
 }
