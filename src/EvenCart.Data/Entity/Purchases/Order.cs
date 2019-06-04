@@ -21,6 +21,10 @@ namespace EvenCart.Data.Entity.Purchases
 
         public string ShippingMethodName { get; set; }
 
+        public string ShippingMethodDisplayName { get; set; }
+
+        public string SelectedShippingOption { get; set; }
+
         public string PaymentMethodName { get; set; }
 
         public decimal Discount { get; set; }

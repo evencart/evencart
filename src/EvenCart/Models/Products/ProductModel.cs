@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Media;
@@ -64,6 +65,28 @@ namespace EvenCart.Models.Products
         public bool IsAvailable { get; set; }
 
         public string SeName { get; set; }
+
+        public bool ReviewsDisabled { get; set; }
+
+        public decimal PackageWeight { get; set; }
+
+        public WeightUnit PackageWeightUnit { get; set; }
+
+        public decimal PackageWidth { get; set; }
+
+        public LengthUnit PackageWidthUnit { get; set; }
+
+        public decimal PackageHeight { get; set; }
+
+        public LengthUnit PackageHeightUnit { get; set; }
+
+        public decimal PackageThickness { get; set; }
+
+        public LengthUnit PackageThicknessUnit { get; set; }
+
+        public decimal AdditionalShippingCharge { get; set; }
+
+        public bool IndividuallyShipped { get; set; }
 
         public ReviewSummaryModel ReviewSummary { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Extensions;
@@ -122,6 +123,16 @@ namespace EvenCart.Infrastructure.Mvc
         public static CustomResponse WithRoundingTypes(this CustomResponse customResponse)
         {
             return customResponse.With("roundingTypes", SelectListHelper.GetSelectItemList<Rounding>());
+        }
+
+        public static CustomResponse WithLengthUnits(this CustomResponse customResponse)
+        {
+            return customResponse.With("lengthUnits", SelectListHelper.GetSelectItemList<LengthUnit>());
+        }
+
+        public static CustomResponse WithWeightUnits(this CustomResponse customResponse)
+        {
+            return customResponse.With("weightUnits", SelectListHelper.GetSelectItemList<WeightUnit>());
         }
     }
 }

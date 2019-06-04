@@ -16,6 +16,7 @@
 
         public const string Cart = "Cart";
         public const string CheckoutAddress = "CheckoutAddress";
+        public const string CheckoutShippingOption = "CheckoutShippingOption";
         public const string CheckoutPayment = "CheckoutPayment";
         public const string CheckoutInit = "CheckoutInit";
         public const string CheckoutConfirm = "CheckoutConfirm";

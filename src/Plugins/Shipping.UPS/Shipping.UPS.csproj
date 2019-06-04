@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.UPS\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.UPS\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.UPS\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ProviderImpl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="config.json" />
+    <None Remove="Views\Administration\UPS\Settings.html" />
+    <None Remove="Views\Administration\UPS\_Navigation.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\UPS\Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\UPS\_Navigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
+  </ItemGroup>
+
+</Project>

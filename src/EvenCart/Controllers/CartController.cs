@@ -67,7 +67,7 @@ namespace EvenCart.Controllers
                     return R.Redirect(loginUrl).Result;
                 }
             }
-            
+
             //first get the product
             var product = _productService.Get(cartItemModel.ProductId);
             if (product == null || !product.IsPublic())
@@ -108,12 +108,16 @@ namespace EvenCart.Controllers
                     }
                 }
 
-                //validate the quantity
-                ValidateQuantityRange(cartItemModel.Quantity, product, out validationResult);
-                if (validationResult != null)
-                    return validationResult;
+                if (!product.HasVariants)
+                {
+                    //validate the quantity
+                    ValidateQuantityRange(cartItemModel.Quantity, product, out validationResult);
+                    if (validationResult != null)
+                        return validationResult;
+                }
 
-                
+
+
                 //should we check for availability
                 if (product.TrackInventory)
                 {
@@ -165,7 +169,8 @@ namespace EvenCart.Controllers
             if (cartItem == null)
             {
                 //no issue adding this
-                cartItem = new CartItem() {
+                cartItem = new CartItem()
+                {
                     ProductId = cartItemModel.ProductId,
                     Quantity = cartItemModel.Quantity,
                     AttributeJson = attributeJson,
@@ -317,14 +322,14 @@ namespace EvenCart.Controllers
                 result = R.Fail.With("error", T("The item is not available")).Result;
                 return;
             }
-            if (variant.StockQuantity == 0)
+            if (variant.StockQuantity == 0 && !variant.CanOrderWhenOutOfStock)
                 result = R.Fail.With("error", T("The item is out of stock")).Result;
         }
 
         private void ValidateProductQuantity(Product product, out IActionResult result)
         {
             result = null;
-            if (product.StockQuantity == 0)
+            if (product.StockQuantity == 0 && !product.CanOrderWhenOutOfStock)
                 result = R.Fail.With("error", T("The item is out of stock")).Result;
         }
         #endregion

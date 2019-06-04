@@ -196,11 +196,58 @@ namespace EvenCart.Controllers
                 cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
                 cart.ShippingFee = shippingHandler.GetShippingHandlerFee(cart);
                 cart.ShippingMethodDisplayName = shippingHandler.PluginInfo.Name;
+                //find the shipping options & store shipping options. These 
+                var shippingOptionModels = GetShipmentOptionModels(shippingHandler, cart);
+                cart.ShippingOptionsSerialized = shippingOptionModels != null ? _dataSerializer.Serialize(shippingOptionModels) : "[]";
+                //select the first option as default one
+                cart.SelectedShippingOption = shippingOptionModels?.FirstOrDefault()?.Name;
             }
 
          
 
             RaiseEvent(NamedEvent.OrderAddressSaved, cart);
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Gets the shipping options available for selected shipping method
+        /// </summary>
+        /// <param name="shippingMethodSystemName">The system name of the shipping method</param>
+        /// <response code="200">A list of available shipping options</response>
+        [DualGet("shipping-options", Name = RouteNames.CheckoutShippingOption)]
+        public IActionResult ShippingOptions(string shippingMethodSystemName)
+        {
+            if (!CanCheckout(out Cart cart))
+                return R.Fail.Result;
+            //validate shipping method
+            var shippingHandler = PluginHelper.GetShipmentHandler(shippingMethodSystemName);
+            if (shippingHandler == null)
+                return R.Fail.With("error", T("Shipping method unavailable")).Result;
+            var shippingOptionModels = GetShipmentOptionModels(shippingHandler, cart);
+            return R.Success.With("shippingOptions", shippingOptionModels).Result;
+        }
+
+        /// <summary>
+        /// Saves shipping option for the cart
+        /// </summary>
+        /// <response code="200">A success response object</response>
+        [DualPost("shipping-options", Name = RouteNames.CheckoutShippingOption)]
+        public IActionResult ShippingOptionsSave(string shippingOptionId)
+        {
+            if (!CanCheckout(out Cart cart))
+                return R.Fail.Result;
+            if (cart.ShippingOptionsSerialized.IsNullEmptyOrWhiteSpace())
+                return R.Fail.With("error", T("No shipping options found")).Result;
+
+            var shippingOptionModels =
+                _dataSerializer.DeserializeAs<IList<ShippingOptionModel>>(cart.ShippingOptionsSerialized);
+
+            var selectedOption = shippingOptionModels.FirstOrDefault(x => x.Id == shippingOptionId);
+            if(selectedOption == null)
+                return R.Fail.With("error", T("Unknown shipping option")).Result;
+            cart.SelectedShippingOption = $"{selectedOption.Name} - {selectedOption.DeliveryTime}";
+            cart.ShippingFee = selectedOption.Rate;
+            _cartService.Update(cart);
             return R.Success.Result;
         }
 
@@ -484,6 +531,16 @@ namespace EvenCart.Controllers
 
             response = R.Fail.With("error", T("An error occurred while checking out"));
             return false;
+        }
+
+        private IList<ShippingOptionModel> GetShipmentOptionModels(IShipmentHandlerPlugin shipmentHandler, Cart cart)
+        {
+            var shippingOptions = shipmentHandler.GetAvailableOptions(cart, null);
+            //set unique ids
+            foreach (var so in shippingOptions)
+                so.Id = Guid.NewGuid().ToString();
+            var shippingOptionModels = shippingOptions?.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
+            return shippingOptionModels;
         }
         #endregion
 

@@ -67,6 +67,26 @@ namespace EvenCart.Data.Entity.Shop
 
         public int PopularityIndex { get; set; }
 
+        public decimal PackageWeight { get; set; }
+
+        public WeightUnit PackageWeightUnit { get; set; }
+
+        public decimal PackageWidth { get; set; }
+
+        public LengthUnit PackageWidthUnit { get; set; }
+
+        public decimal PackageHeight { get; set; }
+
+        public LengthUnit PackageHeightUnit { get; set; }
+
+        public decimal PackageLength { get; set; }
+
+        public LengthUnit PackageLengthUnit { get; set; }
+
+        public decimal AdditionalShippingCharge { get; set; }
+
+        public bool IndividuallyShipped { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }

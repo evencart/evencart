@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
@@ -63,6 +64,28 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public string ManufacturerName { get; set; }
 
         public bool HasVariants { get; set; }
+
+        public bool ReviewsDisabled { get; set; }
+
+        public decimal PackageWeight { get; set; }
+
+        public WeightUnit PackageWeightUnit { get; set; }
+
+        public decimal PackageWidth { get; set; }
+
+        public LengthUnit PackageWidthUnit { get; set; }
+
+        public decimal PackageHeight { get; set; }
+
+        public LengthUnit PackageHeightUnit { get; set; }
+
+        public decimal PackageLength { get; set; }
+
+        public LengthUnit PackageLengthUnit { get; set; }
+
+        public decimal AdditionalShippingCharge { get; set; }
+
+        public bool IndividuallyShipped { get; set; }
 
         public IList<MediaModel> Media { get; set; }
 

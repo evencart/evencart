@@ -12,7 +12,6 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-
                         {% control label text=@t"Product Name" for="name" %}
                         {% control text name="name" placeholder=@t"e.g. Blue Denim Shirt" value="{{product.name}}"%}
                     </div>
@@ -87,10 +86,9 @@
                         {% control label text=@t"Mpn" for="mpn" %}
                         {% control text name="mpn" value="{{product.mpn}}" %}
                     </div>
-
                     {% if product.hasVariants == false %}
                     <div class="form-group">
-                        {% control checkbox name="trackInventory" text=@t"Track Inventory" value="product.track_inventory" %}
+                        {% control checkbox name="trackInventory" text=@t"Track Inventory" value="product.trackInventory" %}
                     </div>
                     {% else %}
                     <div class="form-group">
@@ -124,6 +122,68 @@
                     </div>
                 </div>
             </div>
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Shipment Measurements & Options" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control checkbox name="individuallyShipped" value="product.individuallyShipped" text=@t"Individually shipped" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Additional shipping charge" for="additionalShippingCharge" %}
+                        {% control number name="additionalShippingCharge" value="{{product.additionalShippingCharge}}" min="0" %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Package Width" for="packageWidth" %}
+                                <div class="input-group">
+                                    {% control number name="packageWidth" value="{{product.packageWidth}}" %}
+                                    <div class="input-group-append">
+                                        {% control select name="packageWidthUnit" value="product.packageWidthUnit" items="lengthUnits" required="true" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Package Height" for="packageHeight" %}
+                                <div class="input-group">
+                                    {% control number name="packageHeight" value="{{product.packageHeight}}" %}
+                                    <div class="input-group-append">
+                                        {% control select name="packageHeightUnit" value="product.packageHeightUnit" items="lengthUnits" required="true" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Package Length" for="packageLength" %}
+                                <div class="input-group">
+                                    {% control number name="packageLength" value="{{product.packageLength}}" %}
+                                    <div class="input-group-append">
+                                        {% control select name="packageLengthUnit" value="product.packageLengthUnit" items="lengthUnits" required="true" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Package Weight" for="packageWeight" %}
+                                <div class="input-group">
+                                    {% control number name="packageWeight" value="{{product.packageWeight}}" %}
+                                    <div class="input-group-append">
+                                        {% control select name="packageWeightUnit" value="product.packageWeightUnit" items="weightUnits" required="true" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             {% control hidden name="id" value="{{product.id}}" %}
             <div class="save-button-container">
                 {% if product.id > 0 %}
