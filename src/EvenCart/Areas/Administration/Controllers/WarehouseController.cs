@@ -3,6 +3,7 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
@@ -20,17 +21,18 @@ namespace EvenCart.Areas.Administration.Controllers
     /// </summary>
     public class WarehouseController : FoundationAdminController
     {
-        private const string EntityName = "Warehouse";
         private readonly IWarehouseService _warehouseService;
         private readonly IWarehouseModelFactory _warehouseModelFactory;
         private readonly IAddressService _addressService;
         private readonly IModelMapper _modelMapper;
-        public WarehouseController(IWarehouseService warehouseService, IWarehouseModelFactory warehouseModelFactory, IAddressService addressService, IModelMapper modelMapper)
+        private readonly CatalogSettings _catalogSettings;
+        public WarehouseController(IWarehouseService warehouseService, IWarehouseModelFactory warehouseModelFactory, IAddressService addressService, IModelMapper modelMapper, CatalogSettings catalogSettings)
         {
             _warehouseService = warehouseService;
             _warehouseModelFactory = warehouseModelFactory;
             _addressService = addressService;
             _modelMapper = modelMapper;
+            _catalogSettings = catalogSettings;
         }
 
         /// <summary>
@@ -97,9 +99,12 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageWarehouses)]
         public IActionResult DeleteWarehouse(int warehouseId)
         {
+            if (_warehouseService.Count() == 1)
+                return R.Fail.With("error", T("At least one warehouse must be there for inventory calculation")).Result;
             var warehouse = _warehouseService.Get(warehouseId);
             if (warehouse == null)
                 return NotFound();
+            
             _warehouseService.Delete(warehouse);
             return R.Success.Result;
         }

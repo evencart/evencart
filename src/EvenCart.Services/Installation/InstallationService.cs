@@ -6,13 +6,17 @@ using EvenCart.Core.Exception;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Notifications;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Services.Addresses;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Notifications;
+using EvenCart.Services.Products;
 using EvenCart.Services.Security;
 using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
@@ -216,6 +220,8 @@ namespace EvenCart.Services.Installation
         private void SeedSettings(string installDomain, string storeName)
         {
             var settingService = DependencyResolver.Resolve<ISettingService>();
+            var warehouseService = DependencyResolver.Resolve<IWarehouseService>();
+            var addressService = DependencyResolver.Resolve<IAddressService>();
 
             //general settings
             settingService.Save(new GeneralSettings() {
@@ -237,6 +243,8 @@ namespace EvenCart.Services.Installation
             {
                 EnableVendorSignup = true
             });
+
+            
 
             //order settings
             settingService.Save(new OrderSettings()
@@ -302,6 +310,19 @@ namespace EvenCart.Services.Installation
               ProductUrlTemplate = "/product/{SeName}",
               ContentPageUrlTemplate = "/{SeName}"
             });
+
+            var address = new Address()
+            {
+                EntityName = nameof(Warehouse),
+                Name = "Primary Fulfillment Center"
+            };
+            addressService.Insert(address);
+            //insert warehouse
+            var wareHouse = new Warehouse()
+            {
+                AddressId = address.Id
+            };
+            warehouseService.Insert(wareHouse);
 
             //catalog settings
             settingService.Save(new CatalogSettings()
