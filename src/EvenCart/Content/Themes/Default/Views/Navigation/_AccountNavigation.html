@@ -1,4 +1,11 @@
 ﻿<ul class="account-navigation">
+    {% if withSignout %}
+    {% if currentUser.isAdministrator %}
+    <li>
+        <a href="{% route Dashboard %}">{{"Administration" | t}}</a>
+    </li>
+    {% endif %}
+    {% endif %}
     <li>
         <a href="{% route AccountProfile %}" class='{% if active_menu == "AccountProfile" %}active{% endif %}'>{{"Profile" | t}}</a>
     </li>
@@ -21,11 +28,6 @@
     <li>
         <a href="{% route ForgotPassword %}">{{"Change Password" | t}}</a>
     </li>
-    {% if currentUser.isAdministrator %}
-    <li>
-        <a href="{% route Dashboard %}">{{"Administration" | t}}</a>
-    </li>
-    {% endif %}
     {% if currentUser.isImitator %}
     <li>
         <a href="{% route Logout %}">{{"Exit Imitation Mode" | t}}</a>

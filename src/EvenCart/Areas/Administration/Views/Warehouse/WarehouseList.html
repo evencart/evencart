@@ -45,7 +45,11 @@
             columnSelection: false,
             formatters: {
                 "name": function(c, r) {
-                    return r.address.name;
+                    var name = r.address.name;
+                    if (r.isDefault) {
+                        name += " <span class='badge badge-success'>{{'Default' | t}}</span>";
+                    }
+                    return name;
                 },
                 "address": function(column, row) {
                     var address = "";

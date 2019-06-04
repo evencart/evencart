@@ -285,12 +285,19 @@ body {
   .tt-suggestion p {
     margin: 0; }
 
-input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='number'], textarea {
+input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='number'], textarea, select {
   border: solid 1px #eee;
   border-radius: 3px;
   padding: 0.5em;
   display: block;
   width: 100%; }
+
+.input-group input [type='text'], .input-group input[type='password'], .input-group input[type='email'], .input-group input[type='url'], .input-group input[type='number'], .input-group textarea, .input-group select {
+  display: flex;
+  width: 1%;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto; }
 
 textarea {
   min-height: 50px; }
@@ -489,10 +496,8 @@ h3.page-title {
     padding-top: 15px;
     border-top: solid 1px #ddd; }
 
-select {
-  border: solid 1px #eee; }
-
 select.form-control {
+  border: solid 1px #eee;
   border-radius: 3px;
   padding: .5em;
   display: block;

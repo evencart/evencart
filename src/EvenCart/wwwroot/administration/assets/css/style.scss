@@ -404,12 +404,21 @@ body {
     }
 }
 
-input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='number'], textarea {
+input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='number'], textarea, select {
     border: solid 1px #eee;
     border-radius: 3px;
     padding: 0.5em;
     display: block;
     width: 100%;
+}
+.input-group {
+    input [type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='number'], textarea, select {
+        display: flex;
+        width: 1%;
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+    }
 }
 
 textarea {
@@ -659,15 +668,15 @@ h3.page-title {
     }
 }
 select {
-    border: solid 1px #eee;
+    &.form-control {
+        border: solid 1px #eee;
+        border-radius: 3px;
+        padding: .5em;
+        display: block;
+        width: 100%;
+    }
 }
-select.form-control {
-   
-    border-radius: 3px;
-    padding: .5em;
-    display: block;
-    width: 100%;
-}
+
 
 .notification {
     position: fixed;
