@@ -49,9 +49,7 @@ namespace EvenCart.Areas.Administration.Controllers
             searchModel = searchModel ?? new StockReportSearchModel();
 
             var products = _productService.GetProductsWithVariants(out int totalResults, searchModel.ProductSearch,
-                searchModel.Published, true, x => x.StockQuantity,
-                SortOrder.Ascending,
-                page: searchModel.Current, count: searchModel.RowCount);
+                searchModel.Published, true, page: searchModel.Current, count: searchModel.RowCount);
 
 
             var models = products.Select(_reportModelFactory.Create).ToList();

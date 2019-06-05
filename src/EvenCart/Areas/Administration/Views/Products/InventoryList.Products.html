@@ -1,0 +1,92 @@
+﻿{{warehouses | scriptJson : "initData" }}
+{{inventory.products | scriptJson : "products" }}
+<script type="text/javascript">
+    var getProduct = function(warehouseId) {
+        var arr = products || [];
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].warehouseId.toString() === warehouseId) {
+                return arr[i];
+            }
+        }
+        return {
+            "totalQuantity": 0,
+            "availableQuantity": 0,
+            "reservedQuantity": 0
+        };
+    }
+</script>
+<div class="col-md-12">
+    <form action='{% route api_SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form">
+        {% control xsrf %}
+        <div class="panel">
+            <div class="panel-title">
+                {{"Inventory Details" | t}} <button class="btn btn-primary btn-sm float-right">{{"Save Inventory" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="text">{{"Warehouse" | t}}</th>
+                        <th data-column-id="totalQuantity" data-formatter="quantity">{{"In Stock" | t}}</th>
+                        <th data-column-id="reservedQuantity" data-formatter="quantity">{{"Reserved" | t}}</th>
+                        <th data-column-id="availableQuantity" data-formatter="quantity">{{"Available" | t}}</th>
+                        <th data-column-id="newTotalQuantity" data-formatter="quantityInput">{{"In Stock" | t}}</th>
+                    </tr>
+                    </thead>
+                </table>
+                <script type="text/javascript">
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                warehouses: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            responseObject: "warehouses",
+                            url: '{% route api_InventoryList productId="{{productId}}" %}',
+                            selection: false,
+                            navigation: 0,
+                            columnSelection: false,
+                            formatters: {
+                                "quantity": function(c, r) {
+                                    var product = getProduct(r.value);
+                                    if (c.id === "totalQuantity")
+                                        return product.totalQuantity;
+                                    if (c.id === "reservedQuantity")
+                                        return product.reservedQuantity;
+                                    if (c.id === "availableQuantity")
+                                        return product.availableQuantity;
+                                    return 0;
+                                },
+                                "quantityInput": function(c, r, i) {
+                                    var product = getProduct(r.value);
+                                    var inputs = "<input type='hidden' name='inventories[" + i + "].warehouseId' value='" + r.value + "' />";
+                                    inputs += "<input type='hidden' name='inventories[" + i + "].id' value='{{productId}}' />";
+                                    inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + product.totalQuantity + "' min='" + product.totalQuantity + "' />";
+                                    return inputs;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("inventory-form",
+                            {
+                                onSuccess: function(response) {
+                                    notify("success", "{{'Inventory was updated successfully' | t}}");
+                                }
+                            });
+                    });
+                </script>
+            </div>
+        </div>
+    </form>
+    
+</div>

@@ -27,8 +27,6 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public bool TrackInventory { get; set; }
 
-        public int StockQuantity { get; set; }
-
         public bool CanOrderWhenOutOfStock { get; set; }
 
         public decimal? ComparePrice { get; set; }

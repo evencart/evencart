@@ -1,0 +1,149 @@
+﻿<div class="row">
+    {% if warehouses.size > 1 %}
+    <div class="col-md-3">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Available in warehouses" | t}}
+            </div>
+            <div class="panel-body">
+                {% for warehouse in warehouses %}
+                <div>
+                    <label>
+                        <input class="warehouse-selector" {% if warehouse.selected %}checked{%endif%} type="checkbox" value="{{warehouse.value}}" /> {{warehouse.text}}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-md-9">
+        {{variants | scriptJson : "initData" }}
+        {{inventory.variants | scriptJson : "variants" }}
+        <script type="text/javascript">
+            var getVariant = function (id, warehouseId) {
+                var arr = variants || [];
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].id === id && arr[i].warehouseId.toString() === warehouseId) {
+                        return arr[i];
+                    }
+                }
+                return {
+                    "totalQuantity": 0,
+                    "availableQuantity": 0,
+                    "reservedQuantity": 0
+                };
+            }
+        </script>
+        {% for warehouse in warehouses %}
+        <form action='{% route api_SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form-{{warehouse.value}}">
+            {% control xsrf %}
+            <div class="panel" {% unless warehouse.selected %}style="display: none" {%endunless%} id="inventory-panel-{{warehouse.value}}">
+                <div class="panel-title">
+                    {{"Inventory at " | t}}{{warehouse.text}} <button class="btn btn-primary btn-sm float-right">{{"Save Inventory" | t}}</button>
+                </div>
+                <div class="panel-body no-padding">
+                    <table id="grid-selection-{{warehouse.value}}" class="table table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="variant" data-width="30%" data-formatter="variant">{{"Variant" | t}}</th>
+                            <th data-column-id="sku">{{"Sku" | t}}</th>
+                            <th data-column-id="totalQuantity" data-formatter="quantity">{{"In Stock" | t}}</th>
+                            <th data-column-id="reservedQuantity" data-formatter="quantity">{{"Reserved" | t}}</th>
+                            <th data-column-id="availableQuantity" data-formatter="quantity">{{"Available" | t}}</th>
+                            <th data-column-id="newTotalQuantity" data-formatter="quantityInput">{{"In Stock" | t}}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <script type="text/javascript">
+                        ready(function() {
+                            generateGrid({
+                                element: "grid-selection-{{warehouse.value}}",
+                                initialData: {
+                                    variants: initData,
+                                    current: parseInt("{{current}}"),
+                                    total: parseInt("{{total}}"),
+                                    rowCount: parseInt("{{rowCount}}")
+                                },
+                                method: "GET",
+                                responseObject: "variants",
+                                url: '{% route api_InventoryList productId="{{productId}}" %}',
+                                selection: false,
+                                navigation: 0,
+                                columnSelection: false,
+                                formatters: {
+                                    "variant": function(column, row) {
+                                        var variant = "";
+                                        if (!row.attributes)
+                                            return "";
+                                        row.attributes.forEach(function(attribute) {
+                                            variant += "<div>";
+                                            variant += "<span>" + attribute.name;
+                                            if (attribute.label) {
+                                                variant += " (" + attribute.label + ")";
+                                            }
+                                            variant += "</span> : ";
+                                            variant += attribute.values[0].attributeValue;
+                                            if (attribute.values[0].label) {
+                                                variant += " (" + attribute.values[0].label + ")";
+                                            }
+                                            variant += "</div>";
+
+                                        });
+                                        return variant;
+                                    },
+                                    "quantity": function (c, r) {
+                                        var variant = getVariant(r.id, "{{warehouse.value}}");
+                                        if (c.id === "totalQuantity")
+                                            return variant.totalQuantity;
+                                        if (c.id === "reservedQuantity")
+                                            return variant.reservedQuantity;
+                                        if (c.id === "availableQuantity")
+                                            return variant.availableQuantity;
+                                        return 0;
+                                    },
+                                    "quantityInput": function (c, r, i) {
+                                        var variant = getVariant(r.id, "{{warehouse.value}}");
+                                        var inputs = "<input type='hidden' name='inventories[" + i + "].warehouseId' value='{{warehouse.value}}' />";
+                                        inputs += "<input type='hidden' name='inventories[" + i + "].id' value='" + r.id + "' />";
+                                        inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + variant.totalQuantity + "' min='" + variant.totalQuantity + "'  />";
+                                        return inputs;
+                                    }
+                                }
+                            });
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </form>
+        
+
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("inventory-form-{{warehouse.value}}",
+                    {
+                        onSuccess: function(response) {
+                            notify("success", "{{'Inventory was updated successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+        {% endfor %}
+    </div>
+</div>
+
+<script type="text/javascript">
+    ready(function () {
+        jQuery(".warehouse-selector").on("change",
+            function () {
+                if (jQuery(this).is(":checked")) {
+                    jQuery("#inventory-panel-" + jQuery(this).val()).show();
+                } else {
+                    jQuery("#inventory-panel-" + jQuery(this).val()).hide();
+                }
+            });
+    });
+</script>
+

@@ -47,8 +47,6 @@ namespace EvenCart.Services.Products
             {
                 query = query.Where(x => x.Published == published.Value);
             }
-
-
             //join manufacturers
             query = query.Join<Manufacturer>("ManufacturerId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<Product, Manufacturer>());
@@ -302,12 +300,15 @@ namespace EvenCart.Services.Products
         {
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
             var products = Repository.Where(x => ids.Contains(x.Id))
+                .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Where(seoMetaWhere)
                 .Relate(RelationTypes.OneToMany<Product, Media>())
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
+                .Relate(RelationTypes.OneToMany<Product, WarehouseInventory>())
                 .SelectNested()
                 .ToList();
             if (withReviews)
@@ -320,7 +321,9 @@ namespace EvenCart.Services.Products
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
 
             var product = Repository.Where(x => x.Id == id)
-                .Join<ProductCategory>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductCategory>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Category>("CategoryId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
@@ -504,9 +507,11 @@ namespace EvenCart.Services.Products
             {
                 query = trackInventory.Value ? query.Where(x => x.TrackInventory) : query.Where(x => !x.TrackInventory);
             }
-            orderByExpression = orderByExpression ?? (product => product.Id);
          
-            return query.Join<ProductVariant>("Id", "ProductId", joinType: JoinType.LeftOuter)
+            return query
+                .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductVariant>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
                 .Join<ProductAttribute>("ProductAttributeId", "Id", typeof(ProductVariantAttribute), JoinType.LeftOuter)
                 .Join<ProductAttributeValue>("ProductAttributeValueId", "Id", typeof(ProductVariantAttribute),
@@ -515,6 +520,8 @@ namespace EvenCart.Services.Products
                     joinType: JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", typeof(ProductAttributeValue),
                     joinType: JoinType.LeftOuter)
+                .Join<WarehouseInventory>("Id", "ProductVariantId", typeof(ProductVariant), joinType: JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Product, ProductVariant>())
                 .Relate<ProductVariantAttribute>((product, attribute) =>
                 {

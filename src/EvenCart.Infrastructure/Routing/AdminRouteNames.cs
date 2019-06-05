@@ -63,6 +63,9 @@
         public const string SaveAvailableAttribute = "SaveAvailableAttribute";
         public const string DeleteAvailableAttribute = "DeleteAvailableAttribute";
 
+        public const string InventoryList = "InventoryList";
+        public const string SaveInventory = "SaveInventory";
+
         public const string OrdersList = "OrdersList";
         public const string SaveOrder = "SaveOrder";
         public const string DeleteOrder = "DeleteOrder";

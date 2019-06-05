@@ -6,6 +6,7 @@ using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Shop;
@@ -16,6 +17,7 @@ using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
@@ -47,7 +49,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IProductSpecificationGroupService _productSpecificationGroupService;
         private readonly IProductRelationService _productRelationService;
         private readonly ISeoMetaService _seoMetaService;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService)
+        private readonly IWarehouseService _warehouseService;
+        private readonly IWarehouseInventoryService _warehouseInventoryService;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -67,6 +71,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _productSpecificationGroupService = productSpecificationGroupService;
             _productRelationService = productRelationService;
             _seoMetaService = seoMetaService;
+            _warehouseService = warehouseService;
+            _warehouseInventoryService = warehouseInventoryService;
         }
 
 
@@ -197,6 +203,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _modelMapper.Map(model, product);
             product.UpdatedOn = DateTime.UtcNow;
             //perform the requisites
+            if (product.MinimumPurchaseQuantity < 1)
+                product.MinimumPurchaseQuantity = 1;
             _productService.InsertOrUpdate(product);
             //attach media for new products only
             if (model.Id == 0 && model.Media != null && model.Media.Any(x => x.Id > 0))
@@ -259,7 +267,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 : _productAttributeService.Get(productAttributeId);
 
             var model = productAttribute == null
-                ? new ProductAttributeModel() {
+                ? new ProductAttributeModel()
+                {
                     InputFieldType = InputFieldType.Dropdown
                 }
                 : MapProductAttributeModel(productAttribute);
@@ -410,7 +419,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             return null;
                         var attributeValueId = productAttributeValue.Id;
 
-                        return new ProductVariantAttribute() {
+                        return new ProductVariantAttribute()
+                        {
                             ProductAttributeId = attributeId,
                             ProductAttributeValueId = attributeValueId
                         };
@@ -428,7 +438,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 {
                     return R.Fail.With("error", T("A variant with this combination already exists")).Result;
                 }
-                currentVariant = new ProductVariant() {
+                currentVariant = new ProductVariant()
+                {
                     ProductVariantAttributes = productVariantAttributes,
                     ProductId = productId
                 };
@@ -438,7 +449,6 @@ namespace EvenCart.Areas.Administration.Controllers
             currentVariant.Price = variantModel.Price;
             currentVariant.Sku = variantModel.Sku;
             currentVariant.CanOrderWhenOutOfStock = variantModel.CanOrderWhenOutOfStock;
-            currentVariant.StockQuantity = variantModel.StockQuantity;
             currentVariant.TrackInventory = variantModel.TrackInventory;
             currentVariant.MediaId = variantModel.MediaId;
 
@@ -518,7 +528,8 @@ namespace EvenCart.Areas.Administration.Controllers
             var specsList = aModel.GroupBy(x => x.ProductSpecificationGroup)
                 .Select(x =>
                 {
-                    return new ProductSpecificationListModel() {
+                    return new ProductSpecificationListModel()
+                    {
                         ProductSpecificationGroup = x.Key,
                         ProductSpecifications = x.ToList(),
                         ProductSpecificationsSerialized = RequestHelper.IsApiCall()
@@ -547,7 +558,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 ProductSpecificationsSerialized = "[]"
             }));
 
-           
+
             var nullProductSpecGroup = new ProductSpecificationGroupModel();
 
             var productSpecificationListModels = specsList as IList<ProductSpecificationListModel> ?? specsList.ToList();
@@ -579,7 +590,8 @@ namespace EvenCart.Areas.Administration.Controllers
             var specsList = aModel.GroupBy(x => x.ProductSpecificationGroup)
                 .Select(x =>
                 {
-                    return new ProductSpecificationListModel() {
+                    return new ProductSpecificationListModel()
+                    {
                         ProductSpecificationGroup = groupId == 0 ? new ProductSpecificationGroupModel() : x.Key,
                         ProductSpecifications = x.ToList(),
                         ProductSpecificationsSerialized = RequestHelper.IsApiCall()
@@ -609,7 +621,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 : _productSpecificationService.Get(productSpecificationId);
 
             var model = productSpec == null
-                ? new ProductSpecificationModel() {
+                ? new ProductSpecificationModel()
+                {
                     IsVisible = true,
                     IsFilterable = true,
                     ProductSpecificationGroupId = productSpecificationGroupId
@@ -715,7 +728,8 @@ namespace EvenCart.Areas.Administration.Controllers
             var model = new List<AutocompleteModel>();
             foreach (var c in groups)
             {
-                model.Add(new AutocompleteModel() {
+                model.Add(new AutocompleteModel()
+                {
                     Id = c.Id,
                     Text = c.Name
                 });
@@ -774,6 +788,142 @@ namespace EvenCart.Areas.Administration.Controllers
 
         #endregion
 
+        #region Product Inventory
+
+        /// <summary>
+        /// Gets the inventory details for a product
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <response code="200">A <see cref="WarehouseProductInventoryModel">inventory</see> object as 'inventory' and a list of warehouses</response>
+        [DualGet("{productId}/inventory", Name = AdminRouteNames.InventoryList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageInventory)]
+        public IActionResult InventoryList(int productId)
+        {
+            Product product;
+            if (productId == 0 || (product = _productService.FirstOrDefault(x => x.Id == productId)) == null)
+                return NotFound();
+            var response = R;
+            //get available warehouses
+            var warehouses = _warehouseService.Get(x => true).ToList();
+            var inventories = _warehouseInventoryService.GetByProduct(productId).ToList();
+            var model = new WarehouseProductInventoryModel();
+            response.With("productId", productId);
+            response.With("hasVariants", product.HasVariants);
+            if (product.HasVariants)
+            {
+                model.Variants = new List<WarehouseProductInventoryModel.InventoryModel>();
+                var variants = _productVariantService.GetByProductId(productId);
+                var variantModels = variants.Select(MapProductVariantModel);
+                foreach (var inventory in inventories)
+                {
+                    var variant = variants.FirstOrDefault(x => x.Id == inventory.ProductVariantId);
+                    if (variant == null)
+                        continue; //the variant is not available. weird but true
+                    model.Variants.Add(new WarehouseProductInventoryModel.InventoryModel()
+                    {
+                        WarehouseId = inventory.WarehouseId,
+                        WarehouseName = inventory.Warehouse.Address.Name,
+                        ReservedQuantity = inventory.ReservedQuantity,
+                        AvailableQuantity = inventory.AvailableQuantity,
+                        TotalQuantity = inventory.TotalQuantity,
+                        Id = variant.Id
+                    });
+                }
+                response.With("variants", variantModels);
+                response.WithGridResponse(variants.Count, 1, variants.Count);
+            }
+            else
+            {
+                model.Products = new List<WarehouseProductInventoryModel.InventoryModel>();
+                foreach (var inventory in inventories)
+                {
+                    model.Products.Add(new WarehouseProductInventoryModel.InventoryModel()
+                    {
+                        WarehouseId = inventory.WarehouseId,
+                        WarehouseName = inventory.Warehouse.Address.Name,
+                        ReservedQuantity = inventory.ReservedQuantity,
+                        AvailableQuantity = inventory.AvailableQuantity,
+                        TotalQuantity = inventory.TotalQuantity,
+                        Id = productId
+                    });
+                }
+                response.WithGridResponse(warehouses.Count, 1, warehouses.Count);
+            }
+
+            response.With("inventory", model);
+
+           
+            var warehousesSelectList =
+                SelectListHelper.GetSelectItemListWithAction(warehouses, x => x.Id, x => x.Address.Name);
+            foreach (var wsl in warehousesSelectList)
+            {
+                if ((model.Products != null && model.Products.Any(x => x.WarehouseId.ToString() == wsl.Value)) ||
+                    (model.Variants != null && model.Variants.Any(x => x.WarehouseId.ToString() == wsl.Value)))
+                {
+                    wsl.Selected = true;
+                }
+            }
+            response.With("warehouses", warehousesSelectList);
+            return response.Success.Result;
+        }
+
+        /// <summary>
+        /// Saves the inventory details
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <param name="inventories">A collection of <see cref="InventoryModel">inventory</see> objects</param>
+        /// <response code="200">A success response object</response>
+        [DualPost("{productId}/inventory", Name = AdminRouteNames.SaveInventory, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageInventory)]
+        public IActionResult SaveInventory(int productId, IList<InventoryModel> inventories)
+        {
+            if (inventories == null || !inventories.Any())
+                return BadRequest();
+            Product product;
+            if (productId == 0 || (product = _productService.FirstOrDefault(x => x.Id == productId)) == null)
+                return NotFound();
+            //performance, fetch all the inventory data for the product
+            var savedInventories = _warehouseInventoryService.GetByProduct(productId).ToList();
+            //and warehouses
+            var warehouses = _warehouseService.Get(x => true).ToList();
+            inventories = inventories.Where(x => warehouses.Any(y => y.Id == x.WarehouseId)).ToList();
+            Transaction.Initiate(transaction =>
+            {
+                if (product.HasVariants)
+                {
+                    //we'll update only valid variants
+                    var variants = _productVariantService.Get(x => x.ProductId == productId).ToList();
+                    foreach (var inventory in inventories)
+                    {
+                        if (variants.All(x => x.Id != inventory.Id))
+                            continue; //invalid variant id passed, ignore
+                        var si = savedInventories.FirstOrDefault(x =>
+                                     x.ProductVariantId == inventory.Id && x.ProductId == productId && x.WarehouseId == inventory.WarehouseId) ?? new WarehouseInventory();
+                        si.WarehouseId = inventory.WarehouseId;
+                        si.ProductId = productId;
+                        si.ProductVariantId = inventory.Id;
+                        si.TotalQuantity = inventory.TotalQuantity;
+                        _warehouseInventoryService.InsertOrUpdate(si, transaction);
+                    }
+                }
+                else
+                {
+                    foreach (var inventory in inventories)
+                    {
+                        var si = savedInventories.FirstOrDefault(x => x.ProductId == productId && x.WarehouseId == inventory.WarehouseId) ?? new WarehouseInventory();
+                        if (inventory.TotalQuantity < si.AvailableQuantity)
+                            inventory.TotalQuantity = si.AvailableQuantity;
+                        si.WarehouseId = inventory.WarehouseId;
+                        si.ProductId = productId;
+                        si.ProductVariantId = null;
+                        si.TotalQuantity = inventory.TotalQuantity;
+                        _warehouseInventoryService.InsertOrUpdate(si, transaction);
+                    }
+                }
+            });
+            return R.Success.Result;
+        }
+        #endregion
 
         #region Helpers
 
@@ -797,7 +947,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 return vm;
             vm.Attributes = pv.ProductVariantAttributes.Select(y =>
             {
-                var am = new ProductAttributeModel() {
+                var am = new ProductAttributeModel()
+                {
                     Id = y.ProductAttributeId,
                     Name = y.ProductAttribute.AvailableAttribute.Name,
                     Label = y.ProductAttribute.Label,
@@ -866,7 +1017,8 @@ namespace EvenCart.Areas.Administration.Controllers
                         if (attribute == null)
                         {
                             //save this attribute for future usage
-                            attribute = new AvailableAttribute() {
+                            attribute = new AvailableAttribute()
+                            {
                                 Name = model.Name
                             };
                             _availableAttributeService.Insert(attribute, transaction);
@@ -874,7 +1026,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             //add to existing attribute list
                             availableAttributes.Add(attribute);
                         }
-                        savedProductAttribute = new ProductAttribute() {
+                        savedProductAttribute = new ProductAttribute()
+                        {
                             ProductId = productId,
                             AvailableAttributeId = attribute.Id,
                             AvailableAttribute = attribute,
@@ -918,7 +1071,8 @@ namespace EvenCart.Areas.Administration.Controllers
 
                             if (attributeValue == null)
                             {
-                                attributeValue = new AvailableAttributeValue() {
+                                attributeValue = new AvailableAttributeValue()
+                                {
                                     AvailableAttributeId = savedProductAttribute.AvailableAttributeId,
                                     Value = valueModel.AttributeValue,
                                     AvailableAttribute = savedProductAttribute.AvailableAttribute
@@ -933,7 +1087,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             if (!savedProductAttribute.ProductAttributeValues?.Any(
                                     x => x.AvailableAttributeValueId == attributeValue.Id) ?? false)
                             {
-                                var savedAttributeValue = new ProductAttributeValue() {
+                                var savedAttributeValue = new ProductAttributeValue()
+                                {
                                     AvailableAttributeValueId = attributeValue.Id,
                                     ProductAttributeId = savedProductAttribute.Id,
                                     AvailableAttributeValue = attributeValue
@@ -997,7 +1152,8 @@ namespace EvenCart.Areas.Administration.Controllers
                         if (attribute == null)
                         {
                             //save this attribute for future usage
-                            attribute = new AvailableAttribute() {
+                            attribute = new AvailableAttribute()
+                            {
                                 Name = model.Name
                             };
                             _availableAttributeService.Insert(attribute, transaction);
@@ -1005,7 +1161,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             //add to existing attribute list
                             availableAttributes.Add(attribute);
                         }
-                        savedProductSpecification = new ProductSpecification() {
+                        savedProductSpecification = new ProductSpecification()
+                        {
                             ProductId = productId,
                             AvailableAttributeId = attribute.Id,
                             AvailableAttribute = attribute,
@@ -1050,7 +1207,8 @@ namespace EvenCart.Areas.Administration.Controllers
 
                             if (attributeValue == null)
                             {
-                                attributeValue = new AvailableAttributeValue() {
+                                attributeValue = new AvailableAttributeValue()
+                                {
                                     AvailableAttributeId = savedProductSpecification.AvailableAttributeId,
                                     Value = valueModel.AttributeValue,
                                     AvailableAttribute = savedProductSpecification.AvailableAttribute
@@ -1065,7 +1223,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             if (!savedProductSpecification.ProductSpecificationValues?.Any(
                                     x => x.AvailableAttributeValueId == attributeValue.Id) ?? false)
                             {
-                                var savedAttributeValue = new ProductSpecificationValue() {
+                                var savedAttributeValue = new ProductSpecificationValue()
+                                {
                                     AvailableAttributeValueId = attributeValue.Id,
                                     ProductSpecificationId = savedProductSpecification.Id,
                                     AvailableAttributeValue = attributeValue

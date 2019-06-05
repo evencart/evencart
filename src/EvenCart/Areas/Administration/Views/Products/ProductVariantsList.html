@@ -16,8 +16,6 @@
                             <th data-column-id="gtin">{{"Gtin" | t}}</th>
                             <th data-column-id="mpn">{{"Mpn" | t}}</th>
                             <th data-column-id="price">{{"Price" | t}}</th>
-                            <th data-column-id="weight">{{"Weight" | t}}</th>
-                            <th data-column-id="stockQuantity">{{"Stock" | t}}</th>
                             <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
                         </tr>
                     </thead>
@@ -83,12 +81,12 @@
                                     return table;
                                 },
                                 "commands": function(column, row) {
-                                    return "<button type='button' class='btn btn-secondary command-edit' data-row-id='" +
+                                    return "<button type='button' class='btn btn-sm btn-secondary command-edit' data-row-id='" +
                                         row.id +
                                         "' onclick='editVariant(" +
                                         row.id +
                                         ")'><span class='rbicon-edit'></span></button> " +
-                                        "<button type='button' class='btn btn-danger command-preview' data-row-id='" +
+                                        "<button type='button' class='btn btn-sm btn-danger command-preview' data-row-id='" +
                                         row.id +
                                         "' onclick=deleteVariant(" +
                                         row.id +

@@ -157,6 +157,10 @@ namespace EvenCart.Data.Versions
             
             //warehouses
             Db.CreateTable<Warehouse>(transaction);
+            Db.CreateTable<WarehouseInventory>(transaction);
+            Db.CreateConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
             Db.CreateConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction, true);
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
@@ -223,6 +227,11 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
+           
+            Db.DropConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction);
+            Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
+            Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
+            Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);
@@ -257,7 +266,8 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ProductSpecification>(transaction);
             Db.DropTable<ProductSpecificationValue>(transaction);
             Db.DropTable<ProductRelation>(transaction);
-
+            Db.DropTable<Warehouse>(transaction);
+            Db.DropTable<WarehouseInventory>(transaction);
             //cart
             Db.DropTable<Cart>(transaction);
             Db.DropTable<CartItem>(transaction);
@@ -274,7 +284,6 @@ namespace EvenCart.Data.Versions
             Db.DropTable<RestrictionValue>(transaction);
 
             //tax
-           
             Db.DropTable<Tax>(transaction);
             Db.DropTable<TaxRate>(transaction);
             

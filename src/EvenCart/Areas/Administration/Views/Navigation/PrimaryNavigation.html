@@ -19,8 +19,9 @@
 {% secondary_navigation url="{% route ProductsList %}" title=@t"Back to products" iconClass="rbicon-chevron-left" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductSpecificationsList productId="{{productId}}" %}" title=@t"Specifications" systemName="ProductSpecificationsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route InventoryList productId="{{productId}}" %}" title=@t"Inventory" systemName="InventoryList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route ProductSpecificationsList productId="{{productId}}" %}" title=@t"Specifications" systemName="ProductSpecificationsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="relatedproduct" %}" title=@t"Related Products" systemName="RelatedProducts" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="crosssell" %}" title=@t"Cross Sell" systemName="CrossSell" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="upsell" %}" title=@t"Up Sell" systemName="UpSell" groupId="ProductEdit" %}

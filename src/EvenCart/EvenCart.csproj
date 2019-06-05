@@ -136,6 +136,9 @@
     <None Remove="Areas\Administration\Views\Pages\SeoMetaPanel.html" />
     <None Remove="Areas\Administration\Views\Plugins\PluginsList.html" />
     <None Remove="Areas\Administration\Views\Plugins\WidgetsList.html" />
+    <None Remove="Areas\Administration\Views\Products\InventoryList.html" />
+    <None Remove="Areas\Administration\Views\Products\InventoryList.Products.html" />
+    <None Remove="Areas\Administration\Views\Products\InventoryList.Variants.html" />
     <None Remove="Areas\Administration\Views\Products\ProductAttributeEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductAttributesList.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html" />
@@ -199,6 +202,8 @@
     <None Remove="Areas\Administration\Views\Users\UsersList.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorEditor.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorsList.html" />
+    <None Remove="Areas\Administration\Views\Warehouse\WarehouseEditor.html" />
+    <None Remove="Areas\Administration\Views\Warehouse\WarehouseList.html" />
     <None Remove="Areas\Administration\Views\Widget\CustomHtml.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\Menu.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\ProductCarousel.Settings.html" />
@@ -231,6 +236,7 @@
     <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\ShippingOptions.html" />
     <None Remove="Content\Themes\Default\Views\Common\Breadcrumb.html" />
     <None Remove="Content\Themes\Default\Views\Common\_ConsentPopup.html" />
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
@@ -590,6 +596,12 @@
     <Content Include="Areas\Administration\Views\Plugins\WidgetsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Products\InventoryList.Products.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\InventoryList.Variants.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Products\ProductAttributeEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -612,6 +624,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductRelationsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\InventoryList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductsList.html">
@@ -868,6 +883,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Cart\Wishlist.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\ShippingOptions.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\Complete.html">

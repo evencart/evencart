@@ -56,6 +56,21 @@
             Allows store admins to view dashboard summaries
             </summary>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.InventoryList(System.Int32)">
+            <summary>
+            Gets the inventory details for a product
+            </summary>
+            <param name="productId">The id of the product</param>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel">inventory</see> object as 'inventory' and a list of warehouses</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.SaveInventory(System.Int32,System.Collections.Generic.IList{EvenCart.Areas.Administration.Models.Warehouse.InventoryModel})">
+            <summary>
+            Saves the inventory details
+            </summary>
+            <param name="productId">The id of the product</param>
+            <param name="inventories">A collection of <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel">inventory</see> objects</param>
+            <response code="200">A success response object</response>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.TotalsReport">
             <summary>
             Gets totals for various entities
@@ -307,9 +322,79 @@
             The search parameters for invitation requests
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel">
+            <summary>
+            The inventory object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel.Id">
+            <summary>
+            The identifier for a single item. Can be a product id or variant id depending on if the product has variants
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel.WarehouseId">
+            <summary>
+            The id of the warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel.TotalQuantity">
+            <summary>
+            The total quantity of the item
+            </summary>
+        </member>
         <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel.Address">
             <summary>
             The address details of the warehouse
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel">
+            <summary>
+            The inventory information object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.Variants">
+            <summary>
+            A collection of <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel">variant inventory</see> objects
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.Products">
+            <summary>
+            A collection of <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel">product inventory</see> objects
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel">
+            <summary>
+            The inventory object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.WarehouseId">
+            <summary>
+            The warehouse id
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.WarehouseName">
+            <summary>
+            The warehouse name
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.Name">
+            <summary>
+            The name to identify the inventory item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.AvailableQuantity">
+            <summary>
+            The quantity that is available to customers for new purchases
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.ReservedQuantity">
+            <summary>
+            The quantity that is available in the warehouse but not available for new purchases due to existing orders
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel.InventoryModel.TotalQuantity">
+            <summary>
+            The total quantity present in the warehouse
             </summary>
         </member>
         <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseSearchModel">
@@ -455,6 +540,19 @@
             Saves the address information for the authenticated user's cart
             </summary>
             <param name="requestModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CheckoutController.ShippingOptions(System.String)">
+            <summary>
+            Gets the shipping options available for selected shipping method
+            </summary>
+            <param name="shippingMethodSystemName">The system name of the shipping method</param>
+            <response code="200">A list of available shipping options</response>
+        </member>
+        <member name="M:EvenCart.Controllers.CheckoutController.ShippingOptionsSave(System.String)">
+            <summary>
+            Saves shipping option for the cart
+            </summary>
             <response code="200">A success response object</response>
         </member>
         <member name="M:EvenCart.Controllers.CheckoutController.PaymentInfoSave(EvenCart.Models.Checkout.PaymentMethodModel)">
@@ -840,6 +938,36 @@
         <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.OrderGuid">
             <summary>
             The order guid for which this payment method is being used. This is used only for retrying a previously failed order.
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Checkout.ShippingOptionModel">
+            <summary>
+            Represents an individual shipping option if a shipment handler
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.Id">
+            <summary>
+            The id of the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.Rate">
+            <summary>
+            The rate of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.Name">
+            <summary>
+            The name of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.Description">
+            <summary>
+            The description of the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.DeliveryTime">
+            <summary>
+            The delivery time of this option
             </summary>
         </member>
         <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.CountryId">

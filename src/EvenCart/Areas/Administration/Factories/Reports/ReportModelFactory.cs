@@ -15,11 +15,13 @@ namespace EvenCart.Areas.Administration.Factories.Reports
     {
         public StockReportModel Create(Product entity)
         {
+            var inventory = entity.Inventories.First();
             var model = new StockReportModel()
             {
                 ProductId = entity.Id,
                 Published = entity.Published,
-                StockQuantity = entity.StockQuantity,
+                StockQuantity = inventory.AvailableQuantity,
+                ReservedQuantity = inventory.ReservedQuantity,
                 ProductName = entity.Name,
                 HasVariants = entity.HasVariants
             };
@@ -28,9 +30,11 @@ namespace EvenCart.Areas.Administration.Factories.Reports
             {
                 model.Variants = entity.ProductVariants.Select(variant =>
                 {
+                    var variantInventory = variant.Inventories.FirstOrDefault();
                     return new StockReportModel.VariantStockReportModel()
                     {
-                        StockQuantity = variant.StockQuantity ?? 0,
+                        StockQuantity = variantInventory?.AvailableQuantity ?? 0,
+                        ReservedQuantity = variantInventory?.ReservedQuantity ?? 0,
                         AttributeText = string.Join('\n',
                             variant.ProductVariantAttributes.Select(x =>
                                 $"{x.ProductAttribute.Label}: {x.ProductAttributeValue.Label}"))

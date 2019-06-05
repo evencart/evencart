@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Extensions;
 
 namespace EvenCart.Services.Products
 {
@@ -19,7 +22,7 @@ namespace EvenCart.Services.Products
                 return StockStatus.InStock;
 
             //no variants but tracking
-            if (!product.HasVariants && product.TrackInventory && product.StockQuantity > 0)
+            if (!product.HasVariants && product.TrackInventory && product.Inventories.Any(x => x.AvailableQuantity > product.MinimumPurchaseQuantity))
                 return StockStatus.InStock;
             
             //with variants
@@ -33,11 +36,16 @@ namespace EvenCart.Services.Products
                 if (!variant.TrackInventory)
                     return StockStatus.InStock;
 
-                if (variant.TrackInventory && variant.StockQuantity > 0)
+                if (variant.TrackInventory && variant.IsAvailableInStock(product))
                     return StockStatus.InStock;
             }
             return StockStatus.OutOfStock;
 
+        }
+
+        public void UpdateStockStatusByOrder(Order order)
+        {
+           
         }
     }
 }

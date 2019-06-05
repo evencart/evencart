@@ -142,7 +142,7 @@ namespace EvenCart.Controllers
                             return !attributeIds.Except(variantAttributeIds).Any();
                         });
                         //is the variant available?
-                        ValidateVariantQuantity(variant, out validationResult);
+                        ValidateVariantQuantity(variant, product, out validationResult);
                         if (validationResult != null)
                             return validationResult;
                     }
@@ -269,7 +269,7 @@ namespace EvenCart.Controllers
                     {
                         //get the variant
                         var variant = _productVariantService.Get(cartItem.ProductVariantId);
-                        ValidateVariantQuantity(variant, out validationResult);
+                        ValidateVariantQuantity(variant, product, out validationResult);
                     }
                     if (validationResult != null)
                         return validationResult;
@@ -307,14 +307,21 @@ namespace EvenCart.Controllers
             {
                 result = R.Fail.With("error", T("Maximum {0} item(s) can be ordered", arguments: product.MaximumPurchaseQuantity)).Result;
             }
-
-            else if (product.TrackInventory && quantity > product.StockQuantity)
+            else if (product.TrackInventory)
             {
-                result = R.Fail.With("error", T("Only {0} item(s) are available", arguments: product.StockQuantity)).Result;
+                var availableQuantity = product.Inventories.Max(x => x.AvailableQuantity);
+                if (availableQuantity == 0)
+                {
+                    result = R.Fail.With("error", T("The item is out of stock", arguments: availableQuantity)).Result;
+                }
+                else if (availableQuantity < quantity)
+                {
+                    result = R.Fail.With("error", T("Only {0} item unit(s) are available", arguments: availableQuantity)).Result;
+                }
             }
         }
 
-        private void ValidateVariantQuantity(ProductVariant variant, out IActionResult result)
+        private void ValidateVariantQuantity(ProductVariant variant, Product product, out IActionResult result)
         {
             result = null;
             if (variant == null)
@@ -322,14 +329,14 @@ namespace EvenCart.Controllers
                 result = R.Fail.With("error", T("The item is not available")).Result;
                 return;
             }
-            if (variant.StockQuantity == 0 && !variant.CanOrderWhenOutOfStock)
+            if (!variant.IsAvailableInStock(product))
                 result = R.Fail.With("error", T("The item is out of stock")).Result;
         }
 
         private void ValidateProductQuantity(Product product, out IActionResult result)
         {
             result = null;
-            if (product.StockQuantity == 0 && !product.CanOrderWhenOutOfStock)
+            if (!product.IsAvailableInStock())
                 result = R.Fail.With("error", T("The item is out of stock")).Result;
         }
         #endregion

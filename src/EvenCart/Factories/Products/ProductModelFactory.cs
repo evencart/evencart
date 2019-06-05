@@ -37,7 +37,7 @@ namespace EvenCart.Factories.Products
         public ProductModel Create(Product product)
         {
             var productModel = _modelMapper.Map<ProductModel>(product);
-            productModel.IsAvailable = !product.TrackInventory || (product.TrackInventory && (product.StockQuantity > 0 || product.CanOrderWhenOutOfStock));
+            productModel.IsAvailable = !product.TrackInventory || (product.TrackInventory && product.IsAvailableInStock());
             productModel.SeName = product.SeoMeta?.Slug;
             var mediaModels = product.MediaItems?.OrderBy(x => x.DisplayOrder).Select(y =>
             {

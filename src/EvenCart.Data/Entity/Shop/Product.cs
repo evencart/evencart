@@ -25,8 +25,6 @@ namespace EvenCart.Data.Entity.Shop
 
         public bool TrackInventory { get; set; }
 
-        public int StockQuantity { get; set; }
-
         public bool CanOrderWhenOutOfStock { get; set; }
 
         public decimal? ComparePrice { get; set; }
@@ -107,6 +105,7 @@ namespace EvenCart.Data.Entity.Shop
 
         public virtual IList<ProductVariant> ProductVariants { get; set; }
 
+        public virtual IList<WarehouseInventory> Inventories { get; set; }
         #endregion
 
 

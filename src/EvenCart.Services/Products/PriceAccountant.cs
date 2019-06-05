@@ -188,7 +188,7 @@ namespace EvenCart.Services.Products
                             }
                             else if (product.TrackInventory)
                             {
-                                if (!product.HasVariants && product.StockQuantity == 0)
+                                if (!product.HasVariants && !product.IsAvailableInStock())
                                 {
                                     //remove from cart because we can't find the product
                                     _cartService.RemoveFromCart(ci.Id, transaction);
@@ -210,7 +210,7 @@ namespace EvenCart.Services.Products
                             {
                                 //find the product variants
                                 var variant = productVariants.FirstOrDefault(x => x.Id == ci.ProductVariantId);
-                                if (variant == null || (product.TrackInventory && variant.StockQuantity == 0))
+                                if (variant == null || (product.TrackInventory && !variant.IsAvailableInStock(product)))
                                     //remove from cart because we can't find the variant or it's out of stock
                                     _cartService.RemoveFromCart(ci.Id, transaction);
                                 else

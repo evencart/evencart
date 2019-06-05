@@ -54,6 +54,51 @@
             A single request class to implement all types of transaction requests
             </summary>
         </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ShipperInfo">
+            <summary>
+            Represents the information of shipper
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShipperInfo.CountryCode">
+            <summary>
+            The country code of the shipper
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShipperInfo.ZipCode">
+            <summary>
+            The zip code of shipper
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ShippingOption">
+            <summary>
+            Represents an individual shipping option if a shipment handler
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Id">
+            <summary>
+            The unique identifier for the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Rate">
+            <summary>
+            The rate of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Name">
+            <summary>
+            The name of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Description">
+            <summary>
+            The description of the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.DeliveryTime">
+            <summary>
+            The delivery time of this option
+            </summary>
+        </member>
         <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.StoreDomain">
             <summary>
             The domain where public website has been installed
@@ -132,6 +177,66 @@
         <member name="P:EvenCart.Data.Entity.Settings.UserSettings.AreUserNamesEnabled">
             <summary>
             Specifies if user names are enabled for site
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Shop.LengthUnit">
+            <summary>
+            Represents the length unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.LengthUnit.Centimeter">
+            <summary>
+            The centimeter unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.LengthUnit.Meter">
+            <summary>
+            The meter unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.LengthUnit.Feet">
+            <summary>
+            The feet unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.LengthUnit.Inch">
+            <summary>
+            The inch unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.LengthUnit.Yard">
+            <summary>
+            The yard unit
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Shop.WeightUnit">
+            <summary>
+            Represents a weight unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.WeightUnit.Gram">
+            <summary>
+            The gram unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.WeightUnit.Kilogram">
+            <summary>
+            The kilogram unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.WeightUnit.Ounce">
+            <summary>
+            The ounce unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.WeightUnit.Pound">
+            <summary>
+            The pound unit
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.WeightUnit.Ton">
+            <summary>
+            The ton unit
             </summary>
         </member>
         <member name="T:EvenCart.Data.Entity.Users.InviteRequest">

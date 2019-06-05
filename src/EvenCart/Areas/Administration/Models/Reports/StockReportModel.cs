@@ -11,6 +11,8 @@ namespace EvenCart.Areas.Administration.Models.Reports
 
         public int StockQuantity { get; set; }
 
+        public int ReservedQuantity { get; set; }
+
         public bool Published { get; set; }
 
         public bool HasVariants { get; set; }
@@ -22,6 +24,8 @@ namespace EvenCart.Areas.Administration.Models.Reports
             public string AttributeText { get; set; }
 
             public int StockQuantity { get; set; }
+
+            public int ReservedQuantity { get; set; }
         }
     }
 }
