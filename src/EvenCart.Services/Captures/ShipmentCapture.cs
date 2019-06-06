@@ -2,6 +2,7 @@
 using System.Linq;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Shipping;
 
@@ -11,17 +12,50 @@ namespace EvenCart.Services.Captures
     {
         private readonly IPurchaseAccountant _purchaseAccountant;
         private readonly IShipmentStatusHistoryService _shipmentStatusHistoryService;
-        public ShipmentCapture(IPurchaseAccountant purchaseAccountant, IShipmentStatusHistoryService shipmentStatusHistoryService)
+        private readonly IOrderFulfillmentService _orderFulfillmentService;
+        private readonly IWarehouseInventoryService _warehouseInventoryService;
+        public ShipmentCapture(IPurchaseAccountant purchaseAccountant, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderFulfillmentService orderFulfillmentService, IWarehouseInventoryService warehouseInventoryService)
         {
             _purchaseAccountant = purchaseAccountant;
             _shipmentStatusHistoryService = shipmentStatusHistoryService;
+            _orderFulfillmentService = orderFulfillmentService;
+            _warehouseInventoryService = warehouseInventoryService;
         }
 
         public void OnUpdated(Shipment entity)
         {
-            var orderItems = entity.ShipmentItems.Select(x => x.OrderItem);
+            var orderItems = entity.ShipmentItems.Select(x => x.OrderItem).ToList();
             foreach(var orderItem in orderItems)
                 _purchaseAccountant.EvaluateOrderStatus(orderItem.Order);
+
+            //if the shipment status is InTransit/Returned, that means we should update the inventory, as the item has been shipped/returned
+            if (entity.ShipmentStatus == ShipmentStatus.InTransit || entity.ShipmentStatus == ShipmentStatus.Returned)
+            {
+                var warehouseId = entity.WarehouseId;
+                var shippedProductIds = orderItems.Select(x => x.ProductId).ToList();
+                var inventories = _warehouseInventoryService.GetByProducts(shippedProductIds, warehouseId).ToList();
+                foreach (var shippedItem in entity.ShipmentItems)
+                {
+                    var quantityShipped = shippedItem.Quantity;
+                    var shippedProductId = shippedItem.OrderItem.ProductId;
+                    var variantId = shippedItem.OrderItem.ProductVariantId;
+                    var inventory = shippedItem.OrderItem.ProductVariantId > 0
+                        ? inventories.FirstOrDefault(x => x.ProductVariantId == variantId)
+                        : inventories.FirstOrDefault(x => x.ProductId == shippedProductId);
+                    if (inventory == null)
+                        continue; //weird it's not there. but we can't do anything for this. something is wrong. this shouldn't have hit
+                    if (entity.ShipmentStatus == ShipmentStatus.InTransit)
+                    {
+                        inventory.ReservedQuantity -= quantityShipped;
+                        inventory.TotalQuantity -= quantityShipped;
+                    }
+                    else
+                    {
+                        inventory.TotalQuantity += quantityShipped;
+                    }
+                    _warehouseInventoryService.Update(inventory);
+                }
+            }
 
             //update shipment history
             //get the history

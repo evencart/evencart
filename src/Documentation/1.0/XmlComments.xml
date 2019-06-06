@@ -347,6 +347,11 @@
             The address details of the warehouse
             </summary>
         </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel.DisplayOrder">
+            <summary>
+            The display order of the warehouse
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseProductInventoryModel">
             <summary>
             The inventory information object
@@ -942,7 +947,7 @@
         </member>
         <member name="T:EvenCart.Models.Checkout.ShippingOptionModel">
             <summary>
-            Represents an individual shipping option if a shipment handler
+            Represents an individual shipping option of a shipment handler
             </summary>
         </member>
         <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.Id">

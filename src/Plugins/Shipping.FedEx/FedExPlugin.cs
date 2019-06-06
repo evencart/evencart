@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Plugins;
 
 namespace Shipping.FedEx
@@ -17,12 +19,7 @@ namespace Shipping.FedEx
             return true;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(Cart cart, ShipperInfo shipperInfo)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IList<ShippingOption> GetAvailableOptions(Cart cart)
+        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo)
         {
             throw new System.NotImplementedException();
         }

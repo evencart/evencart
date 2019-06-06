@@ -54,19 +54,24 @@
             A single request class to implement all types of transaction requests
             </summary>
         </member>
-        <member name="T:EvenCart.Data.Entity.Purchases.ShipperInfo">
+        <member name="T:EvenCart.Data.Entity.Purchases.OrderFulfillmentType">
             <summary>
-            Represents the information of shipper
+            The way in which order should be fulfilled
             </summary>
         </member>
-        <member name="P:EvenCart.Data.Entity.Purchases.ShipperInfo.CountryCode">
+        <member name="F:EvenCart.Data.Entity.Purchases.OrderFulfillmentType.WholeFromSingleWarehouse">
             <summary>
-            The country code of the shipper
+            Fulfill entire order from one warehouse
             </summary>
         </member>
-        <member name="P:EvenCart.Data.Entity.Purchases.ShipperInfo.ZipCode">
+        <member name="F:EvenCart.Data.Entity.Purchases.OrderFulfillmentType.SplitToMultipleWarehouseByItem">
             <summary>
-            The zip code of shipper
+            Fulfill order from multiple warehouses restricting a single product to one warehouse
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.OrderFulfillmentType.SplitToMultipleWarehouseByItemQuantity">
+            <summary>
+            NSY: Fulfill order from multiple warehouses allowing single product quantities to be fulfilled across warehouses.
             </summary>
         </member>
         <member name="T:EvenCart.Data.Entity.Purchases.ShippingOption">

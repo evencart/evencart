@@ -40,7 +40,6 @@ namespace EvenCart.Data.Versions
 
             Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction, true);
-            Db.CreateConstraint(Relation.Create<User, Address>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Role, RoleCapability>("Id", "RoleId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Capability, RoleCapability>("Id", "CapabilityId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Capability, UserCapability>("Id", "CapabilityId"), transaction, true);
@@ -160,7 +159,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<WarehouseInventory>(transaction);
             Db.CreateConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction, true);
-            Db.CreateConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
+            //Db.CreateConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction, false);
             Db.CreateConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction, true);
             //settings, logs, and others
             Db.CreateTable<Setting>(transaction);
@@ -171,11 +170,9 @@ namespace EvenCart.Data.Versions
 
         public void Downgrade(IDotEntityTransaction transaction)
         {
-            
 
             Db.DropConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction);
-            Db.DropConstraint(Relation.Create<User, Address>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Role, RoleCapability>("Id", "RoleId"), transaction);
             Db.DropConstraint(Relation.Create<Capability, RoleCapability>("Id", "CapabilityId"), transaction);
             Db.DropConstraint(Relation.Create<Capability, UserCapability>("Id", "CapabilityId"), transaction);
@@ -220,18 +217,15 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<DiscountCoupon, RestrictionValue>("Id", "DiscountCouponId"), transaction);
             Db.DropConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction);
-            Db.DropConstraint(Relation.Create<User, UserCode>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Menu, MenuItem>("Id", "MenuId"), transaction);
             Db.DropConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
-           
             Db.DropConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction);
             Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
-            Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
-            Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
+           // Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);

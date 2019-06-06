@@ -1,7 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Entity.Shop;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -9,9 +8,7 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<InviteRequest>(transaction);
-            Db.AddColumn<UserCode, string>(nameof(UserCode.Email), null, transaction);
-            Db.DropConstraint(Relation.Create<User, UserCode>("Id", "UserId"), transaction);
+            Db.AddColumn<Warehouse, int>(nameof(Warehouse.DisplayOrder), 0, transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

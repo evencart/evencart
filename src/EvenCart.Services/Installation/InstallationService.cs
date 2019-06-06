@@ -58,6 +58,38 @@ namespace EvenCart.Services.Installation
 
             //seed notification events
             //SeedNotificationEvents();
+            SeedCountries();
+        }
+
+        private void SeedCountries()
+        {
+            var countryService = DependencyResolver.Resolve<ICountryService>();
+            var warehouseService = DependencyResolver.Resolve<IWarehouseService>();
+            var addressService = DependencyResolver.Resolve<IAddressService>();
+
+            countryService.Insert(new Country()
+            {
+                Name = "India",
+                Code = "IN",
+                Published = true,
+                ShippingEnabled = true,
+                DisplayOrder = 0
+            });
+
+            var address = new Address()
+            {
+                EntityName = nameof(Warehouse),
+                Name = "Primary Fulfillment Center",
+                CountryId = 1
+            };
+            addressService.Insert(address);
+            //insert warehouse
+            var wareHouse = new Warehouse()
+            {
+                AddressId = address.Id
+            };
+            warehouseService.Insert(wareHouse);
+
         }
         /// <summary>
         /// Seed roles
@@ -220,8 +252,7 @@ namespace EvenCart.Services.Installation
         private void SeedSettings(string installDomain, string storeName)
         {
             var settingService = DependencyResolver.Resolve<ISettingService>();
-            var warehouseService = DependencyResolver.Resolve<IWarehouseService>();
-            var addressService = DependencyResolver.Resolve<IAddressService>();
+        
 
             //general settings
             settingService.Save(new GeneralSettings() {
@@ -310,19 +341,6 @@ namespace EvenCart.Services.Installation
               ProductUrlTemplate = "/product/{SeName}",
               ContentPageUrlTemplate = "/{SeName}"
             });
-
-            var address = new Address()
-            {
-                EntityName = nameof(Warehouse),
-                Name = "Primary Fulfillment Center"
-            };
-            addressService.Insert(address);
-            //insert warehouse
-            var wareHouse = new Warehouse()
-            {
-                AddressId = address.Id
-            };
-            warehouseService.Insert(wareHouse);
 
             //catalog settings
             settingService.Save(new CatalogSettings()

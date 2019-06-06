@@ -40,7 +40,7 @@ namespace Shipping.UPS
             return true;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(Cart cart, ShipperInfo shipperInfo)
+        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             var url = _upsSettings.DebugMode ? DEVELOPMENT_RATES_URL : PRODUCTION_RATES_URL;
@@ -51,7 +51,7 @@ namespace Shipping.UPS
             // However, using "text/xml; encoding=UTF-8" lets us avoid converting the byte array returned by
             // the buildRatesRequestMessage method and (so far) works just fine.
             request.ContentType = "text/xml; encoding=UTF-8"; //"application/x-www-form-urlencoded";
-            var bytes = BuildRatesRequestMessage(cart, shipperInfo);
+            var bytes = BuildRatesRequestMessage(products, shipperInfo, receiverInfo);
             //System.Text.Encoding.Convert(Encoding.UTF8, Encoding.ASCII, this.buildRatesRequestMessage());
             request.ContentLength = bytes.Length;
             var stream = request.GetRequestStream();
@@ -74,7 +74,7 @@ namespace Shipping.UPS
             ApplicationEngine.RouteUrl(UPSProviderConfig.UPSProviderSettingsRouteName);
 
         #region Private 
-        private byte[] BuildRatesRequestMessage(Cart cart, ShipperInfo shipper)
+        private byte[] BuildRatesRequestMessage(IList<Product> products, Address shipperInfo, Address receiverInfo)
         {
             Encoding utf8 = new UTF8Encoding(false);
             var writer = new XmlTextWriter(new MemoryStream(2000), utf8);
@@ -110,22 +110,22 @@ namespace Shipping.UPS
                 writer.WriteElementString("ShipperNumber", _upsSettings.ShipperNumber);
             }
             writer.WriteStartElement("Address");
-            writer.WriteElementString("PostalCode", shipper.ZipCode);
-            writer.WriteElementString("CountryCode", shipper.CountryCode);
+            writer.WriteElementString("PostalCode", shipperInfo.ZipPostalCode);
+            writer.WriteElementString("CountryCode", shipperInfo.Country.Code);
             writer.WriteEndElement(); // </Address>
             writer.WriteEndElement(); // </Shipper>
             writer.WriteStartElement("ShipTo");
             writer.WriteStartElement("Address");
-            if (!string.IsNullOrWhiteSpace(cart.ShippingAddress.StateProvinceName))
+            if (!string.IsNullOrWhiteSpace(receiverInfo.StateProvinceName))
             {
-                writer.WriteElementString("StateProvinceCode", cart.ShippingAddress.StateProvinceName);
+                writer.WriteElementString("StateProvinceCode", receiverInfo.StateProvinceName);
             }
-            if (!string.IsNullOrWhiteSpace(cart.ShippingAddress.ZipPostalCode))
+            if (!string.IsNullOrWhiteSpace(receiverInfo.ZipPostalCode))
             {
-                writer.WriteElementString("PostalCode", cart.ShippingAddress.ZipPostalCode);
+                writer.WriteElementString("PostalCode", receiverInfo.ZipPostalCode);
             }
-            writer.WriteElementString("CountryCode", cart.ShippingAddress.Country.Code);
-            if (cart.ShippingAddress.AddressType == AddressType.Home)
+            writer.WriteElementString("CountryCode", receiverInfo.Country.Code);
+            if (receiverInfo.AddressType == AddressType.Home)
             {
                 writer.WriteElementString("ResidentialAddressIndicator", "true");
             }
@@ -135,9 +135,9 @@ namespace Shipping.UPS
             writer.WriteElementString("Code", "03");
             writer.WriteEndElement(); //</Service>
            
-            for (var i = 0; i < cart.CartItems.Count; i++)
+            for (var i = 0; i < products.Count; i++)
             {
-                var ci = cart.CartItems[i];
+                var product = products[i];
                 writer.WriteStartElement("Package");
                 writer.WriteStartElement("PackagingType");
                 writer.WriteElementString("Code", "02");
@@ -145,7 +145,7 @@ namespace Shipping.UPS
                 writer.WriteStartElement("PackageWeight"); //default is pounds
                 writer.WriteElementString("Weight",
                     _converterService
-                        .ConvertWeight(ci.Product.PackageWeightUnit, WeightUnit.Pound, ci.Product.PackageWeight)
+                        .ConvertWeight(product.PackageWeightUnit, WeightUnit.Pound, product.PackageWeight)
                         .ToString());
                 writer.WriteEndElement(); // </PackageWeight>
                 writer.WriteStartElement("Dimensions");
@@ -154,19 +154,19 @@ namespace Shipping.UPS
                 writer.WriteElementString("Description", "Inches");
                 writer.WriteEndElement(); //</UnitOfMeasurement>
                 writer.WriteElementString("Length", ((int)_converterService
-                    .ConvertLength(ci.Product.PackageLengthUnit, LengthUnit.Inch, ci.Product.PackageLength))
+                    .ConvertLength(product.PackageLengthUnit, LengthUnit.Inch, product.PackageLength))
                     .ToString());
                 writer.WriteElementString("Width", ((int) _converterService
-                    .ConvertLength(ci.Product.PackageWidthUnit, LengthUnit.Inch, ci.Product.PackageWidth))
+                    .ConvertLength(product.PackageWidthUnit, LengthUnit.Inch, product.PackageWidth))
                     .ToString());
                 writer.WriteElementString("Height", ((int)_converterService
-                    .ConvertLength(ci.Product.PackageHeightUnit, LengthUnit.Inch, ci.Product.PackageHeight))
+                    .ConvertLength(product.PackageHeightUnit, LengthUnit.Inch, product.PackageHeight))
                     .ToString());
                 writer.WriteEndElement(); // </Dimensions>
                 writer.WriteStartElement("PackageServiceOptions");
                 writer.WriteStartElement("InsuredValue");
                 writer.WriteElementString("CurrencyCode", "USD");
-                writer.WriteElementString("MonetaryValue", ci.Product.Price.ToString());
+                writer.WriteElementString("MonetaryValue", product.Price.ToString());
                 writer.WriteEndElement(); // </InsuredValue>
 
                 writer.WriteStartElement("DeliveryConfirmation");
@@ -201,30 +201,7 @@ namespace Shipping.UPS
                     }
                     var description = "";
                     var totalCharges = Convert.ToDecimal(rateNode.XPathSelectElement("TotalCharges/MonetaryValue").Value);
-                    var delivery = DateTime.Parse("1/1/1900 12:00 AM");
-                    var date = rateNode.XPathSelectElement("GuaranteedDaysToDelivery").Value;
-                    if (date == "") // no gauranteed delivery date, so use MaxDate to ensure correct sorting
-                    {
-                        date = DateTime.MaxValue.ToShortDateString();
-                    }
-                    else
-                    {
-                        date = DateTime.Now.AddDays(Convert.ToDouble(date)).ToShortDateString();
-                    }
                     var deliveryTime = rateNode.XPathSelectElement("ScheduledDeliveryTime").Value;
-                    if (deliveryTime == "") // no scheduled delivery time, so use 11:59:00 PM to ensure correct sorting
-                    {
-                        date += " 11:59:00 PM";
-                    }
-                    else
-                    {
-                        date += " " + deliveryTime.Replace("Noon", "PM").Replace("P.M.", "PM").Replace("A.M.", "AM");
-                    }
-                    if (date != "")
-                    {
-                        delivery = DateTime.Parse(date);
-                    }
-
                     shippingOptions.Add(new ShippingOption()
                     {
                         Name = name,

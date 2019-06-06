@@ -15,6 +15,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -29,7 +30,10 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IShipmentItemService _shipmentItemService;
         private readonly IShipmentStatusHistoryService _shipmentStatusHistoryService;
         private readonly IOrderModelFactory _orderModelFactory;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory)
+        private readonly IWarehouseService _warehouseService;
+        private readonly IWarehouseInventoryService _warehouseInventoryService;
+        private readonly IOrderFulfillmentService _orderFulfillmentService;
+        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService)
         {
             _orderService = orderService;
             _modelMapper = modelMapper;
@@ -39,6 +43,9 @@ namespace EvenCart.Areas.Administration.Controllers
             _shipmentItemService = shipmentItemService;
             _shipmentStatusHistoryService = shipmentStatusHistoryService;
             _orderModelFactory = orderModelFactory;
+            _warehouseService = warehouseService;
+            _warehouseInventoryService = warehouseInventoryService;
+            _orderFulfillmentService = orderFulfillmentService;
         }
 
         [DualGet("", Name = AdminRouteNames.OrdersList)]
@@ -187,12 +194,27 @@ namespace EvenCart.Areas.Administration.Controllers
             if (shipmentModel.OrderId == 0 || shipmentModel.ShipmentItems == null ||
                 (order = _orderService.Get(shipmentModel.OrderId)) == null)
                 return NotFound();
-
+            //is a valid warehouse supplied?
+            if (shipmentModel.WarehouseId < 1)
+            {
+                //assign a default warehouse
+                var warehouse = _warehouseService.Get(out _, x => true, x => x.DisplayOrder).FirstOrDefault();
+                if (warehouse == null)
+                    return R.Fail.With("error", T("No warehouse found for shipment")).Result;
+                shipmentModel.WarehouseId = warehouse.Id;
+            }
+            else
+            {
+                if (_warehouseService.Count(x => x.Id == shipmentModel.WarehouseId) == 0)
+                {
+                    return R.Fail.With("error", T("No warehouse found for shipment")).Result;
+                }
+            }
             shipment.TrackingNumber = shipmentModel.TrackingNumber;
             shipment.Remarks = shipmentModel.Remarks;
             shipment.ShipmentStatus = shipmentModel.ShipmentStatus;
             shipment.ShippingMethodName = shipmentModel.ShippingMethodName;
-
+            shipment.WarehouseId = shipmentModel.WarehouseId;
             if (shipment.Id == 0)
             {
                 _shipmentService.Insert(shipment);
@@ -206,7 +228,6 @@ namespace EvenCart.Areas.Administration.Controllers
             }
             else
             {
-                _shipmentService.Update(shipment);
                 //add shipment items
                 foreach (var shipmentItemModel in shipmentModel.ShipmentItems)
                 {
@@ -218,6 +239,7 @@ namespace EvenCart.Areas.Administration.Controllers
                         _shipmentItemService.Update(shipmentItem);
                     }
                 }
+                _shipmentService.Update(shipment);
             }
 
             return R.Success.Result;

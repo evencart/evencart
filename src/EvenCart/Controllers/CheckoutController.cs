@@ -6,6 +6,7 @@ using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Addresses;
@@ -26,6 +27,7 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Checkout;
+using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -49,8 +51,8 @@ namespace EvenCart.Controllers
         private readonly IRoleService _roleService;
         private readonly IUserService _userService;
         private readonly ITokenGenerator _tokenGenerator;
-
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, IOrderItemService orderItemService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, ITokenGenerator tokenGenerator)
+        private readonly IProductService _productService;
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, IOrderItemService orderItemService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, ITokenGenerator tokenGenerator, IProductService productService)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -65,6 +67,7 @@ namespace EvenCart.Controllers
             _roleService = roleService;
             _userService = userService;
             _tokenGenerator = tokenGenerator;
+            _productService = productService;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -149,8 +152,6 @@ namespace EvenCart.Controllers
                     }
                 }
             }
-
-            
 
             //save addresses if required
             if (requestModel.BillingAddress.Id == 0)
@@ -449,7 +450,8 @@ namespace EvenCart.Controllers
                     ProductId = cartItem.ProductId,
                     Quantity = cartItem.Quantity,
                     Tax = cartItem.Tax,
-                    TaxPercent = cartItem.TaxPercent
+                    TaxPercent = cartItem.TaxPercent,
+                    ProductVariantId = cartItem.ProductVariantId
                 };
                 orderItems.Add(orderItem);
             }
@@ -535,11 +537,47 @@ namespace EvenCart.Controllers
 
         private IList<ShippingOptionModel> GetShipmentOptionModels(IShipmentHandlerPlugin shipmentHandler, Cart cart)
         {
-            var shippingOptions = shipmentHandler.GetAvailableOptions(cart, null);
-            //set unique ids
-            foreach (var so in shippingOptions)
-                so.Id = Guid.NewGuid().ToString();
-            var shippingOptionModels = shippingOptions?.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
+            //find the product ids of the cart
+            var productIds = cart.CartItems.Select(x => x.ProductId).ToList();
+            var products = _productService.GetProductsWithVariants(productIds);
+            var warehouseWiseProducts = new Dictionary<Warehouse, IList<Product>>();
+            foreach (var item in cart.CartItems)
+            {
+                var product = products.First(x => x.Id == item.ProductId);
+                Warehouse warehouse;
+                if (item.ProductVariantId > 0)
+                {
+                    var productVariant = product.ProductVariants.First(x => x.Id == item.ProductVariantId);
+                    if (!productVariant.IsAvailableInStock(product, out warehouse))
+                        continue;
+                }
+                else
+                {
+                    if (!product.IsAvailableInStock(out warehouse))
+                        continue;
+                }
+                if (warehouseWiseProducts.All(x => x.Key.Id != warehouse.Id))
+                {
+                    warehouseWiseProducts.Add(warehouse, new List<Product>());
+                }
+                warehouseWiseProducts[warehouse].Add(product);
+            }
+            var shippingOptionModels = new List<ShippingOptionModel>();
+            //if there are more than two warehouses, we'll need to calculate shipping for each warehouse
+            foreach (var warehousePair in warehouseWiseProducts)
+            {
+                var shipper = warehousePair.Key.Address;
+                var warehouseProducts = warehousePair.Value;
+                var productsThatCanBeShippedTogether = warehouseProducts.Where(x => !x.IndividuallyShipped).ToList();
+                var productsThatShouldBeShippedIndividually =
+                    warehouseProducts.Where(x => x.IndividuallyShipped).ToList();
+
+                var shippingOptions = shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress);
+                //set unique ids
+                foreach (var so in shippingOptions)
+                    so.Id = Guid.NewGuid().ToString();
+                shippingOptionModels = shippingOptionModels.Concat(shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x))).ToList();
+            }
             return shippingOptionModels;
         }
         #endregion

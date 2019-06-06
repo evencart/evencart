@@ -4,7 +4,6 @@ using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
@@ -28,8 +27,7 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public IList<ShipmentHistoryModel> ShipmentHistoryItems { get; set; }
 
-        public IList<SelectListItem> AvailableShipmentStatus { get; } =
-            SelectListHelper.GetSelectItemList<ShipmentStatus>();
+        public int WarehouseId { get; set; }
 
         public void SetupValidationRules(ModelValidator<ShipmentModel> v)
         {

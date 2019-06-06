@@ -9,6 +9,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public int ProductId { get; set; }
 
+        public int ProductVariantId { get; set; }
+
         public string AttributeJson { get; set; }
 
         public decimal Price { get; set; }

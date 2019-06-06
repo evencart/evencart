@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Shop;
 
 namespace EvenCart.Services.Plugins
 {
@@ -10,6 +12,6 @@ namespace EvenCart.Services.Plugins
 
         bool IsMethodAvailable(Cart cart);
 
-        IList<ShippingOption> GetAvailableOptions(Cart cart, ShipperInfo shipperInfo);
+        IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo);
     }
 }

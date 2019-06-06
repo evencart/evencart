@@ -44,5 +44,7 @@ namespace EvenCart.Services.Products
         IList<Product> GetProductsWithVariants(out int totalResults, string searchText = null, bool? published = null, bool? trackInventory = null,
             Expression<Func<Product, object>> orderByExpression = null, SortOrder sortOrder = SortOrder.Descending,
             int page = 1, int count = int.MaxValue);
+
+        IList<Product> GetProductsWithVariants(IList<int> ids);
     }
 }

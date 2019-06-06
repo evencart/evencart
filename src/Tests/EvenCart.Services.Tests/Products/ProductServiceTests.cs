@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Services.Addresses;
 using EvenCart.Services.Products;
 using EvenCart.Services.Users;
 using NUnit.Framework;
@@ -10,15 +12,22 @@ namespace EvenCart.Services.Tests.Products
 {
     public abstract class ProductServiceTests : BaseTest
     {
-        private readonly IProductService _productService;
-        private readonly IAvailableAttributeService _availableAttributeService;
-        private readonly IAvailableAttributeValueService _availableAttributeValueService;
-        private readonly IVendorService _vendorService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductVariantService _productVariantService;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAccountant _productAccountant;
-        protected ProductServiceTests()
+        private IProductService _productService;
+        private IAvailableAttributeService _availableAttributeService;
+        private IAvailableAttributeValueService _availableAttributeValueService;
+        private IVendorService _vendorService;
+        private IManufacturerService _manufacturerService;
+        private IProductVariantService _productVariantService;
+        private IProductAttributeService _productAttributeService;
+        private IProductAccountant _productAccountant;
+        private IWarehouseService _warehouseService;
+        private IWarehouseInventoryService _warehouseInventoryService;
+        private IAddressService _addressService;
+
+        private Warehouse _w1, _w2;
+
+        [SetUp]
+        public void Setup()
         {
             _productAttributeService = Resolve<IProductAttributeService>();
             _productService = Resolve<IProductService>();
@@ -28,11 +37,20 @@ namespace EvenCart.Services.Tests.Products
             _manufacturerService = Resolve<IManufacturerService>();
             _productVariantService = Resolve<IProductVariantService>();
             _productAccountant = Resolve<IProductAccountant>();
-        }
+            _warehouseService = Resolve<IWarehouseService>();
+            _warehouseInventoryService = Resolve<IWarehouseInventoryService>();
+            _addressService = Resolve<IAddressService>();
 
-        private void SeedData()
-        {
-            
+            var address = new Address()
+            {
+                CountryId = 1,
+                AddressType = AddressType.Home,
+                Name = "abc"
+            };
+            _addressService.Insert(address);
+            _w1 = new Warehouse() { AddressId = address.Id };
+            _w2 = new Warehouse() { AddressId = address.Id };
+            _warehouseService.Insert(new[] { _w1, _w2 });
         }
 
         [Test]
@@ -113,7 +131,6 @@ namespace EvenCart.Services.Tests.Products
                     "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
                 Summary =
                     "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
-                StockQuantity = 10,
                 Published = true,
                 Deleted = false,
                 TrackInventory = true,
@@ -169,11 +186,17 @@ namespace EvenCart.Services.Tests.Products
                         ProductAttributeId = productAttributeColor.Id,
                         ProductAttributeValueId = productAttributeValuesColor[0].Id
                     }
-                }
+                },
+                TrackInventory = true
             });
-            sRedVariant.TrackInventory = true;
-            sRedVariant.StockQuantity = 5;
-            _productVariantService.Update(sRedVariant);
+            _warehouseInventoryService.Insert(new WarehouseInventory()
+            {
+                ProductId = product.Id,
+                ProductVariantId = sRedVariant.Id,
+                TotalQuantity = 5,
+                ReservedQuantity = 0,
+                WarehouseId = _w1.Id
+            });
 
             // s + green
             var sGreenVariant = _productVariantService.AddVariant(product, new ProductVariant()
@@ -190,11 +213,18 @@ namespace EvenCart.Services.Tests.Products
                         ProductAttributeId = productAttributeColor.Id,
                         ProductAttributeValueId = productAttributeValuesColor[1].Id
                     }
-                }
+                },
+                TrackInventory = false
             });
-            sGreenVariant.TrackInventory = false;
-            sGreenVariant.StockQuantity = 0;
-            _productVariantService.Update(sGreenVariant);
+            _warehouseInventoryService.Insert(new WarehouseInventory()
+            {
+                ProductId = product.Id,
+                ProductVariantId = sGreenVariant.Id,
+                TotalQuantity = 5,
+                ReservedQuantity = 0,
+                WarehouseId = _w1.Id
+            });
+
             // m + red
             var mRedVariant = _productVariantService.AddVariant(product, new ProductVariant()
             {
@@ -210,11 +240,17 @@ namespace EvenCart.Services.Tests.Products
                         ProductAttributeId = productAttributeColor.Id,
                         ProductAttributeValueId = productAttributeValuesColor[0].Id
                     }
-                }
+                },
+                TrackInventory = true
             });
-            mRedVariant.TrackInventory = true;
-            mRedVariant.StockQuantity = 0;
-            _productVariantService.Update(mRedVariant);
+            _warehouseInventoryService.Insert(new WarehouseInventory()
+            {
+                ProductId = product.Id,
+                ProductVariantId = mRedVariant.Id,
+                TotalQuantity = 0,
+                ReservedQuantity = 0,
+                WarehouseId = _w1.Id
+            });
 
             //link vendors
             _vendorService.AddVendorProduct(vendor1.Id, product.Id);

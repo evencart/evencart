@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Addresses;
@@ -9,14 +11,25 @@ namespace EvenCart.Services.Products
 {
     public class WarehouseInventoryService : FoundationEntityService<WarehouseInventory>, IWarehouseInventoryService
     {
-        public IEnumerable<WarehouseInventory> GetByProduct(int productId)
+        public IEnumerable<WarehouseInventory> GetByProduct(int productId, int? warehouseId = null)
         {
+            return GetByProducts(new List<int>() {productId}, warehouseId);
+        }
+
+        public IEnumerable<WarehouseInventory> GetByProducts(IList<int> productIds, int? warehouseId = null)
+        {
+            Expression<Func<WarehouseInventory, bool>> warehouseWhere = x => true;
+            if (warehouseId.HasValue)
+            {
+                warehouseWhere = x => x.WarehouseId == warehouseId;
+            }
             return Repository
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<WarehouseInventory, Warehouse>())
                 .Relate<Address>((inventory, address) => { inventory.Warehouse.Address = address; })
-                .Where(x => x.ProductId == productId)
+                .Where(x => productIds.Contains(x.ProductId))
+                .Where(warehouseWhere)
                 .SelectNested();
         }
 

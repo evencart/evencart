@@ -3,7 +3,7 @@
 namespace EvenCart.Models.Checkout
 {
     /// <summary>
-    /// Represents an individual shipping option if a shipment handler
+    /// Represents an individual shipping option of a shipment handler
     /// </summary>
     public class ShippingOptionModel : FoundationModel
     {

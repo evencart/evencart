@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Captures\ShipmentItemCapture.cs" />
     <Compile Remove="Logger\RollingFileLogger.cs" />
   </ItemGroup>
 

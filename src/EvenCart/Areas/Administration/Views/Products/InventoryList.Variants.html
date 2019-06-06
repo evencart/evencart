@@ -107,7 +107,7 @@
                                         var variant = getVariant(r.id, "{{warehouse.value}}");
                                         var inputs = "<input type='hidden' name='inventories[" + i + "].warehouseId' value='{{warehouse.value}}' />";
                                         inputs += "<input type='hidden' name='inventories[" + i + "].id' value='" + r.id + "' />";
-                                        inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + variant.totalQuantity + "' min='" + variant.totalQuantity + "'  />";
+                                        inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + variant.totalQuantity + "' min='" + variant.reservedQuantity + "'  />";
                                         return inputs;
                                     }
                                 }

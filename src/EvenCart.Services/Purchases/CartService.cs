@@ -45,7 +45,7 @@ namespace EvenCart.Services.Purchases
         {
             Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
             Expression<Func<Product, bool>> productWhere = product => product.Published;
-            Expression<Func<Address, bool>> addressWhere = address => address.EntityName == nameof(User);
+            Expression<Func<Address, bool>> addressWhere = address => address.EntityName == null || address.EntityName == nameof(User);
             var userCart = Repository.Where(x => x.UserId == userId && x.IsWishlist == isWishlist)
                 .Join<CartItem>("Id", "CartId", joinType: JoinType.LeftOuter)
                 .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)

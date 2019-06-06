@@ -67,7 +67,7 @@
                                     var product = getProduct(r.value);
                                     var inputs = "<input type='hidden' name='inventories[" + i + "].warehouseId' value='" + r.value + "' />";
                                     inputs += "<input type='hidden' name='inventories[" + i + "].id' value='{{productId}}' />";
-                                    inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + product.totalQuantity + "' min='" + product.totalQuantity + "' />";
+                                    inputs += "<input type='number' name='inventories[" + i + "].totalQuantity' value='" + product.totalQuantity + "' min='" + product.reservedQuantity + "' />";
                                     return inputs;
                                 }
                             }

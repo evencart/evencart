@@ -899,6 +899,8 @@ namespace EvenCart.Areas.Administration.Controllers
                             continue; //invalid variant id passed, ignore
                         var si = savedInventories.FirstOrDefault(x =>
                                      x.ProductVariantId == inventory.Id && x.ProductId == productId && x.WarehouseId == inventory.WarehouseId) ?? new WarehouseInventory();
+                        if (inventory.TotalQuantity < si.ReservedQuantity)
+                            inventory.TotalQuantity = si.ReservedQuantity;
                         si.WarehouseId = inventory.WarehouseId;
                         si.ProductId = productId;
                         si.ProductVariantId = inventory.Id;
@@ -911,8 +913,8 @@ namespace EvenCart.Areas.Administration.Controllers
                     foreach (var inventory in inventories)
                     {
                         var si = savedInventories.FirstOrDefault(x => x.ProductId == productId && x.WarehouseId == inventory.WarehouseId) ?? new WarehouseInventory();
-                        if (inventory.TotalQuantity < si.AvailableQuantity)
-                            inventory.TotalQuantity = si.AvailableQuantity;
+                        if (inventory.TotalQuantity < si.ReservedQuantity)
+                            inventory.TotalQuantity = si.ReservedQuantity;
                         si.WarehouseId = inventory.WarehouseId;
                         si.ProductId = productId;
                         si.ProductVariantId = null;
