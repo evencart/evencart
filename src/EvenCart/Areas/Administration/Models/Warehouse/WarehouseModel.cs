@@ -13,6 +13,11 @@ namespace EvenCart.Areas.Administration.Models.Warehouse
         /// </summary>
         public AddressModel Address { get; set; }
 
+        /// <summary>
+        /// The display order of the warehouse
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
         public void SetupValidationRules(ModelValidator<WarehouseModel> v)
         {
             v.RuleFor(x => x.Address).NotNull();

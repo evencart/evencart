@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Warehouse;
+using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Settings;
@@ -44,7 +45,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageWarehouses)]
         public IActionResult WarehouseList(WarehouseSearchModel searchModel)
         {
-            var warehouses = _warehouseService.Get(out int totalResults, x => true, page: searchModel.Current, count: searchModel.RowCount).ToList();
+            var warehouses = _warehouseService.Get(out int totalResults, x => true, x => x.DisplayOrder, page: searchModel.Current, count: searchModel.RowCount).ToList();
             var models = warehouses.Select(_warehouseModelFactory.Create).ToList();
             return R.Success.With("warehouses", models)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount).Result;
@@ -106,6 +107,25 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             
             _warehouseService.Delete(warehouse);
+            return R.Success.Result;
+        }
+
+        [DualPost("display-order", Name = AdminRouteNames.UpdateWarehouseDisplayOrder, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageWarehouses)]
+        public IActionResult UpdateWarehouseDisplayOrder(WarehouseModel[] warehouseModels)
+        {
+            if (warehouseModels == null)
+                return BadRequest();
+            //get category models with no-zero ids
+            var validModels = warehouseModels.Where(x => x.Id != 0);
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var model in validModels)
+                {
+                    _warehouseService.Update(new { DisplayOrder = model.DisplayOrder }, m => m.Id == model.Id,
+                        transaction);
+                }
+            });
             return R.Success.Result;
         }
     }

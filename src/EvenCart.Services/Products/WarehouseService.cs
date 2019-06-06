@@ -35,8 +35,9 @@ namespace EvenCart.Services.Products
         public override IEnumerable<Warehouse> Get(Expression<Func<Warehouse, bool>> @where, int page = 1, int count = Int32.MaxValue)
         {
             return GetWithJoin()
-                .Where(where).
-                SelectNested(page, count);
+                .Where(where)
+                .OrderBy(x => x.DisplayOrder)
+                .SelectNested(page, count);
         }
 
         private IEntitySet<Warehouse> GetWithJoin()

@@ -7,6 +7,8 @@ namespace EvenCart.Data.Entity.Shop
     {
         public int AddressId { get; set; }
 
+        public int DisplayOrder { get; set; }
+
         #region Virtual Properties
         public virtual Address Address { get; set; }
         #endregion

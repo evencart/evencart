@@ -233,5 +233,6 @@
         public const string GetWarehouse = "GetWarehouse";
         public const string SaveWarehouse = "SaveWarehouse";
         public const string DeleteWarehouse = "DeleteWarehouse";
+        public const string UpdateWarehouseDisplayOrder = "UpdateWarehouseDisplayOrder";
     }
 }

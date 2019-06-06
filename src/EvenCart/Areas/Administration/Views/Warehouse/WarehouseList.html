@@ -12,12 +12,13 @@
                 <div class="form-group">
                     <table id="grid-addresses" class="table table-condensed table-hover">
                         <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name" data-formatter="name">{{"Name" | t }}</th>
-                            <th data-column-id="address" data-formatter="address">{{"Address" | t }}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="name" data-formatter="name">{{"Name" | t }}</th>
+                                <th data-column-id="address" data-formatter="address">{{"Address" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                                <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                            </tr>
                         </thead>
                     </table>
                 </div>
@@ -28,17 +29,37 @@
 </div>
 {{warehouses | scriptJson : 'initData'}}
 <script type="text/javascript">
+    var enableSortable = function (refresh) {
+        if (refresh) {
+            displayOrderSortable({
+                container: "grid-addresses tbody",
+                refresh: true
+            });
+        } else {
+            displayOrderSortable({
+                container: "grid-addresses tbody",
+                itemSelector: "tr",
+                update: function() {
+                    post({
+                        url: "{% route api_UpdateWarehouseDisplayOrder %}",
+                        data: jQuery("#grid-addresses input").serialize()
+                    });
+                }
+            });
+        }
+                        
+    }
     ready(function () {
         generateGrid({
             element: "grid-addresses",
             initialData: {
-                addresses: initData,
+                warehouses: initData,
                 current: parseInt("{{current}}"),
                 total: parseInt("{{total}}"),
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_WarehouseList userId="{{userId}}" %}',
+            url: '{% route api_WarehouseList %}',
             responseObject: "warehouses",
             selection: false,
             navigation: false,
@@ -46,9 +67,6 @@
             formatters: {
                 "name": function(c, r) {
                     var name = r.address.name;
-                    if (r.isDefault) {
-                        name += " <span class='badge badge-success'>{{'Default' | t}}</span>";
-                    }
                     return name;
                 },
                 "address": function(column, row) {
@@ -76,9 +94,18 @@
                         "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                         row.id +
                         "\" onclick='deleteAddress(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                },
+                "hiddenFields": function (column, row, index) {
+                    return "<input type='hidden' data-type='displayorder' name='warehouseModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                        "<input type='hidden' data-type='id'  name='warehouseModels[" + index + "].id' value='" + row.id + "' />";
+                },
+                events: {
+                    "loaded": function () { enableSortable(true); }
                 }
             }
         });
+
+        enableSortable();
     });
 
 
