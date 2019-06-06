@@ -5,12 +5,12 @@ using NUnit.Framework;
 namespace EvenCart.Services.Tests.Formatters
 {
     [TestFixture]
-    public class RoundingServiceTests : BaseTest
+    public class RoundingServiceTests
     {
         private readonly IRoundingService _roundingService;
         public RoundingServiceTests()
         {
-            _roundingService = Resolve<IRoundingService>();
+            _roundingService = new RoundingService();
         }
 
         [Test]

@@ -5,6 +5,7 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure;
+using EvenCart.Services.Installation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +68,9 @@ namespace EvenCart.Services.Tests
         [OneTimeSetUp]
         public void OnetimeSetup()
         {
-           
+            var installationService = new InstallationService(TestDbInit.DbSettings);
+            installationService.Install();
+            installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
         }
 
         [OneTimeTearDown]

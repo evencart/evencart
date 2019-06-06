@@ -16,15 +16,12 @@ namespace EvenCart.Services.Tests
             Db(connectionString, "MySql");
         }
 
+        public static TestDatabaseSettings DbSettings { get; set; }
         public static void Db(string connectionString, string providerName)
         {
             //seed data
-            var dbSettings = DependencyResolver.Resolve<IDatabaseSettings>() as TestDatabaseSettings;
-            dbSettings.SetSettings(connectionString, providerName);
-
-            var installationService = new InstallationService(dbSettings);
-            installationService.Install();
-            installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
+            DbSettings = DependencyResolver.Resolve<IDatabaseSettings>() as TestDatabaseSettings;
+            DbSettings.SetSettings(connectionString, providerName);
         }
         public class TestDatabaseSettings : IDatabaseSettings
         {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -25,13 +25,13 @@
 
   <ItemGroup>
     <Reference Include="DotEntity">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
     </Reference>
     <Reference Include="DotEntity.MySql">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
     </Reference>
     <Reference Include="DotEntity.SqlServer">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
     </Reference>
   </ItemGroup>
 
