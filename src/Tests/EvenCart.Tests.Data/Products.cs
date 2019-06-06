@@ -29,7 +29,6 @@ namespace EvenCart.Tests.Data
                     IsDownloadable = false,
                     Description = "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
                     Summary = "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
-                    StockQuantity = 10,
                     Published = true,
                     Deleted = false,
                     TrackInventory = true
@@ -53,7 +52,6 @@ namespace EvenCart.Tests.Data
                     IsDownloadable = false,
                     Description = "Shop online for the main versions like the apple iPad mini, apple iPad with retina display, apple iPad Air and the original iPad. ... The retina display infused into Apple iPads is a wonderful option and gives you a much sharper image. iPad mini is a smaller and more compact version of the original tablet.",
                     Summary = "Shop online for the main versions like the apple iPad mini, apple iPad with retina display, apple iPad Air and the original iPad. ... The retina display infused into Apple iPads is a wonderful option and gives you a much sharper image. iPad mini is a smaller and more compact version of the original tablet.",
-                    StockQuantity = 10,
                     Published = true,
                     Deleted = false,
                     TrackInventory = true
@@ -77,7 +75,6 @@ namespace EvenCart.Tests.Data
                     IsDownloadable = false,
                     Description = "The Super AMOLED Infinity display of the new Galaxy J8 offers a one-of-a-kind viewing experience. ... The Galaxy J8 enables you to use chatting apps without pausing your videos. ... With 4GB RAM, 64GB memory and the latest Android Oreo, Galaxy J8’s processing power lets you multitask ...",
                     Summary = "The Super AMOLED Infinity display of the new Galaxy J8 offers a one-of-a-kind viewing experience. ... The Galaxy J8 enables you to use chatting apps without pausing your videos. ... With 4GB RAM, 64GB memory and the latest Android Oreo, Galaxy J8’s processing power lets you multitask ...",
-                    StockQuantity = 10,
                     Published = true,
                     Deleted = false,
                     TrackInventory = true

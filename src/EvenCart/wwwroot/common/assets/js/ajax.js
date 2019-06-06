@@ -215,7 +215,12 @@ var post = function (options) {
     options = ajaxExtend(options);
     options.data = options.data || {};
     //set xsrf token for post
-    options.data.__RequestVerificationToken = options.data.__RequestVerificationToken || window._xsrf;
+    if (typeof options.data === "string") {
+        options.data += "&__RequestVerificationToken=" + window._xsrf;
+    } else {
+        options.data.__RequestVerificationToken = options.data.__RequestVerificationToken || window._xsrf;
+    }
+    
     options.method = "POST";
     return ajax(options);
 }
