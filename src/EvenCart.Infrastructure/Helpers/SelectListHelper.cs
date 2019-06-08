@@ -125,7 +125,7 @@ namespace EvenCart.Infrastructure.Helpers
         public static List<SelectListItem> GetCountries()
         {
             var countryService = DependencyResolver.Resolve<ICountryService>();
-            var countries = countryService.Get(x => true).ToList();
+            var countries = countryService.Get(x => x.Published).ToList();
             return GetSelectItemList(countries, country => country.Id, country => country.Name);
         }
 
