@@ -17,7 +17,7 @@ namespace EvenCart.Areas.Administration.Factories.Addresses
         public AddressModel Create(Address address)
         {
             var addressModel = _modelMapper.Map<AddressModel>(address);
-            addressModel.CountryName = address.Country.Name;
+            addressModel.CountryName = address.Country?.Name;
             return addressModel;
         }
     }

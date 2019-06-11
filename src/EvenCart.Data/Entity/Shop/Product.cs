@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Core.Data;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Users;
@@ -108,6 +110,60 @@ namespace EvenCart.Data.Entity.Shop
         public virtual IList<WarehouseInventory> Inventories { get; set; }
         #endregion
 
+        #region Relations
+        public static Action<Product, Warehouse> WithWarehouse()
+        {
+            return (product, warehouse) =>
+            {
+                if (!product.HasVariants)
+                {
+                    foreach (var inventory in product.Inventories)
+                    {
+                        if (inventory.WarehouseId == warehouse.Id)
+                            inventory.Warehouse = warehouse;
+                    }
+                }
+                else
+                {
+                    var allInventories = product.ProductVariants.SelectMany(x => x.Inventories);
+                    foreach (var inventory in allInventories)
+                    {
+                        if (inventory.WarehouseId == warehouse.Id)
+                            inventory.Warehouse = warehouse;
+                    }
+                }
+            };
+        }
+
+        public static Action<Product, Address> WithAddress()
+        {
+            return (product, address) =>
+            {
+                var warehouses = product.HasVariants ? product.ProductVariants.SelectMany(x => x.Inventories.Select(y => y.Warehouse))
+                    : product.Inventories.Select(x => x.Warehouse);
+                foreach (var warehouse in warehouses)
+                {
+                    if (warehouse.AddressId == address.Id)
+                        warehouse.Address = address;
+                }
+            };
+        }
+
+        public static Action<Product, Country> WithCountry()
+        {
+            return (product, country) =>
+            {
+                var warehouses = product.HasVariants ? product.ProductVariants.SelectMany(x => x.Inventories.Select(y => y.Warehouse))
+                    : product.Inventories.Select(x => x.Warehouse);
+                foreach (var warehouse in warehouses)
+                {
+                    if (warehouse.Address.CountryId == country.Id)
+                        warehouse.Address.Country = country;
+                }
+            };
+        }
+
+        #endregion
 
         #region Inner Classes
 

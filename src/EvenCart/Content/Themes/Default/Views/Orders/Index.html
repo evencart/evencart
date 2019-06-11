@@ -7,12 +7,11 @@
             {{"Order" | t}} # {{order.orderNumber}}
         </h3>
         <label>{{"Order Date" | t}}</label> - {{order.createdOn}}
-        <div class="page-section section pb-120">
+        <div class="page-section text-dark section pb-120">
             <div class="row">
-
                 <div class="col-md-3">
                     <div>
-                        <label>{{"Shipping Address" | t}}</label>
+                        <strong>{{"Delivery Address" | t}}</strong>
                     </div>
                     <div>
                         {{order.shippingAddress.name}}
@@ -36,12 +35,15 @@
                 </div>
                 <div class="col-md-2">
                     <div>
-                        <label>{{"Shipping Method" | t}}</label>
+                        <strong>{{"Shipping Method" | t}}</strong>
+                    </div>
+                    <div>
+                        {{order.shippingMethodDisplayName}}
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div>
-                        <label>{{"Order Status" | t}}</label>
+                        <strong>{{"Order Status" | t}}</strong>
                     </div>
                     <div>
                         {{order.orderStatus}}
@@ -49,7 +51,7 @@
                 </div>
                 <div class="col-md-2">
                     <div>
-                        <label>{{"Payment Status" | t}}</label>
+                        <strong>{{"Payment Status" | t}}</strong>
                     </div>
                     <div>
                         {{order.paymentStatus}}
@@ -58,7 +60,7 @@
                 <div class="col-md-3">
                     <div class="">
                         <div class="text-center">
-                            <label>{{"Order Summary" | t}}</label>
+                            <strong>{{"Order Summary" | t}}</strong>
                         </div>
                         <table class="table">
                             <tbody>
@@ -121,16 +123,46 @@
                         </table>
                     </div>
                 </div>
-
             </div>
-            <h3>
-                {{"Products" | t}}
-            </h3>
+           
             <div class="order-items-list">
+                {% for shipment in order.shipments %}
+                <div class="row order-item">
+                    <div class="col-md-2">
+                        <div class="text-muted">{{"Tracking #" | t}} {{shipment.trackingNumber}}</div>
+                        <h5>
+                            {{shipment.shipmentStatus}}
+                        </h5>
+                    </div>
+                    <div class="col-md-10">
+                        {% for shipmentItem in shipment.shipmentItems %}
+                        <div class="row">
+                            <div class="col-md-1">
+                                <img width="50px" src="{{shipmentItem.imageUrl}}" />
+                            </div>
+                            <div class="col-md-3">
+                                <a href='{% route SingleProduct seName="{{shipmentItem.seName}}" %}'>
+                                    {{shipmentItem.productName}}
+                                </a>
+                                <div>
+                                    {{shipmentItem.attributeText | newLine2Br}}
+                                </div>
+                            </div>
+                            <div class="col-md-3 ">
+                                <div>
+                                    {{shipmentItem.price | withCurrency }} x {{shipmentItem.shippedQuantity}}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+                {% endfor %}
                 {% for orderItem in order.orderItems %}
                 <div class="order-item row">
-                    <div class="col-md-2">
-                        <img src="{{orderItem.imageUrl}}" />
+                    <div class="col-md-1">
+                        <img width="50px" src="{{orderItem.imageUrl}}" />
                     </div>
                     <div class="col-md-3">
                         <a href='{% route SingleProduct seName="{{orderItem.seName}}" %}'>
@@ -141,24 +173,9 @@
                         </div>
                     </div>
                     <div class="col-md-3 ">
-                        <label>{{"Price per unit" | t }} x {{"Quantity" | t}}</label>
                         <div>
                             {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                        <label>{{"Line Total" | t }}</label>
-                        <div>
-                            <strong>
-                                {{orderItem.totalPrice | withCurrency }}
-                            </strong>
-                        </div>
-
-                    </div>
-                    <div class="col-md-2">
-                        <h4>
-                            {{orderItem.shipmentStatus}}
-                        </h4>
                     </div>
                 </div>
                 {% endfor %}
@@ -169,7 +186,20 @@
                     <a href='{% route CheckoutPayment orderGuid="{{order.guid}}" %}' class="btn btn-primary margin-r-5">
                         {{"Retry Payment" | t}}
                     </a>
-                    {% endif %}
+                {% endif %}
+                <form action="" method="post" id="form-cancel-order">
+
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-cancel-order",
+                            {
+                                onSuccess: function() {
+                                    notify("success", "{{'Your order cancellation request as been sent' | t}}");
+                                }
+                            });
+                    });
+                </script>
                 <button class="btn btn-danger">
                     {{"Cancel Order" | t}}
                 </button>

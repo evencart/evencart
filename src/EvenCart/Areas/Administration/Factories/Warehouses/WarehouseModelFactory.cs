@@ -1,6 +1,7 @@
 ﻿using EvenCart.Areas.Administration.Factories.Addresses;
 using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.Warehouses
 {
@@ -16,10 +17,22 @@ namespace EvenCart.Areas.Administration.Factories.Warehouses
         {
             var model = new WarehouseModel()
             {
-                Id = entity.Id
+                Id = entity.Id,
+                DisplayOrder = entity.DisplayOrder
             };
             if (entity.Address != null)
                 model.Address = _addressModelFactory.Create(entity.Address);
+            return model;
+        }
+
+        public WarehouseMiniModel  CreateMini(Warehouse entity)
+        {
+            var model = new WarehouseMiniModel()
+            {
+                Id = entity.Id,
+                Name = entity.Address?.Name,
+                DisplayOrder = entity.DisplayOrder
+            };
             return model;
         }
     }

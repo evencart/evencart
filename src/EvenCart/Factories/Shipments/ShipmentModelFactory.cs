@@ -1,22 +1,34 @@
 ﻿using System.Linq;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using EvenCart.Data.Entity.Settings;
+using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Models.Shipments;
+using EvenCart.Services.Formatter;
 
 namespace EvenCart.Factories.Shipments
 {
     public class ShipmentModelFactory : IShipmentModelFactory
     {
-        private readonly IModelMapper _modelMapper;
-        public ShipmentModelFactory(IModelMapper modelMapper)
+        private readonly IFormatterService _formatterService;
+        private readonly IMediaAccountant _mediaAccountant;
+        private readonly TaxSettings _taxSettings;
+        public ShipmentModelFactory(IFormatterService formatterService, IMediaAccountant mediaAccountant, TaxSettings taxSettings)
         {
-            _modelMapper = modelMapper;
+            _formatterService = formatterService;
+            _mediaAccountant = mediaAccountant;
+            _taxSettings = taxSettings;
         }
 
         public ShipmentModel Create(Shipment entity)
         {
-            var model = _modelMapper.Map<ShipmentModel>(entity);
-            model.ShipmentItems = entity.ShipmentItems.Select(Create).ToList();
+            var model = new ShipmentModel()
+            {
+                ShipmentStatus = entity.ShipmentStatus,
+                ShippingMethodName = entity.ShippingMethodName,
+                TrackingNumber = entity.TrackingNumber,
+                ShipmentItems = entity.ShipmentItems.Select(Create).ToList(),
+                Id = entity.Id
+            };
             return model;
         }
 
@@ -24,11 +36,16 @@ namespace EvenCart.Factories.Shipments
         {
             var shipmentItemModel = new ShipmentItemModel()
             {
-                Quantity = entity.Quantity,
-                ProductName =  entity.OrderItem.Product.Name,
+                ProductName = entity.OrderItem.Product.Name,
                 OrderedQuantity = entity.OrderItem.Quantity,
                 ShippedQuantity = entity.Quantity,
-                OrderItemId = entity.OrderItemId
+                OrderItemId = entity.OrderItemId,
+                AttributeText = _formatterService.FormatProductAttributes(entity.OrderItem.AttributeJson),
+                ImageUrl = _mediaAccountant.GetPictureUrl(entity.OrderItem.Product.MediaItems?.FirstOrDefault(), returnDefaultIfNotFound: true),
+                Price = _taxSettings.DisplayProductPricesWithoutTax
+                    ? entity.OrderItem.Price
+                    : entity.OrderItem.Price + entity.OrderItem.Tax / entity.OrderItem.Quantity,
+                SeName = entity.OrderItem.Product.SeoMeta.Slug
             };
             return shipmentItemModel;
         }

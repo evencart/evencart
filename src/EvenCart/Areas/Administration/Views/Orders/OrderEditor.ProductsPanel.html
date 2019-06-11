@@ -1,0 +1,56 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Ordered Products" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <table class="table  table-borderless">
+                {% for orderItem in order.orderItems %}
+                <tr>
+                    <td>
+                        <div class="productName">
+                            <a href='{% route GetProduct productId="{{orderItem.productId}}" %}'>
+                                {{orderItem.productName}}
+                            </a>
+                        </div>
+                        <div class="productAttributes">
+                            {{orderItem.attributeText  | newLine2Br}}
+                        </div>
+                    </td>
+                    <td>
+                        {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+                    </td>
+                    <td>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td>
+                                    <strong>{{"Price" | t }}</strong>
+                                </td>
+                                <td>
+                                    {{ orderItem.totalPrice | withCurrency}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>{{"Tax" | t}}</strong>
+                                </td>
+                                <td>
+                                    {{orderItem.tax | withCurrency }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>{{"Net Amount" | t}}</strong>
+                                </td>
+                                <td>
+                                    {{orderItem.lineTotal | withCurrency}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>

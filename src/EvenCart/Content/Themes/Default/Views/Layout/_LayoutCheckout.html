@@ -2,7 +2,7 @@
 
 <!-- START HEADER SECTION -->
 <header>
-    <div class="container">
+    <div class="checkout-container">
         <div class="row">
             <div class="col-md-2">
                 <!-- logo -->
@@ -10,7 +10,7 @@
                     <a href="/"><img src="{{store.logoUrl}}" alt="main logo"></a>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <ul class="list-inline checkout-wizard-links">
                     <li class="list-inline-item">
                         {% if orderGuid %}
@@ -19,17 +19,25 @@
                             {{"Order Details" | t}}
                         </a>
                         {% else %}
-                        <a class='{% if active_menu == "BillingShipping" %}active{% endif %} {% if step_index > 0 %}done{% endif %}' {% if step_index> 0 %}href="{% route CheckoutAddress %}"{% endif %}>
+                        <a class='{% if active_menu == "BillingShipping" %}active{% endif %} {% if step_index > 0 %}done{% endif %}' {% if step_index > 0 %}href="{% route CheckoutAddress %}"{% endif %}>
                             {% if step_index > 0 %}
                             <i class="fa fa-check-circle-o"></i>
                             {% endif %}
-                            {{"Billing & Shipping" | t}}
+                            {{"Addresses" | t}}
                         </a>
                         {% endif %}
                     </li>
                     <li class="list-inline-item">
-                        <a class='{% if active_menu == "PaymentInfo" %}active{% endif %} {% if step_index > 1 %}done{% endif %}' {% if step_index > 1 %}href="{% route CheckoutPayment %}"{% endif %}>
+                        <a class='{% if active_menu == "ShippingInfo" %}active{% endif %} {% if step_index > 1 %}done{% endif %}' {% if step_index > 1 %}href="{% route CheckoutShippingInfo %}"{% endif %}>
                             {% if step_index > 1 %}
+                            <i class="fa fa-check-circle-o"></i>
+                            {% endif %}
+                            {{"Shipping Details" | t}}
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a class='{% if active_menu == "PaymentInfo" %}active{% endif %} {% if step_index > 2 %}done{% endif %}' {% if step_index > 2 %}href="{% route CheckoutPayment %}"{% endif %}>
+                            {% if step_index > 2 %}
                             <i class="fa fa-check-circle-o"></i>
                             {% endif %}
                             {{"Payment Info" | t}}
@@ -37,8 +45,8 @@
                     </li>
                     {% unless orderGuid %}
                     <li class="list-inline-item">
-                        <a class='{% if active_menu == "OrderSummary" %}active{% endif %} {% if step_index > 2 %}done{% endif %}' {% if step_index > 2 %}href="{% route CheckoutConfirm %}"{% endif %}>
-                            {% if step_index > 2 %}
+                        <a class='{% if active_menu == "OrderSummary" %}active{% endif %} {% if step_index > 3 %}done{% endif %}' {% if step_index > 3 %}href="{% route CheckoutConfirm %}"{% endif %}>
+                            {% if step_index > 3 %}
                             <i class="fa fa-check-circle-o"></i>
                             {% endif %}
                             {{"Order Summary" | t}}
@@ -47,7 +55,7 @@
                     {% endunless %}
                     <li class="list-inline-item">
                         <a class='{% if active_menu == "OrderConfirmed" %}active{% endif %}'>
-                            {{"Order Placed" | t}}
+                            {{"Complete Order" | t}}
                         </a>
                     </li>
                 </ul>

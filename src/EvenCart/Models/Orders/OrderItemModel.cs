@@ -45,9 +45,5 @@ namespace EvenCart.Models.Orders
         /// The tax percent specific to this product
         /// </summary>
         public decimal TaxPercent { get; set; }
-        /// <summary>
-        /// The shipment status of the product
-        /// </summary>
-        public ShipmentStatus ShipmentStatus { get; set; }
     }
 }

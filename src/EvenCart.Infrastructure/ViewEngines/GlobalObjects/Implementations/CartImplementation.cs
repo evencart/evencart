@@ -16,11 +16,13 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public string TaxFormatted => Tax.ToCurrency();
 
-        public decimal ShippingMethodName { get; set; }
+        public string ShippingMethodName { get; set; }
 
         public decimal ShippingMethodFee { get; set; }
 
         public string ShippingMethodFeeFormatted => ShippingMethodFee.ToCurrency();
+
+        public string ShippingOptionName { get; set; }
 
         public decimal PaymentMethodName { get; set; }
 

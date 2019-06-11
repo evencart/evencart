@@ -2,11 +2,13 @@
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Factories.Shipments;
 using EvenCart.Services.Formatter;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Orders;
+using EvenCart.Models.Shipments;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Factories.Orders
@@ -18,14 +20,15 @@ namespace EvenCart.Factories.Orders
         private readonly IFormatterService _formatterService;
         private readonly TaxSettings _taxSettings;
         private readonly IDataSerializer _dataSerializer;
-
-        public OrderModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, IFormatterService formatterService, TaxSettings taxSettings, IDataSerializer dataSerializer)
+        private readonly IShipmentModelFactory _shipmentModelFactory;
+        public OrderModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, IFormatterService formatterService, TaxSettings taxSettings, IDataSerializer dataSerializer, IShipmentModelFactory shipmentModelFactory)
         {
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
             _formatterService = formatterService;
             _taxSettings = taxSettings;
             _dataSerializer = dataSerializer;
+            _shipmentModelFactory = shipmentModelFactory;
         }
 
         public OrderModel Create(Order order)
@@ -50,6 +53,31 @@ namespace EvenCart.Factories.Orders
                 model.ShippingAddress.CountryName = shippingAddress.Country.Name;
             }
             model.OrderItems = order.OrderItems?.Select(Create).ToList();
+            //when at least one shipment has been added and shipped
+            if (model.OrderItems != null && order.Shipments != null && order.Shipments.Any(x => (int)x.ShipmentStatus > (int)ShipmentStatus.Preparing))
+            {
+                model.Shipments = order.Shipments.Select(_shipmentModelFactory.Create).ToList();
+                //remove order items which have already been shipped
+                var shipmentItems = order.Shipments.SelectMany(x => x.ShipmentItems).ToList();
+                foreach (var orderItemModel in model.OrderItems)
+                {
+                    var shippedItemCount = shipmentItems.Where(x => x.OrderItemId == orderItemModel.Id)
+                        .Sum(x => x.Quantity);
+                    if (orderItemModel.Quantity > shippedItemCount)
+                    {
+                        //fewer items were shipped
+                        orderItemModel.Quantity = orderItemModel.Quantity - shippedItemCount;
+                    }
+                    else
+                    {
+                        //we'll remove this item when loop is done
+                        orderItemModel.Id = 0;
+                    }
+                }
+                //remove all the order items with id 0
+                while (model.OrderItems.Any(x => x.Id == 0))
+                    model.OrderItems.Remove(model.OrderItems.First(x => x.Id == 0));
+            }
             return model;
         }
 
@@ -66,8 +94,7 @@ namespace EvenCart.Factories.Orders
             orderItemModel.TotalPrice = _taxSettings.DisplayProductPricesWithoutTax
                 ? orderItem.Price * orderItem.Quantity
                 : orderItem.Price * orderItem.Quantity + orderItem.Tax;
-            orderItemModel.SeName = orderItem.Product.SeoMeta.Slug;
-            orderItemModel.ShipmentStatus = orderItem.Shipment?.ShipmentStatus ?? ShipmentStatus.Preparing;
+            orderItemModel.SeName = orderItem.Product?.SeoMeta?.Slug;
             return orderItemModel;
         }
     }

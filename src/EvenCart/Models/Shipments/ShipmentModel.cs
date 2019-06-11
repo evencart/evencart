@@ -6,8 +6,6 @@ namespace EvenCart.Models.Shipments
 {
     public class ShipmentModel : FoundationEntityModel
     {
-        public int OrderId { get; set; }
-
         public string TrackingNumber { get; set; }
 
         public string Remarks { get; set; }

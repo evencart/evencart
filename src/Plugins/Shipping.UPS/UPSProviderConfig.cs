@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Shipping.UPS
 {
@@ -25,5 +26,10 @@ namespace Shipping.UPS
             {"UPS Today Express", "85"},
             {"UPS Today Express Saver", "86"}
         };
+
+        public static string GetServiceName(string code)
+        {
+            return AvailableServices.FirstOrDefault(x => x.Value == code).Key;
+        }
     }
 }

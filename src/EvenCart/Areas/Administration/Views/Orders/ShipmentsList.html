@@ -11,7 +11,13 @@
     </tr>
     </thead>
     <tbody>
-    {% for shipment in shipments %}
+    {% for ws in shipments %}
+    <tr>
+        <th colspan="5">
+            {{ws.warehouse.name}}
+        </th>
+    </tr>
+    {% for shipment in ws.shipments %}
     <tr>
         <td>
             {{shipment.trackingNumber}}
@@ -19,7 +25,7 @@
         <td>
             {% for shipmentItem in shipment.shipmentItems %}
             <div>
-                {{shipmentItem.productName}} x <strong>{{shipmentItem.quantity}}</strong><br />
+                {{shipmentItem.productName}} x <strong>{{shipmentItem.quantity}}</strong><br/>
                 {{shipmentItem.attributeText}}
             </div>
 
@@ -124,31 +130,16 @@
             </script>
         </td>
         <td>
-            <button class="btn btn-danger" onclick="deleteShipment({{shipment.id}})">
+            <button class="btn btn-sm btn-danger" onclick="deleteShipment('{{shipment.id}}')">
                 <span class="rbicon rbicon-trash-2"></span>
             </button>
         </td>
     </tr>
     {% endfor %}
+    {% endfor %}
     </tbody>
 </table>
-<script type="text/javascript">
-    var deleteShipment = function(shipmentId) {
-        confirm('{{"Deleting a shipment will delete all the activity? Are you sure you want to continue?"}}',
-            function() {
-                var deleteUrl =
-                    '{% route api_DeleteShipment orderId="{{orderId}}" shipmentId="%id%" %}'
-                        .replace("%id%", shipmentId);
 
-                post({
-                    url: deleteUrl,
-                    done: function() {
-                        window['reload_shipment_list']();
-                    }
-                });
-            });
-    }
-</script>
 {% else %}
 <div class="text-center container">
     {{"No items have been shipped" | t}}

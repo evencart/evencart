@@ -9,6 +9,8 @@
         OrderPaid,
         OrderPaymentInfoSaved,
         OrderAddressSaved,
+        OrderShippingInfoSaved,
+        OrderCancelled,
 
         ShipmentShipped,
         ShipmentDelivered,

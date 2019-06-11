@@ -114,6 +114,13 @@ namespace EvenCart.Services.Products
                 .FirstOrDefault();
         }
 
+        public override IEnumerable<ProductVariant> Get(Expression<Func<ProductVariant, bool>> @where, int page = 1, int count = Int32.MaxValue)
+        {
+            return GetQuery(where)
+                .SelectNested(page, count)
+                .ToList();
+        }
+
         public IList<ProductVariant> GetByProductId(int productId)
         {
             return GetQuery(x => x.ProductId == productId)
@@ -129,6 +136,7 @@ namespace EvenCart.Services.Products
                 .Join<ProductAttribute>("ProductAttributeId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("Id", "AvailableAttributeId", joinType: JoinType.LeftOuter)
+                .Join<WarehouseInventory>("Id", "ProductVariantId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<ProductVariant, ProductVariantAttribute>())
                 .Relate<ProductAttributeValue>((variant, value) =>
                 {
@@ -166,7 +174,8 @@ namespace EvenCart.Services.Products
                         .FirstOrDefault(x => x.AvailableAttributeValueId == attributeValue.Id);
                     if (pav != null && pav.AvailableAttributeValue == null)
                         pav.AvailableAttributeValue = attributeValue;
-                });
+                })
+                .Relate(RelationTypes.OneToMany<ProductVariant, WarehouseInventory>());
         }
     }
 }

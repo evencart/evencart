@@ -7,6 +7,7 @@ using DotEntity.Enumerations;
 using EvenCart.Core.Helpers;
 using EvenCart.Core.Services;
 using EvenCart.Core.Services.Events;
+using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Reviews;
@@ -593,6 +594,8 @@ namespace EvenCart.Services.Products
                 .Where(x => ids.Contains(x.Id))
                 .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Country>("CountryId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductVariant>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
                 .Join<ProductAttribute>("ProductAttributeId", "Id", typeof(ProductVariantAttribute), JoinType.LeftOuter)
@@ -604,6 +607,8 @@ namespace EvenCart.Services.Products
                     joinType: JoinType.LeftOuter)
                 .Join<WarehouseInventory>("Id", "ProductVariantId", typeof(ProductVariant), joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Country>("CountryId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Product, ProductVariant>())
                 .Relate<ProductVariantAttribute>((product, attribute) =>
                 {
@@ -664,6 +669,31 @@ namespace EvenCart.Services.Products
                         }
                     }
                 })
+                .Relate<WarehouseInventory>((product, inventory) =>
+                {
+                    if (!product.HasVariants)
+                    {
+                        product.Inventories = product.Inventories ?? new List<WarehouseInventory>();
+                        if(!product.Inventories.Contains(inventory))
+                            product.Inventories.Add(inventory);
+                    }
+                    else
+                    {
+                        product.ProductVariants = product.ProductVariants ?? new List<ProductVariant>();
+                        foreach (var pv in product.ProductVariants)
+                        {
+                            if (pv.Id == inventory.ProductVariantId)
+                            {
+                                pv.Inventories = pv.Inventories ?? new List<WarehouseInventory>();
+                                if(!pv.Inventories.Contains(inventory))
+                                    pv.Inventories.Add(inventory);
+                            }       
+                        }
+                    }
+                })
+                .Relate(Product.WithWarehouse())
+                .Relate(Product.WithAddress())
+                .Relate(Product.WithCountry())
                 .SelectNested()
                 .ToList();
         }

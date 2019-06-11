@@ -1,0 +1,156 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Order Info" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <table class="table table-borderless">
+                <tr>
+                    <td>
+                        {{"Order Id" | t}}
+                    </td>
+                    <td>
+                        {{order.id}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Order Number" | t}}
+                    </td>
+                    <td>
+                        {{order.orderNumber}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Order Uid" | t}}
+                    </td>
+                    <td>
+                        {{order.guid}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Order Status" | t}}
+                    </td>
+                    <td>
+                        {{order.orderStatusDisplay}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Payment Method" | t}}
+                    </td>
+                    <td>
+                        {{order.paymentMethodDisplayName}}
+                        <div><small class="text-muted">{{order.paymentMethodName}}</small></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Payment Status" | t}}
+                    </td>
+                    <td>
+                        {{order.paymentStatusDisplay}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Shipping Method" | t}}
+                    </td>
+                    <td>
+                        {{order.shippingMethodDisplayName}}
+                        <div><small class="text-muted">{{order.shippingMethodName}}</small></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Shipping Option" | t}}
+                    </td>
+                    <td>
+                        {{order.selectedShippingOption}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Subtotal" | t}}
+                    </td>
+                    <td>
+                        {{order.subTotal | withCurrency}}
+                    </td>
+                </tr>
+                {% if order.discount > 0 %}
+                <tr>
+                    <td>
+                        {{"Cart Discount" | t}}
+                    </td>
+                    <td>
+                        - {{order.discount | withCurrency}}
+                        {% if order.discountId > 0 %}
+                        {{"via" | t}}
+                        <a href='{% route GetDiscount discountId="{{order.discountId}}" %}'>
+                            {% if order.discountCoupon != "" %}
+                            {{order.discountCoupon}}
+                            {% else %}
+                            {{"No coupon" | t}}
+                            {% endif %}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>
+                        {{"Tax" | t}}
+                    </td>
+                    <td>
+                        {{order.tax | withCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Shipping Fee" | t}}
+                    </td>
+                    <td>
+                        {{order.shippingMethodFee | withCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Payment Fee" | t}}
+                    </td>
+                    <td>
+                        {{order.paymentMethodFee | withCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>
+                            {{"Total" | t}}
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            {{order.orderTotal | withCurrency}}
+                        </strong>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

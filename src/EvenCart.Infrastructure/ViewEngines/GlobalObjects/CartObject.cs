@@ -42,8 +42,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var cartModel = new CartImplementation() {
                 Items = new List<CartItemImplementation>(),
                 TotalItems = cart.CartItems.Sum(x => x.Quantity),
-                DiscountCoupon = cart.DiscountCoupon?.HasCouponCode ?? false ? cart.DiscountCoupon?.CouponCode : ""
+                DiscountCoupon = cart.DiscountCoupon?.HasCouponCode ?? false ? cart.DiscountCoupon?.CouponCode : "",
+                ShippingMethodName = cart.ShippingMethodDisplayName,
+                ShippingMethodFee = cart.ShippingFee,
+                ShippingOptionName = cart.SelectedShippingOption
             };
+            
             var currentCurrency = ApplicationEngine.CurrentCurrency;
             cartModel.Items = cart.CartItems.Select(x =>
                 {
@@ -79,7 +83,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             cartModel.Tax = cart.CartItems.Sum(x => x.Tax);
             cartModel.CompareFinalAmount = cart.CartItems.Sum(x => x.ComparePrice ?? 0);
             cartModel.Discount = cart.Discount + cart.CartItems.Sum(x => x.Discount);
-            cartModel.FinalAmount = cartModel.SubTotal + cartModel.Tax - cartModel.Discount;
+            cartModel.FinalAmount = cartModel.ShippingMethodFee + cartModel.SubTotal + cartModel.Tax - cartModel.Discount;
 
             //convert currency
             cartModel.SubTotal = priceAccountant.ConvertCurrency(cartModel.SubTotal, currentCurrency, Rounding.Default);

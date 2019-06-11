@@ -7,7 +7,8 @@
 {% secondary_navigation url="{% route OrdersList %}" title=@t"All Orders" systemName="OrdersList" parent="OrdersList" %}
 
 {% secondary_navigation url="{% route OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
-{% secondary_navigation url="{% route GetOrder orderId="{{order.id}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
 
 <!--Catalog-->
 {% primary_navigation title=@t"Catalog" systemName="ProductsList" groupId="store" capability="Product.View" %}

@@ -18,6 +18,7 @@ namespace EvenCart.Services.Addresses
                 .Join<StateOrProvince>("StateProvinceId", "Id", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<Address, Country>())
                 .Relate(RelationTypes.OneToOne<Address, StateOrProvince>())
+                .OrderBy(x => x.Id)
                 .SelectNested(page, count);
         }
 

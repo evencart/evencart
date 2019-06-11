@@ -1,1 +1,22 @@
-﻿
+﻿{% if shippingOptions.size > 0 %}
+<ul class="shipping-options">
+    {% for shippingOption in shippingOptions %}
+    <li>
+        <label>
+            <input name="ShippingOption.Id" value="{{shippingOption.id}}" type="radio" {% if forloop.index0 == 0 %}checked{% endif %} />
+            {{shippingOption.name}}
+            <span>
+                {{shippingOption.description}}
+            </span>
+            {% if shippingOption.rate > 0 %}
+            [ + {{shippingOption.rate | withCurrency}} ]
+            {% endif %}
+        </label>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-danger">
+    {{"No shipping options available for this provider"}}
+</div>
+{% endif %}

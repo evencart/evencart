@@ -124,6 +124,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                 transactionResult.OrderGuid = order.Guid;
                 transactionResult.TransactionAmount = order.OrderTotal;
                 transactionResult.TransactionGuid = returnModel.PaymentId;
+                transactionResult.TransactionCurrencyCode = result.Transactions[0].Amount.Currency;
                 transactionResult.ResponseParameters = new Dictionary<string, object>()
                 {
                     { "id", result.Id },

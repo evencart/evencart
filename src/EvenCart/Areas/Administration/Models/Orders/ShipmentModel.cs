@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
@@ -32,6 +31,7 @@ namespace EvenCart.Areas.Administration.Models.Orders
         public void SetupValidationRules(ModelValidator<ShipmentModel> v)
         {
             v.RuleFor(x => x.OrderId).GreaterThan(0);
+            v.RuleFor(x => x.WarehouseId).GreaterThan(0);
         }
     }
 }

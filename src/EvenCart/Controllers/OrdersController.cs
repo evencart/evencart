@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Events;
 using EvenCart.Services.Purchases;
 using EvenCart.Factories.Orders;
 using EvenCart.Infrastructure.Mvc;
@@ -87,5 +88,37 @@ namespace EvenCart.Controllers
 
             return R.Success.With("orders", orderModels).Result;
         }
+
+        /// <summary>
+        /// Cancels the order with provided order identifier
+        /// </summary>
+        /// <param name="orderGuid">The unique order identifier. It's a guid.</param>
+        /// <response code="200">A success response object</response>
+        [DualPost("{orderGuid}", Name = RouteNames.CancelOrder, OnlyApi = true)]
+        public IActionResult CancelOrder(string orderGuid)
+        {
+            var order = _orderService.GetByGuid(orderGuid);
+            if (order == null)
+                return NotFound();
+            if (!CanCancelOrder(order))
+            {
+                return R.Fail.With("error", T("Unable to cancel the order")).Result;
+            }
+
+            order.OrderStatus = OrderStatus.Cancelled;
+            _orderService.Update(order);
+
+            RaiseEvent(NamedEvent.OrderCancelled);
+            return R.Success.Result;
+        }
+
+
+        #region Helpers
+
+        private bool CanCancelOrder(Order order)
+        {
+            return order.UserId != CurrentUser.Id || order.OrderStatus != OrderStatus.New;
+        }
+        #endregion
     }
 }

@@ -27,6 +27,8 @@ namespace EvenCart.Data.Entity.Purchases
         public virtual Shipment Shipment { get; set; }
 
         public virtual Product Product { get; set; }
+
+        public virtual ProductVariant ProductVariant { get; set; }
         #endregion
     }
 }

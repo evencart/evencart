@@ -4,6 +4,7 @@ using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Addresses;
+using EvenCart.Models.Shipments;
 using UserModel = EvenCart.Models.Users.UserModel;
 
 namespace EvenCart.Models.Orders
@@ -35,9 +36,17 @@ namespace EvenCart.Models.Orders
         /// </summary>
         public string ShippingMethodName { get; set; }
         /// <summary>
+        /// The shipping method display name
+        /// </summary>
+        public string ShippingMethodDisplayName { get; set; }
+        /// <summary>
         /// The payment method name used while placing the order
         /// </summary>
         public string PaymentMethodName { get; set; }
+        /// <summary>
+        /// The payment method name used while placing the order
+        /// </summary>
+        public string PaymentMethodDisplayName { get; set; }
         /// <summary>
         /// The discount amount for the order
         /// </summary>
@@ -106,8 +115,13 @@ namespace EvenCart.Models.Orders
         /// The <see cref="AddressInfoModel">billingAddress</see> used while placing the order
         /// </summary>
         public AddressInfoModel BillingAddress { get; set; }
+
         /// The <see cref="AddressInfoModel">shippingAddress</see> used while placing the order
         public AddressInfoModel ShippingAddress { get; set; }
+        /// <summary>
+        /// List of <see cref="ShipmentModel">shipment</see> objects for this order
+        /// </summary>
+        public IList<ShipmentModel> Shipments { get; set; }
 
     }
 }

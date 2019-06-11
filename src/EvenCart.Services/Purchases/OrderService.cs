@@ -27,18 +27,7 @@ namespace EvenCart.Services.Purchases
 
         public override Order Get(int id)
         {
-            return Repository.Join<OrderItem>("Id", "OrderId", joinType: JoinType.LeftOuter)
-                .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
-                .Join<User>("UserId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
-                .Relate(RelationTypes.OneToMany<Order, OrderItem>())
-                .Relate(RelationTypes.OneToOne<Order, User>())
-                .Relate<Product>((order, product) =>
-                {
-                    var orderItem = order.OrderItems.FirstOrDefault(x => x.ProductId == product.Id);
-                    if (orderItem != null)
-                        orderItem.Product = product;
-                })
-                .Where(x => x.Id == id)
+            return GetByWhere(x => x.Id == id)
                 .SelectNested()
                 .FirstOrDefault();
         }
@@ -173,7 +162,10 @@ namespace EvenCart.Services.Purchases
                     orderItem.Shipment = order.Shipments.First(x => x.Id == shipmentItem.ShipmentId);
                     orderItem.Shipment.ShipmentItems = orderItem.Shipment.ShipmentItems ?? new List<ShipmentItem>();
                     if (!orderItem.Shipment.ShipmentItems.Contains(shipmentItem))
+                    {
                         orderItem.Shipment.ShipmentItems.Add(shipmentItem);
+                        shipmentItem.OrderItem = orderItem;
+                    }
                 })
                 .Relate<Product>((order, product) =>
                 {

@@ -22,11 +22,6 @@ namespace EvenCart.Models.Checkout
         /// </summary>
         public AddressInfoModel ShippingAddress { get; set; }
 
-        /// <summary>
-        /// The <see cref="ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.
-        /// </summary>
-        public ShippingMethodModel ShippingMethod { get; set; }
-
         public void SetupValidationRules(ModelValidator<BillingShippingModel> v)
         {
             v.RuleFor(x => x.BillingAddress).NotNull();

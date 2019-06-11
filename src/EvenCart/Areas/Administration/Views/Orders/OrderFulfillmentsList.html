@@ -1,0 +1,116 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Order Fulfillments" active_menu="OrderFulfillmentsList" parent_active_menu="OrdersList" menu_group="OrderEdit" %}
+
+<script type="text/javascript">
+   
+    var editShipment = function (id, warehouseId) {
+        jQuery("#edit-shipment-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-shipment-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    notify("success", '{{"Shipment was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetShipment orderId="{{orderId}}" shipmentId="%sid%" warehouseId="%wid%" %}'.replace("%sid%", id).replace("%wid%", warehouseId);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-shipment-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteShipment = function(shipmentId, warehouseId) {
+        confirm('{{"Deleting a shipment will delete all the activity? Are you sure you want to continue?"}}',
+            function() {
+                var deleteUrl =
+                    '{% route api_DeleteShipment orderId="{{orderId}}" shipmentId="%id%" warehouseId="%wid%" %}'
+                        .replace("%id%", shipmentId).replace("%wid%", warehouseId);
+
+                post({
+                    url: deleteUrl,
+                    done: function() {
+                        window['reload_shipment_list']();
+                    }
+                });
+            });
+    };
+
+</script>
+<div class="row">
+    <div class="col-md-5">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Fulfillments" | t}}
+                {% if canEditFulfillments %}
+                <button type="button" class="btn btn-primary btn-sm float-right" onclick="editFulfillment()">{{"Edit Fulfillments" | t}}</button>
+                {% endif %}
+            </div>
+            <div class="panel-body">
+                {% for f in orderFulfillments %}
+                <h6>{{f.warehouse.address.name}}</h6>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table  table-borderless">
+                            {% for orderItem in f.orderItems %}
+                            <tr>
+                                <td>
+                                    <div class="productName">
+                                        <a href='{% route GetProduct productId="{{orderItem.productId}}" %}'>
+                                            {{orderItem.productName}}
+                                        </a>
+                                    </div>
+                                    <div class="productAttributes">
+                                        {{orderItem.attributeText | newLine2Br}}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{orderItem.price | withCurrency }} x <strong>{{orderItem.quantity}}</strong>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm float-right" onclick="editShipment(0, '{{f.warehouse.id}}')">{{"Add Shipment" | t}}</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                {% if forloop.last == false %}
+                <hr/>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+      
+    </div>
+    <div class="col-md-7">
+        {% partial "Orders/OrderFulfillmentsList.ShippedProductsPanel" %}
+    </div>
+</div>
+
+<div class="popup" id="edit-shipment-popup">
+</div>
+
+<div class="popup" id="edit-fulfillment-popup">
+</div>
+<script type="text/javascript">
+    var editFulfillment = function () {
+        jQuery("#edit-fulfillment-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-fulfillment-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    notify("success", '{{"Fulfillment was saved successfully" | t}}');
+                    window.location.reload();
+                }
+            });
+        var url = '{% route GetOrderFulfillment orderId="{{orderId}}" %}';
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-fulfillment-popup").html(response);
+                centerPopup();
+            });
+    }
+</script>

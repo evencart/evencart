@@ -94,12 +94,6 @@ namespace EvenCart.Infrastructure.DependencyContainer
                     }
                 })
                 .Where(x => x.IsPublic && !x.IsAbstract).ToList();
-            //find all event consumer types
-            var allConsumerTypes = allTypes
-                .Where(type => type.GetInterfaces()
-                                   .Any(x => x.IsAssignableTo(typeof(IFoundationEvent))));// which implementing some interface(s)
-            //all consumers which are not interfaces
-            registrar.RegisterMany(allConsumerTypes);
 
             //find all the model factories
             var allModelFactories = allTypes
@@ -147,6 +141,13 @@ namespace EvenCart.Infrastructure.DependencyContainer
                               type.GetInterfaces().Length != 0);// which implementing some interface(s)
 
             registrar.RegisterMany(serviceTypes, Reuse.Transient);
+
+            //find all event consumer types
+            var allConsumerTypes = allTypes
+                .Where(type => type.GetInterfaces()
+                    .Any(x => x.IsAssignableTo(typeof(IFoundationEvent))));// which implementing some interface(s)
+            //all consumers which are not interfaces
+            registrar.RegisterMany(allConsumerTypes, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
 
             //components
             //find all event consumer types

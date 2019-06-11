@@ -1,0 +1,18 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Shipped Products" | t}}
+        <a class="float-right clickable margin-r-10" onclick="window['reload_shipment_list']();"><span class="rbicon rbicon-refresh-ccw"></span></a>
+    </div>
+    <div class="panel-body no-padding">
+        <div class="row">
+            <div class="col-12" id="shipment_list">
+                {% control ajaxedcontent source="getShipmentListUrl" id="shipment_list" %}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var getShipmentListUrl = function() {
+        return '{% route ShipmentsList orderId="{{orderId}}" %}';
+    }
+</script>

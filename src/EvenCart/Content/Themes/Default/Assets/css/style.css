@@ -2688,7 +2688,6 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
   text-align: right; }
 
 .cart-total h3 {
-  border-bottom: 1px solid #ddd;
   font-size: 24px;
   line-height: 18px;
   margin-bottom: 30px;
@@ -2698,7 +2697,7 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
 .cart-total table {
   border: medium none;
   float: right;
-  margin: 0;
+  margin-bottom: 40px;
   text-align: right; }
 
 .cart-total table tr th {
@@ -3324,7 +3323,7 @@ div.tab button.active {
     border-bottom: solid 2px #555;
     font-weight: bold; }
   .checkout-wizard-links a.done {
-    color: #555; }
+    color: green; }
 
 #payment-info-form {
   padding: 10px;
@@ -3508,3 +3507,25 @@ div.tab button.active {
   .cookie-consent-popup.expanded {
     max-width: 800px;
     background-color: #333; }
+
+.checkout-container {
+  width: 80%;
+  max-width: 960px;
+  margin: 0 auto; }
+
+.checkout-proceed {
+  margin-top: 20px;
+  margin-bottom: 30px; }
+
+#shipping-methods-list, #shipping-options-list {
+  border: solid 1px #eee;
+  margin-bottom: 20px; }
+  #shipping-methods-list label, #shipping-options-list label {
+    margin-bottom: 0;
+    display: block;
+    padding: 15px; }
+    #shipping-methods-list label:hover, #shipping-options-list label:hover {
+      background-color: #f1f1f1;
+      cursor: pointer; }
+  #shipping-methods-list li, #shipping-options-list li {
+    border-bottom: solid 1px #eee; }

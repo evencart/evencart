@@ -18,6 +18,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public string PaymentMethodName { get; set; }
 
+        public string PaymentMethodDisplayName { get; set; }
+
         public string ShippingMethodName { get; set; }
 
         public string ShippingMethodDisplayName { get; set; }

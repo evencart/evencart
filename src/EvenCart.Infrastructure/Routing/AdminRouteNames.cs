@@ -70,6 +70,9 @@
         public const string SaveOrder = "SaveOrder";
         public const string DeleteOrder = "DeleteOrder";
         public const string GetOrder = "GetOrder";
+        public const string OrderFulfillmentsList = "OrderFulfillmentsList";
+        public const string SaveOrderFulfillment = "SaveOrderFulfillment";
+        public const string GetOrderFulfillment = "GetOrderFulfillment";
 
         public const string GetShipment = "GetShipment";
         public const string ShipmentsList = "ShipmentsList";

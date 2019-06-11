@@ -124,8 +124,13 @@
     <None Remove="Areas\Administration\Views\Navigation\UserSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Navigation\VendorEditSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderEditor.CustomerInfoPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.html" />
-    <None Remove="Areas\Administration\Views\Orders\OrderEditor.ShippedProductsPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderEditor.OrderInfoPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderEditor.ProductsPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentEditor.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentsList.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentsList.ShippedProductsPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.Dates.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.OrderStatus.html" />
@@ -236,6 +241,7 @@
     <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\ShippingInfo.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\ShippingOptions.html" />
     <None Remove="Content\Themes\Default\Views\Common\Breadcrumb.html" />
     <None Remove="Content\Themes\Default\Views\Common\_ConsentPopup.html" />
@@ -261,8 +267,8 @@
     <None Remove="Content\Themes\Default\Views\Layout\_LayoutCheckout.html" />
     <None Remove="Content\Themes\Default\Views\Layout\_RootLayout.html" />
     <None Remove="Content\Themes\Default\Views\Navigation\_AccountNavigation.html" />
-    <None Remove="Content\Themes\Default\Views\Order\Index.html" />
-    <None Remove="Content\Themes\Default\Views\Order\Orders.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\Orders.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.ProductAttributes.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
@@ -560,10 +566,19 @@
     <Content Include="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderEditor.ProductsPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderEditor.CustomerInfoPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderEditor.OrderInfoPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Orders\OrderEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Administration\Views\Orders\OrderEditor.ShippedProductsPanel.html">
+    <Content Include="Areas\Administration\Views\Orders\OrderFulfillmentsList.ShippedProductsPanel.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Orders\OrdersList.FilterPanel.Dates.html">
@@ -579,6 +594,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Orders\OrdersList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderFulfillmentsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderFulfillmentEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Orders\ShipmentEditor.html">
@@ -888,6 +909,9 @@
     <Content Include="Content\Themes\Default\Views\Checkout\ShippingOptions.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\ShippingInfo.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\Complete.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -972,10 +996,10 @@
     <Content Include="Content\Themes\Default\Views\Navigation\_AccountNavigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Order\Index.html">
+    <Content Include="Content\Themes\Default\Views\Orders\Index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\Default\Views\Order\Orders.html">
+    <Content Include="Content\Themes\Default\Views\Orders\Orders.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Products\Index.html">

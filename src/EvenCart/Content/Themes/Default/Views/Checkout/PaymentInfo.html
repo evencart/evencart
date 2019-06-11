@@ -1,8 +1,8 @@
 ﻿{% layout "_LayoutCheckout" %}
-{% global active_menu="PaymentInfo" step_index="1" %}
+{% global active_menu="PaymentInfo" step_index="2" %}
 <form action="{% route api_CheckoutPayment %}" method="post" id="form-payment-info">
     {% control xsrf %}
-    <div class="container">
+    <div class="checkout-container">
         <div class="row">
             <div class="col-8 offset-2">
                 {% if error %}
@@ -12,9 +12,9 @@
                 {% endif %}
             </div>
             <div class="col-8 offset-2">
-                <h3>
+                <h4>
                     {{"Payment Info" | t}}
-                </h3>
+                </h4>
                 {% if paymentMethods.size > 0 %}
                 <select name="SystemName" class="form-control" id="PaymentMethodSystemName">
                     {% for paymentMethod in paymentMethods %}
@@ -29,9 +29,9 @@
                 </div>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center checkout-proceed">
             <input type="hidden" name="orderGuid" value="{{orderGuid}}" />
-            <input type="submit" class="btn btn-default" value='{{"Next" | t}}' />
+            <input type="submit" class="btn btn-default" value='{{"Proceed" | t}}' />
         </div>
     </div>
 </form>

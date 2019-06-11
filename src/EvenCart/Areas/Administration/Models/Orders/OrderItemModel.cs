@@ -8,6 +8,8 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public string ProductName { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public string AttributeText { get; set; }
 
         public decimal Price { get; set; }

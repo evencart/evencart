@@ -4,9 +4,13 @@ using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Services.Formatter;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
+using EvenCart.Services.MediaServices;
 using EvenCart.Services.Serializers;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {
@@ -15,11 +19,13 @@ namespace EvenCart.Areas.Administration.Factories.Orders
         private readonly IModelMapper _modelMapper;
         private readonly IFormatterService _formatterService;
         private readonly IDataSerializer _dataSerializer;
-        public OrderModelFactory(IModelMapper modelMapper, IFormatterService formatterService, IDataSerializer dataSerializer)
+        private readonly IMediaAccountant _mediaAccountant;
+        public OrderModelFactory(IModelMapper modelMapper, IFormatterService formatterService, IDataSerializer dataSerializer, IMediaAccountant mediaAccountant)
         {
             _modelMapper = modelMapper;
             _formatterService = formatterService;
             _dataSerializer = dataSerializer;
+            _mediaAccountant = mediaAccountant;
         }
 
         public OrderModel Create(Order entity)
@@ -51,6 +57,10 @@ namespace EvenCart.Areas.Administration.Factories.Orders
             orderItemModel.ProductName = entity.Product?.Name;
             orderItemModel.AttributeText = _formatterService.FormatProductAttributes(entity.AttributeJson);
             orderItemModel.TotalPrice = orderItemModel.Price * orderItemModel.Quantity;
+            if (entity.Product?.MediaItems != null && entity.Product.MediaItems.Any())
+            {
+                orderItemModel.ImageUrl = _mediaAccountant.GetPictureUrl(entity.Product.MediaItems.First(), returnDefaultIfNotFound: true);
+            }
             return orderItemModel;
         }
     }

@@ -210,7 +210,7 @@ namespace EvenCart.Services.Products
                             {
                                 //find the product variants
                                 var variant = productVariants.FirstOrDefault(x => x.Id == ci.ProductVariantId);
-                                if (variant == null || (product.TrackInventory && !variant.IsAvailableInStock(product)))
+                                if (variant == null || (variant.TrackInventory && !variant.IsAvailableInStock(product)))
                                     //remove from cart because we can't find the variant or it's out of stock
                                     _cartService.RemoveFromCart(ci.Id, transaction);
                                 else

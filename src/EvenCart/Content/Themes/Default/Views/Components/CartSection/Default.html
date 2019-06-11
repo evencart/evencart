@@ -2,7 +2,7 @@
 <div class="page-section section" id="cart-section">
     {% if cart.items.size > 0 %}
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <div class="cart-table table-responsive mb-40">
 
                 <table>
@@ -98,7 +98,7 @@
                                                     reloadComponent("MiniCart", { success: true }, "#mini-cart");
                                                 }
                                             });
-                                        
+
                                         jQuery("#a-remove-form-cart-{{cartItem.id}}").click(function (e) {
                                             e.preventDefault();
                                             jQuery("#remove-form-cart-{{cartItem.id}}").submit();
@@ -113,7 +113,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-8 col-sm-7 col-xs-12">
+        <div class="col-12 col-md-8">
             {% if checkout == "false" %}
             <div class="cart-buttons mb-30">
                 <a href="{% route Home %}">{{"Shop more" | t}}</a>
@@ -180,12 +180,26 @@
             });
                 </script>
             </div>
+
+            {% else %}
+            {% if cart.shippingMethodName %}
+            <h3>{{"Delivery Options" | t}}</h3>
+            <label>{{"Shipping Method" | t}}</label>
+            <div class="text-dark">
+                {{cart.shippingMethodName}}
+            </div>
+            <label>{{"Shipping Option" | t}}</label>
+            <div class="text-dark">
+                {{cart.shippingOptionName}}
+            </div>
             {% endif %}
+            {% endif %}
+
         </div>
-        <div class="col-md-4 col-sm-5 col-xs-12">
+        <div class="col-12 col-md-4 mb-40">
             <div class="cart-total mb-40">
                 <h3>{{"Cart Summary" | t}}</h3>
-                <table>
+                <table class="mb-40">
                     <tbody>
                         <tr class="cart-subtotal">
                             <th>{{"Subtotal" | t}}</th>
@@ -215,7 +229,16 @@
                             </td>
                         </tr>
                         {% endif %}
-
+                        {% if cart.shippingMethodFee > 0 %}
+                        <tr class="cart-subtotal">
+                            <th>{{"Shipping" | t}}</th>
+                            <td>
+                                <span class="amount">
+                                    {{cart.shippingMethodFee | withCurrency}}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endif %}
                         <tr class="order-total">
                             <th>{{"Total" | t }}</th>
                             <td>

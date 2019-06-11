@@ -2,17 +2,17 @@
 {% global active_menu="BillingShipping" step_index="0" %}
 <form method="post" id="form-billing-shipping" action="{% route api_CheckoutAddress %}">
     {% control xsrf %}
-    <div class="container">
+    <div class="checkout-container">
         <div class="row">
-            <div class="col-md-6">
-                <h3>
+            <div class="col-md-8 offset-2">
+                <h4>
                     {{"Address" | t}}
-                </h3>
+                </h4>
                 {% if addresses.size > 0 %}
-                <select name="BillingAddress.id" class="form-control" id="BillingAddressId">
+                <select name="BillingAddress.id" class="form-control mb-10" id="BillingAddressId">
                     {% for address in addresses %}
                     <option value="{{address.id}}">
-                        {{address.name}} {{address.address1}} {{address.address2}} {{address.state}} {{address.city}} {{address.zip}}
+                        {{address.name}} {{address.address1}} {{address.address2}} {{address.state}} {{address.city}} {{address.zipPostalCode}}
                     </option>
                     {% endfor %}
                     <option value="0">
@@ -20,20 +20,26 @@
                     </option>
                 </select>
                 {% endif %}
-                {% if shippingRequired %}
-                <div id="billing-address-container" class="address-container" {% if addresses.size> 0 %}style="display: none"{% endif %}>
-                    {% partial "Addresses/AddressForm" prefix="BillingAddress." %}
+                <div id="billing-address-container" class="address-container" {%if addresses.size> 0 %}style="display: none"{%endif%}>
+                    <div class="row">
+                        {% partial "Addresses/AddressForm" prefix="BillingAddress." %}
+                    </div>
                 </div>
-                {% control checkbox name="UseDifferentShippingAddress" id="UseDifferentShippingAddress" text=@t"Use different address for shipping" value="false" %}
+                {% if shippingRequired %}
+                {% control checkbox name="UseDifferentShippingAddress" id="UseDifferentShippingAddress" text=@t"Billing and shipping addresses are different" value="false" %}
+                {% endif %}
+            </div>
+            <div class="col-md-8 offset-2">
+                {% if shippingRequired %}
                 <div id="delivery-address-container" style="display: none;">
-                    <h3>
+                    <h4>
                         {{"Delivery Address" | t}}
-                    </h3>
+                    </h4>
                     {% if addresses.size > 0 %}
-                    <select name="ShippingAddress.id" class="form-control" id="ShippingAddressId">
+                    <select name="ShippingAddress.id" class="form-control mb-10" id="ShippingAddressId">
                         {% for address in addresses %}
                         <option value="{{address.id}}">
-                            {{address.name}} {{address.address1}} {{address.address2}} {{address.state}} {{address.city}} {{address.zip}}
+                            {{address.name}} {{address.address1}} {{address.address2}} {{address.state}} {{address.city}} {{address.zipPostalCode}}
                         </option>
                         {% endfor %}
                         <option value="0">
@@ -41,15 +47,18 @@
                         </option>
                     </select>
                     {% endif %}
-                    <div id="shipping-address-container" class="address-container" {% if addresses.size>0 %}style="display: none"{% endif %}>
-                        {% partial "Addresses/AddressForm" prefix="ShippingAddress." %}
+                    <div id="shipping-address-container" class="address-container" {%if addresses.size> 0 %}style="display: none"{%endif%}>
+                        <div class="row">  
+                            {% partial "Addresses/AddressForm" prefix="ShippingAddress." %}
+                        </div>
                     </div>
                 </div>
+                
                 {% endif %}
                 <script type="text/javascript">
-                    ready(function() {
+                    ready(function () {
                         //{% if shippingRequired %}
-                        jQuery("#UseDifferentShippingAddress").change(function() {
+                        jQuery("#UseDifferentShippingAddress").change(function () {
                             if (jQuery(this).is(":checked")) {
                                 jQuery("#delivery-address-container").show();
                             } else {
@@ -57,7 +66,7 @@
                             }
                         });
                         //{% endif %}
-                        jQuery("#BillingAddressId, #ShippingAddressId").change(function() {
+                        jQuery("#BillingAddressId, #ShippingAddressId").change(function () {
                             if (jQuery(this).val() == 0) {
                                 jQuery(this).next(".address-container").show();
                             } else {
@@ -68,39 +77,23 @@
                     })
                 </script>
             </div>
-            <div class="col-md-6">
-                <h3>
-                    {{"Delivery Provider" | t}}
-                </h3>
-                <ul id="shipping-methods-list">
-                    {% for shippingMethod in shippingMethods %}
-                    <li>
-                        <label>
-                            <input name="ShippingMethod.SystemName" value="{{shippingMethod.systemName}}" type="radio" {% if forloop.index0= =0 %}checked{% endif %} />
-                            {{shippingMethod.description}}
-                            {% if shippingMethod.fee > 0 %}
-                            [ + {{shippingMethod.fee | withCurrency}} ]
-                            {% endif %}
-                        </label>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
-        <div class="row">
-            <div class="text-center">
-                <input type="submit" class="btn btn-default" value='{{"Next" | t}}' />
+        <div class="row mt-10">
+            <div class="col-12">
+                <div class="text-center checkout-proceed">
+                    <input type="submit" class="btn btn-default" value='{{"Proceed" | t}}' />
+                </div>
             </div>
         </div>
     </div>
 </form>
 <script type="text/javascript">
-    ready(function() {
+    ready(function () {
         initAjaxForm("form-billing-shipping",
             {
-                onSuccess: function() {
-                    var paymentInfoUrl = "{% route CheckoutPayment %}";
-                    window.location.href = paymentInfoUrl;
+                onSuccess: function () {
+                    var nextUrl = "{% route CheckoutShippingInfo %}";
+                    window.location.href = nextUrl;
                 }
             });
     });

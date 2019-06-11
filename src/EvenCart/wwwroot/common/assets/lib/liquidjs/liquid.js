@@ -1413,10 +1413,10 @@
     function Operators(isTruthy) {
         return {
             '==': function _(l, r) {
-                return l === r;
+                return l == r;
             },
             '!=': function _(l, r) {
-                return l !== r;
+                return l != r;
             },
             '>': function _(l, r) {
                 return l !== null && r !== null && l > r;
@@ -1447,6 +1447,7 @@
     var operators$1 = Operators(isTruthy);
 
     function evalExp(exp, scope) {
+       
         assert(scope, 'unable to evalExp: scope undefined');
         var operatorREs = operators;
         var match = void 0;
@@ -1456,7 +1457,7 @@
             if (match = exp.match(expRE)) {
                 var l = evalExp(match[1], scope);
                 var op = operators$1[match[2].trim()];
-                var r = evalExp(match[3], scope);
+                var r = evalExp(match[3], scope);               
                 return op(l, r);
             }
         }

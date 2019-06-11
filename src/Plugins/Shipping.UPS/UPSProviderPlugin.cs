@@ -194,20 +194,25 @@ namespace Shipping.UPS
                 var ratedShipment = xDoc.Root.Elements("RatedShipment");
                 foreach (var rateNode in ratedShipment)
                 {
-                    var name = rateNode.XPathSelectElement("Service/Code").Value;
-                    if (!_upsSettings.ActiveServices.Contains(name))
+                    var code = rateNode.XPathSelectElement("Service/Code").Value;
+                    if (!_upsSettings.ActiveServices.Contains(code))
                     {
                         continue;
                     }
                     var description = "";
                     var totalCharges = Convert.ToDecimal(rateNode.XPathSelectElement("TotalCharges/MonetaryValue").Value);
                     var deliveryTime = rateNode.XPathSelectElement("ScheduledDeliveryTime").Value;
+                    var guarnateedDaysStr = rateNode.XPathSelectElement("GuaranteedDaysToDelivery").Value;
+                    var remarks = rateNode.XPathSelectElement("RatedShipmentWarning").Value;
+                    int.TryParse(guarnateedDaysStr, out var guaranteedDays);
                     shippingOptions.Add(new ShippingOption()
                     {
-                        Name = name,
+                        Name = UPSProviderConfig.GetServiceName(code),
                         Description = description,
                         DeliveryTime = deliveryTime,
-                        Rate = totalCharges
+                        Rate = totalCharges,
+                        GuaranteedDaysToDelivery = guaranteedDays,
+                        Remarks = remarks
                     });
                 }
             }

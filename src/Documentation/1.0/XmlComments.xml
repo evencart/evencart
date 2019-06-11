@@ -147,6 +147,91 @@
             <param name="warehouseId">The id of the warehouse</param>
             <response code="200">A success response object</response>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel">
+            <summary>
+            Represents order fulfillment details of an order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.Warehouse">
+            <summary>
+            The <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel">warehouse</see> of the fulfillment
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItems">
+            <summary>
+            A collection of <see cref="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel">order item</see> object
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel">
+            <summary>
+            The single order item fulfillment object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel.OrderItem">
+            <summary>
+            A single <see cref="T:EvenCart.Areas.Administration.Models.Orders.OrderItemModel">order item</see> object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel.CurrentQuantity">
+            <summary>
+            The currency quantity of the item in the warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel.AvailableQuantity">
+            <summary>
+            The available quantity of the item in the warehouse
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentListModel">
+            <summary>
+            The order fulfillment group object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentListModel.Warehouse">
+            <summary>
+            The <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel">warehouse</see> in this fulfillment
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentListModel.OrderItems">
+            <summary>
+            A list of <see cref="T:EvenCart.Areas.Administration.Models.Orders.OrderItemModel">order item</see> objects in this fulfillment
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentModel">
+            <summary>
+            The order fulfillment object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentModel.OrderItemId">
+            <summary>
+            The id of the order item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentModel.WarehouseId">
+            <summary>
+            The id of the warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentModel.Quantity">
+            <summary>
+            The quantity of the ordered item
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.ShipmentEditorModel">
+            <summary>
+            Represents shipments grouped by warehouses
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShipmentEditorModel.Warehouse">
+            <summary>
+            The <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseMiniModel">warehouse</see> object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShipmentEditorModel.Shipments">
+            <summary>
+            A list <see cref="T:EvenCart.Areas.Administration.Models.Orders.ShipmentModel">shipment</see> objects for the warehouse
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">
             <summary>
             Contains information about various totals
@@ -340,6 +425,21 @@
         <member name="P:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel.TotalQuantity">
             <summary>
             The total quantity of the item
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Warehouse.WarehouseMiniModel">
+            <summary>
+            Represents a minimal warehouse object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseMiniModel.Name">
+            <summary>
+            The name of the warehouse.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseMiniModel.DisplayOrder">
+            <summary>
+            The display order of the warehouse
             </summary>
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel.Address">
@@ -554,9 +654,9 @@
             <param name="shippingMethodSystemName">The system name of the shipping method</param>
             <response code="200">A list of available shipping options</response>
         </member>
-        <member name="M:EvenCart.Controllers.CheckoutController.ShippingOptionsSave(System.String)">
+        <member name="M:EvenCart.Controllers.CheckoutController.ShippingInfoSave(EvenCart.Models.Checkout.ShippingInfoModel)">
             <summary>
-            Saves shipping option for the cart
+            Saves shipping info for the cart
             </summary>
             <response code="200">A success response object</response>
         </member>
@@ -657,6 +757,13 @@
             </summary>
             <param name="searchModel"></param>
             <response code="200">A list of <see cref="T:EvenCart.Models.Orders.OrderModel">orders</see> objects.</response>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.CancelOrder(System.String)">
+            <summary>
+            Cancels the order with provided order identifier
+            </summary>
+            <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <response code="200">A success response object</response>
         </member>
         <member name="T:EvenCart.Controllers.ProductsController">
             <summary>
@@ -905,11 +1012,6 @@
             The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">shippingAddress</see> of the user. Ignore if useDifferentShippingAddress is set to false.
             </summary>
         </member>
-        <member name="P:EvenCart.Models.Checkout.BillingShippingModel.ShippingMethod">
-            <summary>
-            The <see cref="T:EvenCart.Models.Checkout.ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.
-            </summary>
-        </member>
         <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.SystemName">
             <summary>
             The payment method system name
@@ -943,6 +1045,21 @@
         <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.OrderGuid">
             <summary>
             The order guid for which this payment method is being used. This is used only for retrying a previously failed order.
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Checkout.ShippingInfoModel">
+            <summary>
+            Represents a shipping information model
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingInfoModel.ShippingMethod">
+            <summary>
+            The <see cref="T:EvenCart.Models.Checkout.ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingInfoModel.ShippingOption">
+            <summary>
+            The <see cref="T:EvenCart.Models.Checkout.ShippingOptionModel">shipping option</see> to be used. Ignore if not applicable.
             </summary>
         </member>
         <member name="T:EvenCart.Models.Checkout.ShippingOptionModel">
@@ -1090,11 +1207,6 @@
             The tax percent specific to this product
             </summary>
         </member>
-        <member name="P:EvenCart.Models.Orders.OrderItemModel.ShipmentStatus">
-            <summary>
-            The shipment status of the product
-            </summary>
-        </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.OrderNumber">
             <summary>
             The displayable order number
@@ -1125,7 +1237,17 @@
             The shipping method name used while placing the order
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.ShippingMethodDisplayName">
+            <summary>
+            The shipping method display name
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.PaymentMethodName">
+            <summary>
+            The payment method name used while placing the order
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaymentMethodDisplayName">
             <summary>
             The payment method name used while placing the order
             </summary>
@@ -1212,6 +1334,11 @@
         </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.ShippingAddress">
             The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">shippingAddress</see> used while placing the order
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Shipments">
+            <summary>
+            List of <see cref="T:EvenCart.Models.Shipments.ShipmentModel">shipment</see> objects for this order
+            </summary>
         </member>
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.FromDate">
             <summary>

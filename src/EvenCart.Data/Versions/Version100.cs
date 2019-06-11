@@ -73,6 +73,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<CartItem>(transaction);
             Db.CreateTable<Order>(transaction);
             Db.CreateTable<OrderItem>(transaction);
+            Db.CreateTable<OrderFulfillment>(transaction);
             Db.CreateTable<Shipment>(transaction);
             Db.CreateTable<ShipmentItem>(transaction);
             Db.CreateTable<ShipmentHistory>(transaction);
@@ -132,7 +133,7 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Shipment, ShipmentHistory>("Id", "ShipmentId"), transaction, true);
-
+            Db.CreateConstraint(Relation.Create<Order, OrderFulfillment>("Id", "OrderId"), transaction, true);
             //menus
             Db.CreateTable<Menu>(transaction);
             Db.CreateTable<MenuItem>(transaction);
@@ -225,7 +226,8 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
             Db.DropConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction);
             Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
-           // Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
+            // Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
+            Db.DropConstraint(Relation.Create<Order, OrderFulfillment>("Id", "OrderId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);
@@ -271,9 +273,10 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ShipmentItem>(transaction);
             Db.DropTable<ShipmentHistory>(transaction);
             Db.DropTable<PaymentTransaction>(transaction);
+            Db.DropTable<OrderFulfillment>(transaction);
 
 
-            
+
             Db.DropTable<DiscountCoupon>(transaction);
             Db.DropTable<RestrictionValue>(transaction);
 

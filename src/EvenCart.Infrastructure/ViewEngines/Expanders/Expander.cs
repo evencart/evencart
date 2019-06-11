@@ -26,6 +26,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             //the sequence of addition is important
             Expanders.Add(new LayoutExpander() { TagName = "layout" });
             Expanders.Add(new PartialExpander() { TagName = "partial" });
+            Expanders.Add(new UrlRouteExpander() { TagName = "route" });
             if (dbInstalled)
             {
                 Expanders.Add(new WidgetExpander() { TagName = "widget" });
@@ -33,7 +34,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 Expanders.Add(new ControlExpander() { TagName = "control" });
             }
            
-            Expanders.Add(new UrlRouteExpander() { TagName = "route" });
+           
 
             if (dbInstalled)
             {

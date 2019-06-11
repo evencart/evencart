@@ -44,5 +44,6 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
             var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
             return WebHelper.GetUrlFromPath(input, generalSettings.StoreDomain);
         }
+
     }
 }

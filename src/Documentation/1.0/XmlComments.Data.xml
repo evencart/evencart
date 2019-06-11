@@ -74,6 +74,46 @@
             NSY: Fulfill order from multiple warehouses allowing single product quantities to be fulfilled across warehouses.
             </summary>
         </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ShipmentStatus">
+            <summary>
+            The status of the shiopment
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.Preparing">
+            <summary>
+            The shipment is being prepared
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.Packaged">
+            <summary>
+            The shipment has been packaged
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.InTransit">
+            <summary>
+            The shipment has been dispatched and is in the transit.
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.OutForDelivery">
+            <summary>
+            The shipment is out for delivery
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.DeliveryFailed">
+            <summary>
+            The delivery has failed
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.Delivered">
+            <summary>
+            The shipment has been delivered
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ShipmentStatus.Returned">
+            <summary>
+            The shipment was returned
+            </summary>
+        </member>
         <member name="T:EvenCart.Data.Entity.Purchases.ShippingOption">
             <summary>
             Represents an individual shipping option if a shipment handler
@@ -102,6 +142,16 @@
         <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.DeliveryTime">
             <summary>
             The delivery time of this option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.GuaranteedDaysToDelivery">
+            <summary>
+            The guaranteed number of days for delivery
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Remarks">
+            <summary>
+            Any additional information about shipping option
             </summary>
         </member>
         <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.StoreDomain">

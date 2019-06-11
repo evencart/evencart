@@ -1,0 +1,110 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Customer Info" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <table class="table table-borderless">
+                <tr>
+                    <td>
+                        {{"Customer Name" | t}}
+                    </td>
+                    <td>
+                        <a href='{% route GetUser userId="{{order.user.id}}" %}'>
+                            {% if order.user.name %}
+                            {{order.user.name}} -
+                            {% endif %}
+                            {{order.user.email}}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Shipping Address" | t}}
+                    </td>
+                    <td>
+                        <div>
+                            {{order.shippingAddress.name}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.address1}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.address2}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.landmark}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.city}} - {{order.shippingAddress.zipPostalCode}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.stateOrProvinceName}}
+                        </div>
+                        <div>
+                            {{order.shippingAddress.countryName}}
+                        </div>
+                        {% if order.shippingAddress.phone %}
+                        <div>
+                            <label>{{"Phone : " | t}}</label>{{order.shippingAddress.phone}}
+                        </div>
+                        {% endif %}
+                        {% if order.shippingAddress.website %}
+                        <div>
+                            <label>{{"Website : " | t}}</label>{{order.shippingAddress.website}}
+                        </div>
+                        {% endif %}
+                        {% if order.shippingAddress.email %}
+                        <div>
+                            <label>{{"Email : " | t}}</label> {{order.shippingAddress.email}}
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Billing Address" | t}}
+                    </td>
+                    <td>
+                        <div>
+                            {{order.billingAddress.name}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.address1}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.address2}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.landmark}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.city}} - {{order.billingAddress.zipPostalCode}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.stateOrProvinceName}}
+                        </div>
+                        <div>
+                            {{order.billingAddress.countryName}}
+                        </div>
+                        {% if order.billingAddress.phone %}
+                        <div>
+                            <label>{{"Phone : " | t}}</label>{{order.billingAddress.phone}}
+                        </div>
+                        {% endif %}
+                        {% if order.billingAddress.website %}
+                        <div>
+                            <label>{{"Website : " | t}}</label>{{order.billingAddress.website}}
+                        </div>
+                        {% endif %}
+                        {% if order.billingAddress.email %}
+                        <div>
+                            <label>{{"Email :" | t}}</label> {{order.billingAddress.email}}
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

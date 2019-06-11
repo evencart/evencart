@@ -6,6 +6,6 @@ namespace EvenCart.Areas.Administration.Factories.Warehouses
 {
     public interface IWarehouseModelFactory : IModelFactory<Warehouse, WarehouseModel>
     {
-        
+        WarehouseMiniModel CreateMini(Warehouse warehouse);
     }
 }

@@ -7,6 +7,7 @@
     </div>
     <div class="panel-body">
         <form action="{% route api_UPSProviderSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
             <div class="form-group">
                 {% control label text=@t"Active Services" for="ActiveServices" %}
                 {% control checkboxlist name="ActiveServices" value="settings.activeServices" items="availableUPSServices" %}

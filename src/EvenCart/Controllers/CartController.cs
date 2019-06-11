@@ -111,7 +111,7 @@ namespace EvenCart.Controllers
                 if (!product.HasVariants)
                 {
                     //validate the quantity
-                    ValidateQuantityRange(cartItemModel.Quantity, product, out validationResult);
+                    ValidateQuantityRange(cartItemModel.Quantity, product, null, out validationResult);
                     if (validationResult != null)
                         return validationResult;
                 }
@@ -189,8 +189,9 @@ namespace EvenCart.Controllers
             }
             else
             {
+                var productVariant = product.HasVariants ? _productVariantService.Get(cartItem.ProductVariantId) : null;
                 //can we add this item to cart?
-                ValidateQuantityRange(cartItem.Quantity + cartItemModel.Quantity, product, out validationResult);
+                ValidateQuantityRange(cartItem.Quantity + cartItemModel.Quantity, product, productVariant, out validationResult);
                 if (validationResult != null)
                 {
                     return validationResult;
@@ -253,7 +254,9 @@ namespace EvenCart.Controllers
                 if (product == null)
                     return R.Fail.Result;
 
-                ValidateQuantityRange(cartModel.Quantity.Value, product, out IActionResult validationResult);
+                IActionResult validationResult = null;
+                if (!product.HasVariants)
+                    ValidateQuantityRange(cartModel.Quantity.Value, product, null, out validationResult);
                 //is the new quantity validated
                 if (validationResult != null)
                     return validationResult;
@@ -293,7 +296,7 @@ namespace EvenCart.Controllers
         }
 
         #region Helpers
-        private void ValidateQuantityRange(int quantity, Product product, out IActionResult result)
+        private void ValidateQuantityRange(int quantity, Product product, ProductVariant variant, out IActionResult result)
         {
             result = null;
             //check for minimum order quantity
@@ -309,7 +312,7 @@ namespace EvenCart.Controllers
             }
             else if (product.TrackInventory)
             {
-                var availableQuantity = product.Inventories.Max(x => x.AvailableQuantity);
+                var availableQuantity = variant == null ? product.Inventories.Max(x => x.AvailableQuantity) : variant.Inventories.Max(x => x.AvailableQuantity);
                 if (availableQuantity == 0)
                 {
                     result = R.Fail.With("error", T("The item is out of stock", arguments: availableQuantity)).Result;

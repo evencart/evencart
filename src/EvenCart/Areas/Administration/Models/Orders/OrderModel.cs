@@ -27,7 +27,13 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public string ShippingMethodName { get; set; }
 
+        public string ShippingMethodDisplayName { get; set; }
+
+        public string SelectedShippingOption { get; set; }
+
         public string PaymentMethodName { get; set; }
+
+        public string PaymentMethodDisplayName { get; set; }
 
         public decimal Discount { get; set; }
 

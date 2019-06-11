@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
+using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
@@ -14,18 +16,6 @@ namespace EvenCart.Services.Shipping
 {
     public class ShipmentService : FoundationEntityService<Shipment>, IShipmentService
     {
-        public ShipmentItem AddShipmentItem(int shipmentId, int orderItemId, int quantity)
-        {
-            var shipmentItem = new ShipmentItem()
-            {
-                OrderItemId = orderItemId,
-                ShipmentId = shipmentId,
-                Quantity = quantity
-            };
-            EntitySet<ShipmentItem>.Insert(shipmentItem);
-            return shipmentItem;
-        }
-
         public void RemoveShipmentItem(int shipmentItemId)
         {
             EntitySet<ShipmentItem>.Delete(x => x.Id == shipmentItemId);
@@ -38,6 +28,8 @@ namespace EvenCart.Services.Shipping
                 .Join<OrderItem>("OrderItemId", "Id", joinType: JoinType.LeftOuter)
                 .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ShipmentHistory>("Id", "ShipmentId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentItem>())
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentHistory>())
                 .Relate<OrderItem>((shipment, item) =>
@@ -55,9 +47,12 @@ namespace EvenCart.Services.Shipping
                     var shipmentItem =
                         shipment.ShipmentItems.FirstOrDefault(
                             x => x.OrderItem != null && x.OrderItem.ProductId == product.Id);
-                    shipmentItem.OrderItem.Product = product;
+                    if (shipmentItem != null)
+                        shipmentItem.OrderItem.Product = product;
 
                 })
+                .Relate(RelationTypes.OneToOne<Shipment, Warehouse>())
+                .Relate<Address>((shipment, address) => { shipment.Warehouse.Address = address; })
                 .Where(whereOrderIdMatches)
                 .SelectNested()
                 .ToList();
@@ -65,12 +60,17 @@ namespace EvenCart.Services.Shipping
 
         public override Shipment Get(int id)
         {
+            Expression<Func<SeoMeta, bool>> where = meta => meta.EntityName == nameof(Product);
             return Repository.Where(x => x.Id == id)
                 .Join<ShipmentItem>("Id", "ShipmentId", joinType: JoinType.LeftOuter)
                 .Join<OrderItem>("OrderItemId", "Id", joinType: JoinType.LeftOuter)
                 .Join<Order>("OrderId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ShipmentHistory>("Id", "ShipmentId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<User>("UserId", "Id", typeof(Order), JoinType.LeftOuter)
+                .Join<Warehouse>("WarehouseId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Product>("ProductId", "Id", typeof(OrderItem), JoinType.LeftOuter)
+                .Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentItem>())
                 .Relate(RelationTypes.OneToMany<Shipment, ShipmentHistory>())
                 .Relate<OrderItem>((shipment, item) =>
@@ -96,6 +96,24 @@ namespace EvenCart.Services.Shipping
                 .Relate<User>((shipment, user) =>
                 {
                     shipment.User = user;
+                })
+                .Relate(RelationTypes.OneToOne<Shipment, Warehouse>())
+                .Relate<Address>((shipment, address) => { shipment.Warehouse.Address = address; })
+                .Relate<Product>((shipment, product) =>
+                {
+                    foreach (var shipmentItem in shipment.ShipmentItems)
+                    {
+                        if (shipmentItem.OrderItem.ProductId == product.Id)
+                            shipmentItem.OrderItem.Product = product;
+                    }
+                })
+                .Relate<SeoMeta>((shipment, meta) =>
+                {
+                    foreach (var shipmentItem in shipment.ShipmentItems)
+                    {
+                        if (shipmentItem.OrderItem.ProductId == meta.EntityId)
+                            shipmentItem.OrderItem.Product.SeoMeta = meta;
+                    }
                 })
                 .SelectNested()
                 .FirstOrDefault();

@@ -1,0 +1,94 @@
+﻿<form action='{% route api_SaveOrderFulfillment orderId="{{orderId}}" %}' method="post" id="edit-fulfillment-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Fulfillment Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            {% assign index = -1 %}
+            {% for fulfillment in orderFulfillments %}
+            <div class="row">
+                <div class="col-12">
+                    <h4>
+                        {{fulfillment.warehouse.address.name}}
+                    </h4>
+                </div>
+                <div class="col-12">
+                    <table class="table table-bordered" id="table-items">
+                        <thead>
+                        <tr>
+                            <th>{{"Item" | t }}</th>
+                            <th>{{"Ordered Qty" | t }}</th>
+                            <th>{{"Available Qty" | t }}</th>
+                            <th>{{"Fulfillment Qty" | t }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for oi in fulfillment.orderItems %}
+                        {% increment index %}
+                        <tr>
+                            <td>
+                                <div class="productName">
+                                    <a href='{% route GetProduct productId="{{oi.orderItem.productId}}" %}'>
+                                        {{oi.orderItem.productName}}
+                                    </a>
+                                </div>
+                                <div class="productAttributes">
+                                    {{oi.orderItem.attributeText | newLine2Br}}
+                                </div>
+                            </td>
+                            <td>
+                                <strong>{{oi.orderItem.quantity}}</strong>
+                            </td>
+                            <td>
+                                {{oi.availableQuantity}}
+                            </td>
+                            <td>
+                                <input type="hidden" name="orderFulfillments[{{index}}].orderItemId" value="{{oi.orderItem.id}}"/>
+                                <input type="hidden" name="orderFulfillments[{{index}}].warehouseId" value="{{fulfillment.warehouse.id}}"/>
+                                <input type="number" max="{{oi.availableQuantity}}" min="0" value="{{oi.currentQuantity}}" name="orderFulfillments[{{index}}].quantity"/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Fulfillments" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("edit-fulfillment-form",
+        {
+            beforeSubmit: function() {
+                var msg = "{{'You are fulfilling more quantities than ordered. Are you sure you wish to continue?' | t}}";
+                var expected = parseInt("{{orderedItemsCount}}");
+                var actual = 0;
+                jQuery("#table-items input[type='number']").each(function() {
+                    actual += jQuery(this).val();
+                });
+                if (expected < actual) {
+                    return confirm(msg);
+                }
+                return true;
+            },
+            onSuccess: function () {
+                notify("success", '{{"Fulfillment was saved successfully" | t}}');
+                window.location.reload();
+            }
+        });
+</script>
