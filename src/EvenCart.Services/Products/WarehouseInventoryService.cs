@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
@@ -29,6 +30,23 @@ namespace EvenCart.Services.Products
                 .Relate(RelationTypes.OneToOne<WarehouseInventory, Warehouse>())
                 .Relate<Address>((inventory, address) => { inventory.Warehouse.Address = address; })
                 .Where(x => productIds.Contains(x.ProductId))
+                .Where(warehouseWhere)
+                .SelectNested();
+        }
+
+        public IEnumerable<WarehouseInventory> GetByProductVariants(IList<int> productVariantIds, int? warehouseId = null)
+        {
+            Expression<Func<WarehouseInventory, bool>> warehouseWhere = x => true;
+            if (warehouseId.HasValue)
+            {
+                warehouseWhere = x => x.WarehouseId == warehouseId;
+            }
+            return Repository
+                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
+                .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToOne<WarehouseInventory, Warehouse>())
+                .Relate<Address>((inventory, address) => { inventory.Warehouse.Address = address; })
+                .Where(x => x.ProductVariantId != null && productVariantIds.Contains((int) x.ProductVariantId))
                 .Where(warehouseWhere)
                 .SelectNested();
         }

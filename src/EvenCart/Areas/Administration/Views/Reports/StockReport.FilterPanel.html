@@ -12,6 +12,10 @@
                 <option value="false">{{"Pending Only" | t}}</option>
             </select>
         </div>
+        <div class="form-group">
+            {% control label text=@t"Warehouse" %}
+            {% control select id="warehouseId" items="availableWarehouses" value="" required="true" %}
+        </div>
         <div class="text-center">
             <button class="btn btn-primary" id="btnSearch" onclick="reloadGrid('grid-selection')">
                 {{"Search" | t}}

@@ -12,6 +12,7 @@ using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
@@ -32,7 +33,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IUserModelFactory _userModelFactory;
         private readonly IRoleService _roleService;
-        public ReportsController(IProductService productService, IReportModelFactory reportModelFactory, IOrderService orderService, IUserService userService, IOrderModelFactory orderModelFactory, IUserModelFactory userModelFactory, IRoleService roleService)
+        private readonly IWarehouseService _warehouseService;
+        public ReportsController(IProductService productService, IReportModelFactory reportModelFactory, IOrderService orderService, IUserService userService, IOrderModelFactory orderModelFactory, IUserModelFactory userModelFactory, IRoleService roleService, IWarehouseService warehouseService)
         {
             _productService = productService;
             _reportModelFactory = reportModelFactory;
@@ -41,20 +43,27 @@ namespace EvenCart.Areas.Administration.Controllers
             _orderModelFactory = orderModelFactory;
             _userModelFactory = userModelFactory;
             _roleService = roleService;
+            _warehouseService = warehouseService;
         }
 
         [DualGet("stock-report", Name = AdminRouteNames.StockReport)]
         public IActionResult StockReport(StockReportSearchModel searchModel)
         {
             searchModel = searchModel ?? new StockReportSearchModel();
-
-            var products = _productService.GetProductsWithVariants(out int totalResults, searchModel.ProductSearch,
+            //get availalbe warehouses
+            var warehouses = _warehouseService.Get(x => true).ToList();
+            if (searchModel.WarehouseId < 1)
+                searchModel.WarehouseId = warehouses.First().Id;
+            var products = _productService.GetProductsWithVariants(out int totalResults, searchModel.WarehouseId, searchModel.ProductSearch,
                 searchModel.Published, true, page: searchModel.Current, count: searchModel.RowCount);
 
 
             var models = products.Select(_reportModelFactory.Create).ToList();
+           
+            var warehouseModels = SelectListHelper.GetSelectItemListWithAction(warehouses, x => x.Id, x => x.Address.Name);
             return R.Success.WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .With("reportItems", models)
+                .With("availableWarehouses", warehouseModels)
                 .Result;
         }
 

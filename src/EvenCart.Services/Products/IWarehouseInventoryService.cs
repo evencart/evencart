@@ -9,5 +9,7 @@ namespace EvenCart.Services.Products
         IEnumerable<WarehouseInventory> GetByProduct(int productId, int? warehouseId = null);
 
         IEnumerable<WarehouseInventory> GetByProducts(IList<int> productIds, int? warehouseId = null);
+
+        IEnumerable<WarehouseInventory> GetByProductVariants(IList<int> productVariantIds, int? warehouseId = null);
     }
 }

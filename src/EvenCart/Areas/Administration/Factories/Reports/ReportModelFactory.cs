@@ -15,7 +15,7 @@ namespace EvenCart.Areas.Administration.Factories.Reports
     {
         public StockReportModel Create(Product entity)
         {
-            var inventory = entity.Inventories.First();
+            var inventory = entity.Inventories?.FirstOrDefault() ?? new WarehouseInventory() { ReservedQuantity =  0, TotalQuantity = 0};
             var model = new StockReportModel()
             {
                 ProductId = entity.Id,
@@ -30,7 +30,7 @@ namespace EvenCart.Areas.Administration.Factories.Reports
             {
                 model.Variants = entity.ProductVariants.Select(variant =>
                 {
-                    var variantInventory = variant.Inventories.FirstOrDefault();
+                    var variantInventory = variant.Inventories?.FirstOrDefault();
                     return new StockReportModel.VariantStockReportModel()
                     {
                         StockQuantity = variantInventory?.AvailableQuantity ?? 0,

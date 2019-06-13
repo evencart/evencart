@@ -23,10 +23,12 @@ namespace EvenCart.Services.Products
     {
         private readonly IEventPublisherService _eventPublisherService;
         private readonly ISearchQueryParserService _searchQueryParserService;
-        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService)
+        private readonly IWarehouseInventoryService _warehouseInventoryService;
+        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService)
         {
             _eventPublisherService = eventPublisherService;
             _searchQueryParserService = searchQueryParserService;
+            _warehouseInventoryService = warehouseInventoryService;
         }
 
         public IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
@@ -492,8 +494,7 @@ namespace EvenCart.Services.Products
             }
         }
 
-        public IList<Product> GetProductsWithVariants(out int totalResults, string searchText = null, bool? published = null, bool? trackInventory = null, Expression<Func<Product, object>> orderByExpression = null,
-            SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
+        public IList<Product> GetProductsWithVariants(out int totalResults, int warehouseId, string searchText = null, bool? published = null, bool? trackInventory = null, int page = 1, int count = Int32.MaxValue)
         {
             var query = Repository;
             if (!searchText.IsNullEmptyOrWhiteSpace())
@@ -508,8 +509,10 @@ namespace EvenCart.Services.Products
             {
                 query = trackInventory.Value ? query.Where(x => x.TrackInventory) : query.Where(x => !x.TrackInventory);
             }
-         
-            return query
+
+            Expression<Func<WarehouseInventory, object>> orderByExpression = inventory => inventory.TotalQuantity;
+            Expression<Func<Warehouse, bool>> warehouseWhere = warehouse => warehouse.Id == warehouseId;
+            var products = query
                 .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductVariant>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
@@ -521,8 +524,6 @@ namespace EvenCart.Services.Products
                     joinType: JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", typeof(ProductAttributeValue),
                     joinType: JoinType.LeftOuter)
-                .Join<WarehouseInventory>("Id", "ProductVariantId", typeof(ProductVariant), joinType: JoinType.LeftOuter)
-                .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Product, ProductVariant>())
                 .Relate<ProductVariantAttribute>((product, attribute) =>
                 {
@@ -583,9 +584,20 @@ namespace EvenCart.Services.Products
                         }
                     }
                 })
-                .OrderBy(orderByExpression, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending)
+                .Where(warehouseWhere)
+                .OrderBy(orderByExpression, RowOrder.Ascending)
                 .SelectNestedWithTotalMatches(out totalResults, page, count)
                 .ToList();
+
+            //fetch inventories for variants
+            var allVariants = products.Where(x => x.HasVariants && x.ProductVariants != null).SelectMany(x => x.ProductVariants).ToList();
+            var allVariantIds = allVariants.Select(x => x.Id).ToList();
+            var inventories = _warehouseInventoryService.GetByProductVariants(allVariantIds, warehouseId).ToList();
+            foreach (var variant in allVariants)
+            {
+                variant.Inventories = inventories.Where(x => x.ProductVariantId == variant.Id).ToList();
+            }
+            return products;
         }
 
         public IList<Product> GetProductsWithVariants(IList<int> ids)
@@ -674,7 +686,7 @@ namespace EvenCart.Services.Products
                     if (!product.HasVariants)
                     {
                         product.Inventories = product.Inventories ?? new List<WarehouseInventory>();
-                        if(!product.Inventories.Contains(inventory))
+                        if (!product.Inventories.Contains(inventory))
                             product.Inventories.Add(inventory);
                     }
                     else
@@ -685,9 +697,9 @@ namespace EvenCart.Services.Products
                             if (pv.Id == inventory.ProductVariantId)
                             {
                                 pv.Inventories = pv.Inventories ?? new List<WarehouseInventory>();
-                                if(!pv.Inventories.Contains(inventory))
+                                if (!pv.Inventories.Contains(inventory))
                                     pv.Inventories.Add(inventory);
-                            }       
+                            }
                         }
                     }
                 })
