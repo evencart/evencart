@@ -79,7 +79,15 @@ namespace EvenCart.Services.Settings
             {
                 var propertyName = property.Name;
                 var valueObj = property.GetValue(settings);
-                var value = valueObj == null ? "" : valueObj.ToString();
+                var value = "";
+                if (!property.PropertyType.IsPrimitive())
+                {
+                    value = valueObj != null ? _dataSerializer.Serialize(valueObj) : "";
+                }
+                else
+                {
+                    value = valueObj != null ? valueObj.ToString() : "";
+                }
                 //save the property
                 Save(settingType, propertyName, value);
             }
