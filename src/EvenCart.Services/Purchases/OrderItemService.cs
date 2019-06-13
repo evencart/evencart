@@ -30,10 +30,17 @@ namespace EvenCart.Services.Purchases
                 //.Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductVariant>("ProductVariantId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<WarehouseInventory>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
+                .Join<Order>("OrderId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 //.Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 //.Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<OrderItem, Product>())
                 .Relate(RelationTypes.OneToOne<OrderItem, ProductVariant>())
+                .Relate(RelationTypes.OneToOne<OrderItem, Order>((item, order) =>
+                    {
+                        order.OrderItems = order.OrderItems ?? new List<OrderItem>();
+                        if (!order.OrderItems.Contains(item))
+                            order.OrderItems.Add(item);
+                    }))
                 .Relate<WarehouseInventory>((item, inventory) =>
                 {
                     if (item.ProductVariantId > 0)

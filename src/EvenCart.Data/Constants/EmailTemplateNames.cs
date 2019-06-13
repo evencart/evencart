@@ -46,5 +46,9 @@
 
         public const string InvitationMessage = "Invitation";
 
+        public const string ReturnRequestCreatedMessage = "ReturnRequest.Created";
+
+        public const string ReturnRequestCreatedMessageTAdmin = "ReturnRequest.Created" + AdminSuffix;
+
     }
 }

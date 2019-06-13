@@ -73,6 +73,10 @@
         public const string OrderFulfillmentsList = "OrderFulfillmentsList";
         public const string SaveOrderFulfillment = "SaveOrderFulfillment";
         public const string GetOrderFulfillment = "GetOrderFulfillment";
+        public const string ReturnRequestsList = "ReturnRequestsList";
+        public const string SaveReturnRequest = "SaveReturnRequest";
+        public const string DeleteReturnRequest = "DeleteReturnRequest";
+        public const string GetReturnRequest = "GetReturnRequest";
 
         public const string GetShipment = "GetShipment";
         public const string ShipmentsList = "ShipmentsList";
@@ -237,5 +241,13 @@
         public const string SaveWarehouse = "SaveWarehouse";
         public const string DeleteWarehouse = "DeleteWarehouse";
         public const string UpdateWarehouseDisplayOrder = "UpdateWarehouseDisplayOrder";
+
+        public const string GetCustomLabelSuggestions = "GetCustomLabelSuggestions";
+        public const string GetCustomLabel = "GetCustomLabel";
+        public const string SaveCustomLabel = "SaveCustomLabel";
+        public const string CustomLabelsList = "CustomLabelsList";
+        public const string EditCustomLabel = "EditCustomLabel";
+        public const string DeleteCustomLabel = "DeleteCustomLabel";
+        public const string UpdateCustomLabelDisplayOrder = "UpdateCustomLabelDisplayOrder";
     }
 }

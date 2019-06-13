@@ -74,6 +74,8 @@
     <None Remove="Areas\Administration\Views\Countries\StatesList.html" />
     <None Remove="Areas\Administration\Views\Cultures\CurrenciesList.html" />
     <None Remove="Areas\Administration\Views\Cultures\CurrencyEditor.html" />
+    <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelEditor.html" />
+    <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelsList.html" />
     <None Remove="Areas\Administration\Views\Dashboard.html" />
     <None Remove="Areas\Administration\Views\Dashboard\Index.html" />
     <None Remove="Areas\Administration\Views\Dialog\Selector.html" />
@@ -268,7 +270,9 @@
     <None Remove="Content\Themes\Default\Views\Layout\_RootLayout.html" />
     <None Remove="Content\Themes\Default\Views\Navigation\_AccountNavigation.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Index.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\Index.Returns.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Orders.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\ReturnOrder.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.ProductAttributes.html" />
     <None Remove="Content\Themes\Default\Views\Products\ProductsList.html" />
@@ -414,6 +418,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Cultures\CurrencyEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\CustomLabels\CustomLabelsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\CustomLabels\CustomLabelEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Dashboard.html">
@@ -994,6 +1004,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Navigation\_AccountNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Orders\Index.Returns.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Orders\ReturnOrder.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Orders\Index.html">

@@ -12,6 +12,8 @@
         OrderShippingInfoSaved,
         OrderCancelled,
 
+        ReturnRequestCreated,
+
         ShipmentShipped,
         ShipmentDelivered,
         ShipmentDeliveryFailed,

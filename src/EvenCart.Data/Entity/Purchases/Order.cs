@@ -63,6 +63,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public string ShippingAddressSerialized { get; set; }
 
+        public bool DisableReturns { get;set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }

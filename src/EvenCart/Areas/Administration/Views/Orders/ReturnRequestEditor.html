@@ -1,0 +1,149 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Return Request Editor" active_menu="GetReturnRequest" parent_active_menu="OrdersList" menu_group="ReturnRequestEdit" %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Return Request Order # "}} {{returnRequest.orderNumber}}
+            </div>
+            <div class="panel-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>
+                            {{"Order Number" | t}}
+                        </td>
+                        <td>
+                            <a href='{% route GetOrder orderId="{{returnRequest.orderId}}" %}'>{{returnRequest.orderNumber}}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{"Product" | t}}
+                        </td>
+                        <td>
+                            <a href='{% route GetProduct productId="{{returnRequest.productId}}" %}'>{{returnRequest.productName}}</a>
+                            <div> {{returnRequest.attributeText | newLine2Br }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{"Return Quantity" | t}}
+                        </td>
+                        <td>
+                            <strong>{{returnRequest.quantity}}</strong> {{"of" | t }} {{returnRequest.orderedQuantity}} {{"ordered" | t}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{"Return Reason" | t}}
+                        </td>
+                        <td>
+                            {{returnRequest.returnReason}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{"Requested Action" | t}}
+                        </td>
+                        <td>
+                            {{returnRequest.returnAction}}
+                        </td>
+                    </tr>
+                    {% if returnRequest.customerComments %}
+                    <tr>
+                        <td>
+                            {{"Customer comments" | t}}
+                        </td>
+                        <td>
+                            {{returnRequest.customerComments}}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td>
+                            {{"Status" | t}}
+                        </td>
+                        <td>
+                            {{returnRequest.returnRequestStatus}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% control hidden name="id" value="{{returnRequest.id}}" %}
+    </div>
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-body">
+                <form action="{% route api_SaveReturnRequest %}" method="post" id="request-editor-form">
+                    {% control hidden name="id" value="{{returnRequest.id}}" %}
+                    {% control xsrf %}
+                    <div class="save-button-container">
+                        <button type="submit" name="returnRequestStatus" class="btn btn-success" value="{{returnRequest.returnRequestStatus}}">{{"Save Return Request" | t}}</button>
+                        <a class="btn btn-default" href='{% route ReturnRequestsList %}'>{{"Cancel" | t}}</a>
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Remarks" help=@t"Any additional information. This is only visible to admin." %}
+                        {% control textarea name="remarks" value="{{returnRequest.remarks}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Staff Comments" help=@t"The staff comments about this return request. These are visible to the customer." %}
+                        {% control textarea name="staffComments" value="{{returnRequest.staffComments}}" %}
+                    </div>
+                   
+                    <div class="form-group">
+                        {% control label text=@t"Return Option" %}
+                        {% if returnRequest.returnRequestStatus == 'ReturnReceived' %}
+                        {% control select name="returnOption" value="returnRequest.returnOption" items="availableReturnOptionValues" required="true" %}
+                        {% endif %}
+                        {% if returnRequest.returnRequestStatus == 'Complete' %}
+                        {% control select value="returnRequest.returnOption" items="availableReturnOptionValues" required="true" disabled="disabled" %}
+                        {% endif %}
+                    </div>
+                   
+                    <div class="form-group">
+                        {% control label text=@t"Status" %}
+                        {% case returnRequest.returnRequestStatus %}
+                        {% when 'Pending' %}
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="Authorized">{{"Authorize"}}</button>
+                        <button type="submit" class="btn btn-default btn-sm" name="returnRequestStatus" value="Rejected">{{"Reject"}}</button>
+                        {% when 'Authorized' %}
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="Initiated">{{"Mark as Initiated"}}</button>
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="PickupScheduled">{{"Mark as Pickup Scheduled"}}</button>
+                        {% when 'Initiated' or 'PickupScheduled' %}
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="InTransit">{{"Mark as InTransit"}}</button>
+                        {% when 'InTransit' %}
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="ReturnReceived">{{"Mark as Return Received"}}</button>
+                        {% when 'ReturnReceived' %}
+                        <button type="submit" class="btn btn-success btn-sm" name="returnRequestStatus" value="Complete">{{"Complete Return"}}</button>
+                        <button type="submit" class="btn btn-danger btn-sm" name="returnRequestStatus" value="Rejected">{{"Reject Return"}}</button>
+                        <button type="submit" class="btn btn-default btn-sm" name="returnRequestStatus" value="Cancelled">{{"Cancel Return"}}</button>
+                        {% when 'Complete' %}
+                        {{"Return complete with order #" | t}} <a href='{% route GetOrder orderId="{{returnRequest.returnOrderId}}" %}'>{{returnRequest.returnOrderNumber}}</a>
+                        {% endcase %}
+                        <!--{% control select name="returnRequestStatus" items="availableReturnStatusValues" value="returnRequest.returnRequestStatus" required="true" %}-->
+                    </div>
+                </form>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("request-editor-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Return request was saved successfully." | t }}');
+                    setTimeout(function() {
+                            window.location.reload();
+                        },
+                        500);
+
+                }
+            });
+    });
+</script>

@@ -46,5 +46,8 @@ namespace EvenCart.Data.Entity.Settings
 
         public bool InviteRequestCreatedEmailToAdminEnabled { get; set; }
 
+        public bool ReturnRequestCreatedEmailEnabled { get; set; }
+
+        public bool ReturnRequestCreatedToAdminEmailEnabled { get; set; }
     }
 }

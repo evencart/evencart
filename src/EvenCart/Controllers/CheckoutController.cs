@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core;
-using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
@@ -17,7 +16,6 @@ using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
-using EvenCart.Services.Tokens;
 using EvenCart.Services.Users;
 using EvenCart.Events;
 using EvenCart.Infrastructure;
@@ -47,17 +45,13 @@ namespace EvenCart.Controllers
         private readonly IDataSerializer _dataSerializer;
         private readonly IPluginAccountant _pluginAccountant;
         private readonly IOrderService _orderService;
-        private readonly IOrderItemService _orderItemService;
         private readonly OrderSettings _orderSettings;
         private readonly IRoleService _roleService;
         private readonly IUserService _userService;
-        private readonly ITokenGenerator _tokenGenerator;
         private readonly IProductService _productService;
         private readonly IOrderAccountant _orderAccountant;
-        private readonly IOrderFulfillmentService _orderFulfillmentService;
-        private readonly IWarehouseInventoryService _warehouseInventoryService;
 
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, IOrderItemService orderItemService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, ITokenGenerator tokenGenerator, IProductService productService, IOrderAccountant orderAccountant, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService)
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -67,15 +61,11 @@ namespace EvenCart.Controllers
             _dataSerializer = dataSerializer;
             _pluginAccountant = pluginAccountant;
             _orderService = orderService;
-            _orderItemService = orderItemService;
             _orderSettings = orderSettings;
             _roleService = roleService;
             _userService = userService;
-            _tokenGenerator = tokenGenerator;
             _productService = productService;
             _orderAccountant = orderAccountant;
-            _warehouseInventoryService = warehouseInventoryService;
-            _orderFulfillmentService = orderFulfillmentService;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -509,7 +499,8 @@ namespace EvenCart.Controllers
                 UserIpAddress = WebHelper.GetClientIpAddress(),
                 CurrencyCode = ApplicationEngine.BaseCurrency.IsoCode,
                 Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
-                ExchangeRate = ApplicationEngine.BaseCurrency.ExchangeRate
+                ExchangeRate = ApplicationEngine.BaseCurrency.ExchangeRate,
+                DisableReturns = cart.CartItems.All(x => !x.Product.AllowReturns)
             };
             order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
                                order.ShippingMethodFee ?? 0;
@@ -521,9 +512,6 @@ namespace EvenCart.Controllers
             order.BillingAddressSerialized = _dataSerializer.Serialize(billingAddress);
             order.ShippingAddressSerialized =
                 shippingAddress == null ? null : _dataSerializer.Serialize(shippingAddress);
-
-            //save the order now
-            _orderService.Insert(order);
 
             order.OrderItems = new List<OrderItem>();
             foreach (var cartItem in cart.CartItems)
@@ -541,34 +529,8 @@ namespace EvenCart.Controllers
                 };
                 order.OrderItems.Add(orderItem);
             }
-            //save the order items
-            _orderItemService.Insert(order.OrderItems.ToArray());
-
-            //block the inventories
-            var fulfillments = _orderAccountant.GetAutoOrderFulfillments(order);
-            if (fulfillments != null)
-            {
-                Transaction.Initiate(transaction =>
-                {
-                    foreach (var fulfillment in fulfillments)
-                    {
-                        fulfillment.WarehouseInventory.ReservedQuantity += fulfillment.Quantity;
-                        //update inventory
-                        _warehouseInventoryService.Update(fulfillment.WarehouseInventory, transaction);
-                        _orderFulfillmentService.Insert(fulfillment, transaction);
-                    }
-                });
-            }
-            //generate order number & update it
-            var orderNumber = _tokenGenerator.MakeToken(new TemplateToken()
-            {
-                DateTime = order.CreatedOn,
-                Id = order.Id,
-                Template = _orderSettings.OrderNumberTemplate,
-                UserId = order.UserId
-            });
-            order.OrderNumber = orderNumber;
-            _orderService.Update(order);
+            //insert complete order
+            _orderAccountant.InsertCompleteOrder(order);
 
             //process payment
             var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()

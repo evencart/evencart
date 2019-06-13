@@ -47,7 +47,7 @@
                 }
             });
         }
-                        
+
     }
     ready(function () {
         generateGrid({
@@ -98,10 +98,10 @@
                 "hiddenFields": function (column, row, index) {
                     return "<input type='hidden' data-type='displayorder' name='warehouseModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
                         "<input type='hidden' data-type='id'  name='warehouseModels[" + index + "].id' value='" + row.id + "' />";
-                },
-                events: {
-                    "loaded": function () { enableSortable(true); }
                 }
+            },
+            events: {
+                "loaded": function () { enableSortable(true); }
             }
         });
 

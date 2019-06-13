@@ -14,14 +14,14 @@
             Get attribute suggestions based on the query parameter
             </summary>
             <param name="q">The search string for query</param>
-            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel">suggestion</see> objects</response>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Common.AutocompleteModel">suggestion</see> objects</response>
         </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributeValueSuggestions(System.Int32)">
             <summary>
             Gets suggestions for values corresponding to an attribute
             </summary>
             <param name="attributeId">The id of the attribute</param>
-            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel">suggestion</see> objects</response>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Common.AutocompleteModel">suggestion</see> objects</response>
         </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.AvailableAttributesController.AttributesList(EvenCart.Areas.Administration.Models.Shop.AttributeSearchModel)">
             <summary>
@@ -49,6 +49,55 @@
             Deletes an available attribute
             </summary>
             <param name="attributeId">The id of the attribute to be deleted</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.CustomLabelsController">
+            <summary>
+            Custom labels are reusable text labels available for various operations such as cancellation, returns, product tags etc.
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelSuggestions(EvenCart.Data.Entity.Common.CustomLabelType,System.String)">
+            <summary>
+            Get label suggestions based on the query parameter
+            </summary>
+            <param name="labelType"></param>
+            <param name="q">The search string for query</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Common.AutocompleteModel">suggestion</see> objects as 'suggestions'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelsList(EvenCart.Areas.Administration.Models.Common.CustomLabelSearchModel)">
+            <summary>
+            Gets the custom labels
+            </summary>
+            <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelSearchModel">search parameters</see> to filter results.</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelModel">label</see> objects as 'customLabels'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelEditor(System.Int32,EvenCart.Data.Entity.Common.CustomLabelType)">
+            <summary>
+            Gets a single custom label
+            </summary>
+            <param name="customLabelId">The id of custom label</param>
+            <param name="labelType">The type of <see cref="T:EvenCart.Data.Entity.Common.CustomLabelType">label</see></param>
+            <response code="200">The <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelModel">custom label</see> object as 'customLabel'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.SaveCustomLabel(EvenCart.Areas.Administration.Models.Common.CustomLabelModel)">
+            <summary>
+            Saves the custom label to the database
+            </summary>
+            <param name="customLabelModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.DeleteCustomLabel(System.Int32)">
+            <summary>
+            Deletes a custom label
+            </summary>
+            <param name="customLabelId">The id of the label to be deleted</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.UpdateWarehouseDisplayOrder(EvenCart.Areas.Administration.Models.Common.CustomLabelModel[])">
+            <summary>
+            Updates display order for labels
+            </summary>
+            <param name="customLabelModels"></param>
             <response code="200">A success response object</response>
         </member>
         <member name="T:EvenCart.Areas.Administration.Controllers.DashboardController">
@@ -147,6 +196,48 @@
             <param name="warehouseId">The id of the warehouse</param>
             <response code="200">A success response object</response>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.WarehouseController.UpdateWarehouseDisplayOrder(EvenCart.Areas.Administration.Models.Warehouse.WarehouseModel[])">
+            <summary>
+            Updates display order for warehouses
+            </summary>
+            <param name="warehouseModels"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Common.AutocompleteModel.Id">
+            <summary>
+            The id of the result item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Common.AutocompleteModel.Text">
+            <summary>
+            The display text for the result item
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Common.CustomLabelModel">
+            <summary>
+            Represents a custom label
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Common.CustomLabelModel.Text">
+            <summary>
+            The text of the label
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Common.CustomLabelModel.LabelType">
+            <summary>
+            The <see cref="T:EvenCart.Data.Entity.Common.CustomLabelType">label type</see>
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Common.CustomLabelModel.DisplayOrder">
+            <summary>
+            The display order of the label
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Common.CustomLabelSearchModel">
+            <summary>
+            The custom label search object
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel">
             <summary>
             Represents order fulfillment details of an order
@@ -215,6 +306,26 @@
         <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentModel.Quantity">
             <summary>
             The quantity of the ordered item
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.ReturnRequestSearchModel">
+            <summary>
+            Represents a return request search object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ReturnRequestSearchModel.ReturnRequestStatus">
+            <summary>
+            The list of <see cref="P:EvenCart.Areas.Administration.Models.Orders.ReturnRequestSearchModel.ReturnRequestStatus">status</see> values to restrict search results to
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ReturnRequestSearchModel.FromDate">
+            <summary>
+            The start date to restrict the search results from
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ReturnRequestSearchModel.ToDate">
+            <summary>
+            The end date to restrict the search results from
             </summary>
         </member>
         <member name="T:EvenCart.Areas.Administration.Models.Orders.ShipmentEditorModel">
@@ -345,16 +456,6 @@
         <member name="P:EvenCart.Areas.Administration.Models.Settings.UserSettingsModel.AreUserNamesEnabled">
             <summary>
             Specifies if user names are enabled for site
-            </summary>
-        </member>
-        <member name="P:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel.Id">
-            <summary>
-            The id of the result item
-            </summary>
-        </member>
-        <member name="P:EvenCart.Areas.Administration.Models.Shop.AutocompleteModel.Text">
-            <summary>
-            The display text for the result item
             </summary>
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeModel.Name">
@@ -763,6 +864,21 @@
             Cancels the order with provided order identifier
             </summary>
             <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.ReturnOrder(System.String)">
+            <summary>
+            Gets the order with provided order identifier
+            </summary>
+            <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <response code="200">The <see cref="T:EvenCart.Models.Orders.OrderModel">order</see> object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.CreateReturn(System.String,System.Collections.Generic.IList{EvenCart.Models.Orders.ReturnRequestModel})">
+            <summary>
+            Creates a return request for an order
+            </summary>
+            <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <param name="returnRequests">A list of <see cref="T:EvenCart.Models.Orders.ReturnRequestModel">return request</see> objects</param>
             <response code="200">A success response object</response>
         </member>
         <member name="T:EvenCart.Controllers.ProductsController">
@@ -1363,6 +1479,51 @@
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.RowCount">
             <summary>
             The total number of result rows to be returned
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Orders.ReturnItemModel">
+            <summary>
+            Represents a single return item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnItemModel.OrderItem">
+            <summary>
+            The order item corresponding to the return
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnItemModel.MinimumQuantityToReturn">
+            <summary>
+            The minimum quantity that should be returned
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Orders.ReturnRequestModel">
+            <summary>
+            A return request object for single order item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnRequestModel.OrderItemId">
+            <summary>
+            The id of the order item
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnRequestModel.Quantity">
+            <summary>
+            The quantity of the item to return
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnRequestModel.ReturnReasonId">
+            <summary>
+            The reason id for return request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnRequestModel.ReturnActionId">
+            <summary>
+            The action id for return request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.ReturnRequestModel.CustomerComments">
+            <summary>
+            The comments as provided by customer
             </summary>
         </member>
         <member name="P:EvenCart.Models.Products.ProductAttributeModel.Name">

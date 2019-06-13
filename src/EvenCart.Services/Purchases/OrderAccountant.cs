@@ -1,17 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core;
+using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Products;
+using EvenCart.Services.Tokens;
 
 namespace EvenCart.Services.Purchases
 {
     public class OrderAccountant : IOrderAccountant
     {
         private readonly IWarehouseInventoryService _warehouseInventoryService;
-        public OrderAccountant(IWarehouseInventoryService warehouseInventoryService)
+        private readonly IOrderFulfillmentService _orderFulfillmentService;
+        private readonly ITokenGenerator _tokenGenerator;
+        private readonly OrderSettings _orderSettings;
+        private readonly IOrderService _orderService;
+        private readonly IOrderItemService _orderItemService;
+        public OrderAccountant(IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, ITokenGenerator tokenGenerator, OrderSettings orderSettings, IOrderService orderService, IOrderItemService orderItemService)
         {
             _warehouseInventoryService = warehouseInventoryService;
+            _orderFulfillmentService = orderFulfillmentService;
+            _tokenGenerator = tokenGenerator;
+            _orderSettings = orderSettings;
+            _orderService = orderService;
+            _orderItemService = orderItemService;
         }
         /// <summary>
         /// Gets order fulfillments based on the following rules.
@@ -119,6 +134,66 @@ namespace EvenCart.Services.Purchases
             }
 
             return null;
+        }
+
+        public IList<OrderFulfillment> SaveAutOrderFulfillments(Order order)
+        {
+            var fulfillments = GetAutoOrderFulfillments(order);
+            if (fulfillments != null)
+            {
+                Transaction.Initiate(transaction =>
+                {
+                    foreach (var fulfillment in fulfillments)
+                    {
+                        fulfillment.WarehouseInventory.ReservedQuantity += fulfillment.Quantity;
+                        //update inventory
+                        _warehouseInventoryService.Update(fulfillment.WarehouseInventory, transaction);
+                        _orderFulfillmentService.Insert(fulfillment, transaction);
+                    }
+                });
+            }
+
+            return fulfillments;
+        }
+
+        public void InsertCompleteOrder(Order order, Transaction transaction = null)
+        {
+            //save the order now
+            _orderService.Insert(order, transaction);
+            foreach (var oi in order.OrderItems)
+                oi.OrderId = order.Id;
+
+            //save the order items
+            _orderItemService.Insert(order.OrderItems.ToArray());
+
+            //block the inventories
+            SaveAutOrderFulfillments(order);
+
+            //generate order number & update it
+            var orderNumber = _tokenGenerator.MakeToken(new TemplateToken()
+            {
+                DateTime = order.CreatedOn,
+                Id = order.Id,
+                Template = _orderSettings.OrderNumberTemplate,
+                UserId = order.UserId
+            });
+            order.OrderNumber = orderNumber;
+            _orderService.Update(order);
+        }
+
+        public Order CloneOrder(Order order)
+        {
+            var clonedOrder = ObjectHelper.Clone(order);
+            //reset the identifiers
+            clonedOrder.Id = 0;
+            clonedOrder.Guid = Guid.NewGuid().ToString();
+            clonedOrder.CreatedOn = DateTime.UtcNow;
+            clonedOrder.OrderStatus = OrderStatus.New;
+            foreach (var oi in clonedOrder.OrderItems)
+            {
+                oi.Id = 0;
+            }
+            return clonedOrder;
         }
     }
 }

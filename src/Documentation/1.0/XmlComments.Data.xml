@@ -74,6 +74,86 @@
             NSY: Fulfill order from multiple warehouses allowing single product quantities to be fulfilled across warehouses.
             </summary>
         </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ReturnOption">
+            <summary>
+            Represents a return option 
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnOption.Refund">
+            <summary>
+            The customer should be refunded
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnOption.ReturnFresh">
+            <summary>
+            A return order should be created for fresh items
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnOption.ReturnRepaired">
+            <summary>
+            A return order should be created for repaired items
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnOption.Other">
+            <summary>
+            Any other option
+            </summary>
+        </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ReturnRequestStatus">
+            <summary>
+            The status of a refund request
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Pending">
+            <summary>
+            The return is pending
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Authorized">
+            <summary>
+            The return has been authorized
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Initiated">
+            <summary>
+            The return process has been initiated
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.PickupScheduled">
+            <summary>
+            The items have been scheduled for return pickup
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.InTransit">
+            <summary>
+            The items have been picked up and are on way back
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.ReturnReceived">
+            <summary>
+            The items have been received at the warehouse
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Complete">
+            <summary>
+            The return is complete
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Cancelled">
+            <summary>
+            The return has been cancelled
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Rejected">
+            <summary>
+            The return has been rejected
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Purchases.ReturnRequestStatus.Repaired">
+            <summary>
+            The return item has been repaired
+            </summary>
+        </member>
         <member name="T:EvenCart.Data.Entity.Purchases.ShipmentStatus">
             <summary>
             The status of the shiopment

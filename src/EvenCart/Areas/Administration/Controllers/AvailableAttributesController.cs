@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;

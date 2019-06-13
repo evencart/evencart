@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
@@ -13,11 +14,13 @@ namespace EvenCart.Services.Purchases
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
-        public DefaultPurchaseAccountant(IOrderService orderService, ILogger logger, IProductService productService)
+        private readonly IReturnRequestService _returnRequestService;
+        public DefaultPurchaseAccountant(IOrderService orderService, ILogger logger, IProductService productService, IReturnRequestService returnRequestService)
         {
             _orderService = orderService;
             _logger = logger;
             _productService = productService;
+            _returnRequestService = returnRequestService;
         }
 
         public void EvaluateOrderStatus(Order order)
@@ -27,9 +30,23 @@ namespace EvenCart.Services.Purchases
                 _logger.LogError<Order>(new ArgumentNullException(nameof(Order)), "Can't update a null order");
                 return;
             }
+
+            if (new List<OrderStatus> { OrderStatus.Cancelled, OrderStatus.Returned, OrderStatus.PartiallyReturned, OrderStatus.Closed }.Contains(order.OrderStatus))
+                return;
             //if order is complete already, give up
             if (order.OrderStatus == OrderStatus.Complete)
+            {
+                var returnRequests = _returnRequestService.GetOrderReturnRequests(order.Id).ToList();
+                if (returnRequests.Any(x => x.ReturnRequestStatus != ReturnRequestStatus.Complete))
+                    return; //do nothing
+                if (returnRequests.Count < order.OrderItems.Count ||
+                    returnRequests.Sum(x => x.Quantity) < order.OrderItems.Sum(x => x.Quantity))
+                    order.OrderStatus = OrderStatus.PartiallyReturned;
+                else
+                    order.OrderStatus = OrderStatus.Returned;
+                _orderService.Update(order);
                 return;
+            }
 
             //we can't do anything to update order status for now
             if (order.Shipments == null)

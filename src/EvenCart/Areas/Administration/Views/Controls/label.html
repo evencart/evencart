@@ -2,5 +2,7 @@
     <label %attributes% for="%for%">
         %text%
     </label>
+    {% if help != "" %}
+    <a class="clickable" title="{{help}}"><small>[?]</small></a>
+    {% endif %}
 </div>
-

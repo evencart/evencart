@@ -1,0 +1,47 @@
+﻿{% if returnRequests.size > 0 %}
+<h4>{{"Return Requests" | t}}</h4>
+<div class="order-items-list">
+    {% for request in returnRequests %}
+    <div class="row order-item">
+        <div class="col-md-12">
+            <h5>
+                {{request.returnRequestStatus}}
+                {% case request.returnOption %}
+                {% when 'ReturnFresh' %}
+                <small>{{"with replacement order #"}} <a href='{% route SingleOrder orderGuid="{{request.returnOrderGuid}}" %}'>{{request.returnOrderNumber}}</a></small>
+                {% endcase %}
+            </h5>
+        </div>
+        <div class="col-md-1">
+            <img width="50px" src="{{request.imageUrl}}" />
+        </div>
+        <div class="col-md-9">
+            <a href='{% route SingleProduct seName="{{request.seName}}" %}'>
+                {{request.productName}}
+            </a>
+            <strong>x {{request.quantity}}</strong>
+            <div>
+                {{request.attributeText | newLine2Br}}
+            </div>
+            <div>
+                {{"Return Reason" | t}} : {{request.returnReason}}
+            </div>
+            {% if request.customerComments %}
+            <div>
+                {{"Comments" | t}} : {{request.customerComments}}
+            </div>
+            {% endif %}
+            <div>
+                {{"Requested Action" | t}} : {{request.returnAction}}
+            </div>
+            {% if request.staffComments %}
+            <hr/>
+            <div>
+                {{"Staff Comments" | t}} : {{request.staffComments}}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

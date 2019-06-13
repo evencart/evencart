@@ -23,6 +23,16 @@ namespace EvenCart.Data.Extensions
             return variant.Inventories?.Any(x => x.AvailableQuantity > product.MinimumPurchaseQuantity) ?? false;
         }
 
+        public static bool IsAvailableInStock(this ProductVariant variant, int quantity)
+        {
+            return variant.Inventories?.Any(x => x.AvailableQuantity >= quantity) ?? false;
+        }
+
+        public static bool IsAvailableInStock(this Product product, int quantity)
+        {
+            return product.Inventories?.Any(x => x.AvailableQuantity >= quantity) ?? false;
+        }
+
         public static bool IsAvailableInStock(this ProductVariant variant, int quantity, int warehouseId)
         {
             return variant.Inventories?.Where(x => x.WarehouseId == warehouseId).Any(x => x.AvailableQuantity >= quantity) ?? false;
@@ -48,8 +58,13 @@ namespace EvenCart.Data.Extensions
             return orderItem.ProductVariantId > 0
                 ? orderItem.ProductVariant.Inventories.FirstOrDefault(x => x.WarehouseId == warehouseId)
                 : orderItem.Product.Inventories.FirstOrDefault(x => x.WarehouseId == warehouseId);
+        }
 
-
+        public static bool IsAvailableInStock(this OrderItem orderItem, int quantity)
+        {
+            return orderItem.ProductVariantId > 0
+                ? orderItem.ProductVariant.IsAvailableInStock(quantity)
+                : orderItem.Product.IsAvailableInStock(quantity);
         }
     }
 }

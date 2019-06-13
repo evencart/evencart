@@ -6,6 +6,7 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
+using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
@@ -14,7 +15,7 @@ using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Shipping;
 using EvenCart.Events;
-using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
@@ -42,7 +43,11 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IOrderItemService _orderItemService;
         private readonly IWarehouseModelFactory _warehouseModelFactory;
         private readonly IShipmentModelFactory _shipmentModelFactory;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory)
+        private readonly IReturnRequestService _returnRequestService;
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        private readonly IOrderAccountant _orderAccountant;
+        private readonly IPurchaseAccountant _purchaseAccountant;
+        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant)
         {
             _orderService = orderService;
             _modelMapper = modelMapper;
@@ -59,7 +64,13 @@ namespace EvenCart.Areas.Administration.Controllers
             _orderItemService = orderItemService;
             _warehouseModelFactory = warehouseModelFactory;
             _shipmentModelFactory = shipmentModelFactory;
+            _returnRequestService = returnRequestService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _orderAccountant = orderAccountant;
+            _purchaseAccountant = purchaseAccountant;
         }
+
+        #region Orders
 
         [DualGet("", Name = AdminRouteNames.OrdersList)]
         [CapabilityRequired(CapabilitySystemNames.ViewOrder)]
@@ -92,6 +103,10 @@ namespace EvenCart.Areas.Administration.Controllers
             var orderModel = _orderModelFactory.Create(order);
             return R.Success.With("order", orderModel).Result;
         }
+
+        #endregion
+
+        #region Order Fulfillments
 
         [DualGet("{orderId}/fulfillments", Name = AdminRouteNames.OrderFulfillmentsList)]
         [CapabilityRequired(CapabilitySystemNames.ManageInventory)]
@@ -277,6 +292,10 @@ namespace EvenCart.Areas.Administration.Controllers
             return !success ? R.Fail.Result : R.Success.Result;
         }
 
+        #endregion
+
+        #region Shipments
+
         [DualGet("{orderId}/shipments", Name = AdminRouteNames.ShipmentsList)]
         [CapabilityRequired(CapabilitySystemNames.ManageShipment)]
         public IActionResult ShipmentsList(int orderId)
@@ -293,7 +312,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var shipmentModels = _shipmentModelFactory.Create(shipments);
             if (!shipmentModels.Any())
             {
-                
+
             }
             return R.Success.With("orderId", orderId)
                 .With("shipments", shipmentModels)
@@ -535,5 +554,102 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        #endregion
+
+        #region Return Requests
+
+        [DualGet("return-requests", Name = AdminRouteNames.ReturnRequestsList)]
+        [CapabilityRequired(CapabilitySystemNames.ViewReturnRequests)]
+        public IActionResult ReturnRequestsList(ReturnRequestSearchModel searchModel)
+        {
+            var returnRequests = _returnRequestService.GetWithOrderDetails(out int totalResults, searchModel.ReturnRequestStatus, searchModel.FromDate, searchModel.ToDate, searchModel.Current,
+                searchModel.RowCount);
+
+            var returnRequestsModel = returnRequests.Select(_returnRequestModelFactory.Create).ToList();
+            return R.Success.With("returnRequests",  returnRequestsModel)
+                .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
+                .Result;
+        }
+
+        [DualGet("return-requests/{returnRequestId}", Name = AdminRouteNames.GetReturnRequest)]
+        [CapabilityRequired(CapabilitySystemNames.EditReturnRequest)]
+        public IActionResult ReturnRequestEditor(int returnRequestId)
+        {
+            var returnRequest = returnRequestId > 0 ? _returnRequestService.Get(returnRequestId) : null;
+            if (returnRequest == null)
+                return NotFound();
+            var model = _returnRequestModelFactory.Create(returnRequest);
+            var availableReturnStatusValues = SelectListHelper.GetSelectItemList<ReturnRequestStatus>();
+            var availableReturnOptionValues = SelectListHelper.GetSelectItemList<ReturnOption>();
+            return R.Success.With("returnRequest", model)
+                .With("availableReturnStatusValues", availableReturnStatusValues)
+                .With("availableReturnOptionValues", availableReturnOptionValues).Result;
+        }
+
+        [DualPost("return-requests", Name = AdminRouteNames.SaveReturnRequest)]
+        [CapabilityRequired(CapabilitySystemNames.EditReturnRequest)]
+        [ValidateModelState(ModelType = typeof(ReturnRequestModel))]
+        public IActionResult SaveReturnRequest(ReturnRequestModel returnRequestModel)
+        {
+            var returnRequest = returnRequestModel.Id > 0 ? _returnRequestService.Get(returnRequestModel.Id) : null;
+            if (returnRequest == null)
+                return NotFound();
+
+            switch (returnRequestModel.ReturnOption)
+            {
+                case ReturnOption.ReturnRepaired:
+                case ReturnOption.ReturnFresh:
+                    //if the return order was already created, don't do anything
+                    if (!returnRequest.ReturnOrderId.HasValue)
+                    {
+                        //get the original items to check for available inventory
+                        var orderItem = _orderItemService.GetWithProducts(new List<int>() {returnRequest.OrderItemId}).FirstOrDefault();
+                        if (orderItem == null)
+                            return R.Fail.With("error", T("An error occured while processing return")).Result;
+                        if (!orderItem.IsAvailableInStock(returnRequest.Quantity))
+                            return R.Fail.With("error", T("The item is not available in any of the warehouses")).Result;
+                        
+                        var clonedOrder = _orderAccountant.CloneOrder(orderItem.Order);
+                        clonedOrder.OrderItems[0].Quantity = returnRequest.Quantity;
+                        clonedOrder.OrderItems[0].Price = 0m;
+                        clonedOrder.OrderTotal = 0;
+                        clonedOrder.Subtotal = 0;
+                        clonedOrder.PaymentStatus = PaymentStatus.Complete;
+                        _orderAccountant.InsertCompleteOrder(clonedOrder);
+
+                        //save return order id
+                        returnRequest.ReturnOrderId = clonedOrder.Id;
+
+                        //update the status of existing order
+                        _purchaseAccountant.EvaluateOrderStatus(orderItem.Order.Guid);
+                    }
+                    break;
+                case ReturnOption.Refund:
+                    break;
+                case ReturnOption.Other:
+                    //do nothing
+                    break;
+            }
+            returnRequest.ReturnRequestStatus = returnRequestModel.ReturnRequestStatus;
+            returnRequest.UpdatedOn = DateTime.UtcNow;
+            returnRequest.Remarks = returnRequestModel.Remarks;
+            returnRequest.StaffComments = returnRequestModel.StaffComments;
+            returnRequest.ReturnOption = returnRequestModel.ReturnOption;
+            _returnRequestService.Update(returnRequest);
+            return R.Success.With("id", returnRequest.Id).Result;
+        }
+
+        [DualPost("return-requests/delete", Name = AdminRouteNames.DeleteReturnRequest)]
+        [CapabilityRequired(CapabilitySystemNames.EditReturnRequest)]
+        public IActionResult DeleteReturnRequest(int returnRequestId)
+        {
+            var returnRequest = returnRequestId > 0 ? _returnRequestService.Get(returnRequestId) : new ReturnRequest();
+            if (returnRequest == null)
+                return NotFound();
+
+            _returnRequestService.Delete(returnRequest);
+            return R.Success.Result;
+        }
+        #endregion
     }
 }

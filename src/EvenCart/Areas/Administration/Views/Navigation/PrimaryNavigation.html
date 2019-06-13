@@ -5,10 +5,14 @@
 <!--Orders-->
 {% primary_navigation title=@t"Orders" systemName="OrdersList" groupId="store" capability="Order.View" %}
 {% secondary_navigation url="{% route OrdersList %}" title=@t"All Orders" systemName="OrdersList" parent="OrdersList" %}
+{% secondary_navigation url="{% route ReturnRequestsList %}" title=@t"Return Requests" systemName="ReturnRequestsList" parent="OrdersList" %}
 
 {% secondary_navigation url="{% route OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
+
+{% secondary_navigation url="{% route ReturnRequestsList %}" title=@t"Back to return requests" iconClass="rbicon-chevron-left" groupId="ReturnRequestEdit" %}
+{% secondary_navigation url="{% route GetReturnRequest returnRequestId="{{returnRequestId}}" %}" title=@t"Request Request Info" systemName="GetReturnRequest" groupId="ReturnRequestEdit" %}
 
 <!--Catalog-->
 {% primary_navigation title=@t"Catalog" systemName="ProductsList" groupId="store" capability="Product.View" %}
@@ -91,8 +95,8 @@
 {% primary_navigation title=@t"Warehouses" systemName="WarehouseList" groupId="masters" capability="Warehouse.Manage" %}
 {% secondary_navigation url="{% route WarehouseList %}" title=@t"All Warehouses" systemName="WarehouseList" parent="WarehouseList" %}
 
-{% secondary_navigation url="{% route WarehouseList %}" iconClass="rbicon-chevron-left" title=@t"Back to warehouses" groupId="WarehouseEdit" %}
-{% secondary_navigation url="{% route GetWarehouse warehouseId="{{warehouseId}}" %}" title=@t"Warehouse Info" systemName="GetWarehouse" groupId="WarehouseEdit" %}
+{% secondary_navigation url="{% route WarehouseList %}" iconClass="rbicon-chevron-left" title=@t"Back to warehouses" groupId="WarehouseEdit" capability="Warehouse.Manage" %}
+{% secondary_navigation url="{% route GetWarehouse warehouseId="{{warehouseId}}" %}" title=@t"Warehouse Info" systemName="GetWarehouse" groupId="WarehouseEdit" capability="EmailAccount.Manage" %}
 
 <!--Countries-->
 {% primary_navigation title=@t"Countries" systemName="CountriesList" groupId="masters" capability="Country.Manage" %}
@@ -144,3 +148,9 @@
 {% secondary_navigation url="{% route GetSettings settingType="localization" %}" title=@t"Localization" systemName="LocalizationSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="gdpr" %}" title=@t"Gdpr" systemName="GdprSettings" parent="Settings" %}
 {% secondary_navigation url="{% route ScheduledTasksList %}" title=@t"Scheduled Tasks" systemName="ScheduledTasksList" parent="Settings" %}
+
+{% secondary_navigation url="{% route GetSettings settingType="order" %}" iconClass="rbicon-chevron-left" title=@t"Back to order settings" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route CustomLabelsList labelType="returnReason" %}" title=@t"Return Request Reasons" systemName="ReturnReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route CustomLabelsList labelType="cancellationReason" %}" title=@t"Cancellation Reasons" systemName="CancellationReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route CustomLabelsList labelType="returnAction" %}" title=@t"Preferred Return Actions" systemName="ReturnActionsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+

@@ -1,0 +1,140 @@
+﻿{% layout "_Layout" %}
+<div class="container">
+    <div class="wrapper">
+        {% partial "Common/Breadcrumb" %}
+        <h3>
+            {{"Return Request for order" | t}} # {{order.orderNumber}}
+        </h3>
+        <label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+        <div class="page-section text-dark section pb-120">
+            
+            {% if error %}
+            <div class="alert alert-danger">
+                {{error}}
+            </div>
+            {% else %}
+            <div class="order-items-list">
+                {{"Check the items you wish to return" | t}}
+                <form action='{% route api_ReturnOrder orderGuid="{{order.guid}}" %}' method="post" id="form-return">
+                    {% control xsrf %}
+                    {% for returnItem in returnItems %}
+                    {%- assign orderItem = returnItem.orderItem -%}
+                    <div class="row order-item">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-2">
+                                    <input type="checkbox" class="margin-r-10 return-item-selector" name="returnRequests[{{forloop.index0}}].orderItemId" value="{{orderItem.id}}"/> <img width="50px" src="{{orderItem.imageUrl}}"/>
+                                </div>
+                                <div class="col-5">
+                                    <a href='{% route SingleProduct seName="{{orderItem.seName}}" %}'>
+                                        {{orderItem.productName}}
+                                    </a>
+                                    <div>
+                                        {{orderItem.attributeText | newLine2Br}}
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div>
+                                        <label>{{"Quantity" | t}}</label>
+                                        {% if returnItem.minimumQuantityToReturn == orderItem.quantity %}
+                                        {{orderItem.quantity}}
+                                        {% else %}
+                                        <select class="form-control" name="returnRequests[{{forloop.index0}}].quantity">
+                                            {% for q in (returnItem.minimumQuantityToReturn..orderItem.quantity) %}
+                                            <option value="{{q}}">{{q}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="return-item-{{orderItem.id}}" style="display: none;" class="row">
+                                <div class="col-8 offset-2 mb-10">
+                                    <label>{{"Why are you returning this item?" | t}}</label>
+                                    <select class="reason-select form-control mb-10" name="returnRequests[{{forloop.index0}}].returnReasonId">
+                                        {% for reason in availableReasons %}
+                                        <option value="{{reason.value}}">{{reason.text}}</option>
+                                        {% endfor %}
+                                        <option value="0">{{"Other reason" | t}}</option>
+                                    </select>
+                                    <textarea class="form-control" style="display: none" name="returnRequests[{{forloop.index0}}].customerComments"></textarea>
+                                </div>
+                                <div class="col-8 offset-2 mb-10">
+                                    <label>{{"How would you like us to respond?" | t}}</label>
+                                    <select class="action-select form-control" name="returnRequests[{{forloop.index0}}].returnActionId">
+                                        {% for action in availableActions %}
+                                        <option value="{{action.value}}">{{action.text}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                    <div class="action-button-container text-center">
+                        <button type="submit" class="btn btn-danger">
+                            {{"Create Return Request" | t}}
+                        </button>
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-return",
+                            {
+                                onSuccess: function() {
+                                    notify("success", "{{'Return request was successfully created' | t}}");
+                                    window.location.href = "{% route AccountOrders %}";
+                                }
+                            });
+                    })
+                </script>
+            </div>
+            {% endif %}
+
+
+            <div class="text-center">
+                {% if order.orderStatus == "New" %}
+                {% if order.paymentStatus == "Pending" %}
+                <a href='{% route CheckoutPayment orderGuid="{{order.guid}}" %}' class="btn btn-primary margin-r-5">
+                    {{"Retry Payment" | t}}
+                </a>
+                {% endif %}
+                <form action="" method="post" id="form-cancel-order"></form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-cancel-order",
+                            {
+                                onSuccess: function() {
+                                    notify("success", "{{'Your order cancellation request as been sent' | t}}");
+                                }
+                            });
+                    });
+                </script>
+                <button class="btn btn-danger">
+                    {{"Cancel Order" | t}}
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    ready(function () {
+        jQuery(".return-item-selector").change(function() {
+            var value = jQuery(this).val();
+            if (jQuery(this).is(":checked")) {
+                jQuery("#return-item-" + value).slideDown();
+            } else {
+                jQuery("#return-item-" + value).slideUp();
+            }
+        });
+        jQuery(".reason-select").change(function() {
+            if (jQuery(this).val() == "0") {
+                jQuery(this).next("textarea").slideDown();
+            } else {
+                jQuery(this).next("textarea").slideUp();
+            }
+        });
+    });
+</script>

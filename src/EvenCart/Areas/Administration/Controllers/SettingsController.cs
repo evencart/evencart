@@ -193,6 +193,7 @@ namespace EvenCart.Areas.Administration.Controllers
                     break;
                 case "order":
                     settings = DependencyResolver.Resolve<OrderSettings>();
+                    result.WithAvailableOrderStatusTypes();
                     model = _modelMapper.Map<OrderSettingsModel>(settings);
                     break;
                 case "user":

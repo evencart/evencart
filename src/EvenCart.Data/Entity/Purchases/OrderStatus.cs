@@ -11,6 +11,7 @@
         Cancelled = 60, //manual
         Closed = 70, //manual
         Returned = 80, //auto
-        Delayed = 90 //manual
+        PartiallyReturned = 90, //manual
+        Delayed = 100 //manual
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace EvenCart.Areas.Administration.Models.Shop
+﻿namespace EvenCart.Areas.Administration.Models.Common
 {
     public class AutocompleteModel
     {

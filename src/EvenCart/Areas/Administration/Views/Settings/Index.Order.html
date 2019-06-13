@@ -18,5 +18,25 @@
         <div class="form-group">
             {% control checkbox name="enableWishlist" text=@t"Enable wishlist" value="settings.enableWishlist" %}
         </div>
+        <div class="form-group">
+            {% control checkbox name="allowReturns" text=@t"Allow customers to return an order" value="settings.allowReturns" %}
+            <div>
+                <a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="returnReason" %}'>{{"Configure Return Request Reasons" | t}}</a>
+                <a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="returnAction" %}'>{{"Configure Return Actions" | t}}</a>
+            </div>
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Default number of days for returns" for="DefaultReturnsDays" %}
+            {% control number min="0" name="DefaultReturnsDays" value="{{settings.defaultReturnsDays}}"%}
+        </div>
+        <div class="form-group">
+            {% control checkbox name="allowCancellation" text=@t"Allow customers to cancel an order" value="settings.allowCancellation" %}
+            <div><a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="cancellationReason" %}'>{{"Configure Cancellation Reasons" | t}}</a></div>
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Restrict cancellation only for following order status" for="CancellationAllowedFor" %}
+            {% control checkboxlist name="cancellationAllowedFor" value="settings.cancellationAllowedFor" items="orderStatusTypes" %}
+        </div>
+      
     </div>
 </div>

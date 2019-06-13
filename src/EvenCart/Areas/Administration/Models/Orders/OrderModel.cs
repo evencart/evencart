@@ -25,6 +25,8 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public DateTime? PaidOn { get; set; }
 
+        public DateTime? DeliveredOn { get; set; }
+
         public string ShippingMethodName { get; set; }
 
         public string ShippingMethodDisplayName { get; set; }

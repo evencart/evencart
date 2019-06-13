@@ -110,6 +110,11 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        /// <summary>
+        /// Updates display order for warehouses
+        /// </summary>
+        /// <param name="warehouseModels"></param>
+        /// <response code="200">A success response object</response>
         [DualPost("display-order", Name = AdminRouteNames.UpdateWarehouseDisplayOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageWarehouses)]
         public IActionResult UpdateWarehouseDisplayOrder(WarehouseModel[] warehouseModels)

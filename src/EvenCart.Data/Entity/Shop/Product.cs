@@ -87,6 +87,10 @@ namespace EvenCart.Data.Entity.Shop
 
         public bool IndividuallyShipped { get; set; }
 
+        public bool AllowReturns { get; set; }
+
+        public int DaysForReturn { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }

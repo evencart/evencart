@@ -1,6 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Gdpr;
@@ -78,6 +79,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<ShipmentItem>(transaction);
             Db.CreateTable<ShipmentHistory>(transaction);
             Db.CreateTable<PaymentTransaction>(transaction);
+            Db.CreateTable<ReturnRequest>(transaction);
 
             Db.CreateConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction, true);
@@ -167,6 +169,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<Log>(transaction);
             Db.CreateTable<SeoMeta>(transaction);
             Db.CreateTable<ScheduledTask>(transaction);
+            Db.CreateTable<CustomLabel>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -274,7 +277,7 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ShipmentHistory>(transaction);
             Db.DropTable<PaymentTransaction>(transaction);
             Db.DropTable<OrderFulfillment>(transaction);
-
+            Db.DropTable<ReturnRequest>(transaction);
 
 
             Db.DropTable<DiscountCoupon>(transaction);
@@ -321,7 +324,7 @@ namespace EvenCart.Data.Versions
             Db.DropTable<Log>(transaction);
             Db.DropTable<SeoMeta>(transaction);
             Db.DropTable<ScheduledTask>(transaction);
-
+            Db.DropTable<CustomLabel>(transaction);
         }
 
         public string VersionKey => "EvenCart.Data.Versions.Version1_0_0";

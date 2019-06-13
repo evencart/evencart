@@ -1,0 +1,136 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Return Reasons" active_menu="ReturnReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'ReturnReason'" %}
+{% global page_title=@t"Order Cancellation Reasons" active_menu="CancellationReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'CancellationReason'" %}
+{% global page_title=@t"Return Actions" active_menu="ReturnActionsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'ReturnAction'" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{labels.plural}} <button class="btn btn-sm btn-primary float-right" onclick="editCustomLabel(0)">{{"Add" | t}} {{labels.singular}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead style="display: none">
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="text" data-width="80%">{{"Text" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                {{customLabels | scriptJson : 'initData'}}
+                <script type="text/javascript">
+
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                customLabels: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 0,
+                            selection: false,
+                            url: '{% route api_CustomLabelsList labelType="{{labelType}}" %}',
+                            responseObject: "customLabels",
+                            formatters: {
+                                "commands": function (column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editCustomLabel(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteCustomLabel(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                },
+                                "hiddenFields": function (column, row, index) {
+                                    return "<input type='hidden' data-type='displayorder' name='customLabelModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                                        "<input type='hidden' data-type='id'  name='customLabelModels[" + index + "].id' value='" + row.id + "' />";
+                                }
+                            },
+                            events: {
+                                "loaded": function () { enableSortable(true); }
+                            }
+                        });
+                        enableSortable();
+                    });
+
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-customLabel-popup">
+</div>
+
+<script type="text/javascript">
+    var enableSortable = function (refresh) {
+        if (refresh) {
+            displayOrderSortable({
+                container: "grid-selection tbody",
+                refresh: true
+            });
+        } else {
+            displayOrderSortable({
+                container: "grid-selection tbody",
+                itemSelector: "tr",
+                update: function () {
+                    post({
+                        url: "{% route api_UpdateCustomLabelDisplayOrder %}",
+                        data: jQuery("#grid-selection input").serialize()
+                    });
+                }
+            });
+        }
+
+    }
+    var editCustomLabel = function(id) {
+        jQuery("#edit-customLabel-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-customLabel-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Label was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetCustomLabel customLabelId="%id%" labelType="%type%" %}'.replaceAll("%id%", id).replace("%type%", "{{labelType}}");
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-customLabel-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteCustomLabel = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this label?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteCustomLabel %}",
+                    data: {
+                        customLabelId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Label was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>
