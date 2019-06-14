@@ -28,13 +28,13 @@
             {% control hidden name="id" value="{{contentPage.id}}" %}
             <div class="save-button-container">
                 {% if contentPage.id > 0 %}
-                <a class="btn btn-primary" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
+                <a class="btn btn-sm btn-warning" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>
                 {% endif %}
-                <button type="submit" class="btn btn-success">{{"Save Page" | t}}</button>
-                <a class="btn btn-default" href='{% route ContentPagesList %}'>{{"Cancel" | t}}</a>
+                <button type="submit" class="btn btn-sm btn-success">{{"Save Page" | t}}</button>
+                <a class="btn btn-sm btn-default" href='{% route ContentPagesList %}'>{{"Cancel" | t}}</a>
             </div>
         </div>
         <div class="col-lg-4">
