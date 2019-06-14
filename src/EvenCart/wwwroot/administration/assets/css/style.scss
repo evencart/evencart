@@ -846,3 +846,9 @@ tr.ui-sortable-handle td:first-child:before {
     }
 }
 
+button.busy {
+    background-image: url(../../../common/assets/images/submit-loader.gif);
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 25px;
+}

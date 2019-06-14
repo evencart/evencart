@@ -619,3 +619,9 @@ tr.ui-sortable-handle td:first-child:before {
   .total-badge.blue {
     background-color: #247edf;
     color: #fff; }
+
+button.busy {
+  background-image: url(../../../common/assets/images/submit-loader.gif);
+  background-repeat: no-repeat;
+  background-position: 5px center;
+  padding-left: 25px; }

@@ -31,11 +31,25 @@
                 var method = jQuery(form).attr("method") || "post";
                 var action = jQuery(form).attr("action") || window.location.href;
 
+                var enableControls = function() {
+                    //disable the submit buttons
+                    jQuery(formId + " *").removeAttr("disabled");
+                    jQuery(formId + " button[type='submit']," + formId + " input[type='submit']").removeClass("busy");
+                };
+
+                var disableControls = function() {
+                    //disable the submit buttons
+                    jQuery(formId + " *").attr("disabled", "disabled");
+                    jQuery(formId + " button[type='submit']," + formId + " input[type='submit']").addClass("busy");
+                };
+
+                disableControls();
                 var ajaxOptions = {
                     url: action,
                     data: object,
                     method: method,
                     done: function (response) {
+                        enableControls();
                         if (response.success) {
                             if (options.onSuccess)
                                 options.onSuccess(response);
@@ -46,7 +60,11 @@
                             }
                         }
                     },
-                    fail: options.onError
+                    fail: function (response) {
+                        enableControls();
+                        if (options.onError)
+                            options.onError(response);
+                    }
                 };
                 ajax(ajaxOptions);
             },
