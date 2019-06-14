@@ -1,9 +1,8 @@
 ﻿$(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;
-    
+
     if (code == 13) {
-        if (!jQuery(e.target).hasClass("trumbowyg-editor"))
-        {
+        if (!jQuery(e.target).hasClass("trumbowyg-editor")) {
             e.preventDefault();
             return false;
         }
@@ -45,7 +44,7 @@ var showAsPopup = function (id, ajax, onClose, onOpen) {
                 element.center('absolute');
                 element.show();
             }, 300);
-           
+
             element.find(".close-popup, .popup-close").click(function () {
                 hidePopup(id, "cancel");
             });
@@ -107,7 +106,7 @@ var generateGrid = function (options) {
         return rows;
     }
     if (options.initialData && options.initialData[options.responseObject]) {
-       
+
         options.initialData["success"] = true;
     }
 
@@ -128,12 +127,12 @@ var generateGrid = function (options) {
         formatters: options.formatters,
         navigation: options.navigation,
         keepSelection: options.keepSelection,
-        requestHandler: function(request) {
+        requestHandler: function (request) {
             if (options.data)
                 request = jQuery.extend(request, typeof options.data == "function" ? options.data() : "");
             return request;
         },
-        responseHandler: function(response) {
+        responseHandler: function (response) {
             if (response.success) {
                 if (options.done)
                     options.done(response);
@@ -154,29 +153,29 @@ var generateGrid = function (options) {
     });
     if (options.events) {
         for (var event in options.events) {
-            
+
             if (options.events.hasOwnProperty(event)) {
                 var callback = options.events[event];
                 if (callback) {
                     grid.on(event + ".rs.jquery.bootgrid", callback);
                 }
             }
-            
+
         }
     }
 }
 
-var getGridRows = function(id) {
+var getGridRows = function (id) {
     var currentRows = jQuery("#" + id).bootgrid("getCurrentRows");
     return currentRows;
 }
 
-var getGridSelections = function(id) {
+var getGridSelections = function (id) {
     var currentRows = jQuery("#" + id).bootgrid("getCurrentRows");
     var selectedRowIds = jQuery("#" + id).bootgrid("getSelectedRows");
     var resultRows = [];
-    selectedRowIds.forEach(function(rowId) {
-        currentRows.forEach(function(row) {
+    selectedRowIds.forEach(function (rowId) {
+        currentRows.forEach(function (row) {
             if (row.id === rowId) {
                 resultRows.push(row);
             }
@@ -185,7 +184,7 @@ var getGridSelections = function(id) {
     return resultRows;
 }
 
-var addRowsToGrid = function(id, rows) {
+var addRowsToGrid = function (id, rows) {
     jQuery("#" + id).bootgrid("append", rows);
 }
 
@@ -238,7 +237,7 @@ var inputTypeahead = function (options) {
         clearAfterSelect: false,
         preserveAfterFirstCall: false,
         openOnFocus: false,
-        minLength: 3,
+        minLength: 1,
         destroy: false,
         multiple: false,
         value: false,
@@ -276,12 +275,12 @@ var inputTypeahead = function (options) {
         // iterate through the pool of strings and for any string that
         // contains the substring `q`, add it to the `matches` array
         jQuery.each(data, function (index, obj) {
-            var str = typeof obj == "object" ? obj.text : obj;
+            var str = typeof obj === "object" ? obj.text : obj;
             if (substrRegex.test(str)) {
                 matches.push(obj);
             }
         });
-
+        
         if (matches.length == 0 && options.suggestNewAdditions) {
             matches.push({
                 id: 0,
@@ -316,7 +315,7 @@ var inputTypeahead = function (options) {
                     return;
                 }
             }
-            var data = options.data || options.initialData;
+            var data = options.initialData || options.data;
             var matches = dataSearch(q, data);
             syncResults(matches);
         };
@@ -370,7 +369,7 @@ var inputTypeahead = function (options) {
                 source: sourceFunction(options),
                 display: function (selection) {
                     if (selection.id == 0)
-                        return "Add " + selection.text;
+                        return "+ " + selection.text;
                     return selection.text;
                 }
             })
