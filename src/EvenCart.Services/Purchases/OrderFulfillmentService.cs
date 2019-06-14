@@ -61,6 +61,7 @@ namespace EvenCart.Services.Purchases
                     if (!product.MediaItems.Contains(media))
                         product.MediaItems.Add(media);
                 })
+                .Where(where)
                 .SelectNested(page, count);
         }
     }
