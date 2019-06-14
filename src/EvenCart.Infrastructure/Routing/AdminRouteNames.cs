@@ -7,6 +7,8 @@
         public const string GetProduct = "GetProduct";
 
         public const string Dashboard = "Dashboard";
+        public const string RestartApplication = "RestartApplication";
+        public const string PurgeCache = "PurgeCache";
 
         public const string ProductsList = "ProductsList";
         public const string SaveProduct = "SaveProduct";

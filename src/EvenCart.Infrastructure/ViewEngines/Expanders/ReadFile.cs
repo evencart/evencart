@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
+using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {
@@ -100,6 +101,13 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 readFile.MarkAllParentsDirty();
             }
             return readFile;
+        }
+
+        public static void PurgeCache()
+        {
+            //mark all the readfiles as dirty, so they'll be reloaded
+            foreach (var readFile in ReadFileCache.Values)
+                readFile.IsDirty = true;
         }
     }
 }

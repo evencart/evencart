@@ -21,6 +21,7 @@ using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Authentication;
 using EvenCart.Infrastructure.Bundle;
+using EvenCart.Infrastructure.Caching;
 using EvenCart.Infrastructure.Database;
 using EvenCart.Infrastructure.Emails;
 using EvenCart.Infrastructure.Localization;
@@ -46,6 +47,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IDatabaseSettings, DatabaseSettings>(reuse: Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
             //caching
             registrar.Register<ICacheProvider, MemoryCacheProvider>(reuse: Reuse.Singleton);
+            registrar.Register<ICacheAccountant, CacheAccountant>(reuse: Reuse.Transient);
             //events
             registrar.Register<IEventPublisherService, EventPublisherService>(reuse: Reuse.Singleton);
             //file access

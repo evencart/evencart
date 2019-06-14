@@ -59,7 +59,20 @@ body {
     position: fixed;
     top: 0;
     bottom: 0;
-    z-index: 0;
+    z-index: 1;
+
+    .maintenance-dropup {
+        position: fixed;
+        bottom: 0;
+        width: 140px;
+        button{
+            display:block;
+        }
+        & > button {
+            width: 100%;
+            border-radius: 0;
+        }
+    }
 }
 
 .sidenav-links {
@@ -832,3 +845,4 @@ tr.ui-sortable-handle td:first-child:before {
         color: #fff;
     }
 }
+

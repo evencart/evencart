@@ -9,6 +9,8 @@ namespace EvenCart.Data.Constants
 {
     public class CapabilitySystemNames
     {
+        public const string PerformMaintenance = "Maintenance.Perform";
+
         public const string EditProduct = "Product.Edit";
 
         public const string DeleteProduct = "Product.Delete";
