@@ -91,31 +91,6 @@
                 </script>
             </div>
             {% endif %}
-
-
-            <div class="text-center">
-                {% if order.orderStatus == "New" %}
-                {% if order.paymentStatus == "Pending" %}
-                <a href='{% route CheckoutPayment orderGuid="{{order.guid}}" %}' class="btn btn-primary margin-r-5">
-                    {{"Retry Payment" | t}}
-                </a>
-                {% endif %}
-                <form action="" method="post" id="form-cancel-order"></form>
-                <script type="text/javascript">
-                    ready(function() {
-                        initAjaxForm("form-cancel-order",
-                            {
-                                onSuccess: function() {
-                                    notify("success", "{{'Your order cancellation request as been sent' | t}}");
-                                }
-                            });
-                    });
-                </script>
-                <button class="btn btn-danger">
-                    {{"Cancel Order" | t}}
-                </button>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>

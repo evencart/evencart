@@ -66,6 +66,7 @@ function secondsToHms(d) {
 var initCountryState = function (countryElementId, stateElementId, otherStateContainerId, stateValue) {
     countryElementId = countryElementId.replace(".", "\\.");
     stateElementId = stateElementId.replace(".", "\\.");
+    otherStateContainerId = otherStateContainerId || "dummy";
     otherStateContainerId = otherStateContainerId.replace(".", "\\.");
     var countryElement = jQuery("#" + countryElementId);
     var otherStateContainer = jQuery("#" + otherStateContainerId);

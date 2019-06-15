@@ -85,7 +85,7 @@
                     notify("success", '{{"State was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetState stateId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route GetState countryId="{{countryId}}" stateId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
