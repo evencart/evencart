@@ -67,8 +67,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
         {
             foreach (var e in Expanders)
             {
-                var tagRegex = e.AssociatedRegEx ?? GetTagRegex(e.TagName);
-                e.AssociatedRegEx = tagRegex;
+                var tagRegex = GetExpanderRegex(e);
                 if (prePostRun)
                     //run before expansion
                     e.PreRun(readFile);
@@ -88,6 +87,19 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             return inputContent;
         }
 
+        public static string ExpandRoutes(string content, object parameters = null)
+        {
+            var routeExpander = Expanders.Find(x => x.GetType() == typeof(UrlRouteExpander));
+            var tagRegex = GetExpanderRegex(routeExpander);
+            return routeExpander.Expand(null, tagRegex, content, parameters);
+        }
+
+        private static Regex GetExpanderRegex(Expander e)
+        {
+            var tagRegex = e.AssociatedRegEx ?? GetTagRegex(e.TagName);
+            e.AssociatedRegEx = tagRegex;
+            return tagRegex;
+        }
         protected void ExtractMatch(Match match, out string[] straightParameters, out Dictionary<string, string> keyValuePairs)
         {
             straightParameters = null;

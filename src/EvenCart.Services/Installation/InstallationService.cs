@@ -2,12 +2,14 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EvenCart.Core;
 using EvenCart.Core.Exception;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
+using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Notifications;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -15,6 +17,7 @@ using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Cultures;
+using EvenCart.Services.Emails;
 using EvenCart.Services.Notifications;
 using EvenCart.Services.Products;
 using EvenCart.Services.Security;
@@ -422,16 +425,15 @@ namespace EvenCart.Services.Installation
 
         private void SeedEmailTemplates(string adminEmail, string installDomain)
         {
-            /*
             var emailAccountService = DependencyResolver.Resolve<IEmailAccountService>();
             var emailTemplateService = DependencyResolver.Resolve<IEmailTemplateService>();
-            var installEmailTemplatesPath = ServerHelper.GetLocalPathFromRelativePath("~/App_Data/Install/EmailTemplates/");
-            //add email account
-            var emailAccount = new EmailAccount() {
+            var installEmailTemplatesPath = ServerHelper.MapPath("~/App_Data/Install/EmailTemplates/");
+            
+            var emailAccount = new EmailAccount()
+            {
                 Email = "support@" + installDomain,
-                FromName = "EvenCart Helpdesk Software",
+                FromName = "EvenCart",
                 Host = "",
-                IsDefault = true,
                 Port = 485,
                 UseDefaultCredentials = true,
                 UseSsl = true,
@@ -439,7 +441,8 @@ namespace EvenCart.Services.Installation
             };
             emailAccountService.Insert(emailAccount);
 
-            var masterTemplate = new EmailTemplate() {
+            var masterTemplate = new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = true,
                 Subject = "Master Template",
@@ -451,7 +454,8 @@ namespace EvenCart.Services.Installation
             };
             emailTemplateService.Insert(masterTemplate);
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your account has been created",
@@ -463,7 +467,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "A new user has registered",
@@ -475,7 +480,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your account has been activated",
@@ -487,7 +493,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Activate your account",
@@ -499,7 +506,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "We have received a password reset request",
@@ -511,7 +519,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your password has been changed",
@@ -523,7 +532,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your account has been deactivated",
@@ -535,7 +545,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your account has been deactivated",
@@ -547,7 +558,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "Your account has been deleted",
@@ -559,7 +571,8 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
                 Subject = "A user account has been deleted",
@@ -571,173 +584,188 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "We've received your query",
-                TemplateSystemName = EmailTemplateNames.TicketCreatedMessage,
-                TemplateName = "Ticket Created",
+                Subject = "Thank for your interest",
+                TemplateSystemName = EmailTemplateNames.InvitationRequestedMessage,
+                TemplateName = "Invitation Requested",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketCreatedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.InvitationRequestedMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "We've received your query",
-                TemplateSystemName = EmailTemplateNames.TicketCreatedMessageToAdmin,
-                TemplateName = "Ticket Created Administrator",
+                Subject = "{{email}} has requested for an invitation",
+                TemplateSystemName = EmailTemplateNames.InvitationRequestedMessageToAdmin,
+                TemplateName = "Invitation Requested Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketCreatedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.InvitationRequestedMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Your ticket {{Ticket.Id}} has been updated",
-                TemplateSystemName = EmailTemplateNames.TicketUpdatedMessage,
-                TemplateName = "Ticket Updated",
+                Subject = "We invite you to join {{store.name}}",
+                TemplateSystemName = EmailTemplateNames.InvitationMessage,
+                TemplateName = "Invitation",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketUpdatedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.InvitationMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has been updated",
-                TemplateSystemName = EmailTemplateNames.TicketUpdatedMessageToAdmin,
-                TemplateName = "Ticket Updated Administrator",
+                Subject = "Your recent order # {{order.orderNumber}}",
+                TemplateSystemName = EmailTemplateNames.OrderPlacedMessage,
+                TemplateName = "Order Placed",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketUpdatedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.OrderPlacedMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Your ticket {{Ticket.Id}} has been closed",
-                TemplateSystemName = EmailTemplateNames.TicketClosedMessage,
-                TemplateName = "Ticket Closed",
+                Subject = "Order # {{order.orderNumber}} placed by {{user.name}}",
+                TemplateSystemName = EmailTemplateNames.OrderPlacedMessageToAdmin,
+                TemplateName = "Order Placed Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketClosedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.OrderPlacedMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has been closed",
-                TemplateSystemName = EmailTemplateNames.TicketClosedMessageToAdmin,
-                TemplateName = "Ticket Closed Administrator",
+                Subject = "Your recent order # {{order.orderNumber}} has been paid",
+                TemplateSystemName = EmailTemplateNames.OrderPaidMessage,
+                TemplateName = "Order Paid",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketClosedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.OrderPaidMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Your ticket {{Ticket.Id}} has been resolved",
-                TemplateSystemName = EmailTemplateNames.TicketResolvedMessage,
-                TemplateName = "Ticket Resolved",
+                Subject = "Order # {{order.orderNumber}} placed by {{user.name}} has been paid",
+                TemplateSystemName = EmailTemplateNames.OrderPaidMessageToAdmin,
+                TemplateName = "Order Paid Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketResolvedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.OrderPaidMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has been resolved",
-                TemplateSystemName = EmailTemplateNames.TicketResolvedMessageToAdmin,
-                TemplateName = "Ticket Resolved Administrator",
+                Subject = "Your order has been shipped",
+                TemplateSystemName = EmailTemplateNames.ShipmentShippedMessage,
+                TemplateName = "Order Shipped",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketResolvedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ShipmentShippedMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Your ticket {{Ticket.Id}} has been deleted",
-                TemplateSystemName = EmailTemplateNames.TicketDeletedMessage,
-                TemplateName = "Ticket Deleted",
+                Subject = "Your order has been delivered",
+                TemplateSystemName = EmailTemplateNames.ShipmentDeliveredMessage,
+                TemplateName = "Order Delivered",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketDeletedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ShipmentDeliveredMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has been deleted",
-                TemplateSystemName = EmailTemplateNames.TicketDeletedMessageToAdmin,
-                TemplateName = "Ticket Deleted Administrator",
+                Subject = "An order has been delivered",
+                TemplateSystemName = EmailTemplateNames.ShipmentDeliveredMessageToAdmin,
+                TemplateName = "Order Delivered Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.TicketDeletedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ShipmentDeliveredMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has violated SLA",
-                TemplateSystemName = EmailTemplateNames.SlaViolatedMessage,
-                TemplateName = "Sla Violated",
+                Subject = "The delivery of your recent order failed",
+                TemplateSystemName = EmailTemplateNames.ShipmentDeliveryFailedMessage,
+                TemplateName = "Order Delivery Failed",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.SlaViolatedMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ShipmentDeliveryFailedMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "Ticket {{Ticket.Id}} has violated SLA",
-                TemplateSystemName = EmailTemplateNames.SlaViolatedMessageToAdmin,
-                TemplateName = "Sla Violated Administrator",
+                Subject = "A recent order failed to deliver",
+                TemplateSystemName = EmailTemplateNames.ShipmentDeliveryFailedMessageToAdmin,
+                TemplateName = "Order Delivery Failed Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.SlaViolatedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ShipmentDeliveryFailedMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "URGENT! Ticket {{Ticket.Id}} is about to violate SLA",
-                TemplateSystemName = EmailTemplateNames.SlaViolationReminderMessage,
-                TemplateName = "Sla Violation Reminder",
+                Subject = "Return request for order # {{order.orderNumber}}",
+                TemplateSystemName = EmailTemplateNames.ReturnRequestCreatedMessage,
+                TemplateName = "Return Request Created",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.SlaViolationReminderMessage),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ReturnRequestCreatedMessage),
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
-            emailTemplateService.Insert(new EmailTemplate() {
+            emailTemplateService.Insert(new EmailTemplate()
+            {
                 AdministrationEmail = adminEmail,
                 IsMaster = false,
-                Subject = "An SLA has been modified",
-                TemplateSystemName = EmailTemplateNames.SlaModifiedMessageToAdmin,
-                TemplateName = "Sla Modified Administrator",
+                Subject = "Return request for order # {{order.orderNumber}}",
+                TemplateSystemName = EmailTemplateNames.ReturnRequestCreatedMessageToAdmin,
+                TemplateName = "Return Request Created Administrator",
                 IsSystem = true,
                 EmailAccountId = emailAccount.Id,
-                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.SlaModifiedMessageToAdmin),
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ReturnRequestCreatedMessageToAdmin),
                 ParentEmailTemplateId = masterTemplate.Id
-            });*/
+            });
+
         }
 
         #region Helper

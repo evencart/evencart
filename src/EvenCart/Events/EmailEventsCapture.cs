@@ -12,6 +12,7 @@ using EvenCart.Services.Extensions;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Shipments;
 using EvenCart.Factories.Users;
+using EvenCart.Models.Orders;
 
 namespace EvenCart.Events
 {
@@ -25,7 +26,9 @@ namespace EvenCart.Events
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IUserModelFactory _userModelFactory;
         private readonly IShipmentModelFactory _shipmentModelFactory;
-        public EmailEventsCapture(IEmailSender emailSender, UserSettings userSettings, EmailSenderSettings emailSenderSettings, IOrderModelFactory orderModelFactory, IUserModelFactory userModelFactory, IShipmentModelFactory shipmentModelFactory)
+        private readonly SecuritySettings _securitySettings;
+        private readonly IReturnRequestModelFactory _returnRequestModelFactory;
+        public EmailEventsCapture(IEmailSender emailSender, UserSettings userSettings, EmailSenderSettings emailSenderSettings, IOrderModelFactory orderModelFactory, IUserModelFactory userModelFactory, IShipmentModelFactory shipmentModelFactory, SecuritySettings securitySettings, IReturnRequestModelFactory returnRequestModelFactory)
         {
             _emailSender = emailSender;
             _userSettings = userSettings;
@@ -33,6 +36,8 @@ namespace EvenCart.Events
             _orderModelFactory = orderModelFactory;
             _userModelFactory = userModelFactory;
             _shipmentModelFactory = shipmentModelFactory;
+            _securitySettings = securitySettings;
+            _returnRequestModelFactory = returnRequestModelFactory;
         }
 
         public void Capture(string eventName, object[] eventData = null)
@@ -134,7 +139,7 @@ namespace EvenCart.Events
                     }
                     break;
                 case nameof(NamedEvent.ShipmentDeliveryFailed):
-                    if (_emailSenderSettings.ShipmentDeliveredEmailEnabled || _emailSenderSettings.ShipmentDeliveredEmailToAdminEnabled)
+                    if (_emailSenderSettings.ShipmentDeliveryFailedEmailEnabled || _emailSenderSettings.ShipmentDeliveryFailedToAdminEmailEnabled)
                     {
                         var shipment = (Shipment)eventData[0];
                         var user = shipment.User;
@@ -174,7 +179,7 @@ namespace EvenCart.Events
                     {
                         var email = eventData[0].ToString();
                         var userInfo = new EmailMessage.UserInfo("", email);
-                        var model = R.Result;
+                        var model = R.With("email", email).Result;
                         _emailSender.SendEmail(EmailTemplateNames.InvitationRequestedMessage, userInfo, model,
                             _emailSenderSettings.InviteRequestCreatedEmailEnabled,
                             _emailSenderSettings.InviteRequestCreatedEmailToAdminEnabled);
@@ -185,7 +190,8 @@ namespace EvenCart.Events
                         var userCode = (UserCode)eventData[0];
                         var invitationLink = eventData[1].ToString();
                         var userInfo = new EmailMessage.UserInfo("", userCode.Email);
-                        var model = R.With("invitationLink", invitationLink).Result;
+                        var hours = _securitySettings.InviteLinkExpirationHours;
+                        var model = R.With("invitationLink", invitationLink).With("email", userCode.Email).With("expirationHours", hours).Result;
                         _emailSender.SendEmail(EmailTemplateNames.InvitationMessage, userInfo, model);
                     }
                     break;
@@ -193,9 +199,10 @@ namespace EvenCart.Events
                     {
                         var user = (User)eventData[0];
                         var order = (Order) eventData[1];
-                        var listItems = (List<ReturnRequest>) eventData[2];
+                        var listItems = ((List<ReturnRequest>) eventData[2]).Select(x => _returnRequestModelFactory.Create(x)).ToList();
                         var userInfo = user.ToUserInfo();
                         var userModel = _userModelFactory.Create(user);
+                        
                         var model = R.With("user", userModel).With("order", order).With("returnRequests", listItems).Result;
                         _emailSender.SendEmail(EmailTemplateNames.ReturnRequestCreatedMessage, userInfo, model,
                             _emailSenderSettings.ReturnRequestCreatedEmailEnabled,

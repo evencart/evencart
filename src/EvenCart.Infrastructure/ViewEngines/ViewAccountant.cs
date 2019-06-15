@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DotLiquid;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
@@ -150,7 +151,7 @@ namespace EvenCart.Infrastructure.ViewEngines
 
         public string GetLayoutPath(string layoutName)
         {
-            var rootPath = ApplicationEngine.MapPath("~/");
+            var rootPath = ServerHelper.MapPath("~/");
             layoutName = ValidateViewName(layoutName);
             var isAdmin = ApplicationEngine.IsAdmin();
             var pathBuilder = _localFileProvider.CombinePaths(rootPath);
@@ -217,7 +218,7 @@ namespace EvenCart.Infrastructure.ViewEngines
         private IList<string> _adminViewLocations;
         private IList<string> GetViewLocations()
         {
-            var rootPath = ApplicationEngine.MapPath("~/");
+            var rootPath = ServerHelper.MapPath("~/");
             var plugins = _pluginLoader.GetAvailablePlugins();
             if (ApplicationEngine.IsAdmin())
             {

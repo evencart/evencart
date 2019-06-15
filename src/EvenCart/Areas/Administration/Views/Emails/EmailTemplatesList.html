@@ -19,6 +19,7 @@
                     </tr>
                     </thead>
                 </table>
+                {{emailTemplates | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailTemplate = function(id) {
                         var url = '{% route GetEmailTemplate emailTemplateId="_id" %}';
@@ -26,10 +27,6 @@
                         navigate(url);
                     }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless emailTemplates == blank %}*/
-                        initData = JSON.parse('{{emailTemplates}}');
-                        /*{% endunless %}*/
 
                         generateGrid({
                             element: "grid-selection",

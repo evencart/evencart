@@ -51,8 +51,13 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var emailTemplates = _emailTemplateService.Get(out int totalResults, x => true, page: searchModel.Current, count: searchModel.RowCount)
                 .ToList();
-            var models = emailTemplates.Select(x => _modelMapper.Map<EmailTemplateModel>(x)).ToList();
-            return R.Success.With("emailTemplates", () => models, () => _dataSerializer.Serialize(models))
+            var models = emailTemplates.Select(x =>
+            {
+                var model = _modelMapper.Map<EmailTemplateModel>(x);
+                model.Template = string.Empty; //no need to send this in a list
+                return model;
+            }).ToList();
+            return R.Success.With("emailTemplates", models)
                 .WithParams(searchModel)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .Result;
@@ -62,7 +67,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageEmailTemplates)]
         public IActionResult EmailTemplateEditor(int emailTemplateId)
         {
-            var emailTemplate = emailTemplateId > 0 ? _emailTemplateService.Get(emailTemplateId) : null;
+            var emailTemplate = emailTemplateId > 0 ? _emailTemplateService.Get(emailTemplateId) : new EmailTemplate();
             if (emailTemplate == null)
                 return NotFound();
             var model = _modelMapper.Map<EmailTemplateModel>(emailTemplate);
@@ -101,7 +106,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 return R.Fail.With("error", T("A template with this system name already exists")).Result;
             }
-            _modelMapper.Map(model, emailTemplate, nameof(EmailTemplate.Id), nameof(EmailTemplate.IsSystem));
+            _modelMapper.Map(model, emailTemplate, nameof(EmailTemplate.Id), nameof(EmailTemplate.IsSystem), nameof(EmailTemplate.TemplateSystemName));
             if (emailTemplate.Id == 0)
                 emailTemplate.IsSystem = false;
 
@@ -234,9 +239,10 @@ namespace EvenCart.Areas.Administration.Controllers
                 model.Ccs = x.Ccs?.Select(y => $"{y.Name}({y.Email})").ToList();
                 model.Bccs = x.Bccs?.Select(y => $"{y.Name}({y.Email})").ToList();
                 model.ReplyTos = x.ReplyTos?.Select(y => $"{y.Name}({y.Email})").ToList();
+                model.EmailBody = string.Empty; //no need to send all html in list
                 return model;
             }).ToList();
-            return R.Success.With("emailMessages", () => models, () => _dataSerializer.Serialize(models))
+            return R.Success.With("emailMessages", models)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .Result;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Entity.MediaEntities;
@@ -30,7 +31,7 @@ namespace EvenCart.Infrastructure.MediaServices
                 fileBytes = stream.ToArray();
             }
 
-            var saveDirectory = ApplicationEngine.MapPath(ApplicationConfig.MediaDirectory, true);
+            var saveDirectory = ServerHelper.MapPath(ApplicationConfig.MediaDirectory, true);
             var fileName = SafeWriteBytesToFile(mediaFile.FileName, saveDirectory, fileBytes);
             
             //file extension and it's type
@@ -72,7 +73,7 @@ namespace EvenCart.Infrastructure.MediaServices
             if(picture == null)
                 return returnDefaultIfNotFound ? ApplicationEngine.MapUrl(ApplicationConfig.DefaultImagePath, true) : null;
 
-            var serveFileDirectory = ApplicationEngine.MapPath(ApplicationConfig.MediaServeDirectory, true);
+            var serveFileDirectory = ServerHelper.MapPath(ApplicationConfig.MediaServeDirectory, true);
 
             //abc
             var fileNameWithoutExtension = _localFileProvider.GetFileNameWithoutExtension(picture.SystemName);
@@ -88,7 +89,7 @@ namespace EvenCart.Infrastructure.MediaServices
 
             //we'll need to create a file
             //first resize the image from actual file
-            var mediaFileDirectory = ApplicationEngine.MapPath(ApplicationConfig.MediaDirectory, true);
+            var mediaFileDirectory = ServerHelper.MapPath(ApplicationConfig.MediaDirectory, true);
             var originalFile = _localFileProvider.CombinePaths(mediaFileDirectory, picture.SystemName);
             //does the original file exist?
             if(!_localFileProvider.FileExists(originalFile))

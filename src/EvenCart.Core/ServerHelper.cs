@@ -29,5 +29,14 @@ namespace EvenCart.Core
             var applicationLifetime = DependencyResolver.Resolve<IApplicationLifetime>();
             applicationLifetime.StopApplication();
         }
+
+        public static string MapPath(string relativePath, bool isWebRootPath = false)
+        {
+            if (!relativePath.StartsWith("~/"))
+                return relativePath;
+            var hostingEnvironment = DependencyResolver.Resolve<IHostingEnvironment>();
+            return relativePath.Replace("~",
+                isWebRootPath ? hostingEnvironment.WebRootPath : hostingEnvironment.ContentRootPath).Replace("/", "\\");
+        }
     }
 }

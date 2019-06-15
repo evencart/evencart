@@ -1,0 +1,119 @@
+﻿Hey {{user.name}},
+<p>
+    Thank you for placing an order with us. We'll be notifying you as we ship your order.
+</p>
+<p>
+    Your order details are included below for your reference.
+</p>
+<h3>
+    {{"Order" | t}} # {{order.orderNumber}}
+</h3>
+<label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+<table>
+    <tbody>
+        {% for orderItem in order.orderItems %}
+        <tr>
+            <td>
+                <img width="50px" src="{{orderItem.imageUrl | absoluteUrl}}" />
+            </td>
+            <td>
+                <a href='{% route SingleProduct seName="{{orderItem.seName}}" absolute="true" %}'>
+                    {{orderItem.productName}}
+                </a>
+                <div>
+                    {{orderItem.attributeText | newLine2Br}}
+                </div>
+            </td>
+            <td>
+                {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="text-center">
+    <strong>{{"Order Summary" | t}}</strong>
+</div>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>{{"Subtotal" | t}}</th>
+            <td>
+                <span class="amount">
+                    {{order.subTotal | withCurrency}}
+                </span>
+            </td>
+        </tr>
+        {% if order.discount > 0 %}
+        <tr>
+            <th>{{"Discount" | t}}</th>
+            <td>
+                <span class="amount">
+                    -{{order.discount | withCurrency}}
+                </span>
+            </td>
+        </tr>
+        {% endif %}
+        {% if order.shippingMethodFee > 0 %}
+        <tr>
+            <th>{{"Shipping" | t}}</th>
+            <td>
+                <span class="amount">
+                    {{order.shippingMethodFee | withCurrency}}
+                </span>
+            </td>
+        </tr>
+        {% endif %}
+        {% if order.paymentMethodFee > 0 %}
+        <tr>
+            <th>{{"Payment Fee" | t}}</th>
+            <td class="text-right">
+                <span class="amount">
+                    {{order.paymentMethodFee | withCurrency}}
+                </span>
+            </td>
+        </tr>
+        {% endif %}
+        {% if order.tax > 0 %}
+        <tr>
+            <th>{{"Tax" | t}}</th>
+            <td>
+                <span class="amount">
+                    {{order.tax | withCurrency}}
+                </span>
+            </td>
+        </tr>
+        {% endif %}
+
+        <tr class="order-total">
+            <th>{{"Total" | t }}</th>
+            <td>
+                <strong><span class="amount">{{order.orderTotal | withCurrency}}</span></strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Your order will be delivered to the following address.
+    <div>
+        <strong>{{"Delivery Address" | t}}</strong>
+    </div>
+    <div>
+        {{order.shippingAddress.name}}
+    </div>
+    <div>
+        {{order.shippingAddress.address1}}
+    </div>
+    <div>
+        {{order.shippingAddress.address2}}
+    </div>
+    <div>
+        {{order.shippingAddress.city}} {{order.shippingAddress.zipPostalCode}}
+    </div>
+    <div>
+        {{order.shippingAddress.stateProvinceName}}
+    </div>
+    <div>
+        {{order.shippingAddress.countryName}}
+    </div>
+</p>

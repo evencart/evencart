@@ -1,4 +1,5 @@
-﻿using EvenCart.Core.Infrastructure.Providers;
+﻿using EvenCart.Core;
+using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.Theming
@@ -28,7 +29,7 @@ namespace EvenCart.Infrastructure.Theming
 
         public string GetThemePath(string themeName)
         {
-            return ApplicationEngine.MapPath($"~/Content/Themes/{themeName}");
+            return ServerHelper.MapPath($"~/Content/Themes/{themeName}");
         }
     }
 }

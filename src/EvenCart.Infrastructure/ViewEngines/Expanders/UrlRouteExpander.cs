@@ -19,7 +19,14 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             {
                 ExtractMatch(match, out string[] straightParameters, out Dictionary<string, string> keyValuePairs);
                 if (!straightParameters.Any())
-                    throw new Exception($"A route name must be specified in the view {readFile.FileName}");
+                {
+                    if(readFile != null)
+                        throw new Exception($"A route name must be specified in the view {readFile.FileName}");
+                    else
+                    {
+                        throw new Exception($"A route name must be specified. See inner exception for content", new Exception(inputContent));
+                    }
+                }
 
                 var routeName = straightParameters[0];
                 var absoluteValue = "false";
@@ -36,12 +43,12 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 if (keyValuePairs != null && !routeUrl.IsNullEmptyOrWhiteSpace())
                     foreach (var kp in keyValuePairs)
                         routeUrl = routeUrl.Replace(kp.Value, kp.Value, StringComparison.InvariantCultureIgnoreCase);
-                readFile.Content = readFile.Content.Replace(match.Result("$0"), routeUrl);
+                if (readFile != null)
+                    readFile.Content = readFile.Content.Replace(match.Result("$0"), routeUrl);
                 inputContent = inputContent.Replace(match.Result("$0"), routeUrl);
             }
 
             return inputContent;
         }
-
     }
 }

@@ -1156,7 +1156,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\Install\" />
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />

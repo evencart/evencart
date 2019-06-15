@@ -1,0 +1,14 @@
+﻿Hey {{email}}
+<p>
+    We are extremely happy to invite you to join our store at {{store.name}}. Once you join, you'll be able to explore and buy products from our catalog.
+</p>
+<p>
+    <div class="btn btn-primary">
+        <a href="{{invitationLink}}">{{"JOIN NOW"}}</a>
+    </div>
+</p>
+{% if expirationHours > 0 %}
+<p>
+    Note that the link is only valid for next {{expirationHours | pluralize : 'hour' : 'hours'}}.
+</p>
+{% endif %}

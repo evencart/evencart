@@ -127,21 +127,14 @@ namespace EvenCart.Infrastructure
             return WebHelper.GetUrlFromPath(relativeUrl, generalSettings.StoreDomain, urlSettings.GetUrlProtocol());
         }
 
-        public static string MapPath(string relativePath, bool isWebRootPath = false)
-        {
-            if (!relativePath.StartsWith("~/"))
-                return relativePath;
-
-            return relativePath.Replace("~",
-                isWebRootPath ? _hostingEnvironment.WebRootPath : _hostingEnvironment.ContentRootPath).Replace("/", "\\");
-        }
+        
 
         public static string MapUrl(string path, bool isWebRootPath = true)
         {
             if (path.StartsWith("~/"))
             {
                 //relative to absolute
-                path = MapPath(path, isWebRootPath);
+                path = ServerHelper.MapPath(path, isWebRootPath);
             }
             // path = c:\\www\\Content\\...
             // content root = c:\\www

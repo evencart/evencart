@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Services.Serializers;
 
@@ -29,7 +30,7 @@ namespace EvenCart.Infrastructure.Localization
 
         public void LoadLanguage(string languageCode)
         {
-            var languageFile = ApplicationEngine.MapPath(
+            var languageFile = ServerHelper.MapPath(
                 _localFileProvider.CombinePaths(ApplicationConfig.GlobalLanguagesDirectory, $"{languageCode}.json"));
             if (!_localFileProvider.FileExists(languageFile))
                 return; // don't do anything if file doesn't exist

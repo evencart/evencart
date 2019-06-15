@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services.Configuration;
 using EvenCart.Data.Database;
@@ -18,7 +19,7 @@ namespace EvenCart.Infrastructure.Database
             LoadSettings();
         }
 
-        private readonly string _saveFileName = ApplicationEngine.MapPath("~/App_Data/database.config");
+        private readonly string _saveFileName = ServerHelper.MapPath("~/App_Data/database.config");
         private bool _hasSettings = false;
         public void LoadSettings()
         {

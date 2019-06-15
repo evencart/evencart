@@ -1,0 +1,42 @@
+﻿Hey {{user.name}},
+<p>
+    We've received a return request for the following order items.
+</p>
+<h3>
+    {{"Order" | t}} # {{order.orderNumber}}
+</h3>
+<label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+<table>
+    <tbody>
+    {% for returnRequest in returnRequests %}
+    <tr>
+        <td>
+            <img width="50px" src="{{returnRequest.imageUrl | absoluteUrl}}" />
+        </td>
+        <td>
+            <a href='{% route SingleProduct seName="{{returnRequest.seName}}" absolute="true" %}'>
+                {{returnRequest.productName}}
+            </a>
+            <div>
+                {{returnRequest.attributeText | newLine2Br}}
+            </div>
+        </td>
+        <td>
+            {{ "Quantity" | t }} : {{orderItem.quantity}}
+        </td>
+        <td>
+            {{ "Return Reason" | t }} : {{orderItem.returnReason}}
+        </td>
+        <td>
+            {{ "Requested Action" | t }} : {{orderItem.returnAction}}
+        </td>
+        <td>
+            {{ "Comments" | t }} : {{orderItem.customerComments}}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<p>
+    We'll review your request and notify you about next set of actions.
+</p>

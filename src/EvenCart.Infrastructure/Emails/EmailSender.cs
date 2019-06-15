@@ -8,6 +8,7 @@ using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.ViewEngines;
+using EvenCart.Infrastructure.ViewEngines.Expanders;
 
 namespace EvenCart.Infrastructure.Emails
 {
@@ -47,6 +48,8 @@ namespace EvenCart.Infrastructure.Emails
 
             var content = _emailTemplateService.GetProcessedContentTemplate(template);
             //render the content
+            //expand the routes first
+            content = Expander.ExpandRoutes(content, model);
             var processedTemplateString = _viewAccountant.RenderView(templateName, content, model);
             var subjectString = _viewAccountant.RenderView($"{templateName}:Subject", template.Subject, model);
             var emailAccount = template.EmailAccount;

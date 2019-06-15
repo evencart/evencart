@@ -11,16 +11,17 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
-                            <th data-column-id="subject">{{"Subject" | t}}</th>
-                            <th data-column-id="toUsers" data-formatter="tos">{{"To" | t}}</th>
-                            <th data-column-id="sendingDate">{{"Sending Date" | t}}</th>
-                            <th data-column-id="isSent" data-formatter="issent">{{"Sent" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
+                        <th data-column-id="subject">{{"Subject" | t}}</th>
+                        <th data-column-id="toUsers" data-formatter="tos">{{"To" | t}}</th>
+                        <th data-column-id="sendingDate">{{"Sending Date" | t}}</th>
+                        <th data-column-id="isSent" data-formatter="issent">{{"Sent" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{emailMessages | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailMessage = function(id) {
                         var url = '{% route GetEmailMessage emailMessageId="_id" %}';
@@ -44,11 +45,6 @@
                         
                     }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless emailMessages == blank %}*/
-                        initData = JSON.parse('{{emailMessages}}');
-                        /*{% endunless %}*/
-
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

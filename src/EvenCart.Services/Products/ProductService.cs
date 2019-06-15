@@ -446,6 +446,29 @@ namespace EvenCart.Services.Products
                 })
                 .Relate(RelationTypes.OneToOne<Product, Manufacturer>())
                 .Relate(RelationTypes.OneToMany<Product, Vendor>())
+                .Relate<WarehouseInventory>((p, inventory) =>
+                {
+                    if (!p.HasVariants)
+                    {
+                        p.Inventories = p.Inventories ?? new List<WarehouseInventory>();
+                        if (!p.Inventories.Contains(inventory))
+                            p.Inventories.Add(inventory);
+                    }
+                    else
+                    {
+                        p.ProductVariants = p.ProductVariants ?? new List<ProductVariant>();
+                        foreach (var pv in p.ProductVariants)
+                        {
+                            if (pv.Id == inventory.ProductVariantId)
+                            {
+                                pv.Inventories = pv.Inventories ?? new List<WarehouseInventory>();
+                                if (!pv.Inventories.Contains(inventory))
+                                    pv.Inventories.Add(inventory);
+                            }
+                        }
+                    }
+                })
+                .Relate(Product.WithWarehouse())
                 .SelectNested()
                 .FirstOrDefault();
             PopulateReviewSummary(new List<Product>() { product });

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BundlerMinifier;
+using EvenCart.Core;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
@@ -53,15 +54,15 @@ namespace EvenCart.Infrastructure.Bundle
             {
                 //the input file can either be 1. theme-css 2. plugin-css 3. admin-css 4. common-css
                 //check them one by one
-                var file = ApplicationEngine.MapPath("~/Content/Themes" + inputFile);
+                var file = ServerHelper.MapPath("~/Content/Themes" + inputFile);
                 if (!_localFileProvider.FileExists(file))
                 {
                     //plugins
-                    file = ApplicationEngine.MapPath("~/Plugins" + inputFile);
+                    file = ServerHelper.MapPath("~/Plugins" + inputFile);
                     if (!_localFileProvider.FileExists(file))
                     {
                         //administration & common
-                        file = ApplicationEngine.MapPath("~/" + inputFile, true);
+                        file = ServerHelper.MapPath("~/" + inputFile, true);
                         if (!_localFileProvider.FileExists(file))
                         {
                             continue; //can't do anything...the file doesn't exist
@@ -76,7 +77,7 @@ namespace EvenCart.Infrastructure.Bundle
             var outputFilePart1 = GetOutputFileName(fileNamesWithDates);
             var outputFilePart2 = GetOutputFileName(distinctFiles);
             var outputFile = outputFilePart1 + "_" + outputFilePart2;
-            var bundlesDirectory = ApplicationEngine.MapPath(ApplicationConfig.BundlesDirectory, true);
+            var bundlesDirectory = ServerHelper.MapPath(ApplicationConfig.BundlesDirectory, true);
             var bundleFileName = bundlesDirectory + "/" + outputFile + $".min.{type}";
             bundle.OutputFileName = bundleFileName;
             //do we need to generate the bundle?

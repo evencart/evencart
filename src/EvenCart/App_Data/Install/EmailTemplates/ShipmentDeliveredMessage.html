@@ -1,0 +1,61 @@
+﻿Hey {{user.name}},
+<p>The following {{orders.size | pluralize : 'order' : 'orders'}} via {{shipment.shippingMethodName}} wide tracking # {{shipment.trackingNumber}} have been delivered.</p>
+
+{% for order in orders %}
+<h3>
+    {{"Order" | t}} # {{order.orderNumber}}
+</h3>
+<label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+<table>
+    <tbody>
+        {% for orderItem in order.orderItems %}
+        <tr>
+            <td>
+                <img width="50px" src="{{orderItem.imageUrl | absoluteUrl}}" />
+            </td>
+            <td>
+                <a href='{% route SingleProduct seName="{{orderItem.seName}}" absolute="true" %}'>
+                    {{orderItem.productName}}
+                </a>
+                <div>
+                    {{orderItem.attributeText | newLine2Br}}
+                </div>
+            </td>
+            <td>
+                {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+<p>
+    Your order was delivered to the following address.
+    <div>
+        <strong>{{"Delivery Address" | t}}</strong>
+    </div>
+    <div>
+        {{orders[0].shippingAddress.name}}
+    </div>
+    <div>
+        {{orders[0].shippingAddress.address1}}
+    </div>
+    <div>
+        {{orders[0].shippingAddress.address2}}
+    </div>
+    <div>
+        {{orders[0].shippingAddress.city}} {{orders[0].shippingAddress.zipPostalCode}}
+    </div>
+    <div>
+        {{orders[0].shippingAddress.stateProvinceName}}
+    </div>
+    <div>
+        {{orders[0].shippingAddress.countryName}}
+    </div>
+</p>
+<p>
+    Please share with us your experience. This helps us to improve our services towards you.
+</p>
+<p>
+    We thank you again for shopping with us!
+</p>

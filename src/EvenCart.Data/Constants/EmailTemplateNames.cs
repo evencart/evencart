@@ -40,6 +40,10 @@
 
         public const string ShipmentDeliveredMessageToAdmin = ShipmentDeliveredMessage + AdminSuffix;
 
+        public const string ShipmentDeliveryFailedMessage = "Shipment.Failed";
+
+        public const string ShipmentDeliveryFailedMessageToAdmin = ShipmentDeliveryFailedMessage + AdminSuffix;
+
         public const string InvitationRequestedMessage = "Invitation.Requested";
 
         public const string InvitationRequestedMessageToAdmin = InvitationRequestedMessage + AdminSuffix;
@@ -48,7 +52,7 @@
 
         public const string ReturnRequestCreatedMessage = "ReturnRequest.Created";
 
-        public const string ReturnRequestCreatedMessageTAdmin = "ReturnRequest.Created" + AdminSuffix;
+        public const string ReturnRequestCreatedMessageToAdmin = "ReturnRequest.Created" + AdminSuffix;
 
     }
 }

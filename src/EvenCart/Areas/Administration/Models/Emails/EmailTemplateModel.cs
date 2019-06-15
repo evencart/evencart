@@ -29,7 +29,7 @@ namespace EvenCart.Areas.Administration.Models.Emails
         public void SetupValidationRules(ModelValidator<EmailTemplateModel> v)
         {
             v.RuleFor(x => x.TemplateName).NotEmpty();
-            v.RuleFor(x => x.TemplateSystemName).NotEmpty();
+            v.RuleFor(x => x.TemplateSystemName).NotEmpty().When(x => x.Id == 0);
             v.RuleFor(x => x.EmailAccountId).GreaterThan(0);
         }
     }

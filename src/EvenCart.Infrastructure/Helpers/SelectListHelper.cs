@@ -183,7 +183,7 @@ namespace EvenCart.Infrastructure.Helpers
         public static List<SelectListItem> GetAvailableFlags()
         {
             var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
-            var files = localFileProvider.GetFiles(ApplicationEngine.MapPath(ApplicationConfig.FlagsDirectory, true), "*.png");
+            var files = localFileProvider.GetFiles(ServerHelper.MapPath(ApplicationConfig.FlagsDirectory, true), "*.png");
             var fileInfos = files.Select(x => new FileInfo(x));
             return GetSelectItemList(fileInfos.ToList(), x => x.Name, x => x.Name);
         }
