@@ -1,0 +1,64 @@
+﻿{% layout "_Layout" %}
+<div class="container">
+    <div class="wrapper">
+        {% partial "Common/Breadcrumb" %}
+        <h3>
+            {{"Cancellation Request for order" | t}} # {{order.orderNumber}}
+        </h3>
+        <label>{{"Order Date" | t}}</label> - {{order.createdOn}}
+        <div class="page-section text-dark section pb-120">
+            
+            {% if error %}
+            <div class="alert alert-danger">
+                {{error}}
+            </div>
+            {% else %}
+            <div class="order-items-list">
+                <form action='{% route api_CancelOrder orderGuid="{{order.guid}}" %}' method="post" id="form-cancel">
+                    {% control xsrf %}
+                    <div class="form-group">
+                        {% control label text=@t"Why are you cancelling this order?" for="cancelReason" %}
+                        {% control select id="cancelReason" name="cancelReasonId" value="" required="true" items="availableReasons" %}
+                    </div>
+                    <div class="action-button-container text-center">
+                        <button type="submit" class="btn btn-danger">
+                            {{"Create Cancellation Request" | t}}
+                        </button>
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-cancel",
+                            {
+                                onSuccess: function() {
+                                    notify("success", "{{'Order cancellation request was successfully created' | t}}");
+                                    window.location.href = "{% route AccountOrders %}";
+                                }
+                            });
+                    })
+                </script>
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    ready(function () {
+        jQuery(".return-item-selector").change(function() {
+            var value = jQuery(this).val();
+            if (jQuery(this).is(":checked")) {
+                jQuery("#return-item-" + value).slideDown();
+            } else {
+                jQuery("#return-item-" + value).slideUp();
+            }
+        });
+        jQuery(".reason-select").change(function() {
+            if (jQuery(this).val() == "0") {
+                jQuery(this).next("textarea").slideDown();
+            } else {
+                jQuery(this).next("textarea").slideUp();
+            }
+        });
+    });
+</script>

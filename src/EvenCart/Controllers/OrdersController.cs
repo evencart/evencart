@@ -33,7 +33,8 @@ namespace EvenCart.Controllers
         private readonly IShipmentStatusHistoryService _shipmentStatusHistoryService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IReturnRequestModelFactory _requestModelFactory;
-        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory)
+        private readonly IOrderAccountant _orderAccountant;
+        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory, IOrderAccountant orderAccountant)
         {
             _orderService = orderService;
             _orderModelFactory = orderModelFactory;
@@ -42,6 +43,7 @@ namespace EvenCart.Controllers
             _shipmentStatusHistoryService = shipmentStatusHistoryService;
             _returnRequestService = returnRequestService;
             _requestModelFactory = requestModelFactory;
+            _orderAccountant = orderAccountant;
         }
 
         /// <summary>
@@ -117,11 +119,11 @@ namespace EvenCart.Controllers
         }
 
         /// <summary>
-        /// Cancels the order with provided order identifier
+        /// Gets the cancellation reasons for the order
         /// </summary>
         /// <param name="orderGuid">The unique order identifier. It's a guid.</param>
         /// <response code="200">A success response object</response>
-        [DualPost("{orderGuid}", Name = RouteNames.CancelOrder, OnlyApi = true)]
+        [DualGet("{orderGuid}/cancel", Name = RouteNames.CancelOrder)]
         public IActionResult CancelOrder(string orderGuid)
         {
             var order = _orderService.GetByGuid(orderGuid);
@@ -132,10 +134,41 @@ namespace EvenCart.Controllers
                 return R.Fail.With("error", T("Unable to cancel the order")).Result;
             }
 
-            order.OrderStatus = OrderStatus.Cancelled;
-            _orderService.Update(order);
+            var orderModel = _orderModelFactory.Create(order);
 
-            RaiseEvent(NamedEvent.OrderCancelled);
+            //set breadcrumb nodes
+            SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
+            SetBreadcrumbToRoute("Orders", RouteNames.AccountOrders);
+            SetBreadcrumbToRoute(order.OrderNumber, RouteNames.SingleOrder, new { orderGuid }, localize: false);
+            SetBreadcrumbToRoute("Cancellation Request", RouteNames.CancelOrder);
+
+            var cancellationReasons = _customLabelService.GetCustomLabels(CustomLabelType.CancellationReason, out _).ToList();
+            var selectList = SelectListHelper.GetSelectItemList(cancellationReasons, x => x.Id, x => x.Text);
+            return R.Success.With("availableReasons", selectList).With("order", orderModel).With("orderGuid", orderGuid).Result;
+        }
+
+        /// <summary>
+        /// Cancels the order with provided order identifier
+        /// </summary>
+        /// <param name="orderGuid">The unique order identifier. It's a guid.</param>
+        /// <param name="cancelReasonId">The reason id for cancellation</param>
+        /// <response code="200">A success response object</response>
+        [DualPost("{orderGuid}/cancel", Name = RouteNames.CancelOrder, OnlyApi = true)]
+        public IActionResult CancelOrder(string orderGuid, int cancelReasonId)
+        {
+            var order = _orderService.GetByGuid(orderGuid);
+            if (order == null || order.UserId != CurrentUser.Id)
+                return NotFound();
+            if (!CanCancelOrder(order))
+            {
+                return R.Fail.With("error", T("Unable to cancel the order")).Result;
+            }
+
+            var reason = _customLabelService
+                .FirstOrDefault(x => x.LabelType == CustomLabelType.CancellationReason && x.Id == cancelReasonId)?.Text;
+            _orderAccountant.CancelOrder(order, reason);
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                RaiseEvent(NamedEvent.OrderCancelled);
             return R.Success.Result;
         }
         /// <summary>
@@ -197,7 +230,7 @@ namespace EvenCart.Controllers
             var order = _orderService.GetByGuid(orderGuid);
             if (order == null || order.UserId != CurrentUser.Id)
                 return NotFound();
-            if(!CanReturnOrder(order, out var returnableItems, out var lastReturnDate))
+            if (!CanReturnOrder(order, out var returnableItems, out var lastReturnDate))
                 return R.Fail.With("error", T("The order is not eligible for returns")).Result;
 
             var allowedReturnItemIds = returnableItems.Select(x => x.Id).ToList();
@@ -217,7 +250,7 @@ namespace EvenCart.Controllers
             //get the actions and reasons
             var customLabels =
                 _customLabelService.Get(
-                    new List<CustomLabelType>() {CustomLabelType.ReturnAction, CustomLabelType.ReturnReason}, out _).ToList();
+                    new List<CustomLabelType>() { CustomLabelType.ReturnAction, CustomLabelType.ReturnReason }, out _).ToList();
             var actions = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnAction).ToList();
             var reasons = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnReason).ToList();
             var returnRequestList = new List<ReturnRequest>();
@@ -273,7 +306,7 @@ namespace EvenCart.Controllers
                 var historyItems = _shipmentStatusHistoryService.Get(x => orderShipmentIds.Contains(x.ShipmentId)).ToList();
                 var deliveryDate = historyItems.Where(x => x.ShipmentStatus == ShipmentStatus.Delivered)
                     .Max(x => x.CreatedOn);
-                
+
                 //check if any order item is returnable
                 foreach (var orderItem in order.OrderItems)
                 {

@@ -85,7 +85,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var orderModels = orders.Select(_orderModelFactory.Create).ToList();
 
             return R.Success.WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
-                .With("orders", () => orderModels, () => _dataSerializer.Serialize(orderModels))
+                .With("orders", orderModels)
                 .WithAvailableShipmentStatusTypes()
                 .WithAvailableOrderStatusTypes()
                 .WithAvailablePaymentStatusTypes()

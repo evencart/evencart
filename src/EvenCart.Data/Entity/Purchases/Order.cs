@@ -65,6 +65,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public bool DisableReturns { get;set; }
 
+        public string Remarks { get; set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }

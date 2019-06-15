@@ -12,6 +12,7 @@
         Closed = 70, //manual
         Returned = 80, //auto
         PartiallyReturned = 90, //manual
-        Delayed = 100 //manual
+        Delayed = 100, //manual
+        PendingCancellation = 110
     }
 }

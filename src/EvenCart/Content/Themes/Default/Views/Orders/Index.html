@@ -190,21 +190,9 @@
                 {% endif %}
                 {% endif %}
                 {% if canCancel %}
-                <form action='{% route api_CancelOrder orderGuid="{{order.guid}}" %}' method="post" id="form-cancel-order">
-                    <button class="btn btn-danger">
-                        {{"Cancel Order" | t}}
-                    </button>
-                </form>
-                <script type="text/javascript">
-                ready(function() {
-                    initAjaxForm("form-cancel-order",
-                        {
-                            onSuccess: function() {
-                                notify("success", "{{'Your order cancellation request as been sent' | t}}");
-                            }
-                        });
-                });
-                </script>
+                <a class="btn btn-danger" href='{% route CancelOrder orderGuid="{{order.guid}}" %}'>
+                    {{"Cancel Order" | t}}
+                </a>
                 {% endif %}
                 {% if canReturn %}
                 <div class="alert alert-info">

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Purchases;
 
 namespace EvenCart.Services.Purchases
@@ -10,7 +9,9 @@ namespace EvenCart.Services.Purchases
 
         IList<OrderFulfillment> SaveAutOrderFulfillments(Order order);
 
-        void InsertCompleteOrder(Order order, Transaction transaction = null);
+        void InsertCompleteOrder(Order order);
+
+        void CancelOrder(Order order, string cancellationReason);
 
         Order CloneOrder(Order order);
     }

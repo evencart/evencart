@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using EvenCart.Core;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Tokens;
 
@@ -156,15 +158,19 @@ namespace EvenCart.Services.Purchases
             return fulfillments;
         }
 
-        public void InsertCompleteOrder(Order order, Transaction transaction = null)
+        public void InsertCompleteOrder(Order order)
         {
-            //save the order now
-            _orderService.Insert(order, transaction);
-            foreach (var oi in order.OrderItems)
-                oi.OrderId = order.Id;
-
-            //save the order items
-            _orderItemService.Insert(order.OrderItems.ToArray());
+            Transaction.Initiate(transaction =>
+            {
+                //save the order now
+                _orderService.Insert(order, transaction);
+                //save the order items
+                foreach (var oi in order.OrderItems)
+                {
+                    oi.OrderId = order.Id;
+                    _orderItemService.Insert(oi, transaction);
+                }
+            });
 
             //block the inventories
             SaveAutOrderFulfillments(order);
@@ -179,6 +185,47 @@ namespace EvenCart.Services.Purchases
             });
             order.OrderNumber = orderNumber;
             _orderService.Update(order);
+        }
+
+        public void CancelOrder(Order order, string cancellationReason)
+        {
+            //get the fulfillments
+            var fulfillments = _orderFulfillmentService.Get(x => x.OrderId == order.Id).ToList();
+            var warehouseIds = fulfillments.Select(x => x.WarehouseId).ToList();
+            var productIds = fulfillments.Select(x => x.OrderItem.ProductId).ToList();
+            var productVariantIds = fulfillments.Select(x => x.OrderItem.ProductVariantId).ToList();
+            var warehouseInventories = _warehouseInventoryService.Get(x =>
+                warehouseIds.Contains(x.WarehouseId) &&
+                (productVariantIds.Contains((int)x.ProductVariantId) || productIds.Contains(x.ProductId))).ToList();
+
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var fulfillment in fulfillments)
+                {
+                    var inventory = fulfillment.OrderItem.ProductVariantId > 0
+                        ? warehouseInventories.FirstOrDefault(x =>
+                            x.ProductVariantId == fulfillment.OrderItem.ProductVariantId)
+                        : warehouseInventories.FirstOrDefault(x => x.ProductId == fulfillment.OrderItem.ProductId);
+
+                    if (inventory == null)
+                        continue;
+                    inventory.ReservedQuantity -= fulfillment.Quantity; //clear from reserve
+                    _warehouseInventoryService.Update(inventory, transaction);
+                    _orderFulfillmentService.Delete(fulfillment, transaction);
+                }
+
+                order.OrderStatus = order.OrderTotal > 0
+                    ? OrderStatus
+                        .PendingCancellation /*admin will cancel manually and refund or do whatever needs to be done*/
+                    : OrderStatus.Cancelled;
+                if (order.Remarks.IsNullEmptyOrWhiteSpace())
+                    order.Remarks = $"Cancellation Reason : {cancellationReason}";
+                else
+                {
+                    order.Remarks = order.Remarks + Environment.NewLine + $"Cancellation Reason : {cancellationReason}"; ;
+                }
+                _orderService.Update(order, transaction);
+            });
         }
 
         public Order CloneOrder(Order order)

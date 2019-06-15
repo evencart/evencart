@@ -861,9 +861,17 @@
         </member>
         <member name="M:EvenCart.Controllers.OrdersController.CancelOrder(System.String)">
             <summary>
+            Gets the cancellation reasons for the order
+            </summary>
+            <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.OrdersController.CancelOrder(System.String,System.Int32)">
+            <summary>
             Cancels the order with provided order identifier
             </summary>
             <param name="orderGuid">The unique order identifier. It's a guid.</param>
+            <param name="cancelReasonId">The reason id for cancellation</param>
             <response code="200">A success response object</response>
         </member>
         <member name="M:EvenCart.Controllers.OrdersController.ReturnOrder(System.String)">

@@ -20,10 +20,10 @@ namespace EvenCart.Services.Purchases
                 .Join<Product>("ProductId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductMedia>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductVariant>("ProductVariantId", "Id", typeof(OrderItem), joinType: JoinType.LeftOuter)
                 .Join<WarehouseInventory>("WarehouseId", "WarehouseId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<Address>("AddressId", "Id", joinType: JoinType.LeftOuter)
-                .Join<ProductVariant>("ProductVariantId", "Id", typeof(OrderItem), joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<OrderFulfillment, OrderItem>())
                 .Relate(RelationTypes.OneToOne<OrderFulfillment, Warehouse>())
                 .Relate<Address>((fulfillment, address) => { fulfillment.Warehouse.Address = address; })
@@ -38,6 +38,8 @@ namespace EvenCart.Services.Purchases
                     IList<WarehouseInventory> inventories;
                     if (inventory.ProductVariantId > 0)
                     {
+                        if (inventory.ProductVariant == null)
+                            return;
                         fulfillment.OrderItem.ProductVariant.Inventories =
                             fulfillment.OrderItem.ProductVariant.Inventories ?? new List<WarehouseInventory>();
                         inventories = fulfillment.OrderItem.ProductVariant.Inventories;

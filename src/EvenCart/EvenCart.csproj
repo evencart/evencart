@@ -269,6 +269,7 @@
     <None Remove="Content\Themes\Default\Views\Layout\_LayoutCheckout.html" />
     <None Remove="Content\Themes\Default\Views\Layout\_RootLayout.html" />
     <None Remove="Content\Themes\Default\Views\Navigation\_AccountNavigation.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\CancelOrder.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Index.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Index.Returns.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Orders.html" />
@@ -1007,6 +1008,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Orders\Index.Returns.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Orders\CancelOrder.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Orders\ReturnOrder.html">

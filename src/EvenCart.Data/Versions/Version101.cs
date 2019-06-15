@@ -10,8 +10,7 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<ReturnRequest, int?>(nameof(ReturnRequest.ReturnOrderId), null, transaction);
-            Db.AddColumn<ReturnRequest, int>(nameof(ReturnRequest.ReturnOption), 0, transaction);
+            Db.AddColumn<Order, string>(nameof(Order.Remarks), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
