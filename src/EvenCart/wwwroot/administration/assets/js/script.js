@@ -1,4 +1,19 @@
-﻿$(document).on("keypress", 'form', function (e) {
+﻿jQuery(document).ready(function() {
+    var width = jQuery(".sidenav").width();
+    jQuery(".mobile-navigation").on("click",
+        function () {
+            var currentLeft = jQuery(".sidenav").position().left;
+            if (currentLeft == 0) {
+                //hide it
+                currentLeft -= width;
+            } else {
+                currentLeft = 0;
+            }
+            jQuery(".sidenav").animate({ left: currentLeft });
+            jQuery(".client-main, .client-main-navlinks, .client-main-content").animate({ left: currentLeft+width });
+        });
+});
+$(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;
 
     if (code == 13) {

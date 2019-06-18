@@ -625,3 +625,28 @@ button.busy {
   background-repeat: no-repeat;
   background-position: 5px center;
   padding-left: 25px; }
+
+.mobile-navigation {
+  display: none !important; }
+
+.mobile-secondary-navigation {
+  display: none; }
+
+@media only screen and (max-width: 1000px) {
+  .sidenav {
+    left: -140px; }
+  .client-main {
+    left: 0px; }
+  .client-main-navlinks {
+    left: 0px; }
+  .client-main-content {
+    left: 0px; }
+  .mobile-navigation {
+    display: inline-block !important; }
+  .desktop-secondary-navigation {
+    display: none !important; }
+  .mobile-navigation-select {
+    width: auto;
+    padding: 0;
+    display: inline-block;
+    border: none; } }

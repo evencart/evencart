@@ -158,6 +158,7 @@
                         var active_menu = "{{active_menu}}";
                         var parent_active_menu = "{{parent_active_menu}}";
                         var menu_group = "{{menu_group}}";
+                        var mobileNavigation = "<li><select class='mobile-navigation-select'>";
                         if (secondary_navigation) {
                             for (var i = 0; i < secondary_navigation.length; i++) {
                                 var menuItem = secondary_navigation[i];
@@ -171,7 +172,7 @@
                                         continue;
                                     }
                                 }
-                                var li = "<li class='" + (menuItem.systemName == active_menu ? "active" : "") + "'>";
+                                var li = "<li class='desktop-secondary-navigation " + (menuItem.systemName == active_menu ? "active" : "") + "'>";
                                 li += "<a href='" + menuItem.url + "'>";
                                 if (menuItem.iconClass) {
                                     li += "<span class='" + menuItem.iconClass + "'></span>";
@@ -180,21 +181,22 @@
                                 li += "</a>";
                                 li += "</li>";
                                 jQuery("#secondaryNavigationUl").append(li);
+
+                                mobileNavigation += "<option value='" + menuItem.url + "' " + (menuItem.systemName == active_menu ? "selected" : "") + ">" + menuItem.title + "</option>";
                             }
+                            //now mobile nav
+                            mobileNavigation += "</select></li>";
+                            jQuery("#secondaryNavigationUl").append(mobileNavigation);
                         }
 
                     });
                 </script>
                 <ul id="secondaryNavigationUl" class="list-inline">
-
-                    {% unless back_page == nil %}
                     <li>
-                        <a href="{{ back_page }}">
-                            <span class="rbicon-chevron-left"></span> {{ back_link_title }}
+                        <a class="mobile-navigation">
+                            <span class="rbicon rbicon-list"></span>
                         </a>
                     </li>
-                    {% endunless %}
-
                 </ul>
             </div>
             <div class="client-main-content">
@@ -236,6 +238,11 @@
         ready(function () {
             if ("{{context}}" !== "dashboard")
                 useContext("{{ context }}", "{% route api_GetTemplates %}");
+
+            jQuery(".mobile-navigation-select").on("change",
+                function() {
+                    navigate(jQuery(this).val());
+                });
         });
 
     </script>
