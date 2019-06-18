@@ -85,7 +85,7 @@ namespace EvenCart.Infrastructure.Plugins
         public IList<WidgetInfo> GetAvailableWidgets()
         {
             var plugins = GetAvailablePlugins(true).Where(x => x.Active).ToList();
-            var widgetInfos = plugins.SelectMany(x =>
+            var widgetInfos = plugins.Where(x => x.Installed && x.Active).SelectMany(x =>
             {
                 return x.Widgets.Select(y => new WidgetInfo() {
                     PluginName = x.Name,
@@ -101,7 +101,7 @@ namespace EvenCart.Infrastructure.Plugins
             }).ToList();
             //todo:move this to separate file
             //get the widgets already part of solution
-            var solutionWidgetTypes = TypeFinder.ClassesOfType<IWidget>();
+            var solutionWidgetTypes = TypeFinder.ClassesOfType<IWidget>(restrictToSolutionAssemblies: true);
             var solutionWidgets = solutionWidgetTypes.Select(x => (IWidget) DependencyResolver.Resolve(x)).ToList();
             foreach (var sw in solutionWidgets)
             {

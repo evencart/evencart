@@ -7,6 +7,8 @@ namespace EvenCart.Core.Infrastructure.Utils
 {
     public sealed class TypeFinder
     {
+        private static string[] SolutionAssemblies = {"EvenCart", "EvenCart.Core", "EvenCart.Data", "EvenCart.Services", "EvenCart.Infrastructure"};
+
         private static TypeFinder _finder
         {
             get { return Singleton<TypeFinder>.Instance; }
@@ -43,10 +45,13 @@ namespace EvenCart.Core.Infrastructure.Utils
             return loadedTypes;
         }
 
-        IList<Type> OfType<T>(bool excludeAbstract = true)
+        IList<Type> OfType<T>(bool excludeAbstract = true, bool restrictToSolutionAssemblies = false)
         {
             var loadedTypes = new List<Type>();
-            foreach (var assembly in _allAssemblies)
+            var assembliesToSearch = restrictToSolutionAssemblies
+                ? _allAssemblies.Where(x => SolutionAssemblies.Contains(x.GetName().Name))
+                : _allAssemblies;
+            foreach (var assembly in assembliesToSearch)
             {
                 //exclude if it's a system assembly
                 if(AssemblyLoader.IsSystemAssembly(assembly.FullName))
@@ -125,10 +130,10 @@ namespace EvenCart.Core.Infrastructure.Utils
             }
         }
 
-        public static IList<Type> ClassesOfType<T>(bool excludeAbstract = true)
+        public static IList<Type> ClassesOfType<T>(bool excludeAbstract = true, bool restrictToSolutionAssemblies = false)
         {
             _allAssemblies = _allAssemblies ?? AssemblyLoader.GetAppDomainAssemblies();
-            return _finder.OfType<T>(excludeAbstract);
+            return _finder.OfType<T>(excludeAbstract, restrictToSolutionAssemblies);
         }
 
         public static IList<Type> EnumTypes()

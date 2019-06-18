@@ -1,6 +1,5 @@
 ﻿{% layout "_WidgetLayout" %}
 {% global page_title=@t"Widget Configuration" active_menu="WidgetConfiguration" parent_active_menu="PluginsList" %}
-{% partial "Navigation/WidgetSecondaryNavigation" %}
 
 <form action="" method="post">
     <div class="row">
@@ -26,7 +25,7 @@
 
     <div class="save-button-container">
         <input type="hidden" name="id" value="{{widgetId}}"/>
-        <button type="submit" class="btn btn-success">{{"Save Widget" | t}}</button>
-        <a class="btn btn-default" href='{% route WidgetsList %}'>{{"Cancel" | t}}</a>
+        <button type="submit" class="btn btn-sm btn-success">{{"Save Widget" | t}}</button>
+        <a class="btn btn-sm btn-default" href='{% route WidgetsList %}'>{{"Cancel" | t}}</a>
     </div>
 </form>
