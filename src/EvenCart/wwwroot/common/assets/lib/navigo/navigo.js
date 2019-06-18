@@ -92,7 +92,8 @@
     }
 
     function match(url, routes) {
-        return findMatchedRoutes(url, routes)[0] || false;
+        var matchedRoutes = findMatchedRoutes(url, routes);
+        return matchedRoutes.filter(function (m) { return m.route.route === url; })[0] || matchedRoutes[0] || false;
     }
 
     function root(url, routes) {
