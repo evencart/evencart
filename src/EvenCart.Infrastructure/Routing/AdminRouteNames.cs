@@ -131,6 +131,7 @@
         public const string PaymentMethodsList = "PaymentMethodsList";
         public const string ShippingMethodsList = "ShippingMethodsList";
         public const string PluginsList = "PluginsList";
+        public const string MarketPluginsList = "MarketPluginsList";
         public const string UpdatePluginStatus = "UpdatePluginStatus";
         public const string WidgetsList = "WidgetsList";
         public const string SaveWidget = "SaveWidget";

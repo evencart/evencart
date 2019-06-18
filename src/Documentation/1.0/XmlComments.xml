@@ -105,6 +105,13 @@
             Allows store admins to view dashboard summaries
             </summary>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.PluginsController.MarketPluginsList(EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel)">
+            <summary>
+            The list paginated of plugins in EvenCart marketplace
+            </summary>
+            <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel">search</see> object for plugins</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Plugins.PluginInfoModel">plugin</see> objects as 'plugins'</response>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.InventoryList(System.Int32)">
             <summary>
             Gets the inventory details for a product
@@ -343,6 +350,11 @@
             A list <see cref="T:EvenCart.Areas.Administration.Models.Orders.ShipmentModel">shipment</see> objects for the warehouse
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel">
+            <summary>
+            Represents a plugin search object
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Reports.TotalsReportModel">
             <summary>
             Contains information about various totals
@@ -476,6 +488,36 @@
         <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel.Value">
             <summary>
             A single value for the attribute
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Updates.UpdateModel">
+            <summary>
+            Represents a news object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Title">
+            <summary>
+            The title of the update
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Summary">
+            <summary>
+            The summary of the update
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.CreatedOn">
+            <summary>
+            The date when this update was published
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Url">
+            <summary>
+            The target url of the update
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Highlight">
+            <summary>
+            Specifies if update should be highlighted
             </summary>
         </member>
         <member name="T:EvenCart.Areas.Administration.Models.Users.GenerateInvitationLinkModel">

@@ -141,6 +141,7 @@
     <None Remove="Areas\Administration\Views\Orders\ShipmentEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\ShipmentsList.html" />
     <None Remove="Areas\Administration\Views\Pages\SeoMetaPanel.html" />
+    <None Remove="Areas\Administration\Views\Plugins\MarketPluginsList.html" />
     <None Remove="Areas\Administration\Views\Plugins\PluginsList.html" />
     <None Remove="Areas\Administration\Views\Plugins\WidgetsList.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.html" />
@@ -620,6 +621,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Pages\SeoMetaPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Plugins\MarketPluginsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Plugins\PluginsList.html">

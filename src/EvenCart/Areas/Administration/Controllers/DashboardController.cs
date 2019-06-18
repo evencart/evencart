@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure;
+﻿using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.ViewEngines;
@@ -19,12 +20,14 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualGet("~/admin", Name = AdminRouteNames.Dashboard)]
         public IActionResult Index()
         {
-            return Result();
+            return R.Success.Result;
         }
 
         [DualGet("templates/get", Name = AdminRouteNames.GetTemplates, OnlyApi = true)]
         public IActionResult LoadTemplates(string context)
         {
+            if (context.IsNullEmptyOrWhiteSpace())
+                return R.Success.With("templates", null).Result;
             var templates = _viewAccountant.CompileAllViews(context, ApplicationConfig.AdminAreaName);
             return R.Success.With("templates", templates).Result;
         }

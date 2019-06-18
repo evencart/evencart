@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Models.Plugins;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
@@ -12,6 +14,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.HttpServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -19,16 +22,23 @@ namespace EvenCart.Areas.Administration.Controllers
     [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
     public class PluginsController : FoundationAdminController
     {
+#if DEBUG
+        private const string MarketPluginUrl = "http://localhost:52886/samples/plugins.json";
+#else
+        private const string MarketPluginUrl = "https://www.evencart.com/api/market";
+#endif
         private readonly IModelMapper _modelMapper;
         private readonly IPluginAccountant _pluginAccountant;
         private readonly IDataSerializer _dataSerializer;
         private readonly PluginSettings _pluginSettings;
-        public PluginsController(IModelMapper modelMapper, IPluginAccountant pluginAccountant, IDataSerializer dataSerializer, PluginSettings pluginSettings)
+        private readonly IRequestProvider _requestProvider;
+        public PluginsController(IModelMapper modelMapper, IPluginAccountant pluginAccountant, IDataSerializer dataSerializer, PluginSettings pluginSettings, IRequestProvider requestProvider)
         {
             _modelMapper = modelMapper;
             _pluginAccountant = pluginAccountant;
             _dataSerializer = dataSerializer;
             _pluginSettings = pluginSettings;
+            _requestProvider = requestProvider;
         }
 
         [DualGet("", Name = AdminRouteNames.PluginsList)]
@@ -42,7 +52,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return pluginInfo;
             }).ToList();
             return R.Success.WithGridResponse(plugins.Count, 1, pluginModels.Count)
-                .With("plugins", () => pluginModels, () => _dataSerializer.Serialize(pluginModels))
+                .With("plugins", pluginModels)
                 .Result;
         }
 
@@ -174,6 +184,32 @@ namespace EvenCart.Areas.Administration.Controllers
                 _pluginAccountant.DeactivatePlugin(plugin);
             }
             return R.Success.Result;
+        }
+
+        /// <summary>
+        /// The list paginated of plugins in EvenCart marketplace
+        /// </summary>
+        /// <param name="searchModel">The <see cref="PluginsSearchModel">search</see> object for plugins</param>
+        /// <response code="200">A list of <see cref="PluginInfoModel">plugin</see> objects as 'plugins'</response>
+        [DualGet("market", Name = AdminRouteNames.MarketPluginsList)]
+        [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
+        [ValidateModelState(ModelType = typeof(PluginsSearchModel))]
+        public async Task<IActionResult> MarketPluginsList(PluginsSearchModel searchModel)
+        {
+            var marketPluginInfos = await _requestProvider.GetAsync<MarketPluginInfosModel>(MarketPluginUrl,
+                new NameValueCollection()
+                {
+                    {"current", searchModel.Current.ToString()},
+                    {"rowCount", searchModel.RowCount.ToString()},
+                    {"searchPhrase", searchModel.SearchPhrase}
+                });
+
+            if (!marketPluginInfos.Success)
+                return R.Fail.Result;
+            return R.Success
+                .WithGridResponse(marketPluginInfos.Total, marketPluginInfos.Current, marketPluginInfos.RowCount)
+                .With("plugins", marketPluginInfos.Plugins)
+                .Result;
         }
     }
 }

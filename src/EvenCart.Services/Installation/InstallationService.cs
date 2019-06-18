@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -303,7 +304,9 @@ namespace EvenCart.Services.Installation
             //system settings
             settingService.Save(new SystemSettings() {
                 IsInstalled = true,
-                MinimumLogLevel = LogLevel.Debug
+                MinimumLogLevel = LogLevel.Debug,
+                LatestFetchedOn = DateTime.UtcNow.AddHours(-24),
+                LatestUpdatesFetched = null
             });
 
             //security settings

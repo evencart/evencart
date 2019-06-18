@@ -304,6 +304,21 @@
             Specifies minimum log level that should be used for logging
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.UpdateFetchIntervalInHours">
+            <summary>
+            Specifies the update fetch interval in hours.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.LatestUpdatesFetched">
+            <summary>
+            The latest updates fetched
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.LatestFetchedOn">
+            <summary>
+            The latest date when updates were fetched
+            </summary>
+        </member>
         <member name="P:EvenCart.Data.Entity.Settings.UserSettings.UserRegistrationDefaultMode">
             <summary>
             Default registration mode for users

@@ -1,0 +1,63 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Plugins" active_menu="MarketPluginsList" parent_active_menu="PluginsList" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Market Plugins" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="plugin">{{"Plugin" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{plugins | scriptJson : 'initData'}}
+                <script type="text/javascript">
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            method: "GET",
+                            url: '{% route api_MarketPluginsList %}',
+                            initialData: {
+                                plugins: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            responseObject: "plugins",
+                            selection: false,
+                            navigation: 0,
+                            columnSelection: false,
+                            formatters: {
+                                "plugin": function(column, row) {
+                                    var plugin = '';
+                                    plugin += '<div>' + row.name + '</div>';
+                                    if (row.description) {
+                                        plugin += '<div>{{"Description" | t}} ' + "<b>" + row.description + "</b></div>";
+                                    }
+                                    plugin += '<div>{{"Version" | t}} ' + "<b>" + row.version + "</b></div>";
+                                    plugin += '<div>{{"Author" | t}} ' + "<b>" + row.author + "</b></div>";
+
+                                    return plugin;
+                                },
+                                "commands": function (column, row) {
+                                    return "<a href='" + row.pluginUrl + "' target='_blank' class='btn btn-sm btn-secondary command-edit'> " +
+                                        '{{"View" | t}}' +
+                                        "</a> ";
+                                }
+                            }
+                        });
+                        jQuery('.dropdown-toggle').dropdown();
+                    });
+                    
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"From EvenCart Desks" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            {% for update in evencartUpdates %}
+            <div class="col-md-4">
+                <h6><a target="_blank" href="{{update.url}}">{{update.title}}</a></h6>
+                <p>
+                    {{update.summary}}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

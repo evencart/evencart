@@ -234,7 +234,8 @@
 
     <script type="text/javascript">
         ready(function () {
-            useContext("{{ context }}", "{% route api_GetTemplates %}");
+            if ("{{context}}" !== "dashboard")
+                useContext("{{ context }}", "{% route api_GetTemplates %}");
         });
 
     </script>

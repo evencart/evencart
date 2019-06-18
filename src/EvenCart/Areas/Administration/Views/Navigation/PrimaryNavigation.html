@@ -123,8 +123,10 @@
 
 <!--Plugins-->
 {% primary_navigation title=@t"Plugins" systemName="PluginsList" groupId="settings" capability="Plugin.Manage" %}
-{% secondary_navigation url="{% route PluginsList %}" title=@t"All Plugins" parent="PluginsList" systemName="PluginsList" %}
+{% secondary_navigation url="{% route PluginsList %}" title=@t"Local Plugins" parent="PluginsList" systemName="PluginsList" %}
 {% secondary_navigation url="{% route WidgetsList %}" title=@t"Widgets" parent="PluginsList" systemName="WidgetsList" %}
+{% secondary_navigation url="{% route MarketPluginsList %}" title=@t"Plugin Market" parent="PluginsList" systemName="MarketPluginsList" %}
+
 
 <!--GDPR -->
 {% primary_navigation title=@t"GDPR" systemName="Gdpr" groupId="settings" capability="GDPR.Manage" %}

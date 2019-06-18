@@ -22,6 +22,8 @@ namespace EvenCart.Areas.Administration.Models.Plugins
 
         public string AssemblyName { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public bool Installed { get; set; }
 
         public bool Active { get; set; }

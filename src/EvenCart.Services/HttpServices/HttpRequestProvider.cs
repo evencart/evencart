@@ -14,14 +14,14 @@ namespace EvenCart.Services.HttpServices
             _dataSerializer = dataSerializer;
         }
 
-        public T Get<T>(string url)
+        public T Get<T>(string url, NameValueCollection data = null)
         {
-            return GetAsync<T>(url).Result;
+            return GetAsync<T>(url, data).Result;
         }
 
-        public async Task<T> GetAsync<T>(string url)
+        public async Task<T> GetAsync<T>(string url, NameValueCollection data = null)
         {
-            var response = await GetStringAsync(url);
+            var response = await GetStringAsync(url, data);
             return _dataSerializer.DeserializeAs<T>(response);
         }
 
@@ -36,14 +36,14 @@ namespace EvenCart.Services.HttpServices
             return _dataSerializer.DeserializeAs<T>(response);
         }
 
-        public string GetString(string url)
+        public string GetString(string url, NameValueCollection data = null)
         {
-            return GetStringAsync(url).Result;
+            return GetStringAsync(url, data).Result;
         }
 
-        public async Task<string> GetStringAsync(string url)
+        public async Task<string> GetStringAsync(string url, NameValueCollection data = null)
         {
-            var response = await SendProxyRequest(url, "GET", null);
+            var response = await SendProxyRequest(url, "GET", data);
             return response;
         }
 
@@ -57,7 +57,16 @@ namespace EvenCart.Services.HttpServices
                 {
                     byte[] resBytes;
                     if (method == "GET")
+                    {
+                        if (parameters != null)
+                        {
+                            //add parameters
+                            if (!url.Contains('?'))
+                                url += "?";
+                            url += parameters.ToString();
+                        }
                         resBytes = await webClient.DownloadDataTaskAsync(url);
+                    }
                     else
                     {
                         resBytes = await webClient.UploadValuesTaskAsync(url, method, parameters);
