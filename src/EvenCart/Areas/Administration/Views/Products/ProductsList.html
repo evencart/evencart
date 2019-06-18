@@ -58,6 +58,7 @@
                             navigation : 3,
                             url: "{% route api_ProductsList %}",
                             responseObject: "products",
+                            selection:false,
                             formatters: {
                                 "binary": function(column, row) {
                                     return gridFormatters.binary(column, row, column.id);
