@@ -52,7 +52,9 @@
 
         public const string ReturnRequestCreatedMessage = "ReturnRequest.Created";
 
-        public const string ReturnRequestCreatedMessageToAdmin = "ReturnRequest.Created" + AdminSuffix;
+        public const string ReturnRequestCreatedMessageToAdmin = ReturnRequestCreatedMessage + AdminSuffix;
+
+        public const string ContactUsMessageToAdmin = "ContactUs" + AdminSuffix;
 
     }
 }

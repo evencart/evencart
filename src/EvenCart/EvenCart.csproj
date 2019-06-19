@@ -42,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="App_Data\database.config.ex" />
     <None Remove="App_Data\database.configex" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
@@ -293,6 +292,7 @@
     <None Remove="Content\Themes\Default\Views\Authentication\Login.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\Product - Copy.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\_UserReviewBox.html" />
+    <None Remove="Content\Themes\Default\Views\Templates\ContactUs.html" />
     <None Remove="Content\Themes\Default\Views\Widgets\Index.html" />
     <None Remove="Views\Controls\checkbox.html" />
     <None Remove="Views\Controls\checkboxlist.html" />
@@ -337,7 +337,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App_Data\database.config.ex" />
     <Content Include="Areas\Administration\Views\Categories\CategoriesList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1075,6 +1074,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Reviews\_UserReviewBox.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Templates\ContactUs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Widgets\Index.html">

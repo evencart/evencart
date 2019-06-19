@@ -80,7 +80,7 @@ namespace EvenCart.Infrastructure.Emails
             _emailService.Queue(message);
         }
 
-        private void QueueEmailMessageToAdmin(string templateName, object model = null)
+        private void QueueEmailMessageToAdmin(string templateName, object model = null, string email = null)
         {
             var message = LoadAndProcessTemplate(templateName, model);
             if (message == null)
@@ -88,7 +88,9 @@ namespace EvenCart.Infrastructure.Emails
                 _logger.LogError<EmailTemplate>(null, $"Failure sending email. Unable to load template '{templateName}'");
                 return;
             }
-            message.Tos.Add(new EmailMessage.UserInfo("Administrator", message.OriginalEmailTemplate.AdministrationEmail));
+
+            email = email ?? message.OriginalEmailTemplate.AdministrationEmail;
+            message.Tos.Add(new EmailMessage.UserInfo("Administrator", email));
             _emailService.Queue(message);
         }
 
@@ -116,59 +118,6 @@ namespace EvenCart.Infrastructure.Emails
                 QueueEmailMessage(templateName, userInfo, model);
             if (sendEmailToAdmin)
                 QueueEmailMessageToAdmin(templateName + EmailTemplateNames.AdminSuffix, model);
-        }
-
-        public void SendUserRegistered(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if (_emailSenderSettings.UserRegisteredEmailEnabled)
-            {
-                QueueEmailMessage(EmailTemplateNames.UserRegisteredMessage, userInfo, model);
-            }
-            if (_emailSenderSettings.UserRegisteredEmailToAdminEnabled) //send to admin if needed
-            {
-                QueueEmailMessageToAdmin(EmailTemplateNames.UserRegisteredMessageToAdmin, model);
-            }
-        }
-
-        public void SendUserActivationLink(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            QueueEmailMessage(EmailTemplateNames.UserActivationLinkMessage, userInfo, model);
-        }
-
-        public void SendUserActivated(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if (_emailSenderSettings.UserActivationEmailEnabled)
-                QueueEmailMessage(EmailTemplateNames.UserActivatedMessage, userInfo, model);
-        }
-
-        public void SendOrderPlaced(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if(_emailSenderSettings.OrderPlacedEmailEnabled)
-                QueueEmailMessage(EmailTemplateNames.OrderPlacedMessage, userInfo, model);
-            if(_emailSenderSettings.OrderPlacedEmailToAdminEnabled)
-                QueueEmailMessageToAdmin(EmailTemplateNames.OrderPlacedMessageToAdmin, model);
-        }
-
-        public void SendOrderComplete(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if(_emailSenderSettings.OrderPaidEmailEnabled)
-                QueueEmailMessage(EmailTemplateNames.OrderPlacedMessage, userInfo, model);
-            if(_emailSenderSettings.OrderPaidEmailToAdminEnabled)
-                QueueEmailMessageToAdmin(EmailTemplateNames.OrderPlacedMessageToAdmin, model);
-        }
-
-        public void SendShipmentShipped(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if (_emailSenderSettings.ShipmentShippedEmailEnabled)
-                QueueEmailMessage(EmailTemplateNames.OrderPlacedMessage, userInfo, model);
-        }
-
-        public void SendShipmentDelivered(EmailMessage.UserInfo userInfo, object model = null)
-        {
-            if (_emailSenderSettings.ShipmentDeliveredEmailEnabled)
-                QueueEmailMessage(EmailTemplateNames.ShipmentDeliveredMessage, userInfo, model);
-            if (_emailSenderSettings.OrderPaidEmailToAdminEnabled)
-                QueueEmailMessageToAdmin(EmailTemplateNames.ShipmentDeliveredMessageToAdmin, model);
         }
     }
 }

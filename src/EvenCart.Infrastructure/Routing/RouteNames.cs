@@ -13,6 +13,7 @@
         public const string ChangePassword = "ChangePassword";
         public const string VerifyEmail = "VerifyEmail";
         public const string RequestInvite = "RequestInvite";
+        public const string ContactUs = "ContactUs";
 
         public const string Cart = "Cart";
         public const string CheckoutAddress = "CheckoutAddress";

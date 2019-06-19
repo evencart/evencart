@@ -1,0 +1,67 @@
+﻿{% layout "_Layout" %}
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h3>
+                    {{contentPage.name}}
+                </h3>
+                {{contentPage.content}}
+                <form action="{% route api_ContactUs %}" id="contactus-form" method="post">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Name" %}
+                                {% control text name="name" id="name" %}
+                                {% control validator for="name" required="true" %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Email" %}
+                                {% control text name="email" id="email" %}
+                                {% control validator for="email" required="true" email="true" %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {% control label text=@t"Phone" %}
+                                {% control text name="phone" %}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {% control label text=@t"Subject" %}
+                                {% control text name="subject" id="subject" %}
+                                {% control validator for="subject" required="true" %}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {% control label text=@t"Query" %}
+                                {% control textarea name="description" id="description" %}
+                                {% control validator for="description" required="true" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-button-container text-center">
+                        {% control xsrf %}
+                        <button type="submit" class="btn btn-dark">
+                            {{"Send Query" | t}}
+                        </button>
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("contactus-form",
+                            {
+                                onSuccess: function() {
+                                    notify("success", '{{"Thank you for reaching out. You will very soon hear from us." | t}}');
+                                }
+                            });
+                    })
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

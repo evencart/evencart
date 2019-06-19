@@ -769,6 +769,19 @@ namespace EvenCart.Services.Installation
                 ParentEmailTemplateId = masterTemplate.Id
             });
 
+            emailTemplateService.Insert(new EmailTemplate()
+            {
+                AdministrationEmail = adminEmail,
+                IsMaster = false,
+                Subject = "Contact Form Query - {{contact.subject}}",
+                TemplateSystemName = EmailTemplateNames.ContactUsMessageToAdmin,
+                TemplateName = "Contact Form Query Administrator",
+                IsSystem = true,
+                EmailAccountId = emailAccount.Id,
+                Template = ReadEmailTemplate(installEmailTemplatesPath, EmailTemplateNames.ContactUsMessageToAdmin),
+                ParentEmailTemplateId = masterTemplate.Id
+            });
+
         }
 
         #region Helper

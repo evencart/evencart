@@ -22,7 +22,9 @@
         PasswordReset,
 
         InvitationRequested,
-        Invitation
+        Invitation,
+
+        ContactUs
         
     }
 }

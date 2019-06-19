@@ -198,15 +198,22 @@ namespace EvenCart.Events
                 case nameof(NamedEvent.ReturnRequestCreated):
                     {
                         var user = (User)eventData[0];
-                        var order = (Order) eventData[1];
-                        var listItems = ((List<ReturnRequest>) eventData[2]).Select(x => _returnRequestModelFactory.Create(x)).ToList();
+                        var order = (Order)eventData[1];
+                        var listItems = ((List<ReturnRequest>)eventData[2]).Select(x => _returnRequestModelFactory.Create(x)).ToList();
                         var userInfo = user.ToUserInfo();
                         var userModel = _userModelFactory.Create(user);
-                        
+
                         var model = R.With("user", userModel).With("order", order).With("returnRequests", listItems).Result;
                         _emailSender.SendEmail(EmailTemplateNames.ReturnRequestCreatedMessage, userInfo, model,
                             _emailSenderSettings.ReturnRequestCreatedEmailEnabled,
                             _emailSenderSettings.ReturnRequestCreatedToAdminEmailEnabled);
+                    }
+                    break;
+                case nameof(NamedEvent.ContactUs):
+                    {
+                        var contactUsModel = eventData[0];
+                        var model = R.With("contact", contactUsModel);
+                        _emailSender.SendEmail(EmailTemplateNames.ContactUsMessageToAdmin, null, model, false, true);
                     }
                     break;
             }
@@ -223,7 +230,8 @@ namespace EvenCart.Events
             NamedEvent.PasswordResetRequested.ToString(),
             NamedEvent.InvitationRequested.ToString(),
             NamedEvent.Invitation.ToString(),
-            NamedEvent.ReturnRequestCreated.ToString()
+            NamedEvent.ReturnRequestCreated.ToString(),
+            NamedEvent.ContactUs.ToString()
         };
 
 
