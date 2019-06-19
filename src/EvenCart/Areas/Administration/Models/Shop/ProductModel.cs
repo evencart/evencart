@@ -94,6 +94,7 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();
+            v.RuleFor(x => x.MinimumPurchaseQuantity).GreaterThan(0);
         }
     }
 }

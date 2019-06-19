@@ -39,7 +39,7 @@ namespace EvenCart.Data.Entity.Shop
 
         public string Mpn { get; set; }
 
-        public int MinimumPurchaseQuantity { get; set; }
+        public int MinimumPurchaseQuantity { get; set; } = 1;
 
         public int MaximumPurchaseQuantity { get; set; }
 

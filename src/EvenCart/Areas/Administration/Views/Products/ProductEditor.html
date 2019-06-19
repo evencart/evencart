@@ -107,7 +107,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 {% control label text=@t"Min. Purchase Qty." for="minimumPurchaseQuantity" %}
-                                {% control number name="minimumPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="0" %}
+                                {% control number name="minimumPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="1" %}
                             </div>
                         </div>
                         <div class="col-md-4">
