@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Shop;
@@ -7,6 +8,7 @@ using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.ViewEngines;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Infrastructure.Mvc
 {
@@ -133,6 +135,13 @@ namespace EvenCart.Infrastructure.Mvc
         public static CustomResponse WithWeightUnits(this CustomResponse customResponse)
         {
             return customResponse.With("weightUnits", SelectListHelper.GetSelectItemList<WeightUnit>());
+        }
+
+        public static CustomResponse WithActiveThemeTemplates(this CustomResponse customResponse)
+        {
+            var listItems = ApplicationEngine.ActiveTheme.Templates.Select(x => new SelectListItem(x.Key, x.Key))
+                .ToList();
+            return customResponse.With("themeTemplates", listItems);
         }
     }
 }

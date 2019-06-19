@@ -61,6 +61,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             var model = PrepareModel(contentPage);
             return R.Success.With("contentPage", model)
+                .WithActiveThemeTemplates()
                 .Result;
         }
 

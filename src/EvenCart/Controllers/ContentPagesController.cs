@@ -1,5 +1,6 @@
 ﻿using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Pages;
 using EvenCart.Infrastructure;
@@ -40,7 +41,16 @@ namespace EvenCart.Controllers
                 return NotFound();
             var contentPageModel = _modelMapper.Map<ContentPageModel>(contentPage);
             SeoMetaHelper.SetSeoData(contentPageModel.Name);
-            return R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id).With("preview", !contentPage.Published).Result;
+            var r = R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id)
+                .With("preview", !contentPage.Published);
+            if (!contentPage.Template.IsNullEmptyOrWhiteSpace())
+            {
+                //get the template
+                var template = ApplicationEngine.ActiveTheme.GetTemplatePath(contentPage.Template);
+                if (!template.IsNullEmptyOrWhiteSpace())
+                    r.WithView(template);
+            }
+            return r.Result;
         }
 
         /// <summary>

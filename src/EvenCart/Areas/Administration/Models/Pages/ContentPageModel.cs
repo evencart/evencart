@@ -1,5 +1,6 @@
 ﻿using System;
 using EvenCart.Areas.Administration.Models.Users;
+using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
@@ -28,6 +29,7 @@ namespace EvenCart.Areas.Administration.Models.Pages
 
         public int UserId { get; set; }
 
+        public string Template { get; set; }
 
         #region Virtual Properties
         public SeoMetaModel SeoMeta { get; set; }
@@ -38,6 +40,7 @@ namespace EvenCart.Areas.Administration.Models.Pages
         public void SetupValidationRules(ModelValidator<ContentPageModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();
+            v.RuleFor(x => x.Template).Must(x => x == null || ApplicationEngine.ActiveTheme.Templates.ContainsKey(x));
         }
     }
 }

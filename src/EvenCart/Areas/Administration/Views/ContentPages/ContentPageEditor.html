@@ -40,12 +40,18 @@
         <div class="col-lg-4">
             <div class="panel">
                 <div class="panel-title">
-                    {{"Visibility" | t}}
+                    {{"Options" | t}}
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
                         {% control checkbox name="published" value="contentPage.published" text=@t"Published" %}
                     </div>
+                    {% if themeTemplates.size > 0 %}
+                    <div class="form-group">
+                        {% control label text=@t"Page Template" %}
+                        {% control select name="template" value="contentPage.template" items="themeTemplates" %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% assign seoMeta = contentPage.seoMeta %}

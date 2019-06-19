@@ -26,6 +26,8 @@ namespace EvenCart.Data.Entity.Pages
 
         public DateTime PublishedOn { get; set; }
 
+        public string Template { get; set; }
+
         #region Virtual Properties
         public virtual SeoMeta SeoMeta { get; set; }
 
