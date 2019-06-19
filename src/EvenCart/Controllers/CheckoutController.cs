@@ -273,7 +273,7 @@ namespace EvenCart.Controllers
         /// Saves shipping info for the cart
         /// </summary>
         /// <response code="200">A success response object</response>
-        [DualPost("shipping-options", Name = RouteNames.CheckoutShippingInfo, OnlyApi = true)]
+        [DualPost("shipping-options", Name = RouteNames.CheckoutShippingOptions, OnlyApi = true)]
         public IActionResult ShippingInfoSave(ShippingInfoModel requestModel)
         {
             if (!CanCheckout(out Cart cart))

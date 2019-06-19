@@ -5,6 +5,7 @@ using DryIoc.Microsoft.DependencyInjection;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -74,26 +75,30 @@ namespace EvenCart.Infrastructure
 #if !DEBUGWS
             app.CheckInstallation();
 
-            //https redirection
-            app.UseHttps();
+            if (DatabaseManager.IsDatabaseInstalled())
+            {
+                //https redirection
+                app.UseHttps();
 
-            //ip filtering
-            app.UseIpFilter();
+                //ip filtering
+                app.UseIpFilter();
 
-            //use response pages
-            app.UseStatusPages();
+                //use response pages
+                app.UseStatusPages();
 
-            //use static files
-            app.UseStaticFiles(_hostingEnvironment);
+                //use static files
+                app.UseStaticFiles(_hostingEnvironment);
 
-            //init database
-            app.InitializeDatabase();
+                //init database
+                app.InitializeDatabase();
 
-            //use authentication
-            app.UseAppAuthentication();
+                //use authentication
+                app.UseAppAuthentication();
 
-            //anti-forgery validation
-            app.UseAntiforgeryTokens();
+                //anti-forgery validation
+                app.UseAntiforgeryTokens();
+            }
+            
 #endif
             //use mvc
             app.UseMvc(builder =>
@@ -167,7 +172,7 @@ namespace EvenCart.Infrastructure
 
         public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
 
-        public static string CurrentLanguageCultureCode => "fr-GB";
+        public static string CurrentLanguageCultureCode => "en-US";
 
         public static Currency CurrentCurrency
         {

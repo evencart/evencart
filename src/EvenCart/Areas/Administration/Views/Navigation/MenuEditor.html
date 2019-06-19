@@ -1,4 +1,5 @@
 ﻿<form action="{% route api_SaveMenu %}" method="post" id="menu-editor-form">
+    {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Menu Editor" | t}}

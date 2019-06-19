@@ -10,6 +10,7 @@
             </div>
             <div class="panel-body">
                 <form id="form-url-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    {% control xsrf %}
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
@@ -37,6 +38,7 @@
             </div>
             <div class="panel-body no-padding">
                 <form id="form-category-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    {% control xsrf %}
                     <div id="categories-container">
 
                     </div>
@@ -53,6 +55,7 @@
             </div>
             <div class="panel-body no-padding">
                 <form id="form-pages-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    {% control xsrf %}
                     <div id="pages-container">
 
                     </div>
@@ -68,6 +71,7 @@
             </div>
             <div class="panel-body">
                 <form id="form-group-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    {% control xsrf %}
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">

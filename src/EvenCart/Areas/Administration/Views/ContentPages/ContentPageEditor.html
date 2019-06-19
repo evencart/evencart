@@ -63,10 +63,12 @@
     ready(function () {
         initAjaxForm("content-editor-form",
             {
-                onSuccess: function () {
+                onSuccess: function (response) {
+
                     notify("success", '{{"Content was saved successfully." | t }}');
                     //{% if contentPage.id == 0 %}
-                    window.location.reload();
+                    window.location.href =
+                        '{% route GetContentPage contentPageId="%id%" %}'.replace("%id%", response.contentPageId);
                     //{% endif %}
                 }
             });

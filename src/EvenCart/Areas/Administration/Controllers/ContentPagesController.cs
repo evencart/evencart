@@ -90,7 +90,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             //update the seometa
             _seoMetaService.UpdateSeoMetaForEntity(contentPage, model.SeoMeta);
-            return R.Success.Result;
+            return R.Success.With("contentPageId", contentPage.Id).Result;
         }
 
         [DualPost("delete", Name = AdminRouteNames.DeleteContentPage, OnlyApi = true)]

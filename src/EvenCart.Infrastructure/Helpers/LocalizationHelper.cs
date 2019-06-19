@@ -5,6 +5,11 @@ namespace EvenCart.Infrastructure.Helpers
 {
     public static class LocalizationHelper
     {
+        public static string Localize(string resource, params object[] arguments)
+        {
+            return Localize(resource, ApplicationEngine.CurrentLanguageCultureCode, arguments);
+        }
+
         public static string Localize(string resource, string languageCultureCode, params object[] arguments)
         {
             if (resource == null)
