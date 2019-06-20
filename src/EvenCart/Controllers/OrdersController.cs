@@ -286,7 +286,7 @@ namespace EvenCart.Controllers
 
         private bool CanCancelOrder(Order order)
         {
-            return order.UserId == CurrentUser.Id && (_orderSettings.CancellationAllowedFor.Contains(order.OrderStatus));
+            return order.UserId == CurrentUser.Id && (_orderSettings.CancellationAllowedFor.Contains(order.OrderStatus.ToString()));
         }
 
         private bool CanReturnOrder(Order order, out IList<OrderItem> orderItems, out DateTime lastReturnDate)

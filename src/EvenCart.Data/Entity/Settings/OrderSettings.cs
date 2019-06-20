@@ -20,6 +20,6 @@ namespace EvenCart.Data.Entity.Settings
 
         public bool AllowCancellation { get; set; }
 
-        public IList<OrderStatus> CancellationAllowedFor { get; set; }
+        public IList<string> CancellationAllowedFor { get; set; }
     }
 }
