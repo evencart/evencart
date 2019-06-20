@@ -28,5 +28,11 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public bool EnableCssBundling { get; set; }
 
         public bool EnableHtmlMinification { get; set; }
+
+        public string DefaultPageTitle { get; set; }
+
+        public string DefaultMetaKeywords { get; set; }
+
+        public string DefaultMetaDescription { get; set; }
     }
 }

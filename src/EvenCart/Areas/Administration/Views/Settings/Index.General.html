@@ -1,57 +1,94 @@
 ﻿{% global page_title=@t"General Settings" active_menu="GeneralSettings" parent_active_menu="Settings" if="settingType == 'general'" %}
-
-<div class="panel">
-    <div class="panel-title">
-        {{"General Settings" | t}}
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Store Info" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control label text=@t"Store Name" for="storeName" %}
+                    {% control text name="storeName" value="{{settings.storeName}}"%}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Store Domain" for="store-domain" %}
+                    {% control text name="storeDomain" value="{{settings.storeDomain}}"%}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Default Timezone" for="defaultTimezoneId" %}
+                    {% control select name="defaultTimezoneId" value="settings.defaultTimeZoneId" items="timezones" %}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Store Logo" for="logoId" %}
+                    {% control imageupload name="logoId" id="logoId" value="settings.logoId" __url="{{settings.logoUrl}}" %}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Store Favicon" for="faviconId" %}
+                    {% control imageupload name="faviconId" id="faviconId" value="settings.faviconId" __url="{{settings.faviconUrl}}" %}
+                </div>
+      
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <div class="form-group">
-            {% control label text=@t"Store Name" for="storeName" %}
-            {% control text name="storeName" value="{{settings.storeName}}"%}
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="panel-title">
+                {{"SEO" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control checkbox name="enableJsBundling" text=@t"Enable JS Bundling" value="settings.enableJsBundling"%}
+                </div>
+                <div class="form-group">
+                    {% control checkbox name="enableCssBundling" text=@t"Enable CSS Bundling" value="settings.enableCssBundling"%}
+                </div>
+                <div class="form-group">
+                    {% control checkbox name="enableHtmlMinification" text=@t"Enable Html Minification" value="settings.enableHtmlMinification"%}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Default Page Title" for="default-page-title" %}
+                    {% control text name="defaultPageTitle" value="{{settings.defaultPageTitle}}"%}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Default Meta Keywords" for="default-meta-keywords" %}
+                    {% control text name="defaultMetaKeywords" value="{{settings.defaultMetaKeywords}}"%}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Default Meta Description" for="default-meta-description" %}
+                    {% control text name="defaultMetaDescription" value="{{settings.defaultMetaDescription}}"%}
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            {% control label text=@t"Store Domain" for="store-domain" %}
-            {% control text name="storeDomain" value="{{settings.storeDomain}}"%}
-        </div>
-        <div class="form-group">
-            {% control label text=@t"Default Timezone" for="defaultTimezoneId" %}
-            {% control select name="defaultTimezoneId" value="settings.defaultTimeZoneId" items="timezones" %}
-        </div>
-        <div class="form-group">
-            {% control label text=@t"Store Logo" for="logoId" %}
-            {% control imageupload name="logoId" id="logoId" value="settings.logoId" __url="{{settings.logoUrl}}" %}
-        </div>
-        <div class="form-group">
-            {% control label text=@t"Store Favicon" for="faviconId" %}
-            {% control imageupload name="faviconId" id="faviconId" value="settings.faviconId" __url="{{settings.faviconUrl}}" %}
-        </div>
-        <div class="form-group">
-            {% control checkbox name="enableBreadcrumbs" text=@t"Enable breadcrumbs" value="settings.enableBreadcrumbs"%}
-        </div>
-        {% if availableMenus.size > 0 %}
-        <div class="form-group">
-            {% control label text=@t"Primary Site Navigation" for="primaryNavigationId" %}
-            {% control select name="primaryNavigationId" value="settings.primaryNavigationId" items="availableMenus" %}
-        </div>
-        {% endif %}
-        {% if availableCurrencies.size > 1 %}
-        <div class="form-group">
-            {% control label text=@t"Base Currency" for="baseCurrencyId" %}
-            {% control select name="baseCurrency" value="settings.baseCurrencyId" items="availableCurrencies" %}
-        </div>
-        <div class="form-group">
-            {% control label text=@t"Default Display Currency" for="primaryCurrencyId" %}
-            {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
-        </div>
-        {% endif %}
-        <div class="form-group">
-            {% control checkbox name="enableJsBundling" text=@t"Enable JS Bundling" value="settings.enableJsBundling"%}
-        </div>
-        <div class="form-group">
-            {% control checkbox name="enableCssBundling" text=@t"Enable CSS Bundling" value="settings.enableCssBundling"%}
-        </div>
-        <div class="form-group">
-            {% control checkbox name="enableHtmlMinification" text=@t"Enable Html Minification" value="settings.enableHtmlMinification"%}
+    </div>
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Store Front Settings" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control checkbox name="enableBreadcrumbs" text=@t"Enable breadcrumbs" value="settings.enableBreadcrumbs"%}
+                </div>
+                {% if availableMenus.size > 0 %}
+                <div class="form-group">
+                    {% control label text=@t"Primary Site Navigation" for="primaryNavigationId" %}
+                    {% control select name="primaryNavigationId" value="settings.primaryNavigationId" items="availableMenus" %}
+                </div>
+                {% endif %}
+                {% if availableCurrencies.size > 1 %}
+                <div class="form-group">
+                    {% control label text=@t"Base Currency" for="baseCurrencyId" %}
+                    {% control select name="baseCurrency" value="settings.baseCurrencyId" items="availableCurrencies" %}
+                </div>
+                <div class="form-group">
+                    {% control label text=@t"Default Display Currency" for="primaryCurrencyId" %}
+                    {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+
+
+
