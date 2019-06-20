@@ -22,6 +22,7 @@
                         </div>
                     </div>
                     {% if reviews.size > 0 %}
+                    {% if bestReview %}
                     <div class="row">
                         <div class="col-md-6">
                             <h6>
@@ -38,6 +39,7 @@
                             {% partial "Reviews/_ReviewBox" %}
                         </div>
                     </div>
+                    {% endif %}
                     <div class="reviews">
                         {% for review in reviews %}
                         {% partial "Reviews/_ReviewBox" %}
