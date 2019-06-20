@@ -25,8 +25,13 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 }
                 keyValuePairs.TryGetValue("render", out var render);
                 keyValuePairs.TryGetValue("bundle", out var bundle);
+                keyValuePairs.TryGetValue("gz", out var gz);
                 bundle = bundle ?? "";
                 render = render?.ToLower();
+                var gzExt = "";
+                if (!gz.IsNullEmptyOrWhiteSpace() && gz == "true")
+                    gzExt = ".gz";
+
                 if(render.IsNullEmptyOrWhiteSpace() || (render != "css" && render != "js"))
                     throw new Exception($"The bundle tag must have a render parameter set to either 'css' or 'js' in file " + readFile.FileName);
 
@@ -40,7 +45,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                             throw new Exception($"The bundle with name '{bundle}' was not declared. File name " +
                                                 readFile.FileName);
                         var bundleUrl = bundleUrls[bundle];
-                        var link = $"<link rel=\"stylesheet\" href=\"{bundleUrl}\" />";
+                        var link = $"<link rel=\"stylesheet\" href=\"{bundleUrl}{gzExt}\" />";
                         inputContent = inputContent.ReplaceFirstOccurance(match.Result("$0"), link);
                         readFile.Content = readFile.Content.ReplaceFirstOccurance(match.Result("$0"), link);
                     }
@@ -61,7 +66,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                             throw new Exception($"The bundle with name '{bundle}' was not declared. File name " +
                                                 readFile.FileName);
                         var bundleUrl = bundleUrls[bundle];
-                        var script = $"<script type=\"text/javascript\" src=\"{bundleUrl}\"></script>";
+                        var script = $"<script type=\"text/javascript\" src=\"{bundleUrl}{gzExt}\"></script>";
                         inputContent = inputContent.ReplaceFirstOccurance(match.Result("$0"), script);
                         readFile.Content = readFile.Content.ReplaceFirstOccurance(match.Result("$0"), script);
                     }

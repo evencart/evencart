@@ -46,6 +46,9 @@ namespace EvenCart.Infrastructure
             //register singletons
             services.AddGlobalSingletons();
 
+            //response compression
+            services.EnableResponseCompression();
+
             //add MVC and routing convention for api access
             services.AddAppMvc(hostingEnvironment);
             services.AddAppRouting();
@@ -100,6 +103,8 @@ namespace EvenCart.Infrastructure
             }
             
 #endif
+            app.UseResponseCompression();
+
             //use mvc
             app.UseMvc(builder =>
             {

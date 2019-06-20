@@ -89,7 +89,27 @@ namespace EvenCart.Infrastructure.Extensions
 
         public static void UseStaticFiles(this IApplicationBuilder app, IHostingEnvironment hostingEnvironment)
         {
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    var headers = context.Context.Response.Headers;
+                    var contentType = headers["Content-Type"];
+                    if (contentType == "application/x-gzip")
+                    {
+                        if (context.File.Name.EndsWith("js.gz"))
+                        {
+                            contentType = "application/javascript";
+                        }
+                        else if (context.File.Name.EndsWith("css.gz"))
+                        {
+                            contentType = "text/css";
+                        }
+                        headers.Add("Content-Encoding", "gzip");
+                        headers["Content-Type"] = contentType;
+                    }
+                }
+            });
 
             //bundles directory
             var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "Bundles");

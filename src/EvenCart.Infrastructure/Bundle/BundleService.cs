@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using BundlerMinifier;
 using EvenCart.Core;
@@ -86,7 +88,7 @@ namespace EvenCart.Infrastructure.Bundle
                 //delete the existing bundles of these files
                 try
                 {
-                    _localFileProvider.DeleteFiles(bundlesDirectory, $"*_{outputFilePart2}.min.{type}");
+                    _localFileProvider.DeleteFiles(bundlesDirectory, $"*_{outputFilePart2}.min.{type}*");
                 }
                 catch
                 {
@@ -97,6 +99,17 @@ namespace EvenCart.Infrastructure.Bundle
                 bundleFileProcessor.Process(bundle.FileName, new List<BundlerMinifier.Bundle>() { bundle });
             }
             //if operation succeeded, return the url, else null
+            if (bundle.OutputFileName == null)
+                return null;
+            //also create a gzipped version as well
+            using(var bundleFileStream = File.OpenRead(bundleFileName))
+            using (var compressedFileStream = File.Create(bundleFileName + ".gz"))
+            {
+                using (var compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
+                {
+                    bundleFileStream.CopyTo(compressionStream);
+                }
+            }
             return bundle.OutputFileName == null ? null : ApplicationEngine.MapUrl(bundleFileName);
 
         }

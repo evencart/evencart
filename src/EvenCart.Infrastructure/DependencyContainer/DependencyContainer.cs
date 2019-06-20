@@ -80,6 +80,8 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IEmailSender, EmailSender>(reuse: Reuse.Transient);
             //bundler
             registrar.Register<IBundleService, BundleService>(reuse: Reuse.Transient);
+            //minifier
+            registrar.Register<IMinifier, Minifier>(reuse: Reuse.Transient);
             //interceptor
             registrar.Register<IInterceptorService, InterceptorService>(reuse: Reuse.Singleton);
 

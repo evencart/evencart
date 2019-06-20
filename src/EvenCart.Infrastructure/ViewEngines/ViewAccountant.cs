@@ -7,7 +7,9 @@ using EvenCart.Core;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure.Bundle;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Routing;
@@ -35,8 +37,9 @@ namespace EvenCart.Infrastructure.ViewEngines
         private readonly IPluginLoader _pluginLoader;
         private readonly IHtmlProcessor _htmlProcessor;
         private readonly IAntiforgery _antiforgery;
-
-        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery)
+        private readonly IMinifier _minifier;
+        private readonly GeneralSettings _generalSettings;
+        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier, GeneralSettings generalSettings)
         {
             _localFileProvider = localFileProvider;
             _actionContextAccessor = actionContextAccessor;
@@ -44,6 +47,8 @@ namespace EvenCart.Infrastructure.ViewEngines
             _pluginLoader = pluginLoader;
             _htmlProcessor = htmlProcessor;
             _antiforgery = antiforgery;
+            _minifier = minifier;
+            _generalSettings = generalSettings;
             _parsedTemplateCache = new ConcurrentDictionary<CachedViewKey, CachedView>();
 
             //set the file system
@@ -102,7 +107,11 @@ namespace EvenCart.Infrastructure.ViewEngines
         {
             var template = GetView(viewPath, originalViewPath, area, parameters).Template;
             var resultHash = GetTemplateHash(parameters);
-            return template.Render(resultHash);
+            var raw = template.Render(resultHash);
+            if (!_generalSettings.EnableHtmlMinification)
+                return raw;
+            var minified = _minifier.MinifyHtml(raw);
+            return minified;
         }
 
         public string RenderView(string viewName, string htmlContent, object parameters = null)
@@ -111,7 +120,11 @@ namespace EvenCart.Infrastructure.ViewEngines
             {
                 var template = Template.Parse(htmlContent);
                 var resultHash = GetTemplateHash(parameters);
-                return template.Render(resultHash);
+                var raw = template.Render(resultHash);
+                if (!_generalSettings.EnableHtmlMinification)
+                    return raw;
+                var minified = _minifier.MinifyHtml(raw);
+                return minified;
             }
             catch (Exception ex)
             {

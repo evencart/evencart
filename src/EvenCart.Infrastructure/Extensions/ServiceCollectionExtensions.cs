@@ -12,6 +12,7 @@ using EvenCart.Services.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -147,6 +148,11 @@ namespace EvenCart.Infrastructure.Extensions
                 options.FormFieldName = "__RequestVerificationToken";
                 options.Cookie.Name = "_xsrf";
             });
+        }
+
+        public static void EnableResponseCompression(this IServiceCollection services)
+        {
+            services.AddResponseCompression();
         }
     }
 }

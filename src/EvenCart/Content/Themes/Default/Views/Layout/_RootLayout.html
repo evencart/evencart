@@ -21,14 +21,14 @@
     {% css "/default/assets/css/style.min.css" %}
 
     <!--Render CSS-->
-    {% bundle render="css" %}
+    {% bundle render="css"  gz="true" %}
 
     <!-- jQuery latest version -->
     {% js "/default/assets/js/jquery-3.1.1.min.js" bundle="headScripts" %}
     <!-- Modernizr JS -->
     {% js "/default/assets/js/modernizr-2.8.3.min.js" bundle="headScripts" %}
 
-    {% bundle render="js" bundle="headScripts" %}
+    {% bundle render="js" bundle="headScripts" gz="true" %}
     <script type="text/javascript">
         window._xsrf = "{{store.xsrfToken}}";
         //helper for quick calls
@@ -71,7 +71,7 @@
     {% js "/common/assets/js/helpers.js" bundle="footerScripts" %}
     {% js "/common/assets/js/catalog.js" bundle="footerScripts" %}
     <!--render scripts-->
-    {% bundle render="js" bundle="footerScripts" %}
+    {% bundle render="js" bundle="footerScripts" gz="true" %}
     {% widget "body_end" %}
 </body>
 </html>
