@@ -1,5 +1,13 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"Products" active_menu="ProductVariantsList" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"Product must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel">
@@ -146,4 +154,5 @@
             });
     }
 </script>
+{% endif %}
 

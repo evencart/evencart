@@ -1,9 +1,17 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"Inventories" active_menu="InventoryList" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
-{% if hasVariants %}
-{% partial "Products/InventoryList.Variants" %}
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"Product must be saved first to access this page" | t}}</div>
+    </div>
+</div>
 {% else %}
-{% partial "Products/InventoryList.Products" %}
+    {% if hasVariants %}
+    {% partial "Products/InventoryList.Variants" %}
+    {% else %}
+    {% partial "Products/InventoryList.Products" %}
+    {% endif %}
 {% endif %}
 
 

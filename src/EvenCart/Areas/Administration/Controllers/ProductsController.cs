@@ -243,7 +243,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductAttributesList(int productId)
         {
-            var product = _productService.FirstOrDefault(x => x.Id == productId);
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var product = productId < 1 ? null : _productService.FirstOrDefault(x => x.Id == productId);
             if (product == null)
                 return NotFound();
             var model = _modelMapper.Map<ProductModel>(product);
@@ -260,7 +263,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductAttributeEditor(int productId, int productAttributeId)
         {
-            if (productId <= 0 || _productService.Count(x => x.Id == productId) == 0)
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (productId < 0 || _productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
 
             var productAttribute = productAttributeId <= 0
@@ -333,8 +339,11 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductVariantsList(int productId)
         {
-            Product product;
-            if (productId == 0 || (product = _productService.FirstOrDefault(x => x.Id == productId)) == null)
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var product = productId < 1 ? null : _productService.FirstOrDefault(x => x.Id == productId);
+            if (product == null)
                 return NotFound();
             var productModel = _modelMapper.Map<ProductModel>(product);
             var variants = _productVariantService.GetByProductId(productId);
@@ -349,7 +358,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductVariantEditor(int productId, int productVariantId)
         {
-            if (productId <= 0 || _productService.Count(x => x.Id == productId) == 0)
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (productId < 0 || _productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
             var productVariant = productVariantId <= 0
                 ? new ProductVariant() { ProductId = productId }
@@ -492,7 +504,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult UpdateCategoriesDisplayOrder(int productId, IList<CategoryModel> categories)
         {
-            if (productId == 0 || _productService.Count(x => x.Id == productId) == 0)
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (_productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
 
             LinkProductWithCategories(productId, categories);
@@ -520,7 +535,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductSpecsList(int productId)
         {
-            var product = _productService.FirstOrDefault(x => x.Id == productId);
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var product = productId < 1 ? null : _productService.FirstOrDefault(x => x.Id == productId);
             if (product == null)
                 return NotFound();
             var model = _modelMapper.Map<ProductModel>(product);
@@ -582,7 +600,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductSpecsList(int productId, int groupId)
         {
-            var product = _productService.FirstOrDefault(x => x.Id == productId);
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var product = productId < 1 ? null : _productService.FirstOrDefault(x => x.Id == productId);
             if (product == null)
                 return NotFound();
             var model = _modelMapper.Map<ProductModel>(product);
@@ -614,6 +635,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductSpecEditor(int productId, int productSpecificationId, int productSpecificationGroupId = 0)
         {
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (productId <= 0 || _productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
 
@@ -636,6 +660,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductSpecGroupEditor(int productId, int productSpecificationGroupId)
         {
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (productId <= 0 || _productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
 
@@ -745,6 +772,11 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult ProductRelationsList(int productId, ProductRelationType relationType)
         {
+            var r = R;
+            r.With("relationType", relationType).With("productId", productId);
+            if (productId == 0)
+                return r.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (productId < 1 || _productService.Count(x => x.Id == productId) == 0)
                 return NotFound();
             var productRelations = _productRelationService.GetByProductId(productId, relationType, 1, int.MaxValue);
@@ -754,9 +786,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 relationModel.DestinationProduct = _modelMapper.Map<ProductModel>(x.DestinationProduct);
                 return relationModel;
             }).ToList();
-            return R.Success.With("relations", () => productRelationModels, () => _dataSerializer.Serialize(productRelationModels))
-                .With("relationType", relationType)
-                .With("productId", productId)
+            return r.Success.With("relations", () => productRelationModels, () => _dataSerializer.Serialize(productRelationModels))
                 .WithGridResponse(productRelationModels.Count, 1, productRelationModels.Count)
                 .Result;
         }
@@ -800,8 +830,11 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageInventory)]
         public IActionResult InventoryList(int productId)
         {
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             Product product;
-            if (productId == 0 || (product = _productService.FirstOrDefault(x => x.Id == productId)) == null)
+            if ((product = _productService.FirstOrDefault(x => x.Id == productId)) == null)
                 return NotFound();
             var response = R;
             //get available warehouses

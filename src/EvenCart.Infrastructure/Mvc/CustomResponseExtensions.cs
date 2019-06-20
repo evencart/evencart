@@ -143,5 +143,13 @@ namespace EvenCart.Infrastructure.Mvc
                 .ToList();
             return customResponse.With("themeTemplates", listItems);
         }
+
+        public static CustomResponse WithError(this CustomResponse customResponse, string errorCode, string errorMessage = null)
+        {
+            customResponse.With("errorCode", errorCode);
+            if (errorMessage != null)
+                customResponse.With("error", errorMessage);
+            return customResponse;
+        }
     }
 }
