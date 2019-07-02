@@ -78,6 +78,9 @@ namespace EvenCart.Infrastructure
 #if !DEBUGWS
             app.CheckInstallation();
 
+            //use static files
+            app.UseStaticFiles(_hostingEnvironment);
+
             if (DatabaseManager.IsDatabaseInstalled())
             {
                 //https redirection
@@ -88,9 +91,6 @@ namespace EvenCart.Infrastructure
 
                 //use response pages
                 app.UseStatusPages();
-
-                //use static files
-                app.UseStaticFiles(_hostingEnvironment);
 
                 //init database
                 app.InitializeDatabase();
