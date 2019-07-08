@@ -69,22 +69,26 @@ namespace EvenCart.Data.Database
             if (_versionsAdded)
                 return;
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
-           
-            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-            var pluginInfos = pluginLoader.GetAvailablePlugins();
-            foreach (var pluginInfo in pluginInfos)
+
+            if (withPlugins)
             {
-                try
+                var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
+                var pluginInfos = pluginLoader.GetAvailablePlugins();
+                foreach (var pluginInfo in pluginInfos)
                 {
-                    var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
-                    if (versions.Any())
-                        DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
-                }
-                catch
-                {
-                    // ignored
+                    try
+                    {
+                        var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
+                        if (versions.Any())
+                            DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
+
             _versionsAdded = true;
         }
 
@@ -104,18 +108,18 @@ namespace EvenCart.Data.Database
                     }
                 }
             }
-          
+
         }
 
         public static void UpgradeDatabase(string callingContextName)
         {
-            AppendVersions();
+            AppendVersions(true);
             DotEntityDb.UpdateDatabaseToLatestVersion(callingContextName);
         }
 
         public static void CleanupDatabase(string callingContextName)
         {
-            AppendVersions();
+            AppendVersions(true);
             DotEntityDb.UpdateDatabaseToVersion(callingContextName, null);
         }
 
@@ -148,7 +152,8 @@ namespace EvenCart.Data.Database
         {
             try
             {
-                var builder = new SqlConnectionStringBuilder {
+                var builder = new SqlConnectionStringBuilder
+                {
                     IntegratedSecurity = request.IntegratedSecurity,
                     DataSource = request.ServerName,
                     InitialCatalog = request.DatabaseName
