@@ -54,7 +54,9 @@ namespace EvenCart.Infrastructure.Authentication
                 //update last activity date
                 user.LastActivityDate = DateTime.UtcNow;
                 user.LastActivityIpAddress = WebHelper.GetClientIpAddress();
-                userService.Update(user);
+                userService.Update(
+                    new {LastActivityDate = DateTime.UtcNow, LastActivityIpAddress = WebHelper.GetClientIpAddress()},
+                    x => x.Id == user.Id, null);
             }
 
 

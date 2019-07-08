@@ -59,7 +59,7 @@ namespace EvenCart.Data.Extensions
             {
                 return source;
             }
-            return result.Concat(result.SelectManyRecursive(selector));
+            return source.Concat(result.SelectManyRecursive(selector));
         }
     }
 }

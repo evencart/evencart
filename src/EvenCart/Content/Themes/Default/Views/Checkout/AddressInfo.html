@@ -20,7 +20,7 @@
                     </option>
                 </select>
                 {% endif %}
-                <div id="billing-address-container" class="address-container" {%if addresses.size> 0 %}style="display: none"{%endif%}>
+                <div id="billing-address-container" class="address-container" {%if addresses.size > 0 %}style="display: none"{%endif%}>
                     <div class="row">
                         {% partial "Addresses/AddressForm" prefix="BillingAddress." %}
                     </div>
@@ -47,7 +47,7 @@
                         </option>
                     </select>
                     {% endif %}
-                    <div id="shipping-address-container" class="address-container" {%if addresses.size> 0 %}style="display: none"{%endif%}>
+                    <div id="shipping-address-container" class="address-container" {%if addresses.size > 0 %}style="display: none"{%endif%}>
                         <div class="row">  
                             {% partial "Addresses/AddressForm" prefix="ShippingAddress." %}
                         </div>

@@ -117,5 +117,6 @@ ready(function() {
 });
 
 window.onpopstate = function (event) {
-    productSearch.setUrl(document.location.pathname);
+    if (window._currentPage == "ProductsList")
+        productSearch.setUrl(document.location.pathname);
 };

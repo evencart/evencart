@@ -169,7 +169,7 @@ namespace EvenCart.Controllers
             };
             if (review == null || review.ProductId != productId)
                 return NotFound();
-            if (review.UserId != ApplicationEngine.CurrentUser.Id || !_catalogSettings.AllowReviewModification)
+            if (review.UserId != ApplicationEngine.CurrentUser.Id || (review.Id > 0 && !_catalogSettings.AllowReviewModification))
                 return NotFound();
 
             var response = R.Success;

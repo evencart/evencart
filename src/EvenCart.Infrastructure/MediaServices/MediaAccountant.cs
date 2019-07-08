@@ -27,7 +27,7 @@ namespace EvenCart.Infrastructure.MediaServices
             byte[] fileBytes;
             using (var stream = new MemoryStream())
             {
-                mediaFile.CopyToAsync(stream);
+                mediaFile.CopyTo(stream);
                 fileBytes = stream.ToArray();
             }
 

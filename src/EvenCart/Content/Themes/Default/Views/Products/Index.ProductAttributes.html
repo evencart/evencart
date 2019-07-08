@@ -3,6 +3,7 @@
 <div class="section product-attribute">
     <input type="hidden" name="attributes[{{forloop.index0}}].name" value="{{attribute.name}}" />
     <h5 class="pd-sub-title">{{attribute.name}}</h5>
+    {% if attribute.inputFieldType == "Dropdown" %}
     <select class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name">
         {% unless attribute.isRequired %}
         <option value="-1">{{"Select" | t}}</option>
@@ -11,64 +12,82 @@
         <option value="{{value.name}}">{{value.name}}</option>
         {% endfor %}
     </select>
+    {% endif %}
+    {% if attribute.inputFieldType == "CheckBox" %}
+    <label>
+        <input type="checkbox" data-attribute="{{attribute.name}}" value="{{attribute.availableValues[0].name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}disabled="disabled" checked="checked"{%endif%}/> {{attribute.availableValues[0].name}}
+    </label>
+    {% endif %}
 </div>
 {% endfor %}
-{% if variants.size > 0 %}
+ {% if variants.size > 0 %}
 <script type="text/javascript">
-                            jQuery(document).ready(function () {
-                                var variants = JSON.parse('{{variants}}');
-                                variants = variants.sort(function (v1, v2) {
-                                    //sort in descending order of number of attributes
-                                    var v1Length = Object.keys(v1.attributes).length;
-                                    var v2Length = Object.keys(v2.attributes).length;
-                                    return v2Length - v1Length;
-                                });
-                                var refreshVariant = function () {
-                                    //create an object for selected values
-                                    var obj = {};
-                                    jQuery(".product-attribute select").each(function() {
-                                        var attributeName = jQuery(this).data("attribute");
-                                        attributeName = attributeName[0].toLowerCase() + attributeName.substr(1);
-                                        var value = jQuery(this).val();
-                                        obj[attributeName] = value;
-                                    });
-                                    var variant = null;
-                                    for (var i = 0; i < variants.length; i++) {
-                                        if (variant != null)
-                                            break;
-                                        var attributes = variants[i].attributes;
-                                        variant = variants[i];
-                                        for (var attribute in attributes) {
-                                            if (attributes.hasOwnProperty(attribute)) {
-                                                if (attributes[attribute] !== obj[attribute]) {
-                                                    variant = null;
-                                                    break;
-                                                }
-                                            } else {
-                                                variant = null;
-                                            }
-                                        }
-                                    }
-                                    if (variant != null) {
-                                        jQuery("#priceFormatted").html(variant.price);
-                                        if (variant.isAvailable) {
-                                            jQuery(".quantity-cart").show();
-                                            jQuery(".product-unavailable").hide();
-                                        } else {
-                                            jQuery(".quantity-cart").hide();
-                                            jQuery(".product-unavailable").show();
-                                        }
-                                    } else {
-                                        if (variants.length > 0) {
-                                            jQuery(".quantity-cart").hide();
-                                            jQuery(".product-unavailable").show();
-                                        }
-                                        jQuery("#priceFormatted").html("{{product.priceFormatted}}");
-                                    }
-                                }
-                                jQuery(".product-attribute select").change(refreshVariant);
-                                //initial price
-                                refreshVariant();
-                            });
+     var variants = JSON.parse('{{variants}}');
+     jQuery(document).ready(function () {
+         variants = variants.sort(function (v1, v2) {
+             //sort in descending order of number of attributes
+             var v1Length = Object.keys(v1.attributes).length;
+             var v2Length = Object.keys(v2.attributes).length;
+             return v2Length - v1Length;
+         });
+         var refreshVariant = function () {
+             //create an object for selected values
+             var obj = {};
+             jQuery(".product-attribute select").each(function() {
+                 var attributeName = jQuery(this).data("attribute");
+                 attributeName = attributeName[0].toLowerCase() + attributeName.substr(1);
+                 var value = jQuery(this).val();
+                 obj[attributeName] = value;
+             });
+             jQuery(".product-attribute input[type='checkbox']").each(function () {
+                 var attributeName = jQuery(this).data("attribute");
+                 attributeName = attributeName[0].toLowerCase() + attributeName.substr(1);
+                 if (jQuery(this).is(":checked")) {
+                     var value = jQuery(this).val();
+                     obj[attributeName] = value;
+                 }
+             });
+             var variant = null;
+             for (var i = 0; i < variants.length; i++) {
+                 if (variant != null)
+                     break;
+                 variant = variants[i];
+                 var attributes = variant.attributes;
+                 if (Object.keys(obj).length != Object.keys(attributes).length) {
+                     variant = null;
+                 } else {
+                     for (var attribute in attributes) {
+                         if (attributes.hasOwnProperty(attribute)) {
+                             if (attributes[attribute] !== obj[attribute]) {
+                                 variant = null;
+                                 break;
+                             }
+                         } else {
+                             variant = null;
+                         }
+                     }
+                 }
+             }
+             if (variant != null) {
+                 jQuery("#priceFormatted").html(variant.price);
+                 if (variant.isAvailable) {
+                     jQuery(".quantity-cart").show();
+                     jQuery(".product-unavailable").hide();
+                 } else {
+                     jQuery(".quantity-cart").hide();
+                     jQuery(".product-unavailable").show();
+                 }
+             } else {
+                 if (variants.length > 0) {
+                     jQuery(".quantity-cart").hide();
+                     jQuery(".product-unavailable").show();
+                 }
+                 jQuery("#priceFormatted").html("{{product.priceFormatted}}");
+             }
+         }
+         jQuery(".product-attribute select, .product-attribute input[type='checkbox']").change(refreshVariant);
+         //initial price
+         refreshVariant();
+     });
 </script>
 {% endif %}

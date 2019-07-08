@@ -3,7 +3,7 @@
 {% partial "Navigation/MenuEditSecondaryNavigation" %}
 
 <div class="row menu-page">
-    <div class="col-md-3">
+    <div class="col-md-3 {% if menus.size == 0 %}disabled{% endif %}">
         <div class="panel">
             <div class="panel-title">
                 {{"Custom Link" | t}}
@@ -150,9 +150,10 @@
             function(result, response) {
                 if (result == "ok") {
                     notify("success", '{{"Menu was saved successfully" | t}}');
-                    jQuery("#selected-menu").append("<option value='" + response.menu.id + "'>" + response.menu.name + "</option>");
+                    window.location.reload();
+                    /*jQuery("#selected-menu").append("<option value='" + response.menu.id + "'>" + response.menu.name + "</option>");
                     jQuery("#selected-menu").val(response.menu.id);
-                    jQuery("#selected-menu").trigger("change");
+                    jQuery("#selected-menu").trigger("change");*/
                 }
             });
         var url = '{% route GetMenu menuId="%id%" %}'.replaceAll("%id%", id);
@@ -378,8 +379,9 @@
         jQuery("#selected-menu").change(function() {
             loadMenuItems(0);
         });
+        //{% if menus.size > 0 %}
         jQuery("#selected-menu").trigger("change");
-
+        //{% endif %}
         displayOrderSortable({
             container: "table-menu-items",
             itemSelector: "tr",

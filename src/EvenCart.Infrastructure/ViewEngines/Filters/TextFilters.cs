@@ -3,6 +3,7 @@ using DotLiquid;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Helpers;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Localization;
@@ -45,5 +46,9 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
             return WebHelper.GetUrlFromPath(input, generalSettings.StoreDomain);
         }
 
+        public static string StripHtml(string input)
+        {
+            return HtmlUtility.StripHtml(input);
+        }
     }
 }

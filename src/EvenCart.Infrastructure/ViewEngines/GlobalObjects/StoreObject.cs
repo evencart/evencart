@@ -9,6 +9,7 @@ using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
+using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Gdpr;
 using FluentValidation.Results;
@@ -25,10 +26,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var orderSettings = DependencyResolver.Resolve<OrderSettings>();
             var urlSettings = DependencyResolver.Resolve<UrlSettings>();
             var gdprSettings = DependencyResolver.Resolve<GdprSettings>();
+            var localizationSettings = DependencyResolver.Resolve<LocalizationSettings>();
 
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
             var antiforgery = DependencyResolver.Resolve<IAntiforgery>();
+            var currencyService = DependencyResolver.Resolve<ICurrencyService>();
 
             var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
             var logoUrl = generalSettings.LogoId > 0
@@ -57,6 +60,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 ReviewsEnabled = catalogSettings.EnableReviews,
                 ReviewModificationAllowed = catalogSettings.AllowReviewModification,
                 ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
+                PrimaryCurrencyCode = currencyService.Get(localizationSettings.BaseCurrencyId)?.IsoCode,
                 XsrfToken = antiforgery.GetToken()
             };
             var currentUser = ApplicationEngine.CurrentUser;

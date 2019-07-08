@@ -124,6 +124,7 @@ namespace EvenCart.Services.Products
                     availableAttribute.AvailableAttributeValues = (List<AvailableAttributeValue>) productAttribute.Tag;
                     productAttribute.AvailableAttribute = availableAttribute;
                 })
+                .OrderBy(x => x.DisplayOrder)
                 .SelectNested()
                 .ToList();
         }

@@ -102,7 +102,7 @@ namespace EvenCart.Controllers
                     {
                         attributes = new Dictionary<string, string>(),
                         price = (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax).ToCurrency(),
-                        isAvailable = variant.TrackInventory && variant.IsAvailableInStock(product),
+                        isAvailable = !variant.TrackInventory || (variant.TrackInventory && variant.IsAvailableInStock(product)),
                         sku = !variant.Sku.IsNullEmptyOrWhiteSpace() ? variant.Sku : product.Sku,
                         gtin = !variant.Gtin.IsNullEmptyOrWhiteSpace() ? variant.Gtin : product.Gtin,
                         mpn = !variant.Mpn.IsNullEmptyOrWhiteSpace() ? variant.Mpn : product.Mpn
@@ -116,6 +116,7 @@ namespace EvenCart.Controllers
 
                 if (variantModels.Any())
                     response.With("variants", () => variantModels, () => _dataSerializer.Serialize(variantModels));
+                productModel.IsAvailable = variantModels.Any(x => (bool) ((dynamic) x).isAvailable);
             }
 
             //reviews
@@ -144,7 +145,7 @@ namespace EvenCart.Controllers
             if (_generalSettings.EnableBreadcrumbs)
             {
                 var categoryTree = _categoryService.GetFullCategoryTree();
-                var category = product.Categories.FirstOrDefault();
+                var category = product.Categories?.FirstOrDefault();
                 var currentCategoryFull = categoryTree.FirstOrDefault(x => x.Id == category?.Id);
                 BreadcrumbHelper.SetCategoryBreadcrumb(currentCategoryFull, categoryTree);
                 SetBreadcrumbToRoute(product.Name, RouteNames.SingleProduct, new {seName = product.SeoMeta.Slug}, localize: false);

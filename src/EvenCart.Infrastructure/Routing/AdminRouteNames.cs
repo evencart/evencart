@@ -38,6 +38,8 @@
         public const string EditProductAttribute = "EditProductAttribute";
         public const string DeleteProductAttribute = "DeleteProductAttribute";
         public const string DeleteProductAttributeValue = "DeleteProductAttributeValue";
+        public const string UpdateProductAttributeDisplayOrder = "UpdateProductAttributeDisplayOrder";
+        public const string UpdateProductAttributeValueDisplayOrder = "UpdateProductAttributeValueDisplayOrder";
 
         public const string SaveProductSpecification = "SaveProductSpecification";
         public const string SaveProductSpecificationGroup = "SaveProductSpecificationGroup";
@@ -49,6 +51,7 @@
         public const string DeleteProductSpecificationValue = "DeleteProductSpecificationValue";
         public const string DeleteProductSpecificationGroup = "DeleteProductSpecificationGroup";
         public const string GetProductSpecificationsGroupSuggestions = "GetProductSpecificationsGroupSuggestions";
+        public const string UpdateProductSpecificationDisplayOrder = "UpdateProductSpecificationDisplayOrder";
 
         public const string SaveProductRelation = "SaveProductRelation";
         public const string ProductRelationsList = "ProductRelationsList";

@@ -134,6 +134,7 @@ namespace EvenCart.Areas.Administration.Controllers
             user = _modelMapper.Map(userModel, user,
                 excludeProperties: new[]
                     {nameof(user.CreatedOn), nameof(user.UpdatedOn), nameof(user.LastLoginDate)});
+            user.Name = $"{user.FirstName} {user.LastName}";
             if (user.Id == 0)
             {
                 user.Guid = Guid.NewGuid();

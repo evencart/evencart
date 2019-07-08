@@ -60,5 +60,7 @@ namespace EvenCart.Infrastructure
 
         public const string DefaultFaviconUrl = "~/common/assets/images/favicon.png";
 
+        public const string UnavailableMethodName = "Not Available";
+
     }
 }

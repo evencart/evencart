@@ -1,6 +1,7 @@
 ﻿using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
+using EvenCart.Data.Helpers;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Routing;
 
@@ -33,11 +34,11 @@ namespace EvenCart.Infrastructure.Helpers
             }
 
             if (seoMeta.PageTitle.IsNullEmptyOrWhiteSpace())
-                seoMeta.PageTitle = title;
+                seoMeta.PageTitle = HtmlUtility.StripHtml(title);
             if (seoMeta.MetaKeywords.IsNullEmptyOrWhiteSpace())
-                seoMeta.MetaKeywords = keywords;
+                seoMeta.MetaKeywords = HtmlUtility.StripHtml(keywords);
             if (seoMeta.MetaDescription.IsNullEmptyOrWhiteSpace())
-                seoMeta.MetaDescription = description;
+                seoMeta.MetaDescription = HtmlUtility.StripHtml(description);
         }
     }
 }

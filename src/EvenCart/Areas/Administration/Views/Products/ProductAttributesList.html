@@ -11,28 +11,46 @@
     <div class="col-md-12 ">
         <div class="panel">
             <div class="panel-title">
-                {{"Product Attributes" | t}} <button class="btn btn-primary float-right" onclick="editAttribute(0)">{{"Add New" | t}}</button>
+                {{"Product Attributes" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editAttribute(0)">{{"Add Attribute" | t}}</button>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name">{{"Name" | t}}</th>
-                            <th data-column-id="label">{{"Display Text" | t}}</th>
-                            <th data-column-id="inputFieldTypeDisplay">{{"Type" | t}}</th>
-                            <th data-column-id="isRequired" data-formatter="isrequired">{{"Required" | t}}</th>
-                            <th data-column-id="values" data-formatter="values">{{"Values" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="label">{{"Display Text" | t}}</th>
+                        <th data-column-id="inputFieldTypeDisplay">{{"Type" | t}}</th>
+                        <th data-column-id="isRequired" data-formatter="isrequired">{{"Required" | t}}</th>
+                        <th data-column-id="values" data-formatter="values" data-width="20%">{{"Values" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{attributes | scriptJson : 'initData'}}
                 <script type="text/javascript">
+                    var enableSortable = function (refresh) {
+                        if (refresh) {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                refresh: true
+                            });
+                        } else {
+                            displayOrderSortable({
+                                container: "grid-selection tbody",
+                                itemSelector: "tr",
+                                update: function() {
+                                    post({
+                                        url: "{% route api_UpdateProductAttributeDisplayOrder %}",
+                                        data: jQuery("#grid-selection input").serialize()
+                                    });
+                                }
+                            });
+                        }
+                        
+                    }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless attributes == blank %}*/
-                        initData = JSON.parse('{{attributes}}');
-                        /*{% endunless %}*/
                         generateGrid({
                             element: "grid-selection",
                             initialData: {
@@ -73,19 +91,27 @@
                                     return table;
                                 },
                                 "commands": function(column, row) {
-                                    return "<button type='button' class='btn btn-secondary command-edit' data-row-id='" +
+                                    return "<button type='button' class='btn btn-sm btn-secondary command-edit' data-row-id='" +
                                         row.id +
                                         "' onclick='editAttribute(" +
                                         row.id +
                                         ")'><span class='rbicon-edit'></span></button> " +
-                                        "<button type='button' class='btn btn-danger command-preview' data-row-id='" +
+                                        "<button type='button' class='btn btn-sm btn-danger command-preview' data-row-id='" +
                                         row.id +
                                         "' onclick='deleteAttribute(" +
                                         row.id +
                                         ")'><span class='rbicon-trash-2'></span></button>";
+                                },
+                                "hiddenFields": function (column, row, index) {
+                                    return "<input type='hidden' data-type='displayorder' name='productAttributes[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                                        "<input type='hidden' data-type='id'  name='productAttributes[" + index + "].id' value='" + row.id + "' />";
                                 }
+                            },
+                            events: {
+                                "loaded": function () { enableSortable(true); }
                             }
                         });
+                        enableSortable();
                     });
 
                 </script>
@@ -128,7 +154,7 @@
                 post({
                     url: "{% route api_DeleteProductAttribute %}",
                     data: {
-                      productAttributeId: id
+                        productAttributeId: id
                     },
                     done: function(response) {
                         if (response.success) {

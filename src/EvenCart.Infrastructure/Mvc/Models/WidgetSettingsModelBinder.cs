@@ -6,6 +6,8 @@
 // #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Core.Infrastructure;
@@ -13,12 +15,19 @@ using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Plugins;
+using EvenCart.Services.Serializers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EvenCart.Infrastructure.Mvc.Models
 {
     public class WidgetSettingsModelBinder : IModelBinder
     {
+        private readonly IDataSerializer _dataSerializer;
+        public WidgetSettingsModelBinder(IDataSerializer dataSerializer)
+        {
+            _dataSerializer = dataSerializer;
+        }
+
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (!typeof(WidgetSettingsModel).IsAssignableFrom(bindingContext.ModelType))
@@ -69,9 +78,18 @@ namespace EvenCart.Infrastructure.Mvc.Models
                 if (propertyValueProviderResult == ValueProviderResult.None)
                     continue;
                 bindingContext.ModelState.SetModelValue(property.Name ,valueProviderResult);
-                //convert property value to appropriate type
-                var typedValue = TypeConverter.CastPropertyValue(property, propertyValueProviderResult.FirstValue);
-                property.SetValue(settingsObject, typedValue);
+                if (property.PropertyType.IsGenericType)
+                {
+                    //todo: find a better way...right now we just serialize and deserialize for quick type conversion
+                    var targetValue = _dataSerializer.Deserialize(
+                        _dataSerializer.Serialize(propertyValueProviderResult.Values), property.PropertyType);
+                    property.SetValue(settingsObject, targetValue);
+                }
+                else
+                {
+                    var typedValue = TypeConverter.CastPropertyValue(property, propertyValueProviderResult.FirstValue);
+                    property.SetValue(settingsObject, typedValue);
+                }
             }
             bindingContext.Result = ModelBindingResult.Success(settingsObject);
             return Task.CompletedTask;

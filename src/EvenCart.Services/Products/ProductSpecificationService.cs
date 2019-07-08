@@ -14,7 +14,8 @@ namespace EvenCart.Services.Products
         {
             var query = Repository
                 .Join<ProductSpecificationGroup>("ProductSpecificationGroupId", "Id", joinType: JoinType.LeftOuter)
-                .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", SourceColumn.Parent,
+                    JoinType.LeftOuter)
                 .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToOne<ProductSpecification, ProductSpecificationGroup>())
@@ -24,7 +25,7 @@ namespace EvenCart.Services.Products
                     if (specification.Tag == null)
                         specification.Tag = new List<AvailableAttributeValue>();
 
-                    var attributeList = (List<AvailableAttributeValue>)specification.Tag;
+                    var attributeList = (List<AvailableAttributeValue>) specification.Tag;
                     if (!attributeList.Contains(value))
                         attributeList.Add(value);
 
@@ -35,10 +36,11 @@ namespace EvenCart.Services.Products
                 })
                 .Relate<AvailableAttribute>((specification, availableAttribute) =>
                 {
-                    availableAttribute.AvailableAttributeValues = (List<AvailableAttributeValue>)specification.Tag;
+                    availableAttribute.AvailableAttributeValues = (List<AvailableAttributeValue>) specification.Tag;
                     specification.AvailableAttribute = availableAttribute;
                 })
-                .Where(x => x.ProductId == productId);
+                .Where(x => x.ProductId == productId)
+                .OrderBy(x => x.DisplayOrder);
 
             if(groupId.HasValue)
                 query = query.Where(x => x.ProductSpecificationGroupId == groupId);

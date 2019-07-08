@@ -95,6 +95,7 @@
             initialData: null,
             url: "{% route api_GetAttributeSuggestions %}",
             preserveAfterFirstCall: true,
+            substringMatch: false,
             openOnFocus: true,
             minLength: 0,
             select: function (item) {
@@ -123,6 +124,7 @@
                 element: "product-productSpecification-value-selector",
                 initialData: initialData,
                 multiple: true,
+                substringMatch: false,
                 url: function () {
                     var productSpecificationId = jQuery("#product-productSpecification").val();
                     if (productSpecificationId == 0)

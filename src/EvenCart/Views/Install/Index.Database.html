@@ -99,14 +99,6 @@
         installSettings.integratedSecurity = jQuery("#integratedSecurity").is(":checked");
         installSettings.providerName = jQuery("#provider").val();
 
-        installSettings.serverUrl = "localhost";
-        installSettings.databaseName = "ms";
-        installSettings.databaseUserName = "root";
-        installSettings.databasePassword = "admin";
-        installSettings.integratedSecurity = true;
-        installSettings.providerName = "MySql";
-
-
         testDatabaseSettings(function(success) {
             if (success)
                 stepUp();

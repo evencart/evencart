@@ -199,7 +199,9 @@ namespace EvenCart.Controllers
             //is shipping required?
             var shippingRequired = CartHelper.IsShippingRequired(cart);
             if (!shippingRequired)
+            {
                 return RedirectToRoute(RouteNames.CheckoutPayment);
+            }
             if (cart.BillingAddressId == 0 || cart.ShippingAddressId == 0)
             {
                 return R.Fail.With("error", T("The address details were not provided")).Result;
@@ -209,7 +211,9 @@ namespace EvenCart.Controllers
             var shippingHandlers = _pluginAccountant.GetActivePlugins(typeof(IShipmentHandlerPlugin));
             if (!shippingHandlers.Any())
             {
-                //there are no shipping handlers, may be it's been manually handled by store owner
+                cart.ShippingMethodName = ApplicationConfig.UnavailableMethodName;
+                _cartService.Update(cart);
+                //there are no shipping handlers, may be it's being manually handled by store owner
                 return RedirectToRoute(RouteNames.CheckoutPayment);
             }
             var shippingModels = shippingHandlers.Select(x =>
@@ -345,6 +349,14 @@ namespace EvenCart.Controllers
 
             //find available payment methods
             var paymentHandlers = _pluginAccountant.GetActivePlugins(typeof(IPaymentHandlerPlugin));
+
+            if (!paymentHandlers.Any())
+            {
+                //redirect to confirm page...payment must be handled offline
+                cart.PaymentMethodName = ApplicationConfig.UnavailableMethodName;
+                _cartService.Update(cart);
+                return RedirectToRoute(RouteNames.CheckoutConfirm);
+            }
             var paymentModels = paymentHandlers.Select(x =>
                 {
                     var pluginHandlerInstance = x.LoadPluginInstance<IPaymentHandlerPlugin>();
@@ -536,8 +548,8 @@ namespace EvenCart.Controllers
             var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()
                 ? null
                 : _dataSerializer.DeserializeAs<Dictionary<string, object>>(cart.PaymentMethodData);
-
-            if (!ProcessPayment(order, paymentMethodData, out CustomResponse response))
+            CustomResponse response = null;
+            if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, paymentMethodData, out response))
             {
                 return response.Result;
             }
@@ -558,6 +570,7 @@ namespace EvenCart.Controllers
 
             }
 
+            response = response ?? R.Success;
             return response.With("orderGuid", order.Guid).Result;
         }
 

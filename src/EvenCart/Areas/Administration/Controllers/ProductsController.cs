@@ -127,7 +127,7 @@ namespace EvenCart.Areas.Administration.Controllers
             });
             return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
                 .WithAvailableInputTypes()
-                .With("products", () => productsModel, () => _dataSerializer.Serialize(productsModel))
+                .With("products", productsModel)
                 .With("availableFromPrice", availableFromPrice)
                 .With("availableToPrice", availableToPrice)
                 .Result;
@@ -176,7 +176,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [ValidateModelState(ModelType = typeof(ProductModel))]
         public IActionResult SaveProduct(ProductModel model)
         {
-            var product = model.Id > 0 ? _productService.Get(model.Id) : new Product();
+            var product = model.Id > 0 ? _productService.FirstOrDefault(x => x.Id == model.Id) : new Product();
             //is that a non-existent product?
             if (product == null)
                 return NotFound();
@@ -190,6 +190,15 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 //find the manufacturer
                 var manufacturer = _manufacturerService.FirstOrDefault(x => x.Name == model.ManufacturerName);
+                //if manufacturer is null, insert new
+                if (manufacturer == null)
+                {
+                    manufacturer = new Manufacturer()
+                    {
+                        Name = model.ManufacturerName
+                    };
+                    _manufacturerService.Insert(manufacturer);
+                }
                 model.ManufacturerId = manufacturer?.Id;
             }
             else if (model.ManufacturerId.HasValue && model.ManufacturerId.Value > 0)
@@ -201,7 +210,9 @@ namespace EvenCart.Areas.Administration.Controllers
                 model.ManufacturerId = null;
 
             //update the product properties
-            _modelMapper.Map(model, product);
+            _modelMapper.Map(model, product, nameof(Product.HasVariants));
+            if (product.Id == 0)
+                product.CreatedOn = DateTime.UtcNow;
             product.UpdatedOn = DateTime.UtcNow;
             //perform the requisites
             if (product.MinimumPurchaseQuantity < 1)
@@ -223,7 +234,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             //update seo
             _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
-            return R.Success.Result;
+            return R.Success.With("productId", product.Id).Result;
         }
 
         [DualPost("{productId}/delete", Name = AdminRouteNames.DeleteProduct, OnlyApi = true)]
@@ -255,7 +266,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             return R.Success.With("product", model)
                 .With("productId", productId)
-                .With("attributes", () => amodel, () => _dataSerializer.Serialize(amodel))
+                .With("attributes", amodel)
                 .Result;
         }
 
@@ -329,6 +340,22 @@ namespace EvenCart.Areas.Administration.Controllers
                 }
             });
 
+            return R.Success.Result;
+        }
+
+        [DualPost("attributes/displayorder", Name = AdminRouteNames.UpdateProductAttributeDisplayOrder, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult UpdateProductAttributeDisplayOrder(IList<ProductAttributeModel> productAttributes)
+        {
+            var validModels = productAttributes.Where(x => x.Id != 0).ToList();
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var model in validModels)
+                {
+                    _productAttributeService.Update(new { DisplayOrder = model.DisplayOrder }, m => m.Id == model.Id,
+                        transaction);
+                }
+            });
             return R.Success.Result;
         }
 
@@ -475,6 +502,12 @@ namespace EvenCart.Areas.Administration.Controllers
                 _productVariantService.AddVariant(product, currentVariant);
             }
 
+            //update track inventory for product if required
+            if (currentVariant.TrackInventory && !product.TrackInventory)
+            {
+                product.TrackInventory = true;
+                _productService.Update(product);
+            }
             #endregion
 
             return R.Success.Result;
@@ -765,6 +798,22 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.With("suggestions", model.OrderBy(x => x.Text)).Result;
         }
 
+        [DualPost("specifications/displayorder", Name = AdminRouteNames.UpdateProductSpecificationDisplayOrder, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult UpdateProductSpecDisplayOrder(IList<ProductSpecificationModel> specifications)
+        {
+            var validModels = specifications.Where(x => x.Id != 0).ToList();
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var model in validModels)
+                {
+                    _productSpecificationService.Update(new { DisplayOrder = model.DisplayOrder }, m => m.Id == model.Id,
+                        transaction);
+                }
+            });
+            return R.Success.Result;
+        }
+
         #endregion
 
         #region Product Relations
@@ -848,7 +897,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 model.Variants = new List<WarehouseProductInventoryModel.InventoryModel>();
                 var variants = _productVariantService.GetByProductId(productId);
                 var variantModels = variants.Select(MapProductVariantModel);
-                foreach (var inventory in inventories)
+                foreach (var inventory in inventories.Where(x => x.ProductVariantId > 0))
                 {
                     var variant = variants.FirstOrDefault(x => x.Id == inventory.ProductVariantId);
                     if (variant == null)
@@ -896,6 +945,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 {
                     wsl.Selected = true;
                 }
+                else if (warehousesSelectList.Count == 1)
+                    wsl.Selected = true;
             }
             response.With("warehouses", warehousesSelectList);
             return response.Success.Result;
@@ -979,6 +1030,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private ProductVariantModel MapProductVariantModel(ProductVariant pv)
         {
             var vm = _modelMapper.Map<ProductVariantModel>(pv);
+            if (pv.Id == 0)
+                vm.TrackInventory = true;
             if (pv.ProductVariantAttributes == null)
                 return vm;
             vm.Attributes = pv.ProductVariantAttributes.Select(y =>

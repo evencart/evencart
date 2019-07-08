@@ -129,7 +129,10 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var attribute = attributeModel.Id > 0
                 ? _availableAttributeService.Get(attributeModel.Id)
-                : new AvailableAttribute();
+                : new AvailableAttribute()
+                {
+                    AvailableAttributeValues = new List<AvailableAttributeValue>()
+                };
             if (attribute == null)
                 return NotFound();
             attribute.Name = attributeModel.Name;

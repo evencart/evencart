@@ -2122,10 +2122,13 @@ a.meanmenu-reveal i {
 ------------------------------*/
 /*-- Product Large Image Tab --*/
 .pro-large-img {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
 .pro-large-img img {
-    width: 100%;
+    max-width: 100%;
+    max-height:35em;
 }
 /*-- Product Thumbnail Image Slider --*/
 .pro-thumb-img-slider {
@@ -2192,7 +2195,6 @@ a.meanmenu-reveal i {
     font-size: 30px;
     font-weight: 600;
     margin-bottom: 27px;
-    text-transform: capitalize;
 }
 /*-- Product Price & Ratting --*/
 .price-ratting {
@@ -2201,7 +2203,7 @@ a.meanmenu-reveal i {
 /*-- Price --*/
 .product-details .price {
     color: #7a7a7a;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 700;
     line-height: 24px;
 }
@@ -4406,4 +4408,9 @@ div.tab button.active {
     li {
         border-bottom: solid 1px #eee;
     }
+}
+
+.body-section
+{
+    min-height: 400px;
 }

@@ -16,6 +16,7 @@
     "footer-one": "Footer Column One",
     "footer-two": "Footer Column Two",
     "footer-three": "Footer Column Three",
-    "footer-four":  "Footer Column Four" 
+    "footer-four": "Footer Column Four",
+    "footer": "Footer" 
   } 
 }

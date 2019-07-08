@@ -10,7 +10,7 @@ namespace EvenCart.Data.Extensions
         public static bool IsAvailableInStock(this Product product)
         {
             return product.CanOrderWhenOutOfStock ||
-                   (product.Inventories?.Any(x => x.AvailableQuantity > product.MinimumPurchaseQuantity) ?? false);
+                   (product.Inventories?.Any(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity) ?? false);
         }
 
         public static bool IsAvailableInStock(this Product product, int quantity, int warehouseId)
@@ -20,7 +20,7 @@ namespace EvenCart.Data.Extensions
 
         public static bool IsAvailableInStock(this ProductVariant variant, Product product)
         {
-            return variant.Inventories?.Any(x => x.AvailableQuantity > product.MinimumPurchaseQuantity) ?? false;
+            return variant.Inventories?.Any(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity) ?? false;
         }
 
         public static bool IsAvailableInStock(this ProductVariant variant, int quantity)

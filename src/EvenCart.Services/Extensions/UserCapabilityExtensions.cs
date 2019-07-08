@@ -41,7 +41,8 @@ namespace EvenCart.Services.Extensions
                 {
                     //search for user specific caps
                     var userCapabilities = capabilityService.GetByUser(user.Id);
-                    capabilities = capabilities.Concat(userCapabilities).ToList();
+                    if (userCapabilities != null)
+                        capabilities = capabilities.Concat(userCapabilities).ToList();
                 }
             }
            

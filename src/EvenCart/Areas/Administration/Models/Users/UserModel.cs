@@ -36,6 +36,8 @@ namespace EvenCart.Areas.Administration.Models.Users
 
         public int ReferrerId { get; set; }
 
+        public bool NewslettersEnabled { get; set; }
+
         public IList<RoleModel> Roles { get; set; }
 
         public string Password { get; set; }

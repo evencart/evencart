@@ -3,7 +3,6 @@
 <!-- PAGE SECTION START -->
 <div class="product-section section wrapper">
     <div class="container">
-       
         <div class="row mb-40">
             <!-- Single Product Images -->
             <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
@@ -34,11 +33,29 @@
                         <small>
                             {% partial "Products/_AddToWishlist" %}
                         </small>
-                        
+
                     </h1>
+                    {% if product.reviewSummary.totalRatings > 0 %}
                     <a href="#reviews">
                         {% partial "Products/_Rating" %}
                     </a>
+                    {% else %}
+                    {% partial "Products/_Rating" %}
+                    <div>
+                        <a href='{% route ReviewEditor productId="{{product.id}}" reviewId="0" %}'>
+                            {{"Write a review" | t}}
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if product.summary %}
+                    <!-- Short Description -->
+                    <div class="short-desc section">
+                        <h5 class="pd-sub-title">{{"Quick Overview" | t}}</h5>
+                        <p>
+                            {{product.summary}}
+                        </p>
+                    </div>
+                    {% endif %}
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->
@@ -51,13 +68,6 @@
                             <div class="new" id="priceFormatted">{{product.price | withCurrency }}</div>
                         </span>
                     </div>
-                    <!-- Short Description -->
-                    <div class="short-desc section">
-                        <h5 class="pd-sub-title">{{"Quick Overview" | t}}</h5>
-                        <p>
-                            {{product.summary}}
-                        </p>
-                    </div>
                     <form action="{% route api_AddToCart %}" method="post" id="form-add-to-cart">
                         {% control xsrf %}
                         <input type="hidden" name="productId" value="{{product.id}}" />
@@ -66,18 +76,18 @@
                         <!-- Quantity Cart -->
                         <div class="quantity-cart section">
                             <div class="product-quantity">
-                                <input name="quantity" type="text" value="{{product.minimumPurchaseQuantity}}">
+                                <input name="quantity" type="number" value="{{product.minimumPurchaseQuantity}}" min="{{product.minimumPurchaseQuantity}}">
                             </div>
                             <button class="add-to-cart">{{"add to cart" | t }}</button>
                         </div>
                         {% else %}
                         <script type="text/javascript">
-                            ready(function() {
+                            ready(function () {
                                 jQuery(".product-unavailable").show();
                             });
                         </script>
                         {% endif %}
-                        <div class="product-unavailable">
+                        <div class="product-unavailable alert alert-danger">
                             {{"The product is currently not available" | t}}
                         </div>
                     </form>
@@ -111,13 +121,12 @@
                 <div class="margin-b-20">
                   
                     {% for specGroup in product.productSpecificationGroups %}
-                  
                     <div class="col-md-12 margin-b-20">
                         <h3>
-                            {% if forloop.index0 == 0 %}
-                            {{"Product Details" | t}}
-                            {% else %}
+                            {% if forloop.index0 > 0 or specGroup.name %}
                             {{specGroup.name}}
+                            {% else %}
+                            {{"Product Details" | t}}
                             {% endif %}
                         </h3>
                         <table class="table-data-sheet">

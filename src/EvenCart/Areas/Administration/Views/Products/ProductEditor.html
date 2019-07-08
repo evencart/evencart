@@ -37,13 +37,13 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 {% control label text=@t"Price" for="price" %}
-                                {% control currency name="price" value="{{product.price}}" min="0" step="0.01" %}
+                                {% control currency name="price" value="{{product.price}}" min="0" %}
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 {% control label text=@t"Compare Price" for="comparePrice" %}
-                                {% control currency name="comparePrice" value="{{product.comparePrice}}" min="0" step="0.01" %}
+                                {% control currency name="comparePrice" value="{{product.comparePrice}}" min="0" %}
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,9 @@
                     <div class="form-group">
                         {% control checkbox name="isFeatured" text=@t"Is Featured?" value="product.isFeatured" %}
                     </div>
-
+                    <div class="form-group">
+                        {% control checkbox name="reviewsDisabled" text=@t"Disable Reviews" value="product.reviewsDisabled" %}
+                    </div>
                 </div>
             </div>
             <div class="panel">
@@ -96,14 +98,6 @@
                     </div>
                     {% endif %}
                     <div class="row">
-                        {% if product.hasVariants == false %}
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                {% control label text=@t"Stock Quantity" for="stockQuantity" %}
-                                {% control number name="stockQuantity" value="{{product.stockQuantity}}" min="0" %}
-                            </div>
-                        </div>
-                        {% endif %}
                         <div class="col-md-4">
                             <div class="form-group">
                                 {% control label text=@t"Min. Purchase Qty." for="minimumPurchaseQuantity" %}
@@ -118,7 +112,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {% control checkbox name="canOrderWhenOutOfStock" value="product.canOrderWhenOutIfStock" text=@t"Can order when out of stock?" %}
+                        {% control checkbox name="canOrderWhenOutOfStock" value="product.canOrderWhenOutOfStock" text=@t"Can order when out of stock?" %}
                     </div>
                 </div>
             </div>
@@ -132,7 +126,7 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Additional shipping charge" for="additionalShippingCharge" %}
-                        {% control number name="additionalShippingCharge" value="{{product.additionalShippingCharge}}" min="0" %}
+                        {% control currency name="additionalShippingCharge" value="{{product.additionalShippingCharge}}" min="0" %}
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -211,14 +205,14 @@
     ready(function () {
         initAjaxForm("product-editor-form",
             {
-                onSuccess: function () {
+                onSuccess: function (response) {
+                    var productId = response.productId;
                     notify("success", '{{"Product was saved successfully." | t }}');
-                    //{% if product.id == 0 %}
+                    //{% if productId == 0 %}
                     setTimeout(function () {
-                        window.location.reload();
+                        window.location.href = '{% route GetProduct productId="%id%" %}'.replace("%id%", productId);
                     }, 500);
                     //{% endif %}
-
                 }
             });
     })

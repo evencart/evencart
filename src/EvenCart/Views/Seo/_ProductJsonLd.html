@@ -8,7 +8,7 @@
             "{{media.url | absoluteUrl}}" {% if forloop.last == false %},{% endif %}
             {% endfor %}
         ],
-        "description": "{{product.description}}",
+        "description": "{{product.description | strip_html}}",
         "sku": "{{product.sku}}",
         "mpn": "{{product.mpn}}",
         {% if reviews.size > 0 %}

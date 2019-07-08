@@ -11,16 +11,17 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name">{{"Product" | t}}</th>
-                            <th data-column-id="sku">{{"Sku" | t}}</th>
-                            <th data-column-id="priceFormatted">{{"Price" | t}}</th>
-                            <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="name" data-width="40%">{{"Product" | t}}</th>
+                        <th data-column-id="sku">{{"Sku" | t}}</th>
+                        <th data-column-id="priceFormatted">{{"Price" | t}}</th>
+                        <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{products | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editProduct = function(id) {
                         var url = '{% route GetProduct productId="product_id" %}';
@@ -41,10 +42,6 @@
 
                     }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless products == blank %}*/
-                        initData = JSON.parse('{{products}}');
-                        /*{% endunless %}*/
 
                         generateGrid({
                             element: "grid-selection",
@@ -62,6 +59,9 @@
                             formatters: {
                                 "binary": function(column, row) {
                                     return gridFormatters.binary(column, row, column.id);
+                                },
+                                "name": function(column, row) {
+                                    return "<img width='50px' src='" + row.media[0].thumbnailUrl + "' /> " + row.name;
                                 },
                                 "commands": function (column, row) {
                                     return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +

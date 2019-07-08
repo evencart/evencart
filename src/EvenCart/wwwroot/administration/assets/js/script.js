@@ -338,7 +338,7 @@ var inputTypeahead = function (options) {
 
     if (options.multiple) {
         jQuery('#' + element).tagsinput({
-            allowDuplicates: false,
+            allowDuplicates: true,
             trimValue: true,
             freeInput: options.suggestNewAdditions,
             itemText: "text",
@@ -352,7 +352,7 @@ var inputTypeahead = function (options) {
                     source: sourceFunction(options),
                     display: function (selection) {
                         if (selection.id == 0)
-                            return "Add " + selection.text;
+                            return "+ " + selection.text;
                         return selection.text;
                     }
                 }
@@ -376,20 +376,22 @@ var inputTypeahead = function (options) {
     else {
 
         jQuery('#' + element).typeahead({
-            hint: true,
-            highlight: true,
-            minLength: options.minLength
-        },
-            {
-                source: sourceFunction(options),
-                display: function (selection) {
-                    if (selection.id == 0)
-                        return "+ " + selection.text;
-                    return selection.text;
-                }
-            })
+                    hint: true,
+                    highlight: true,
+                    minLength: options.minLength
+                },
+                {
+                    source: sourceFunction(options),
+                    display: function(selection) {
+                        if (selection.id == 0) {
+                            return "+ " + selection.text;
+                        }
+                        console.log(selection);
+                        return selection.text;
+                    }
+                })
             .bind('typeahead:select',
-                function (ev, suggestion) {
+                function(ev, suggestion) {
                     if (suggestion.id == 0) {
                         jQuery(this).typeahead('val', suggestion.text);
                     }

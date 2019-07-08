@@ -160,10 +160,11 @@ namespace EvenCart.Services.Purchases
 
         public void InsertCompleteOrder(Order order)
         {
+            //save the order now
+            _orderService.Insert(order);
+
             Transaction.Initiate(transaction =>
             {
-                //save the order now
-                _orderService.Insert(order, transaction);
                 //save the order items
                 foreach (var oi in order.OrderItems)
                 {

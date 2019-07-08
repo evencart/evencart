@@ -24,7 +24,8 @@
     </div>
 
     <div class="save-button-container">
-        <input type="hidden" name="id" value="{{widgetId}}"/>
+        {% control xsrf %}
+        <input type="hidden" name="id" value="{{widgetId}}" />
         <button type="submit" class="btn btn-sm btn-success">{{"Save Widget" | t}}</button>
         <a class="btn btn-sm btn-default" href='{% route WidgetsList %}'>{{"Cancel" | t}}</a>
     </div>

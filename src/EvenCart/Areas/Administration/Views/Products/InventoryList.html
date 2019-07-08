@@ -7,7 +7,7 @@
     </div>
 </div>
 {% else %}
-    {% if hasVariants %}
+{% if hasVariants == true %}
     {% partial "Products/InventoryList.Variants" %}
     {% else %}
     {% partial "Products/InventoryList.Products" %}

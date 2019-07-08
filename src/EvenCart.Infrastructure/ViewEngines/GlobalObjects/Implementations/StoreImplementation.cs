@@ -43,5 +43,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public ConsentGroupImplementation ConsentGroup { get; set; }
 
         public string XsrfToken { get; set; }
+
+        public string PrimaryCurrencyCode { get; set; }
     }
 }

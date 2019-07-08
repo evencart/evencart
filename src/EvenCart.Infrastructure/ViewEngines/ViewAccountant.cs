@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DotLiquid;
 using EvenCart.Core;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Bundle;
@@ -38,8 +40,7 @@ namespace EvenCart.Infrastructure.ViewEngines
         private readonly IHtmlProcessor _htmlProcessor;
         private readonly IAntiforgery _antiforgery;
         private readonly IMinifier _minifier;
-        private readonly GeneralSettings _generalSettings;
-        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier, GeneralSettings generalSettings)
+        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier)
         {
             _localFileProvider = localFileProvider;
             _actionContextAccessor = actionContextAccessor;
@@ -48,7 +49,6 @@ namespace EvenCart.Infrastructure.ViewEngines
             _htmlProcessor = htmlProcessor;
             _antiforgery = antiforgery;
             _minifier = minifier;
-            _generalSettings = generalSettings;
             _parsedTemplateCache = new ConcurrentDictionary<CachedViewKey, CachedView>();
 
             //set the file system
@@ -108,10 +108,7 @@ namespace EvenCart.Infrastructure.ViewEngines
             var template = GetView(viewPath, originalViewPath, area, parameters).Template;
             var resultHash = GetTemplateHash(parameters);
             var raw = template.Render(resultHash);
-            if (!_generalSettings.EnableHtmlMinification)
-                return raw;
-            var minified = _minifier.MinifyHtml(raw);
-            return minified;
+            return GetProcessedHtml(raw);
         }
 
         public string RenderView(string viewName, string htmlContent, object parameters = null)
@@ -121,10 +118,7 @@ namespace EvenCart.Infrastructure.ViewEngines
                 var template = Template.Parse(htmlContent);
                 var resultHash = GetTemplateHash(parameters);
                 var raw = template.Render(resultHash);
-                if (!_generalSettings.EnableHtmlMinification)
-                    return raw;
-                var minified = _minifier.MinifyHtml(raw);
-                return minified;
+                return GetProcessedHtml(raw);
             }
             catch (Exception ex)
             {
@@ -301,13 +295,32 @@ namespace EvenCart.Infrastructure.ViewEngines
                 resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
             }
 
-            //if there is an seometa, do that as well
-            var seoMeta = ApplicationEngine.CurrentHttpContext.GetRequestSeoMeta();
-            resultHash.Add("pageTitle", seoMeta?.PageTitle ?? _generalSettings.DefaultPageTitle);
-            resultHash.Add("metaKeywords", seoMeta?.MetaKeywords ?? _generalSettings.DefaultMetaKeywords);
-            resultHash.Add("metaDescription", seoMeta?.MetaDescription ?? _generalSettings.DefaultMetaDescription);
+            if (DatabaseManager.IsDatabaseInstalled())
+            {
+                var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+                //if there is an seometa, do that as well
+                var seoMeta = ApplicationEngine.CurrentHttpContext.GetRequestSeoMeta();
+                resultHash.Add("pageTitle", seoMeta?.PageTitle ?? generalSettings.DefaultPageTitle);
+                resultHash.Add("metaKeywords", seoMeta?.MetaKeywords ?? generalSettings.DefaultMetaKeywords);
+                resultHash.Add("metaDescription", seoMeta?.MetaDescription ?? generalSettings.DefaultMetaDescription);
+            }
+         
 
             return resultHash;
+        }
+
+        private string GetProcessedHtml(string html)
+        {
+            if (DatabaseManager.IsDatabaseInstalled())
+            {
+                var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+                if (!generalSettings.EnableHtmlMinification)
+                    return html;
+                var minified = _minifier.MinifyHtml(html);
+                return minified;
+            }
+
+            return html;
         }
     }
 }

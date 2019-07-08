@@ -126,7 +126,8 @@
 {% secondary_navigation url="{% route PluginsList %}" title=@t"Local Plugins" parent="PluginsList" systemName="PluginsList" %}
 {% secondary_navigation url="{% route WidgetsList %}" title=@t"Widgets" parent="PluginsList" systemName="WidgetsList" %}
 {% secondary_navigation url="{% route MarketPluginsList %}" title=@t"Plugin Market" parent="PluginsList" systemName="MarketPluginsList" %}
-
+{% secondary_navigation url="{% route WidgetsList %}" iconClass="rbicon-chevron-left" title=@t"Back to widgets" groupId="WidgetEdit" %}
+{% secondary_navigation url="" title=@t"Configure Widget" systemName="WidgetConfiguration" groupId="WidgetEdit" %}
 
 <!--GDPR -->
 {% primary_navigation title=@t"GDPR" systemName="Gdpr" groupId="settings" capability="GDPR.Manage" %}

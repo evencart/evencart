@@ -32,11 +32,16 @@
                     {% endfor %}
                     {% else %}
                     {% for attribute in attributes %}
-
+                    
                     <div class="form-group" style="padding-top: 15px">
                         {% control label text="{{attribute.name | t}}" %}
                         {% control hidden name="variant.attributes[{{forloop.index0}}].id" value="{{attribute.id}}" %}
-                        {% control select name="variant.attributes[{{forloop.index0}}].values[0].id" items="attribute.valuesAsSelectListItems" required="{{attribute.isRequired}}" %}
+                        {% if attribute.isRequired %}
+                        {% control select name="variant.attributes[{{forloop.index0}}].values[0].id" items="attribute.valuesAsSelectListItems" required="true" %}
+                        {% else %}
+                        {% control select name="variant.attributes[{{forloop.index0}}].values[0].id" items="attribute.valuesAsSelectListItems" %}
+                        {% endif %}
+
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -79,10 +84,6 @@
 
                             <div class="form-group">
                                 {% control checkbox name="variant.trackInventory" text=@t"Track Inventory" value="{{variant.trackInventory}}" %}
-                            </div>
-                            <div class="form-group">
-                                {% control label text=@t"Stock Quantity" for="stockQuantity" %}
-                                {% control number name="variant.stockQuantity" value="{{variant.stockQuantity}}" min="0" %}
                             </div>
                             <div class="form-group">
                                 {% control checkbox name="variant.canOrderWhenOutOfStock" value="{{variant.canOrderWhenOutOfStock}}" text=@t"Can order when out of stock?" %}

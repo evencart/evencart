@@ -12,6 +12,7 @@ using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Notifications;
+using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
@@ -287,7 +288,15 @@ namespace EvenCart.Services.Installation
                 AllowGuestCheckout = true,
                 OrderNumberTemplate = "{UID}{YYYY:R}{MM:R}{DD:R}-{ID}",
                 AllowReorder = true,
-                EnableWishlist = true
+                EnableWishlist = true,
+                AllowCancellation = true,
+                CancellationAllowedFor = new List<string>()
+                {
+                    OrderStatus.New.ToString(),
+                    OrderStatus.Processing.ToString(),
+                    OrderStatus.OnHold.ToString(),
+                    OrderStatus.Delayed.ToString()
+                }
             });
             //tax settings
             settingService.Save(new TaxSettings()

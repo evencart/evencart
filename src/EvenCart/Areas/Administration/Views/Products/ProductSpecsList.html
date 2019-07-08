@@ -12,13 +12,33 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Product Specifications" | t}}
-                {% if hasGroup == "false"  %}
+                {% if hasGroup == false  %}
                 <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, 0)">{{"Add Specification" | t}}</button>
                 {% endif %}
                 <button class="btn btn-primary float-right btn-sm margin-r-5" onclick="editSpecGroup(0)">{{"Add New Group" | t}}</button>
             </div>
             <div class="panel-body">
-
+                <script type="text/javascript">
+                    var enableSortable = function (refresh, id) {
+                        if (refresh) {
+                            displayOrderSortable({
+                                container: "grid-selection-" + id + " tbody",
+                                refresh: true
+                            });
+                        } else {
+                            displayOrderSortable({
+                                container: "grid-selection-" + id + " tbody",
+                                itemSelector: "tr",
+                                update: function() {
+                                    post({
+                                        url: "{% route api_UpdateProductSpecificationDisplayOrder %}",
+                                        data: jQuery("#grid-selection-" + id + " input").serialize()
+                                    });
+                                }
+                            });
+                        }
+                    }
+                </script>
                 {% for psl in productSpecificationsList %}
                 <h6 class="text-center">
                     {% if psl.productSpecificationGroup.id == 0 %}
@@ -29,7 +49,7 @@
                         <span class="rbicon rbicon-edit"></span>
                     </a>
                     {% endif %}
-                    {% if hasGroup == "true" %}
+                    {% if hasGroup == true %}
                     <button class="btn btn-primary float-right btn-sm" onclick="editSpec(0, '{{psl.productSpecificationGroup.id}}')">{{"Add Specification" | t}}</button>
                     {% endif %}
                 </h6>
@@ -42,6 +62,7 @@
                             <th data-column-id="isFilterable" data-formatter="isfilterable" data-width="10%">{{"Filterable" | t}}</th>
                             <th data-column-id="values" data-width="50%" data-formatter="values">{{"Values" | t}}</th>
                             <th data-column-id="commands" data-width="10%" data-formatter="commands" data-sortable="false"></th>
+                            <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
                         </tr>
                     </thead>
                 </table>
@@ -122,9 +143,18 @@
                                         "' onclick='deleteSpec(" +
                                         row.id +
                                         ")'><span class='rbicon-trash-2'></span></button>";
+                                },
+                                "hiddenFields": function (column, row, index) {
+                                    return "<input type='hidden' data-type='displayorder' name='specifications[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                                        "<input type='hidden' data-type='id'  name='specifications[" + index + "].id' value='" + row.id + "' />";
                                 }
+                            },
+                            events: {
+                                "loaded": function () { enableSortable(true, "{{psl.productSpecificationGroup.id}}"); }
                             }
                         });
+
+                        enableSortable(false, "{{psl.productSpecificationGroup.id}}");
                     });
 
                 </script>

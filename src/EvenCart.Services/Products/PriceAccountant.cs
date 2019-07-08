@@ -221,7 +221,7 @@ namespace EvenCart.Services.Products
                                     GetProductPriceDetails(product, cart.BillingAddress, price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
 
                                     //do we need an update?
-                                    if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent)
+                                    if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0)
                                     {
                                         ci.Price = priceWithoutTax;
                                         ci.ComparePrice = comparisonPrice;
@@ -238,7 +238,7 @@ namespace EvenCart.Services.Products
                                 GetProductPriceDetails(product, cart.BillingAddress, basePrice, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
                                 tax = tax * ci.Quantity;
                                 //do we need an update?
-                                if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent)
+                                if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0)
                                 {
                                     ci.Price = priceWithoutTax;
                                     ci.ComparePrice = product.ComparePrice;

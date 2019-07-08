@@ -11,6 +11,7 @@ using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Mvc.Models;
+using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
@@ -40,9 +41,9 @@ namespace EvenCart.Areas.Administration.Components.Widgets
                 return R.Success.ComponentResult;
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<ProductCarouselWidgetSettings>(widgetId);
-            if (!widgetSettings.ProductIds.Any())
+            if (widgetSettings.ProductIds == null || !widgetSettings.ProductIds.Any())
                 return R.Success.ComponentResult;
-            var products = _productService.GetProducts(widgetSettings.ProductIds, true);
+            var products = _productService.GetProducts(widgetSettings.ProductIds, true).Where(x => x.IsPublic());
             var productsModel = products.Select(_productModelFactory.Create)
                 .OrderBy(x => widgetSettings.ProductIds.IndexOf(x.Id))
                 .ToList();

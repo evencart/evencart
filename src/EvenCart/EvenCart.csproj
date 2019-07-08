@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App_Data\database.config.ex" />
     <None Remove="App_Data\database.configex" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
@@ -215,6 +216,7 @@
     <None Remove="Areas\Administration\Views\Widget\Menu.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\ProductCarousel.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\RawHtml.Settings.html" />
+    <None Remove="Areas\Administration\Views\Widget\SocialIcons.Settings.html" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.eot" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.svg" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.ttf" />
@@ -328,6 +330,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="App_Data\database.config.ex" />
     <Content Include="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -833,6 +836,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Warehouse\WarehouseList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Widget\SocialIcons.Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Widget\CustomHtml.Settings.html">

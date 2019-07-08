@@ -18,7 +18,7 @@ namespace EvenCart.Data.Entity.Reviews
 
         public bool VerifiedPurchase { get; set; }
 
-        public int OrderId { get; set; }
+        public int? OrderId { get; set; }
 
         public int ProductId { get; set; }
 

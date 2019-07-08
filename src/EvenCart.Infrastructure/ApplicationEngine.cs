@@ -190,7 +190,8 @@ namespace EvenCart.Infrastructure
                 var currencyService = DependencyResolver.Resolve<ICurrencyService>();
                 if (currentCurrencyId > 0)
                     currency = currencyService.Get(currentCurrencyId);
-                currency = currency ?? currencyService.FirstOrDefault(x => true);
+                currency = currency ?? currencyService.FirstOrDefault(x => x.Published);
+                CurrentHttpContext.SetCurrentCurrency(currency);
                 return currency;
             }
         }
