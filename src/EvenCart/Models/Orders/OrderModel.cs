@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Shipments;
@@ -28,9 +29,17 @@ namespace EvenCart.Models.Orders
         /// </summary>
         public DateTime CreatedOn { get; set; }
         /// <summary>
+        /// Date when the order was created in user's timezone
+        /// </summary>
+        public DateTime CreatedOnLocal => CreatedOn.ToUserDateTime();
+        /// <summary>
         /// Date when order was paid
         /// </summary>
         public DateTime? PaidOn { get; set; }
+        /// <summary>
+        /// Date when the order was Paid in user's timezone
+        /// </summary>
+        public DateTime? PaidOnLocal => PaidOn?.ToUserDateTime();
         /// <summary>
         /// The shipping method name used while placing the order
         /// </summary>

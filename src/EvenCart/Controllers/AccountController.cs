@@ -31,7 +31,7 @@ namespace EvenCart.Controllers
         {
             var currentUser = ApplicationEngine.CurrentUser;
             var userModel = _modelMapper.Map<UserModel>(currentUser);
-            return R.Success.With("user", userModel).Result;
+            return R.Success.With("user", userModel).WithTimezones().Result;
         }
     }
 }

@@ -35,6 +35,10 @@
                 {% control datetime name="dateOfBirth" value="{{user.dateOfBirth}}" %}
             </div>
             <div class="col-sm-12 mb-20">
+                {% control label text=@t"Timezone" for="timezone" %}
+                {% control select name="timezoneId" value="user.timeZoneId" items="timezones" %}
+            </div>
+            <div class="col-sm-12 mb-20">
                 {% control checkbox text=@t"Subscribe to newsletters" name="newslettersEnabled" value="user.newslettersEnabled" %}
             </div>
         </div>

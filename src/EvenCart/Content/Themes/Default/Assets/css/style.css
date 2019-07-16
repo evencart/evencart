@@ -1,7 +1,7 @@
 ﻿body {
   background: #fff;
   color: #999999;
-  font-family: 'Lato', Arial, sans-serif;
+  font-family: 'Noto Sans', Arial, sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
@@ -53,7 +53,6 @@ h4,
 h5,
 h6 {
   color: #3f3f3f;
-  font-family: 'Montserrat', sans-serif;
   margin-top: 0px;
   font-style: normal;
   font-weight: 400; }
@@ -680,7 +679,6 @@ input:focus, textarea:focus {
 
 .page-banner-content h1 {
   color: #4e4e4e;
-  font-family: "Montserrat",sans-serif;
   font-size: 36px;
   font-weight: 700;
   line-height: 1;
@@ -695,7 +693,6 @@ input:focus, textarea:focus {
 
 .page-banner-content .breadcrumb li {
   color: #a7a7a7;
-  font-family: "Montserrat",sans-serif;
   font-size: 14px;
   font-weight: 400;
   text-transform: uppercase; }
@@ -747,12 +744,10 @@ input:focus, textarea:focus {
 .main-menu > ul > li > a {
   color: #555;
   display: block;
-  font-family: "Catamaran",sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
-  padding: 17px 0;
-  text-transform: uppercase; }
+  padding: 17px 0; }
 
 .stick .main-menu > ul > li > a {
   padding: 25px 0; }
@@ -790,11 +785,9 @@ input:focus, textarea:focus {
 .sub-menu li a {
   display: block;
   color: #a3a3a3;
-  font-family: "Catamaran",sans-serif;
   font-size: 12px;
   font-weight: 500;
-  position: relative;
-  text-transform: uppercase; }
+  position: relative; }
 
 .sub-menu li:hover a {
   color: #3f3f3f;
@@ -939,7 +932,6 @@ a.meanmenu-reveal i {
   background-color: transparent;
   border: medium none;
   color: #666;
-  font-family: "Catamaran",sans-serif;
   font-weight: 400;
   letter-spacing: 0.5px;
   padding: 6px 15px;
@@ -1016,7 +1008,6 @@ a.meanmenu-reveal i {
 .header-selector > ul > li ul li a {
   color: #a3a3a3;
   display: block;
-  font-family: "Catamaran",sans-serif;
   font-size: 12px;
   font-weight: 500;
   line-height: 24px;
@@ -1189,7 +1180,6 @@ a.meanmenu-reveal i {
   background-color: #282828;
   color: #fff;
   display: inline-block;
-  font-family: "Catamaran",sans-serif;
   font-size: 12px;
   font-weight: 700;
   height: 36px;
@@ -1201,97 +1191,6 @@ a.meanmenu-reveal i {
 .cart-bottom a:hover {
   background-color: #3f3f3f; }
 
-/* -----------------------------------
-  03. Home Slider Section
---------------------------------------*/
-.home-slider-section {
-  margin-top: 110px;
-  position: relative; }
-
-/*-- Home Slider --*/
-/*-- Nivo Slider Caption --*/
-.nivo-caption, .hero-static-caption {
-  background-color: transparent;
-  bottom: auto;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  left: 0;
-  opacity: 1;
-  padding: 0;
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  width: 100%;
-  z-index: 8; }
-
-/*-- Hero Video Content --*/
-.hero-video-caption {
-  background-color: rgba(240, 240, 240, 0.8);
-  padding: 250px 0; }
-
-/*-- Slider Content --*/
-.hero-slider-content h1 {
-  color: #3f3f3f;
-  font-size: 65px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-transform: uppercase; }
-
-.hero-slider-content p {
-  color: #7e7e7e;
-  font-size: 18px;
-  line-height: 28px;
-  margin-bottom: 37px;
-  max-width: 755px;
-  padding: 0; }
-
-.hero-slider-content a {
-  background-color: #383838;
-  border: 1px solid #383838;
-  color: #fff;
-  display: inline-block;
-  font-family: "Montserrat",sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  height: 44px;
-  line-height: 24px;
-  padding: 10px 50px;
-  text-transform: uppercase; }
-
-.hero-slider-content a:hover {
-  background-color: transparent;
-  color: #383838; }
-
-/*-- Nivo Direction Nav --*/
-.nivo-directionNav a {
-  background-color: #b1b1b1;
-  border-radius: 50%;
-  color: #fff;
-  display: block;
-  height: 58px;
-  margin-top: -29px;
-  text-align: center;
-  top: 50%;
-  width: 58px; }
-
-.nivo-directionNav a:hover {
-  background-color: #383838;
-  color: #fff; }
-
-.nivo-directionNav a i {
-  display: block;
-  font-size: 24px;
-  line-height: 58px; }
-
-.nivo-prevNav {
-  left: 40px; }
-
-.nivo-nextNav {
-  right: 40px; }
-
-/*-- Home Slick Slider --*/
 .home-slick-text-slider .home-slick-content {
   margin-top: 219px; }
 
@@ -1354,7 +1253,6 @@ a.meanmenu-reveal i {
   color: #818181;
   display: block;
   float: left;
-  font-family: "Catamaran",sans-serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -1376,7 +1274,6 @@ a.meanmenu-reveal i {
   color: #818181;
   display: block;
   float: right;
-  font-family: "Catamaran",sans-serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -1401,7 +1298,6 @@ a.meanmenu-reveal i {
 /*-- Product Filter --*/
 .product-filter h5 {
   color: #8d8d8d;
-  font-family: "Catamaran",sans-serif;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 13px;
@@ -1675,11 +1571,9 @@ a.meanmenu-reveal i {
 
 .product-info .title {
   display: block;
-  font-family: "Catamaran",sans-serif;
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 6px;
-  text-transform: uppercase; }
+  margin-bottom: 6px; }
 
 .product-info .title a {
   color: #7a7a7a;
@@ -1848,7 +1742,6 @@ a.meanmenu-reveal i {
 
 .product-details .short-desc p {
   color: #8f8e8e;
-  font-family: "Montserrat",sans-serif;
   font-size: 15px;
   font-weight: 300;
   line-height: 24px; }
@@ -1982,7 +1875,6 @@ a.meanmenu-reveal i {
 .product-details .usefull-link li a {
   color: #818181;
   display: block;
-  font-family: "Montserrat",sans-serif;
   font-size: 12px;
   line-height: 24px;
   text-transform: uppercase; }
@@ -2001,7 +1893,6 @@ a.meanmenu-reveal i {
 .product-details .share-icons span {
   color: #818181;
   float: left;
-  font-family: "Montserrat",sans-serif;
   font-size: 12px;
   line-height: 20px;
   margin-right: 10px;
@@ -2101,11 +1992,10 @@ a.meanmenu-reveal i {
 /*-- Footer Widget Title --*/
 .widget-title {
   color: #505050;
-  font-family: "Catamaran",sans-serif;
   font-size: 19px;
   font-weight: 700;
   margin-bottom: 25px;
-  text-transform: uppercase; }
+  letter-spacing: 0.08rem; }
 
 .footer-widget-dark .widget-title {
   color: #ffffff; }
@@ -2341,7 +2231,6 @@ a.meanmenu-reveal i {
 .home-blog-item .content .date {
   color: #595959;
   display: block;
-  font-family: "Montserrat",sans-serif;
   margin-bottom: 25px;
   overflow: hidden; }
 
@@ -2401,7 +2290,6 @@ a.meanmenu-reveal i {
 .blog-item .content .date {
   color: #595959;
   display: block;
-  font-family: "Montserrat",sans-serif;
   margin-bottom: 10px;
   overflow: hidden; }
 
@@ -2485,7 +2373,6 @@ a.meanmenu-reveal i {
   background-color: #383838;
   border: 1px solid #383838;
   color: #fff;
-  font-family: "Montserrat",sans-serif;
   font-weight: 400;
   height: 40px;
   padding: 7px 45px;
@@ -2555,7 +2442,6 @@ a.meanmenu-reveal i {
 
 .cart-table table tbody tr td.pro-title a {
   display: block;
-  font-family: "Catamaran",sans-serif;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 6px;
@@ -2791,7 +2677,6 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
 
 .wishlist-table table tbody tr td.pro-title a {
   display: block;
-  font-family: "Catamaran",sans-serif;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 6px;
@@ -3020,76 +2905,6 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
 .coupon-form input[type="submit"]:hover {
   background-color: #3f3f3f; }
 
-/*-- Order Wrapper --*/
-.order-wrapper {
-  border: 1px solid #ddd;
-  padding: 30px; }
-
-.order-wrapper h3 {
-  border-bottom: 1px solid #ddd;
-  font-size: 24px;
-  line-height: 17px;
-  margin: 0 0 30px;
-  padding-bottom: 10px;
-  text-transform: uppercase;
-  width: 100%; }
-
-/*-- Order Table --*/
-.order-table {
-  border: medium none; }
-
-.order-table table thead tr th {
-  border-bottom: 1px solid #ddd;
-  border-right: medium none navy;
-  font-size: 16px;
-  line-height: 16px;
-  padding: 0 0 10px;
-  text-transform: uppercase;
-  width: 250px; }
-
-.order-table table thead tr th.product-name {
-  text-align: left; }
-
-.order-table table thead tr th.product-total {
-  text-align: right; }
-
-.order-table table tbody tr td {
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  padding: 8px 0; }
-
-.order-table table tbody tr td.product-name {
-  text-align: left; }
-
-.order-table table tbody tr td.product-total {
-  text-align: right; }
-
-.order-table table tfoot tr th, .order-table table tfoot tr td {
-  border-bottom: 1px solid #ddd;
-  padding: 7px 0; }
-
-.order-table table tfoot tr th {
-  text-align: left; }
-
-.order-table table tfoot tr td {
-  text-align: right; }
-
-/*-- Order Button --*/
-.order-button input[type="submit"] {
-  background-color: #282828;
-  border: medium none;
-  color: #fff;
-  font-weight: 500;
-  height: 40px;
-  padding: 5px 25px;
-  text-transform: uppercase; }
-
-.order-button input[type="submit"]:hover {
-  background-color: #3f3f3f; }
-
-/* -----------------------------------
-  13. Login & Register Page
---------------------------------------*/
 .login-reg-form {
   border: 1px solid #ddd;
   padding: 40px; }
@@ -3133,7 +2948,7 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
   margin-right: 10px;
   margin-top: 3px; }
 
-.login-reg-form form input[type="submit"] {
+.login-reg-form form button[type="submit"], .login-reg-form form input[type="submit"] {
   background-color: #282828;
   border: medium none;
   color: #fff;
@@ -3141,109 +2956,14 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
   height: 40px;
   margin: 0 15px 0 0;
   padding: 7px 50px;
-  text-transform: uppercase;
-  width: auto; }
+  width: auto;
+  border-radius: 3px; }
 
 .login-reg-form form input[type="submit"]:hover {
   background-color: #3f3f3f; }
 
 .login-reg-form form a {
   color: #3f3f3f; }
-
-/*------------------------------------------------contact page-------------------------------------------*/
-/*-- Page Banner Section --*/
-.page-banner-section {
-  background-image: url("../img/2.jpg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin-top: 110px;
-  padding: 90px 0; }
-
-.page-banner-content {
-  display: inline-block;
-  padding: 26px 50px;
-  position: relative;
-  z-index: 1; }
-
-.page-banner-content::before {
-  border: 25px solid #f9f9fa;
-  content: "";
-  height: 155px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 330px;
-  z-index: -1; }
-
-.page-banner-content h1 {
-  color: #4e4e4e;
-  font-family: "Montserrat",sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 7px;
-  text-transform: uppercase; }
-
-/*-- Page Breadcrumb --*/
-.page-banner-content .breadcrumb {
-  background-color: transparent;
-  margin: 0;
-  padding: 0; }
-
-.page-banner-content .breadcrumb li {
-  color: #a7a7a7;
-  font-family: "Montserrat",sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase; }
-
-.page-banner-content .breadcrumb > li + li::before {
-  color: #a7a7a7;
-  content: "\f105";
-  font-family: FontAwesome;
-  font-size: 16px; }
-
-.page-banner-content .breadcrumb li:hover a {
-  color: #3f3f3f; }
-
-/*------------------*/
-div.tab {
-  float: left;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-  width: 30%;
-  height: 300px; }
-
-/* Style the buttons inside the tab */
-div.tab button {
-  display: block;
-  background-color: inherit;
-  color: black;
-  padding: 22px 16px;
-  width: 100%;
-  border: none;
-  outline: none;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 17px; }
-
-/* Change background color of buttons on hover */
-div.tab button:hover {
-  background-color: #ddd; }
-
-/* Create an active/current "tab button" class */
-div.tab button.active {
-  background-color: #ccc; }
-
-/* Style the tab content */
-.tabcontent {
-  float: left;
-  padding: 0px 12px;
-  width: 70%;
-  border-left: none;
-  height: auto; }
 
 .category-filter .child-category-list {
   margin-left: 20px; }
@@ -3268,7 +2988,9 @@ div.tab button.active {
   position: relative;
   clear: both;
   height: 24px;
-  width: 76px; }
+  width: 80px;
+  margin-right: 10px;
+  margin-bottom: 5px; }
   .rating-container .active-stars {
     padding: 0;
     position: absolute;

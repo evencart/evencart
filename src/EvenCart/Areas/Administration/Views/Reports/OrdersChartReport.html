@@ -5,15 +5,15 @@
     var yDataOrders = [];
     var yDataProducts = [];
     var label = "";
-    //{% if groupBy == "Years" %}
+    /*{% if groupBy == "Years" %}*/
     label = "{{'Year' | t}}";;
-    //{% elsif groupBy == "Months" %}
+    /*{% elsif groupBy == "Months" %}*/
     label = "{{'Month' | t}}";
-    //{% elsif groupBy == "Days" %}
+    /*{% elsif groupBy == "Days" %}*/
     label = "{{'Day' | t}}";
-    //{% elsif groupBy == "Weeks" %}
+    /*{% elsif groupBy == "Weeks" %}*/
     label = "{{'Week' | t}}";
-    //{% endif %}
+    /*{% endif %}*/
     for (var i = 0; i < reportItems.length; i++) {
         xData.push(reportItems[i].groupName);
         yDataOrders.push(reportItems[i].totalOrders);

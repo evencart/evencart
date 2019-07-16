@@ -40,6 +40,7 @@ namespace EvenCart.Controllers
             currentUser.CompanyName = userModel.CompanyName;
             currentUser.DateOfBirth = userModel.DateOfBirth;
             currentUser.MobileNumber = userModel.MobileNumber;
+            currentUser.TimeZoneId = userModel.TimeZoneId;
             _userService.Update(currentUser);
 
             return R.Success.Result;

@@ -1,9 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.Common;
-using EvenCart.Data.Entity.Pages;
-using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -11,7 +8,7 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<ContentPage, string>(nameof(ContentPage.Template), "", transaction);
+            Db.AddColumn<User, string>(nameof(User.TimeZoneId), "0", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

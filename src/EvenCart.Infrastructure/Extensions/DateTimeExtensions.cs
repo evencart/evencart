@@ -8,7 +8,9 @@
 using System;
 using System.Globalization;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 
 namespace EvenCart.Infrastructure.Extensions
@@ -17,12 +19,17 @@ namespace EvenCart.Infrastructure.Extensions
     {
         public static DateTime ToUserDateTime(this DateTime dateTime)
         {
-            return dateTime.ToUserDateTime(null);
+            return dateTime.ToUserDateTime(ApplicationEngine.CurrentUser);
         }
 
         public static DateTime ToUserDateTime(this DateTime dateTime, User user)
         {
-            return dateTime;
+            var timezoneId = user?.TimeZoneId;
+            if (timezoneId.IsNullEmptyOrWhiteSpace() || timezoneId == "0")
+            {
+                timezoneId = DependencyResolver.Resolve<GeneralSettings>().DefaultTimeZoneId;
+            }
+            return TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Utc, TimeZoneInfo.FindSystemTimeZoneById(timezoneId));
         }
 
         public static string GetMonthName(this DateTime dateTime)

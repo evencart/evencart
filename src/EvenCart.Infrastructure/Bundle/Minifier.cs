@@ -24,7 +24,10 @@ namespace EvenCart.Infrastructure.Bundle
                 str += match.ToString();
             }
 
-            html = MatchBodyRegEx.Replace(html, str + "</body>");
+            if (MatchBodyRegEx.IsMatch(html))
+                html = MatchBodyRegEx.Replace(html, str + "</body>");
+            else
+                html = html + str;
             return html;
         }
     }

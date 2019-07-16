@@ -14,21 +14,21 @@
                         {% control xsrf %}
                         <div class="row">
                             <div class="col-sm-12 mb-20">
-                                <label id="email">Email <span class="required">*</span></label>
+                                <label id="email">{{"Email" | t}}</label>
                                 <input name="email" id="email" type="text">
                             </div>
                             <div class="col-sm-12 mb-20">
-                                <label id="password">Passwords <span class="required">*</span></label>
+                                <label id="password">{{"Password" | t}}</label>
                                 <input name="password" id="password" type="password">
                             </div>
                             <div class="col-sm-12 mb-20">
-                                <input id="Login" name="login" class="inline" type="submit">
+                                <button type="submit">{{"Login" | t}}</button>
                                 <label class="inline" for="rememberme">
                                     <input id="rememberme" name="rememberme" value="true" type="checkbox"> {{"Remember me" | t}}
                                 </label>
                             </div>
                             <div class="col-sm-12">
-                                <a href="{% route ForgotPassword %}">{{"Lost your password?" | t}}</a>
+                                <a href="{% route ForgotPassword %}">{{"Forgot password?" | t}}</a>
                             </div>
                             <div class="col-sm-12">
                                 {{"Don't have any account?" | t}} <a href="{% route Register %}">{{"Create one" | t}}</a>

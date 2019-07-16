@@ -1393,9 +1393,19 @@
             Date when order was created
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.CreatedOnLocal">
+            <summary>
+            Date when the order was created in user's timezone
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.PaidOn">
             <summary>
             Date when order was paid
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.PaidOnLocal">
+            <summary>
+            Date when the order was Paid in user's timezone
             </summary>
         </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.ShippingMethodName">
@@ -1756,6 +1766,11 @@
             The creation date of review. Ignored for POST requests.
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Reviews.ReviewModel.CreatedOnLocal">
+            <summary>
+            The creation date of review in user's timezone
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Reviews.ReviewModel.Private">
             <summary>
             Specifies if user information should be kept private or public
@@ -1834,6 +1849,11 @@
         <member name="P:EvenCart.Models.Users.UserModel.NewslettersEnabled">
             <summary>
             true if user has subscribed to newsletters. false otherwise.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.TimeZoneId">
+            <summary>
+            The timezone id of the user
             </summary>
         </member>
     </members>

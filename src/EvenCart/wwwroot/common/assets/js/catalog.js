@@ -1,4 +1,5 @@
-﻿var root = "http://localhost:52886";
+﻿window.root = "http://localhost:52886";
+var root = window.root;
 var useHash = false; // Defaults to: false
 var hash = '#!'; // Defaults to: '#'
 var router = new Navigo(root, useHash, hash);

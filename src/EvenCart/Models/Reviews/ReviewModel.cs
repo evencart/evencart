@@ -1,4 +1,5 @@
 ﻿using System;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using EvenCart.Models.Products;
@@ -30,6 +31,10 @@ namespace EvenCart.Models.Reviews
         /// The creation date of review. Ignored for POST requests.
         /// </summary>
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        /// <summary>
+        /// The creation date of review in user's timezone
+        /// </summary>
+        public DateTime CreatedOnLocal => CreatedOn.ToUserDateTime();
         /// <summary>
         /// Specifies if user information should be kept private or public
         /// </summary>

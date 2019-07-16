@@ -46,6 +46,11 @@ namespace EvenCart.Models.Users
         /// </summary>
         public bool NewslettersEnabled { get; set; }
 
+        /// <summary>
+        /// The timezone id of the user
+        /// </summary>
+        public string TimeZoneId { get; set; }
+
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();

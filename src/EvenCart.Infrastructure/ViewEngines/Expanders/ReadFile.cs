@@ -72,7 +72,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
 
         public bool IsModified()
         {
-            if (IsDirty)
+            if (IsDirty || FileName == null)
                 return true;
             var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
             var lastModified = localFileProvider.GetLastModifiedDateTime(FileName);

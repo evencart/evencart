@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
@@ -20,6 +21,7 @@ using EvenCart.Infrastructure.DependencyContainer;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Theming;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,10 @@ namespace EvenCart.Infrastructure
         #region Initialization
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(
+                    new DirectoryInfo(ApplicationConfig.SecureDataDirectory));
+
             //antiforgery
             services.AddAntiforgeryTokens();
 

@@ -97,7 +97,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             var roleModel = _roleModelFactory.Create(role);
             roleModel.Capabilities = role.Capabilities?.Select(x => x.Id.ToString()).ToList();
-            var availableCapabilities = _capabilityService.Get(x => true).ToList();
+            var availableCapabilities = _capabilityService.Get(x => true).OrderBy(x => x.Name).ToList();
             var availableCapabilitiesModel =
                 SelectListHelper.GetSelectItemList(availableCapabilities, x => x.Id, x => x.Name);
 

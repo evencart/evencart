@@ -1,4 +1,5 @@
 ﻿using System;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Users;
 
@@ -20,7 +21,11 @@ namespace EvenCart.Models.Pages
 
         public DateTime CreatedOn { get; set; }
 
+        public DateTime CreatedOnLocal => CreatedOn.ToUserDateTime();
+
         public DateTime UpdatedOn { get; set; }
+
+        public DateTime UpdatedOnLocal => UpdatedOn.ToUserDateTime();
 
         public DateTime PublishedOn { get; set; }
 

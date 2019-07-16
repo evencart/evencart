@@ -30,3 +30,4 @@ src/EvenCart/wwwroot/bundles/*.js
 src/EvenCart/wwwroot/bundles/*.css
 src/Plugins/Shipping.UPS/obj/
 src/EvenCart/wwwroot/bundles/
+publish/

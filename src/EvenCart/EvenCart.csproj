@@ -17,19 +17,15 @@
   <ItemGroup>
     <Compile Remove="App_Data\Languages\Flags\**" />
     <Compile Remove="Pages\**" />
-    <Compile Remove="Plugins\**" />
     <Compile Remove="wwwroot\administration\assets\lib\dist\**" />
     <Content Remove="App_Data\Languages\Flags\**" />
     <Content Remove="Pages\**" />
-    <Content Remove="Plugins\**" />
     <Content Remove="wwwroot\administration\assets\lib\dist\**" />
     <EmbeddedResource Remove="App_Data\Languages\Flags\**" />
     <EmbeddedResource Remove="Pages\**" />
-    <EmbeddedResource Remove="Plugins\**" />
     <EmbeddedResource Remove="wwwroot\administration\assets\lib\dist\**" />
     <None Remove="App_Data\Languages\Flags\**" />
     <None Remove="Pages\**" />
-    <None Remove="Plugins\**" />
     <None Remove="wwwroot\administration\assets\lib\dist\**" />
   </ItemGroup>
 
@@ -44,10 +40,36 @@
   <ItemGroup>
     <None Remove="App_Data\database.config.ex" />
     <None Remove="App_Data\database.configex" />
+    <None Remove="App_Data\Install\EmailTemplates\ContactUsMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\InvitationMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\InvitationRequestedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\InvitationRequestedMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\Master.html" />
+    <None Remove="App_Data\Install\EmailTemplates\OrderPaidMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\OrderPaidMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\OrderPlacedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\OrderPlacedMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\PasswordChangedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\PasswordRecoveryLinkMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\ShipmentDeliveredMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\ShipmentDeliveredMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\ShipmentShippedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserAccountDeletedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserAccountDeletedMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserActivatedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserActivationLinkMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserDeactivatedMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserDeactivatedMessageToAdmin.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserRegisteredMessage.html" />
+    <None Remove="App_Data\Install\EmailTemplates\UserRegisteredMessageToAdmin.html" />
+    <None Remove="App_Data\Security\.gitkeep" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
     <None Remove="Areas\Administration\Views\Categories\CategoriesList.html" />
     <None Remove="Areas\Administration\Views\Categories\CategoryEditor.html" />
+    <None Remove="Areas\Administration\Views\Components\EvenCartUpdates\Default.html" />
     <None Remove="Areas\Administration\Views\ContentPages\ContentPageEditor.html" />
     <None Remove="Areas\Administration\Views\ContentPages\ContentPagesList.html" />
     <None Remove="Areas\Administration\Views\Controls\ajaxedcontent.html" />
@@ -76,8 +98,13 @@
     <None Remove="Areas\Administration\Views\Cultures\CurrencyEditor.html" />
     <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelEditor.html" />
     <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelsList.html" />
-    <None Remove="Areas\Administration\Views\Dashboard.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.BestSellers.html" />
     <None Remove="Areas\Administration\Views\Dashboard\Index.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.OrdersChart.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.RecentOrders.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.RecentUsers.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.Totals.html" />
+    <None Remove="Areas\Administration\Views\Dashboard\Index.UsersChart.html" />
     <None Remove="Areas\Administration\Views\Dialog\Selector.html" />
     <None Remove="Areas\Administration\Views\Discounts\DiscountEditor.html" />
     <None Remove="Areas\Administration\Views\Discounts\DiscountsList.html" />
@@ -138,6 +165,7 @@
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.OrderStatus.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.PaymentStatus.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.html" />
+    <None Remove="Areas\Administration\Views\Orders\ReturnRequestsList.html" />
     <None Remove="Areas\Administration\Views\Orders\ShipmentEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\ShipmentsList.html" />
     <None Remove="Areas\Administration\Views\Pages\SeoMetaPanel.html" />
@@ -171,6 +199,7 @@
     <None Remove="Areas\Administration\Views\Reports\RecentUsersReport.html" />
     <None Remove="Areas\Administration\Views\Reports\StockReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\StockReport.html" />
+    <None Remove="Areas\Administration\Views\Reports\TotalsReport.html" />
     <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Reports\UserOrdersReport.html" />
     <None Remove="Areas\Administration\Views\Reports\UsersChartReport.html" />
@@ -217,6 +246,14 @@
     <None Remove="Areas\Administration\Views\Widget\ProductCarousel.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\RawHtml.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\SocialIcons.Settings.html" />
+    <None Remove="Content\Themes\Default\Assets\css\animate.min.css" />
+    <None Remove="Content\Themes\Default\Assets\css\bootstrap.min.css" />
+    <None Remove="Content\Themes\Default\Assets\css\font-awesome.css" />
+    <None Remove="Content\Themes\Default\Assets\css\hover-min.css" />
+    <None Remove="Content\Themes\Default\Assets\css\hover.css" />
+    <None Remove="Content\Themes\Default\Assets\css\plugins.css" />
+    <None Remove="Content\Themes\Default\Assets\css\responsive.css" />
+    <None Remove="Content\Themes\Default\Assets\css\style.scss" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.eot" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.svg" />
     <None Remove="Content\Themes\Default\Assets\fonts\fontawesome-webfont.ttf" />
@@ -260,6 +297,7 @@
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\RawHtml\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\SocialIcons\Default.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\_404.html" />
@@ -331,6 +369,81 @@
 
   <ItemGroup>
     <Content Include="App_Data\database.config.ex" />
+    <Content Include="App_Data\Install\EmailTemplates\ContactUsMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\InvitationMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\InvitationRequestedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\InvitationRequestedMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Master.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\OrderPaidMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\OrderPaidMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\OrderPlacedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\OrderPlacedMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\PasswordChangedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\PasswordRecoveryLinkMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\ShipmentDeliveredMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\ShipmentDeliveredMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\ShipmentShippedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserAccountDeletedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserAccountDeletedMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserActivatedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserActivationLinkMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserDeactivatedMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserDeactivatedMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserRegisteredMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\UserRegisteredMessageToAdmin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Security\.gitkeep">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -344,6 +457,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Categories\CategoryEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Components\EvenCartUpdates\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\ContentPages\ContentPageEditor.html">
@@ -430,10 +546,25 @@
     <Content Include="Areas\Administration\Views\CustomLabels\CustomLabelEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Administration\Views\Dashboard.html">
+    <Content Include="Areas\Administration\Views\Dashboard\Index.BestSellers.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Dashboard\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.OrdersChart.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.RecentOrders.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.RecentUsers.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.Totals.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Dashboard\Index.UsersChart.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Dialog\Selector.html">
@@ -616,6 +747,9 @@
     <Content Include="Areas\Administration\Views\Orders\OrderFulfillmentEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Orders\ReturnRequestsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Orders\ShipmentEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -692,6 +826,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Reports\RecentOrdersReport.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Reports\TotalsReport.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Reports\UsersChartReport.html">
@@ -853,6 +990,30 @@
     <Content Include="Areas\Administration\Views\Widget\RawHtml.Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Themes\Default\Assets\css\animate.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\bootstrap.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\font-awesome.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\hover-min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\hover.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\plugins.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\responsive.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\css\style.scss">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Assets\fonts\fontawesome-webfont.eot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -981,6 +1142,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\RawHtml\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\SocialIcons\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\ContentPages\Index.html">
@@ -1176,6 +1340,8 @@
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
+    <Folder Include="Plugins\Security.Recaptcha\" />
+    <Folder Include="Plugins\Ui.Slider\Views\UiSlider\" />
     <Folder Include="Widgets\" />
     <Folder Include="wwwroot\bundles\" />
   </ItemGroup>
@@ -1184,6 +1350,20 @@
     <None Include="Content\Themes\Default\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Plugins\Payments.PaypalWithRedirect\EvenCart.Data.dll.config" />
+    <None Include="Plugins\Payments.PaypalWithRedirect\EvenCart.Services.dll.config" />
+    <None Include="Plugins\Payments.PaypalWithRedirect\RoastedMarketplace.Data.dll.config" />
+    <None Include="Plugins\Payments.PaypalWithRedirect\RoastedMarketplace.Services.dll.config" />
+    <None Include="Plugins\Shipping.FedEx\EvenCart.Data.dll.config" />
+    <None Include="Plugins\Shipping.FedEx\EvenCart.Services.dll.config" />
+    <None Include="Plugins\Shipping.FedEx\RoastedMarketplace.Data.dll.config" />
+    <None Include="Plugins\Shipping.FedEx\RoastedMarketplace.Services.dll.config" />
+    <None Include="Plugins\Shipping.UPS\EvenCart.Data.dll.config" />
+    <None Include="Plugins\Shipping.UPS\EvenCart.Services.dll.config" />
+    <None Include="Plugins\Ui.Slider\EvenCart.Data.dll.config" />
+    <None Include="Plugins\Ui.Slider\EvenCart.Services.dll.config" />
+    <None Include="Plugins\Ui.Slider\RoastedMarketplace.Data.dll.config" />
+    <None Include="Plugins\Ui.Slider\RoastedMarketplace.Services.dll.config" />
     <None Include="wwwroot\administration\assets\css\style.css" />
     <None Include="wwwroot\administration\assets\css\style.min.css" />
     <None Include="wwwroot\administration\assets\css\style.scss" />

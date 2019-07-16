@@ -9,7 +9,7 @@
     {%- assign ratingWidth=review.ratingPercent -%}
     {% partial "Products/_RatingStars" %}
     <div class="review-description">
-        {{review.description}}
+        {{review.description | newLine2Br }}
     </div>
     <div class="posted-by">
         {{review.displayName}} {{"on" | t}} {{review.createdOn }}

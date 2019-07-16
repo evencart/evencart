@@ -26,6 +26,8 @@ namespace EvenCart.Infrastructure
 
         public const string GlobalLanguagesDirectory = "~/App_Data/Languages";
 
+        public const string SecureDataDirectory = "App_Data/Security";
+
         public const string FlagsDirectory = "~/common/flags";
 
         public const string BundlesDirectory = "~/bundles";
