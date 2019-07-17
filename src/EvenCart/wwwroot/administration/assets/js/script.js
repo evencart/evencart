@@ -17,7 +17,7 @@ $(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;
 
     if (code == 13) {
-        if (!jQuery(e.target).hasClass("trumbowyg-editor")) {
+        if (!jQuery(e.target).hasClass("trumbowyg-editor") && jQuery(e.target)[0].tagName != "TEXTAREA") {
             e.preventDefault();
             return false;
         }
