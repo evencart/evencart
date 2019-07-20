@@ -6,6 +6,8 @@ namespace EvenCart.Infrastructure.Theming
     {
         public string Name { get; set; }
 
+        public string DirectoryName { get; set; }
+
         public string Description { get; set; }
 
         public string ProductBoxImageSize { get; set; }
@@ -19,6 +21,8 @@ namespace EvenCart.Infrastructure.Theming
         public Dictionary<string, string> WidgetZones { get; set; }
 
         public Dictionary<string, string> Templates { get; set; } = new  Dictionary<string, string>();
+
+        public string ThumbnailUrl { get; set; }
 
         public string GetTemplatePath(string templateKey)
         {

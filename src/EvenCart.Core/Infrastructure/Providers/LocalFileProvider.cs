@@ -87,6 +87,11 @@ namespace EvenCart.Core.Infrastructure.Providers
             return Directory.GetFiles(directoryName, pattern);
         }
 
+        public string[] GetDirectories(string directoryName)
+        {
+            return Directory.GetDirectories(directoryName);
+        }
+
         public void DeleteFiles(string directoryName, string pattern)
         {
             var files = GetFiles(directoryName, pattern);

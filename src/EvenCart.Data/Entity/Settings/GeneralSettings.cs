@@ -38,5 +38,7 @@ namespace EvenCart.Data.Entity.Settings
         public string DefaultMetaKeywords { get; set; }
 
         public string DefaultMetaDescription { get; set; }
+
+        public string ActiveTheme { get; set; }
     }
 }

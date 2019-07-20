@@ -38,6 +38,8 @@ namespace EvenCart.Infrastructure
 
         public const string DefaultImagePath = "~/Content/Uploads/_Default.jpg";
 
+        public const string ThemeDirectory = "~/Content/Themes";
+
         public const string AdminAreaName = "admin";
 
         public const int AdminThumbnailWidth = 100;

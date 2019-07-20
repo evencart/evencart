@@ -85,6 +85,19 @@
                     {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
                 </div>
                 {% endif %}
+                <div class="form-group">
+                    {% control label text=@t"Active Theme" for="active-theme" %}
+                    <ul class="list-no-style">
+                        {% for theme in availableThemes %}
+                        <label class="text-center">
+                            <img src="{{theme.thumbnailUrl}}" /><br/>
+                            <input name="activeTheme" type="radio" {% if theme.directoryName == settings.activeTheme %}checked{% endif %} value="{{theme.directoryName}}"/> 
+                            <strong>{{theme.name}}</strong>
+                        </label>
+                        {% endfor %}
+                    </ul>
+                 
+                </div>
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Settings;
+using EvenCart.Areas.Administration.Models.Themes;
 using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
@@ -17,6 +18,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Infrastructure.Theming;
 using EvenCart.Services.Gdpr;
 using EvenCart.Services.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -45,11 +47,13 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly ISettingService _settingService;
         private readonly IModelMapper _modelMapper;
         private readonly ICryptographyService _cryptographyService;
-        public SettingsController(ISettingService settingService, IModelMapper modelMapper, ICryptographyService cryptographyService)
+        private readonly IThemeProvider _themeProvider;
+        public SettingsController(ISettingService settingService, IModelMapper modelMapper, ICryptographyService cryptographyService, IThemeProvider themeProvider)
         {
             _settingService = settingService;
             _modelMapper = modelMapper;
             _cryptographyService = cryptographyService;
+            _themeProvider = themeProvider;
         }
 
         [DualGet("{settingType}", Name = AdminRouteNames.GetSettings)]
@@ -190,6 +194,16 @@ namespace EvenCart.Areas.Administration.Controllers
                     var menuSelectList = SelectListHelper.GetSelectItemList(menus, x => x.Id, x => x.Name);
                     result.WithTimezones();
                     result.With("availableMenus", menuSelectList);
+
+                    //get themes
+                    var themes = _themeProvider.GetAvailableThemes()
+                        .Select(x => new ThemeInfoModel()
+                        {
+                            DirectoryName = x.DirectoryName,
+                            Name = x.Name,
+                            ThumbnailUrl = x.ThumbnailUrl
+                        }).ToList();
+                    result.With("availableThemes", themes);
                     break;
                 case "order":
                     settings = DependencyResolver.Resolve<OrderSettings>();
