@@ -12,9 +12,10 @@
         })
         .validate({
             submitHandler: function (form) {
+                var extraData = options.extraData;
                 if (isFunction(options.extraData)) {
-                    options.extraData = options.extraData();
-                    if (!options.extraData) {
+                    extraData = options.extraData();
+                    if (!extraData) {
                         if (options.onError)
                             options.onError();
                         return;
@@ -23,7 +24,7 @@
                 //get form object
                 var object = jQuery(form).serializeObject();
                 //add additional parameters
-                object = jQuery.extend(object, options.extraData);
+                object = jQuery.extend(object, extraData);
                 if (options.beforeSubmit) {
                     if (!options.beforeSubmit(object))
                         return;
