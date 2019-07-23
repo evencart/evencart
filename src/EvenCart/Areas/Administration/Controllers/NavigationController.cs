@@ -50,7 +50,7 @@ namespace EvenCart.Areas.Administration.Controllers
         public IActionResult MenuList()
         {
             var menus = _menuService.Get(x => true);
-            var menuModels = menus.Select(x => _modelMapper.Map<MenuModel>(x)).ToList();
+            var menuModels = menus.Select(x => _modelMapper.Map<MenuModel>(x)).OrderBy(x => x.Name).ToList();
             //categories
             var categories = _categoryService.GetFullCategoryTree();
             var pages = _contentPageService.Get(x => true).ToList();
