@@ -25,7 +25,7 @@ namespace EvenCart.Infrastructure.Theming
         private ThemeInfo _cachedThemeInfo = null;
         public ThemeInfo GetActiveTheme()
         {
-            if (_cachedThemeInfo != null)
+            if (_cachedThemeInfo != null && _cachedThemeInfo.DirectoryName == _generalSettings.ActiveTheme)
                 return _cachedThemeInfo;
             var themeDirectoryName = _generalSettings.ActiveTheme;
             if(themeDirectoryName.IsNullEmptyOrWhiteSpace())
