@@ -243,6 +243,7 @@
     <None Remove="Content\Themes\Default\Assets\js\popper.min.js" />
     <None Remove="Content\Themes\Default\Assets\js\wow.js" />
     <None Remove="Content\Themes\Default\Assets\js\wow.min.js" />
+    <None Remove="Content\Themes\Default\Assets\theme.jpg" />
     <None Remove="Content\Themes\Default\Views\Account\Profile.html" />
     <None Remove="Content\Themes\Default\Views\Addresses\AddressEditor.html" />
     <None Remove="Content\Themes\Default\Views\Addresses\Addresses.html" />
@@ -954,6 +955,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Assets\js\wow.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Assets\theme.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Account\Profile.html">
