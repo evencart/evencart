@@ -15,7 +15,15 @@ namespace EvenCart.Services.Navigation
     {
         public override Menu Get(int id)
         {
-            return GetByWhere(x => x.Id == id).SelectNested().FirstOrDefault();
+            var menu = GetByWhere(x => x.Id == id).SelectNested().FirstOrDefault();
+            if (menu?.MenuItems == null)
+                return menu;
+            foreach (var menuItem in menu.MenuItems)
+            {
+                menuItem.ChildMenuItems = menu.MenuItems.Where(x => x.ParentMenuItemId == menuItem.Id).ToList();
+            }
+
+            return menu;
         }
 
         public override IEnumerable<Menu> Get(Expression<Func<Menu, bool>> @where, int page = 1, int count = Int32.MaxValue)

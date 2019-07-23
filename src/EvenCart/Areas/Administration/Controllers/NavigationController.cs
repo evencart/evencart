@@ -241,8 +241,19 @@ namespace EvenCart.Areas.Administration.Controllers
             var menuItem = menuItemId > 0 ? _menuItemService.Get(menuItemId) : null;
             if (menuItem == null)
                 return NotFound();
-            _menuItemService.Delete(menuItem);
-
+            //get the menu to get the entire tree
+            var menu = _menuService.Get(menuItem.MenuId);
+            if (menu == null)
+                return NotFound();
+            Transaction.Initiate(transaction =>
+            {
+                _menuItemService.Delete(menuItem, transaction);
+               //get all the children
+               var childMenuItems = menu.MenuItems.First(x => x.Id == menuItemId).ChildMenuItems.SelectManyRecursive(x => x.ChildMenuItems);
+               foreach (var cm in childMenuItems)
+                   _menuItemService.Delete(cm, transaction);
+            });
+      
             return R.Success.Result;
         }
 

@@ -1,4 +1,5 @@
-﻿using EvenCart.Core.Data;
+﻿using System.Collections.Generic;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Pages;
 
 namespace EvenCart.Data.Entity.Navigation
@@ -25,6 +26,8 @@ namespace EvenCart.Data.Entity.Navigation
         public virtual Menu Menu { get; set; }
 
         public virtual MenuItem ParentMenuItem { get; set; }
+
+        public virtual IList<MenuItem> ChildMenuItems { get; set; }
 
         public virtual SeoMeta SeoMeta { get; set; }
         #endregion

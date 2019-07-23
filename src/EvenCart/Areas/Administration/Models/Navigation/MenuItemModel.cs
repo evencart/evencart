@@ -8,7 +8,7 @@ namespace EvenCart.Areas.Administration.Models.Navigation
     {
         public int MenuId { get; set; }
 
-        public int? ParentMenuItemId { get; set; }
+        public int ParentMenuItemId { get; set; }
 
         public string Name { get; set; }
 
