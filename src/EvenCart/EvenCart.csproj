@@ -123,36 +123,10 @@
     <None Remove="Areas\Administration\Views\Layout\_WidgetLayout.html" />
     <None Remove="Areas\Administration\Views\Manufacturers\ManufacturerEditor.html" />
     <None Remove="Areas\Administration\Views\Manufacturers\ManufacturersList.html" />
-    <None Remove="Areas\Administration\Views\Navigation\AddressEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ConsentSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ContentPageEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ContentPagesSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\CountrySecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\DiscountEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\EmailAccountEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\EmailsSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\EmailTemplateEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\GDPRSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Navigation\MenuEditor.html" />
-    <None Remove="Areas\Administration\Views\Navigation\MenuEditSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Navigation\MenuItemEditor.html" />
     <None Remove="Areas\Administration\Views\Navigation\MenuList.html" />
-    <None Remove="Areas\Administration\Views\Navigation\OrderEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\OrderSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\PluginSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Navigation\PrimaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ProductEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ProductSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\PromotionSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\ReportsSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\SettingsSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\StatesSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\TaxRatesSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\TaxSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\UserEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\UserSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\VendorEditSecondaryNavigation.html" />
-    <None Remove="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.CustomerInfoPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.OrderInfoPanel.html" />
@@ -621,40 +595,7 @@
     <Content Include="Areas\Administration\Views\Manufacturers\ManufacturersList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Administration\Views\Navigation\AddressEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ConsentSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ContentPageEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ContentPagesSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\CountrySecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\DiscountEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\EmailAccountEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\EmailsSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\EmailTemplateEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\GDPRSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Areas\Administration\Views\Navigation\MenuEditor.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\MenuEditSecondaryNavigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Navigation\MenuItemEditor.html">
@@ -663,52 +604,7 @@
     <Content Include="Areas\Administration\Views\Navigation\MenuList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Administration\Views\Navigation\OrderEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\OrderSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\PluginSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Areas\Administration\Views\Navigation\PrimaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ProductEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ProductSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\PromotionSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\ReportsSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\SettingsSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\StatesSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\TaxRatesSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\TaxSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\UserEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\UserSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\VendorEditSecondaryNavigation.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Administration\Views\Navigation\WidgetSecondaryNavigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Orders\OrderEditor.ProductsPanel.html">

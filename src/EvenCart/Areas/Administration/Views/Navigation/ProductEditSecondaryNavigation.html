@@ -1,9 +1,0 @@
-﻿{% global back_page="{% route ProductsList %}" back_link_title=@t"Back to products" %}
-{% secondary_navigation url="{% route GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" %}
-{% secondary_navigation url="{% route ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" %}
-{% secondary_navigation url="{% route ProductSpecificationsList productId="{{productId}}" %}" title=@t"Specifications" systemName="ProductSpecificationsList" %}
-{% secondary_navigation url="{% route ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="relatedproduct" %}" title=@t"Related Products" systemName="RelatedProducts" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="crosssell" %}" title=@t"Cross Sell" systemName="CrossSell" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="upsell" %}" title=@t"Up Sell" systemName="UpSell" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="frequentlyboughttogether" %}" title=@t"Bought Together" systemName="FbtProducts" %}
