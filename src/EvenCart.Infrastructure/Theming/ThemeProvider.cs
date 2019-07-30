@@ -71,6 +71,11 @@ namespace EvenCart.Infrastructure.Theming
             return themeInfos;
         }
 
+        public void ResetActiveTheme()
+        {
+            _cachedThemeInfo = null;
+        }
+
         private ThemeInfo GetThemeInfo(DirectoryInfo directoryInfo)
         {
             var themeConfigPath = _localFileProvider.CombinePaths(_themeDirectory, directoryInfo.Name, "config.json");

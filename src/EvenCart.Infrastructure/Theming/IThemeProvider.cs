@@ -9,5 +9,7 @@ namespace EvenCart.Infrastructure.Theming
         string GetThemePath(string themeName);
 
         IList<ThemeInfo> GetAvailableThemes();
+
+        void ResetActiveTheme();
     }
 }
