@@ -134,11 +134,15 @@ namespace EvenCart.Infrastructure.Extensions
             var allThemes = Directory.GetDirectories(themesDir);
             foreach (var themeDir in allThemes)
             {
+               
                 var directoryInfo = new DirectoryInfo(themeDir);
+                var assetDir =
+                    Path.Combine(themesDir, themeDir, "Assets");
+                if (!Directory.Exists(assetDir))
+                    continue;
                 app.UseStaticFiles(new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(
-                        Path.Combine(themesDir, themeDir, "Assets")),
+                    FileProvider = new PhysicalFileProvider(assetDir),
                     RequestPath = new PathString($"/{directoryInfo.Name}/assets")
                 });
             }
