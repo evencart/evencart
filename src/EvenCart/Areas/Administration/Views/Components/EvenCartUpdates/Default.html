@@ -1,4 +1,5 @@
-﻿<div class="panel">
+﻿{% if evencartUpdates.size > 0 %}
+<div class="panel">
     <div class="panel-title">
         {{"From EvenCart Desks" | t}}
     </div>
@@ -15,3 +16,4 @@
         </div>
     </div>
 </div>
+{% endif %}

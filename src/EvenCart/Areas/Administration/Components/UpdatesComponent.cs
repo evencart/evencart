@@ -35,32 +35,41 @@ namespace EvenCart.Areas.Administration.Components
 
         public override IViewComponentResult Invoke(object data = null)
         {
-            UpdatesResponseModel updates = null;
-            //do we need to fetch?
-            if (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace() || DateTime.UtcNow.Subtract(_systemSettings.LatestFetchedOn).TotalHours >=
-                _systemSettings.UpdateFetchIntervalInHours)
-            {
-                //we need to
-                updates = _requestProvider.Get<UpdatesResponseModel>(UpdatesFetchUrl, new NameValueCollection()
-                {
-                    { "storeDomain", _generalSettings.StoreDomain },
-                    { "storeName", _generalSettings.StoreName }
-                });
-                if (!updates.Success && _systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace())
-                    return R.Fail.ComponentResult;
-                _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
-                _settingService.Save(_systemSettings);
-            }
-
-            updates = updates ?? (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace()
-                          ? null
-                          : _dataSerializer.DeserializeAs<UpdatesResponseModel>(_systemSettings.LatestUpdatesFetched));
             var r = R;
-            if (updates != null)
+            try
             {
-                r.With("evencartUpdates", updates.Updates);
+                UpdatesResponseModel updates = null;
+                //do we need to fetch?
+                if (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace() || DateTime.UtcNow.Subtract(_systemSettings.LatestFetchedOn).TotalHours >=
+                    _systemSettings.UpdateFetchIntervalInHours)
+                {
+                    //we need to
+                    updates = _requestProvider.Get<UpdatesResponseModel>(UpdatesFetchUrl, new NameValueCollection()
+                    {
+                        { "storeDomain", _generalSettings.StoreDomain },
+                        { "storeName", _generalSettings.StoreName }
+                    });
+                    if (!updates.Success && _systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace())
+                        return R.Fail.ComponentResult;
+                    _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
+                    _settingService.Save(_systemSettings);
+                }
+
+                updates = updates ?? (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace()
+                              ? null
+                              : _dataSerializer.DeserializeAs<UpdatesResponseModel>(_systemSettings.LatestUpdatesFetched));
+
+                if (updates != null)
+                {
+                    r.With("evencartUpdates", updates.Updates);
+                }
+                return r.Success.ComponentResult;
             }
-            return r.Success.ComponentResult;
+            catch
+            {
+                return r.Success.ComponentResult;
+            }
+            
         }
     }
 }

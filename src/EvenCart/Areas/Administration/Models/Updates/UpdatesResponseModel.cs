@@ -3,7 +3,7 @@ using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Updates
 {
-    public class UpdatesResponseModel : FoundationModel
+    public class UpdatesResponseModel
     {
         public int Current { get; set; }
 
