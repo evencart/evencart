@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Authors>Team Apexol</Authors>
+    <Company>Sojatia Infocrafts Private Limited</Company>
+    <Description>The infrastructure library for EvenCart software.</Description>
+    <Copyright>2019 Sojatia Infocrafts Private Limited</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

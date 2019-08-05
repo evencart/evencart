@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Authors>Team Apexol</Authors>
+    <Company>Sojatia Infocrafts Private Limited</Company>
+    <Description>Plugin to process payments with PayPal by redirecting to PayPal's website.</Description>
+    <Copyright>2019 Sojatia Infocrafts Private Limited</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
