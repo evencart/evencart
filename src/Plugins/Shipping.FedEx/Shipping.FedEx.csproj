@@ -41,4 +41,8 @@
     <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)Build\Cleanup\Output\Cleanup.exe $(OutDir)" />
+  </Target>
+
 </Project>

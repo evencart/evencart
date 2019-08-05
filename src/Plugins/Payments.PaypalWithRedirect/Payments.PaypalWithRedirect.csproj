@@ -26,7 +26,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Controllers\PaypalWithRedirectController.cs~RF3c4975d.TMP" />
     <None Remove="Views\Administration\PaypalWithRedirect\Settings.html" />
     <None Remove="Views\Administration\PaypalWithRedirect\_Navigation.html" />
     <None Remove="Views\PublicInfo.html" />
@@ -61,5 +60,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)Build\Cleanup\Output\Cleanup.exe $(OutDir)" />
+  </Target>
 
 </Project>

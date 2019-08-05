@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.WebHost.Tests", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.UPS", "Plugins\Shipping.UPS\Shipping.UPS.csproj", "{942A748E-770A-43B7-A805-01D75D014AF5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3545BB05-0273-4C20-B232-C9BA08E9A939}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup", "Build\Cleanup\Cleanup.csproj", "{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +122,12 @@ Global
 		{942A748E-770A-43B7-A805-01D75D014AF5}.DebugWithSwagger|Any CPU.Build.0 = DebugWithSwagger|Any CPU
 		{942A748E-770A-43B7-A805-01D75D014AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{942A748E-770A-43B7-A805-01D75D014AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.DebugWithSwagger|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.DebugWithSwagger|Any CPU.Build.0 = Debug|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +141,7 @@ Global
 		{91BA7EEF-EB02-46E9-BCB6-BB27463270B2} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{2DE0BF14-5386-4C67-A181-84B3561C6C03} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
 		{942A748E-770A-43B7-A805-01D75D014AF5} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
+		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471} = {3545BB05-0273-4C20-B232-C9BA08E9A939}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {646273F8-A252-4654-8A29-F5380A2FCDB0}
