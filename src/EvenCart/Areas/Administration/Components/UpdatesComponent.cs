@@ -17,7 +17,7 @@ namespace EvenCart.Areas.Administration.Components
 #if DEBUG
         private const string UpdatesFetchUrl = "http://localhost:52886/samples/updates.json";
 #else
-        private const string UpdatesFetchUrl = "https://www.evencart.com/api/updates";
+        private const string UpdatesFetchUrl = "https://www.evencart.com/api/feed";
 #endif
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
