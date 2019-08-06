@@ -56,6 +56,6 @@
         public const string SetActiveCurrency = "SetActiveCurrency";
         public const string SaveGdprPreferences = "SaveGdprPreferences";
         public const string Error = "Error";
-
+        public const string KeepAlive = "KeepAlive";
     }
 }
