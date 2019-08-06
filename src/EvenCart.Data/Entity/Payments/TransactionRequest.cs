@@ -15,5 +15,9 @@ namespace EvenCart.Data.Entity.Payments
         public Dictionary<string, object> Parameters { get; set; }
 
         public bool IsPartialRefund { get; set; }
+
+        public TransactionRequestType RequestType { get; set; }
+
+        public decimal? Amount { get; set; }
     }
 }

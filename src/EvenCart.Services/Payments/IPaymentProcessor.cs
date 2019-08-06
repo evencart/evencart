@@ -7,5 +7,9 @@ namespace EvenCart.Services.Payments
     public interface IPaymentProcessor
     {
         TransactionResult ProcessPayment(Order order, Dictionary<string, object> paymentMethodData = null);
+
+        TransactionResult ProcessRefund(Order order, decimal amount);
+
+        TransactionResult ProcessVoid(Order order);
     }
 }

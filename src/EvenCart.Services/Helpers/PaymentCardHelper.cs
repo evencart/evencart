@@ -23,7 +23,7 @@ namespace EvenCart.Services.Helpers
             try
             {
                 //Clean the card number- remove dashes and spaces
-                cardNumber = cardNumber.Replace("-", "").Replace(" ", "");
+                cardNumber = StripDashes(cardNumber);
 
                 //Convert card number into digits array
                 var digits = new int[cardNumber.Length];
@@ -105,7 +105,7 @@ namespace EvenCart.Services.Helpers
 
         public static string StripDashes(string cardNumber)
         {
-            var strippedCardNumber =  cardNumber.Trim().Replace("-", "");
+            var strippedCardNumber =  cardNumber.Trim().Replace(" ", "").Replace("-", "");
             return strippedCardNumber;
         }
         public static string MaskCardNumber(string cardNumber)

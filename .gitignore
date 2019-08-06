@@ -32,3 +32,6 @@ src/Plugins/Shipping.UPS/obj/
 src/EvenCart/wwwroot/bundles/
 publish/
 site-template/
+src/Build/Cleanup/obj/
+src/Plugins/Payments.Stripe/obj/
+src/Plugins/Payments.Stripe/bin/

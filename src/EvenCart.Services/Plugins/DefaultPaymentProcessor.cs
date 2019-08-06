@@ -11,6 +11,21 @@ namespace EvenCart.Services.Plugins
     {
         public TransactionResult ProcessPayment(Order order, Dictionary<string, object> paymentMethodData = null)
         {
+            return ProcessResult(order, TransactionRequestType.Payment, order.OrderTotal, paymentMethodData);
+        }
+
+        public TransactionResult ProcessRefund(Order order, decimal amount)
+        {
+            return ProcessResult(order, TransactionRequestType.Refund, amount);
+        }
+
+        public TransactionResult ProcessVoid(Order order)
+        {
+            return ProcessResult(order, TransactionRequestType.Void, order.OrderTotal);
+        }
+
+        private TransactionResult ProcessResult(Order order, TransactionRequestType requestType, decimal? amount, Dictionary<string, object> paymentMethodData = null)
+        {
             var paymentMethodName = order.PaymentMethodName;
             var paymentMethodInfo = PluginHelper.GetPaymentHandler(paymentMethodName);
 
@@ -23,7 +38,9 @@ namespace EvenCart.Services.Plugins
                 Order = order,
                 IsPartialRefund = false,
                 TransactionGuid = Guid.NewGuid().ToString(),
-                Parameters = paymentMethodData
+                Parameters = paymentMethodData,
+                Amount = amount,
+                RequestType = requestType
             };
 
             var transactionResult = paymentMethodInfo.ProcessTransaction(transactionRequest);
