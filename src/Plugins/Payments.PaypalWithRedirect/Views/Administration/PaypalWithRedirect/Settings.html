@@ -1,5 +1,5 @@
 ﻿{% layout "_PluginLayout" %}
-{% global page_title=@t"Paypal Configuration" active_menu="ConfigurePaypalWithRedirect" %}
+{% global page_title=@t"Paypal Configuration" active_menu="ConfigurePaypalWithRedirect" menu_group="PaypalRedirectConfiguration" %}
 {% partial "PaypalWithRedirect/_Navigation" %}
 <div class="panel">
     <div class="panel-title">
@@ -7,6 +7,7 @@
     </div>
     <div class="panel-body">
         <form action="{% route api_PaypalWithRedirectSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
             <div class="form-group">
                 {% control label text=@t"Client Id" for="clientId" %}
                 {% control text name="clientId" value="{{settings.clientId}}" %}

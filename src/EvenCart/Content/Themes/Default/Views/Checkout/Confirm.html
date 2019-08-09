@@ -22,6 +22,14 @@
                     ready(function () {
                         initAjaxForm("form-checkout-confirm",
                             {
+                                onSuccess: function(response) {
+                                    if (response.success) {
+                                        var orderGuid = response.orderGuid;
+                                        var url = '{% route CheckoutComplete orderGuid="%id%" %}'.replace("%id%",
+                                            orderGuid);
+                                        window.location.href = url;
+                                    }
+                                }
                             });
                     });
                 </script>

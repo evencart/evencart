@@ -1,5 +1,5 @@
 ﻿{% layout "_PluginLayout" %}
-{% global page_title=@t"Stripe Configuration" active_menu="ConfigureStripe" %}
+{% global page_title=@t"Stripe Configuration" active_menu="ConfigureStripe" menu_group="StripeConfiguration" %}
 {% partial "Stripe/_Navigation" %}
 <div class="panel">
     <div class="panel-title">
@@ -7,6 +7,7 @@
     </div>
     <div class="panel-body">
         <form action="{% route api_StripeSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
             <div class="form-group">
                 {% control label text=@t"Publishable Key" for="publishableKey" %}
                 {% control text name="publishableKey" value="{{settings.publishableKey}}" %}

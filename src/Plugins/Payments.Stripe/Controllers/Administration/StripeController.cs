@@ -9,11 +9,11 @@ namespace Payments.Stripe.Controllers.Administration
 {
     public class StripeController : FoundationAdminController
     {
-        private readonly StripeSettings _StripeSettings;
+        private readonly StripeSettings _stripeSettings;
         private readonly ISettingService _settingService;
-        public StripeController(StripeSettings StripeSettings, ISettingService settingService)
+        public StripeController(StripeSettings stripeSettings, ISettingService settingService)
         {
-            _StripeSettings = StripeSettings;
+            _stripeSettings = stripeSettings;
             _settingService = settingService;
         }
         [HttpGet("settings", Name = StripeConfig.StripeSettingsRouteName)]
@@ -21,9 +21,15 @@ namespace Payments.Stripe.Controllers.Administration
         {
             var settingsModel = new SettingsModel()
             {
-                ClientId = _StripeSettings.ClientId,
-                ClientSecret = _StripeSettings.ClientSecret,
-                EnableSandbox = _StripeSettings.EnableTestMode
+                Description = _stripeSettings.Description,
+                TestPublishableKey = _stripeSettings.TestPublishableKey,
+                TestSecretKey = _stripeSettings.TestSecretKey,
+                AdditionalFee = _stripeSettings.AdditionalFee,
+                AuthorizeOnly = _stripeSettings.AuthorizeOnly,
+                EnableTestMode = _stripeSettings.EnableTestMode,
+                PublishableKey = _stripeSettings.PublishableKey,
+                SecretKey = _stripeSettings.SecretKey,
+                UsePercentageForAdditionalFee = _stripeSettings.UsePercentageForAdditionalFee
             };
             return R.Success.With("settings", settingsModel).Result;
         }
@@ -32,10 +38,16 @@ namespace Payments.Stripe.Controllers.Administration
         [ValidateModelState(ModelType = typeof(SettingsModel))]
         public IActionResult SettingsSave(SettingsModel settingsModel)
         {
-            _StripeSettings.ClientId = settingsModel.ClientId;
-            _StripeSettings.ClientSecret = settingsModel.ClientSecret;
-            _StripeSettings.EnableTestMode = settingsModel.EnableSandbox;
-            _settingService.Save(_StripeSettings);
+            _stripeSettings.Description = settingsModel.Description;
+            _stripeSettings.TestPublishableKey = settingsModel.TestPublishableKey;
+            _stripeSettings.TestSecretKey = settingsModel.TestSecretKey;
+            _stripeSettings.AdditionalFee = settingsModel.AdditionalFee;
+            _stripeSettings.AuthorizeOnly = settingsModel.AuthorizeOnly;
+            _stripeSettings.EnableTestMode = settingsModel.EnableTestMode;
+            _stripeSettings.PublishableKey = settingsModel.PublishableKey;
+            _stripeSettings.SecretKey = settingsModel.SecretKey;
+            _stripeSettings.UsePercentageForAdditionalFee = settingsModel.UsePercentageForAdditionalFee;
+            _settingService.Save(_stripeSettings);
             return R.Success.Result;
         }
     }

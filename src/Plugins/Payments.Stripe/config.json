@@ -1,5 +1,5 @@
 ﻿{
-  "name": "Paypal With Redirect Payment",
+  "name": "Stripe Payments",
   "description": "",
   "version": "1.0",
   "supportedVersions": [ "1.0"],

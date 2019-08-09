@@ -1,1 +1,2 @@
-﻿{% secondary_navigation  url="{% route PaypalWithRedirectSettings %}" title=@t"Paypal Settings" systemName="ConfigurePaypalWithRedirect" parent="PluginsList" %}
+﻿{% secondary_navigation  url="{% route PluginsList %}" iconClass="rbicon-chevron-left" title=@t"Back to plugins" systemName="PluginsList" groupId="PaypalRedirectConfiguration" %}
+{% secondary_navigation  url="{% route PaypalWithRedirectSettings %}" title=@t"Paypal Settings" systemName="ConfigurePaypalWithRedirect" parent="PluginsList" groupId="PaypalRedirectConfiguration" %}
