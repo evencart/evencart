@@ -1,6 +1,7 @@
 ﻿using System;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Purchases;
@@ -23,7 +24,7 @@ namespace EvenCart.Services.Payments
 
         public void ProcessTransactionResult(TransactionResult result, bool clearCart = false)
         {
-            var order = _orderService.GetByGuid(result.OrderGuid);
+            var order = result.Order ?? _orderService.GetByGuid(result.OrderGuid);
             if (!result.Success)
             {
                 _logger.LogError<Order>(result.Exception, "Error occured while processing payment", order.User, result.ResponseParameters);
@@ -33,13 +34,16 @@ namespace EvenCart.Services.Payments
             {
                 CreatedOn = DateTime.UtcNow,
                 OrderGuid = order.Guid,
-                PaymentMethodName = order.PaymentMethodName,
+                PaymentMethodName = result.IsOfflineTransaction ? "Offline" : order.PaymentMethodName,
                 PaymentStatus = result.NewStatus,
                 UserIpAddress = order.UserIpAddress,
                 TransactionAmount = result.TransactionAmount,
                 TransactionGuid = result.TransactionGuid,
                 TransactionCurrencyCode = result.TransactionCurrencyCode
             };
+            if (paymentTransaction.TransactionGuid.IsNullEmptyOrWhiteSpace())
+                paymentTransaction.TransactionGuid = Guid.NewGuid().ToString();
+
             paymentTransaction.SetTransactionCodes(result.ResponseParameters);
             //save this
             _paymentTransactionService.Insert(paymentTransaction);

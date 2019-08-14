@@ -14,17 +14,17 @@ namespace EvenCart.Services.Extensions
             if (!request.Parameters.ContainsKey(parameterName))
                 return default(T);
 
-            return (T) request.Parameters[parameterName];
+            return (T)request.Parameters[parameterName];
         }
 
         public static T GetParameterAs<T>(this TransactionResult result, string parameterName)
         {
-            if(result == null)
+            if (result == null)
                 throw new EvenCartException("Can't read a null result");
 
             if (!result.ResponseParameters.ContainsKey(parameterName))
                 return default(T);
-           
+
             return (T)result.ResponseParameters[parameterName];
         }
 
@@ -53,7 +53,7 @@ namespace EvenCart.Services.Extensions
         public static void SetTransactionCode(this PaymentTransaction paymentTransaction, string parameterName,
             object parameterValue)
         {
-            if(paymentTransaction == null)
+            if (paymentTransaction == null)
                 throw new EvenCartException("Can't read null payment transaction");
 
             if (paymentTransaction.TransactionCodes.ContainsKey(parameterName))
@@ -70,10 +70,11 @@ namespace EvenCart.Services.Extensions
         public static void SetTransactionCodes(this PaymentTransaction paymentTransaction,
             Dictionary<string, object> transactionCodes)
         {
-            foreach (var code in transactionCodes)
-            {
-                paymentTransaction.SetTransactionCode(code.Key, code.Value);
-            }
+            if (transactionCodes != null)
+                foreach (var code in transactionCodes)
+                {
+                    paymentTransaction.SetTransactionCode(code.Key, code.Value);
+                }
         }
         /// <summary>
         /// Gets the value of named response code from payment transaction

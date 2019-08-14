@@ -69,6 +69,8 @@ namespace EvenCart.Data.Constants
 
         public const string DeleteOrder = "Order.Delete";
 
+        public const string ApprovePayments = "Payments.Approve";
+
         public const string ViewOrder = "Order.View";
 
         public const string EditReturnRequest = "ReturnRequest.Edit";

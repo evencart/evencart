@@ -7,6 +7,8 @@ using EvenCart.Data.Extensions;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Settings;
 using EvenCart.Infrastructure.Plugins;
+using EvenCart.Services.Payments;
+using EvenCart.Services.Plugins;
 
 namespace EvenCart.Infrastructure.Extensions
 {
@@ -89,6 +91,11 @@ namespace EvenCart.Infrastructure.Extensions
                 var settingService = DependencyResolver.Resolve<ISettingService>();
                 settingService.Save(pluginSettings);
             }
+        }
+
+        public static bool Supports(this IPaymentHandlerPlugin plugin, PaymentOperation operation)
+        {
+            return plugin.SupportedOperations.Contains(operation);
         }
     }
 }

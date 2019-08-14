@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Data.Entity.Purchases;
 
 namespace EvenCart.Data.Entity.Payments
 {
@@ -8,6 +9,8 @@ namespace EvenCart.Data.Entity.Payments
         public string TransactionGuid { get; set; }
 
         public string OrderGuid { get; set; }
+
+        public Order Order { get; set; }
 
         public bool Success { get; set; }
 
@@ -24,6 +27,8 @@ namespace EvenCart.Data.Entity.Payments
         public decimal TransactionAmount { get; set; }
 
         public string TransactionCurrencyCode { get; set; }
+
+        public bool IsOfflineTransaction { get; set; }
 
         public TransactionResult Redirect(string url)
         {

@@ -1,0 +1,136 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Payment Transactions" active_menu="PaymentTransactionsList" parent_active_menu="OrdersList" menu_group="OrderEdit" %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Payment Transactions" | t}}
+                {% if canRefund == true %}
+                <button class="btn btn-sm btn-danger float-right" onclick="editRefund()" type="button">
+                    {{"Issue Refund" | t}}
+                </button>
+                <div id="popup-refund" class="popup"></div>
+                <script type="text/javascript">
+                    var editRefund = function() {
+                        jQuery("#popup-refund").html("{{'Please wait...'}}");
+                        var centerPopup = showAsPopup("popup-refund",
+                            true,
+                            function(result) {
+                                if (result == "ok") {
+                                    //reload the grid
+                                    reloadGrid('grid-selection');
+                                    notify("success", '{{"Refund was processed successfully" | t}}');
+                                }
+                            });
+                        var url = '{% route RefundEditor orderId="%id%" %}'.replaceAll("%id%", "{{orderId}}");
+                        loadPage(url, true,
+                            null,
+                            function(response) {
+                                jQuery("#popup-refund").html(response);
+                                centerPopup();
+
+                            });
+                    }
+
+                </script>
+                {% endif %}
+                {% if canVoid == true %}
+                <form method="post" action='{% route api_ApproveVoid orderId="{{orderId}}" %}' class="float-right" id="form-void-transaction">
+                    {% control xsrf %}
+                    <button class="btn btn-sm btn-danger" type="submit">
+                        {{"Void Transaction" | t}}
+                    </button>
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-void-transaction",
+                            {
+                                beforeSubmit: function() {
+                                    return confirm('{{"Are you sure you want to void this order?" | t}}');
+                                },
+                                onSuccess: function() {
+                                    notify("success", '{{"The order was void successfully." | t}}');
+                                    reloadGrid("grid-selection");
+                                }
+                            });
+                    });
+                </script>
+                {% endif %}
+                {% if canCapture == true %}
+                <form method="post" action='{% route api_ApproveCapture orderId="{{orderId}}" %}' class="float-right margin-r-10" id="form-capture-transaction">
+                    {% control xsrf %}
+                    <button class="btn btn-sm btn-primary" type="submit">
+                        {{"Capture Transaction" | t}}
+                    </button>
+                </form>
+                <script type="text/javascript">
+                    ready(function() {
+                        initAjaxForm("form-capture-transaction",
+                            {
+                                beforeSubmit: function() {
+                                    return confirm('{{"Are you sure you want to capture this order?" | t}}');
+                                },
+                                onSuccess: function() {
+                                    notify("success", '{{"The order was captured successfully." | t}}');
+                                    reloadGrid("grid-selection");
+                                }
+                            });
+                    });
+                </script>
+                {% endif %}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover no-margin">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="createdOn" data-width="20%">{{"Date" | t}}</th>
+                            <th data-column-id="details" data-formatter="details" data-width="45%">{{"Details" | t}}</th>
+                            <th data-column-id="paymentStatus">{{"Payment Status" | t}}</th>
+                            <th data-column-id="transactionAmountFormatted">{{"Amount" | t}}</th>
+                        </tr>
+                    </thead>
+                </table>
+                {{ transactions | scriptJson : 'initData' }}
+                <script type="text/javascript">
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                transactions: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 0,
+                            url: '{% route api_PaymentTransactionsList %}',
+                            responseObject: "transactions",
+                            selection: false,
+                            formatters: {
+                                "details": function(column, row) {
+                                    var details = "<button class='btn btn-sm btn-secondary' onclick='jQuery(this).hide().next().show();'>+ {{'Show' | t}}</button>";
+                                    details += "<div style='display:none'><div><strong>{{'Transaction Id' | t}}</strong>: " + row.transactionGuid + "</div>";
+                                    details += "<div><strong>{{'Ip Address' | t}}</strong>: " + row.userIpAddress + "</div>";
+                                    details += "<div><strong>{{'Payment Method' | t}}</strong>: " + row.paymentMethodDisplay + "</div>";
+                                    details += "<div><strong>{{'Currency' | t}}</strong>: " + row.transactionCurrencyCode + "</div>";
+                                    details += "<hr/><div><h5>{{'Transaction Response' | t}}</h5></div>";
+                                    var transactionCodes = JSON.parse(row.transactionCodesSerialized);
+                                    for (var key in transactionCodes) {
+                                        if (transactionCodes.hasOwnProperty(key)) {
+                                            details += "<div><strong>" + key + "</strong>: " + (transactionCodes[key] || "{{'Not Available' | t}}") + "</div>";
+                                        }
+                                    }
+                                    details += "</div>";
+                                    return details;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

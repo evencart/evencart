@@ -3,11 +3,13 @@ using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Services.Formatter;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
+using EvenCart.Services.Helpers;
 using EvenCart.Services.MediaServices;
 using EvenCart.Services.Serializers;
 using Microsoft.CodeAnalysis.Emit;
@@ -62,6 +64,17 @@ namespace EvenCart.Areas.Administration.Factories.Orders
                 orderItemModel.ImageUrl = _mediaAccountant.GetPictureUrl(entity.Product.MediaItems.First(), returnDefaultIfNotFound: true);
             }
             return orderItemModel;
+        }
+
+        public PaymentTransactionModel Create(PaymentTransaction entity)
+        {
+            var model = _modelMapper.Map<PaymentTransactionModel>(entity);
+            var paymentHandler = PluginHelper.GetPaymentHandler(entity.PaymentMethodName);
+            if (paymentHandler != null)
+            {
+                model.PaymentMethodDisplay = paymentHandler.PluginInfo.Name;
+            }
+            return model;
         }
     }
 }

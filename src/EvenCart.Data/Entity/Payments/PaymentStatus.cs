@@ -10,6 +10,7 @@
         Voided = 50,
         Authorized = 60,
         Captured = 70,
-        RefundPending = 80
+        RefundPending = 80,
+        RefundedPartially = 90
     }
 }

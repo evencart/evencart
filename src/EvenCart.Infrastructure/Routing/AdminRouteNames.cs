@@ -82,6 +82,13 @@
         public const string SaveReturnRequest = "SaveReturnRequest";
         public const string DeleteReturnRequest = "DeleteReturnRequest";
         public const string GetReturnRequest = "GetReturnRequest";
+        public const string PaymentTransactionsList = "PaymentTransactionsList";
+        public const string RefundEditor = "RefundEditor";
+        public const string SavePaymentStatus = "SavePaymentStatus";
+        public const string SaveOrderStatus = "SaveOrderStatus";
+        public const string ApproveRefund = "ApproveRefund";
+        public const string ApproveCapture = "ApproveCapture";
+        public const string ApproveVoid = "ApproveVoid";
 
         public const string GetShipment = "GetShipment";
         public const string ShipmentsList = "ShipmentsList";

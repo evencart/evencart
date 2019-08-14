@@ -15,12 +15,15 @@ using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Shipping;
 using EvenCart.Events;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Helpers;
+using EvenCart.Services.Payments;
 using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +50,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IReturnRequestModelFactory _returnRequestModelFactory;
         private readonly IOrderAccountant _orderAccountant;
         private readonly IPurchaseAccountant _purchaseAccountant;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant)
+        private readonly IPaymentTransactionService _paymentTransactionService;
+        private readonly IPaymentAccountant _paymentAccountant;
+        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant)
         {
             _orderService = orderService;
             _modelMapper = modelMapper;
@@ -68,6 +73,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _returnRequestModelFactory = returnRequestModelFactory;
             _orderAccountant = orderAccountant;
             _purchaseAccountant = purchaseAccountant;
+            _paymentTransactionService = paymentTransactionService;
+            _paymentAccountant = paymentAccountant;
         }
 
         #region Orders
@@ -97,11 +104,50 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
         public IActionResult OrderEditor(int orderId)
         {
-            var order = orderId > 0 ? _orderService.Get(orderId) : new Order();
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
             if (order == null)
                 return NotFound();
             var orderModel = _orderModelFactory.Create(order);
-            return R.Success.With("order", orderModel).Result;
+            var response = R.Success.With("order", orderModel);
+            return response.Result;
+        }
+
+        [DualPost("", Name = AdminRouteNames.SaveOrder, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        [ValidateModelState(ModelType = typeof(OrderModel))]
+        public IActionResult SaveOrder(SaveOrderModel orderModel)
+        {
+            var order = _orderService.Get(orderModel.Id);
+            if (order == null)
+                return NotFound();
+
+            if (orderModel.Discount.HasValue)
+                order.Discount = orderModel.Discount.Value;
+            if (orderModel.OrderStatus.HasValue)
+                order.OrderStatus = orderModel.OrderStatus.Value;
+            if (orderModel.PaymentStatus.HasValue)
+                order.PaymentStatus = orderModel.PaymentStatus.Value;
+            if (!orderModel.PaymentMethodDisplayName.IsNullEmptyOrWhiteSpace())
+                order.PaymentMethodDisplayName = orderModel.PaymentMethodDisplayName;
+            if (!orderModel.PaymentMethodName.IsNullEmptyOrWhiteSpace())
+                order.PaymentMethodName = orderModel.PaymentMethodName;
+            if (!orderModel.ShippingMethodName.IsNullEmptyOrWhiteSpace())
+                order.ShippingMethodName = orderModel.ShippingMethodName;
+            if (!orderModel.ShippingMethodDisplayName.IsNullEmptyOrWhiteSpace())
+                order.ShippingMethodDisplayName = orderModel.ShippingMethodDisplayName;
+            if (!orderModel.SelectedShippingOption.IsNullEmptyOrWhiteSpace())
+                order.SelectedShippingOption = orderModel.SelectedShippingOption;
+            if (orderModel.PaymentMethodFee.HasValue)
+                order.PaymentMethodFee = orderModel.PaymentMethodFee;
+            if (orderModel.ShippingMethodFee.HasValue)
+                order.ShippingMethodFee = orderModel.ShippingMethodFee;
+            if (orderModel.Tax.HasValue)
+                order.Tax = orderModel.Tax.Value;
+            if (orderModel.Discount.HasValue)
+                order.Discount = orderModel.Discount.Value;
+            _orderService.Update(order);
+
+            return R.Success.Result;
         }
 
         #endregion
@@ -566,7 +612,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 searchModel.RowCount);
 
             var returnRequestsModel = returnRequests.Select(_returnRequestModelFactory.Create).ToList();
-            return R.Success.With("returnRequests",  returnRequestsModel)
+            return R.Success.With("returnRequests", returnRequestsModel)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .Result;
         }
@@ -603,12 +649,12 @@ namespace EvenCart.Areas.Administration.Controllers
                     if (!returnRequest.ReturnOrderId.HasValue)
                     {
                         //get the original items to check for available inventory
-                        var orderItem = _orderItemService.GetWithProducts(new List<int>() {returnRequest.OrderItemId}).FirstOrDefault();
+                        var orderItem = _orderItemService.GetWithProducts(new List<int>() { returnRequest.OrderItemId }).FirstOrDefault();
                         if (orderItem == null)
                             return R.Fail.With("error", T("An error occured while processing return")).Result;
                         if (!orderItem.IsAvailableInStock(returnRequest.Quantity))
                             return R.Fail.With("error", T("The item is not available in any of the warehouses")).Result;
-                        
+
                         var clonedOrder = _orderAccountant.CloneOrder(orderItem.Order);
                         clonedOrder.OrderItems[0].Quantity = returnRequest.Quantity;
                         clonedOrder.OrderItems[0].Price = 0m;
@@ -649,6 +695,269 @@ namespace EvenCart.Areas.Administration.Controllers
 
             _returnRequestService.Delete(returnRequest);
             return R.Success.Result;
+        }
+        #endregion
+
+
+        #region Payment Transactions, Refunds and Status updates
+
+        [DualGet("{orderId}/transactions", Name = AdminRouteNames.PaymentTransactionsList)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult PaymentTransactionsList(int orderId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            var transactions = _paymentTransactionService.Get(x => x.OrderGuid == order.Guid).OrderByDescending(x => x.CreatedOn).ToList();
+            var models = transactions.Select(_orderModelFactory.Create).ToList();
+
+            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
+
+            var response = R.Success;
+            if (paymentHandler != null && order.OrderTotal > 0)
+            {
+                if (CanRefund(order))
+                {
+                    //we can refund upto the balance transactions
+                    var totalRefunds = transactions
+                        .Where(x => x.PaymentStatus == PaymentStatus.RefundedPartially ||
+                                    x.PaymentStatus == PaymentStatus.Refunded).Sum(x => x.TransactionAmount);
+                    if (paymentHandler.SupportedOperations.Contains(PaymentOperation.Refund))
+                    {
+                        response.With("canRefund", totalRefunds < order.OrderTotal);
+                    }
+                    else
+                    {
+                        response.With("canRefundOffline", totalRefunds < order.OrderTotal);
+                    }
+                }
+                else if (order.PaymentStatus == PaymentStatus.Authorized)
+                {
+                    if (paymentHandler.SupportedOperations.Contains(PaymentOperation.Capture))
+                    {
+                        response.With("canCapture", true);
+                    }
+                    if (paymentHandler.SupportedOperations.Contains(PaymentOperation.Void))
+                    {
+                        response.With("canVoid", true);
+                    }
+                }
+
+            }
+
+            return response.With("orderId", orderId).With("transactions", models).Result;
+        }
+
+        [HttpGet("{orderId}/refund", Name = AdminRouteNames.RefundEditor)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult RefundEditor(int orderId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            if (CanRefund(order))
+            {
+                var orderModel = _orderModelFactory.Create(order);
+                var transactions = _paymentTransactionService.Get(x => x.OrderGuid == order.Guid).ToList();
+                var refundedAmount = transactions
+                    .Where(x => x.PaymentStatus == PaymentStatus.Refunded ||
+                                x.PaymentStatus == PaymentStatus.RefundedPartially).Sum(x => x.TransactionAmount);
+                var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
+                var response = R.Success;
+                if (paymentHandler != null && paymentHandler.Supports(PaymentOperation.Refund))
+                {
+                    response.With("canRefund", refundedAmount < order.OrderTotal);
+                }
+                else
+                {
+                    response.With("canRefundOffline", refundedAmount < order.OrderTotal);
+                }
+                return response.With("order", orderModel).Result;
+            }
+
+            return R.Fail.With("error", T("The order is not eligible for refund")).Result;
+        }
+
+        [DualPost("{orderId}/refund", Name = AdminRouteNames.ApproveRefund, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ApprovePayments)]
+        [ValidateModelState(ModelType = typeof(RefundModel))]
+        public IActionResult SaveRefund(RefundModel requestModel)
+        {
+            var order = _orderService.Get(requestModel.OrderId);
+            if (order == null)
+                return NotFound();
+            if (!CanRefund(order))
+                return R.Fail.With("error", T("The order is not eligible for refund")).Result;
+            if (requestModel.IsPartialRefund && requestModel.Amount > order.OrderTotal)
+            {
+                return R.Fail.With("error", T("Unable to refund more than the order total")).Result;
+            }
+            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
+            if (paymentHandler != null && paymentHandler.Supports(PaymentOperation.Refund))
+            {
+                var transactions = _paymentTransactionService.Get(x => x.OrderGuid == order.Guid).ToList();
+                var refundedAmount = transactions
+                    .Where(x => x.PaymentStatus == PaymentStatus.Refunded ||
+                                x.PaymentStatus == PaymentStatus.RefundedPartially).Sum(x => x.TransactionAmount);
+
+                if (refundedAmount > 0 && requestModel.IsPartialRefund)
+                {
+                    //check if the amount to refund is valid
+                    var validAmountToRefund = order.OrderTotal - refundedAmount;
+                    if (requestModel.Amount > validAmountToRefund)
+                    {
+                        return R.Fail.With("error", T("Unable to refund more than the balance order total")).Result;
+                    }
+                }
+                //get the saved payment transaction
+                var transaction = transactions.FirstOrDefault(x => x.PaymentStatus == PaymentStatus.Authorized ||
+                                                  x.PaymentStatus == PaymentStatus.Captured ||
+                                                  x.PaymentStatus == PaymentStatus.Complete);
+
+                var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
+                {
+                    Order = order,
+                    IsPartialRefund = requestModel.IsPartialRefund,
+                    RequestType = TransactionRequestType.Refund,
+                    TransactionGuid = Guid.NewGuid().ToString(),
+                    Amount = requestModel.IsPartialRefund ? requestModel.Amount : order.OrderTotal - refundedAmount,
+                    Parameters = transaction?.TransactionCodes
+                });
+                if (transactionResult.Success)
+                {
+                    transactionResult.OrderGuid = order.Guid;
+                    _paymentAccountant.ProcessTransactionResult(transactionResult);
+                }
+            }
+            else if (requestModel.RefundOffline)
+            {
+                var transactionResult = new TransactionResult()
+                {
+                    TransactionGuid = Guid.NewGuid().ToString(),
+                    Success = true,
+                    Order = order,
+                    OrderGuid = order.Guid,
+                    TransactionAmount = requestModel.IsPartialRefund ? requestModel.Amount : order.OrderTotal,
+                    NewStatus = requestModel.IsPartialRefund ? PaymentStatus.RefundedPartially : PaymentStatus.Refunded,
+                    TransactionCurrencyCode = order.CurrencyCode,
+                    IsOfflineTransaction = true
+                };
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
+            }
+
+            return R.Success.Result;
+        }
+
+        [DualPost("{orderId}/void", Name = AdminRouteNames.ApproveVoid, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ApprovePayments)]
+        public IActionResult SaveVoid(int orderId)
+        {
+            var order = _orderService.Get(orderId);
+            if (order == null)
+                return NotFound();
+            if (order.PaymentStatus != PaymentStatus.Authorized)
+                return R.Fail.With("error", T("The order is not eligible for void")).Result;
+
+            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
+            if (paymentHandler != null)
+            {
+                if (paymentHandler.Supports(PaymentOperation.Void))
+                {
+                    var transaction = _paymentTransactionService.FirstOrDefault(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Authorized);
+                    var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
+                    {
+                        Order = order,
+                        RequestType = TransactionRequestType.Void,
+                        TransactionGuid = Guid.NewGuid().ToString(),
+                        Parameters = transaction?.TransactionCodes
+                    });
+                    if (transactionResult.Success)
+                    {
+                        order.PaymentStatus = PaymentStatus.Voided;
+                        order.OrderStatus = OrderStatus.Cancelled;
+                        _paymentAccountant.ProcessTransactionResult(transactionResult);
+                    }
+                }
+            }
+            else
+            {
+                var transactionResult = new TransactionResult()
+                {
+                    TransactionGuid = Guid.NewGuid().ToString(),
+                    Success = true,
+                    Order = order,
+                    OrderGuid = order.Guid,
+                    TransactionAmount = order.OrderTotal,
+                    NewStatus = PaymentStatus.Voided,
+                    TransactionCurrencyCode = order.CurrencyCode,
+                    IsOfflineTransaction = true
+                };
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
+            }
+
+            return R.Success.Result;
+        }
+
+        [DualPost("{orderId}/capture", Name = AdminRouteNames.ApproveCapture, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ApprovePayments)]
+        public IActionResult SaveCapture(int orderId)
+        {
+            var order = _orderService.Get(orderId);
+            if (order == null)
+                return NotFound();
+            if (order.PaymentStatus != PaymentStatus.Authorized)
+                return R.Fail.With("error", T("The order is not eligible for capture")).Result;
+
+            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
+            if (paymentHandler != null)
+            {
+                if (paymentHandler.Supports(PaymentOperation.Capture))
+                {
+                    var transaction = _paymentTransactionService.FirstOrDefault(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Authorized);
+                    var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
+                    {
+                        Order = order,
+                        RequestType = TransactionRequestType.Capture,
+                        TransactionGuid = Guid.NewGuid().ToString(),
+                        Parameters = transaction?.TransactionCodes
+                    });
+                    if (transactionResult.Success)
+                    {
+                        order.PaymentStatus = PaymentStatus.Captured;
+                        order.OrderStatus = OrderStatus.Processing;
+                        _paymentAccountant.ProcessTransactionResult(transactionResult);
+                    }
+                }
+            }
+            else
+            {
+                var transactionResult = new TransactionResult()
+                {
+                    TransactionGuid = Guid.NewGuid().ToString(),
+                    Success = true,
+                    Order = order,
+                    OrderGuid = order.Guid,
+                    TransactionAmount = order.OrderTotal,
+                    NewStatus = PaymentStatus.Captured,
+                    TransactionCurrencyCode = order.CurrencyCode,
+                    IsOfflineTransaction = true
+                };
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
+            }
+
+            return R.Success.Result;
+        }
+        #endregion
+
+
+        #region helpers
+
+        private bool CanRefund(Order order)
+        {
+            return order.PaymentStatus == PaymentStatus.Complete ||
+                   order.PaymentStatus == PaymentStatus.Captured ||
+                   order.PaymentStatus == PaymentStatus.RefundedPartially ||
+                   order.PaymentStatus == PaymentStatus.RefundPending;
         }
         #endregion
     }

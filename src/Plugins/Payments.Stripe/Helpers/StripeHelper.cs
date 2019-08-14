@@ -65,7 +65,10 @@ namespace Payments.Stripe.Helpers
                     {"balanceTransactionId", charge.BalanceTransactionId },
                     {"chargeId", charge.Id }
                 },
-                TransactionGuid = request.TransactionGuid
+                TransactionGuid = request.TransactionGuid,
+                TransactionAmount = (decimal)charge.Amount / 100,
+                TransactionCurrencyCode = charge.Currency,
+                OrderGuid = order.Guid
             };
             if (charge.Status == "failed")
             {
@@ -88,14 +91,28 @@ namespace Payments.Stripe.Helpers
 
         public static TransactionResult ProcessRefund(TransactionRequest refundRequest, StripeSettings stripeSettings, ILogger logger)
         {
+            InitStripe(stripeSettings, true);
             var refundService = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
                 ChargeId = refundRequest.GetParameterAs<string>("chargeId"),
-                Amount = (long) (refundRequest.Amount ?? refundRequest.Order.OrderTotal),
+                Amount = 100 * (long)(refundRequest.Amount ?? refundRequest.Order.OrderTotal),
             };
             var refund = refundService.Create(refundOptions);
-            var refundResult = new TransactionResult();
+            var refundResult = new TransactionResult()
+            {
+                TransactionGuid = Guid.NewGuid().ToString(),
+                ResponseParameters = new Dictionary<string, object>()
+                {
+                    {"sourceTransferReversalId", refund.SourceTransferReversalId },
+                    {"balanceTransactionId", refund.BalanceTransactionId },
+                    {"chargeId", refund.ChargeId },
+                    {"receiptNumber", refund.ReceiptNumber },
+                },
+                OrderGuid = refundRequest.Order.Guid,
+                TransactionCurrencyCode = refund.Currency,
+                TransactionAmount = (decimal)refund.Amount / 100
+            };
             if (refund.Status == "failed")
             {
                 logger.Log<TransactionResult>(LogLevel.Warning, "The refund for Order#" + refundRequest.Order.Id + " by stripe failed." + refund.FailureReason);
@@ -105,11 +122,48 @@ namespace Payments.Stripe.Helpers
             }
             if (refund.Status == "succeeded")
             {
-                refundResult.NewStatus = PaymentStatus.Refunded;
+                refundResult.NewStatus = refundRequest.IsPartialRefund ? PaymentStatus.RefundedPartially : PaymentStatus.Refunded;
+                refundResult.Success = true;
             }
 
             return refundResult;
         }
 
+        public static TransactionResult ProcessCapture(TransactionRequest captureRequest, StripeSettings stripeSettings, ILogger logger)
+        {
+            InitStripe(stripeSettings, true);
+            var chargeService = new ChargeService();
+            var chargeId = captureRequest.GetParameterAs<string>("chargeId");
+            var charge = chargeService.Capture(chargeId, new ChargeCaptureOptions()
+            {
+                Amount = 100 * (long)(captureRequest.Amount ?? captureRequest.Order.OrderTotal)
+            });
+            var captureResult = new TransactionResult()
+            {
+                ResponseParameters = new Dictionary<string, object>()
+                {
+                    {"chargeId", charge.Id },
+                    {"balanceTransactionId", charge.BalanceTransactionId },
+                    {"disputeId", charge.DisputeId },
+                    {"invoiceId", charge.InvoiceId },
+                },
+                OrderGuid = captureRequest.Order.Guid,
+                TransactionAmount = (decimal)charge.Amount / 100
+            };
+            if (charge.Status == "failed")
+            {
+                logger.Log<TransactionResult>(LogLevel.Warning, "The capture for Order#" + captureRequest.Order.Id + " by stripe failed.");
+                captureResult.Success = false;
+                captureResult.Exception = new Exception("An error occurred while processing capture");
+                return captureResult;
+            }
+            if (charge.Captured.GetValueOrDefault())
+            {
+                captureResult.NewStatus = PaymentStatus.Complete;
+                captureResult.Success = true;
+            }
+
+            return captureResult;
+        }
     }
 }

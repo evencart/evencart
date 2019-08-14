@@ -4,6 +4,7 @@
     {
         Payment,
         Refund,
-        Void
+        Void,
+        Capture
     }
 }

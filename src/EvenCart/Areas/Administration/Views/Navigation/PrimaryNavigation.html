@@ -10,6 +10,7 @@
 {% secondary_navigation url="{% route OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route PaymentTransactionsList orderId="{{orderId}}" %}" title=@t"Payment Transactions" systemName="PaymentTransactionsList" groupId="OrderEdit" %}
 
 {% secondary_navigation url="{% route ReturnRequestsList %}" title=@t"Back to return requests" iconClass="rbicon-chevron-left" groupId="ReturnRequestEdit" %}
 {% secondary_navigation url="{% route GetReturnRequest returnRequestId="{{returnRequestId}}" %}" title=@t"Request Request Info" systemName="GetReturnRequest" groupId="ReturnRequestEdit" %}

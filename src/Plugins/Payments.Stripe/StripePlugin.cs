@@ -38,7 +38,9 @@ namespace Payments.Stripe
             if (request.RequestType == TransactionRequestType.Refund)
                 return StripeHelper.ProcessRefund(request, _stripeSettings, _logger);
             if (request.RequestType == TransactionRequestType.Void)
-                return StripeHelper.ProcessPayment(request, _stripeSettings, _logger);
+                return StripeHelper.ProcessRefund(request, _stripeSettings, _logger);
+            if (request.RequestType == TransactionRequestType.Capture)
+                return StripeHelper.ProcessCapture(request, _stripeSettings, _logger);
             return null;
         }
 
