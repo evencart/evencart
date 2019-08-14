@@ -188,7 +188,7 @@ namespace EvenCart.Services.Purchases
             _orderService.Update(order);
         }
 
-        public void CancelOrder(Order order, string cancellationReason)
+        public void CancelOrder(Order order, string cancellationReason, bool finalize = false)
         {
             //get the fulfillments
             var fulfillments = _orderFulfillmentService.Get(x => x.OrderId == order.Id).ToList();
@@ -215,7 +215,7 @@ namespace EvenCart.Services.Purchases
                     _orderFulfillmentService.Delete(fulfillment, transaction);
                 }
 
-                order.OrderStatus = order.OrderTotal > 0
+                order.OrderStatus = order.OrderTotal > 0 && !finalize
                     ? OrderStatus
                         .PendingCancellation /*admin will cancel manually and refund or do whatever needs to be done*/
                     : OrderStatus.Cancelled;

@@ -1,4 +1,6 @@
-﻿namespace EvenCart.Infrastructure.Routing
+﻿using EvenCart.Data.Helpers;
+
+namespace EvenCart.Infrastructure.Routing
 {
     public static class AdminRouteNames
     {
@@ -74,6 +76,7 @@
         public const string OrdersList = "OrdersList";
         public const string SaveOrder = "SaveOrder";
         public const string DeleteOrder = "DeleteOrder";
+        public const string CancelAdminOrder = "CancelAdminOrder";
         public const string GetOrder = "GetOrder";
         public const string OrderFulfillmentsList = "OrderFulfillmentsList";
         public const string SaveOrderFulfillment = "SaveOrderFulfillment";

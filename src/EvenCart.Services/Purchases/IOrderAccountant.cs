@@ -11,7 +11,7 @@ namespace EvenCart.Services.Purchases
 
         void InsertCompleteOrder(Order order);
 
-        void CancelOrder(Order order, string cancellationReason);
+        void CancelOrder(Order order, string cancellationReason, bool finalize = false);
 
         Order CloneOrder(Order order);
     }

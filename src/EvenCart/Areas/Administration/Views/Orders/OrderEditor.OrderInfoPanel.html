@@ -1,6 +1,27 @@
 ﻿<div class="panel">
     <div class="panel-title">
         {{"Order Info" | t}}
+        {% if canCancel %}
+        <form id="form-cancel-order" class="float-right" method="post" action='{% route api_CancelAdminOrder orderId="{{order.id}}" %}'>
+            {% control hidden name="orderId" value="{{order.id}}" %}
+            {% control xsrf %}
+            <button type="submit" class="btn btn-danger btn-sm">{{"Cancel Order" | t}}</button>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-cancel-order",
+                    {
+                        beforeSubmit: function() {
+                            return confirm('{{"Are you sure you want to cancel this order?" | t}}');
+                        },
+                        onSuccess: function() {
+                            notify("success", '{{"The order was cancelled successfully." | t}}');
+                            window.location.reload();
+                        }
+                    });
+            });
+        </script>
+        {% endif %}
     </div>
     <div class="panel-body">
         <div class="row">

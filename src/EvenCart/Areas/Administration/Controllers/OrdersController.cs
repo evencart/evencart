@@ -8,6 +8,7 @@ using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
@@ -109,7 +110,30 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             var orderModel = _orderModelFactory.Create(order);
             var response = R.Success.With("order", orderModel);
+            var canCancel = CanCancel(order);
+            var canRefund = CanRefund(order);
+            response.With("canCancel", canCancel).With("canRefund", canRefund);
             return response.Result;
+        }
+        [DualPost("{orderId}", Name = AdminRouteNames.CancelAdminOrder, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        [ValidateModelState(ModelType = typeof(OrderModel))]
+        public IActionResult CancelOrder(int orderId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            if (order.OrderStatus != OrderStatus.PendingCancellation)
+                _orderAccountant.CancelOrder(order, "", true);
+            else
+            {
+                //the inventories were already managed last time, so we won't touch them again.
+                order.OrderStatus = OrderStatus.Cancelled;
+                _orderService.Update(order);
+            }
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                RaiseEvent(NamedEvent.OrderCancelled);
+            return R.Success.Result;
         }
 
         [DualPost("", Name = AdminRouteNames.SaveOrder, OnlyApi = true)]
@@ -958,6 +982,16 @@ namespace EvenCart.Areas.Administration.Controllers
                    order.PaymentStatus == PaymentStatus.Captured ||
                    order.PaymentStatus == PaymentStatus.RefundedPartially ||
                    order.PaymentStatus == PaymentStatus.RefundPending;
+        }
+
+        private bool CanCancel(Order order)
+        {
+            return order.OrderStatus == OrderStatus.New ||
+                   order.OrderStatus == OrderStatus.Delayed ||
+                   order.OrderStatus == OrderStatus.PendingCancellation ||
+                   order.OrderStatus == OrderStatus.Processing ||
+                   order.OrderStatus == OrderStatus.OnHold;
+
         }
         #endregion
     }
