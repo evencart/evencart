@@ -67,6 +67,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public string Remarks { get; set; }
 
+        public bool ManualModeTriggered { get; set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }

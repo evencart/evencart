@@ -56,6 +56,9 @@
                     </td>
                     <td>
                         {{order.orderStatusDisplay}}
+                        <small>
+                            <a onclick="editOrderInfo('status');return false;" href="#" class="clickable float-right">{{"Edit" | t}}</a>
+                        </small>
                     </td>
                 </tr>
                 <tr>
@@ -69,6 +72,9 @@
                     </td>
                     <td>
                         {{order.paymentMethodDisplayName}}
+                        <small>
+                            <a onclick="editOrderInfo('payment');return false;" href="#" class="clickable float-right">{{"Edit" | t}}</a>
+                        </small>
                         <div><small class="text-muted">{{order.paymentMethodName}}</small></div>
                     </td>
                 </tr>
@@ -91,6 +97,9 @@
                     </td>
                     <td>
                         {{order.shippingMethodDisplayName}}
+                        <small>
+                            <a onclick="editOrderInfo('shipping');return false;" href="#" class="clickable float-right">{{"Edit" | t}}</a>
+                        </small>
                         <div><small class="text-muted">{{order.shippingMethodName}}</small></div>
                     </td>
                 </tr>
@@ -113,6 +122,9 @@
                     </td>
                     <td>
                         {{order.subTotal | withCurrency}}
+                        <small>
+                            <a onclick="editOrderInfo('totals');return false;" href="#" class="clickable float-right">{{"Edit" | t}}</a>
+                        </small>
                     </td>
                 </tr>
                 {% if order.discount > 0 %}
@@ -175,3 +187,26 @@
         </div>
     </div>
 </div>
+
+<div id="popup-info" class="popup"></div>
+<script type="text/javascript">
+    var editOrderInfo = function(infoType) {
+        jQuery("#popup-info").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("popup-info",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    notify("success", '{{"Order was saved successfully" | t}}');
+                    window.location.reload();
+                }
+            });
+        var url = '{% route GetOrderInfo orderId="%id%" infoType="%infoType%" %}'.replaceAll("%id%", "{{orderId}}").replaceAll("%infoType%", infoType);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#popup-info").html(response);
+                centerPopup();
+            });
+    }
+</script>

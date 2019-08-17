@@ -51,7 +51,7 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public decimal Tax { get; set; }
 
-        public decimal OrderTotal => Subtotal + Tax - Discount + ShippingMethodFee ?? 0 + PaymentMethodFee ?? 0;
+        public decimal OrderTotal { get; set; }
 
         public string OrderTotalFormatted => OrderTotal.ToCurrency();
 

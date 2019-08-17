@@ -1,0 +1,119 @@
+﻿<form action="{% route api_SaveOrder %}" method="post" id="order-info-editor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Order Info Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% if infoType == "status" %}
+                    <div class="form-group">
+                        <div class="alert alert-danger">
+                            {{"WARNING : It's not recommended to change order status as changing it manually will disable the automatic inventory management"}}
+                        </div>
+                        {% control label text=@t"Order Status" for="title" %}
+                        {% control select name="orderStatus" value="orderStatus" items="orderStatusTypes" required="true" %}
+                    </div>
+                    {% endif %}
+                    {% if infoType == "payment" %}
+                    <div class="form-group">
+                        {% control label text=@t"Payment Method" for="paymentMethodName" %}
+                        {% control text name="paymentMethodName" value="{{paymentMethodName}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Payment Method Display" for="paymentMethodDisplayName" %}
+                        {% control text name="paymentMethodDisplayName" value="{{paymentMethodDisplayName}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Payment Status" for="paymentStatus" %}
+                        {% control select name="paymentStatus" value="paymentStatus" items="paymentStatusTypes" required="true" %}
+                    </div>
+                    {% endif %}
+                    {% if infoType == "shipping" %}
+                    <div class="form-group">
+                        {% control label text=@t"Shipping Method" for="shippingMethodName" %}
+                        {% control text name="shippingMethodName" value="{{shippingMethodName}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Shipping Method Display" for="shippingMethodDisplayName" %}
+                        {% control text name="shippingMethodDisplayName" value="{{shippingMethodDisplayName}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Selected Shipping Option" for="selectedShippingOption" %}
+                        {% control text name="selectedShippingOption" value="{{selectedShippingOption}}" %}
+                    </div>
+                    {% endif %}
+                    {% if infoType == "totals" %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Subtotal" for="subTotal" %}
+                                {% control currency name="subTotal" value="{{subTotal}}" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Discount" for="discount" %}
+                                {% control currency name="discount" value="{{discount}}" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Shipping Method Fee" for="shippingMethodFee" %}
+                                {% control currency name="shippingMethodFee" value="{{shippingMethodFee}}" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Payment Method Fee" for="paymentMethodFee" %}
+                                {% control currency name="paymentMethodFee" value="{{paymentMethodFee}}" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Tax" for="tax" %}
+                                {% control currency name="tax" value="{{tax}}" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {% control label text=@t"Order Total" for="orderTotal" %}
+                                {% control currency name="orderTotal" value="{{orderTotal}}" %}
+                            </div>
+                        </div>
+                    </div>
+                  
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Order" | t}}</button> 
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("order-info-editor-form",
+        {
+            onSuccess: function () {
+                hidePopup("popup-info");
+            }
+        });
+
+</script>

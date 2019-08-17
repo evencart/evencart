@@ -112,12 +112,56 @@ namespace EvenCart.Areas.Administration.Controllers
             var response = R.Success.With("order", orderModel);
             var canCancel = CanCancel(order);
             var canRefund = CanRefund(order);
-            response.With("canCancel", canCancel).With("canRefund", canRefund);
+            response.With("canCancel", canCancel).With("canRefund", canRefund).WithAvailableOrderStatusTypes();
             return response.Result;
         }
+
+        [DualGet("{orderId}/{infoType}", Name = AdminRouteNames.GetOrderInfo)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult OrderInfoEditor(int orderId, string infoType)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            var response = R.Success;
+            infoType = infoType.ToLower();
+            switch (infoType)
+            {
+                case "payment":
+                    response.With("paymentMethodName", order.PaymentMethodName);
+                    response.With("paymentMethodDisplayName", order.PaymentMethodDisplayName);
+                    response.With("paymentStatus", order.PaymentStatus);
+                    response.WithAvailablePaymentStatusTypes();
+                    break;
+                case "shipping":
+                    response.With("shippingMethodName", order.ShippingMethodName);
+                    response.With("shippingMethodDisplayName", order.ShippingMethodDisplayName);
+                    response.With("selectedShippingOption", order.SelectedShippingOption);
+                    response.WithAvailableShipmentStatusTypes();
+                    break;
+                case "status":
+                    response.With("orderStatus", order.OrderStatus);
+                    response.WithAvailableOrderStatusTypes();
+                    break;
+                case "totals":
+                    response.With("subTotal", order.Subtotal);
+                    response.With("discount", order.Discount);
+                    response.With("tax", order.Tax);
+                    response.With("paymentMethodFee", order.PaymentMethodFee);
+                    response.With("shippingMethodFee", order.ShippingMethodFee);
+                    response.With("orderTotal", order.OrderTotal);
+                    break;
+                default:
+                    return NotFound();
+            }
+
+            response.With("id", order.Id);
+            response.With("infoType", infoType);
+            return response.Result;
+        }
+
         [DualPost("{orderId}", Name = AdminRouteNames.CancelAdminOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
-        [ValidateModelState(ModelType = typeof(OrderModel))]
         public IActionResult CancelOrder(int orderId)
         {
             var order = orderId > 0 ? _orderService.Get(orderId) : null;
@@ -136,6 +180,8 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+
+
         [DualPost("", Name = AdminRouteNames.SaveOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
         [ValidateModelState(ModelType = typeof(OrderModel))]
@@ -148,7 +194,10 @@ namespace EvenCart.Areas.Administration.Controllers
             if (orderModel.Discount.HasValue)
                 order.Discount = orderModel.Discount.Value;
             if (orderModel.OrderStatus.HasValue)
+            {
                 order.OrderStatus = orderModel.OrderStatus.Value;
+                order.ManualModeTriggered = true;
+            }
             if (orderModel.PaymentStatus.HasValue)
                 order.PaymentStatus = orderModel.PaymentStatus.Value;
             if (!orderModel.PaymentMethodDisplayName.IsNullEmptyOrWhiteSpace())
@@ -986,11 +1035,11 @@ namespace EvenCart.Areas.Administration.Controllers
 
         private bool CanCancel(Order order)
         {
-            return order.OrderStatus == OrderStatus.New ||
-                   order.OrderStatus == OrderStatus.Delayed ||
-                   order.OrderStatus == OrderStatus.PendingCancellation ||
-                   order.OrderStatus == OrderStatus.Processing ||
-                   order.OrderStatus == OrderStatus.OnHold;
+            return !order.ManualModeTriggered && (order.OrderStatus == OrderStatus.New ||
+                                                  order.OrderStatus == OrderStatus.Delayed ||
+                                                  order.OrderStatus == OrderStatus.PendingCancellation ||
+                                                  order.OrderStatus == OrderStatus.Processing ||
+                                                  order.OrderStatus == OrderStatus.OnHold);
 
         }
         #endregion

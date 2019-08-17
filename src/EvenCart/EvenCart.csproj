@@ -134,6 +134,7 @@
     <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentsList.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderFulfillmentsList.ShippedProductsPanel.html" />
+    <None Remove="Areas\Administration\Views\Orders\OrderInfoEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.Dates.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrdersList.FilterPanel.OrderStatus.html" />
@@ -608,6 +609,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Navigation\PrimaryNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Orders\OrderInfoEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Orders\RefundEditor.html">
