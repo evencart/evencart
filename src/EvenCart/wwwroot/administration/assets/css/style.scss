@@ -60,14 +60,15 @@ body {
     top: 0;
     bottom: 0;
     z-index: 1;
-
     .maintenance-dropup {
         position: fixed;
         bottom: 0;
         width: 140px;
-        button{
-            display:block;
+
+        button {
+            display: block;
         }
+
         & > button {
             width: 100%;
             border-radius: 0;
@@ -75,11 +76,20 @@ body {
     }
 }
 
+.sidenav-links-container {
+    overflow: auto;
+    position: absolute;
+    width: 100%;
+    bottom: 30px;
+    top: 60px;
+}
 .sidenav-links {
-    margin: 15px 0;
+    margin: 15px 0 0;
     padding: 0;
-    font-size: 14px;
-
+    font-size: 14px;    
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    
     a {
         color: $foreground-for-primary-dark;
         display: block;
@@ -897,4 +907,5 @@ button.busy {
     text-align: right;
     right: 0;
     font-weight: bold;
+    color: gray;
 }

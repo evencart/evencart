@@ -46,10 +46,19 @@ body {
       width: 100%;
       border-radius: 0; }
 
+.sidenav-links-container {
+  overflow: auto;
+  position: absolute;
+  width: 100%;
+  bottom: 30px;
+  top: 60px; }
+
 .sidenav-links {
-  margin: 15px 0;
+  margin: 15px 0 0;
   padding: 0;
-  font-size: 14px; }
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
   .sidenav-links a {
     color: #fff;
     display: block;
@@ -656,4 +665,5 @@ button.busy {
   padding: 2px;
   text-align: right;
   right: 0;
-  font-weight: bold; }
+  font-weight: bold;
+  color: gray; }
