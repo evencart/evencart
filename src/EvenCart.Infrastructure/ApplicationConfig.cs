@@ -4,7 +4,9 @@ namespace EvenCart.Infrastructure
 {
     public static class ApplicationConfig
     {
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.0-beta";
+
+        public const string AppName = "EvenCart";
 
         public const string ApiVersion = "1.0";
 

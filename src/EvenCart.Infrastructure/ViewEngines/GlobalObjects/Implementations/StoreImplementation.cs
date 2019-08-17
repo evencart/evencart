@@ -6,6 +6,10 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 {
     public class StoreImplementation : FoundationModel
     {
+        public string SoftwareVersion { get; set; }
+
+        public string SoftwareTitle { get; set; }
+
         public string Url { get; set; }
 
         public string Name { get; set; }

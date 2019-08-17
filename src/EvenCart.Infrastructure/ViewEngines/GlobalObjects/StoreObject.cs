@@ -61,7 +61,9 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 ReviewModificationAllowed = catalogSettings.AllowReviewModification,
                 ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
                 PrimaryCurrencyCode = currencyService.Get(localizationSettings.BaseCurrencyId)?.IsoCode,
-                XsrfToken = antiforgery.GetToken()
+                XsrfToken = antiforgery.GetToken(),
+                SoftwareVersion = ApplicationConfig.Version,
+                SoftwareTitle = ApplicationConfig.AppName
             };
             var currentUser = ApplicationEngine.CurrentUser;
             if (!ApplicationEngine.CurrentHttpContext.IsTokenAuthenticated() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
