@@ -172,25 +172,25 @@ namespace EvenCart.Services.Tests.Products
         [Test]
         public void Tax_Rate_Retrieval_Succeeds()
         {
-            var rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[0]);
+            var rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[0], out var _);
             Assert.AreEqual(_taxRates[1].Rate, rate); //15
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[1]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[1], out var _);
             Assert.AreEqual(_taxRates[2].Rate, rate); //18
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[2]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[0], _addresses[2], out var _);
             Assert.AreEqual(_taxSettings.DefaultTaxRate, rate); //default tax rate
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[1], _addresses[0]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[1], _addresses[0], out var _);
             Assert.AreEqual(0, rate); //no tax is charged
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[0]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[0], out var _);
             Assert.AreEqual(_taxRates[3].Rate, rate); // 0
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[1]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[1], out var _);
             Assert.AreEqual(_taxRates[3].Rate, rate); //0
 
-            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[2]);
+            rate = _taxAccountant.GetFinalTaxRate(_products[2], _addresses[2], out var _);
             Assert.AreEqual(_taxSettings.DefaultTaxRate, rate); //default
         }
     }

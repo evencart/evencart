@@ -1373,6 +1373,11 @@
             The tax percent specific to this product
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.TaxName">
+            <summary>
+            The tax name applicable of this product
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.OrderNumber">
             <summary>
             The displayable order number
@@ -1516,6 +1521,11 @@
             List of <see cref="T:EvenCart.Models.Shipments.ShipmentModel">shipment</see> objects for this order
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.Taxes">
+            <summary>
+            List of <see cref="T:EvenCart.Models.Orders.OrderTaxModel">tax</see> objects for this order
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.FromDate">
             <summary>
             The start date to search the orders from. Defaults to 6 months old
@@ -1539,6 +1549,11 @@
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.RowCount">
             <summary>
             The total number of result rows to be returned
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Orders.OrderTaxModel">
+            <summary>
+            Represents a unique tax for a single order
             </summary>
         </member>
         <member name="T:EvenCart.Models.Orders.ReturnItemModel">

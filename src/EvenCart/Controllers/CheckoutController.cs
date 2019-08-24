@@ -537,6 +537,7 @@ namespace EvenCart.Controllers
                     Quantity = cartItem.Quantity,
                     Tax = cartItem.Tax,
                     TaxPercent = cartItem.TaxPercent,
+                    TaxName = cartItem.TaxName,
                     ProductVariantId = cartItem.ProductVariantId
                 };
                 order.OrderItems.Add(orderItem);

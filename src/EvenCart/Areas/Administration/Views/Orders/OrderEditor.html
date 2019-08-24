@@ -9,7 +9,13 @@
     <div class="col-lg-6">
         {% partial "Orders/OrderEditor.CustomerInfoPanel" %}
     </div>
-
+    {% if canDownloadInvoice %}
+    <div class="save-button-container">
+        <form action='{% route DownloadInvoice orderGuid="{{order.guid}}" %}'>
+            <button type="submit" class="btn btn-sm btn-success">{{"Download Invoice" | t}}</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
 {% control hidden name="id" value="{{order.id}}" %}
 <script type="text/javascript">

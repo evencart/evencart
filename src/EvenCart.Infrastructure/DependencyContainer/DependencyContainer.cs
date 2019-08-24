@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using DryIoc;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Config;

@@ -27,6 +27,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public decimal FinalPrice { get; set; } //=70
 
+        public string TaxName { get; set; }
+
         #region Virtual Properties
         public virtual Product Product { get; set; }
         #endregion

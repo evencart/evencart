@@ -131,6 +131,10 @@ namespace EvenCart.Models.Orders
         /// List of <see cref="ShipmentModel">shipment</see> objects for this order
         /// </summary>
         public IList<ShipmentModel> Shipments { get; set; }
+        /// <summary>
+        /// List of <see cref="OrderTaxModel">tax</see> objects for this order
+        /// </summary>
+        public IList<OrderTaxModel> Taxes { get; set; }
 
     }
 }

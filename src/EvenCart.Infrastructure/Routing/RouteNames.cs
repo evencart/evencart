@@ -57,5 +57,6 @@
         public const string SaveGdprPreferences = "SaveGdprPreferences";
         public const string Error = "Error";
         public const string KeepAlive = "KeepAlive";
+        public const string DownloadInvoice = "DownloadInvoice";
     }
 }

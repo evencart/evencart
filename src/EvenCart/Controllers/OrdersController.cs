@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Common;
+using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Events;
@@ -13,6 +15,7 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Orders;
 using EvenCart.Services.Common;
+using EvenCart.Services.Pdf;
 using EvenCart.Services.Shipping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +37,8 @@ namespace EvenCart.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly IReturnRequestModelFactory _requestModelFactory;
         private readonly IOrderAccountant _orderAccountant;
-        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory, IOrderAccountant orderAccountant)
+        private readonly IPdfService _pdfService;
+        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory, IOrderAccountant orderAccountant, IPdfService pdfService)
         {
             _orderService = orderService;
             _orderModelFactory = orderModelFactory;
@@ -44,6 +48,7 @@ namespace EvenCart.Controllers
             _returnRequestService = returnRequestService;
             _requestModelFactory = requestModelFactory;
             _orderAccountant = orderAccountant;
+            _pdfService = pdfService;
         }
 
         /// <summary>
@@ -76,7 +81,7 @@ namespace EvenCart.Controllers
             SetBreadcrumbToRoute("Orders", RouteNames.AccountOrders);
             SetBreadcrumbToRoute(order.OrderNumber, RouteNames.SingleOrder, new { orderGuid }, localize: false);
 
-            return r.Success.With("order", model).With("returnRequests", returnRequestModels).Result;
+            return r.Success.With("order", model).With("returnRequests", returnRequestModels).With("canDownloadInvoice", CanDownloadInvoice(order)).Result;
         }
         /// <summary>
         /// Gets orders for the authenticated user
@@ -282,6 +287,16 @@ namespace EvenCart.Controllers
             return R.Success.Result;
         }
 
+        [HttpGet("{orderGuid}/invoice", Name = RouteNames.DownloadInvoice)]
+        public IActionResult DownloadInvoice(string orderGuid)
+        {
+            var order = _orderService.GetByGuid(orderGuid);
+            if (order == null || order.UserId != CurrentUser.Id || !CanDownloadInvoice(order))
+                return NotFound();
+
+            var pdfBytes = _pdfService.GetPdfBytes(InvoiceHelper.GetInvoice(order));
+            return File(pdfBytes, "application/pdf", $"order_invoice_{order.Id}.pdf");
+        }
         #region Helpers
 
         private bool CanCancelOrder(Order order)
@@ -325,6 +340,11 @@ namespace EvenCart.Controllers
                 lastReturnDate = orderItems.Any() ? deliveryDate.AddDays(orderItems.Max(x => x.Product.DaysForReturn)) : DateTime.UtcNow;
             }
             return orderItems.Any();
+        }
+
+        private bool CanDownloadInvoice(Order order)
+        {
+            return order.OrderStatus == OrderStatus.Complete && order.PaymentStatus == PaymentStatus.Complete;
         }
         #endregion
     }

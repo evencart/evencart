@@ -21,6 +21,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public decimal TaxPercent { get; set; }
 
+        public string TaxName { get; set; }
+
         #region Virtual Properties
         public virtual Order Order { get; set; }
 

@@ -5,9 +5,17 @@
 
         <h3>
             {{"Order" | t}} # {{order.orderNumber}}
+            {% if canDownloadInvoice %}
+            <form action='{% route DownloadInvoice orderGuid="{{order.guid}}" %}' style="float: right;">
+                <button type="submit" class="btn btn-sm btn-success">{{"Download Invoice" | t}}</button>
+            </form>
+            {% endif %}
         </h3>
 
         <label>{{"Order Date" | t}}</label> - {{order.createdOnLocal}}
+        
+       
+       
         <div class="page-section text-dark section pb-120">
             <div class="row">
                 <div class="col-md-3">

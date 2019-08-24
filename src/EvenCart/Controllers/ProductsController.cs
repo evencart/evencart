@@ -97,7 +97,7 @@ namespace EvenCart.Controllers
                 var variantModels = new List<object>();
                 foreach (var variant in variants)
                 {
-                    _priceAccountant.GetProductPriceDetails(product, null, variant.Price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                    _priceAccountant.GetProductPriceDetails(product, null, variant.Price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate, out _);
                     var variantObject = new
                     {
                         attributes = new Dictionary<string, string>(),

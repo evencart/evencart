@@ -1,4 +1,9 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Database;
@@ -9,6 +14,7 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing.Conventions;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Services.Security;
+using HtmlToPdfConverter;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -153,6 +159,29 @@ namespace EvenCart.Infrastructure.Extensions
         public static void EnableResponseCompression(this IServiceCollection services)
         {
             services.AddResponseCompression();
+        }
+
+        public static IServiceCollection AddHtmlToPdfConverter(this IServiceCollection services)
+        {
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            services.AddScoped<IPdfConverter, PdfConverter>();
+
+            var context = new CustomAssemblyLoadContext();
+            var projectRootFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dll");
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.so");
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dylib");
+            }
+
+            context.LoadUnmanagedLibrary(path);
+
+            return services;
         }
     }
 }

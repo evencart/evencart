@@ -1,0 +1,276 @@
+﻿<!doctype html>
+<html>
+<head>
+    <!-- Invoice styling -->
+    <style>
+        body {
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            text-align: center;
+            color: #777;
+        }
+
+            body h1 {
+                font-weight: 300;
+                margin-bottom: 0px;
+                padding-bottom: 0px;
+                color: #000;
+            }
+
+            body h3 {
+                font-weight: 300;
+                margin-top: 10px;
+                margin-bottom: 20px;
+                font-style: italic;
+                color: #555;
+            }
+
+            body a {
+                color: #06F;
+            }
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+        }
+
+            .invoice-box table {
+                width: 100%;
+                line-height: inherit;
+                text-align: left;
+            }
+
+                .invoice-box table td {
+                    padding: 5px;
+                    vertical-align: top;
+                }
+
+                .invoice-box table tr td.right-aligned {
+                    text-align: right;
+                }
+
+                .invoice-box table tr td.center-aligned {
+                    text-align: center;
+                }
+
+                .invoice-box table tr.top table td {
+                    padding-bottom: 20px;
+                }
+
+                    .invoice-box table tr.top table td.title {
+                        font-size: 45px;
+                        line-height: 45px;
+                        color: #333;
+                    }
+
+                .invoice-box table tr.information table td {
+                    padding-bottom: 40px;
+                }
+
+                .invoice-box table tr.heading td {
+                    background: #eee;
+                    border-bottom: 1px solid #ddd;
+                    font-weight: bold;
+                }
+
+                .invoice-box table tr.details td {
+                    padding-bottom: 20px;
+                }
+
+                .invoice-box table tr.item td {
+                    border-bottom: 1px solid #eee;
+                }
+
+                .invoice-box table tr.item.last td {
+                    border-bottom: none;
+                }
+
+                .invoice-box table tr.total td:nth-child(2) {
+                    border-top: 2px solid #eee;
+                    font-weight: bold;
+                }
+
+        .invoice-box table tr.top table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+
+        .invoice-box table tr.information table td {
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                <img src="{{ store.logoUrl | absoluteUrl }}">
+                            </td>
+
+                            <td>
+                                {{"Invoice"}} #: {{ order.orderNumber }}<br>
+                                {{"Date" | t}}: {{order.createdOnLocal}}<br>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <div>
+                                    <strong>{{"Delivery Address" | t}}</strong>
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.name}}
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.address1}}
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.address2}}
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.city}} {{order.shippingAddress.zipPostalCode}}
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.stateProvinceName}}
+                                </div>
+                                <div>
+                                    {{order.shippingAddress.countryName}}
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {% if order.shippingMethodDisplayName != '' %}
+            <tr class="heading">
+                <td colspan="2">
+                    {{"Shipping Method" | t }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td colspan="2">
+                    {{order.shippingMethodDisplayName}}
+                </td>
+            </tr>
+            {% endif %}
+            <tr class="heading">
+                <td>
+                    {{"Product" | t}}
+                </td>
+                <td>
+                    {{"Quantity" | t}}
+                </td>
+                <td class="right-aligned">
+                    {{"Price" | t}}
+                </td>
+                <td class="right-aligned">
+                    {{"Line Total" | t}}
+                </td>
+            </tr>
+            {% for orderItem in order.orderItems %}
+            <tr class="item">
+                <td>
+                    <img width="50px" style="float: left;" src="{{orderItem.imageUrl | absoluteUrl}}" />
+                    <div style="float: left; margin-left: 15px;">
+                        {{orderItem.productName}} <br />
+                        {{orderItem.attributeText | newLine2Br}}
+                    </div>
+                </td>
+                <td class="center-aligned">
+                    {{orderItem.quantity}}
+                </td>
+                <td>
+                    {{orderItem.price | withCurrency }}
+                </td>
+                <td class="right-aligned">
+                    {{orderItem.totalPrice | withCurrency }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <table style="width: 100%">
+            <tbody>
+                <tr>
+                    <th>{{"Subtotal" | t}}</th>
+                    <td class="text-right">
+                        <span class="amount">
+                            {{order.subTotal | withCurrency}}
+                        </span>
+                    </td>
+                </tr>
+                {% if order.discount > 0 %}
+                <tr>
+                    <th>{{"Discount" | t}}</th>
+                    <td class="text-right">
+                        <span class="amount">
+                            -{{order.discount | withCurrency}}
+                        </span>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if order.shippingMethodFee > 0 %}
+                <tr>
+                    <th>{{"Shipping" | t}}</th>
+                    <td class="text-right">
+                        <span class="amount">
+                            {{order.shippingMethodFee | withCurrency}}
+                        </span>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if order.paymentMethodFee > 0 %}
+                <tr>
+                    <th>{{"Payment Fee" | t}}</th>
+                    <td class="text-right">
+                        <span class="amount">
+                            {{order.paymentMethodFee | withCurrency}}
+                        </span>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if order.tax > 0 %}
+                {% for tax in order.taxes %}
+                <tr>
+                    <th>{{tax.taxName}} (@ {{tax.taxPercent}}%)</th>
+                    <td class="text-right">
+                        <span class="amount">
+                            {{tax.amount | withCurrency}}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+               
+                {% endif %}
+
+                <tr class="order-total">
+                    <th>{{"Total" | t }}</th>
+                    <td class="text-right">
+                        <strong><span class="amount">{{order.orderTotal | withCurrency}}</span></strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

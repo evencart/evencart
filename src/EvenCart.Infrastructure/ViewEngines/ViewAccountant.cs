@@ -83,10 +83,10 @@ namespace EvenCart.Infrastructure.ViewEngines
             return viewName;
         }
 
-        public string GetThemeViewPath(string viewName)
+        public string GetThemeViewPath(string viewName, bool ignoreAdminViews = false)
         {
             viewName = ValidateViewName(viewName);
-            return GetViewLocations()
+            return GetViewLocations(ignoreAdminViews)
                 .Select(x => _localFileProvider.CombinePaths(x, viewName))
                 .FirstOrDefault(x => _localFileProvider.FileExists(x));
         }
@@ -223,11 +223,11 @@ namespace EvenCart.Infrastructure.ViewEngines
 
         private IList<string> _viewLocations;
         private IList<string> _adminViewLocations;
-        private IList<string> GetViewLocations()
+        private IList<string> GetViewLocations(bool ignoreAdminViews = false)
         {
             var rootPath = ServerHelper.MapPath("~/");
             var plugins = _pluginLoader.GetAvailablePlugins();
-            if (ApplicationEngine.IsAdmin())
+            if (!ignoreAdminViews && ApplicationEngine.IsAdmin())
             {
                 if (_adminViewLocations != null)
                     return _adminViewLocations;

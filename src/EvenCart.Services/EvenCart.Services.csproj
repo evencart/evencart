@@ -37,6 +37,8 @@
   <ItemGroup>
     <PackageReference Include="BundlerMinifier.Core" Version="2.9.406" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
+    <PackageReference Include="HtmlToPdfConverter" Version="1.0.2" />
+    <PackageReference Include="HtmlToPdfConverter.Core" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +56,18 @@
     <Reference Include="DotEntity.SqlServer">
       <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="C:\Users\apexol\.nuget\packages\htmltopdfconverter\1.0.2\contentFiles\any\netstandard2.0\NativeLibs\X64\libwkhtmltox.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="C:\Users\apexol\.nuget\packages\htmltopdfconverter\1.0.2\contentFiles\any\netstandard2.0\NativeLibs\X64\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="C:\Users\apexol\.nuget\packages\htmltopdfconverter\1.0.2\contentFiles\any\netstandard2.0\NativeLibs\X64\libwkhtmltox.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

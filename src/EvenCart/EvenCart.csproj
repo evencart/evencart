@@ -290,6 +290,7 @@
     <None Remove="Content\Themes\Default\Views\Orders\CancelOrder.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Index.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Index.Returns.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\Invoice.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Orders.html" />
     <None Remove="Content\Themes\Default\Views\Orders\ReturnOrder.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
@@ -1090,6 +1091,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Navigation\_AccountNavigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Orders\Invoice.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Orders\Index.Returns.html">

@@ -20,6 +20,7 @@ using EvenCart.Services.Purchases;
 using EvenCart.Infrastructure.DependencyContainer;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Theming;
+using HtmlToPdfConverter.Abstractions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,9 @@ namespace EvenCart.Infrastructure
             //add MVC and routing convention for api access
             services.AddAppMvc(hostingEnvironment);
             services.AddAppRouting();
+
+            //html to pdf
+            services.AddHtmlToPdfConverter();
 
             //fire up dependency injector
             var container = new Container();

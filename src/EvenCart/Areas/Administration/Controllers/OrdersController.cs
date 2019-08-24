@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Orders;
 using EvenCart.Areas.Administration.Factories.Warehouses;
+using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
@@ -23,8 +24,10 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
+using EvenCart.Services.Pdf;
 using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,7 +56,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IPurchaseAccountant _purchaseAccountant;
         private readonly IPaymentTransactionService _paymentTransactionService;
         private readonly IPaymentAccountant _paymentAccountant;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant)
+        private readonly IPdfService _pdfService;
+
+        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService)
         {
             _orderService = orderService;
             _modelMapper = modelMapper;
@@ -76,6 +81,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _purchaseAccountant = purchaseAccountant;
             _paymentTransactionService = paymentTransactionService;
             _paymentAccountant = paymentAccountant;
+            _pdfService = pdfService;
         }
 
         #region Orders
@@ -221,6 +227,17 @@ namespace EvenCart.Areas.Administration.Controllers
             _orderService.Update(order);
 
             return R.Success.Result;
+        }
+
+        [HttpGet("{orderId}/invoice", Name = AdminRouteNames.DownloadInvoice)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult DownloadInvoice(int orderId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            var pdfBytes = _pdfService.GetPdfBytes(InvoiceHelper.GetInvoice(order));
+            return File(pdfBytes, "application/pdf", $"order_invoice_{order.Id}.pdf");
         }
 
         #endregion

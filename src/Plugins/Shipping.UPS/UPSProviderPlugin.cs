@@ -140,7 +140,7 @@ namespace Shipping.UPS
                 var product = products[i];
                 writer.WriteStartElement("Package");
                 writer.WriteStartElement("PackagingType");
-                writer.WriteElementString("Code", "02");
+                writer.WriteElementString("Code", UPSHelper.GetPackagingTypeCode(PackagingType.Package));
                 writer.WriteEndElement(); //</PackagingType>
                 writer.WriteStartElement("PackageWeight"); //default is pounds
                 writer.WriteElementString("Weight",

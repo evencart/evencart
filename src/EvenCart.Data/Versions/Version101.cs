@@ -9,7 +9,8 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.AddColumn<Order, bool>(nameof(Order.ManualModeTriggered), false, transaction);
+            Db.AddColumn<OrderItem, string>(nameof(OrderItem.TaxName), "", transaction);
+            Db.AddColumn<CartItem, string>(nameof(CartItem.TaxName), "", transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

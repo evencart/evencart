@@ -218,10 +218,10 @@ namespace EvenCart.Services.Products
                                     var comparisonPrice = variant.ComparePrice ?? product.ComparePrice;
                                     var price = Math.Min(basePrice, variant.Price ?? product.Price);
 
-                                    GetProductPriceDetails(product, cart.BillingAddress, price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                                    GetProductPriceDetails(product, cart.BillingAddress, price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate, out var taxName);
 
                                     //do we need an update?
-                                    if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0)
+                                    if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0 || ci.TaxName != taxName)
                                     {
                                         ci.Price = priceWithoutTax;
                                         ci.ComparePrice = comparisonPrice;
@@ -229,16 +229,17 @@ namespace EvenCart.Services.Products
                                         ci.TaxPercent = taxRate;
                                         ci.Discount = discount;
                                         ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
+                                        ci.TaxName = taxName;
                                         _cartItemService.Update(ci);
                                     }
                                 }
                             }
                             else
                             {
-                                GetProductPriceDetails(product, cart.BillingAddress, basePrice, out decimal priceWithoutTax, out decimal tax, out decimal taxRate);
+                                GetProductPriceDetails(product, cart.BillingAddress, basePrice, out decimal priceWithoutTax, out decimal tax, out decimal taxRate, out var taxName);
                                 tax = tax * ci.Quantity;
                                 //do we need an update?
-                                if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0)
+                                if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0 || ci.TaxName != taxName)
                                 {
                                     ci.Price = priceWithoutTax;
                                     ci.ComparePrice = product.ComparePrice;
@@ -246,6 +247,7 @@ namespace EvenCart.Services.Products
                                     ci.TaxPercent = taxRate;
                                     ci.Discount = discount;
                                     ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
+                                    ci.TaxName = taxName;
                                     _cartItemService.Update(ci);
                                 }
                             }
@@ -296,9 +298,9 @@ namespace EvenCart.Services.Products
             return product.Price - discount;
         }
 
-        public void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate)
+        public void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate, out string taxName)
         {
-            taxRate = _taxAccountant.GetFinalTaxRate(product, address);
+            taxRate = _taxAccountant.GetFinalTaxRate(product, address, out taxName);
             var fromBasePrice = basePrice ?? product.Price;
             if (_taxSettings.PricesIncludeTax)
             {

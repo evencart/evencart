@@ -45,5 +45,9 @@ namespace EvenCart.Models.Orders
         /// The tax percent specific to this product
         /// </summary>
         public decimal TaxPercent { get; set; }
+        /// <summary>
+        /// The tax name applicable of this product
+        /// </summary>
+        public string TaxName { get; set; }
     }
 }

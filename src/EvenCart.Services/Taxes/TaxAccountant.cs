@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Taxes;
 
 namespace EvenCart.Services.Taxes
 {
@@ -17,8 +20,9 @@ namespace EvenCart.Services.Taxes
             _taxSettings = taxSettings;
         }
 
-        public decimal GetFinalTaxRate(Product product, Address address)
+        public decimal GetFinalTaxRate(Product product, Address address, out string taxName)
         {
+            taxName = "Tax";
             if (!product.ChargeTaxes)
                 return 0;
 
@@ -42,7 +46,7 @@ namespace EvenCart.Services.Taxes
             var tax = _taxService.GetWithTaxRate(taxId, address?.CountryId ?? 0, address?.StateProvinceId ?? 0, address?.ZipPostalCode);
             if (tax?.TaxRates == null || !tax.TaxRates.Any())
                 return _taxSettings.DefaultTaxRate;
-
+            taxName = tax.Name;
             return tax.TaxRates.First().Rate;
         }
     }

@@ -21,7 +21,7 @@ namespace EvenCart.Services.Products
 
         decimal GetAutoDiscountedPriceForUser(Product product, User user, int quantity, ref IList<DiscountCoupon> discountCoupons, out decimal discount);
 
-        void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate);
+        void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate, out string taxName);
 
         decimal ConvertCurrency(decimal input, Currency targetCurrency, Rounding? roundingType = null);
     }

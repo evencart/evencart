@@ -5,7 +5,7 @@ namespace EvenCart.Infrastructure.ViewEngines
 {
     public interface IViewAccountant
     {
-        string GetThemeViewPath(string viewName);
+        string GetThemeViewPath(string viewName, bool ignoreAdminViews = false);
 
         IList<string> GetSearchLocations();
 

@@ -78,6 +78,17 @@ namespace EvenCart.Factories.Orders
                 while (model.OrderItems.Any(x => x.Id == 0))
                     model.OrderItems.Remove(model.OrderItems.First(x => x.Id == 0));
             }
+
+            if (model.OrderItems != null)
+            {
+                model.Taxes = model.OrderItems.GroupBy(x => new {x.TaxName, x.TaxPercent}).Select(x =>
+                    new OrderTaxModel()
+                    {
+                        TaxName = x.Key.TaxName,
+                        TaxPercent = x.Key.TaxPercent,
+                        Amount = x.Sum(y => y.Tax)
+                    }).ToList();
+            }
             return model;
         }
 
@@ -95,6 +106,7 @@ namespace EvenCart.Factories.Orders
                 ? orderItem.Price * orderItem.Quantity
                 : orderItem.Price * orderItem.Quantity + orderItem.Tax;
             orderItemModel.SeName = orderItem.Product?.SeoMeta?.Slug;
+            orderItemModel.TaxName = orderItem.TaxName;
             return orderItemModel;
         }
     }

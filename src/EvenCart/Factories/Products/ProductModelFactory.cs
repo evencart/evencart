@@ -130,7 +130,7 @@ namespace EvenCart.Factories.Products
                 }
             }
             _priceAccountant.GetProductPriceDetails(product, null, price, out decimal priceWithoutTax,
-                out decimal tax, out decimal taxRate);
+                out decimal tax, out decimal taxRate, out _);
             if (_taxSettings.DisplayProductPricesWithoutTax)
                 productModel.Price = priceWithoutTax;
             else

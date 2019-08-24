@@ -79,6 +79,8 @@ namespace EvenCart.Infrastructure.Routing
         public const string CancelAdminOrder = "CancelAdminOrder";
         public const string GetOrder = "GetOrder";
         public const string GetOrderInfo = "GetOrderInfo";
+        public const string DownloadInvoice = "DownloadAdminInvoice";
+
         public const string OrderFulfillmentsList = "OrderFulfillmentsList";
         public const string SaveOrderFulfillment = "SaveOrderFulfillment";
         public const string GetOrderFulfillment = "GetOrderFulfillment";
