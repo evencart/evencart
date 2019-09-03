@@ -158,3 +158,9 @@
 {% secondary_navigation url="{% route CustomLabelsList labelType="cancellationReason" %}" title=@t"Cancellation Reasons" systemName="CancellationReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
 {% secondary_navigation url="{% route CustomLabelsList labelType="returnAction" %}" title=@t"Preferred Return Actions" systemName="ReturnActionsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
 
+{% primary_navigation url="{% route GetAbout %}" title=@t"System" systemName="System" groupId="settings" %}
+{% secondary_navigation url="{% route GetAbout %}" title=@t"About" systemName="About" parent="System" %}
+{% secondary_navigation url="{% route LogsList %}" title=@t"Activity Log" systemName="LogsList" parent="System" %}
+
+{% secondary_navigation url="{% route LogsList %}" iconClass="rbicon-chevron-left" title=@t"Back to logs" groupId="LogEdit" %}
+{% secondary_navigation url="" title="Log Viewer" systemName="GetLog" groupId="LogEdit" %}

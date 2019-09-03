@@ -268,5 +268,12 @@ namespace EvenCart.Infrastructure.Routing
         public const string EditCustomLabel = "EditCustomLabel";
         public const string DeleteCustomLabel = "DeleteCustomLabel";
         public const string UpdateCustomLabelDisplayOrder = "UpdateCustomLabelDisplayOrder";
+
+        public const string LogsList = "LogsList";
+        public const string GetLog = "GetLog";
+        public const string DeleteLog = "DeleteLog";
+        public const string ClearLogs = "ClearLogs";
+
+        public const string GetAbout = "GetAbout";
     }
 }

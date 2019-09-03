@@ -105,6 +105,38 @@
             Allows store admins to view dashboard summaries
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.LogsController">
+            <summary>
+            Allows to view and delete activity logs
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.LogsController.LogsList(EvenCart.Areas.Administration.Models.Logger.LogSearchModel)">
+            <summary>
+            Gets the logs recorded in the system
+            </summary>
+            <param name="searchModel"></param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Logger.LogModel">log</see> objects as 'logs'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.LogsController.LogViewer(System.Int32)">
+            <summary>
+            Gets a single log entry
+            </summary>
+            <param name="logId">The id of the entry</param>
+            <response code="200">A single <see cref="T:EvenCart.Areas.Administration.Models.Logger.LogModel">log</see> object as 'log'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.LogsController.DeleteLog(System.Int32)">
+            <summary>
+            Deletes a specific log entry from the system
+            </summary>
+            <param name="logId">The id of the log</param>
+            <response code="200">A success response object.</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.LogsController.ClearLogs">
+            <summary>
+            Clears all the logs from the system. WARNING: Use this only if you are sure what you are doing.
+            </summary>
+            <response code="200">A success response object.</response>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.PluginsController.MarketPluginsList(EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel)">
             <summary>
             The list paginated of plugins in EvenCart marketplace
@@ -164,6 +196,17 @@
             </summary>
             <param name="searchModel"></param>
             <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Reports.UserRegistrationReportModel">user report</see> objects as 'reportItems'</response>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.SystemController">
+            <summary>
+            Allows admin to retrieve system information
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.SystemController.About">
+            <summary>
+            Gets the details about the software such as version, loaded assemblies etc. and system information such as available RAM, system time etc.
+            </summary>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.System.AboutModel">info</see> object as 'info'</response>
         </member>
         <member name="T:EvenCart.Areas.Administration.Controllers.UsersController">
             <summary>
@@ -488,6 +531,11 @@
         <member name="P:EvenCart.Areas.Administration.Models.Shop.AvailableAttributeValueModel.Value">
             <summary>
             A single value for the attribute
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.System.AboutModel">
+            <summary>
+            Represents a system and software information object
             </summary>
         </member>
         <member name="T:EvenCart.Areas.Administration.Models.Updates.UpdateModel">

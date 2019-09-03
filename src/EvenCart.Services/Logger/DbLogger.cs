@@ -26,7 +26,7 @@ namespace EvenCart.Services.Logger
                 CreatedOn = DateTime.UtcNow,
                 IpAddress = WebHelper.GetClientIpAddress(),
                 LogLevel = logLevel,
-                ShortMessage = $"{typeof(T).Name} {message}",
+                ShortMessage = $"[{typeof(T).Name}] {message}",
                 Details = exception?.ToString(),
                 Url = WebHelper.GetCurrentUrl(),
                 ReferralUrl = WebHelper.GetReferrerUrl()

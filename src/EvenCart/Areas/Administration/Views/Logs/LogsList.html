@@ -1,0 +1,76 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Logs" active_menu="LogsList" parent_active_menu="System" %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Logs" | t}}
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="logLevel" data-width="15%">{{"Log Level" | t}}</th>
+                            <th data-column-id="shortMessage" data-width="50%">{{"Description" | t}}</th>
+                            <th data-column-id="createdOn">{{"Log Date" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                {{ logs | scriptJson : 'initData'}}
+                <script type="text/javascript">
+
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                logs: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: "{% route api_LogsList %}",
+                            responseObject: "logs",
+                            formatters: {
+                                "commands": function (column, row) {
+                                    var logUrl = '{% route GetLog logId="_id_" %}'.replace("_id_", row.id);
+                                    return "<a class=\"btn btn-sm btn-primary\" href='" + logUrl + "'><span class=\"rbicon-external-link\"></span></a> " +
+                                        "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteLog(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button> ";;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var deleteLog = function(id) {
+        confirm('{{"Are you sure you wish to delete this log?" | t}}',
+            function() {
+                var url = '{% route api_DeleteLog %}';
+                post({
+                    url: url,
+                    data: {
+                        logId: id
+                    },
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Log was deleted successfully" | t}}');
+                    }
+                });
+            });
+    }
+</script>

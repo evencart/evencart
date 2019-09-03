@@ -1,0 +1,74 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Log Viewer" active_menu="GetLog" parent_active_menu="System" menu_group="LogEdit" %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Log Info" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                {{"Log Level" | t}}
+                            </td>
+                            <td>
+                                {{log.logLevel}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Date" | t}}
+                            </td>
+                            <td>
+                                {{log.createdOn}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"User IP Address" | t}}
+                            </td>
+                            <td>
+                                {{log.ipAddress}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Url" | t}}
+                            </td>
+                            <td>
+                                {{log.url}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Referral Url" | t}}
+                            </td>
+                            <td>
+                                {{log.referralUrl}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Summary" | t}}
+                            </td>
+                            <td>
+                                {{log.shortMessage}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Details" | t}}
+                            </td>
+                            <td>
+                                {{log.details}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"About" active_menu="About" parent_active_menu="System" %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"System Information" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                {{"Version" | t}}
+                            </td>
+                            <td>
+                                <strong>{{store.softwareVersion}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Operating System" | t}}
+                            </td>
+                            <td>
+                                {{info.operatingSystemName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Framework" | t}}
+                            </td>
+                            <td>
+                                {{info.frameworkVersion}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"ASP.NET Version" | t}}
+                            </td>
+                            <td>
+                                {{info.aspNetVersion}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Timezone" | t}}
+                            </td>
+                            <td>
+                                {{info.timeZone}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{"Server Time (UTC)" | t}}
+                            </td>
+                            <td>
+                                {{info.utcTime}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Loaded Assemblies" | t}}
+            </div>
+            <div class="panel-body">
+                <a href="" id="link-assemblies">
+                    <i class="rbicon rbicon-link"></i>
+                    {{info.loadedAssemblies.size}} {{"assemblies loaded" | t}}
+                </a>
+                <div id="div-assembly-list" style="display: none;">
+                    <ol>
+                        {% for assembly in info.loadedAssemblies %}
+                        <li>{{assembly}}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <script type="text/javascript">
+                    ready(function() {
+                        jQuery("#link-assemblies").on("click",
+                            function (e) {
+                                jQuery(this).hide()
+                                e.preventDefault();
+                                jQuery("#div-assembly-list").toggle();
+                            });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

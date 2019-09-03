@@ -121,6 +121,8 @@
     <None Remove="Areas\Administration\Views\Layout\_Layout.html" />
     <None Remove="Areas\Administration\Views\Layout\_PluginLayout.html" />
     <None Remove="Areas\Administration\Views\Layout\_WidgetLayout.html" />
+    <None Remove="Areas\Administration\Views\Logs\LogsList.html" />
+    <None Remove="Areas\Administration\Views\Logs\LogViewer.html" />
     <None Remove="Areas\Administration\Views\Manufacturers\ManufacturerEditor.html" />
     <None Remove="Areas\Administration\Views\Manufacturers\ManufacturersList.html" />
     <None Remove="Areas\Administration\Views\Navigation\MenuEditor.html" />
@@ -199,6 +201,7 @@
     <None Remove="Areas\Administration\Views\Settings\Index.Tax.html" />
     <None Remove="Areas\Administration\Views\Settings\Index.Url.html" />
     <None Remove="Areas\Administration\Views\Settings\Index.User.html" />
+    <None Remove="Areas\Administration\Views\System\About.html" />
     <None Remove="Areas\Administration\Views\Taxes\TaxEditor.html" />
     <None Remove="Areas\Administration\Views\Taxes\TaxesList.html" />
     <None Remove="Areas\Administration\Views\Taxes\TaxRateEditor.html" />
@@ -594,6 +597,12 @@
     <Content Include="Areas\Administration\Views\Layout\_WidgetLayout.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Logs\LogsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Logs\LogViewer.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Manufacturers\ManufacturerEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -826,6 +835,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Settings\Index.User.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\System\About.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Taxes\TaxEditor.html">
