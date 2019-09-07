@@ -14,11 +14,7 @@ namespace EvenCart.Areas.Administration.Components
     [ViewComponent(Name = "EvenCartUpdates")]
     public class UpdatesComponent : FoundationComponent
     {
-#if DEBUG
-        private const string UpdatesFetchUrl = "http://localhost:52886/samples/updates.json";
-#else
         private const string UpdatesFetchUrl = "https://www.evencart.com/api/feed";
-#endif
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
         private readonly ISettingService _settingService;
@@ -61,7 +57,7 @@ namespace EvenCart.Areas.Administration.Components
 
                 if (updates != null)
                 {
-                    r.With("evencartUpdates", updates.Updates);
+                    r.With("evencartUpdates", updates.FeedItems);
                 }
                 return r.Success.ComponentResult;
             }

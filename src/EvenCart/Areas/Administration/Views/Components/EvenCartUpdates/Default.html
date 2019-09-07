@@ -5,11 +5,21 @@
     </div>
     <div class="panel-body">
         <div class="row">
+            {% if evencartUpdates.size == 1 %}
+            {% assign col = 12 %}
+            {% elseif evencartUpdates.size == 2 %}
+            {% assign col = 6 %}
+            {% elseif evencartUpdates.size == 3 %}
+            {% assign col = 4 %}
+            {% elseif evencartUpdates.size == 4 %}
+            {% assign col = 3 %}
+            {% endif %}
+
             {% for update in evencartUpdates %}
-            <div class="col-md-4">
+            <div class="col-md-{{ col }}">
                 <h6><a target="_blank" href="{{update.url}}">{{update.title}}</a></h6>
                 <p>
-                    {{update.summary}}
+                    {{update.description}}
                 </p>
             </div>
             {% endfor %}

@@ -17,6 +17,6 @@ namespace EvenCart.Areas.Administration.Models.Updates
 
         public bool Success { get; set; }
 
-        public IList<UpdateModel> Updates { get; set; }
+        public IList<UpdateModel> FeedItems { get; set; }
     }
 }

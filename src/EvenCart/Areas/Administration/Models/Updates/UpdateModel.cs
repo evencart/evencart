@@ -16,7 +16,7 @@ namespace EvenCart.Areas.Administration.Models.Updates
         /// <summary>
         /// The summary of the update
         /// </summary>
-        public string Summary { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// The date when this update was published

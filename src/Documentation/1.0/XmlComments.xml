@@ -548,7 +548,7 @@
             The title of the update
             </summary>
         </member>
-        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Summary">
+        <member name="P:EvenCart.Areas.Administration.Models.Updates.UpdateModel.Description">
             <summary>
             The summary of the update
             </summary>
