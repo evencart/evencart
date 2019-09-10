@@ -3,6 +3,7 @@ using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Routing;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -63,16 +64,22 @@ namespace EvenCart.Infrastructure.Routing.Conventions
     continue;
 #endif
                     var dynamicRoute = (DynamicRouteAttribute) ar.AttributeRouteModel.Attribute;
-                    var settingService = DependencyResolver.Resolve<ISettingService>();
-                    var settingName = dynamicRoute.SettingName;
-                    var setting =
-                        settingService.FirstOrDefault(x => x.GroupName == nameof(UrlSettings) && x.Key == settingName);
-                    if (setting == null)
-                        continue;
+                    var template = dynamicRoute.DynamicTemplate;
+                    if (template.IsNullEmptyOrWhiteSpace())
+                    {
+                        var settingService = DependencyResolver.Resolve<ISettingService>();
+                        var settingName = dynamicRoute.SettingName;
+                        var setting =
+                            settingService.FirstOrDefault(x => x.GroupName == nameof(UrlSettings) && x.Key == settingName);
+                        if (setting == null)
+                            continue;
+                        template = dynamicRoute.TemplatePrefix + setting.Value + dynamicRoute.TemplateSuffix;
+                    }
+                   
                     var dynamicRouteProvider = DependencyResolver.Resolve<IDynamicRouteProvider>();
                     dynamicRouteProvider.RegisterDynamicRoute(new RouteData()
                     {
-                        Template = dynamicRoute.TemplatePrefix + setting.Value + dynamicRoute.TemplateSuffix,
+                        Template = template,
                         ActionName = action.ActionName,
                         ControllerName = action.Controller.ControllerName,
                         RouteName = dynamicRoute.Name,

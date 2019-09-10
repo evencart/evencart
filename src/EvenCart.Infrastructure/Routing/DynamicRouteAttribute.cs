@@ -25,6 +25,10 @@ namespace EvenCart.Infrastructure.Routing
         /// The prefix that'll be added to the dynamic template. Default is blank.
         /// </summary>
         public string TemplatePrefix { get; set; } = "";
+        /// <summary>
+        /// The url template to be used. If this is set, the SettingName and TemplateSuffix and Prefix are ignored
+        /// </summary>
+        public string DynamicTemplate { get; set; }
 
         /// <summary>
         /// The parameter name passed to the method. Default is id

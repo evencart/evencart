@@ -137,6 +137,11 @@
             The prefix that'll be added to the dynamic template. Default is blank.
             </summary>
         </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.DynamicTemplate">
+            <summary>
+            The url template to be used. If this is set, the SettingName and TemplateSuffix and Prefix are ignored
+            </summary>
+        </member>
         <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.ParameterName">
             <summary>
             The parameter name passed to the method. Default is id
