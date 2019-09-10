@@ -132,6 +132,8 @@ namespace EvenCart.Infrastructure.Routing
                     //preserve seometa so we can serve it later
                     routeContext.HttpContext.SetRequestSeoMeta(seoMeta);
                     routeContext.RouteData.Values["id"] = id;
+                    routeContext.RouteData.Values["controller"] = routeData.ControllerName;
+                    routeContext.RouteData.Values["action"] = routeData.ActionName;
                     return routeData;
                 }
                 //if we are here, id was not passed, so we'll have to check all the available slugs for entitytype
