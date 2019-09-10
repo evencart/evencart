@@ -6,6 +6,6 @@ namespace EvenCart.Areas.Administration.Factories.Users
 {
     public interface IUserModelFactory : IModelFactory<User, UserModel>
     {
-        
+        UserMiniModel CreateMini(User user);
     }
 }

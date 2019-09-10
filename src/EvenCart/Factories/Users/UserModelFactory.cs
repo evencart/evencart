@@ -16,5 +16,13 @@ namespace EvenCart.Factories.Users
         {
             return _modelMapper.Map<UserModel>(user);
         }
+
+        public UserMiniModel CreateMini(User user)
+        {
+            return new UserMiniModel()
+            {
+                Name = user.Name
+            };
+        }
     }
 }

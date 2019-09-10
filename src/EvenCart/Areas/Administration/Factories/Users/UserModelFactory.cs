@@ -31,5 +31,10 @@ namespace EvenCart.Areas.Administration.Factories.Users
             }
             return userModel;
         }
+
+        public UserMiniModel CreateMini(User entity)
+        {
+            return _modelMapper.Map<UserMiniModel>(entity);
+        }
     }
 }
