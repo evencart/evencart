@@ -173,6 +173,14 @@ namespace EvenCart.Infrastructure.ViewEngines
             if (_localFileProvider.FileExists(layoutPath))
                 return layoutPath;
 
+            //check inside plugins
+            var plugins = _pluginLoader.GetAvailablePlugins();
+            foreach (var plugin in plugins)
+            {
+                layoutPath = _localFileProvider.CombinePaths(plugin.PluginDirectory, "Views", layoutName);
+                if (_localFileProvider.FileExists(layoutPath))
+                    return layoutPath;
+            }
             //if we are here and accessing public site, the layout was not found, so look for layout on the root
             if (!isAdmin)
             {
@@ -304,7 +312,7 @@ namespace EvenCart.Infrastructure.ViewEngines
                 resultHash.Add("metaKeywords", seoMeta?.MetaKeywords ?? generalSettings.DefaultMetaKeywords);
                 resultHash.Add("metaDescription", seoMeta?.MetaDescription ?? generalSettings.DefaultMetaDescription);
             }
-         
+
 
             return resultHash;
         }
