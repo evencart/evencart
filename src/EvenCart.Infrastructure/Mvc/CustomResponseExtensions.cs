@@ -16,6 +16,8 @@ namespace EvenCart.Infrastructure.Mvc
     {
         public static CustomResponse WithGridResponse(this CustomResponse customResponse, int totalMatches, int currentPage, int count, string sortBy = null, SortOrder? sortOrder = null)
         {
+            if (currentPage < 1)
+                currentPage = 1;
             count = Math.Min(count, totalMatches);
             var r = customResponse.With("current", currentPage)
                 .With("rowCount", count)
