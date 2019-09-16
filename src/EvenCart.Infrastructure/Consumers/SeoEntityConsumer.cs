@@ -1,4 +1,6 @@
-﻿using EvenCart.Core;
+﻿using System.Linq;
+using System.Reflection;
+using EvenCart.Core;
 using EvenCart.Core.Data;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Pages;
@@ -27,6 +29,13 @@ namespace EvenCart.Infrastructure.Consumers
                 Slug = CommonHelper.GenerateSlug(name)
             };
             _seoMetaService.Insert(seoMeta);
+
+            //is there a property to for seometa
+            var property = typeof(T).GetProperties().FirstOrDefault(x => x.PropertyType == typeof(SeoMeta) && x.CanWrite);
+            if (property != null)
+            {
+                property.SetValue(entity, seoMeta);
+            }
         }
 
         public void OnDeleted(T entity)
