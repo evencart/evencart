@@ -21,7 +21,8 @@ namespace EvenCart.Factories.Users
         {
             return new UserMiniModel()
             {
-                Name = user.Name
+                Name = user.Name,
+                Id = user.Id
             };
         }
     }
