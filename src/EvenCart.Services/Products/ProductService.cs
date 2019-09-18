@@ -640,6 +640,16 @@ namespace EvenCart.Services.Products
             return product;
         }
 
+        public override IEnumerable<Product> Get(Expression<Func<Product, bool>> @where, int page = 1, int count = Int32.MaxValue)
+        {
+            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
+            return Repository.Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
+                .Where(where)
+                .Where(seoMetaWhere)
+                .SelectNested(page, count);
+        }
+
         public void PopulateReviewSummary(IList<Product> products)
         {
             if (!products.Any())
