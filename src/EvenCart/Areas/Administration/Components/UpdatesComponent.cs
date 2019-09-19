@@ -45,10 +45,14 @@ namespace EvenCart.Areas.Administration.Components
                         { "storeDomain", _generalSettings.StoreDomain },
                         { "storeName", _generalSettings.StoreName }
                     });
-                    if (!updates.Success && _systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace())
-                        return R.Fail.ComponentResult;
-                    _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
-                    _settingService.Save(_systemSettings);
+                    if (updates != null)
+                    {
+                        if (!updates.Success && _systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace())
+                            return R.Fail.ComponentResult;
+                        _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
+                        _settingService.Save(_systemSettings);
+                    }
+                   
                 }
 
                 updates = updates ?? (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace()
