@@ -218,9 +218,6 @@ var gridFormatters = {
             return "<span class='rbicon-x text-danger'></span>";
     }
 };
-var initFileUploader = function (options) {
-    jQuery('#' + options.element).fileupload(options);
-}
 
 var displayOrderSortable = function (options) {
     var container = options.container;

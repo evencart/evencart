@@ -1,4 +1,8 @@
-﻿var initAjaxForm = function (formId, options) {
+﻿var initFileUploader = function (options) {
+    jQuery('#' + options.element).fileupload(options);
+}
+
+var initAjaxForm = function (formId, options) {
     formId = "#" + formId;
     options = jQuery.extend({},
         {
