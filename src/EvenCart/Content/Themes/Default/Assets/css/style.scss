@@ -4058,3 +4058,22 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
 {
     min-height: 400px;
 }
+
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    cursor: pointer;
+
+    input[type='file'] {
+        position: absolute;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        font-size: 100px;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+}
