@@ -1051,6 +1051,13 @@
             <param name="userModel"></param>
             <response code="200">A success response object</response>
         </member>
+        <member name="M:EvenCart.Controllers.UsersController.UploadProfilePicture(EvenCart.Models.Media.MediaUploadModel)">
+            <summary>
+            Handles profile image upload for user
+            </summary>
+            <param name="mediaModel"></param>
+            <response code="200">A <see cref="T:EvenCart.Models.Media.MediaModel">media</see> object as media</response>
+        </member>
         <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Name">
             <summary>
             The name of the addressee
@@ -1369,6 +1376,26 @@
         <member name="P:EvenCart.Models.Gdpr.ConsentModel.OneTimeSelection">
             <summary>
             If true, the consent is required to be provided during user registration. Default is false. Ignored for POST requests.
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Media.MediaUploadModel">
+            <summary>
+            Represents an uploaded media file
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Media.MediaUploadModel.MediaFile">
+            <summary>
+            The file object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Media.MediaUploadModel.EntityName">
+            <summary>
+            The name of the entity with which this media is to be linked
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Media.MediaUploadModel.EntityId">
+            <summary>
+            The id of the entity
             </summary>
         </member>
         <member name="P:EvenCart.Models.Orders.OrderItemModel.ProductId">
@@ -1917,6 +1944,21 @@
         <member name="P:EvenCart.Models.Users.UserModel.TimeZoneId">
             <summary>
             The timezone id of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.CanChangeProfilePicture">
+            <summary>
+            Specifies if user can change the profile picture
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.ProfilePictureUrl">
+            <summary>
+            The url of the user's profile picture
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.Points">
+            <summary>
+            The points earned by user as reputation
             </summary>
         </member>
     </members>

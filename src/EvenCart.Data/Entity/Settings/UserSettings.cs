@@ -14,5 +14,10 @@ namespace EvenCart.Data.Entity.Settings
         /// Specifies if user names are enabled for site
         /// </summary>
         public bool AreUserNamesEnabled { get; set; }
+
+        /// <summary>
+        /// Specifies if profile pictures are enabled
+        /// </summary>
+        public bool AreProfilePicturesEnabled { get; set; }
     }
 }

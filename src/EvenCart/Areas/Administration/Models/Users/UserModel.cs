@@ -44,6 +44,8 @@ namespace EvenCart.Areas.Administration.Models.Users
 
         public string ConfirmPassword { get; set; }
 
+        public int Points { get; set; }
+
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();

@@ -1,4 +1,6 @@
-﻿using EvenCart.Infrastructure;
+﻿using EvenCart.Data.Entity.Settings;
+using EvenCart.Factories.Users;
+using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
@@ -16,10 +18,10 @@ namespace EvenCart.Controllers
     public class AccountController : FoundationController
     {
 
-        private readonly IModelMapper _modelMapper;
-        public AccountController(IModelMapper modelMapper)
+        private readonly IUserModelFactory _userModelFactory;
+        public AccountController(IUserModelFactory userModelFactory)
         {
-            _modelMapper = modelMapper;
+            _userModelFactory = userModelFactory;
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace EvenCart.Controllers
         public IActionResult Profile()
         {
             var currentUser = ApplicationEngine.CurrentUser;
-            var userModel = _modelMapper.Map<UserModel>(currentUser);
+            var userModel = _userModelFactory.Create(currentUser);
             return R.Success.With("user", userModel).WithTimezones().Result;
         }
     }

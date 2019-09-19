@@ -10,6 +10,8 @@ namespace EvenCart.Models.Media
 
         public string ThumbnailUrl { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public string MimeType { get; set; }
 
         public string Url { get; set; }

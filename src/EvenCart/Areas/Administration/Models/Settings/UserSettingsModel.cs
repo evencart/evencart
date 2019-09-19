@@ -19,5 +19,7 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public int MaximumNumberOfVisibleNotifications { get; set; }
 
         public List<SelectListItem> AvailableUserRegistrationModes { get; set; }
+
+        public bool AreProfilePicturesEnabled { get; set; }
     }
 }

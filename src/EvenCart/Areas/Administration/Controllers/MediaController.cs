@@ -11,6 +11,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -22,13 +23,15 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IModelMapper _modelMapper;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService, ICategoryService categoryService)
+        private readonly IUserService _userService;
+        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService, ICategoryService categoryService, IUserService userService)
         {
             _mediaAccountant = mediaAccountant;
             _mediaService = mediaService;
             _modelMapper = modelMapper;
             _productService = productService;
             _categoryService = categoryService;
+            _userService = userService;
         }
 
         [DualPost("upload", Name = AdminRouteNames.UploadMedia, OnlyApi = true)]
@@ -60,6 +63,12 @@ namespace EvenCart.Areas.Administration.Controllers
                         if (_categoryService.Count(x => x.Id == mediaModel.EntityId) > 0)
                         {
                             _categoryService.Update(new {MediaId = media.Id}, x => x.Id == mediaModel.EntityId, null);
+                        }
+                        break;
+                    case "user":
+                        if (_userService.Count(x => x.Id == mediaModel.EntityId) > 0)
+                        {
+                            _userService.Update(new { ProfilePictureId = media.Id }, x => x.Id == mediaModel.EntityId, null);
                         }
                         break;
                 }

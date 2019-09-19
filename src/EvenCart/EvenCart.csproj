@@ -321,6 +321,7 @@
     <None Remove="Views\Controls\currency.html" />
     <None Remove="Views\Controls\datetime.html" />
     <None Remove="Views\Controls\hidden.html" />
+    <None Remove="Views\Controls\imageupload.html" />
     <None Remove="Views\Controls\label.html" />
     <None Remove="Views\Controls\number.html" />
     <None Remove="Views\Controls\password.html" />
@@ -1193,6 +1194,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Controls\hidden.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\imageupload.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Controls\label.html">

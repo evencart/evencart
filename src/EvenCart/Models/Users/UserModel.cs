@@ -51,6 +51,21 @@ namespace EvenCart.Models.Users
         /// </summary>
         public string TimeZoneId { get; set; }
 
+        /// <summary>
+        /// Specifies if user can change the profile picture
+        /// </summary>
+        public bool CanChangeProfilePicture { get; set; }
+
+        /// <summary>
+        /// The url of the user's profile picture
+        /// </summary>
+        public string ProfilePictureUrl { get; set; }
+
+        /// <summary>
+        /// The points earned by user as reputation
+        /// </summary>
+        public int Points { get; set; }
+
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();

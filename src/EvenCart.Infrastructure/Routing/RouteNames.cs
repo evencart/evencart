@@ -46,6 +46,7 @@
         public const string AccountWishlist = "AccountWishlist";
         public const string AccountGdpr = "AccountGdpr";
         public const string SaveUser = "AccountSaveUser";
+        public const string SaveUserPicture = "AccountSaveUserPicture";
         public const string SaveAddress = "AccountSaveAddress";
         public const string DeleteAddress = "AccountDeleteAddress";
         public const string SingleOrder = "SingleOrder";

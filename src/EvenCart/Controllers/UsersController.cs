@@ -1,9 +1,14 @@
-﻿using EvenCart.Services.Users;
+﻿using EvenCart.Data.Entity.Settings;
+using EvenCart.Services.Users;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Models.Media;
 using EvenCart.Models.Users;
+using EvenCart.Services.MediaServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,10 +22,17 @@ namespace EvenCart.Controllers
     public class UsersController : FoundationController
     {
         private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
+        private readonly IMediaAccountant _mediaAccountant;
+        private readonly UserSettings _userSettings;
+        private readonly IMediaService _mediaService;
+        private readonly IModelMapper _modelMapper;
+        public UsersController(IUserService userService, IMediaAccountant mediaAccountant, UserSettings userSettings, IMediaService mediaService, IModelMapper modelMapper)
         {
             _userService = userService;
+            _mediaAccountant = mediaAccountant;
+            _userSettings = userSettings;
+            _mediaService = mediaService;
+            _modelMapper = modelMapper;
         }
 
         /// <summary>
@@ -44,6 +56,35 @@ namespace EvenCart.Controllers
             _userService.Update(currentUser);
 
             return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Handles profile image upload for user
+        /// </summary>
+        /// <param name="mediaModel"></param>
+        /// <response code="200">A <see cref="MediaModel">media</see> object as media</response>
+        [ValidateModelState(ModelType = typeof(MediaUploadModel))]
+        [DualPost("avatar", Name = RouteNames.SaveUserPicture, OnlyApi = true)]
+        public IActionResult UploadProfilePicture(MediaUploadModel mediaModel)
+        {
+            if (!_userSettings.AreProfilePicturesEnabled)
+                return NotFound();
+
+            var mediaFile = mediaModel.MediaFile;
+            if (mediaFile == null || mediaFile.Length == 0)
+            {
+                return R.Fail.Result;
+            }
+
+            var media = _mediaAccountant.GetMediaInstance(mediaFile, 0);
+            //save it
+            _mediaService.Insert(media);
+            _userService.Update(new { ProfilePictureId = media.Id }, x => x.Id == CurrentUser.Id, null);
+
+            var model = _modelMapper.Map<MediaModel>(media);
+            model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ImageUrl = _mediaAccountant.GetPictureUrl(media);
+            return R.Success.With("media", model).Result;
         }
     }
 }

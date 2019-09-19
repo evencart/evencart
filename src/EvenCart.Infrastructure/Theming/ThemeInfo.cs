@@ -18,6 +18,8 @@ namespace EvenCart.Infrastructure.Theming
 
         public string ProductPageImageThumbnailSize { get; set; }
 
+        public string UserProfileImageSize { get; set; }
+
         public Dictionary<string, string> WidgetZones { get; set; }
 
         public Dictionary<string, string> Templates { get; set; } = new  Dictionary<string, string>();

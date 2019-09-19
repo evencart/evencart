@@ -329,6 +329,11 @@
             Specifies if user names are enabled for site
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.UserSettings.AreProfilePicturesEnabled">
+            <summary>
+            Specifies if profile pictures are enabled
+            </summary>
+        </member>
         <member name="T:EvenCart.Data.Entity.Shop.LengthUnit">
             <summary>
             Represents the length unit

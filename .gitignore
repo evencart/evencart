@@ -35,3 +35,4 @@ site-template/
 src/Build/Cleanup/obj/
 src/Plugins/Payments.Stripe/obj/
 src/Plugins/Payments.Stripe/bin/
+src/Plugins/Support.Forums/obj/

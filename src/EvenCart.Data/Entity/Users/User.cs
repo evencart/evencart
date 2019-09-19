@@ -64,6 +64,10 @@ namespace EvenCart.Data.Entity.Users
 
         public string TimeZoneId { get; set; }
 
+        public int Points { get; set; }
+
+        public int? ProfilePictureId { get; set; }
+
         #region Virtual Properties
         public virtual IList<Role> Roles { get; set; }
 

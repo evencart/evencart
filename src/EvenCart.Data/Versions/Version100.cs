@@ -38,6 +38,7 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<Country>(transaction);
             Db.CreateTable<StateOrProvince>(transaction);
             Db.CreateTable<InviteRequest>(transaction);
+            Db.CreateTable<UserPoint>(transaction);
 
             Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction, true);
@@ -48,7 +49,7 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<User, VendorUser>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Vendor, VendorUser>("Id", "VendorId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Country, Address>("Id", "CountryId"), transaction, true);
-
+            Db.CreateConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction, true);
             //shop
             Db.CreateTable<Product>(transaction);
             Db.CreateTable<Category>(transaction);
@@ -231,9 +232,11 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
             // Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
             Db.DropConstraint(Relation.Create<Order, OrderFulfillment>("Id", "OrderId"), transaction);
+            Db.DropConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);
+            Db.DropTable<UserPoint>(transaction);
             Db.DropTable<Role>(transaction);
             Db.DropTable<Capability>(transaction);
             Db.DropTable<UserRole>(transaction);
