@@ -28,6 +28,8 @@ namespace EvenCart.Areas.Administration.Models.Plugins
 
         public bool Active { get; set; }
 
+        public bool Dirty { get; set; }
+
         public string ConfigurationUrl{ get; set; }
 
         public void SetupValidationRules(ModelValidator<PluginInfoModel> v)

@@ -40,7 +40,7 @@ namespace EvenCart.Services.Installation
         {
             DatabaseManager.InitDatabase(_databaseSettings);
             DatabaseManager.ClearVersions();
-            DatabaseManager.UpgradeDatabase(false);
+            DatabaseManager.UpgradeDatabase();
         }
 
 

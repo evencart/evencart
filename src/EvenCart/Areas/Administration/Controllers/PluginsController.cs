@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Models.Plugins;
 using EvenCart.Data.Constants;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Extensions;
@@ -183,6 +185,22 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 _pluginAccountant.DeactivatePlugin(plugin);
             }
+            return R.Success.Result;
+        }
+
+        [DualPost("dbupgrade", Name = AdminRouteNames.UpgradeDbPlugin, OnlyApi = true)]
+        public IActionResult UpgradePlugin(string systemName)
+        {
+            if (systemName.IsNullEmptyOrWhiteSpace())
+                return R.Fail.Result;
+            var pluginInfo = _pluginAccountant.GetAvailablePlugins(true)
+                .FirstOrDefault(x => x.Dirty && x.Installed && x.SystemName == systemName);
+            if (pluginInfo == null)
+                return NotFound();
+
+            DatabaseManager.UpgradeDatabase(systemName);
+            //it's not longer dirty now
+            pluginInfo.Dirty = false;
             return R.Success.Result;
         }
 

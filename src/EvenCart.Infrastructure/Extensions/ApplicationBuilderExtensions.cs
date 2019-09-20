@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
@@ -7,6 +8,8 @@ using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.Middleware;
+using EvenCart.Infrastructure.Plugins;
+using EvenCart.Services.Plugins;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -61,6 +64,17 @@ namespace EvenCart.Infrastructure.Extensions
 
                 //upgrade capabilities
                 CapabilityHelper.UpgradeCapabilities();
+
+                //mark plugin data
+                var pluginAccountant = DependencyResolver.Resolve<IPluginAccountant>();
+                var availablePlugins = pluginAccountant.GetAvailablePlugins(true);
+                var installedVersions = DatabaseManager.GetInstalledVersions();
+                foreach (var plugin in availablePlugins)
+                {
+                    var dbPlugin = plugin.LoadPluginInstance<DatabasePlugin>();
+                    plugin.Dirty = installedVersions.ContainsKey(plugin.SystemName) &&
+                                           dbPlugin.IsDatabaseUpgradeRequired(installedVersions[plugin.SystemName]);
+                }
             }
 
         }

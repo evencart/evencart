@@ -1,4 +1,5 @@
-﻿using EvenCart.Core.Plugins;
+﻿using System.Collections.Generic;
+using EvenCart.Core.Plugins;
 using EvenCart.Data.Database;
 
 namespace EvenCart.Services.Plugins
@@ -13,6 +14,11 @@ namespace EvenCart.Services.Plugins
         public override void Uninstall()
         {
             DatabaseManager.CleanupDatabase(PluginInfo.SystemName);
+        }
+
+        public virtual bool IsDatabaseUpgradeRequired(IList<string> installedVersions)
+        {
+            return false;
         }
     }
 }

@@ -38,6 +38,8 @@ namespace EvenCart.Core.Plugins
 
         public bool Active { get; set; }
 
+        public bool Dirty { get; set; }
+
         public IList<IWidget> Widgets { get; set; }
 
         public string ConfigurationUrl => LoadPluginInstance<IPlugin>().ConfigurationUrl;

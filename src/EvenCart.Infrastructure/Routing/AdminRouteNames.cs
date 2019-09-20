@@ -149,6 +149,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string PluginsList = "PluginsList";
         public const string MarketPluginsList = "MarketPluginsList";
         public const string UpdatePluginStatus = "UpdatePluginStatus";
+        public const string UpgradeDbPlugin = "UpgradeDbPlugin";
         public const string WidgetsList = "WidgetsList";
         public const string SaveWidget = "SaveWidget";
         public const string DeleteWidget = "DeleteWidget";

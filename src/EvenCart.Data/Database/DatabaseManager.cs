@@ -1,4 +1,6 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using DotEntity;
 using DotEntity.MySql;
@@ -6,6 +8,7 @@ using DotEntity.Providers;
 using DotEntity.SqlServer;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
+using EvenCart.Data.Extensions;
 using EvenCart.Data.Versions;
 
 namespace EvenCart.Data.Database
@@ -64,63 +67,59 @@ namespace EvenCart.Data.Database
         }
 
         private static bool _versionsAdded = false;
-        public static void AppendVersions(bool withPlugins = false)
+        public static void AppendVersions()
         {
             if (_versionsAdded)
                 return;
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
 
-            if (withPlugins)
+            //the plugin versions
+            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
+            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            foreach (var pluginInfo in pluginInfos)
             {
-                var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-                var pluginInfos = pluginLoader.GetAvailablePlugins();
-                foreach (var pluginInfo in pluginInfos)
+                try
                 {
-                    try
-                    {
-                        var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
-                        if (versions.Any())
-                            DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                    var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
+                    if (versions.Any())
+                        DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                }
+                catch
+                {
+                    // ignored
                 }
             }
 
             _versionsAdded = true;
         }
 
-        public static void UpgradeDatabase(bool withPlugins = true)
+        public static void UpgradeDatabase()
         {
             UpgradeDatabase(DatabaseContextKey);
-            if (withPlugins)
-            {
-                //upgrade the installed plugin's database as well.
-                var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-                var pluginInfos = pluginLoader.GetAvailablePlugins();
-                foreach (var pluginInfo in pluginInfos)
-                {
-                    if (pluginInfo.Installed)
-                    {
-                        UpgradeDatabase(pluginInfo.SystemName);
-                    }
-                }
-            }
-
         }
 
         public static void UpgradeDatabase(string callingContextName)
         {
-            AppendVersions(true);
+            AppendVersions();
             DotEntityDb.UpdateDatabaseToLatestVersion(callingContextName);
         }
 
         public static void CleanupDatabase(string callingContextName)
         {
-            AppendVersions(true);
+            AppendVersions();
             DotEntityDb.UpdateDatabaseToVersion(callingContextName, null);
+        }
+
+        public static IList<string> GetInstalledVersions(string callingContextName)
+        {
+            if (callingContextName.IsNullEmptyOrWhiteSpace())
+                throw new ArgumentNullException(nameof(callingContextName));
+            return DotEntityDb.GetAppliedVersions(callingContextName);
+        }
+
+        public static IDictionary<string, List<string>> GetInstalledVersions()
+        {
+            return DotEntityDb.GetAllAppliedVersions();
         }
 
         public static void ClearVersions()

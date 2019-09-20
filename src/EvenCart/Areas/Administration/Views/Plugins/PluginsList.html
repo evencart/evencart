@@ -54,7 +54,14 @@
                                             '{{"Configuration" | t}}' +
                                             "</button> ";
                                     }
-                                   
+                                    var upgradeBtn = "";
+                                    if (row.dirty) {
+                                        upgradeBtn =
+                                            "<button type='button' class='btn btn-sm btn-info command-edit' " +
+                                            "onclick='upgradePlugin(\"" + row.systemName + "\")'>" +
+                                            '{{"Upgrade" | t}}' +
+                                            "</button> ";
+                                    }
 
                                     if (!row.installed) {
                                         return "<button type='button' class='btn btn-sm btn-primary command-edit' " +
@@ -66,19 +73,19 @@
                                         return "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", true, true)'>" +
                                             '{{"Activate" | t}}' +
-                                            "</button> " + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
+                                            "</button> " + upgradeBtn + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
                                             '{{"Uninstall" | t}}' +
                                             "</button> " + actionLinks;
                                     }
                                     else if (row.active) {
-                                        return "<button type='button' class='btn btn-sm btn-danger command-edit' " +
+                                        return upgradeBtn + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
                                             '{{"Deactivate" | t}}' +
                                             "</button> " + actionLinks;
                                     }
                                     else if (row.installed) {
-                                        return "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
+                                        return upgradeBtn + "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
                                             "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
                                             '{{"Uninstall" | t}}' +
                                             "</button> " + actionLinks;
@@ -144,6 +151,22 @@
                     else if (!installed && !active) {
                         notify("success", '{{"Plugin was uninstalled successfully" | t}}');
                     }
+
+                }
+            }
+        });
+    }
+
+    var upgradePlugin = function(systemName) {
+        post({
+            url: "{% route api_UpgradeDbPlugin%}",
+            data: {
+                systemName: systemName
+            },
+            done: function(response) {
+                if (response.success) {
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Plugin was upgraded successfully" | t}}');
 
                 }
             }
