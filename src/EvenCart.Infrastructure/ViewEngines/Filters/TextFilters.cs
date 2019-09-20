@@ -7,6 +7,7 @@ using EvenCart.Data.Helpers;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Localization;
+using EvenCart.Services.Helpers;
 
 namespace EvenCart.Infrastructure.ViewEngines.Filters
 {
@@ -49,6 +50,11 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
         public static string StripHtml(string input)
         {
             return HtmlUtility.StripHtml(input);
+        }
+
+        public static string Pretty(DateTime date)
+        {
+            return DateTimeHelper.GetRelativeDate(date);
         }
     }
 }

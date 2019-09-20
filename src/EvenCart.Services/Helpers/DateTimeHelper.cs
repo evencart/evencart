@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
@@ -136,6 +137,81 @@ namespace EvenCart.Services.Helpers
             var step = start > end ? -1 : 1;
             for (var day = start.Date; day <= end; day = day.AddDays(step))
                 yield return day;
+        }
+
+        /// <summary>
+        /// Gets the relative date for a date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string GetRelativeDate(DateTime date)
+        {
+         
+            var s = DateTime.Now.Subtract(date);
+            var dayDiff = (int)s.TotalDays;
+            var secDiff = (int)s.TotalSeconds;
+            if (dayDiff < 0 || dayDiff >= 31)
+            {
+                return null;
+            }
+        
+            if (dayDiff == 0)
+            {
+                // A.
+                // Less than one minute ago.
+                if (secDiff < 60)
+                {
+                    return "just now";
+                }
+                // B.
+                // Less than 2 minutes ago.
+                if (secDiff < 120)
+                {
+                    return "1 minute ago";
+                }
+                // C.
+                // Less than one hour ago.
+                if (secDiff < 3600)
+                {
+                    return $"{Math.Floor((double) secDiff / 60)} minutes ago";
+                }
+                // D.
+                // Less than 2 hours ago.
+                if (secDiff < 7200)
+                {
+                    return "1 hour ago";
+                }
+                // E.
+                // Less than one day ago.
+                if (secDiff < 86400)
+                {
+                    return $"{Math.Floor((double) secDiff / 3600)} hours ago";
+                }
+            }
+
+            // Handle previous days.
+            if (dayDiff == 1)
+            {
+                return "yesterday";
+            }
+            if (dayDiff < 7)
+            {
+                return $"{dayDiff} days ago";
+            }
+            if (dayDiff < 30)
+            {
+                return $"{Math.Ceiling((double) dayDiff / 7)} weeks ago";
+            }
+            if (dayDiff < 31)
+            {
+                return $"1 month ago";
+            }
+            if (dayDiff < 31)
+            {
+                return $"1 month ago";
+            }
+
+            return date.ToString("D at hh:mm tt");
         }
     }
 }
