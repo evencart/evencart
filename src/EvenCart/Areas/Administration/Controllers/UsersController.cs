@@ -51,7 +51,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IUserCodeService _userCodeService;
         private readonly IInviteRequestService _inviteRequestService;
         private readonly IAddressModelFactory _addressModelFactory;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory)
+        private readonly IUserPointService _userPointService;
+        private readonly IUserModelFactory _userModelFactory;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory, IUserPointService userPointService, IUserModelFactory userModelFactory)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -67,6 +69,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _userCodeService = userCodeService;
             _inviteRequestService = inviteRequestService;
             _addressModelFactory = addressModelFactory;
+            _userPointService = userPointService;
+            _userModelFactory = userModelFactory;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -310,6 +314,60 @@ namespace EvenCart.Areas.Administration.Controllers
                 return cartItem;
             }).ToList();
             return R.Success.With("cartItems", models).WithGridResponse(models.Count, 1, models.Count).Result;
+        }
+
+        [DualGet("{userId}/points", Name = AdminRouteNames.UserPointsList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageUserPoints)]
+        public IActionResult UserPointsList(UserPointSearchModel searchModel)
+        {
+            var userId = searchModel.UserId;
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            var userPoints = _userPointService.Get(out int totalResults, x => x.UserId == userId, x => x.Id, RowOrder.Descending, searchModel.Current, searchModel.RowCount);
+            var pointsTotal = _userPointService.GetPoints(userId);
+            var models = userPoints.Select(_userModelFactory.Create).ToList();
+            return R.Success.With("userId", userId).With("userPoints", models).With("totalPoints", pointsTotal)
+                .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount).Result;
+        }
+
+        [DualGet("{userId}/points/{userPointId}", Name = AdminRouteNames.GetUserPoint)]
+        [CapabilityRequired(CapabilitySystemNames.ManageUserPoints)]
+        public IActionResult UserPointEditor(int userId, int userPointId)
+        {
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+
+            var userPoint = userPointId > 0 ? _userPointService.Get(userPointId) : new UserPoint()
+            {
+                UserId = userId,
+                ActivatorUserId = CurrentUser.Id
+            };
+            if (userPoint == null)
+                return NotFound();
+            var model = _userModelFactory.Create(userPoint);
+            return R.Success.With("userPoint", model).Result;
+        }
+
+        [DualPost("points", Name = AdminRouteNames.SaveUserPoint, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageUserPoints)]
+        [ValidateModelState(ModelType = typeof(UserPointModel))]
+        public IActionResult SaveUserPoint(UserPointModel userPointModel)
+        {
+            var id = userPointModel.Id;
+            var userPoint = id > 0 ? _userPointService.Get(id) : new UserPoint()
+            {
+                ActivatorUserId = CurrentUser.Id,
+                CreatedOn = DateTime.UtcNow,
+                UserId = userPointModel.UserId
+            };
+        
+
+            if (userPoint == null)
+                return NotFound();
+            userPoint.Points = userPointModel.Points;
+            userPoint.Reason = userPointModel.Reason;
+            _userPointService.InsertOrUpdate(userPoint);
+            return R.Success.Result;
         }
 
         [HttpGet("{userId}/imitate", Name = AdminRouteNames.UserImitate)]

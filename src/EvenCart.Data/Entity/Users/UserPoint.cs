@@ -16,7 +16,7 @@ namespace EvenCart.Data.Entity.Users
         public int ActivatorUserId { get; set; }
 
         #region Virtual Properties
-        public virtual User User { get; set; }
+        public virtual User ActivatorUser { get; set; }
         #endregion
     }
 }

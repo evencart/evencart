@@ -97,6 +97,8 @@ namespace EvenCart.Data.Constants
 
         public const string ManageCart = "Cart.Manage";
 
+        public const string ManageUserPoints = "UserPoint.Manage";
+
         public const string ImitateUser = "User.Imitate";
 
         public const string ManageReviews = "Review.Manage";

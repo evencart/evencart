@@ -1,0 +1,91 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"User Points" active_menu="UserPointsList" parent_active_menu="UsersList" menu_group="UserEdit" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"User Points" | t}} - {{totalPoints | pluralize : "point" : "points"}}
+                <button class="btn btn-primary btn-sm float-right" onclick="editUserPoint(0);">{{"Add points" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-userPoints" class="table table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="points">{{"Points" | t }}</th>
+                            <th data-column-id="createdOn">{{"Created On" | t }}</th>
+                            <th data-column-id="reason">{{"Reason" | t }}</th>
+                            <th data-column-id="activatorUser" data-formatter="user">{{"Activator User" | t }}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" id="edit-userpoint-popup">
+</div>
+
+{{ userPoints | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-userPoints",
+            initialData: {
+                userPoints: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_UserPointsList userId="{{userId}}" %}',
+            responseObject: "userPoints",
+            selection: false,
+            navigation: 2,
+            columnSelection: false,
+            formatters: {
+                "user": function(column, row) {
+                    if (row.activatorUser) {
+                        var url = '{% route GetUser userId="%" %}'.replace("%", row.activatorUser.id);
+                        return '<a href=' + url + '>' + row.activatorUser.name + "</a>";
+                    }
+                    return row.activatorUser.name;
+                },
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editUserPoint(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button>";
+
+                }
+            }
+        });
+    });
+
+
+    var editUserPoint = function (id) {
+        jQuery("#edit-userpoint-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-userpoint-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-userPoints');
+                    notify("success", '{{"User point was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetUserPoint userId="{0}" userPointId="{1}" %}'.replace("{0}", "{{userId}}").replace("{1}", id);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-userpoint-popup").html(response);
+                centerPopup();
+            });
+    }
+</script>

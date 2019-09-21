@@ -115,6 +115,9 @@ namespace EvenCart.Infrastructure.Routing
         public const string RoleCapabilitiesList = "CapabilitiesList";
         public const string SaveCapabilities = "SaveCapabilities";
         public const string UserCart = "UserCart";
+        public const string UserPointsList = "UserPointsList";
+        public const string SaveUserPoint = "SaveUserPoint";
+        public const string GetUserPoint = "GetUserPoint";
         public const string UserImitate = "UserImitate";
         public const string AnonymizeUser = "AnonymizeUser";
         public const string GenerateInviteLink = "GenerateInviteLink";

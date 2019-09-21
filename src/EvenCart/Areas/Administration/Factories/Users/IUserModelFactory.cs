@@ -4,7 +4,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.Users
 {
-    public interface IUserModelFactory : IModelFactory<User, UserModel>
+    public interface IUserModelFactory : IModelFactory<User, UserModel>, IModelFactory<UserPoint, UserPointModel>
     {
         UserMiniModel CreateMini(User user);
     }

@@ -216,6 +216,8 @@
     <None Remove="Areas\Administration\Views\Users\UserCart.html" />
     <None Remove="Areas\Administration\Views\Users\UserEditor.html" />
     <None Remove="Areas\Administration\Views\Users\UserEditor.RolesPanel.html" />
+    <None Remove="Areas\Administration\Views\Users\UserPointEditor.html" />
+    <None Remove="Areas\Administration\Views\Users\UserPointsList.html" />
     <None Remove="Areas\Administration\Views\Users\UsersList.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorEditor.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorsList.html" />
@@ -854,6 +856,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Users\AddressEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UserPointEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Users\UserPointsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Users\InvitationRequestsList.html">

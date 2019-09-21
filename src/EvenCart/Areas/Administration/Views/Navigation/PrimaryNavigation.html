@@ -46,6 +46,7 @@
 {% secondary_navigation url="{% route AddressList  userId="{{userId}}" %}" title=@t"Addresses" systemName="AddressList" groupId="UserEdit" capability="User.Edit" %}
 {% secondary_navigation url="{% route UserOrdersList userId="{{userId}}" %}" title=@t"Orders" systemName="OrdersList" groupId="UserEdit" capability="User.Edit" %}
 {% secondary_navigation url="{% route CapabilitiesList userId="{{userId}}" %}" title=@t"Capabilities" systemName="CapabilitiesList" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route UserPointsList userId="{{userId}}" %}" title=@t"User Points" systemName="UserPointsList" groupId="UserEdit" capability="UserPoint.Manage" %}
 {% secondary_navigation url="{% route UserCart userId="{{userId}}" %}" title=@t"Current Cart" systemName="UserCart" groupId="UserEdit" capability="Cart.Manage" %}
 {% secondary_navigation url="{% route UserImitate userId="{{userId}}" %}" title=@t"Imitation" systemName="Imitate" groupId="UserEdit" capability="User.Imitate" %}
 {% secondary_navigation url="{% route ConsentLogsList userId="{{userId}}" %}" title=@t"GDPR Consent Log" systemName="ConsentLogsList" groupId="UserEdit" capability="GDPR.Manage" %}
