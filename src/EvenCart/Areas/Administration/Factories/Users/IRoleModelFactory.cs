@@ -2,7 +2,7 @@
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 
-namespace EvenCart.Factories.Users
+namespace EvenCart.Areas.Administration.Factories.Users
 {
     public interface IRoleModelFactory : IModelFactory<Role, RoleModel>, IModelFactory<Capability, CapabilityModel>
     {

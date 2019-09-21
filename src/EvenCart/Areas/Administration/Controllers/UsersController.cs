@@ -1,9 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Factories.Addresses;
 using EvenCart.Areas.Administration.Factories.Orders;
+using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
@@ -19,7 +21,6 @@ using EvenCart.Services.Formatter;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
-using EvenCart.Factories.Users;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
