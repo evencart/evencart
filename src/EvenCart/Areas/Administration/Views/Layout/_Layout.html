@@ -41,6 +41,37 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{% route Home %}" target="_blank">{{"Public Store" | t}}</a>
                     <a class="dropdown-item" href="{% route Logout %}">{{"Logout" | t}}</a>
+                    <div class="dropdown-divider"></div>
+                    <h6 class="dropdown-header">{{"Maintenance" | t}}</h6>
+                    <form method="post" action="{% route api_PurgeCache %}" id="form-purge-cache">
+                        {% control xsrf %}
+                        <button class="dropdown-item" type="submit">{{"Purge Cache" | t}}</button>
+                    </form>
+                    <form method="post" action="{% route api_RestartApplication %}" id="form-restart">
+                        {% control xsrf %}
+                        <button class="dropdown-item" type="submit">{{"Restart" | t}} {{store.softwareTitle}}</button>
+                    </form>
+                    <script type="text/javascript">
+                        ready(function() {
+                            initAjaxForm("form-purge-cache",
+                                {
+                                    onSuccess: function() {
+                                        notify("success", "{{'Successfully purged the cache' | t}}");
+                                    }
+                                });
+                            initAjaxForm("form-restart",
+                                {
+                                    onSuccess: function () {
+                                        notify("success", "{{'Successfully restarted the application. Please wait while page is being reloaded...' | t}}");
+                                        setTimeout(function() {
+                                                window.location.reload();
+                                            },
+                                            3000);
+
+                                    }
+                                });
+                        })
+                    </script>
                 </div>
             </div>
             {% json source="AdminNavigation" var="navigation" %}
@@ -112,45 +143,6 @@
             <div class="sidenav-links-container">
                 <ul id="primaryNavigationUl" class="sidenav-links"></ul>
             </div>
-            <!-- Default dropup button -->
-            <div class="btn-group dropup maintenance-dropup">
-                <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="rbicon rbicon-settings"></span> {{"Maintenance" | t}}
-                </button>
-                <div class="dropdown-menu">
-                    <form class="dropdown-item" method="post" action="{% route api_PurgeCache %}" id="form-purge-cache">
-                        {% control xsrf %}
-                        <button class="btn btn-warning btn-sm" type="submit">{{"Purge Cache" | t}}</button>
-                    </form>
-                    <form class="dropdown-item" method="post" action="{% route api_RestartApplication %}" id="form-restart">
-                        {% control xsrf %}
-                        <button class="btn btn-danger btn-sm" type="submit">{{"Restart" | t}} {{store.softwareTitle}}</button>
-                    </form>
-                    <script type="text/javascript">
-                        ready(function() {
-                            initAjaxForm("form-purge-cache",
-                                {
-                                    onSuccess: function() {
-                                        notify("success", "{{'Successfully purged the cache' | t}}");
-                                    }
-                                });
-                            initAjaxForm("form-restart",
-                                {
-                                    onSuccess: function () {
-                                        notify("success", "{{'Successfully restarted the application. Please wait while page is being reloaded...' | t}}");
-                                        setTimeout(function() {
-                                                window.location.reload();
-                                            },
-                                            3000);
-
-                                    }
-                                });
-                        })
-                    </script>
-                </div>
-            </div>
-
-            
         </div>
         <div class="client-main">
             <div class="client-main-navlinks">
