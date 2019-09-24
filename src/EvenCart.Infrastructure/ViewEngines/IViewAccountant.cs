@@ -7,6 +7,8 @@ namespace EvenCart.Infrastructure.ViewEngines
     {
         string GetThemeViewPath(string viewName, bool ignoreAdminViews = false);
 
+        IList<string> GetAllMatchingViewPaths(string viewName);
+
         IList<string> GetSearchLocations();
 
         string RenderView(ViewContext viewContext);

@@ -91,6 +91,15 @@ namespace EvenCart.Infrastructure.ViewEngines
                 .FirstOrDefault(x => _localFileProvider.FileExists(x));
         }
 
+        public IList<string> GetAllMatchingViewPaths(string viewName)
+        {
+            viewName = ValidateViewName(viewName);
+            return GetViewLocations()
+                .Select(x => _localFileProvider.CombinePaths(x, viewName))
+                .Where(x => _localFileProvider.FileExists(x))
+                .ToList();
+        }
+
         public IList<string> GetSearchLocations()
         {
             return GetViewLocations();
