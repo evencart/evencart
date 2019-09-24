@@ -1,5 +1,6 @@
 ﻿using System;
 using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Mvc.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Payments.Stripe.Models;
@@ -7,7 +8,8 @@ using Payments.Stripe.Models;
 namespace Payments.Stripe.Controllers
 {
     [Route("stripe")]
-    public class StripeController : FoundationController
+    [PluginType(PluginType = typeof(StripePlugin))]
+    public class StripeController : FoundationPluginController
     {
         [HttpGet("payment-info", Name = StripeConfig.PaymentHandlerComponentRouteName)]
         public IActionResult PaymentInfoDisplayPage()

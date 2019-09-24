@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Routing;
+using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -13,7 +18,7 @@ namespace EvenCart.Infrastructure.Routing.Conventions
     /// <summary>
     /// Adds additional routes for api access
     /// </summary>
-    public class AppRoutingConvention : IActionModelConvention
+    public class AppRoutingConvention : IActionModelConvention, IControllerModelConvention
     {
         public void Apply(ActionModel action)
         {
@@ -92,6 +97,23 @@ namespace EvenCart.Infrastructure.Routing.Conventions
         
             foreach (var ns in newSelectors)
                 action.Selectors.Add(ns);
+        }
+
+        private IList<PluginInfo> _activePlugins;
+        public void Apply(ControllerModel controller)
+        {
+            
+            if (typeof(FoundationPluginController).IsAssignableFrom(controller.ControllerType))
+            {
+                _activePlugins = _activePlugins ?? DependencyResolver.Resolve<IPluginAccountant>().GetActivePlugins();
+                var pluginTypeAttribute = controller.Attributes.FirstOrDefault(x => x.GetType() == typeof(PluginTypeAttribute)) as PluginTypeAttribute;
+                if (pluginTypeAttribute == null)
+                    throw new ArgumentException(
+                        $"The controller {controller.DisplayName} must declare a {nameof(PluginTypeAttribute)} with it's plugin type");
+
+                if (_activePlugins.All(x => x.PluginType != pluginTypeAttribute.PluginType))
+                    controller.Actions.Clear();
+            }
         }
     }
 }

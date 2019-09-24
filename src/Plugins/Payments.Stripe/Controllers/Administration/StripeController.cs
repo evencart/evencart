@@ -7,7 +7,7 @@ using Payments.Stripe.Models;
 
 namespace Payments.Stripe.Controllers.Administration
 {
-    public class StripeController : FoundationAdminController
+    public class StripeController : FoundationPluginAdminController
     {
         private readonly StripeSettings _stripeSettings;
         private readonly ISettingService _settingService;

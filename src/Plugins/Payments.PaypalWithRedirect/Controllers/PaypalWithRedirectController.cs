@@ -2,6 +2,7 @@
 using EvenCart.Services.Payments;
 using EvenCart.Services.Purchases;
 using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,7 +12,8 @@ using Payments.PaypalWithRedirect.Models;
 namespace Payments.PaypalWithRedirect.Controllers
 {
     [Route("paypal-with-redirect")]
-    public class PaypalWithRedirectController : FoundationController
+    [PluginType(PluginType = typeof(PaypalWithRedirectPlugin))]
+    public class PaypalWithRedirectController : FoundationPluginController
     {
         private readonly IPaymentAccountant _paymentAccountant;
         private readonly IOrderService _orderService;

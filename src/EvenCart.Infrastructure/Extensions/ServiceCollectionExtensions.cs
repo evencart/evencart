@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -91,7 +92,8 @@ namespace EvenCart.Infrastructure.Extensions
                     if (DatabaseManager.IsDatabaseInstalled())
                     {
 #endif
-                        options.Conventions.Add(new AppRoutingConvention());
+                        options.Conventions.Add((IControllerModelConvention)new AppRoutingConvention());
+                        options.Conventions.Add((IActionModelConvention) new AppRoutingConvention());
                         options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
 #if !DEBUGWS
                     }

@@ -10,7 +10,7 @@ using Shipping.UPS.Models;
 
 namespace Shipping.UPS.Controllers.Administration
 {
-    public class UPSController : FoundationAdminController
+    public class UPSController : FoundationPluginAdminController
     {
         private readonly ISettingService _settingService;
         private readonly UPSSettings _upsSettings;

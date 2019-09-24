@@ -7,7 +7,7 @@ using Payments.PaypalWithRedirect.Models;
 
 namespace Payments.PaypalWithRedirect.Controllers.Administration
 {
-    public class PaypalWithRedirectController : FoundationAdminController
+    public class PaypalWithRedirectController : FoundationPluginAdminController
     {
         private readonly PaypalWithRedirectSettings _paypalWithRedirectSettings;
         private readonly ISettingService _settingService;
