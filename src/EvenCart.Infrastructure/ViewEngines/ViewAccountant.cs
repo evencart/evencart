@@ -312,7 +312,7 @@ namespace EvenCart.Infrastructure.ViewEngines
                 resultHash.Add(globalObjectKp.Key, globalObjectKp.Value.GetObject());
             }
 
-            if (DatabaseManager.IsDatabaseInstalled())
+            if (DatabaseManager.IsDatabaseInstalled() && !ApplicationEngine.IsAdmin())
             {
                 var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
                 //if there is an seometa, do that as well

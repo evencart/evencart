@@ -4,11 +4,12 @@ using EvenCart.Core;
 using EvenCart.Core.Data;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Pages;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Pages;
 
 namespace EvenCart.Infrastructure.Consumers
 {
-    public class SeoEntityConsumer<T> : IFoundationEntityInserted<T>, IFoundationEntityDeleted<T> where T: FoundationEntity
+    public class SeoEntityConsumer<T> : IFoundationEntityInserted<T>, IFoundationEntityUpdated<T>, IFoundationEntityDeleted<T> where T: FoundationEntity
     {
         private readonly ISeoMetaService _seoMetaService;
         public SeoEntityConsumer(ISeoMetaService seoMetaService)
@@ -26,7 +27,8 @@ namespace EvenCart.Infrastructure.Consumers
                 EntityId = entity.Id,
                 EntityName = typeof(T).Name,
                 LanguageCultureCode = ApplicationEngine.CurrentLanguageCultureCode,
-                Slug = CommonHelper.GenerateSlug(name)
+                Slug = CommonHelper.GenerateSlug(name),
+                PageTitle = name
             };
             _seoMetaService.Insert(seoMeta);
 
@@ -42,10 +44,25 @@ namespace EvenCart.Infrastructure.Consumers
         {
             if (!(entity is ISeoEntity))
                 return;
-            var name = typeof(T).Name;
-            var seoMeta = _seoMetaService.FirstOrDefault(x => x.EntityId == entity.Id && x.EntityName == name);
+            var seoMeta = _seoMetaService.GetForEntity<T>(entity.Id);
             if(seoMeta != null)
                 _seoMetaService.Delete(seoMeta);
+        }
+
+        public void OnUpdated(T entity)
+        {
+            if (!(entity is ISeoEntity))
+                return;
+            var name = ((ISeoEntity)entity).Name;
+            var seoMeta = _seoMetaService.GetForEntity<T>(entity.Id);
+            if (seoMeta != null)
+            {
+                if (seoMeta.PageTitle.IsNullEmptyOrWhiteSpace())
+                {
+                    seoMeta.PageTitle = name;
+                    _seoMetaService.Update(seoMeta);
+                }
+            }
         }
     }
 }
