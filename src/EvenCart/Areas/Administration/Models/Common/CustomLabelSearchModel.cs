@@ -8,6 +8,6 @@ namespace EvenCart.Areas.Administration.Models.Common
     /// </summary>
     public class CustomLabelSearchModel : AdminSearchModel
     {
-        public CustomLabelType LabelType { get; set; }
+        public string LabelType { get; set; }
     }
 }

@@ -106,11 +106,11 @@ namespace EvenCart.Services.Extensions
             return string.Format(ExtraFieldNameFormat, extraField.Id);
         }
 
-        public static IList<Pair<ExtraField, string>> GetExtraFields<T>(this IHasEntityProperties<T> entity) where T : FoundationEntity
+        public static IList<Pair<ExtraField, string>> GetExtraFields(this IHasEntityProperties entity)
         {
             var entityProperties = entity.GetProperties();
             var extraFieldService = DependencyResolver.Resolve<IExtraFieldService>();
-            var entityName = typeof(T).Name;
+            var entityName = entity.GetType().Name;
             var typeExtraFields = extraFieldService.Get(x => x.EntityName == entityName).ToList();
 
             var extraFieldList = new List<Pair<ExtraField, string>>();

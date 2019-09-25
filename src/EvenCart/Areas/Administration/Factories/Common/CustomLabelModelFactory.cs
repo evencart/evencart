@@ -11,7 +11,7 @@ namespace EvenCart.Areas.Administration.Factories.Common
             {
                 Id = entity.Id,
                 DisplayOrder = entity.DisplayOrder,
-                LabelType = entity.LabelType,
+                LabelType = entity.Type,
                 Text = entity.Text
             };
         }

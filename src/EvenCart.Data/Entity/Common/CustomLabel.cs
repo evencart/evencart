@@ -1,4 +1,5 @@
-﻿using EvenCart.Core.Data;
+﻿using System;
+using EvenCart.Core.Data;
 
 namespace EvenCart.Data.Entity.Common
 {
@@ -6,7 +7,7 @@ namespace EvenCart.Data.Entity.Common
     {
         public string Text { get; set; }
 
-        public CustomLabelType LabelType { get; set; }
+        public string Type { get; set; }
 
         public int DisplayOrder { get; set; }
     }

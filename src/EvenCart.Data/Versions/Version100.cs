@@ -4,6 +4,8 @@ using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Emails;
+using EvenCart.Data.Entity.EntityProperties;
+using EvenCart.Data.Entity.Feed;
 using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Data.Entity.Logs;
 using EvenCart.Data.Entity.MediaEntities;
@@ -116,7 +118,9 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<TaxRate>(transaction);
             Db.CreateConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction, true);
 
-           
+
+            //feed
+            Db.CreateTable<FeedItem>(transaction);
 
             //content
             Db.CreateTable<ContentPage>(transaction);
@@ -171,6 +175,9 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<SeoMeta>(transaction);
             Db.CreateTable<ScheduledTask>(transaction);
             Db.CreateTable<CustomLabel>(transaction);
+            Db.CreateTable<EntityProperty>(transaction);
+            Db.CreateIndex<EntityProperty>(new[] {nameof(EntityProperty.EntityName), nameof(EntityProperty.EntityId)},
+                transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -289,9 +296,10 @@ namespace EvenCart.Data.Versions
             //tax
             Db.DropTable<Tax>(transaction);
             Db.DropTable<TaxRate>(transaction);
-            
 
 
+            //feed
+            Db.DropTable<FeedItem>(transaction);
 
             //content
             Db.DropTable<ContentPage>(transaction);
@@ -328,6 +336,10 @@ namespace EvenCart.Data.Versions
             Db.DropTable<SeoMeta>(transaction);
             Db.DropTable<ScheduledTask>(transaction);
             Db.DropTable<CustomLabel>(transaction);
+
+            Db.DropIndex<EntityProperty>(new[] { nameof(EntityProperty.EntityName), nameof(EntityProperty.EntityId) },
+                transaction);
+            Db.DropTable<EntityProperty>(transaction);
         }
 
         public string VersionKey => "EvenCart.Data.Versions.Version1_0_0";

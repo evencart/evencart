@@ -1,5 +1,7 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
+using EvenCart.Data.Entity.Common;
+using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
@@ -8,10 +10,9 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<UserPoint>(transaction);
-            Db.AddColumn<User, int>(nameof(User.Points), 0, transaction);
-            Db.AddColumn<User, int?>(nameof(User.ProfilePictureId), 0, transaction);
-            Db.CreateConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction, true);
+            Db.CreateTable<EntityProperty>(transaction);
+            Db.CreateIndex<EntityProperty>(new[] { nameof(EntityProperty.EntityId) },
+                transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -21,5 +22,5 @@ namespace EvenCart.Data.Versions
 
         public string VersionKey => "EvenCart.Data.Versions.Version1_0_1";
     }
-    
+
 }

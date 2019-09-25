@@ -29,6 +29,10 @@ namespace EvenCart.Controllers
     [Route("orders")]
     public class OrdersController : FoundationController
     {
+        private const string CancellationReasonLabel = "cancellationReason";
+        private const string ReturnReasonLabel = "returnReason";
+        private const string ReturnActionLabel = "returnAction";
+
         private readonly IOrderService _orderService;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ICustomLabelService _customLabelService;
@@ -147,7 +151,7 @@ namespace EvenCart.Controllers
             SetBreadcrumbToRoute(order.OrderNumber, RouteNames.SingleOrder, new { orderGuid }, localize: false);
             SetBreadcrumbToRoute("Cancellation Request", RouteNames.CancelOrder);
 
-            var cancellationReasons = _customLabelService.GetCustomLabels(CustomLabelType.CancellationReason, out _).ToList();
+            var cancellationReasons = _customLabelService.GetCustomLabels(CancellationReasonLabel, out _).ToList();
             var selectList = SelectListHelper.GetSelectItemList(cancellationReasons, x => x.Id, x => x.Text);
             return R.Success.With("availableReasons", selectList).With("order", orderModel).With("orderGuid", orderGuid).Result;
         }
@@ -170,7 +174,7 @@ namespace EvenCart.Controllers
             }
 
             var reason = _customLabelService
-                .FirstOrDefault(x => x.LabelType == CustomLabelType.CancellationReason && x.Id == cancelReasonId)?.Text;
+                .FirstOrDefault(x => x.Type == CancellationReasonLabel && x.Id == cancelReasonId)?.Text;
             _orderAccountant.CancelOrder(order, reason);
             if (order.OrderStatus == OrderStatus.Cancelled)
                 RaiseEvent(NamedEvent.OrderCancelled);
@@ -206,9 +210,9 @@ namespace EvenCart.Controllers
             //get the actions and reasons
             var customLabels =
                 _customLabelService.Get(
-                    new List<CustomLabelType>() { CustomLabelType.ReturnAction, CustomLabelType.ReturnReason }, out _).ToList();
-            var actions = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnAction).ToList();
-            var reasons = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnReason).ToList();
+                    new List<string>() { ReturnActionLabel, ReturnReasonLabel }, out _).ToList();
+            var actions = customLabels.Where(x => x.Type == ReturnActionLabel).ToList();
+            var reasons = customLabels.Where(x => x.Type == ReturnReasonLabel).ToList();
             var reasonsAsSelectList = SelectListHelper.GetSelectItemList(reasons, x => x.Id, x => x.Text);
             var actionsAsSelectList = SelectListHelper.GetSelectItemList(actions, x => x.Id, x => x.Text);
             //set breadcrumb nodes
@@ -255,9 +259,9 @@ namespace EvenCart.Controllers
             //get the actions and reasons
             var customLabels =
                 _customLabelService.Get(
-                    new List<CustomLabelType>() { CustomLabelType.ReturnAction, CustomLabelType.ReturnReason }, out _).ToList();
-            var actions = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnAction).ToList();
-            var reasons = customLabels.Where(x => x.LabelType == CustomLabelType.ReturnReason).ToList();
+                    new List<string>() { ReturnActionLabel, ReturnReasonLabel }, out _).ToList();
+            var actions = customLabels.Where(x => x.Type == ReturnActionLabel).ToList();
+            var reasons = customLabels.Where(x => x.Type == ReturnReasonLabel).ToList();
             var returnRequestList = new List<ReturnRequest>();
             //create the return request for each item now
             Transaction.Initiate(transaction =>

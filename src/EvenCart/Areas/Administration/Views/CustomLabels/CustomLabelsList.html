@@ -1,13 +1,13 @@
 ﻿{% layout "_Layout" %}
-{% global page_title=@t"Return Reasons" active_menu="ReturnReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'ReturnReason'" %}
-{% global page_title=@t"Order Cancellation Reasons" active_menu="CancellationReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'CancellationReason'" %}
-{% global page_title=@t"Return Actions" active_menu="ReturnActionsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'ReturnAction'" %}
+{% global page_title=@t"Return Reasons" active_menu="ReturnReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'returnReason'" %}
+{% global page_title=@t"Order Cancellation Reasons" active_menu="CancellationReasonsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'cancellationReason'" %}
+{% global page_title=@t"Return Actions" active_menu="ReturnActionsList" parent_active_menu="Settings" menu_group="CustomLabelsList" if="labelType == 'returnAction'" %}
 
 <div class="row">
     <div class="col-md-12 col-offset-2">
         <div class="panel">
             <div class="panel-title">
-                {{labels.plural}} <button class="btn btn-sm btn-primary float-right" onclick="editCustomLabel(0)">{{"Add" | t}} {{labels.singular}}</button>
+                {{"Values" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editCustomLabel(0)">{{"Add New" | t}}</button>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
@@ -115,7 +115,7 @@
 
     var deleteCustomLabel = function(id) {
         var msg =
-            '{{ "Are you sure you wish to delete this label?" | t}}';
+            '{{ "Are you sure you wish to delete this value?" | t}}';
         confirm(msg,
             function() {
                 post({
@@ -126,7 +126,7 @@
                     done: function(response) {
                         if (response.success) {
                             reloadGrid('grid-selection');
-                            notify("success", '{{"Label was deleted successfully" | t}}');
+                            notify("success", '{{"Value was deleted successfully" | t}}');
                         }
                     }
                 });

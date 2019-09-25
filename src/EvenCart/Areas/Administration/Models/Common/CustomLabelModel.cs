@@ -18,7 +18,7 @@ namespace EvenCart.Areas.Administration.Models.Common
         /// <summary>
         /// The <see cref="CustomLabelType">label type</see>
         /// </summary>
-        public CustomLabelType LabelType { get; set; }
+        public string LabelType { get; set; }
 
         /// <summary>
         /// The display order of the label
@@ -28,6 +28,7 @@ namespace EvenCart.Areas.Administration.Models.Common
         public void SetupValidationRules(ModelValidator<CustomLabelModel> v)
         {
             v.RuleFor(x => x.Text).NotEmpty();
+            v.RuleFor(x => x.LabelType).NotEmpty();
         }
     }
 }

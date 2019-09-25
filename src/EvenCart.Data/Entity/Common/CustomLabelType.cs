@@ -5,6 +5,7 @@
         CancellationReason = 1,
         ReturnReason = 2,
         ProductTag = 3,
-        ReturnAction = 4
+        ReturnAction = 4,
+        UserType = 5
     }
 }

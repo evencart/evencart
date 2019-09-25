@@ -56,7 +56,7 @@
             Custom labels are reusable text labels available for various operations such as cancellation, returns, product tags etc.
             </summary>
         </member>
-        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelSuggestions(EvenCart.Data.Entity.Common.CustomLabelType,System.String)">
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelSuggestions(System.String,System.String)">
             <summary>
             Get label suggestions based on the query parameter
             </summary>
@@ -71,7 +71,7 @@
             <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelSearchModel">search parameters</see> to filter results.</param>
             <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelModel">label</see> objects as 'customLabels'</response>
         </member>
-        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelEditor(System.Int32,EvenCart.Data.Entity.Common.CustomLabelType)">
+        <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.CustomLabelEditor(System.Int32,System.String)">
             <summary>
             Gets a single custom label
             </summary>

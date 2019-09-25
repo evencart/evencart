@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Core.Data;
+using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Interfaces;
 
 namespace EvenCart.Data.Entity.Users
 {
-    public class User : FoundationEntity, ISoftDeletable, IHasEntityProperties<User>, ISearchFilterSupported
+    public class User : FoundationEntity, ISoftDeletable, IHasEntityProperties, ISearchFilterSupported
     {
         public string FirstName { get; set; }
 
@@ -72,6 +73,8 @@ namespace EvenCart.Data.Entity.Users
         public virtual IList<Role> Roles { get; set; }
 
         public virtual IList<Capability> Capabilities { get; set; }
+
+        public virtual IList<EntityProperty> EntityProperties { get; set; }
         #endregion
     }
 }

@@ -17,10 +17,14 @@ namespace EvenCart.Services.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static IList<EntityProperty> GetProperties<T>(this IHasEntityProperties<T> entity) where T: FoundationEntity
+        public static IList<EntityProperty> GetProperties(this IHasEntityProperties entity)
         {
+            var typeName = entity.GetType().Name;
             var entityPropertyService = DependencyResolver.Resolve<IEntityPropertyService>();
-            return entityPropertyService.Get(x => x.EntityName == typeof(T).Name && x.EntityId == entity.Id).ToList();
+            //get all in one go for performance reasons
+            entity.EntityProperties = entity.EntityProperties ?? entityPropertyService.Get(
+                                          x => x.EntityName == typeName && x.EntityId == entity.Id).ToList();
+            return entity.EntityProperties;
         }
         /// <summary>
         /// Gets the property with specified name for current entity
@@ -29,12 +33,9 @@ namespace EvenCart.Services.Extensions
         /// <param name="entity"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static EntityProperty GetProperty<T>(this IHasEntityProperties<T> entity, string propertyName) where T : FoundationEntity
+        public static EntityProperty GetProperty(this IHasEntityProperties entity, string propertyName)
         {
-            var entityPropertyService = DependencyResolver.Resolve<IEntityPropertyService>();
-            return
-                entityPropertyService.Get(
-                    x => x.EntityName == typeof(T).Name && x.EntityId == entity.Id && x.PropertyName == propertyName).FirstOrDefault();
+            return GetProperties(entity).FirstOrDefault(x => x.PropertyName == propertyName);
         }
 
         /// <summary>
@@ -44,10 +45,28 @@ namespace EvenCart.Services.Extensions
         /// <param name="entity"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static object GetPropertyValue<T>(this IHasEntityProperties<T> entity, string propertyName) where T : FoundationEntity
+        public static object GetPropertyValue(this IHasEntityProperties entity, string propertyName)
         {
             var entityProperty = GetProperty(entity, propertyName);
             return entityProperty?.Value;
+        }
+
+        public static void LoadProperties<T>(this List<IHasEntityProperties> entities, params string[] propertyNames) where T : FoundationEntity
+        {
+            var typeName = typeof(T).Name;
+            var entityPropertyService = DependencyResolver.Resolve<IEntityPropertyService>();
+            var propertyNamesAsList = propertyNames.ToList();
+            var entityIds = entities.Select(x => x.Id).ToList();
+            var entityProperties = entityPropertyService.Get(x =>
+                    x.EntityName == typeName && propertyNamesAsList.Contains(x.PropertyName) &&
+                    entityIds.Contains(x.EntityId))
+                .ToList();
+
+            foreach (var entity in entities)
+            {
+                entity.EntityProperties = entityProperties.Where(x => x.EntityId == entity.Id).ToList();
+            }
+
         }
 
         /// <summary>
@@ -63,33 +82,31 @@ namespace EvenCart.Services.Extensions
             if (entity == null)
                 return defaultValue;
 
-            var entityPropertyService = DependencyResolver.Resolve<IEntityPropertyService>();
-            var typeName = entity.GetType().BaseType?.Name ?? entity.GetType().Name;
-            var entityProperty =  entityPropertyService.Get(
-                    x => x.EntityName == typeName && x.EntityId == entity.Id && x.PropertyName == propertyName).FirstOrDefault();
-
+            var entityProperty = GetProperty(entity, propertyName);
             if (entityProperty == null)
                 return defaultValue;
 
             return JsonConvert.DeserializeAnonymousType(entityProperty.Value, defaultValue);
         }
 
-        public static void SetPropertyValue<T>(this IHasEntityProperties<T> entity, string propertyName, object value)
-            where T : FoundationEntity
+        public static void SetPropertyValue(this IHasEntityProperties entity, string propertyName, object value)
         {
             //does this property exist?
             var property = GetProperty(entity, propertyName) ?? new EntityProperty()
             {
                 EntityId = entity.Id,
-                EntityName = typeof(T).Name,
+                EntityName = entity.GetType().Name,
                 PropertyName = propertyName
             };
-            
+
 
             property.Value = JsonConvert.SerializeObject(value);
             var entityPropertyService = DependencyResolver.Resolve<IEntityPropertyService>();
             if (property.Id == 0)
+            {
                 entityPropertyService.Insert(property);
+                entity.EntityProperties.Add(property);
+            }
             else
                 entityPropertyService.Update(property);
         }
