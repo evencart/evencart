@@ -1,8 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.Common;
-using EvenCart.Data.Entity.EntityProperties;
-using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Entity.Subscriptions;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -10,9 +8,7 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<EntityProperty>(transaction);
-            Db.CreateIndex<EntityProperty>(new[] { nameof(EntityProperty.EntityId) },
-                transaction);
+            Db.CreateTable<Subscription>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

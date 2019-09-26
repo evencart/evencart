@@ -21,7 +21,12 @@ namespace EvenCart.Controllers
         public IActionResult Index(string componentName)
         {
             //pass any additional data as model to the view
-            var model = ApplicationEngine.CurrentHttpContext.Request.Form?.ToDictionary(x => x.Key, x => (object) x.Value);
+            var model = ApplicationEngine.CurrentHttpContext.Request.Form?.ToDictionary(x => x.Key, x =>
+            {
+                if (x.Value.Count == 1)
+                    return (object) x.Value[0];
+                return (object) x.Value;
+            });
             return ViewComponent(componentName, model);
         }
     }

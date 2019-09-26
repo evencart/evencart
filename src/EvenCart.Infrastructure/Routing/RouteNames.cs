@@ -59,5 +59,8 @@
         public const string Error = "Error";
         public const string KeepAlive = "KeepAlive";
         public const string DownloadInvoice = "DownloadInvoice";
+
+        public const string SaveSubscription = "SaveSubscription";
+        public const string DeleteSubscription = "DeleteSubscription";
     }
 }

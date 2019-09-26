@@ -276,6 +276,7 @@
     <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\Menu\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\MiniCart\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\NewsletterSubscription\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\Pagination\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
@@ -1064,6 +1065,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\MiniCart\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\NewsletterSubscription\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\Pagination\Default.html">

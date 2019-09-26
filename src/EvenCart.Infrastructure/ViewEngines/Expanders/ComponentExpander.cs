@@ -95,7 +95,10 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 {
                     componentName = componentName.Replace('.', '_').Replace(" ", "_");
                     var key = $"{componentName}{componentIndexOnPage}";
-                    objects.Add($"{key}", modelToMerge);
+                    if (objects.ContainsKey(key))
+                        objects[key] = modelToMerge;
+                    else
+                        objects.Add($"{key}", modelToMerge);
                     assignBuilder.AppendFormat(AssignFormat, componentName, key);
                 }
             }

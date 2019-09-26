@@ -50,7 +50,16 @@ namespace EvenCart.Infrastructure.Mvc
         [NonAction]
         protected void RaiseEvent(Enum eventName, params object[] eventData)
         {
-            DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName.ToString(), eventData);
+            RaiseEvent(eventName.ToString(), eventData);
+        }
+
+        /// <summary>
+        /// Raises a named event so other services and plugins can capture
+        /// </summary>
+        [NonAction]
+        protected void RaiseEvent(string eventName, params object[] eventData)
+        {
+            DependencyResolver.Resolve<IEventPublisherService>().Publish(eventName, eventData);
         }
 
         [NonAction]

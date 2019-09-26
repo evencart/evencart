@@ -65,6 +65,11 @@
             Raises a named event so other services and plugins can capture
             </summary>
         </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.RaiseEvent(System.String,System.Object[])">
+            <summary>
+            Raises a named event so other services and plugins can capture
+            </summary>
+        </member>
         <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.SetBreadcrumbToUrl(System.String,System.String,System.String,System.Boolean)">
             <summary>
             Creates a breadcrumb node with the provided data

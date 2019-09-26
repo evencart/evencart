@@ -136,6 +136,13 @@ namespace EvenCart.Core.Infrastructure.Utils
             return _finder.OfType<T>(excludeAbstract, restrictToSolutionAssemblies);
         }
 
+        public static IList<T> InstancesOfType<T>() where T : class
+        {
+            return ClassesOfType<T>()
+                .Select(x => (T) (DependencyResolver.ResolveOptional(x) ?? Activator.CreateInstance(x)))
+                .ToList();
+        }
+
         public static IList<Type> EnumTypes()
         {
             var loadedTypes = new List<Type>();

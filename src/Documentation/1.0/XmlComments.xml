@@ -1039,6 +1039,23 @@
             </summary>
             <response code="200">A list of <see cref="T:EvenCart.Models.Reviews.PendingReviewModel">pendingReviews</see> objects.</response>
         </member>
+        <member name="T:EvenCart.Controllers.SubscriptionController">
+            <summary>
+            Manages subscriptions for a user
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.SubscriptionController.Subscribe(EvenCart.Models.Subscriptions.SubscriptionModel)">
+            <summary>
+            Subscribes the logged in user or email provided for a particular subscription identifier
+            </summary>
+            <response code="200">A success or failure response object</response>
+        </member>
+        <member name="M:EvenCart.Controllers.SubscriptionController.Unsubscribe(EvenCart.Models.Subscriptions.SubscriptionModel)">
+            <summary>
+            Unsubscribes the logged in user or the email provided for a particular subscription identifier
+            </summary>
+            <response code="200">A success or failure response object</response>
+        </member>
         <member name="T:EvenCart.Controllers.UsersController">
             <summary>
             Allows authenticated user to manage their personal info
@@ -1894,6 +1911,11 @@
         <member name="P:EvenCart.Models.Reviews.ReviewSearchModel.Rating">
             <summary>
             Set to a value to search reviews of that rating value
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Subscriptions.SubscriptionModel">
+            <summary>
+            Represents a single subscription 
             </summary>
         </member>
         <member name="P:EvenCart.Models.Users.UserModel.FirstName">
