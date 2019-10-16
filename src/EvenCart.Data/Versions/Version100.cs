@@ -5,7 +5,6 @@ using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.EntityProperties;
-using EvenCart.Data.Entity.Feed;
 using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Data.Entity.Logs;
 using EvenCart.Data.Entity.MediaEntities;
@@ -118,9 +117,6 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<TaxRate>(transaction);
             Db.CreateConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction, true);
 
-
-            //feed
-            Db.CreateTable<FeedItem>(transaction);
 
             //content
             Db.CreateTable<ContentPage>(transaction);
@@ -297,9 +293,6 @@ namespace EvenCart.Data.Versions
             Db.DropTable<Tax>(transaction);
             Db.DropTable<TaxRate>(transaction);
 
-
-            //feed
-            Db.DropTable<FeedItem>(transaction);
 
             //content
             Db.DropTable<ContentPage>(transaction);
