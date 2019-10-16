@@ -1,0 +1,28 @@
+﻿<div id="div-subscription-{{subscriptionGuid}}" class="container">
+    <div class="text-center call-to-action">
+        <form action="{% route api_SaveSubscription %}" id="form-subscription-{{subscriptionGuid}}" method="post">
+            {% control xsrf %}
+            {% control hidden name="subscriptionGuid" value="{{subscriptionGuid}}" %}
+            <div class="form-group">
+                {% control label text=@t"Email" for="email" %}
+                {% control text name="email" id="email" value="" %}
+                {% control validator for="email" email="true" required="true" %}
+            </div>
+            <button type="submit" class="btn btn-primary" id="btn-sub-{{subscriptionGuid}}">
+                {{"Subscribe" | t}}
+            </button>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-subscription-{{subscriptionGuid}}",
+                    {
+                        onSuccess: function(response) {
+                            if (response.success) {
+                                jQuery("#div-subscription-{{subscriptionGuid}}").html("Thank you for subscribing");
+                            }
+                        }
+                    });
+            })
+        </script>
+    </div>
+</div>
