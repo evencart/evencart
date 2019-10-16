@@ -22,6 +22,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public string CurrentPage { get; set; }
 
+        public string CurrentUrl { get; set; }
+
         public IList<SelectListItem> Categories { get; set; }
 
         public bool WishlistEnabled { get; set; }

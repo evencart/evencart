@@ -159,6 +159,12 @@ namespace EvenCart.Infrastructure.Extensions
                     FileProvider = new PhysicalFileProvider(assetDir),
                     RequestPath = new PathString($"/{directoryInfo.Name}/assets")
                 });
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(themesDir, themeDir, "Assets")),
+                    RequestPath = new PathString($"/content/themes/{directoryInfo.Name}/assets")
+                });
             }
 
             //also plugin's assets directories

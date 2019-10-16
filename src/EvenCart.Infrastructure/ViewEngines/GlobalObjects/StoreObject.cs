@@ -14,6 +14,7 @@ using EvenCart.Services.Extensions;
 using EvenCart.Services.Gdpr;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {
@@ -54,6 +55,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 LogoUrl = logoUrl,
                 FaviconUrl = faviconUrl,
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
+                CurrentUrl = ApplicationEngine.CurrentHttpContext.Request.GetEncodedPathAndQuery(),
                 Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName),
                 WishlistEnabled = orderSettings.EnableWishlist,
                 RepeatOrdersEnabled = orderSettings.AllowReorder,
