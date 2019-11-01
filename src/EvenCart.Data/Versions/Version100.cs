@@ -17,6 +17,7 @@ using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.ScheduledTasks;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Subscriptions;
 using EvenCart.Data.Entity.Taxes;
 using EvenCart.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
@@ -172,8 +173,8 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<ScheduledTask>(transaction);
             Db.CreateTable<CustomLabel>(transaction);
             Db.CreateTable<EntityProperty>(transaction);
-            Db.CreateIndex<EntityProperty>(new[] {nameof(EntityProperty.EntityName), nameof(EntityProperty.EntityId)},
-                transaction);
+
+            Db.CreateTable<Subscription>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -330,9 +331,8 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ScheduledTask>(transaction);
             Db.DropTable<CustomLabel>(transaction);
 
-            Db.DropIndex<EntityProperty>(new[] { nameof(EntityProperty.EntityName), nameof(EntityProperty.EntityId) },
-                transaction);
             Db.DropTable<EntityProperty>(transaction);
+            Db.DropTable<Subscription>(transaction);
         }
 
         public string VersionKey => "EvenCart.Data.Versions.Version1_0_0";

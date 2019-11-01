@@ -8,7 +8,6 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            Db.CreateTable<Subscription>(transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
