@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using EvenCart.Core;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Serializers;
@@ -13,23 +15,28 @@ namespace EvenCart.Infrastructure.Theming
         private readonly string _themeDirectory;
         private readonly ILocalFileProvider _localFileProvider;
         private readonly IDataSerializer _dataSerializer;
-        private readonly GeneralSettings _generalSettings;
-        public ThemeProvider(ILocalFileProvider localFileProvider, IDataSerializer dataSerializer, GeneralSettings generalSettings)
+        
+        public ThemeProvider(ILocalFileProvider localFileProvider, IDataSerializer dataSerializer)
         {
             _localFileProvider = localFileProvider;
             _dataSerializer = dataSerializer;
-            _generalSettings = generalSettings;
             _themeDirectory = ServerHelper.MapPath($"{ApplicationConfig.ThemeDirectory}");
         }
 
         private ThemeInfo _cachedThemeInfo = null;
         public ThemeInfo GetActiveTheme()
         {
-            if (_cachedThemeInfo != null && _cachedThemeInfo.DirectoryName == _generalSettings.ActiveTheme)
+            var defaultThemeDirectoryName = "Default";
+            if (!DatabaseManager.IsDatabaseInstalled())
+            {
+                return GetThemeInfo(new DirectoryInfo(defaultThemeDirectoryName));
+            }
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+            if (_cachedThemeInfo != null && _cachedThemeInfo.DirectoryName == generalSettings.ActiveTheme)
                 return _cachedThemeInfo;
-            var themeDirectoryName = _generalSettings.ActiveTheme;
+            var themeDirectoryName = generalSettings.ActiveTheme;
             if(themeDirectoryName.IsNullEmptyOrWhiteSpace())
-                themeDirectoryName = "Default";
+                themeDirectoryName = defaultThemeDirectoryName;
             var themePath = GetThemePath(themeDirectoryName);
             _cachedThemeInfo = GetThemeInfo(new DirectoryInfo(themePath));
 
