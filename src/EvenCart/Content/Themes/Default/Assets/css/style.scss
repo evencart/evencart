@@ -4077,3 +4077,9 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
         cursor: pointer;
     }
 }
+
+.hp-control
+{
+    position:absolute;
+    left:-50000px;
+}

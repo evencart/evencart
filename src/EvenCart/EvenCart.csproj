@@ -319,6 +319,8 @@
     <None Remove="Content\Themes\Default\Views\Reviews\_UserReviewBox.html" />
     <None Remove="Content\Themes\Default\Views\Templates\ContactUs.html" />
     <None Remove="Content\Themes\Default\Views\Widgets\Index.html" />
+    <None Remove="Views\Components\GoogleRecaptcha\Default.html" />
+    <None Remove="Views\Controls\captcha.html" />
     <None Remove="Views\Controls\checkbox.html" />
     <None Remove="Views\Controls\checkboxlist.html" />
     <None Remove="Views\Controls\currency.html" />
@@ -1191,6 +1193,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Widgets\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\GoogleRecaptcha\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Controls\captcha.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Controls\checkbox.html">

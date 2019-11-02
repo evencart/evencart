@@ -1,0 +1,11 @@
+﻿<script src="https://www.google.com/recaptcha/api.js?onload=captchaLoaded&render={{googleCaptchaSettings.siteKey}}"></script>
+<input type="hidden" name="g-recaptcha-response"/>
+<script>
+    var captchaLoaded = function() {
+        grecaptcha.ready(function() {
+            grecaptcha.execute('{{googleCaptchaSettings.siteKey}}', {action: '{{store.currentPage}}'}).then(function(token) {
+                jQuery("[name='g-recaptcha-response']").val(token);
+            });
+        });
+    }
+</script>

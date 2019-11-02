@@ -193,5 +193,10 @@ namespace EvenCart.Infrastructure.Extensions
         {
             app.UseMiddleware<IpAddressValidationMiddleware>();
         }
+
+        public static void UseRecaptcha(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<GoogleRecaptchaMiddleware>();
+        }
     }
 }

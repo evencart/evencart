@@ -51,5 +51,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public string XsrfToken { get; set; }
 
         public string PrimaryCurrencyCode { get; set; }
+
+        public string HoneypotFieldName { get; set; }
     }
 }

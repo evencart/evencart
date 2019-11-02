@@ -257,7 +257,7 @@ namespace EvenCart.Services.Installation
         private void SeedSettings(string installDomain, string storeName)
         {
             var settingService = DependencyResolver.Resolve<ISettingService>();
-        
+            var cryptographyService = DependencyResolver.Resolve<ICryptographyService>();
 
             //general settings
             settingService.Save(new GeneralSettings() {
@@ -320,7 +320,8 @@ namespace EvenCart.Services.Installation
 
             //security settings
             settingService.Save(new SecuritySettings() {
-                DefaultPasswordStorageFormat = PasswordFormat.Sha1Hashed
+                DefaultPasswordStorageFormat = PasswordFormat.Sha1Hashed,
+                HoneypotFieldName = "refcode-" + cryptographyService.GetRandomPassword()
             });
 
             //user settings

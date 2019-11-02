@@ -17,6 +17,36 @@
             <param name="model"></param>
             <returns></returns>
         </member>
+        <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.CheckIpAddress(System.String)">
+            <summary>
+            Checks the requesting IP address in the collection
+            and bans the IP if required.
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.CreateTimer">
+            <summary>
+            Creates the timer that subtract a request
+            from the _IpAddress dictionary.
+            </summary>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.CreateBanningTimer">
+            <summary>
+            Creates the timer that removes 1 banned IP address
+            every time the timer is elapsed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.GetTimer(System.Int32)">
+            <summary>
+            Creates a simple timer instance and starts it.
+            </summary>
+            <param name="interval">The interval in milliseconds.</param>
+        </member>
+        <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.TimerElapsed(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            Subtracts a request from each IP address in the collection.
+            </summary>
+        </member>
         <member name="T:EvenCart.Infrastructure.Mvc.Attributes.ValidateModelStateAttribute">
             <summary>
             Validates the model of the requested action and returns a 400 if it's an invalid model 

@@ -279,6 +279,16 @@
             If captcha should be enabled
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.SiteKey">
+            <summary>
+            The site key for Google Captcha
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.SiteSecret">
+            <summary>
+            The site secret for Google captcha
+            </summary>
+        </member>
         <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.BannedIps">
             <summary>
             The IP Address which are banned from accessing the site. Leave empty to allow all IP addresses.
@@ -292,6 +302,11 @@
         <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.SharedVerificationKey">
             <summary>
             The private key that'll be required for POST requests if no verification token is passed
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.HoneypotFieldName">
+            <summary>
+            The name of honeypot field to prevent bot submissions
             </summary>
         </member>
         <member name="P:EvenCart.Data.Entity.Settings.SystemSettings.IsInstalled">

@@ -22,6 +22,7 @@
                                 <input name="password" id="password" type="password">
                             </div>
                             <div class="col-sm-12 mb-20">
+                                {% control captcha %}
                                 <button type="submit">{{"Login" | t}}</button>
                                 <label class="inline" for="rememberme">
                                     <input id="rememberme" name="rememberme" value="true" type="checkbox"> {{"Remember me" | t}}

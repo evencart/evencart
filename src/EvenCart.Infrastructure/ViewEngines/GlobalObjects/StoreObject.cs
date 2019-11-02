@@ -28,6 +28,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var urlSettings = DependencyResolver.Resolve<UrlSettings>();
             var gdprSettings = DependencyResolver.Resolve<GdprSettings>();
             var localizationSettings = DependencyResolver.Resolve<LocalizationSettings>();
+            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
 
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
@@ -65,7 +66,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 PrimaryCurrencyCode = currencyService.Get(localizationSettings.BaseCurrencyId)?.IsoCode,
                 XsrfToken = antiforgery.GetToken(),
                 SoftwareVersion = ApplicationConfig.Version,
-                SoftwareTitle = ApplicationConfig.AppName
+                SoftwareTitle = ApplicationConfig.AppName,
+                HoneypotFieldName = securitySettings.HoneypotFieldName
             };
             var currentUser = ApplicationEngine.CurrentUser;
             if (!ApplicationEngine.CurrentHttpContext.IsTokenAuthenticated() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())

@@ -30,6 +30,14 @@ namespace EvenCart.Data.Entity.Settings
         /// </summary>
         public bool EnableCaptcha { get; set; }
         /// <summary>
+        /// The site key for Google Captcha
+        /// </summary>
+        public string SiteKey { get; set; }
+        /// <summary>
+        /// The site secret for Google captcha
+        /// </summary>
+        public string SiteSecret { get; set; }
+        /// <summary>
         /// The IP Address which are banned from accessing the site. Leave empty to allow all IP addresses.
         /// </summary>
         public string BannedIps { get; set; }
@@ -41,5 +49,9 @@ namespace EvenCart.Data.Entity.Settings
         /// The private key that'll be required for POST requests if no verification token is passed
         /// </summary>
         public string SharedVerificationKey { get; set; }
+        /// <summary>
+        /// The name of honeypot field to prevent bot submissions
+        /// </summary>
+        public string HoneypotFieldName { get; set; } 
     }
 }

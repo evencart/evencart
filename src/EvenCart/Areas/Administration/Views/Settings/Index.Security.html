@@ -9,6 +9,18 @@
             {% control checkbox name="enableCaptcha" text=@t"Enable Captcha" value="settings.enableCaptcha"%}
         </div>
         <div class="form-group">
+            {% control label text=@t"Site Key" for="siteKey" %}
+            {% control text name="siteKey" value="{{settings.siteKey}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Site Secret" for="siteSecret" %}
+            {% control text name="siteSecret" value="{{settings.siteSecret}}"%}
+        </div>
+        <div class="form-group">
+            {% control label text=@t"Honeypot Field Name" for="honeypotFieldName" %}
+            {% control text name="honeypotFieldName" value="{{settings.honeypotFieldName}}"%}
+        </div>
+        <div class="form-group">
             {% control label text=@t"Banned Ip Addresses" for="banned-ips" %}
             {% control text name="bannedIps" value="{{settings.bannedIps}}"%}
         </div>

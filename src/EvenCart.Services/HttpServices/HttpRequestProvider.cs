@@ -77,7 +77,7 @@ namespace EvenCart.Services.HttpServices
                 catch (Exception e)
                 {
 
-                    return "";
+                    return null;
                 }
             }
 

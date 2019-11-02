@@ -67,6 +67,13 @@ var initAjaxForm = function (formId, options) {
                     },
                     fail: function (response) {
                         enableControls();
+                        if (response.status == 403) {
+                            var responseObj = JSON.parse(response.responseText);
+                            if (responseObj.error_code == "CAPTCHA_VALIDATION_REQUIRED") {
+                                //captcha needs to be displayed now
+                                reloadComponent("GoogleRecaptcha", {}, formId + " .captcha");
+                            }
+                        }
                         if (options.onError)
                             options.onError(response);
                     }

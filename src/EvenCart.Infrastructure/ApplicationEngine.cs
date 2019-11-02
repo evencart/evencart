@@ -110,6 +110,9 @@ namespace EvenCart.Infrastructure
 
                 //anti-forgery validation
                 app.UseAntiforgeryTokens();
+
+                //recaptcha
+                app.UseRecaptcha();
             }
             
 #endif

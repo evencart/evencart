@@ -5,6 +5,7 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Infrastructure.Mvc;
 using EvenCart.Services.Security;
 using EvenCart.Services.Serializers;
 using Microsoft.AspNetCore.Antiforgery;
@@ -60,7 +61,11 @@ namespace EvenCart.Infrastructure.Middleware
                         var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
                         context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(dataSerializer.Serialize(new
-                            {success = false, error = "Unable to verify the request"}));
+                        {
+                            success = false,
+                            error = "Unable to verify the request",
+                            error_code = ErrorCodes.AntiForgeryValidationFailed
+                        }));
                         return;
                     }
                 }
