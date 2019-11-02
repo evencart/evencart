@@ -42,6 +42,10 @@ namespace EvenCart.Services.Products
             SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
         {
             var query = Repository;
+            availableFromPrice = 0;
+            availableToPrice = 0;
+            availableManufacturers = null;
+            availableVendors = null;
             //search text
             if (!string.IsNullOrEmpty(searchText))
             {
@@ -147,58 +151,62 @@ namespace EvenCart.Services.Products
             var products = query.SelectNestedWithTotalMatches(out totalResults, page, count).ToList();
             //find the average rating
             PopulateReviewSummary(products);
-
-            //todo: find a way to cache this
-            //now find the available filters
-            //first specifications
-            var productSpecifications = RepositoryExplorer<ProductSpecification>()
-                .Join<AvailableAttribute>("AvailableAttributeId", "Id")
-                .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", SourceColumn.Parent)
-                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id")
-                .Where(x => x.IsFilterable && allProductIds.Contains(x.ProductId))
-                .Relate(RelationTypes.OneToOne<ProductSpecification, AvailableAttribute>())
-                .Relate(RelationTypes.OneToMany<ProductSpecification, ProductSpecificationValue>())
-                .Relate<AvailableAttributeValue>((specification, value) =>
-                {
-                    foreach (var psv in specification.ProductSpecificationValues.Where(x => x.AvailableAttributeValueId == value.Id))
-                    {
-                        psv.AvailableAttributeValue = value;
-                    }
-                })
-                .SelectNested();
             availableFilters = new Dictionary<string, List<string>>();
-            foreach (var specification in productSpecifications)
+            if (allProductIds.Any())
             {
-                var name = specification.Label.IsNullEmptyOrWhiteSpace()
-                    ? specification.AvailableAttribute.Name
-                    : specification.Label;
-                if (!availableFilters.ContainsKey(name))
-                    availableFilters.Add(name, new List<string>());
-                foreach (var specValue in specification.ProductSpecificationValues)
+                //todo: find a way to cache this
+                //now find the available filters
+                //first specifications
+                var productSpecifications = RepositoryExplorer<ProductSpecification>()
+                    .Join<AvailableAttribute>("AvailableAttributeId", "Id")
+                    .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", SourceColumn.Parent)
+                    .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id")
+                    .Where(x => x.IsFilterable && allProductIds.Contains(x.ProductId))
+                    .Relate(RelationTypes.OneToOne<ProductSpecification, AvailableAttribute>())
+                    .Relate(RelationTypes.OneToMany<ProductSpecification, ProductSpecificationValue>())
+                    .Relate<AvailableAttributeValue>((specification, value) =>
+                    {
+                        foreach (var psv in specification.ProductSpecificationValues.Where(x => x.AvailableAttributeValueId == value.Id))
+                        {
+                            psv.AvailableAttributeValue = value;
+                        }
+                    })
+                    .SelectNested();
+
+                foreach (var specification in productSpecifications)
                 {
-                    if (!specValue.Label.IsNullEmptyOrWhiteSpace())
-                        availableFilters[name].Add(specValue.Label);
-                    if (!availableFilters[name].Contains(specValue.AvailableAttributeValue.Value))
-                        availableFilters[name].Add(specValue.AvailableAttributeValue.Value);
+                    var name = specification.Label.IsNullEmptyOrWhiteSpace()
+                        ? specification.AvailableAttribute.Name
+                        : specification.Label;
+                    if (!availableFilters.ContainsKey(name))
+                        availableFilters.Add(name, new List<string>());
+                    foreach (var specValue in specification.ProductSpecificationValues)
+                    {
+                        if (!specValue.Label.IsNullEmptyOrWhiteSpace())
+                            availableFilters[name].Add(specValue.Label);
+                        if (!availableFilters[name].Contains(specValue.AvailableAttributeValue.Value))
+                            availableFilters[name].Add(specValue.AvailableAttributeValue.Value);
+                    }
+                }
+
+                //then vendors and manufacturers
+                var productIdStr = string.Join(",", allProductIds);
+                using (var multiresult = EntitySet.Query(
+                    $"SELECT * FROM {DotEntityDb.GetTableNameForType<Manufacturer>()} WHERE Id IN (SELECT DISTINCT(ManufacturerId) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr}));" +
+                    $"SELECT * FROM {DotEntityDb.GetTableNameForType<Vendor>()} WHERE Id IN (SELECT DISTINCT(VendorId) FROM {DotEntityDb.GetTableNameForType<ProductVendor>()} WHERE ProductId IN ({productIdStr}));" +
+                    $"SELECT MIN(Price) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr});" +
+                    $"SELECT MAX(Price) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr});",
+                    null))
+                {
+                    var manufacturers = multiresult.SelectAllAs<Manufacturer>();
+                    var vendors = multiresult.SelectAllAs<Vendor>();
+                    availableFromPrice = multiresult.SelectScalerAs<decimal>();
+                    availableToPrice = multiresult.SelectScalerAs<decimal>();
+                    availableManufacturers = manufacturers.ToDictionary(x => x.Id, x => x.Name);
+                    availableVendors = vendors.ToDictionary(x => x.Id, x => x.Name);
                 }
             }
-
-            //then vendors and manufacturers
-            var productIdStr = string.Join(",", allProductIds);
-            using (var multiresult = EntitySet.Query(
-                $"SELECT * FROM {DotEntityDb.GetTableNameForType<Manufacturer>()} WHERE Id IN (SELECT DISTINCT(ManufacturerId) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr}));" +
-                $"SELECT * FROM {DotEntityDb.GetTableNameForType<Vendor>()} WHERE Id IN (SELECT DISTINCT(VendorId) FROM {DotEntityDb.GetTableNameForType<ProductVendor>()} WHERE ProductId IN ({productIdStr}));" +
-                $"SELECT MIN(Price) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr});" +
-                $"SELECT MAX(Price) FROM {DotEntityDb.GetTableNameForType<Product>()} WHERE Id IN ({productIdStr});",
-                null))
-            {
-                var manufacturers = multiresult.SelectAllAs<Manufacturer>();
-                var vendors = multiresult.SelectAllAs<Vendor>();
-                availableFromPrice = multiresult.SelectScalerAs<decimal>();
-                availableToPrice = multiresult.SelectScalerAs<decimal>();
-                availableManufacturers = manufacturers.ToDictionary(x => x.Id, x => x.Name);
-                availableVendors = vendors.ToDictionary(x => x.Id, x => x.Name);
-            }
+           
             return products;
         }
 
@@ -802,10 +810,13 @@ namespace EvenCart.Services.Products
             //fetch inventories for variants
             var allVariants = products.Where(x => x.HasVariants && x.ProductVariants != null).SelectMany(x => x.ProductVariants).ToList();
             var allVariantIds = allVariants.Select(x => x.Id).ToList();
-            var inventories = _warehouseInventoryService.GetByProductVariants(allVariantIds, warehouseId).ToList();
-            foreach (var variant in allVariants)
+            if (allVariantIds.Any())
             {
-                variant.Inventories = inventories.Where(x => x.ProductVariantId == variant.Id).ToList();
+                var inventories = _warehouseInventoryService.GetByProductVariants(allVariantIds, warehouseId).ToList();
+                foreach (var variant in allVariants)
+                {
+                    variant.Inventories = inventories.Where(x => x.ProductVariantId == variant.Id).ToList();
+                }
             }
             return products;
         }
