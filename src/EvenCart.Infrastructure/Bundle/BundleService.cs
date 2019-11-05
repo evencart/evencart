@@ -60,7 +60,7 @@ namespace EvenCart.Infrastructure.Bundle
                 if (!_localFileProvider.FileExists(file))
                 {
                     //plugins
-                    file = ServerHelper.MapPath("~/Plugins" + inputFile);
+                    file = ServerHelper.MapPath("~/" + inputFile);
                     if (!_localFileProvider.FileExists(file))
                     {
                         //administration & common
