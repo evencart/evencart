@@ -117,12 +117,18 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 var model = _modelMapper.Map<ProductModel>(x);
                 model.Media = x.MediaItems?.Select(y =>
-                    {
-                        var mediaModel = _modelMapper.Map<MediaModel>(y);
-                        mediaModel.ThumbnailUrl = _mediaAccountant.GetPictureUrl(y, 100, 100);
-                        return mediaModel;
-                    })
-                    .ToList();
+                                  {
+                                      var mediaModel = _modelMapper.Map<MediaModel>(y);
+                                      mediaModel.ThumbnailUrl = _mediaAccountant.GetPictureUrl(y, 100, 100);
+                                      return mediaModel;
+                                  })
+                                  .ToList() ?? new List<MediaModel>()
+                              {
+                                  new MediaModel()
+                                  {
+                                      ThumbnailUrl = _mediaAccountant.GetPictureUrl(null, 100, 100, true)
+                                  }
+                              };
                 return model;
             });
             return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
@@ -935,7 +941,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             response.With("inventory", model);
 
-           
+
             var warehousesSelectList =
                 SelectListHelper.GetSelectItemListWithAction(warehouses, x => x.Id, x => x.Address.Name);
             foreach (var wsl in warehousesSelectList)

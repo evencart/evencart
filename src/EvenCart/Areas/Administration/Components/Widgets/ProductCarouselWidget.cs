@@ -71,7 +71,8 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             var widgetSettings = settings as ProductCarouselWidgetSettings;
             if (widgetSettings?.ProductIds != null)
             {
-                var products = _productService.GetProducts(widgetSettings.ProductIds);
+                var productIds = widgetSettings.ProductIds.Distinct().ToList();
+                var products = _productService.GetProducts(productIds);
                 var productsModel = products.Select(x =>
                     {
                         var model = _modelMapper.Map<ProductModel>(x);
