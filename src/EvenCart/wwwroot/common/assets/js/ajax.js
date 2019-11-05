@@ -229,7 +229,8 @@ var ajax = function (options) {
                 options.done(response);
         })
         .fail(function (response) {
-            notify("error", "Something didn't go right there", true);
+            var error = response.error || "Something didn't go right there";
+            notify("error", error, true);
             if (options.fail)
                 options.fail(response);
         })
