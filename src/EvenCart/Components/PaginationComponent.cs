@@ -26,6 +26,7 @@ namespace EvenCart.Components
             dataAsDict.TryGetValue("callback", out var callbackObj);
             dataAsDict.TryGetValue("url", out var url);
             dataAsDict.TryGetValue("maxPages", out var maxPagesStr);
+            dataAsDict.TryGetValue("wrapperClass", out var wrapperClass);
             var maxPages = MaxVisiblePages;
             if (maxPagesStr != null)
                 int.TryParse(maxPagesStr.ToString(), out maxPages);
@@ -39,7 +40,7 @@ namespace EvenCart.Components
                 end = totalPages;
             //1 2 3 4 [5] 6 7 8 9 10
             return R.Success.WithGridResponse(totalPages, current, countPerPage).With("callback", functionName).With("url", url)
-                .With("pageStart", start).With("pageEnd", end).ComponentResult;
+                .With("pageStart", start).With("pageEnd", end).With("wrapperClass", wrapperClass).ComponentResult;
         }
     }
 }
