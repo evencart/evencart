@@ -152,7 +152,7 @@ namespace EvenCart.Services.Helpers
             var secDiff = (int)s.TotalSeconds;
             if (dayDiff < 0 || dayDiff >= 31)
             {
-                return null;
+                return date.ToString("D") + " at " + date.ToString("hh:mm tt");
             }
         
             if (dayDiff == 0)
@@ -211,7 +211,7 @@ namespace EvenCart.Services.Helpers
                 return $"1 month ago";
             }
 
-            return date.ToString("D at hh:mm tt");
+            return date.ToString("D") + " at " + date.ToString("hh:mm tt");
         }
     }
 }

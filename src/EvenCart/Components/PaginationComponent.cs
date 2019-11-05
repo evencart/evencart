@@ -20,7 +20,7 @@ namespace EvenCart.Components
             var totalRecords = int.Parse(dataAsDict["total"].ToString());
            
             if (countPerPage == 0)
-                return R.Success.ComponentResult;
+                return R.Success.With("pageStart", 0).With("pageEnd", 0).WithGridResponse(0, current, countPerPage).ComponentResult;
 
             var totalPages = (int) Math.Ceiling((decimal) totalRecords / countPerPage);
             dataAsDict.TryGetValue("callback", out var callbackObj);
@@ -38,7 +38,7 @@ namespace EvenCart.Components
             if (end > totalPages)
                 end = totalPages;
             //1 2 3 4 [5] 6 7 8 9 10
-            return R.Success.WithGridResponse(totalPages, current, 0).With("callback", functionName).With("url", url)
+            return R.Success.WithGridResponse(totalPages, current, countPerPage).With("callback", functionName).With("url", url)
                 .With("pageStart", start).With("pageEnd", end).ComponentResult;
         }
     }

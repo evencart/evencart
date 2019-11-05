@@ -47,8 +47,8 @@ namespace EvenCart.Services.Subscriptions
         public IList<User> GetSubscribers(string subscriptionGuid, object data)
         {
             var dataSerialized = Serialized(data);
-            var userTable = DotEntityDb.GetTableNameForType<User>();
-            var subscriptionTable = DotEntityDb.GetTableNameForType<Subscription>();
+            var userTable = DotEntityDb.Provider.SafeEnclose(DotEntityDb.GetTableNameForType<User>());
+            var subscriptionTable = DotEntityDb.Provider.SafeEnclose(DotEntityDb.GetTableNameForType<Subscription>());
 
             var idCol = DotEntityDb.Provider.SafeEnclose(nameof(User.Id));
             var userIdCol = DotEntityDb.Provider.SafeEnclose(nameof(Subscription.UserId));
@@ -57,8 +57,8 @@ namespace EvenCart.Services.Subscriptions
             var dataCol = DotEntityDb.Provider.SafeEnclose(nameof(Subscription.Data));
 
             var query =
-                $"SELECT * FROM {userTable} WHERE {idCol} IN (SELECT {userIdCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data WHERE {userIdCol} IS NOT NULL) OR " +
-                $"{emailCol} IN (SELECT {emailCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data WHERE {emailCol} IS NOT NULL)";
+                $"SELECT * FROM {userTable} WHERE {idCol} IN (SELECT {userIdCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data AND {userIdCol} IS NOT NULL) OR " +
+                $"{emailCol} IN (SELECT {emailCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data AND {emailCol} IS NOT NULL)";
 
 
             return RepositoryExplorer<User>().QueryNested(query, new {subscriptionGuid, data = dataSerialized})
