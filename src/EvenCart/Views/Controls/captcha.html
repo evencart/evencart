@@ -1,2 +1,8 @@
 ﻿<div class="captcha"></div>
-<input type="text" autocomplete="off" id="hp-ref-code" class="hp-control" name="{{store.honeypotFieldName}}" alt="The field should be filled by those who don't want to submit successfully" />
+<input type="text" autocomplete="off" id="hp-ref-code" class="hp-control-{{store.honeypotFieldName}}" name="{{store.honeypotFieldName}}" alt="The field should be filled by those who don't want to submit successfully" />
+<style>
+    .hp-control-{{store.honeypotFieldName}} {
+        position: absolute;
+        left: -50000px;
+    }
+</style>
