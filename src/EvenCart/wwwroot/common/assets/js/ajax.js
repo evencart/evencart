@@ -247,7 +247,8 @@ var post = function (options) {
     options.data = options.data || {};
     //set xsrf token for post
     if (typeof options.data === "string") {
-        options.data += "&__RequestVerificationToken=" + window._xsrf;
+        if (options.data.indexOf("__RequestVerificationToken") < 0)
+            options.data += "&__RequestVerificationToken=" + window._xsrf;
     } else {
         options.data.__RequestVerificationToken = options.data.__RequestVerificationToken || window._xsrf;
     }

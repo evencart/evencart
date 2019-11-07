@@ -1,4 +1,4 @@
-﻿window.root = "http://localhost:52886";
+﻿window.root = window.location.origin;
 var root = window.root;
 var useHash = false; // Defaults to: false
 var hash = '#!'; // Defaults to: '#'
