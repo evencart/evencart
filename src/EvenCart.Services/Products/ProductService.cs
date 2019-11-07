@@ -714,7 +714,7 @@ namespace EvenCart.Services.Products
 
         public IList<Product> GetProductsWithVariants(out int totalResults, int warehouseId, string searchText = null, bool? published = null, bool? trackInventory = null, int page = 1, int count = Int32.MaxValue)
         {
-            var query = Repository;
+            var query = Repository.Where(x => !x.Deleted);
             if (!searchText.IsNullEmptyOrWhiteSpace())
             {
                 query = query.Where(x => x.Name.Contains(searchText));
