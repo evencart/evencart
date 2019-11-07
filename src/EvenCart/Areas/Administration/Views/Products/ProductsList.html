@@ -30,12 +30,12 @@
                     }
                     var deleteProduct = function (id) {
                         if (confirm("{{'The products are soft deleted to maintain cross references with order. Are you sure proceed with soft delete?' | t}}")) {
-                            var url = '{% route DeleteProduct productId="product_id" %}';
+                            var url = '{% route api_DeleteProduct productId="product_id" %}';
                             url = url.replace("product_id", id);
                             post({
                                 url: url,
                                 done: function() {
-                                    reloadGrid("#grid-selection");
+                                    reloadGrid("grid-selection");
                                 }
                             });
                         }
