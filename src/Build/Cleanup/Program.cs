@@ -7,14 +7,16 @@ namespace Cleanup
 {
     class Program
     {
-        private static string FilesToDelete = "DotEntity.*;DotLiquid.*;EvenCart.dll;EvenCart.Core.dll;EvenCart.Data.dll;EvenCart.Services.dll;EvenCart.Infrastructure.dll;*.pdb;*.dll.config;DotEntity.*;DryIoc.*;dotnet-bundle.dll;Newtonsoft.*;Microsoft.*;System.*;BraintreeHttp-Dotnet.dll;FluentScheduler.dll;FluentValidation.*;HtmlAgilityPack.dll;NUglify.dll;SixLabors.*;Source.dll;*.deps.json";
+        private static string FilesToDelete = "DotEntity.*;DotLiquid.*;EvenCart.dll;EvenCart.Core.dll;EvenCart.Data.dll;EvenCart.Services.dll;EvenCart.Infrastructure.dll;*.pdb;*.dll.config;DotEntity.*;DryIoc.*;dotnet-bundle.dll;Newtonsoft.*;Microsoft.*;System.*;BraintreeHttp-Dotnet.dll;FluentScheduler.dll;FluentValidation.*;HtmlAgilityPack.dll;NUglify.dll;SixLabors.*;Source.dll;*.deps.json;DinkToPdf.dll;HtmlToPdf*.dll;";
+
+        private static string DirectoriesToDelete = "NativeLibs;it";
 
         static void Main(string[] args)
         {
             var filesToPreserve = "";
             var filesToDelete = "";
             var directory = "";
-            
+            var directoriesToDelete = "";
             if (args.Length > 0)
                 directory = args[0];
 
@@ -26,6 +28,10 @@ namespace Cleanup
             if (args.Length > 2)
             {
                 filesToDelete = args[2];
+            }
+            if (args.Length > 3)
+            {
+                directoriesToDelete = args[3];
             }
 
             filesToDelete = FilesToDelete + ";" + filesToDelete;
@@ -40,11 +46,27 @@ namespace Cleanup
                 foreach (var fileInfo in files)
                 {
                     if (preservedFiles.Contains(fileInfo.Name))
+                    {
+                        Console.WriteLine("Skipping " + fileInfo.FullName);
                         continue; //skip the files
+                    }
                     File.Delete(fileInfo.FullName);
+                    Console.WriteLine("Deleted  " + fileInfo.FullName);
                 }
             }
 
+            directoriesToDelete = DirectoriesToDelete + ";" + directoriesToDelete;
+            var directories = ParseFilesStr(directoriesToDelete);
+            Console.WriteLine("Found " + directories.Count + " dir(s) to delete");
+            foreach (var dir in directories)
+            {
+                var dirInfo = new DirectoryInfo(Path.Combine(directory, dir));
+                if (dirInfo.Exists)
+                {
+                    Console.WriteLine("Deleting directory " + dirInfo.FullName);
+                    Directory.Delete(dirInfo.FullName, true);
+                }
+            }
         }
 
         private static IList<string> ParseFilesStr(string filesStr)
