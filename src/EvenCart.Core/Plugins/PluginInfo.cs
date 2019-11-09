@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Startup;
 
 namespace EvenCart.Core.Plugins
 {
@@ -41,6 +42,10 @@ namespace EvenCart.Core.Plugins
         public bool Dirty { get; set; }
 
         public IList<IWidget> Widgets { get; set; }
+
+        public IAppStartup Startup { get; set; }
+
+        public IDependencyContainer DependencyContainer { get; set; }
 
         public string ConfigurationUrl => LoadPluginInstance<IPlugin>().ConfigurationUrl;
 

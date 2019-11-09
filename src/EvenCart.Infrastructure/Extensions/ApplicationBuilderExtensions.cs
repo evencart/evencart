@@ -56,9 +56,6 @@ namespace EvenCart.Infrastructure.Extensions
             var databaseSettings = DependencyResolver.Resolve<IDatabaseSettings>();
             if (databaseSettings.HasSettings())
             {
-                //initialize database
-                DatabaseManager.InitDatabase(databaseSettings);
-
                 //upgrade to latest version
                 DatabaseManager.UpgradeDatabase();
 

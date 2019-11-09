@@ -9,14 +9,12 @@ using EvenCart.Core.Plugins;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Authentication;
+using EvenCart.Infrastructure.Database;
 using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing.Conventions;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Services.Security;
 using HtmlToPdfConverter;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +32,17 @@ namespace EvenCart.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void InitDbConnection(this IServiceCollection services, IHostingEnvironment hostingEnvironment)
+        {
+            var dbSettings = new DatabaseSettings(hostingEnvironment);
+            services.AddSingleton<IDatabaseSettings>(provider => dbSettings);
+            if (dbSettings.HasSettings())
+            {
+                //initialize database
+                DatabaseManager.InitDatabase(dbSettings);
+            }
+        }
+
         public static void AddAppAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(options =>
@@ -105,7 +114,7 @@ namespace EvenCart.Infrastructure.Extensions
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 })
                 //load plugins
-                .AddAppPlugins(new PluginLoader(hostingEnvironment))
+                .AddAppPlugins(hostingEnvironment)
                 .AddViewOptions(options =>
                 {
                     options.ViewEngines.Clear();
@@ -135,10 +144,11 @@ namespace EvenCart.Infrastructure.Extensions
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
         }
 
-        public static IMvcBuilder AddAppPlugins(this IMvcBuilder mvcBuilder, IPluginLoader pluginLoader)
+        public static IMvcBuilder AddAppPlugins(this IMvcBuilder mvcBuilder, IHostingEnvironment hostingEnvironment)
         {
-            pluginLoader.LoadAvailablePlugins();
-            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            PluginLoader.Init(hostingEnvironment);
+            PluginLoader.LoadAvailablePlugins();
+            var pluginInfos = PluginLoader.GetAvailablePlugins().UpdateInstallStatus();
             mvcBuilder.ConfigureApplicationPartManager(manager =>
             {
                 foreach (var pluginInfo in pluginInfos)

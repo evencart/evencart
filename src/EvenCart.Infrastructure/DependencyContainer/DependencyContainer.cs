@@ -63,7 +63,6 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IImageProcessor, ImageProcessor>(reuse: Reuse.Singleton);
             registrar.Register<IMediaAccountant, MediaAccountant>(reuse: Reuse.Singleton);
             //plugin loader
-            registrar.Register<IPluginLoader, PluginLoader>(reuse: Reuse.Singleton);
             registrar.Register<IPluginAccountant, PluginAccountant>(reuse: Reuse.ScopedOrSingleton);
             //model mapper
             registrar.Register<IModelMapper, ModelMapper>(reuse: Reuse.Singleton);

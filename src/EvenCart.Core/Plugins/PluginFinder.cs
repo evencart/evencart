@@ -8,15 +8,13 @@ namespace EvenCart.Core.Plugins
     {
         public static PluginInfo FindPlugin(string systemName)
         {
-            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-            var moduleInfo = pluginLoader.FindPlugin(systemName);
+            var moduleInfo = PluginLoader.FindPlugin(systemName);
             return moduleInfo;
         }
 
         public static IList<PluginInfo> FindPlugins<T>() where T : IPlugin
         {
-            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-            var availablePlugins = pluginLoader.GetAvailablePlugins();
+            var availablePlugins = PluginLoader.GetAvailablePlugins();
             return availablePlugins.Where(x => typeof(T).IsAssignableFrom(x.PluginType)).ToList();
         }
     }

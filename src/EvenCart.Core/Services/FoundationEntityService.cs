@@ -115,6 +115,11 @@ namespace EvenCart.Core.Services
             return EntitySet<T>.Where(where).OrderBy(x => x.Id).Select(page, count);
         }
 
+        public static IEnumerable<T> Get(Expression<Func<T, bool>> @where)
+        {
+            return EntitySet<T>.Where(where).Select();
+        }
+
         public virtual IEnumerable<T> Get(out int totalResults, Expression<Func<T, bool>> @where, Expression<Func<T, object>> orderBy = null, RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
         {
             if (orderBy == null)

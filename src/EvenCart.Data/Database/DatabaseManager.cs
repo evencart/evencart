@@ -74,8 +74,7 @@ namespace EvenCart.Data.Database
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
 
             //the plugin versions
-            var pluginLoader = DependencyResolver.Resolve<IPluginLoader>();
-            var pluginInfos = pluginLoader.GetAvailablePlugins();
+            var pluginInfos = PluginLoader.GetAvailablePlugins();
             foreach (var pluginInfo in pluginInfos)
             {
                 try

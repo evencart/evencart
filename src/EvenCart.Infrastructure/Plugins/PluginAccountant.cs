@@ -12,12 +12,10 @@ namespace EvenCart.Infrastructure.Plugins
 {
     public class PluginAccountant : IPluginAccountant
     {
-        private readonly IPluginLoader _pluginLoader;
         private readonly PluginSettings _pluginSettings;
         private readonly IPluginInstallerService _pluginInstallerService;
-        public PluginAccountant(IPluginLoader pluginLoader, PluginSettings pluginSettings, IPluginInstallerService pluginInstallerService)
+        public PluginAccountant(PluginSettings pluginSettings, IPluginInstallerService pluginInstallerService)
         {
-            _pluginLoader = pluginLoader;
             _pluginSettings = pluginSettings;
             _pluginInstallerService = pluginInstallerService;
         }
@@ -41,7 +39,7 @@ namespace EvenCart.Infrastructure.Plugins
 
         public IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
         {
-            var availablePlugins = _pluginLoader.GetAvailablePlugins(withWidgets);
+            var availablePlugins = PluginLoader.GetAvailablePlugins(withWidgets);
             var sitePlugins = _pluginSettings.GetSitePlugins();
             foreach (var ap in availablePlugins)
             {

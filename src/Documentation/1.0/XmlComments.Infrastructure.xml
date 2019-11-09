@@ -17,6 +17,11 @@
             <param name="model"></param>
             <returns></returns>
         </member>
+        <member name="M:EvenCart.Infrastructure.Extensions.PluginExtensions.UpdateInstallStatus(System.Collections.Generic.IList{EvenCart.Core.Plugins.PluginInfo})">
+            <summary>
+            Updates the install/active property values in plugin info. Should be called 
+            </summary>
+        </member>
         <member name="M:EvenCart.Infrastructure.Middleware.IpAddressAccessRegister.CheckIpAddress(System.String)">
             <summary>
             Checks the requesting IP address in the collection

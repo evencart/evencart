@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Plugins;
+using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Serializers;
@@ -9,6 +11,7 @@ using EvenCart.Services.Settings;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
+using Newtonsoft.Json;
 
 namespace EvenCart.Infrastructure.Extensions
 {
@@ -96,6 +99,29 @@ namespace EvenCart.Infrastructure.Extensions
         public static bool Supports(this IPaymentHandlerPlugin plugin, PaymentOperation operation)
         {
             return plugin.SupportedOperations.Contains(operation);
+        }
+
+        /// <summary>
+        /// Updates the install/active property values in plugin info. Should be called 
+        /// </summary>
+        internal static IList<PluginInfo> UpdateInstallStatus(this IList<PluginInfo> pluginInfos)
+        {
+            //this is called during app startup when database has been initialized and services are not available yet, therefore we'll manually fetch the plugin install status
+            //todo: find if there is a better way than this
+
+            var setting = FoundationEntityService<Setting>.Get(x =>
+                x.GroupName == nameof(PluginSettings) && x.Key == nameof(PluginSettings.SitePlugins)).FirstOrDefault();
+            if (setting == null)
+                return pluginInfos;
+            var pluginStatus = JsonConvert.DeserializeObject<IList<PluginStatus>>(setting.Value);
+            foreach (var pluginInfo in pluginInfos)
+            {
+                var ps = pluginStatus.FirstOrDefault(x => x.PluginSystemName == pluginInfo.SystemName);
+                pluginInfo.Installed = ps?.Installed ?? false;
+                pluginInfo.Active = ps?.Active ?? false;
+            }
+
+            return pluginInfos;
         }
     }
 }

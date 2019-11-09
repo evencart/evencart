@@ -36,16 +36,14 @@ namespace EvenCart.Infrastructure.ViewEngines
         private readonly ILocalFileProvider _localFileProvider;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IThemeProvider _themeProvider;
-        private readonly IPluginLoader _pluginLoader;
         private readonly IHtmlProcessor _htmlProcessor;
         private readonly IAntiforgery _antiforgery;
         private readonly IMinifier _minifier;
-        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IPluginLoader pluginLoader, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier)
+        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier)
         {
             _localFileProvider = localFileProvider;
             _actionContextAccessor = actionContextAccessor;
             _themeProvider = themeProvider;
-            _pluginLoader = pluginLoader;
             _htmlProcessor = htmlProcessor;
             _antiforgery = antiforgery;
             _minifier = minifier;
@@ -183,7 +181,7 @@ namespace EvenCart.Infrastructure.ViewEngines
                 return layoutPath;
 
             //check inside plugins
-            var plugins = _pluginLoader.GetAvailablePlugins();
+            var plugins = PluginLoader.GetAvailablePlugins();
             foreach (var plugin in plugins)
             {
                 layoutPath = _localFileProvider.CombinePaths(plugin.PluginDirectory, "Views", layoutName);
@@ -243,7 +241,7 @@ namespace EvenCart.Infrastructure.ViewEngines
         private IList<string> GetViewLocations(bool ignoreAdminViews = false)
         {
             var rootPath = ServerHelper.MapPath("~/");
-            var plugins = _pluginLoader.GetAvailablePlugins();
+            var plugins = PluginLoader.GetAvailablePlugins();
             if (!ignoreAdminViews && ApplicationEngine.IsAdmin())
             {
                 if (_adminViewLocations != null)

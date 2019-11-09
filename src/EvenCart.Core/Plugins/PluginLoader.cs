@@ -5,28 +5,25 @@ using System.Linq;
 using System.Reflection;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Utils;
-using EvenCart.Core.Plugins;
-using EvenCart.Data.Extensions;
+using EvenCart.Core.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 
-namespace EvenCart.Infrastructure.Plugins
+namespace EvenCart.Core.Plugins
 {
-    public class PluginLoader : IPluginLoader
+    public static class PluginLoader
     {
-        private readonly string _pluginsDirectory;
-        private readonly string _binDirectory;
+        private static string _pluginsDirectory;
+        private static string _binDirectory;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public PluginLoader(IHostingEnvironment hostingEnvironment)
+        public static void Init(IHostingEnvironment hostingEnvironment)
         {
-            _hostingEnvironment = hostingEnvironment;
             _binDirectory = Path.Combine(hostingEnvironment.ContentRootPath, "bin", "plugins");
             _pluginsDirectory = Path.Combine(hostingEnvironment.ContentRootPath, "Plugins");
         }
 
         private static IList<PluginInfo> _loadedPlugins = null;
-        public void LoadAvailablePlugins()
+        public static void LoadAvailablePlugins()
         {
             if (_loadedPlugins != null)
                 return;
@@ -50,8 +47,7 @@ namespace EvenCart.Infrastructure.Plugins
                         continue;//invalid file found
 
                     //ignore any invalid ones
-                    if (pluginInfo.SystemName.IsNullEmptyOrWhiteSpace() || pluginInfo.Name.IsNullEmptyOrWhiteSpace() ||
-                        pluginInfo.AssemblyName.IsNullEmptyOrWhiteSpace())
+                    if (IsNullEmptyOrWhitespace(pluginInfo.SystemName) || IsNullEmptyOrWhitespace(pluginInfo.Name) || IsNullEmptyOrWhitespace(pluginInfo.AssemblyName))
                         continue;
                 }
                 catch
@@ -64,7 +60,7 @@ namespace EvenCart.Infrastructure.Plugins
                 pluginInfo.PluginDirectory = fileInfo.DirectoryName;
                 var assemblyPath = Path.Combine(pluginInfo.PluginDirectory, pluginInfo.AssemblyName);
                 if (!File.Exists(assemblyPath))
-                    throw new Exception(
+                    throw new System.Exception(
                         $"Can't load the assembly {assemblyPath} for the plugin {pluginInfo.Name} ({pluginInfo.SystemName})");
                 var mainAssemblyFileInfo = new FileInfo(assemblyPath);
                 //copy the assembly file to bin directory
@@ -87,11 +83,22 @@ namespace EvenCart.Infrastructure.Plugins
                 //set the assembly to the copied one
                 pluginInfo.Assembly = pluginAssembly;
                 pluginInfo.PluginType = TypeFinder.OfType<IPlugin>(pluginAssembly);
+                
+                //set startup
+                var startupType = TypeFinder.OfType<IAppStartup>(pluginAssembly);
+                if (startupType != null)
+                    pluginInfo.Startup = (IAppStartup) Activator.CreateInstance(startupType);
+
+                //set container
+                var diType = TypeFinder.OfType<IDependencyContainer>(pluginAssembly);
+                if (diType != null)
+                    pluginInfo.DependencyContainer = (IDependencyContainer)Activator.CreateInstance(diType);
+
                 _loadedPlugins.Add(pluginInfo);
             }
         }
 
-        public IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
+        public static IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
         {
             if (_loadedPlugins.All(x => x.Widgets == null) && withWidgets)
             {
@@ -105,12 +112,12 @@ namespace EvenCart.Infrastructure.Plugins
             return _loadedPlugins;
         }
 
-        public PluginInfo FindPlugin(string systemName)
+        public static PluginInfo FindPlugin(string systemName)
         {
             return _loadedPlugins.FirstOrDefault(x => x.SystemName == systemName);
         }
 
-        public void InitializeDependentAssemblyResolver()
+        public static void InitializeDependentAssemblyResolver()
         {
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
@@ -127,7 +134,7 @@ namespace EvenCart.Infrastructure.Plugins
             };
         }
 
-        public bool SafeFileCopy(FileInfo sourceFileInfo, string targetPath)
+        public static bool SafeFileCopy(FileInfo sourceFileInfo, string targetPath)
         {
             try
             {
@@ -153,14 +160,18 @@ namespace EvenCart.Infrastructure.Plugins
             }
         }
 
-        private IDictionary<string, string> GetDependentAssemblies(Assembly analyzedAssembly)
+        private static IDictionary<string, string> GetDependentAssemblies(Assembly analyzedAssembly)
         {
             var referencedAssemblies = analyzedAssembly.GetReferencedAssemblies();
             var dependentFileNames = referencedAssemblies.ToDictionary(x => x.FullName, x => $"{x.Name}.dll");
             return dependentFileNames;
         }
 
-        public IEnumerable<string> GetNamesOfAssembliesReferencedBy(Assembly assembly)
+        private static bool IsNullEmptyOrWhitespace(string s)
+        {
+            return string.IsNullOrWhiteSpace(s) || string.IsNullOrEmpty(s);
+        }
+        public static IEnumerable<string> GetNamesOfAssembliesReferencedBy(Assembly assembly)
         {
             return assembly.GetReferencedAssemblies()
                 .Select(assemblyName => assemblyName.FullName);

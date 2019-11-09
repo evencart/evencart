@@ -5,7 +5,10 @@ using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Infrastructure.Utils;
+using EvenCart.Core.Plugins;
 using EvenCart.Core.Services;
+using EvenCart.Core.Startup;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
@@ -44,6 +47,9 @@ namespace EvenCart.Infrastructure
                 .PersistKeysToFileSystem(
                     new DirectoryInfo(ApplicationConfig.SecureDataDirectory));
 
+            //init db connection
+            services.InitDbConnection(hostingEnvironment);
+
             //antiforgery
             services.AddAntiforgeryTokens();
 
@@ -62,6 +68,11 @@ namespace EvenCart.Infrastructure
 
             //html to pdf
             services.AddHtmlToPdfConverter();
+
+            //add any services from plugins
+            var availablePlugins = PluginLoader.GetAvailablePlugins();
+            foreach (var ap in availablePlugins.Where(x => x.Installed))
+                ap.Startup?.ConfigureServices(services, hostingEnvironment);
 
             //fire up dependency injector
             var container = new Container();
@@ -117,6 +128,13 @@ namespace EvenCart.Infrastructure
             
 #endif
             app.UseResponseCompression();
+
+            //add any middlewares from plugins
+            var availablePlugins = PluginLoader.GetAvailablePlugins();
+            foreach (var ap in availablePlugins.Where(x => x.Active))
+            {
+                ap.Startup?.Configure(app);
+            }
 
             //use mvc
             app.UseMvc(builder =>

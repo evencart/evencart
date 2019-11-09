@@ -30,11 +30,11 @@ namespace EvenCart.Core
             applicationLifetime.StopApplication();
         }
 
-        public static string MapPath(string relativePath, bool isWebRootPath = false)
+        public static string MapPath(string relativePath, bool isWebRootPath = false, IHostingEnvironment hostingEnv = null)
         {
             if (!relativePath.StartsWith("~/"))
                 return relativePath;
-            var hostingEnvironment = DependencyResolver.Resolve<IHostingEnvironment>();
+            var hostingEnvironment = hostingEnv ?? DependencyResolver.Resolve<IHostingEnvironment>();
             return relativePath.Replace("~",
                 isWebRootPath ? hostingEnvironment.WebRootPath : hostingEnvironment.ContentRootPath).Replace("/", "\\");
         }

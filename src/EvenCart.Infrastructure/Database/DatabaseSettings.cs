@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using EvenCart.Core;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services.Configuration;
 using EvenCart.Data.Database;
+using EvenCart.Services.Configuration;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EvenCart.Infrastructure.Database
 {
@@ -14,12 +15,16 @@ namespace EvenCart.Infrastructure.Database
 
         public string ProviderName { get; private set; }
 
-        public DatabaseSettings()
+        public IConfigurationFileService ConfigurationFileService { get; } = new XmlConfigurationFileService();
+
+        private string _saveFileName;
+        public DatabaseSettings(IHostingEnvironment hostingEnvironment)
         {
+            _saveFileName = ServerHelper.MapPath("~/App_Data/database.config", hostingEnv: hostingEnvironment);
             LoadSettings();
         }
 
-        private readonly string _saveFileName = ServerHelper.MapPath("~/App_Data/database.config");
+        
         private bool _hasSettings = false;
         public void LoadSettings()
         {
@@ -27,7 +32,7 @@ namespace EvenCart.Infrastructure.Database
             if (!File.Exists(_saveFileName))
                 return;
 
-            var configFileService = DependencyResolver.Resolve<IConfigurationFileService>();
+            var configFileService = ConfigurationFileService;
 
             var configValues = configFileService.ReadFile(_saveFileName);
             if(configValues == null)
@@ -41,7 +46,7 @@ namespace EvenCart.Infrastructure.Database
         
         public void WriteSettings(string connectionString, string providerName)
         {
-            var configFileService = DependencyResolver.Resolve<IConfigurationFileService>();
+            var configFileService = ConfigurationFileService;
             var configValues = new Dictionary<string, string>()
             {
                 {"ConnectionString", connectionString},
