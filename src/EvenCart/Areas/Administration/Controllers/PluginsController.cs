@@ -153,11 +153,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualPost("widgets/delete", Name = AdminRouteNames.DeleteWidget, OnlyApi = true)]
         public IActionResult DeleteWidget(string id)
         {
-            var widgets = _pluginSettings.GetSiteWidgets();
-            var widget = widgets.FirstOrDefault(x => x.Id == id);
-            if (widget != null)
-                widgets.Remove(widget);
-            _pluginSettings.SaveWidgets(widgets, true);
+           _pluginSettings.DeleteWidget(id);
             return R.Success.Result;
         }
 

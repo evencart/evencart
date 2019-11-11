@@ -101,6 +101,15 @@ namespace EvenCart.Infrastructure.Extensions
             return plugin.SupportedOperations.Contains(operation);
         }
 
+        public static void DeleteWidget(this PluginSettings pluginSettings, string id)
+        {
+            var widgets = pluginSettings.GetSiteWidgets();
+            var widget = widgets.FirstOrDefault(x => x.Id == id);
+            if (widget != null)
+                widgets.Remove(widget);
+            pluginSettings.SaveWidgets(widgets, true);
+        }
+
         /// <summary>
         /// Updates the install/active property values in plugin info. Should be called 
         /// </summary>

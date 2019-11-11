@@ -21,5 +21,9 @@ namespace EvenCart.Infrastructure.Plugins
         void DeactivatePlugin(PluginInfo pluginInfo);
 
         IList<WidgetInfo> GetAvailableWidgets();
+
+        void AddWidget(string widgetName, string pluginSystemName, string zoneName);
+
+        void DeleteWidget(string id);
     }
 }

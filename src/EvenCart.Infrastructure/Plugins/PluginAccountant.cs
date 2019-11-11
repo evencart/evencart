@@ -93,6 +93,7 @@ namespace EvenCart.Infrastructure.Plugins
                     WidgetZones = y.WidgetZones,
                     ConfigurationUrl = y.ConfigurationUrl,
                     HasConfiguration = y.HasConfiguration,
+                    SkipDragging = y.SkipDragging,
                     WidgetInstance = y
                 });
 
@@ -113,10 +114,21 @@ namespace EvenCart.Infrastructure.Plugins
                     WidgetZones = sw.WidgetZones,
                     ConfigurationUrl = sw.ConfigurationUrl,
                     HasConfiguration = sw.HasConfiguration,
+                    SkipDragging = sw.SkipDragging,
                     WidgetInstance = sw
                 });
             }
             return widgetInfos;
+        }
+
+        public void AddWidget(string widgetName, string pluginSystemName, string zoneName)
+        {
+            _pluginSettings.AddWidget(widgetName, pluginSystemName, zoneName);
+        }
+
+        public void DeleteWidget(string id)
+        {
+            _pluginSettings.DeleteWidget(id);
         }
     }
 }
