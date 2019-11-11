@@ -127,6 +127,12 @@ body {
     white-space: nowrap; }
   .user-menu .user-info {
     font-size: 0.8em; }
+    .user-menu .user-info .user-name {
+      max-width: 108px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block; }
 
 .list-inline li {
   display: inline; }

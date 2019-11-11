@@ -441,7 +441,8 @@ namespace EvenCart.Services.Installation
             var emailAccountService = DependencyResolver.Resolve<IEmailAccountService>();
             var emailTemplateService = DependencyResolver.Resolve<IEmailTemplateService>();
             var installEmailTemplatesPath = ServerHelper.MapPath("~/App_Data/Install/EmailTemplates/");
-            
+            if (installDomain.StartsWith("//"))
+                installDomain = installDomain.Substring(2);
             var emailAccount = new EmailAccount()
             {
                 Email = "support@" + installDomain,
