@@ -11,6 +11,11 @@ namespace Ui.Slider
             registrar.Register<IUiSliderService, UiSliderService>(Reuse.ScopedOrSingleton);
         }
 
+        public void RegisterDependenciesIfActive(IRegistrator registrar)
+        {
+            
+        }
+
         public int Priority { get; } = 0;
     }
 }

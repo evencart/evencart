@@ -6,6 +6,8 @@ namespace EvenCart.Core.Infrastructure
     {
         void RegisterDependencies(IRegistrator registrar);
 
+        void RegisterDependenciesIfActive(IRegistrator registrar);
+
         int Priority { get; }
     }
 }

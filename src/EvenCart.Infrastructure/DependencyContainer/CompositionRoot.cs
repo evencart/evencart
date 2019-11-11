@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DryIoc;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Plugins;
 
 namespace EvenCart.Infrastructure.DependencyContainer
@@ -15,11 +12,13 @@ namespace EvenCart.Infrastructure.DependencyContainer
             coreRegistrar.RegisterDependencies(registrar);
 
             //then the plugin ones
-            var plugins = PluginLoader.GetAvailablePlugins().Where(x => x.Installed && x.DependencyContainer != null)
+            var plugins = PluginLoader.GetAvailablePlugins().Where(x => x.DependencyContainer != null)
                 .OrderBy(x => x.DependencyContainer.Priority);
             foreach (var plugin in plugins)
             {
                 plugin.DependencyContainer.RegisterDependencies(registrar);
+                if (plugin.Active)
+                    plugin.DependencyContainer.RegisterDependenciesIfActive(registrar);
             }
         }
     }

@@ -185,6 +185,11 @@ namespace EvenCart.Infrastructure.DependencyContainer
             }
         }
 
+        public void RegisterDependenciesIfActive(IRegistrator registrar)
+        {
+            
+        }
+
         public int Priority { get; }
     }
 }
