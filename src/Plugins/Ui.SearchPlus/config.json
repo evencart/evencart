@@ -1,0 +1,11 @@
+﻿{
+  "name": "Ui SearchPlus",
+  "description": "Includes autocomplete for your store search box",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Ui.SearchPlus.dll",
+  "systemName": "EvenCart.Ui.SearchPlus",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}

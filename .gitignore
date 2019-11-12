@@ -37,3 +37,4 @@ src/Plugins/Payments.Stripe/obj/
 src/Plugins/Payments.Stripe/bin/
 src/Plugins/Support.Forums/obj/
 plugin-project/
+src/Plugins/Ui.SearchPlus/obj/

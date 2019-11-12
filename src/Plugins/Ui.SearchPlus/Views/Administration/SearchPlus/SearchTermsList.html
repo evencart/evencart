@@ -1,0 +1,100 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Search Terms" active_menu="UiSearchPlusTermsList" menu_group="UiSearchPlusConfiguration"%}
+{% partial "SearchPlus/_Navigation" %}
+
+<div class="row">
+    <div class="col-md-10 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Search Terms" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editSearchTerm(0)">{{"Add term" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="term">{{"Term" | t}}</th>
+                            <th data-column-id="termCategory">{{"Category" | t}}</th>
+                            <th data-column-id="score">{{"Score" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                {{searchTerms | scriptJson : 'initData'}}
+                <script type="text/javascript">
+
+                    ready(function() {
+
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                searchTerms: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            selection: false,
+                            navigation: 0,
+                            columnSelection: false,
+                            url: "{% route api_UiSearchPlusTermsList %}",
+                            responseObject: "searchTerms",
+                            formatters: {
+                                "commands": function(column, row) {
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editSearchTerm(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-danger btn-sm command-preview\" onclick='deleteSearchTerm(" + row.id + ")' data-row-id=\"" +
+                                        row.id +
+                                        "\"><span class=\"rbicon-trash-2\"></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="edit-term-popup" class="popup"></div>
+<script type="text/javascript">
+
+    var editSearchTerm = function(id) {
+        jQuery("#edit-term-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-term-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Term was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route UiSearchGetSearchTerm searchTermId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-term-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteSearchTerm = function (id) {
+        confirm('{{"Are you sure you wish to delete this search term?" | t}}',
+            function() {
+                var url = '{% route api_UiDeleteSearchTerm searchTermId="_id_" %}';
+                url = url.replace("_id_", id);
+                post({
+                    url: url,
+                    done: function() {
+                        reloadGrid("grid-selection");
+                    }
+                });
+            });
+
+    };
+
+</script>

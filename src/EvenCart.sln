@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup", "Build\Cleanup\Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.Stripe", "Plugins\Payments.Stripe\Payments.Stripe.csproj", "{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.SearchPlus", "Plugins\Ui.SearchPlus\Ui.SearchPlus.csproj", "{69F4380E-5EBC-4920-901A-07FF0235CE9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,12 @@ Global
 		{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}.DebugWithSwagger|Any CPU.Build.0 = DebugWithSwagger|Any CPU
 		{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.DebugWithSwagger|Any CPU.ActiveCfg = DebugWithSwagger|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.DebugWithSwagger|Any CPU.Build.0 = DebugWithSwagger|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +159,7 @@ Global
 		{942A748E-770A-43B7-A805-01D75D014AF5} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471} = {3545BB05-0273-4C20-B232-C9BA08E9A939}
 		{45FAEA43-BBC4-4C3A-8138-68B0B555DE17} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
+		{69F4380E-5EBC-4920-901A-07FF0235CE9F} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {646273F8-A252-4654-8A29-F5380A2FCDB0}

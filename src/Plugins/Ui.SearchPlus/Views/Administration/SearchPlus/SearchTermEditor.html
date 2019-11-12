@@ -1,0 +1,48 @@
+﻿<form action="{% route api_UiSaveSearchTerm %}" method="post" id="term-editor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Search Term Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Term" for="term" %}
+                        {% control text id="term" name="term" placeholder=@t"" value="{{searchTerm.term}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Term Category" for="term-category" %}
+                        {% control text id="term-category" name="termCategory" placeholder=@t"" value="{{searchTerm.termCategory}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Score" for="score" %}
+                        {% control number id="score" name="score" value="{{searchTerm.score}}"%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{searchTerm.Id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Search Term" | t}}</button>
+                    <button class="btn btn-sm btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("term-editor-form",
+        {
+            onSuccess: function () {
+                hidePopup("edit-term-popup");
+            }
+        });
+
+</script>

@@ -1,0 +1,54 @@
+﻿{% js "/plugins/Ui.SearchPlus/assets/js/auto-complete/jquery.auto-complete.js" %}
+{% css "/plugins/Ui.SearchPlus/assets/js/auto-complete/jquery.auto-complete.css" %}
+<script type="text/javascript">
+    ready(function() {
+        jQuery('#{{searchBoxId}}').autoComplete({
+            minChars: 1,
+            source: function(term, suggest) {
+                var url = '{% route api_UiSearchAutoComplete %}';
+                get({
+                    url: url,
+                    data: {
+                        term: term
+                    },
+                    done: function (response) {
+                        var results = [];
+                        if (response.terms.length > 0) {
+                            for (var i = 0; i < response.terms.length; i++) {
+                                results.push({
+                                    type: "term",
+                                    name: response.terms[i].name,
+                                    url: response.terms[i].url,
+                                    thumbnailUrl: response.terms[i].thumbnailUrl
+                                });
+                            }
+                        }
+                        if (response.products.length > 0) {
+                            results.push({
+                                type: "heading",
+                                name: "{{'Products' | t}}"
+                            });
+                            for (var i = 0; i < response.products.length; i++) {
+                                results.push({
+                                    type: "product",
+                                    name: response.products[i].name,
+                                    url: response.products[i].url,
+                                    thumbnailUrl: response.products[i].thumbnailUrl
+                                });
+                            }
+                        }
+                        suggest(results);
+                    }
+                });
+            },
+            renderItem: function (item, search) {
+                if (item.type == "heading")
+                    return '<div class="autocomplete-suggestion-heading">' + item.name + '</div>';
+                return '<div class="autocomplete-suggestion" data-url="' + item.url + '" data-image="' + item.thumbnailUrl + '">'+item.name +'</div>';
+            },
+            onSelect: function (e, term, item) {
+                window.location.href = item.data("url");
+            }
+        });
+    });
+</script>

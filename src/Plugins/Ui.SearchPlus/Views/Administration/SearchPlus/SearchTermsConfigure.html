@@ -1,0 +1,33 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Search Plus Configuration" active_menu="ConfigureUiSearchPlus" menu_group="UiSearchPlusConfiguration" %}
+{% partial "SearchPlus/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"Search Plus Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_UiSearchPlusConfigure %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control label text=@t"Number of AutoComplete Results" for="clientId" %}
+                {% control text name="numberOfAutoCompleteResults" value="{{settings.numberOfAutoCompleteResults}}" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="enableSandbox" text=@t"Show Term Category" value="settings.showTermCategory" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>

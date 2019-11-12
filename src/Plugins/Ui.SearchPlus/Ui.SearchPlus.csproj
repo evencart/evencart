@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Authors>Team Apexol</Authors>
+    <Company>Sojatia Infocrafts Private Limited</Company>
+    <Description>The slider plugin for EvenCart software</Description>
+    <Copyright>2019 Sojatia Infocrafts Private Limited</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Ui.SearchPlus\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Ui.SearchPlus\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Ui.SearchPlus\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\js\auto-complete\jquery.auto-complete.css" />
+    <None Remove="Assets\js\auto-complete\jquery.auto-complete.js" />
+    <None Remove="Assets\js\auto-complete\jquery.auto-complete.min.js" />
+    <None Remove="Views\Administration\SearchPlus\SearchTermEditor.html" />
+    <None Remove="Views\Administration\SearchPlus\SearchTermsConfigure.html" />
+    <None Remove="Views\Administration\SearchPlus\SearchTermsList.html" />
+    <None Remove="Views\Administration\SearchPlus\_Navigation.html" />
+    <None Remove="Views\Components\SearchPlusWidget\Default.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\js\auto-complete\jquery.auto-complete.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\js\auto-complete\jquery.auto-complete.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\js\auto-complete\jquery.auto-complete.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\SearchPlus\SearchTermEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\SearchPlus\_Navigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\SearchPlus\SearchTermsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\SearchPlus\SearchTermsConfigure.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Components\SearchPlusWidget\Default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotEntity">
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.MySql">
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
+    </Reference>
+    <Reference Include="DotEntity.SqlServer">
+      <HintPath>..\..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)Build\Cleanup\Output\Cleanup.exe $(OutDir)" />
+  </Target>
+
+</Project>
