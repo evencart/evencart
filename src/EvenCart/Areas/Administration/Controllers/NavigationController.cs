@@ -68,8 +68,8 @@ namespace EvenCart.Areas.Administration.Controllers
             }).ToList();
 
             return R.Success.With("menus", menuModels)
-                .With("categories", () => categoryModels, () => _dataSerializer.Serialize(categoryModels))
-                .With("pages", () => pageModels, () => _dataSerializer.Serialize(pageModels))
+                .With("categories", categoryModels)
+                .With("pages", pageModels)
                 .Result;
         }
 

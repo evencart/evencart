@@ -144,7 +144,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 model.IsDefault = _emailSenderSettings.DefaultEmailAccountId == x.Id;
                 return model;
             }).ToList();
-            return R.Success.With("emailAccounts", () => models, () => _dataSerializer.Serialize(models))
+            return R.Success.With("emailAccounts", models)
                 .WithGridResponse(models.Count, 1, models.Count)
                 .Result;
         }

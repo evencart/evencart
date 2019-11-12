@@ -33,7 +33,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var vendors = _vendorService.GetVendors(searchModel.SearchPhrase, searchModel.Current, searchModel.RowCount,
                 out int totalMatches);
             var vendorModels = vendors.Select(x => _modelMapper.Map<VendorModel>(x)).ToList();
-            return R.Success.With("vendors", () => vendorModels, () => _dataSerializer.Serialize(vendorModels))
+            return R.Success.With("vendors", vendorModels)
                 .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
                 .Result;
         }

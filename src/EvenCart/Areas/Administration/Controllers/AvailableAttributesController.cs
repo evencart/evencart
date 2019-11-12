@@ -94,7 +94,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var attributeModels = attributes.Select(GetAttributeModel).ToList();
 
-            return R.Success.With("attributes", () => attributeModels, () => _dataSerializer.Serialize(attributeModels))
+            return R.Success.With("attributes", attributeModels)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .WithParams(searchModel)
                 .Result;

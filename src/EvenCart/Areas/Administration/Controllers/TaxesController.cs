@@ -39,7 +39,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var models = taxes.Select(x => _modelMapper.Map<TaxModel>(x)).ToList();
             return R.Success.WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
-                .With("taxes", () => models, () => _dataSerializer.Serialize(models))
+                .With("taxes", models)
                 .WithParams(searchModel)
                 .Result;
         }
@@ -100,7 +100,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return model;
             }).ToList();
 
-            return R.Success.With("taxRates", () => models, () => _dataSerializer.Serialize(models))
+            return R.Success.With("taxRates", models)
                 .WithGridResponse(models.Count, 1, models.Count)
                 .With("taxId", taxId)
                 .With("taxName", tax.Name)

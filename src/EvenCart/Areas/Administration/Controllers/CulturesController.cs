@@ -36,8 +36,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 searchModel.RowCount);
 
             var currenciesModel = currencies.Select(_currencyModelFactory.Create).ToList();
-            return R.Success.With("currencies", () => currenciesModel,
-                    () => _dataSerializer.Serialize(currenciesModel))
+            return R.Success.With("currencies", currenciesModel)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .Result;
         }

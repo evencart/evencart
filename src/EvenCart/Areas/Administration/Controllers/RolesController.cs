@@ -35,7 +35,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var roles = _roleService.Get(x => true);
             var roleModels = roles.Select(_roleModelFactory.Create).ToList();
-            return R.Success.With("roles", () => roleModels, () => _dataSerializer.Serialize(roleModels))
+            return R.Success.With("roles",roleModels)
                 .WithGridResponse(roleModels.Count, 1, roleModels.Count)
                 .Result;
         }

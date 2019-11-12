@@ -115,7 +115,7 @@ namespace EvenCart.Controllers
                 }
 
                 if (variantModels.Any())
-                    response.With("variants", () => variantModels, () => _dataSerializer.Serialize(variantModels));
+                    response.With("variants", variantModels);
                 productModel.IsAvailable = variantModels.Any(x => (bool) ((dynamic) x).isAvailable);
             }
 

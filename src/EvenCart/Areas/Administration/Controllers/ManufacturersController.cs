@@ -51,8 +51,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 searchModel.RowCount);
 
             var manufacturersModel = manufacturers.Select(x => _modelMapper.Map<ManufacturerModel>(x)).ToList();
-            return R.Success.With("manufacturers", () => manufacturersModel,
-                    () => _dataSerializer.Serialize(manufacturersModel))
+            return R.Success.With("manufacturers", manufacturersModel)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .Result;
         }

@@ -40,7 +40,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var models = countries.Select(x => _modelMapper.Map<CountryModel>(x)).ToList();
             return R.Success.WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
-                .With("countries", () => models, () => _dataSerializer.Serialize(models))
+                .With("countries", models)
                 .WithParams(searchModel)
                 .Result;
         }
@@ -87,7 +87,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var models = stateOrProvinces.Select(x => _modelMapper.Map<StateOrProvinceModel>(x)).ToList();
 
-            return R.Success.With("states", () => models, () => _dataSerializer.Serialize(models))
+            return R.Success.With("states", models)
                 .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount)
                 .With("countryId", countryId)
                 .With("countryName", country.Name)

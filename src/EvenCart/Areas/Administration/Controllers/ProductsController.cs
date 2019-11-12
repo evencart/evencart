@@ -381,7 +381,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var productModel = _modelMapper.Map<ProductModel>(product);
             var variants = _productVariantService.GetByProductId(productId);
             var variantModels = variants.Select(MapProductVariantModel);
-            return R.Success.With("variants", () => variantModels, () => _dataSerializer.Serialize(variantModels))
+            return R.Success.With("variants", variantModels)
                 .With("product", productModel)
                 .With("productId", productId)
                 .Result;
@@ -841,7 +841,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 relationModel.DestinationProduct = _modelMapper.Map<ProductModel>(x.DestinationProduct);
                 return relationModel;
             }).ToList();
-            return r.Success.With("relations", () => productRelationModels, () => _dataSerializer.Serialize(productRelationModels))
+            return r.Success.With("relations", productRelationModels)
                 .WithGridResponse(productRelationModels.Count, 1, productRelationModels.Count)
                 .Result;
         }

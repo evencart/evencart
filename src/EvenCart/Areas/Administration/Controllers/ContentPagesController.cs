@@ -47,7 +47,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return x;
             });
             return R.Success.WithGridResponse(totalResults, current, rowCount)
-                .With("contentPages", () => contentPageModels, () => _dataSerializer.Serialize(contentPageModels))
+                .With("contentPages", contentPageModels)
                 .WithParams(parameters)
                 .Result;
         }

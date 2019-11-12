@@ -57,15 +57,6 @@
             Validates the model of the requested action and returns a 400 if it's an invalid model 
             </summary>
         </member>
-        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponse.With(System.String,System.Func{System.Object},System.Func{System.Object})">
-            <summary>
-            Attaches specified parameter to the response
-            </summary>
-            <param name="key">The key of the parameter</param>
-            <param name="apiAction">The function that'll be called if request is an api request</param>
-            <param name="mvcAction">The function that'll be called if request is a mvc request</param>
-            <returns>The response object</returns>
-        </member>
         <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithAvailableCountries(EvenCart.Infrastructure.Mvc.CustomResponse)">
             <summary>
             Adds available countries to current response

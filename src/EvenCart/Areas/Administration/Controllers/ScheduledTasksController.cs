@@ -37,7 +37,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var tasks = _scheduledTaskService.GetScheduledTasks(out int totalMatches, searchModel.SearchPhrase,
                 searchModel.EnableStatus, searchModel.Current, searchModel.RowCount);
             var models = tasks.Select(x => _modelMapper.Map<ScheduledTaskModel>(x)).ToList();
-            return R.Success.With("tasks", () => models, () => _dataSerializer.Serialize(models))
+            return R.Success.With("tasks", models)
                 .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
                 .WithParams(searchModel)
                 .Result;

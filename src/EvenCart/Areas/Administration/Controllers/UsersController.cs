@@ -96,7 +96,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var roles = _roleService.Get(x => true);
             var roleModels = roles.Select(x => _modelMapper.Map<RoleModel>(x)).ToList();
-            return R.Success.With("users", () => userModels, () => _dataSerializer.Serialize(userModels))
+            return R.Success.With("users", userModels)
                 .With("roles", roleModels)
                 .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
                 .Result;
@@ -185,7 +185,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             var addresses = _addressService.Get(x => x.EntityId == userId && x.EntityName == nameof(User)).ToList();
             var addressesModel = addresses.Select(_addressModelFactory.Create).ToList();
-            return R.Success.With("addresses", () => addressesModel, () => _dataSerializer.Serialize(addressesModel)).Result;
+            return R.Success.With("addresses", addressesModel).Result;
         }
 
         [DualGet("{userId}/addresses/{addressId}", Name = AdminRouteNames.GetAddress)]

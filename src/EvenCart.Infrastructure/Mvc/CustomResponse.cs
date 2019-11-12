@@ -52,27 +52,6 @@ namespace EvenCart.Infrastructure.Mvc
             _viewName = viewName;
             return this;
         }
-        /// <summary>
-        /// Attaches specified parameter to the response
-        /// </summary>
-        /// <param name="key">The key of the parameter</param>
-        /// <param name="apiAction">The function that'll be called if request is an api request</param>
-        /// <param name="mvcAction">The function that'll be called if request is a mvc request</param>
-        /// <returns>The response object</returns>
-        public CustomResponse With(string key, Func<object> apiAction, Func<object> mvcAction)
-        {
-            if (RequestHelper.IsApiCall())
-            {
-                if (apiAction != null)
-                    With(key, apiAction());
-            }
-            else
-            {
-                if (mvcAction != null)
-                    With(key, mvcAction());
-            }
-            return this;
-        }
 
         public static CustomResponse Response(Controller controller) => new CustomResponse(controller);
 

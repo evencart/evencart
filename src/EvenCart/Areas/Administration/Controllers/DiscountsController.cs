@@ -55,8 +55,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 out int totalMatches, searchModel.Current, searchModel.RowCount);
 
             var discountCouponModels = discountCoupons.Select(x => _modelMapper.Map<DiscountModel>(x)).ToList();
-            return R.Success.With("discounts", () => discountCouponModels,
-                    () => _dataSerializer.Serialize(discountCouponModels))
+            return R.Success.With("discounts", discountCouponModels)
                 .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
                 .Result;
         }

@@ -73,7 +73,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 .With("total", allCategories.Count)
                 .With("current", searchModel.Current)
                 .With("rowCount", searchModel.RowCount)
-                .With("categories", () => categoryModels, () => _dataSerializer.Serialize(categoryModels))
+                .With("categories", categoryModels)
                 .Result;
         }
 
