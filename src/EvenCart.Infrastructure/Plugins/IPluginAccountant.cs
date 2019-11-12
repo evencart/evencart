@@ -22,7 +22,7 @@ namespace EvenCart.Infrastructure.Plugins
 
         IList<WidgetInfo> GetAvailableWidgets();
 
-        void AddWidget(string widgetName, string pluginSystemName, string zoneName);
+        string AddWidget(string widgetName, string pluginSystemName, string zoneName);
 
         void DeleteWidget(string id);
     }

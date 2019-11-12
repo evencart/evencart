@@ -16,6 +16,8 @@ namespace EvenCart.Core.Plugins
 
         bool HasConfiguration { get; }
 
+        bool SkipDragging { get; }
+
         string ConfigurationUrl { get; }
 
         Type SettingsType { get; }

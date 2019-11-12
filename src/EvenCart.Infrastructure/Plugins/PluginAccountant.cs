@@ -121,9 +121,9 @@ namespace EvenCart.Infrastructure.Plugins
             return widgetInfos;
         }
 
-        public void AddWidget(string widgetName, string pluginSystemName, string zoneName)
+        public string AddWidget(string widgetName, string pluginSystemName, string zoneName)
         {
-            _pluginSettings.AddWidget(widgetName, pluginSystemName, zoneName);
+            return _pluginSettings.AddWidget(widgetName, pluginSystemName, zoneName);
         }
 
         public void DeleteWidget(string id)

@@ -67,21 +67,23 @@ namespace EvenCart.Infrastructure.Extensions
             return dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets).OrderBy(x => x.DisplayOrder).ToList();
         }
 
-        public static void AddWidget(this PluginSettings pluginSettings, string widgetName, string pluginSystemName, string zoneName)
+        public static string AddWidget(this PluginSettings pluginSettings, string widgetName, string pluginSystemName, string zoneName)
         {
             var siteWidgets = pluginSettings.GetSiteWidgets();
             //find widget count in zone
             var zoneWidgetCount = siteWidgets.Count(x => x.ZoneName == zoneName);
+            var widgetId = Guid.NewGuid().ToString();
             siteWidgets.Add(new WidgetStatus()
             {
                 WidgetSystemName = widgetName,
                 PluginSystemName = pluginSystemName,
                 ZoneName = zoneName,
                 DisplayOrder = zoneWidgetCount,
-                Id = Guid.NewGuid().ToString()
+                Id = widgetId
             });
 
             pluginSettings.SaveWidgets(siteWidgets, true);
+            return widgetId;
         }
 
         public static void SaveWidgets(this PluginSettings pluginSettings, IList<WidgetStatus> widgets, bool save = false)

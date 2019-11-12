@@ -23,7 +23,7 @@ namespace Ui.Slider.Components
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
         }
-        private const string WidgetSystemName = "SliderWidget";
+        public const string WidgetSystemName = "SliderWidget";
         public override IViewComponentResult Invoke(object data = null)
         {
             var slides = _uiSliderService.Get(x => x.Visible);
@@ -43,6 +43,8 @@ namespace Ui.Slider.Components
         public IList<string> WidgetZones { get;  }  = new List<string>() { "slider" };
 
         public bool HasConfiguration { get; } = false;
+
+        public bool SkipDragging { get; } = true;
 
         public string ConfigurationUrl { get; } = null;
 

@@ -20,6 +20,8 @@ namespace EvenCart.Core.Plugins
 
         public bool HasConfiguration { get; set; }
 
+        public bool SkipDragging { get; set; }
+
         public string ConfigurationUrl { get; set; }
 
         public IWidget WidgetInstance { get; set; }

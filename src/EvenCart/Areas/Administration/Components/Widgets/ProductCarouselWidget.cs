@@ -62,6 +62,8 @@ namespace EvenCart.Areas.Administration.Components.Widgets
 
         public bool HasConfiguration { get; } = true;
 
+        public bool SkipDragging { get; } = false;
+
         public string ConfigurationUrl { get; } = null;
 
         public Type SettingsType { get; } = typeof(ProductCarouselWidgetSettings);
