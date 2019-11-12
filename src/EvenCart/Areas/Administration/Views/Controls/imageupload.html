@@ -9,6 +9,9 @@
         <input id="imageFile-{{name}}" name="mediaFile" type="file" />
         <input type="hidden" name="{{name}}" id="hidden-{{name}}" value="%value%" />
     </span>
+    <span class="btn btn-danger btn-sm" id="clear-{{name}}" style="{% if %value% == 0 %}display:none;{% endif %}">
+        {{"Clear" | t}}
+    </span>
 </div>
 
 <script type="text/javascript">
@@ -21,7 +24,14 @@
                 var media = result.media;
                 jQuery("#image-{{name}}").attr("src", media.thumbnailUrl);
                 jQuery("#hidden-{{name}}").val(media.id);
+                jQuery("#clear-{{name}}").show();
             }
+        });
+
+        jQuery("#clear-{{name}}").click(function() {
+            jQuery("#image-{{name}}").removeAttr("src");
+            jQuery("#hidden-{{name}}").val(0);
+            jQuery(this).hide();
         });
     });
 </script>

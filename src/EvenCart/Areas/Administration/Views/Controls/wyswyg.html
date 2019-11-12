@@ -27,7 +27,13 @@
                 upload: {
                     serverPath: "{% route api_UploadMedia %}",
                     fileFieldName: "mediaFile",
-                    urlPropertyName: "media.imageUrl"
+                    urlPropertyName: "media.imageUrl",
+                    data: [
+                        {
+                            name: "__RequestVerificationToken",
+                            value: window._xsrf
+                        }
+                    ]
                 }
             }
         });
