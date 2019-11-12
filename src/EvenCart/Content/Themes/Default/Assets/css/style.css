@@ -2988,7 +2988,7 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
   position: relative;
   clear: both;
   height: 24px;
-  width: 80px;
+  width: 65px;
   margin-right: 10px;
   margin-bottom: 5px; }
   .rating-container .active-stars {

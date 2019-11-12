@@ -19,13 +19,15 @@
                 </div>
                 <div class="col-lg-4 col-md-8 col-12">
                     <div class="global-search">
+                        {% widget before_global_search %}
                         <form method="get" action="{% route ProductsSearchPage %}">
-                            <input type="text" name="search" placeholder="{{'Search products or brands' | t}}" />
+                            <input type="text" name="search" id="global-search" placeholder="{{'Search products or brands' | t}}" />
                             <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </form>
-                        {% partial Seo/_SearchJsonLd  %}
+                        {% widget after_global_search %}
+                        {% partial Seo/_SearchJsonLd %}
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
