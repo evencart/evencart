@@ -17,12 +17,9 @@
                     </tr>
                     </thead>
                 </table>
+                {{discounts | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
-                        var initData = null;
-                        /*{% unless discounts == blank %}*/
-                        initData = JSON.parse('{{discounts}}');
-                        /*{% endunless %}*/
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

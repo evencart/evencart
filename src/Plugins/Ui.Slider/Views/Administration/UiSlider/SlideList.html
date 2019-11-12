@@ -15,15 +15,16 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name" data-formatter="image">{{"" | t}}</th>
-                            <th data-column-id="title">{{"Title" | t}}</th>
-                            <th data-column-id="visible" data-formatter="check">{{"Visible" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="image">{{"" | t}}</th>
+                        <th data-column-id="title">{{"Title" | t}}</th>
+                        <th data-column-id="visible" data-formatter="check">{{"Visible" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{slides | scriptJson : 'initData'}}
                 <script type="text/javascript">
 
                     var editSlide = function(id) {
@@ -52,11 +53,6 @@
                     };
 
                     ready(function() {
-                        var initData = null;
-                        /*{% unless slides == blank %}*/
-                        initData = JSON.parse('{{slides}}');
-                        /*{% endunless %}*/
-
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

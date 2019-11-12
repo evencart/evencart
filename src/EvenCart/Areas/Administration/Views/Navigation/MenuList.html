@@ -141,6 +141,8 @@
         </td>
     </tr>
 </script>
+{{categories | scriptJson : 'allCategories'}}
+{{pages | scriptJson : 'allPages'}}
 <script type="text/javascript">
     var editMenu = function(id) {
         jQuery("#edit-popup").html("{{'Please wait...'}}");
@@ -223,13 +225,11 @@
         return pageLine;
     }
 
-    var allCategories = JSON.parse('{{categories}}');
     if (allCategories.length == 0) {
         jQuery("#categories-panel").hide();
     } else
         jQuery("#categories-container").html(renderCategory(allCategories, 0, 0));
 
-    var allPages = JSON.parse('{{pages}}');
     if (allPages.length == 0)
         jQuery("#pages-panel").hide();
     else

@@ -18,6 +18,7 @@
                     </tr>
                     </thead>
                 </table>
+                {{emailAccounts | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailAccount = function(id) {
                         var url = '{% route GetEmailAccount emailAccountId="_id" %}';
@@ -25,11 +26,6 @@
                         navigate(url);
                     }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless emailAccounts == blank %}*/
-                        initData = JSON.parse('{{emailAccounts}}');
-                        /*{% endunless %}*/
-
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

@@ -19,6 +19,7 @@
                     </tr>
                     </thead>
                 </table>
+                {{contentPages | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editContentPage = function(id) {
                         var url = '{% route GetContentPage contentPageId="_id" %}';
@@ -42,10 +43,6 @@
 
                     }
                     ready(function() {
-                        var initData = null;
-                        /*{% unless contentPages == blank %}*/
-                        initData = JSON.parse('{{contentPages}}');
-                        /*{% endunless %}*/
 
                         generateGrid({
                             element: "grid-selection",

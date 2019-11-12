@@ -10,24 +10,20 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="countryName">{{"Country" | t}}</th>
-                            <th data-column-id="stateOrProvinceName">{{"State" | t}}</th>
-                            <th data-column-id="zipOrPostalCode">{{"Postal Code" | t}}</th>
-                            <th data-column-id="rate">{{"Rate" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="countryName">{{"Country" | t}}</th>
+                        <th data-column-id="stateOrProvinceName">{{"State" | t}}</th>
+                        <th data-column-id="zipOrPostalCode">{{"Postal Code" | t}}</th>
+                        <th data-column-id="rate">{{"Rate" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{taxRates | scriptJson : 'initData'}}
                 <script type="text/javascript">
                    
                     ready(function() {
-                        var initData = null;
-                        /*{% unless taxRates == blank %}*/
-                        initData = JSON.parse('{{taxRates}}');
-                        /*{% endunless %}*/
-
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

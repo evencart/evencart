@@ -10,23 +10,20 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name" data-formatter="name" data-width="40%">{{"Name" | t}}</th>
-                            <th data-column-id="seconds" data-formatter="seconds">{{"Runs every" | t}}</th>
-                            <th data-column-id="enabled" data-formatter="enabled">{{"Enabled" | t}}</th>
-                            <th data-column-id="isRunning" data-formatter="isRunning">{{"In progress" | t}}</th>
-                            <th data-column-id="stopOnError" data-formatter="stopOnError">{{"Stop on error" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="name" data-width="40%">{{"Name" | t}}</th>
+                        <th data-column-id="seconds" data-formatter="seconds">{{"Runs every" | t}}</th>
+                        <th data-column-id="enabled" data-formatter="enabled">{{"Enabled" | t}}</th>
+                        <th data-column-id="isRunning" data-formatter="isRunning">{{"In progress" | t}}</th>
+                        <th data-column-id="stopOnError" data-formatter="stopOnError">{{"Stop on error" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{tasks | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
-                        var initData = null;
-                        /*{% unless tasks == blank %}*/
-                        initData = JSON.parse('{{tasks}}');
-                        /*{% endunless %}*/
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

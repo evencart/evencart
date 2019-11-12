@@ -17,12 +17,9 @@
                     </tr>
                     </thead>
                 </table>
+                {{manufacturers | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
-                        var initData = null;
-                        /*{% unless manufacturers == blank %}*/
-                        initData = JSON.parse('{{manufacturers}}');
-                        /*{% endunless %}*/
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

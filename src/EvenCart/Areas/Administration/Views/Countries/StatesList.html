@@ -10,15 +10,16 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead style="display: none">
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name">{{"Name" | t}}</th>
-                            <th data-column-id="shippingEnabled" data-formatter="shippingEnabled">{{"Shipping Enabled" | t}}</th>
-                            <th data-column-id="published" data-formatter="published">{{"Published" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="shippingEnabled" data-formatter="shippingEnabled">{{"Shipping Enabled" | t}}</th>
+                        <th data-column-id="published" data-formatter="published">{{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{states | scriptJson : 'initData'}}
                 <script type="text/javascript">
                    
                     ready(function() {

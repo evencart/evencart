@@ -29,7 +29,7 @@
                             displayOrderSortable({
                                 container: "grid-selection-" + id + " tbody",
                                 itemSelector: "tr",
-                                update: function() {
+                                update: function () {
                                     post({
                                         url: "{% route api_UpdateProductSpecificationDisplayOrder %}",
                                         data: jQuery("#grid-selection-" + id + " input").serialize()
@@ -66,12 +66,9 @@
                         </tr>
                     </thead>
                 </table>
+                {{psl.productSpecificationsSerialized | scriptJson: 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
-                        var initData = null;
-                        /*{% unless psl.productSpecificationsSerialized == blank %}*/
-                        initData = JSON.parse('{{psl.productSpecificationsSerialized}}');
-                        /*{% endunless %}*/
                         if (initData) {
                             initData = {
                                 data: initData,

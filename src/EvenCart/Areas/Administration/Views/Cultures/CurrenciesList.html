@@ -10,17 +10,18 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed no-margin">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="name">{{"Name" | t}}</th>
-                            <th data-column-id="isoCode">{{"Iso Code" | t}}</th>
-                            <th data-column-id="cultureCode">{{"Culture" | t}}</th>
-                            <th data-column-id="exchangeRate">{{"Exchange Rate" | t}}</th>
-                            <th data-column-id="published" data-formatter="published">{{"Published" | t}}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="isoCode">{{"Iso Code" | t}}</th>
+                        <th data-column-id="cultureCode">{{"Culture" | t}}</th>
+                        <th data-column-id="exchangeRate">{{"Exchange Rate" | t}}</th>
+                        <th data-column-id="published" data-formatter="published">{{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
                     </thead>
                 </table>
+                {{currencies | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
                         var initData = null;
