@@ -130,6 +130,12 @@ namespace EvenCart.Services.Settings
             FurnishInstance(settingsObject);
         }
 
+        public void DeleteSettings<T>() where T : ISettingGroup
+        {
+            var groupName = typeof(T).Name;
+            Delete(x => x.GroupName == groupName);
+        }
+
         private void FurnishInstance<T>(T settingsInstance) where T : ISettingGroup
         {
             var settingInstanceType = settingsInstance.GetType();

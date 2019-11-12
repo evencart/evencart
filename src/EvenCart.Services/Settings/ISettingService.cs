@@ -20,5 +20,7 @@ namespace EvenCart.Services.Settings
         T GetSettings<T>() where T : ISettingGroup;
 
         void LoadSettings<T>(T settingsObject) where T : ISettingGroup;
+
+        void DeleteSettings<T>() where T : ISettingGroup;
     }
 }

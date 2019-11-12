@@ -658,6 +658,20 @@ namespace EvenCart.Services.Products
                 .SelectNested(page, count);
         }
 
+        public override IEnumerable<Product> Get(out int totalResults, Expression<Func<Product, bool>> @where, Expression<Func<Product, object>> orderBy = null,
+            RowOrder rowOrder = RowOrder.Ascending, int page = 1, int count = Int32.MaxValue)
+        {
+            if (orderBy == null)
+                orderBy = x => x.Id;
+            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
+            return Repository.Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
+                .Where(where)
+                .Where(seoMetaWhere)
+                .OrderBy(orderBy, rowOrder)
+                .SelectNestedWithTotalMatches(out totalResults, page, count);
+        }
+
         public void PopulateReviewSummary(IList<Product> products)
         {
             if (!products.Any())
