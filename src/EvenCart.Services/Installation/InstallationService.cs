@@ -415,7 +415,11 @@ namespace EvenCart.Services.Installation
                 UserRegisteredEmailToAdminEnabled = true
             });
 
-
+            settingService.Save(new PluginSettings()
+            {
+                SitePlugins = "[]",
+                SiteWidgets = "[]"
+            });
         }
 
         private void SeedNotificationEvents()

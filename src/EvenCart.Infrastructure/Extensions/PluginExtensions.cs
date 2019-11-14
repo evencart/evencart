@@ -122,7 +122,7 @@ namespace EvenCart.Infrastructure.Extensions
 
             var setting = FoundationEntityService<Setting>.Get(x =>
                 x.GroupName == nameof(PluginSettings) && x.Key == nameof(PluginSettings.SitePlugins)).FirstOrDefault();
-            if (setting == null)
+            if (setting == null || setting.Value.IsNullEmptyOrWhiteSpace())
                 return pluginInfos;
             var pluginStatus = JsonConvert.DeserializeObject<IList<PluginStatus>>(setting.Value);
             foreach (var pluginInfo in pluginInfos)
