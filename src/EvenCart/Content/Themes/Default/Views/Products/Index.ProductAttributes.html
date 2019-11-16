@@ -21,8 +21,9 @@
 </div>
 {% endfor %}
  {% if variants.size > 0 %}
+ {{variants | scriptJson : 'variants'}}
 <script type="text/javascript">
-     var variants = JSON.parse('{{variants}}');
+     
      jQuery(document).ready(function () {
          variants = variants.sort(function (v1, v2) {
              //sort in descending order of number of attributes
@@ -84,6 +85,18 @@
                  }
                  jQuery("#priceFormatted").html("{{product.priceFormatted}}");
              }
+         }
+         //find the first available variant and set it's values
+         for (var i = 0; i < variants.length; i++) {
+             if (!variants[i].isAvailable)
+                 continue;
+             var variant = variants[i];
+             var attributes = variant.attributes;
+             for (var attribute in attributes) {
+                 var dataAttributeName = attribute[0].toUpperCase() + attribute.substr(1);
+                 jQuery("[data-attribute=\"" + dataAttributeName + "\"]").val(variant.attributes[attribute]);
+             }
+             break;
          }
          jQuery(".product-attribute select, .product-attribute input[type='checkbox']").change(refreshVariant);
          //initial price
