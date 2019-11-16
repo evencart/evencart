@@ -207,7 +207,7 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="{{store.url}}/administration/assets/lib/popper.min.js"></script>
     <script src="{{store.url}}/administration/assets/lib/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
-
+    <script src="{{store.url}}/administration/assets/lib/are-you-sure/jquery.are-you-sure.js"></script>
     <script src="{{store.url}}/administration/assets/lib/simple-mde/js/simplemde.js"></script>
     <script src="{{store.url}}/administration/assets/lib/simplebar/simplebar.js"></script>
     <script src="{{store.url}}/administration/assets/lib/typeahead/typeahead.js"></script>
@@ -240,8 +240,9 @@
                 function() {
                     navigate(jQuery(this).val());
                 });
+            initAreYouSure();
         });
-
+        
     </script>
 
 </body>

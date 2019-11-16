@@ -408,3 +408,7 @@ var inputTypeahead = function (options) {
 }
 
 
+var initAreYouSure = function() {
+    //init are you sure
+    jQuery('form').areYouSure();
+};

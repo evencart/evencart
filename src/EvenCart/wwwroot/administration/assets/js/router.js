@@ -89,6 +89,10 @@ var setupLinks = function () {
 setupLinks();
 
 function navigate(url, absolute, skipHistory) {
+    if (jQuery("form").hasClass("dirty")) {
+        if (!confirm("Changes you made may not be saved. Are you sure to reload?"))
+            return;
+    }
     //if we have a route, we'll navigate, else we reload
     if (router.helpers.match(url, router._routes)) {
         router.navigate(url, absolute, skipHistory);
