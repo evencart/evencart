@@ -531,7 +531,7 @@ namespace EvenCart.Areas.Administration.Controllers
             //update variant's product if there are no more any variants
             if (_productVariantService.Count(x => x.ProductId == productId) == 0)
             {
-                _productVariantService.Update(new { HasVariants = false }, x => x.ProductId == productId, null);
+                _productService.Update(new { HasVariants = false }, x => x.Id == productId, null);
             }
 
             return R.Success.Result;
