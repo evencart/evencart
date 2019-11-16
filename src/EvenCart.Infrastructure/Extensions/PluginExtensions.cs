@@ -11,6 +11,7 @@ using EvenCart.Services.Settings;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Newtonsoft.Json;
 
 namespace EvenCart.Infrastructure.Extensions
@@ -57,14 +58,20 @@ namespace EvenCart.Infrastructure.Extensions
             pluginSettings.SetSitePlugins(pluginStatus, true);
         }
 
-        public static IList<WidgetStatus> GetSiteWidgets(this PluginSettings pluginSettings)
+        public static IList<WidgetStatus> GetSiteWidgets(this PluginSettings pluginSettings, bool activeOnly = false)
         {
             var siteWidgets = pluginSettings.SiteWidgets;
             if (siteWidgets.IsNullEmptyOrWhiteSpace())
                 return new List<WidgetStatus>();
 
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
-            return dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets).OrderBy(x => x.DisplayOrder).ToList();
+            var widgets = dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets);
+            if (activeOnly)
+            {
+                var sitePlugins = pluginSettings.GetSitePlugins().Where(x => x.Active).Select(x => x.PluginSystemName);
+                widgets = widgets.Where(x => x.PluginSystemName == ApplicationConfig.InbuiltWidgetPluginName || sitePlugins.Contains(x.PluginSystemName)).ToList();
+            }
+            return widgets.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         public static string AddWidget(this PluginSettings pluginSettings, string widgetName, string pluginSystemName, string zoneName)

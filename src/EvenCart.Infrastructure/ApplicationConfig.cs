@@ -70,5 +70,7 @@ namespace EvenCart.Infrastructure
 
         public const string NewsletterSubscriptionGuid = "E0D79E93-03AC-43B8-8D35-E8FE447244FA";
 
+        public const string InbuiltWidgetPluginName = "EvenCart.InbuiltWidgets";
+
     }
 }

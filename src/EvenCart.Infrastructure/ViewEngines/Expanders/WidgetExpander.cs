@@ -22,7 +22,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                 return inputContent;
             }
             var pluginSettings = DependencyResolver.Resolve<PluginSettings>();
-            var widgets = pluginSettings.GetSiteWidgets();
+            var widgets = pluginSettings.GetSiteWidgets(true);
             var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
             
             var widgetFormat = "{0}";

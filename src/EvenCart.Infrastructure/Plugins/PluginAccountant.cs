@@ -107,8 +107,8 @@ namespace EvenCart.Infrastructure.Plugins
                 if (widgetInfos.Any(x => x.WidgetSystemName == sw.SystemName))
                     continue;
                 widgetInfos.Add(new WidgetInfo() {
-                    PluginName = "EvenCart",
-                    PluginSystemName = "EvenCart.InbuiltWidgets",
+                    PluginName = ApplicationConfig.AppName,
+                    PluginSystemName = ApplicationConfig.InbuiltWidgetPluginName,
                     WidgetSystemName = sw.SystemName,
                     WidgetDisplayName = sw.DisplayName,
                     WidgetZones = sw.WidgetZones,
