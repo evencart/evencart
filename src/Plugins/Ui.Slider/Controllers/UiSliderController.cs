@@ -56,7 +56,7 @@ namespace Ui.Slider.Controllers
                 })
                 .ToList();
 
-            return R.Success.With("slides", () => models, () => _dataSerializer.Serialize(models)).Result;
+            return R.Success.With("slides", models).Result;
         }
 
         [DualPost("", Name = UiSliderRouteNames.SaveSlide, OnlyApi = true)]
