@@ -6,22 +6,27 @@
         <div class="row mb-40">
             <!-- Single Product Images -->
             <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
-                <!-- Tab panes -->
-                <div class="tab-content mb-10">
-                    {% for media in product.media %}
-                    <div class="pro-large-img tab-pane {% if forloop.index == 1 %}active{% endif %}" id="pro-large-img-{{forloop.index}}">
-                        <img src="{{media.url}}" alt="" />
-                    </div>
-                    {% endfor %}
+                <div class="mb-10 tab-pane">
+                    <div class="pro-large-img"><img alt="" id="product-detail-image" /></div>
                 </div>
                 <!-- Single Product Thumbnail Slider -->
                 <div class="pro-thumb-img-slider">
                     {% for media in product.media %}
                     <div>
-                        <a href="#pro-large-img-{{forloop.index}}" data-toggle="tab"><img src="{{media.thumbnailUrl}}" alt="" /></a>
+                        <a href="#pro-large-img-{{forloop.index}}" class="product-thumb-link" data-url="{{media.url}}" data-toggle="tab"><img src="{{media.thumbnailUrl}}" alt="" /></a>
                     </div>
                     {% endfor %}
                 </div>
+                <script type="text/javascript">
+                    ready(function() {
+                        jQuery(".product-thumb-link").on("click",
+                            function(e) {
+                                var imageUrl = jQuery(this).data("url");
+                                jQuery("#product-detail-image").attr("src", imageUrl);
+                            });
+                        jQuery(".product-thumb-link:first").trigger("click");
+                    });
+                </script>
             </div>
             <!-- Single Product Details -->
             <div class="col-md-7 col-sm-6 col-xs-12 mb-40">
