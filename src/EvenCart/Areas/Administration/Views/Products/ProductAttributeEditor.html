@@ -95,7 +95,8 @@
             url: "{% route api_GetAttributeSuggestions %}",
             preserveAfterFirstCall: true,
             openOnFocus: true,
-            substringMatch:false,
+            substringMatch: false,
+            suggestNewAdditions: true,
             minLength: 0,
             select: function (item) {
                 jQuery("#product-attribute-value-selector").focus();

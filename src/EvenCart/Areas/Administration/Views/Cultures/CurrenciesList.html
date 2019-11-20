@@ -24,10 +24,6 @@
                 {{currencies | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     ready(function() {
-                        var initData = null;
-                        /*{% unless currencies == blank %}*/
-                        initData = JSON.parse('{{currencies}}');
-                        /*{% endunless %}*/
                         generateGrid({
                             element: "grid-selection",
                             initialData: {

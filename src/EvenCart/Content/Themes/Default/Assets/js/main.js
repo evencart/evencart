@@ -174,6 +174,7 @@
     -----------------------------------*/
     $('.pro-thumb-img-slider').slick({
         speed: 700,
+        infinite: false,
         slidesToShow: 4,
         slidesToScroll: 1,
         prevArrow: '<button type="button" class="arrow-prev"><i class="fa fa-angle-left"></i></button>',

@@ -424,18 +424,21 @@
 
       self.$container.on('keypress', 'input', $.proxy(function(event) {
          var $input = $(event.target);
-
+         
          if (self.$element.attr('disabled')) {
             self.$input.attr('disabled', 'disabled');
             return;
          }
-
+         
          var text = $input.val(),
          maxLengthReached = self.options.maxChars && text.length >= self.options.maxChars;
-         if (self.options.freeInput && (keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
+         if ((keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
             // Only attempt to add a tag if there is data in the field
             if (text.length !== 0) {
-               self.add(maxLengthReached ? text.substr(0, self.options.maxChars) : text);
+                self.add({
+                    text: maxLengthReached ? text.substr(0, self.options.maxChars) : text,
+                    id:0
+                });
                $input.val('');
             }
 

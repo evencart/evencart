@@ -292,7 +292,7 @@ var inputTypeahead = function (options) {
                 matches.push(obj);
             }
         });
-        
+
         if (matches.length == 0 && options.suggestNewAdditions) {
             matches.push({
                 id: 0,
@@ -333,13 +333,14 @@ var inputTypeahead = function (options) {
         };
     }
 
-    if (options.multiple) {
+    if (options.multiple) {       
         jQuery('#' + element).tagsinput({
             allowDuplicates: true,
             trimValue: true,
             freeInput: options.suggestNewAdditions,
             itemText: "text",
             itemValue: "id",
+            confirmKeys: [13, 9],
             typeaheadjs: [
                 {
                     hint: true,
@@ -366,29 +367,28 @@ var inputTypeahead = function (options) {
             jQuery('#' + element).on("beforeItemRemove", options.beforeItemRemoved);
         if (options.itemRemoved)
             jQuery('#' + element).on("itemRemoved", options.itemRemoved);
-
+       
         jQuery('#' + element).data("taginit", true);
 
     }
     else {
 
         jQuery('#' + element).typeahead({
-                    hint: true,
-                    highlight: true,
-                    minLength: options.minLength
-                },
-                {
-                    source: sourceFunction(options),
-                    display: function(selection) {
-                        if (selection.id == 0) {
-                            return "+ " + selection.text;
-                        }
-                        console.log(selection);
-                        return selection.text;
+            hint: true,
+            highlight: true,
+            minLength: options.minLength
+        },
+            {
+                source: sourceFunction(options),
+                display: function (selection) {
+                    if (selection.id == 0) {
+                        return "+ " + selection.text;
                     }
-                })
+                    return selection.text;
+                }
+            })
             .bind('typeahead:select',
-                function(ev, suggestion) {
+                function (ev, suggestion) {
                     if (suggestion.id == 0) {
                         jQuery(this).typeahead('val', suggestion.text);
                     }
@@ -396,7 +396,12 @@ var inputTypeahead = function (options) {
                     if (options.clearAfterSelect)
                         jQuery(this).typeahead('val', "");
                 });
+        jQuery('#' + element).on('blur', function (e) {
+            var val = jQuery(this).val();
+            if (val.startsWith("+ "))
+                jQuery(this).val(val.substring(2));
 
+        });
         if (options.openOnFocus) {
             jQuery('#' + element).focus(function () {
                 if (jQuery(this).val() == "")

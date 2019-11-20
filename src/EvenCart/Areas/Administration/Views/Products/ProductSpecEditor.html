@@ -101,9 +101,13 @@
             select: function (item) {
                 jQuery("#product-productSpecification-value-selector").focus();
                 jQuery("#product-productSpecification").val(item.id);
-                initForValues();
+                //initForValues();
             }
         });
+        jQuery("#product-productSpecification-selector").on("blur",
+            function() {
+                initForValues();
+            });
         var initForValues = function () {
             var initialData = null;
             /* {% if productSpecification.id > 0 %} */
@@ -147,9 +151,7 @@
                 /* {% endif %}*/
             });
         }
-        /* {% if productSpecification.id > 0 %} */
         initForValues();
-        /* {% endif %}*/
     });
 
 </script>
