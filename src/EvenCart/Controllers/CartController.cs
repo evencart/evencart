@@ -111,16 +111,13 @@ namespace EvenCart.Controllers
                     }
                 }
 
-                if (!product.HasVariants)
-                {
-                    //validate the quantity
-                    ValidateQuantityRange(cartItemModel.Quantity, product, null, out validationResult);
-                    if (validationResult != null)
-                        return validationResult;
-                }
+                //validate the quantity
+                ValidateQuantityRange(cartItemModel.Quantity, product, null, out validationResult);
+                if (validationResult != null)
+                    return validationResult;
 
                 //should we check for availability
-                if (product.TrackInventory)
+                if (product.TrackInventory || product.HasVariants)
                 {
                     if (!product.HasVariants)
                     {
@@ -143,7 +140,7 @@ namespace EvenCart.Controllers
                             return !attributeIds.Except(variantAttributeIds).Any();
                         });
                         //is the variant available?
-                        ValidateVariantQuantity(variant, product, out validationResult);
+                        ValidateVariantQuantity(cartItemModel.Quantity, variant, out validationResult);
                         if (validationResult != null)
                             return validationResult;
                     }
@@ -157,7 +154,7 @@ namespace EvenCart.Controllers
                     }
                     attributeJson = _dataSerializer.Serialize(productAttributes, false);
                 }
-               
+
             }
 
             //guest signin if user is not signed in
@@ -276,7 +273,7 @@ namespace EvenCart.Controllers
                     {
                         //get the variant
                         var variant = _productVariantService.Get(cartItem.ProductVariantId);
-                        ValidateVariantQuantity(variant, product, out validationResult);
+                        ValidateVariantQuantity(cartModel.Quantity.Value, variant, out validationResult);
                     }
                     if (validationResult != null)
                         return validationResult;
@@ -304,17 +301,17 @@ namespace EvenCart.Controllers
         {
             result = null;
             //check for minimum order quantity
-            if (quantity < product.MinimumPurchaseQuantity)
+            if (product.MinimumPurchaseQuantity > 0 && quantity < product.MinimumPurchaseQuantity)
             {
                 result = R.Fail.With("error", T("Minimum {0} item(s) must be ordered", arguments: product.MinimumPurchaseQuantity)).Result;
             }
 
             //check for maximum order quantity
-            else if (quantity > product.MaximumPurchaseQuantity)
+            else if (product.MaximumPurchaseQuantity > 0 && quantity > product.MaximumPurchaseQuantity)
             {
                 result = R.Fail.With("error", T("Maximum {0} item(s) can be ordered", arguments: product.MaximumPurchaseQuantity)).Result;
             }
-            else if (product.TrackInventory)
+            else if (product.TrackInventory && variant != null)
             {
                 var availableQuantity = variant == null ? product.Inventories.Max(x => x.AvailableQuantity) : variant.Inventories.Max(x => x.AvailableQuantity);
                 if (availableQuantity == 0)
@@ -328,7 +325,7 @@ namespace EvenCart.Controllers
             }
         }
 
-        private void ValidateVariantQuantity(ProductVariant variant, Product product, out IActionResult result)
+        private void ValidateVariantQuantity(int quantity, ProductVariant variant, out IActionResult result)
         {
             result = null;
             if (variant == null)
@@ -336,8 +333,20 @@ namespace EvenCart.Controllers
                 result = R.Fail.With("error", T("The item is not available")).Result;
                 return;
             }
-            if (!variant.IsAvailableInStock(product))
-                result = R.Fail.With("error", T("The item is out of stock")).Result;
+            
+            if (variant.TrackInventory)
+            {
+                var availableQuantity = variant.Inventories.Max(x => x.AvailableQuantity);
+                if (availableQuantity < quantity)
+                {
+                    result = R.Fail.With("error", T("Only {0} item unit(s) are available", arguments: availableQuantity)).Result;
+                }
+                else if (availableQuantity == 0)
+                {
+                    result = R.Fail.With("error", T("The item is out of stock")).Result;
+                }
+            }
+            
         }
 
         private void ValidateProductQuantity(Product product, out IActionResult result)
