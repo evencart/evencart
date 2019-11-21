@@ -96,6 +96,9 @@ namespace EvenCart.Infrastructure
             {
                 app.UseDeveloperExceptionPage();
             }
+            //error logger
+            app.UseErrorLogger();
+
 #if !DEBUGWS
             app.CheckInstallation();
 

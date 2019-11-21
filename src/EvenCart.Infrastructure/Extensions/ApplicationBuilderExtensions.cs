@@ -145,7 +145,7 @@ namespace EvenCart.Infrastructure.Extensions
             var allThemes = Directory.GetDirectories(themesDir);
             foreach (var themeDir in allThemes)
             {
-               
+
                 var directoryInfo = new DirectoryInfo(themeDir);
                 var assetDir =
                     Path.Combine(themesDir, themeDir, "Assets");
@@ -195,5 +195,11 @@ namespace EvenCart.Infrastructure.Extensions
         {
             app.UseMiddleware<GoogleRecaptchaMiddleware>();
         }
+
+        public static void UseErrorLogger(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ErrorLoggingMiddleware>();
+        }
+
     }
 }

@@ -67,7 +67,7 @@ namespace EvenCart.Areas.Administration.Controllers
         /// </summary>
         /// <param name="logId">The id of the log</param>
         /// <response code="200">A success response object.</response>
-        [DualPost("", Name = AdminRouteNames.DeleteLog)]
+        [DualPost("", Name = AdminRouteNames.DeleteLog, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.PerformMaintenance)]
         public IActionResult DeleteLog(int logId)
         {
@@ -82,7 +82,7 @@ namespace EvenCart.Areas.Administration.Controllers
         /// Clears all the logs from the system. WARNING: Use this only if you are sure what you are doing.
         /// </summary>
         /// <response code="200">A success response object.</response>
-        [DualPost("clear", Name = AdminRouteNames.ClearLogs)]
+        [DualPost("clear", Name = AdminRouteNames.ClearLogs, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.PerformMaintenance)]
         public IActionResult ClearLogs()
         {

@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-title">
-                {{"Logs" | t}}
+                {{"Logs" | t}} <button class="btn btn-sm btn-primary float-right" onclick="clearLogs()">{{"Clear Logs" | t}}</button>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
@@ -69,6 +69,20 @@
                     done: function () {
                         reloadGrid("grid-selection");
                         notify("success", '{{"Log was deleted successfully" | t}}');
+                    }
+                });
+            });
+    }
+
+    var clearLogs = function() {
+        confirm('{{"Are you sure you wish to delete all the logs?" | t}}',
+            function() {
+                var url = '{% route api_ClearLogs %}';
+                post({
+                    url: url,
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Logs were deleted successfully" | t}}');
                     }
                 });
             });
