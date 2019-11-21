@@ -101,8 +101,12 @@ namespace EvenCart.Controllers
                     var variantObject = new
                     {
                         attributes = new Dictionary<string, string>(),
-                        price = (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax).ToCurrency(),
-                        isAvailable = !variant.TrackInventory || (variant.TrackInventory && variant.IsAvailableInStock(product)),
+                        price = _priceAccountant
+                            .ConvertCurrency(
+                                (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax),
+                                ApplicationEngine.CurrentCurrency).ToCurrency(),
+                        isAvailable = !variant.TrackInventory ||
+                                      (variant.TrackInventory && variant.IsAvailableInStock(product)),
                         sku = !variant.Sku.IsNullEmptyOrWhiteSpace() ? variant.Sku : product.Sku,
                         gtin = !variant.Gtin.IsNullEmptyOrWhiteSpace() ? variant.Gtin : product.Gtin,
                         mpn = !variant.Mpn.IsNullEmptyOrWhiteSpace() ? variant.Mpn : product.Mpn
