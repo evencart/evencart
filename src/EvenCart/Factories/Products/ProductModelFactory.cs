@@ -9,9 +9,15 @@ using EvenCart.Services.Products;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
+using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Media;
-using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
+using DownloadModel = EvenCart.Models.Products.DownloadModel;
+using ProductAttributeModel = EvenCart.Models.Products.ProductAttributeModel;
+using ProductAttributeValueModel = EvenCart.Models.Products.ProductAttributeValueModel;
+using ProductModel = EvenCart.Models.Products.ProductModel;
+using ProductSpecificationGroupModel = EvenCart.Models.Products.ProductSpecificationGroupModel;
+using ProductSpecificationModel = EvenCart.Models.Products.ProductSpecificationModel;
 
 namespace EvenCart.Factories.Products
 {
@@ -140,6 +146,18 @@ namespace EvenCart.Factories.Products
             var targetCurrency = ApplicationEngine.CurrentCurrency;
             productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
             return productModel;
+        }
+
+        public DownloadModel Create(Download download)
+        {
+            var model = new DownloadModel()
+            {
+                Description = download.Description,
+                Title = download.Title,
+                DownloadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadFile, new {guid = download.Guid}),
+                FileType = download.FileType
+            };
+            return model;
         }
     }
 }

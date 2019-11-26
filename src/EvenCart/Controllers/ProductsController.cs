@@ -41,8 +41,8 @@ namespace EvenCart.Controllers
         private readonly IReviewService _reviewService;
         private readonly GeneralSettings _generalSettings;
         private readonly IProductModelFactory _productModelFactory;
-
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings, IProductModelFactory productModelFactory)
+        private readonly IDownloadService _downloadService;
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings, IProductModelFactory productModelFactory, IDownloadService downloadService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -56,6 +56,7 @@ namespace EvenCart.Controllers
             _reviewService = reviewService;
             _generalSettings = generalSettings;
             _productModelFactory = productModelFactory;
+            _downloadService = downloadService;
         }
 
         [HttpGet("product-preview/{id}", Name = RouteNames.PreviewProduct)]
@@ -123,6 +124,18 @@ namespace EvenCart.Controllers
                 productModel.IsAvailable = variantModels.Any(x => (bool) ((dynamic) x).isAvailable);
             }
 
+            //downloads
+            if (product.IsDownloadable)
+            {
+                var downloads = _downloadService.GetWithoutBytes(x => x.ProductId == product.Id).ToList();
+                if (CurrentUser.IsVisitor())
+                {
+                    downloads = downloads.Where(x => !x.RequireLogin).ToList();
+                }
+
+                var downloadModels = downloads.Select(_productModelFactory.Create).ToList();
+                response.With("downloads", downloadModels);
+            }
             //reviews
             if (_catalogSettings.EnableReviews)
             {

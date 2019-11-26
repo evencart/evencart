@@ -1,0 +1,190 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Downloads" active_menu="DownloadsList" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"Product must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Downloads" | t}}
+                <span class="btn btn-primary clickable fileinput-button btn-sm float-right" id="btn-add-download">
+                    <span>{{"Add new download" | t}}</span>
+                    <input id="imageFile" type="file" name="mediaFile" />
+                </span>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-downloads" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="title">{{"Title" | t }}</th>
+                                <th data-column-id="description">{{"Description" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                                <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{downloads | scriptJson : 'initData'}}
+<script type="text/javascript">
+    var enableSortable = function (refresh) {
+        if (refresh) {
+            displayOrderSortable({
+                container: "grid-downloads tbody",
+                refresh: true
+            });
+        } else {
+            displayOrderSortable({
+                container: "grid-downloads tbody",
+                itemSelector: "tr",
+                update: function() {
+                    post({
+                        url: "{% route api_UpdateDownloadDisplayOrder %}",
+                        data: jQuery("#grid-downloads input").serialize()
+                    });
+                }
+            });
+        }
+
+    }
+    ready(function () {
+        generateGrid({
+            element: "grid-downloads",
+            initialData: {
+                downloads: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_DownloadList %}',
+            responseObject: "downloads",
+            selection: false,
+            navigation: false,
+            columnSelection: false,
+            formatters: {
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editDownload(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                        "<a class=\"btn btn-primary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" href='" + row.downloadUrl + "' target='_blank'><span class=\"rbicon-download\"></span></a> " +
+                        "<span title=\"{{'Replace file' | t}}\" class=\"btn btn-primary clickable fileinput-button btn-sm\" id=\"btn-replace-download-" + row.id + "\"> " +
+                        "<span class=\"rbicon-upload\"></span> <input id=\"imageFile-" + row.id + "\" data-id='" + row.id + "' class='grid-media-upload' type=\"file\" name=\"mediaFile\" /></span> " +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteDownload(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                },
+                "hiddenFields": function (column, row, index) {
+                    return "<input type='hidden' data-type='displayorder' name='downloadModels[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
+                        "<input type='hidden' data-type='id'  name='downloadModels[" + index + "].id' value='" + row.id + "' />";
+                }
+            },
+            events: {
+                "loaded": function() {
+                    enableSortable(true);
+                    initGridFileLoaders();
+                }
+            }
+        });
+
+        enableSortable();
+        initGridFileLoaders();
+    });
+
+
+    var editDownload = function (id) {
+        jQuery("#edit-download-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-download-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-downloads');
+                    notify("success", '{{"Download was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetDownload productId="{{productId}}" downloadId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-download-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteDownload = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this download? The action can not be undone." | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteDownload %}",
+                    data: {
+                        downloadId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-downloads');
+                            notify("success", '{{"Download was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>
+{% endif %}
+
+<div class="popup" id="edit-download-popup">
+</div>
+
+<script type="text/javascript">
+    ready(function() {
+        initFileUploader({
+            element: "imageFile",
+            url: '{% route api_UploadDownloadFile productId="{{productId}}" %}',
+            done: function(e, data) {
+                var result = data.result;
+                editDownload(result.downloadId);
+            },
+            formData: {
+                __RequestVerificationToken: window._xsrf
+            }
+        });
+
+    });
+
+    var initGridFileLoaders = function () {
+        jQuery(".grid-media-upload").each(function () {
+            var id = jQuery(this).data("id");
+            var element = "imageFile-" + id;
+            initFileUploader({
+                element: element,
+                url: '{% route api_UploadDownloadFile productId="{{productId}}" %}',
+                done: function(e, data) {
+                    notify("success", "{{'Download was replaced successfully' | t}}");
+                },
+                formData: {
+                    __RequestVerificationToken: window._xsrf,
+                    id: id
+                }
+            });
+        });
+       
+    }
+</script>

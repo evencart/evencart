@@ -172,8 +172,16 @@ namespace EvenCart.Services.Products
                 {
                     var pav = variant.ProductVariantAttributes.Select(x => x.ProductAttributeValue)
                         .FirstOrDefault(x => x.AvailableAttributeValueId == attributeValue.Id);
-                    if (pav != null && pav.AvailableAttributeValue == null)
-                        pav.AvailableAttributeValue = attributeValue;
+                    if (pav != null)
+                    {
+                        if (pav.AvailableAttributeValue == null)
+                            pav.AvailableAttributeValue = attributeValue;
+                        if (pav.Label.IsNullEmptyOrWhiteSpace())
+                        {
+                            pav.Label = attributeValue?.Value;
+                        }
+                    }
+
                 })
                 .Relate(RelationTypes.OneToMany<ProductVariant, WarehouseInventory>());
         }

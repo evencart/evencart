@@ -349,6 +349,16 @@
             Specifies if profile pictures are enabled
             </summary>
         </member>
+        <member name="F:EvenCart.Data.Entity.Shop.DownloadActivationType.PaymentComplete">
+            <summary>
+            Activation type when payment is complete
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Shop.DownloadActivationType.Manual">
+            <summary>
+            Manual activation
+            </summary>
+        </member>
         <member name="T:EvenCart.Data.Entity.Shop.LengthUnit">
             <summary>
             Represents the length unit

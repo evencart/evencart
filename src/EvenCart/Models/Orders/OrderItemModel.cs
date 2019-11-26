@@ -49,5 +49,9 @@ namespace EvenCart.Models.Orders
         /// The tax name applicable of this product
         /// </summary>
         public string TaxName { get; set; }
+        /// <summary>
+        /// Specifies if the product is downloadable
+        /// </summary>
+        public bool IsDownloadable { get; set; }
     }
 }

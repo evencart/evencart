@@ -23,6 +23,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public string TaxName { get; set; }
 
+        public bool IsDownloadable { get; set; }
+
         #region Virtual Properties
         public virtual Order Order { get; set; }
 

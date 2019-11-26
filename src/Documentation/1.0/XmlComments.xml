@@ -159,6 +159,47 @@
             <param name="inventories">A collection of <see cref="T:EvenCart.Areas.Administration.Models.Warehouse.InventoryModel">inventory</see> objects</param>
             <response code="200">A success response object</response>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.DownloadList(System.Int32)">
+            <summary>
+            Get the ware house list
+            </summary>
+            <param name="productId">The id of the product</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Shop.DownloadModel">download</see> objects as 'downloads'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.DownloadEditor(System.Int32,System.Int32)">
+            <summary>
+            Gets a download with specific id
+            </summary>
+            <param name="productId">The id of the product</param>
+            <param name="downloadId">The id of the download</param>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.Shop.DownloadModel">download</see> object as 'download'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.DownloadFile(System.Int32)">
+            <summary>
+            Downloads a file to the browser
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.SaveDownload(EvenCart.Areas.Administration.Models.Shop.DownloadModel)">
+            <summary>
+            Saves a download to database
+            </summary>
+            <param name="downloadModel"></param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.DeleteDownload(System.Int32)">
+            <summary>
+            Deletes specific download
+            </summary>
+            <param name="downloadId">The id of the download</param>
+            <response code="200">A success response object</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.UpdateDownloadDisplayOrder(EvenCart.Areas.Administration.Models.Shop.DownloadModel[])">
+            <summary>
+            Updates display order for downloads
+            </summary>
+            <param name="downloadModels"></param>
+            <response code="200">A success response object</response>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.ReportsController.TotalsReport">
             <summary>
             Gets totals for various entities

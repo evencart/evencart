@@ -95,6 +95,8 @@ namespace EvenCart.Infrastructure.Routing
         public const string ApproveRefund = "ApproveRefund";
         public const string ApproveCapture = "ApproveCapture";
         public const string ApproveVoid = "ApproveVoid";
+        public const string OrderDownloadsList = "OrderDownloadsList";
+        public const string SaveOrderDownload = "SaveOrderDownload";
 
         public const string GetShipment = "GetShipment";
         public const string ShipmentsList = "ShipmentsList";
@@ -279,5 +281,13 @@ namespace EvenCart.Infrastructure.Routing
         public const string ClearLogs = "ClearLogs";
 
         public const string GetAbout = "GetAbout";
+
+        public const string DownloadList = "DownloadList";
+        public const string UploadDownloadFile = "UploadDownloadFile";
+        public const string GetDownload = "GetDownload";
+        public const string SaveDownload = "SaveDownload";
+        public const string DeleteDownload = "DeleteDownload";
+        public const string AdminDownloadFile = "AdminDownloadFile";
+        public const string UpdateDownloadDisplayOrder = "UpdateDownloadDisplayOrder";
     }
 }

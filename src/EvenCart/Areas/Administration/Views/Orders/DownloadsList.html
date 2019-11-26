@@ -1,0 +1,86 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Downloads" active_menu="OrderDownloadsList" parent_active_menu="OrdersList" menu_group="OrderEdit" %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Downloads" | t}}
+            </div>
+            <div class="panel-body  {% unless noDownloads==true %}no-padding{% endunless %}">
+                {% if noDownloads==true %}
+                <div class="alert alert-danger">
+                    {{"No downloads are available for the order" | t}}
+                </div>
+                {% else %}
+                <table id="grid-selection" class="table table-condensed table-hover no-margin">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="title">{{"Title" | t}}</th>
+                        <th data-column-id="downloadCount">{{"Download Count" | t}}</th>
+                        <th data-column-id="downloadUrl" data-formatter="downloadButton">{{"Download" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{ downloads | scriptJson : 'initData' }}
+                <script type="text/javascript">
+                    var editDownload = function(id) {
+                        var url = '{% route GetDownload DownloadId="request_id" %}';
+                        url = url.replace("request_id", id);
+                        navigate(url);
+                    }
+
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                downloads: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 0,
+                            url: '{% route api_OrderDownloadsList %}',
+                            responseObject: "downloads",
+                            selection: false,
+                            formatters: {
+                                "downloadButton": function(column, row) {
+                                    var btn = "<a class='btn btn-sm btn-primary' href='" +
+                                        row.downloadUrl +
+                                        "' target='_blank'><span class='rbicon-download'></span></a>";
+                                    return btn;
+                                },
+                                "commands": function (column, row) {
+                                    if (row.active) {
+                                        return "<button class='btn btn-sm btn-danger' onclick='changeDownloadStatus(" + row.itemDownloadId + ", " + row.downloadId + ", false)'>{{'Deactivate' | t}}</button>";
+                                    }
+                                    return "<button class='btn btn-sm btn-primary' onclick='changeDownloadStatus(" + row.itemDownloadId + "," + row.downloadId + ", true)'>{{'Activate' | t}}</button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var changeDownloadStatus = function (itemDownloadId, downloadId, active) {
+        post({
+            url: '{% route api_SaveOrderDownload orderId="{{orderId}}" %}',
+            data: {
+                itemDownloadId: itemDownloadId,
+                downloadId: downloadId,
+                active: active
+            },
+            done: function() {
+                reloadGrid("grid-selection");
+            }
+        });
+    }
+</script>

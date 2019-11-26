@@ -9,6 +9,7 @@
 
 {% secondary_navigation url="{% route OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route OrderDownloadsList orderId="{{orderId}}" %}" title=@t"Downloads" systemName="OrderDownloadsList" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
 {% secondary_navigation url="{% route PaymentTransactionsList orderId="{{orderId}}" %}" title=@t"Payment Transactions" systemName="PaymentTransactionsList" groupId="OrderEdit" %}
 
@@ -24,6 +25,7 @@
 
 {% secondary_navigation url="{% route ProductsList %}" title=@t"Back to products" iconClass="rbicon-chevron-left" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route DownloadList productId="{{productId}}" %}" title=@t"Downloads" systemName="DownloadsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route InventoryList productId="{{productId}}" %}" title=@t"Inventory" systemName="InventoryList" groupId="ProductEdit" %}

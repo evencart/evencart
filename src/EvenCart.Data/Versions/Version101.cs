@@ -1,6 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.Subscriptions;
+using EvenCart.Data.Entity.Purchases;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -8,6 +8,7 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
+            Db.AddColumn<CartItem, bool>(nameof(CartItem.IsDownloadable), false, transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

@@ -50,8 +50,8 @@ namespace EvenCart.Controllers
         private readonly IUserService _userService;
         private readonly IProductService _productService;
         private readonly IOrderAccountant _orderAccountant;
-
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant)
+        private readonly IDownloadService _downloadService;
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -66,6 +66,7 @@ namespace EvenCart.Controllers
             _userService = userService;
             _productService = productService;
             _orderAccountant = orderAccountant;
+            _downloadService = downloadService;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -538,8 +539,10 @@ namespace EvenCart.Controllers
                     Tax = cartItem.Tax,
                     TaxPercent = cartItem.TaxPercent,
                     TaxName = cartItem.TaxName,
-                    ProductVariantId = cartItem.ProductVariantId
+                    ProductVariantId = cartItem.ProductVariantId,
+                    IsDownloadable = cartItem.IsDownloadable
                 };
+              
                 order.OrderItems.Add(orderItem);
             }
             //insert complete order
@@ -554,6 +557,10 @@ namespace EvenCart.Controllers
             {
                 return response.Result;
             }
+
+            //initialize downloads
+            _downloadService.InitializeDownloads(order);
+
             //clear the user's cart
             _cartService.ClearCart(currentUser.Id);
 

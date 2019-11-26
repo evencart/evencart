@@ -107,6 +107,7 @@ namespace EvenCart.Factories.Orders
                 : orderItem.Price * orderItem.Quantity + orderItem.Tax;
             orderItemModel.SeName = orderItem.Product?.SeoMeta?.Slug;
             orderItemModel.TaxName = orderItem.TaxName;
+            orderItemModel.IsDownloadable = orderItem.IsDownloadable;
             return orderItemModel;
         }
     }

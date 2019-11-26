@@ -129,6 +129,7 @@
     <None Remove="Areas\Administration\Views\Navigation\MenuItemEditor.html" />
     <None Remove="Areas\Administration\Views\Navigation\MenuList.html" />
     <None Remove="Areas\Administration\Views\Navigation\PrimaryNavigation.html" />
+    <None Remove="Areas\Administration\Views\Orders\DownloadsList.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.CustomerInfoPanel.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.html" />
     <None Remove="Areas\Administration\Views\Orders\OrderEditor.OrderInfoPanel.html" />
@@ -151,6 +152,8 @@
     <None Remove="Areas\Administration\Views\Plugins\MarketPluginsList.html" />
     <None Remove="Areas\Administration\Views\Plugins\PluginsList.html" />
     <None Remove="Areas\Administration\Views\Plugins\WidgetsList.html" />
+    <None Remove="Areas\Administration\Views\Products\DownloadEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\DownloadList.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.Products.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.Variants.html" />
@@ -675,6 +678,9 @@
     <Content Include="Areas\Administration\Views\Orders\PaymentTransactionsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Orders\DownloadsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Orders\ReturnRequestsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -702,7 +708,13 @@
     <Content Include="Areas\Administration\Views\Products\InventoryList.Variants.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Products\DownloadEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Products\ProductAttributeEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\DownloadList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductAttributesList.html">

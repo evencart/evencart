@@ -66,5 +66,13 @@ namespace EvenCart.Data.Extensions
                 ? orderItem.ProductVariant.IsAvailableInStock(quantity)
                 : orderItem.Product.IsAvailableInStock(quantity);
         }
+
+        public static string GetVariantName(this ProductVariant variant)
+        {
+            var attributes =
+                variant.ProductVariantAttributes.Select(x =>
+                    $"{x.ProductAttribute.Label}:{x.ProductAttributeValue.Label}");
+            return string.Join(" ", attributes);
+        }
     }
 }

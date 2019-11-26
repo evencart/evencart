@@ -177,7 +177,8 @@ namespace EvenCart.Controllers
                     AttributeJson = attributeJson,
                     ComparePrice = product.ComparePrice,
                     Price = product.Price,
-                    ProductVariantId = variant?.Id ?? 0
+                    ProductVariantId = variant?.Id ?? 0,
+                    IsDownloadable = product.IsDownloadable
                 };
                 if (cartItemModel.IsWishlist)
                 {

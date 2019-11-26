@@ -71,6 +71,8 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<ProductSpecification>(transaction);
             Db.CreateTable<ProductSpecificationValue>(transaction);
             Db.CreateTable<ProductRelation>(transaction);
+            Db.CreateTable<Download>(transaction);
+            Db.CreateTable<ItemDownload>(transaction);
 
             //cart
             Db.CreateTable<Cart>(transaction);
@@ -109,6 +111,7 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<AvailableAttributeValue, ProductSpecificationValue>("Id", "AvailableAttributeValueId"), transaction);
             Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, false);
+            Db.CreateConstraint(Relation.Create<Product, Download>("Id", "ProductId"), transaction, true);
 
             Db.CreateTable<DiscountCoupon>(transaction);
             Db.CreateTable<RestrictionValue>(transaction);

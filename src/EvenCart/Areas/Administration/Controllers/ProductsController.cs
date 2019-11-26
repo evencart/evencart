@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using EvenCart.Areas.Administration.Extensions;
+using EvenCart.Areas.Administration.Factories.Products;
 using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Areas.Administration.Models.Warehouse;
+using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Shop;
@@ -52,7 +55,10 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly ISeoMetaService _seoMetaService;
         private readonly IWarehouseService _warehouseService;
         private readonly IWarehouseInventoryService _warehouseInventoryService;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService)
+        private readonly IDownloadService _downloadService;
+        private readonly IDownloadModelFactory _downloadModelFactory;
+        private readonly ILocalFileProvider _localFileProvider;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -74,6 +80,9 @@ namespace EvenCart.Areas.Administration.Controllers
             _seoMetaService = seoMetaService;
             _warehouseService = warehouseService;
             _warehouseInventoryService = warehouseInventoryService;
+            _downloadService = downloadService;
+            _downloadModelFactory = downloadModelFactory;
+            _localFileProvider = localFileProvider;
         }
 
 
@@ -1012,6 +1021,182 @@ namespace EvenCart.Areas.Administration.Controllers
                         si.TotalQuantity = inventory.TotalQuantity;
                         _warehouseInventoryService.InsertOrUpdate(si, transaction);
                     }
+                }
+            });
+            return R.Success.Result;
+        }
+        #endregion
+
+        #region Downloads
+        /// <summary>
+        /// Get the ware house list
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <response code="200">A list of <see cref="DownloadModel">download</see> objects as 'downloads'</response>
+        [DualGet("{productId}/downloads", Name = AdminRouteNames.DownloadList)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult DownloadList(int productId)
+        {
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+            var downloads = _downloadService.GetWithoutBytes(x => x.ProductId == productId).ToList();
+            var models = downloads.Select(_downloadModelFactory.Create).ToList();
+            var r = R.Success.With("downloads", models)
+                .With("productId", productId)
+                .WithGridResponse(models.Count, 1, models.Count);
+            return r.Result;
+        }
+
+        /// <summary>
+        /// Gets a download with specific id
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <param name="downloadId">The id of the download</param>
+        /// <response code="200">A <see cref="DownloadModel">download</see> object as 'download'</response>
+        [DualGet("{productId}/download/{downloadId}", Name = AdminRouteNames.GetDownload)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult DownloadEditor(int productId, int downloadId)
+        {
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+
+            var download = downloadId > 0 ? _downloadService.Get(downloadId) : new Download()
+            {
+                ProductId = productId
+            };
+            var model = _downloadModelFactory.Create(download);
+            var availableActivationTypes = SelectListHelper.GetSelectItemList<DownloadActivationType>();
+
+            var r = R.Success.With("productId", productId).With("download", model).With("availableActivationTypes", availableActivationTypes);
+            //do we have variants?
+            if (product.HasVariants)
+            {
+                var variants = _productVariantService.GetByProductId(productId);
+                var selectItemList =
+                    SelectListHelper.GetSelectItemListWithAction(variants, x => x.Id, x => x.GetVariantName());
+                r.With("availableVariants", selectItemList);
+            }
+
+            return r.Result;
+        }
+
+        [DualPost("{productId}/downloads/upload", Name = AdminRouteNames.UploadDownloadFile, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        [ValidateModelState(ModelType = typeof(DownloadUploadModel))]
+        public IActionResult UploadDownloadFile(DownloadUploadModel uploadModel)
+        {
+            Download download = null;
+            if (uploadModel.Id > 0)
+            {
+                download = _downloadService.Get(uploadModel.Id);
+                if (download == null)
+                    return NotFound();
+            }
+            else
+            {
+                var productId = uploadModel.ProductId;
+                var product = productId > 0 ? _productService.Get(productId) : null;
+                if (product == null)
+                    return NotFound();
+                download = new Download()
+                {
+                    Guid = Guid.NewGuid().ToString(),
+                    ProductId = uploadModel.ProductId
+                };
+            }
+            var fileBytes = uploadModel.MediaFile.GetBytesAsync().Result;
+            download.FileBytes = fileBytes;
+            download.FileType = uploadModel.MediaFile.ContentType;
+            download.FileExtension = _localFileProvider.GetExtension(uploadModel.MediaFile.FileName);
+            _downloadService.InsertOrUpdate(download);
+            return R.With("downloadId", download.Id).Result;
+        }
+        /// <summary>
+        /// Downloads a file to the browser
+        /// </summary>
+        [HttpGet("downloads/{id}", Name = AdminRouteNames.AdminDownloadFile)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult DownloadFile(int id)
+        {
+            var download = _downloadService.Get(id);
+            if (download == null)
+                return NotFound();
+            return File(download.FileBytes, download.FileType, $"{download.Title}{download.FileExtension}");
+        }
+
+        /// <summary>
+        /// Saves a download to database
+        /// </summary>
+        /// <param name="downloadModel"></param>
+        /// <response code="200">A success response object</response>
+        [DualPost("{productId}/downloads", Name = AdminRouteNames.SaveDownload, OnlyApi = true)]
+        [ValidateModelState(ModelType = typeof(DownloadModel))]
+        public IActionResult SaveDownload(DownloadModel downloadModel)
+        {
+            var productId = downloadModel.ProductId;
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+
+            var download = downloadModel.Id > 0 ? _downloadService.Get(downloadModel.Id) : new Download()
+            {
+                Guid = Guid.NewGuid().ToString(),
+                ProductId = downloadModel.ProductId,
+                ProductVariantId = downloadModel.ProductVariantId
+            };
+            if (download == null)
+                return NotFound();
+            download.Title = downloadModel.Title;
+            download.Description = downloadModel.Description;
+            download.DownloadActivationType = downloadModel.DownloadActivationType;
+            download.IsFileLocationUrl = downloadModel.IsFileLocationUrl;
+            if (download.IsFileLocationUrl)
+                download.FileLocation = downloadModel.FileLocation;
+            download.MaximumDownloads = downloadModel.MaximumDownloads;
+            download.Published = downloadModel.Published;
+            download.RequireLogin = downloadModel.RequireLogin;
+            download.RequirePurchase = downloadModel.RequirePurchase;
+            
+            _downloadService.InsertOrUpdate(download);
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Deletes specific download
+        /// </summary>
+        /// <param name="downloadId">The id of the download</param>
+        /// <response code="200">A success response object</response>
+        [DualPost("delete", Name = AdminRouteNames.DeleteDownload, OnlyApi = true)]
+        public IActionResult DeleteDownload(int downloadId)
+        {
+            var download = _downloadService.Get(downloadId);
+            if (download == null)
+                return NotFound();
+
+            _downloadService.Delete(download);
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Updates display order for downloads
+        /// </summary>
+        /// <param name="downloadModels"></param>
+        /// <response code="200">A success response object</response>
+        [DualPost("display-order", Name = AdminRouteNames.UpdateDownloadDisplayOrder, OnlyApi = true)]
+        public IActionResult UpdateDownloadDisplayOrder(DownloadModel[] downloadModels)
+        {
+            if (downloadModels == null)
+                return BadRequest();
+            //get category models with no-zero ids
+            var validModels = downloadModels.Where(x => x.Id != 0);
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var model in validModels)
+                {
+                    _downloadService.Update(new { DisplayOrder = model.DisplayOrder }, m => m.Id == model.Id,
+                        transaction);
                 }
             });
             return R.Success.Result;
