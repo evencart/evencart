@@ -93,6 +93,7 @@ function navigate(url, absolute, skipHistory) {
         if (!confirm("Changes you made may not be saved. Are you sure to reload?"))
             return;
     }
+    window.router._routes.sort(function (a, b) { return (a.route.match(/:/g) || []).length - (b.route.match(/:/g) || []).length });
     //if we have a route, we'll navigate, else we reload
     if (router.helpers.match(url, router._routes)) {
         router.navigate(url, absolute, skipHistory);
