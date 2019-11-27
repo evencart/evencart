@@ -43,7 +43,7 @@
                             },
                             method: "GET",
                             navigation: 0,
-                            url: '{% route api_OrderDownloadsList %}',
+                            url: '{% route api_OrderDownloadsList orderId="{{orderId}}" %}',
                             responseObject: "downloads",
                             selection: false,
                             formatters: {

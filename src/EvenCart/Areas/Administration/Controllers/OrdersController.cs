@@ -832,10 +832,11 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             var itemDownload = downloadModel.ItemDownloadId > 0
                 ? _itemDownloadService.FirstOrDefault(x =>
-                    x.DownloadId == downloadModel.DownloadId && x.Id == downloadModel.ItemDownloadId)
+                    x.DownloadId == downloadModel.DownloadId && x.Id == downloadModel.ItemDownloadId && x.UserId == order.UserId)
                 : new ItemDownload()
                 {
-                    DownloadId = downloadModel.DownloadId
+                    DownloadId = downloadModel.DownloadId,
+                    UserId = order.UserId
                 };
 
             if (itemDownload == null)

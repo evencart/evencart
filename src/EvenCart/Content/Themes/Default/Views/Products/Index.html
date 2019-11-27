@@ -61,6 +61,19 @@
                         </p>
                     </div>
                     {% endif %}
+                    {% if product.isDownloadable %}
+                    {% if downloads.size > 0 %}
+
+                    <div class="alert alert-info">
+                        <strong>{{"Downloads" | t}}</strong>
+                        {% for download in downloads %}
+                        <div>
+                            <a href="{{download.downloadUrl}}"><i class="fa fa-download margin-r-5"></i>{{download.title}}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endif %}
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->

@@ -68,7 +68,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_DownloadList %}',
+            url: '{% route api_DownloadList productId="{{productId}}" %}',
             responseObject: "downloads",
             selection: false,
             navigation: false,

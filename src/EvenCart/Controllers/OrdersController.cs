@@ -10,12 +10,15 @@ using EvenCart.Data.Entity.Settings;
 using EvenCart.Events;
 using EvenCart.Services.Purchases;
 using EvenCart.Factories.Orders;
+using EvenCart.Factories.Products;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Orders;
+using EvenCart.Models.Products;
 using EvenCart.Services.Common;
 using EvenCart.Services.Pdf;
+using EvenCart.Services.Products;
 using EvenCart.Services.Shipping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +45,10 @@ namespace EvenCart.Controllers
         private readonly IReturnRequestModelFactory _requestModelFactory;
         private readonly IOrderAccountant _orderAccountant;
         private readonly IPdfService _pdfService;
-        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory, IOrderAccountant orderAccountant, IPdfService pdfService)
+        private readonly IDownloadService _downloadService;
+        private readonly IOrderItemDownloadService _orderItemDownloadService;
+        private readonly IProductModelFactory _productModelFactory;
+        public OrdersController(IOrderService orderService, IOrderModelFactory orderModelFactory, ICustomLabelService customLabelService, OrderSettings orderSettings, IShipmentStatusHistoryService shipmentStatusHistoryService, IReturnRequestService returnRequestService, IReturnRequestModelFactory requestModelFactory, IOrderAccountant orderAccountant, IPdfService pdfService, IDownloadService downloadService, IOrderItemDownloadService orderItemDownloadService, IProductModelFactory productModelFactory)
         {
             _orderService = orderService;
             _orderModelFactory = orderModelFactory;
@@ -53,6 +59,9 @@ namespace EvenCart.Controllers
             _requestModelFactory = requestModelFactory;
             _orderAccountant = orderAccountant;
             _pdfService = pdfService;
+            _downloadService = downloadService;
+            _orderItemDownloadService = orderItemDownloadService;
+            _productModelFactory = productModelFactory;
         }
 
         /// <summary>
@@ -80,6 +89,31 @@ namespace EvenCart.Controllers
             var returnRequests = _returnRequestService.GetOrderReturnRequests(order.Id);
             var returnRequestModels = returnRequests.Select(_requestModelFactory.Create).ToList();
 
+            //downloads
+            if (order.OrderItems?.Any(x => x.IsDownloadable) ?? false)
+            {
+                var downloadableOrderItems = order.OrderItems.Where(x => x.IsDownloadable).ToList();
+                var productIds = downloadableOrderItems.Select(x => x.ProductId).ToList();
+                var downloads = _downloadService.GetWithoutBytes(x => productIds.Contains(x.ProductId) && x.Published).ToList();
+                if (downloads.Any())
+                {
+                    var downloadIds = downloads.Select(x => x.Id).ToList();
+                    var itemDownloads = _orderItemDownloadService.Get(x => downloadIds.Contains(x.DownloadId));
+                    var downloadModels = new List<DownloadModel>();
+                    foreach (var itemDownload in itemDownloads)
+                    {
+                        var download = downloads.FirstOrDefault(x => x.Id == itemDownload.DownloadId);
+                        if (download == null)
+                            continue;//this should not be hit unless somebody has messed up with database and deleted the data manually
+                        var downloadModel = _productModelFactory.Create(download);
+                        downloadModel.Active = itemDownload.Active;
+                        downloadModels.Add(downloadModel);
+                    }
+
+                    r.With("canDownload", downloadModels.Any());
+                    r.With("downloads", downloadModels.OrderBy(x => x.DisplayOrder).ToList());
+                }
+            }
             //set breadcrumb nodes
             SetBreadcrumbToRoute("Account", RouteNames.AccountProfile);
             SetBreadcrumbToRoute("Orders", RouteNames.AccountOrders);
@@ -305,7 +339,9 @@ namespace EvenCart.Controllers
 
         private bool CanCancelOrder(Order order)
         {
-            return order.UserId == CurrentUser.Id && (_orderSettings.CancellationAllowedFor.Contains(order.OrderStatus.ToString()));
+            return order.UserId == CurrentUser.Id &&
+                   (_orderSettings.CancellationAllowedFor.Contains(order.OrderStatus.ToString())) &&
+                   order.OrderItems.Any(x => x.Product.IsDownloadable && !x.Product.IsShippable);
         }
 
         private bool CanReturnOrder(Order order, out IList<OrderItem> orderItems, out DateTime lastReturnDate)

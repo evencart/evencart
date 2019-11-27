@@ -29,7 +29,7 @@ namespace EvenCart.Areas.Administration.Factories.Products
             {
                 Title = download.Title,
                 Description = download.Description,
-                Active = itemDownload?.Active ?? true,
+                Active = itemDownload?.Active ?? download.DownloadActivationType != DownloadActivationType.Manual,
                 DownloadCount = itemDownload?.DownloadCount ?? 0,
                 DownloadUrl = ApplicationEngine.RouteUrl(AdminRouteNames.AdminDownloadFile, new { id = download.Id }),
                 ItemDownloadId = itemDownload?.Id ?? 0,

@@ -127,7 +127,7 @@ namespace EvenCart.Controllers
             //downloads
             if (product.IsDownloadable)
             {
-                var downloads = _downloadService.GetWithoutBytes(x => x.ProductId == product.Id).ToList();
+                var downloads = _downloadService.GetWithoutBytes(x => x.ProductId == product.Id && !x.RequirePurchase).ToList();
                 if (CurrentUser.IsVisitor())
                 {
                     downloads = downloads.Where(x => !x.RequireLogin).ToList();

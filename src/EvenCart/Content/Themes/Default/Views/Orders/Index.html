@@ -189,6 +189,32 @@
                 </div>
                 {% endfor %}
             </div>
+            {% if canDownload %}
+            <h4>{{"Downloads" | t}}</h4>
+            <table class="table table-bordered">
+                {% for download in downloads %}
+                <tr>
+                    <td>
+                        {{download.title}}
+                        <div>
+                            <small>
+                                {{download.description}}
+                            </small>
+                        </div>
+                    </td>
+                    <td>
+                        {% if download.active %}
+                        <a href="{{download.downloadUrl}}">
+                            <i class="fa fa-download"></i> 
+                            {{"Download" | t}}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            {% endif %}
             <div class="text-center">
                 {% if order.orderStatus == "New" %}
                 {% if order.paymentStatus == "Pending" %}

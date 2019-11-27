@@ -1511,6 +1511,11 @@
             The tax name applicable of this product
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderItemModel.IsDownloadable">
+            <summary>
+            Specifies if the product is downloadable
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.OrderNumber">
             <summary>
             The displayable order number

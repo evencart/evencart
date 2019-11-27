@@ -12,6 +12,10 @@ namespace EvenCart.Models.Products
 
         public string FileType { get; set; }
 
+        public bool Active { get; set; }
+
         public bool Published { get; set; }
+
+        public int DisplayOrder { get; set; }
     }
 }

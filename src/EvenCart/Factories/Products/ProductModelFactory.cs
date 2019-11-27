@@ -155,7 +155,9 @@ namespace EvenCart.Factories.Products
                 Description = download.Description,
                 Title = download.Title,
                 DownloadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadFile, new {guid = download.Guid}),
-                FileType = download.FileType
+                FileType = download.FileType,
+                Published = download.Published,
+                DisplayOrder = download.DisplayOrder
             };
             return model;
         }
