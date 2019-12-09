@@ -49,7 +49,7 @@ namespace EvenCart.Data.Database
 
         public static bool IsDatabaseInstalled(IDatabaseSettings dbSettings)
         {
-            return dbSettings.HasSettings() && !string.IsNullOrEmpty(dbSettings.ConnectionString) && !string.IsNullOrEmpty(dbSettings.ProviderName);
+            return dbSettings != null && dbSettings.HasSettings() && !string.IsNullOrEmpty(dbSettings.ConnectionString) && !string.IsNullOrEmpty(dbSettings.ProviderName);
         }
 
         private static IDatabaseProvider GetProvider(string providerAbstractName)

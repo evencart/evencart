@@ -14,7 +14,7 @@ namespace EvenCart.Core.Infrastructure
 
         public static T Resolve<T>()
         {
-            return ServiceProvider.GetRequiredService<T>();
+            return ServiceProvider == null ? default(T) : ServiceProvider.GetRequiredService<T>();
         }
 
         public static T Resolve<T>(object serviceKey)
