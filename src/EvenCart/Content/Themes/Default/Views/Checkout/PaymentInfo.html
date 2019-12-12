@@ -44,7 +44,12 @@
         initAjaxForm("form-payment-info",
             {
                 onSuccess: function (response) {
-                    var confirmInfoUrl = "{% route CheckoutConfirm %}";
+                    var confirmInfoUrl = "";
+                    //{% unless orderGuid %}
+                    confirmInfoUrl = "{% route CheckoutConfirm %}";
+                    //{% else %}
+                    confirmInfoUrl = '{% route CheckoutComplete orderGuid="{{orderGuid}}" %}';
+                    //{% endunless %}
                     window.location.href = confirmInfoUrl;
                 },
                 onError: function() {
