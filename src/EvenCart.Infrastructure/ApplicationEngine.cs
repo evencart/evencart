@@ -218,13 +218,15 @@ namespace EvenCart.Infrastructure
             get
             {
                 var currency = CurrentHttpContext.GetCurrentCurrency();
-                if (currency != null)
+                if (currency != null && currency.Published)
                     return currency;
                 var currentCurrencyId = CurrentUser?.ActiveCurrencyId ?? DependencyResolver.Resolve<LocalizationSettings>().PrimaryCurrencyId;
                 var currencyService = DependencyResolver.Resolve<ICurrencyService>();
                 if (currentCurrencyId > 0)
                     currency = currencyService.Get(currentCurrencyId);
-                currency = currency ?? currencyService.FirstOrDefault(x => x.Published);
+
+                if (currency == null || !currency.Published)
+                    currency = currencyService.FirstOrDefault(x => x.Published);
                 CurrentHttpContext.SetCurrentCurrency(currency);
                 return currency;
             }

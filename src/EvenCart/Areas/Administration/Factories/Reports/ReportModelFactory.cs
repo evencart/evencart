@@ -48,26 +48,30 @@ namespace EvenCart.Areas.Administration.Factories.Reports
         {
             totalResults = 0;
             if (!orders.Any())
-                return null;
+                return new List<OrderReportModel>();
             orders = orders.OrderBy(x => x.CreatedOn).ToList();
             IEnumerable<IGrouping<string, Order>> groupedOrders;
             List<string> allValidGroupNames = null;
             var minDate = orders.Min(x => x.CreatedOn);
             var maxDate = orders.Max(x => x.CreatedOn);
             var allDates = DateTimeHelper.DatesBetween(minDate, maxDate);
+            var currencies = orders.Select(x => x.CurrencyCode.ToUpperInvariant()).Distinct().ToList();
             switch (groupBy)
             {
                 case GroupUnit.Days:
-                    groupedOrders = orders.GroupBy(x => x.CreatedOn.ToFormattedString());
-                    allValidGroupNames = allDates.Select(x => x.ToFormattedString()).ToList();
+                    groupedOrders = orders.GroupBy(x => x.CreatedOn.ToFormattedString() + " - " + x.CurrencyCode.ToUpperInvariant());
+                    allValidGroupNames =
+                        allDates.SelectMany(x => currencies.Select(y => x.ToFormattedString() + " - " + y)).ToList();
                     break;
                 case GroupUnit.Months:
-                    groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.GetMonthName()} {x.CreatedOn.Year}");
-                    allValidGroupNames = allDates.Select(x => $"{x.GetMonthName()} {x.Year}").Distinct().ToList();
+                    groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.GetMonthName()} {x.CreatedOn.Year} - {x.CurrencyCode.ToUpperInvariant()}");
+                    allValidGroupNames = allDates
+                        .SelectMany(x => currencies.Select(y => $"{x.GetMonthName()} {x.Year} - {y}")).Distinct().ToList();
                     break;
                 case GroupUnit.Years:
-                    groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.Year}");
-                    allValidGroupNames = allDates.Select(x => $"{x.Year}").Distinct().ToList();
+                    groupedOrders = orders.GroupBy(x => $"{x.CreatedOn.Year} - {x.CurrencyCode.ToUpperInvariant()}");
+                    allValidGroupNames = allDates.SelectMany(x => currencies.Select(y => $"{x.Year} - {y}")).Distinct()
+                        .ToList();
                     break;
                 case GroupUnit.Weeks:
                 default:
@@ -76,14 +80,17 @@ namespace EvenCart.Areas.Administration.Factories.Reports
                     allValidGroupNames = new List<string>();
                     while (weekStartDate < maxDate)
                     {
-                        allValidGroupNames.Add($"{weekStartDate.ToFormattedString()} - {weekStartDate.AddDays(6).ToFormattedString()}");
+                        var weekStr =
+                            $"{weekStartDate.ToFormattedString()} - {weekStartDate.AddDays(6).ToFormattedString()}";
+                        foreach (var currency in currencies)
+                            allValidGroupNames.Add($"{weekStr} - {currency}");
                         //next week
                         weekStartDate = weekStartDate.AddDays(7);
                     }
                     groupedOrders = orders.GroupBy(x =>
                     {
                         x.CreatedOn.GetWeekRangeDates(out var startDate, out var endDate);
-                        return $"{startDate.ToFormattedString()} - {endDate.ToFormattedString()}";
+                        return $"{startDate.ToFormattedString()} - {endDate.ToFormattedString()} - {x.CurrencyCode.ToUpperInvariant()}";
                     });
                     break;
             }
@@ -97,7 +104,8 @@ namespace EvenCart.Areas.Administration.Factories.Reports
                     GroupName = groupName,
                     TotalOrders = 0,
                     TotalProducts = 0,
-                    TotalAmount = 0
+                    TotalAmount = 0,
+                    CurrencyCode = groupName.Substring(groupName.Length - 4).Trim()
                 };
                 var group = groupedOrdersAsList.FirstOrDefault(x => x.Key == groupName);
                 if (group != null)
@@ -116,17 +124,18 @@ namespace EvenCart.Areas.Administration.Factories.Reports
 
         public IList<UserOrderReportModel> CreateUserOrderReportModels(out int totalResults, IList<Order> orders, int page, int count)
         {
-            var groupedOrders = orders.GroupBy(x => x.User);
+            var groupedOrders = orders.GroupBy(x => new { x.User, CurrencyCode = x.CurrencyCode.ToUpperInvariant() });
             var orderReports = new List<UserOrderReportModel>();
             foreach (var go in groupedOrders)
             {
                 var groupOrders = go.ToList();
-                var user = go.Key;
+                var user = go.Key.User;
                 orderReports.Add(new UserOrderReportModel()
                 {
                     Id = user.Id,
                     Name = user.Name,
                     Email = user.Email,
+                    CurrencyCode = go.Key.CurrencyCode,
                     TotalOrders = groupOrders.Count,
                     TotalProducts = groupOrders.SelectMany(x => x.OrderItems).Count(),
                     TotalAmount = groupOrders.Sum(x => x.OrderTotal),

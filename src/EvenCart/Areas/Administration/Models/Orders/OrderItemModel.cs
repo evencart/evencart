@@ -1,7 +1,9 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
+    [FormatAsCurrencies(nameof(Price), nameof(TotalPrice), nameof(LineTotal), nameof(Tax))]
     public class OrderItemModel : FoundationEntityModel
     {
         public int ProductId { get; set; }

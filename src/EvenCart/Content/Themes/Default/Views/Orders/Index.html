@@ -77,7 +77,7 @@
                                     <th>{{"Subtotal" | t}}</th>
                                     <td class="text-right">
                                         <span class="amount">
-                                            {{order.subTotal | withCurrency}}
+                                            {{order.subTotal | withCurrency : order.currencyCode}}
                                         </span>
                                     </td>
                                 </tr>
@@ -86,7 +86,7 @@
                                     <th>{{"Discount" | t}}</th>
                                     <td class="text-right">
                                         <span class="amount">
-                                            -{{order.discount | withCurrency}}
+                                            -{{order.discount | withCurrency : order.currencyCode}}
                                         </span>
                                     </td>
                                 </tr>
@@ -96,7 +96,7 @@
                                     <th>{{"Shipping" | t}}</th>
                                     <td class="text-right">
                                         <span class="amount">
-                                            {{order.shippingMethodFee | withCurrency}}
+                                            {{order.shippingMethodFee | withCurrency : order.currencyCode}}
                                         </span>
                                     </td>
                                 </tr>
@@ -106,7 +106,7 @@
                                     <th>{{"Payment Fee" | t}}</th>
                                     <td class="text-right">
                                         <span class="amount">
-                                            {{order.paymentMethodFee | withCurrency}}
+                                            {{order.paymentMethodFee | withCurrency : order.currencyCode}}
                                         </span>
                                     </td>
                                 </tr>
@@ -116,7 +116,7 @@
                                     <th>{{"Tax" | t}}</th>
                                     <td class="text-right">
                                         <span class="amount">
-                                            {{order.tax | withCurrency}}
+                                            {{order.tax | withCurrency : order.currencyCode}}
                                         </span>
                                     </td>
                                 </tr>
@@ -125,7 +125,7 @@
                                 <tr class="order-total">
                                     <th>{{"Total" | t }}</th>
                                     <td class="text-right">
-                                        <strong><span class="amount">{{order.orderTotal | withCurrency}}</span></strong>
+                                        <strong><span class="amount">{{order.orderTotal | withCurrency : order.currencyCode}}</span></strong>
                                     </td>
                                 </tr>
                             </tbody>
@@ -159,7 +159,7 @@
                             </div>
                             <div class="col-md-3 ">
                                 <div>
-                                    {{shipmentItem.price | withCurrency }} x {{shipmentItem.shippedQuantity}}
+                                    {{shipmentItem.price | withCurrency : order.currencyCode }} x {{shipmentItem.shippedQuantity}}
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="col-md-3 ">
                         <div>
-                            {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+                            {{orderItem.price | withCurrency : order.currencyCode }} x {{orderItem.quantity}}
                         </div>
                     </div>
                 </div>

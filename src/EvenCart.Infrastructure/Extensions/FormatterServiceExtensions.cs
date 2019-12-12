@@ -1,4 +1,5 @@
 ﻿using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 
 namespace EvenCart.Infrastructure.Extensions
@@ -17,6 +18,14 @@ namespace EvenCart.Infrastructure.Extensions
         {
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
             return formatterService.FormatCurrency(amount);
+        }
+
+        public static string ToCurrency(this decimal amount, string code)
+        {
+            if (code.IsNullEmptyOrWhiteSpace())
+                return amount.ToCurrency();
+            var formatterService = DependencyResolver.Resolve<IFormatterService>();
+            return formatterService.FormatCurrencyFromIsoCode(amount, code);
         }
 
         public static string ToCurrency(this decimal? amount)

@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
+using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure.Extensions;
+using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -81,6 +87,10 @@ namespace EvenCart.Infrastructure.Mvc
 
         public static IActionResult GetResult(CustomResponse r)
         {
+            var expandoDict = (IDictionary<string, object>)r._expandoObject;
+            var allValues = expandoDict.Values.Where(x => x != null && !x.GetType().IsPrimitive);
+            foreach (var value in allValues)
+                CheckForFormattedValues(value);
             if (RequestHelper.IsApiCall(out bool withStoreMeta, out string[] metaTypes))
             {
                 if (withStoreMeta)
@@ -95,7 +105,7 @@ namespace EvenCart.Infrastructure.Mvc
                 //ignore the view and return the model as json
                 return r._controller.Json(r._expandoObject);
             }
-            if(r._viewName != null)
+            if (r._viewName != null)
                 return r._controller?.View(r._viewName, r._expandoObject);
             return r._controller?.View(r._expandoObject);
         }
@@ -107,5 +117,75 @@ namespace EvenCart.Infrastructure.Mvc
             return r._viewComponent?.View(r._expandoObject);
         }
 
+        #region Helpers
+
+        /// <summary>
+        /// The method checks for <see cref="FormatAsCurrenciesAttribute"/> in the object and adds additional properties to the responses to represent formatted data
+        /// </summary>
+        private static void CheckForFormattedValues(object value, IList<PropertyInfo> attributeProperties = null, string currency = null, PropertyInfo currencyCodeProperty = null)
+        {
+            if (value == null)
+                return;
+            var typeOfFm = value.GetType();
+            if (value is IEnumerable<FoundationModel> valueAsCollection)
+            {
+                var genericTypeArgument = typeOfFm.GenericTypeArguments[0];
+                var properties = GetFormattableProperties(genericTypeArgument, out currencyCodeProperty);
+                foreach (var collectionValue in valueAsCollection)
+                    CheckForFormattedValues(collectionValue, properties, currency, currencyCodeProperty);
+            }
+            else if (value is FoundationModel valueAsFm)
+            {
+                var properties = attributeProperties ?? GetFormattableProperties(typeOfFm, out currencyCodeProperty);
+                currency = currencyCodeProperty?.GetValue(value)?.ToString() ?? currency;
+                foreach (var fp in properties)
+                {
+                    var fpValue = fp.GetValue(value, null);
+                    if (fpValue == null)
+                        continue;
+                    if (typeof(DateTime).IsAssignableFrom(fp.PropertyType) ||
+                        typeof(DateTime?).IsAssignableFrom(fp.PropertyType))
+                    {
+                        valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), ((DateTime)fpValue).ToFormattedString(false));
+                    }
+                    else
+                    {
+                        valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), ((decimal)fpValue).ToCurrency(currency));
+                    }
+                }
+
+                //any child properties
+                var list = typeOfFm.GetProperties().Where(x =>
+                    typeof(IEnumerable<FoundationModel>).IsAssignableFrom(x.PropertyType) ||
+                    typeof(FoundationModel).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var innerProperty in list)
+                {
+                    CheckForFormattedValues(innerProperty.GetValue(value), null, currency, currencyCodeProperty);
+                }
+            }
+           
+
+        }
+
+        private static IList<PropertyInfo> GetFormattableProperties(Type type, out PropertyInfo currencyCodeProperty)
+        {
+            currencyCodeProperty = null;
+            var attribute = type.GetCustomAttributes(typeof(FormatAsCurrenciesAttribute))
+                .Select(x => (FormatAsCurrenciesAttribute) x).FirstOrDefault();
+            var propertyNames = attribute?.PropertyNames.Distinct() ?? new List<string>();
+            var allProperties = type.GetProperties();
+            var properties = allProperties.Where(x =>
+                typeof(DateTime).IsAssignableFrom(x.PropertyType) ||
+                typeof(DateTime?).IsAssignableFrom(x.PropertyType) ||
+                propertyNames.Contains(x.Name)).ToList();
+            if (attribute != null && !attribute.CurrencyCodeProperty.IsNullEmptyOrWhiteSpace())
+            {
+                currencyCodeProperty = allProperties.FirstOrDefault(x => x.Name == attribute.CurrencyCodeProperty);
+                if (currencyCodeProperty == null)
+                    throw new Exception($"The property {attribute.CurrencyCodeProperty} was not found on type {type.Name}");
+            }
+            return properties;
+        }
+        #endregion
     }
 }

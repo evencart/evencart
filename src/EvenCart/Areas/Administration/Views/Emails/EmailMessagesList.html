@@ -14,7 +14,7 @@
                         <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
                         <th data-column-id="subject">{{"Subject" | t}}</th>
                         <th data-column-id="toUsers" data-formatter="tos">{{"To" | t}}</th>
-                        <th data-column-id="sendingDate">{{"Sending Date" | t}}</th>
+                        <th data-column-id="sendingDate" data-formatter="formatted">{{"Sending Date" | t}}</th>
                         <th data-column-id="isSent" data-formatter="issent">{{"Sent" | t}}</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
                     </tr>
@@ -58,6 +58,9 @@
                             url: "{% route api_EmailMessagesList %}",
                             responseObject: "emailMessages",
                             formatters: {
+                                "formatted": function(column, row) {
+                                    return gridFormatters.formatted(column, row);
+                                },
                                 "tos": function(column, row) {
                                     var tos = "";
                                     row.tos.forEach(function(item) {

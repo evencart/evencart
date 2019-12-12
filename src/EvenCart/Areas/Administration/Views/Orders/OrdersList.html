@@ -16,7 +16,7 @@
                     <tr>
                         <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
                         <th data-column-id="number" data-formatter="number">{{"Order#" | t}}</th>
-                        <th data-column-id="createdOn">{{"Order Date" | t}}</th>
+                        <th data-column-id="createdOn" data-formatter="formatted">{{"Order Date" | t}}</th>
                         <th data-column-id="userName" data-formatter="userName">{{"Customer" | t}}</th>
                         <th data-column-id="orderStatusDisplay">{{"Order Status" | t}}</th>
                         <th data-column-id="paymentStatusDisplay">{{"Payment Status" | t}}</th>
@@ -70,6 +70,9 @@
                             },
                             selection:false,
                             formatters: {
+                                "formatted": function(column, row)  {
+                                    return gridFormatters.formatted(column, row);
+                                },
                                 "userName": function(column, row) {
                                     var name = row.user.name || "";
                                     if (name !== "")

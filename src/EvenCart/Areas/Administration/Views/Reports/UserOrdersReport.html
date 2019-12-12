@@ -18,7 +18,7 @@
                             <th data-column-id="customer" data-formatter="customer">{{"Customer" | t}}</th>
                             <th data-column-id="totalOrders">{{"Total Orders" | t}}</th>
                             <th data-column-id="totalProducts">{{"Total Products" | t}}</th>
-                            <th data-column-id="totalAmountFormatted">{{"Total Amount" | t}}</th>
+                            <th data-column-id="totalAmount" data-formatter="formatted">{{"Total Amount" | t}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -46,7 +46,10 @@
                                 },
                                 "customer": function (column, row) {
                                     var userUrl = '{% route GetUser userId="%id%" %}'.replace("%id%", row.id);
-                                    return "<a href='" + userUrl + "'>" + row.name + "</a><div>" + row.email + "</div>";
+                                    return "<a href='" + userUrl + "'>" + row.name + "</a><div>" + row.email + "</div><div>" + row.currencyCode + "</div>";
+                                },
+                                "formatted": function(column, row) {
+                                    return gridFormatters.formatted(column, row);
                                 }
                             },
                             templates: {

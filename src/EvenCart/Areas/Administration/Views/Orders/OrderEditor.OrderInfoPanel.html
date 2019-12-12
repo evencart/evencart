@@ -121,7 +121,7 @@
                         {{"Subtotal" | t}}
                     </td>
                     <td>
-                        {{order.subTotal | withCurrency}}
+                        {{order.formatted.subtotal}}
                         <small>
                             <a onclick="editOrderInfo('totals');return false;" href="#" class="clickable float-right">{{"Edit" | t}}</a>
                         </small>
@@ -133,7 +133,7 @@
                         {{"Cart Discount" | t}}
                     </td>
                     <td>
-                        - {{order.discount | withCurrency}}
+                        - {{order.formatted.discount}}
                         {% if order.discountId > 0 %}
                         {{"via" | t}}
                         <a href='{% route GetDiscount discountId="{{order.discountId}}" %}'>
@@ -152,7 +152,7 @@
                         {{"Tax" | t}}
                     </td>
                     <td>
-                        {{order.tax | withCurrency}}
+                        {{order.formatted.tax}}
                     </td>
                 </tr>
                 <tr>
@@ -160,7 +160,7 @@
                         {{"Shipping Fee" | t}}
                     </td>
                     <td>
-                        {{order.shippingMethodFee | withCurrency}}
+                        {{order.formatted.shippingMethodFee}}
                     </td>
                 </tr>
                 <tr>
@@ -168,7 +168,7 @@
                         {{"Payment Fee" | t}}
                     </td>
                     <td>
-                        {{order.paymentMethodFee | withCurrency}}
+                        {{order.formatted.paymentMethodFee}}
                     </td>
                 </tr>
                 <tr>
@@ -179,7 +179,7 @@
                     </td>
                     <td>
                         <strong>
-                            {{order.orderTotalFormatted}}
+                            {{order.formatted.orderTotal}}
                         </strong>
                     </td>
                 </tr>

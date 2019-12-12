@@ -85,7 +85,7 @@
                     <thead>
                         <tr>
                             <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="createdOn" data-width="20%">{{"Date" | t}}</th>
+                            <th data-column-id="createdOn" data-width="20%" data-formatter="formatted">{{"Date" | t}}</th>
                             <th data-column-id="details" data-formatter="details" data-width="45%">{{"Details" | t}}</th>
                             <th data-column-id="paymentStatus">{{"Payment Status" | t}}</th>
                             <th data-column-id="transactionAmountFormatted">{{"Amount" | t}}</th>
@@ -124,6 +124,9 @@
                                     }
                                     details += "</div>";
                                     return details;
+                                },
+                                "formatted": function (column, row) {
+                                    return gridFormatters.formatted(column, row);
                                 }
                             }
                         });

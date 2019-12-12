@@ -24,9 +24,9 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
             return string.Concat($"{input} ", T(input == 1 ? singular : plural));
         }
 
-        public static string WithCurrency(Context context, decimal input)
+        public static string WithCurrency(Context context, decimal input, string currency = null)
         {
-            return input.ToCurrency();
+            return currency == null ? input.ToCurrency() : input.ToCurrency(currency);
         }
 
         public static string NewLine2Br(string input)

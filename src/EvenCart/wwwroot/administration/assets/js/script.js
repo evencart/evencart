@@ -216,6 +216,9 @@ var gridFormatters = {
             return "<span class='rbicon-check text-success'></span>";
         else
             return "<span class='rbicon-x text-danger'></span>";
+    },
+    formatted: function (column, row) {
+        return row.formatted[column.id];
     }
 };
 

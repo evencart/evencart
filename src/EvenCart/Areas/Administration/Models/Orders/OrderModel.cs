@@ -5,10 +5,12 @@ using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
+    [FormatAsCurrencies(nameof(OrderTotal), nameof(Subtotal), nameof(Discount), nameof(ShippingMethodFee), nameof(PaymentMethodFee), nameof(Tax), CurrencyCodeProperty = nameof(CurrencyCode))]
     public class OrderModel : FoundationEntityModel
     {
         public string OrderNumber { get; set; }
@@ -52,8 +54,8 @@ namespace EvenCart.Areas.Administration.Models.Orders
         public decimal Tax { get; set; }
 
         public decimal OrderTotal { get; set; }
-
-        public string OrderTotalFormatted => OrderTotal.ToCurrency();
+        [Obsolete]
+        public string OrderTotalFormatted => OrderTotal.ToCurrency(CurrencyCode);
 
         public string UserGstNumber { get; set; }
 

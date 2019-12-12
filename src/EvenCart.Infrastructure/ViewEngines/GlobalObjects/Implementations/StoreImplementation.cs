@@ -53,5 +53,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public string PrimaryCurrencyCode { get; set; }
 
         public string HoneypotFieldName { get; set; }
+
+        public string ActiveCurrencySymbol { get; set; }
     }
 }

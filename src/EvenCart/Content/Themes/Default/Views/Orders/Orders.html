@@ -30,7 +30,7 @@
                     <div>
                         <label>{{"Order Total" | t}}</label>
                     </div>
-                    {{order.orderTotal | withCurrency}}
+                    {{order.orderTotal | withCurrency : order.currencyCode}}
                 </div>
                 <div class="col-md-3">
                     <div>

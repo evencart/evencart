@@ -6,6 +6,8 @@ namespace EvenCart.Services.Formatter
     {
         string FormatCurrency(decimal amount, string languageCultureCode, bool includeSymbol = true);
 
+        string FormatCurrencyFromIsoCode(decimal amount, string isoCode, bool includeSymbol = true);
+
         string FormatDateTime(DateTime dateTime, string languageCultureCode, bool onlyDate = false);
 
         string FormatProductAttributes(string attributeJson);

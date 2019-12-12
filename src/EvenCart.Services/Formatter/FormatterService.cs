@@ -9,10 +9,11 @@ namespace EvenCart.Services.Formatter
     public class FormatterService : IFormatterService
     {
         private readonly IDataSerializer _dataSerializer;
-
+        private static IDictionary<string, CultureInfo> _cultureInfos;
         public FormatterService(IDataSerializer dataSerializer)
         {
             _dataSerializer = dataSerializer;
+            _cultureInfos = new Dictionary<string, CultureInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
 
@@ -20,6 +21,31 @@ namespace EvenCart.Services.Formatter
         {
             var culture = new CultureInfo(languageCultureCode);
             return amount.ToString("C", culture);
+        }
+
+        public string FormatCurrencyFromIsoCode(decimal amount, string isoCode, bool includeSymbol = true)
+        {
+            if (!_cultureInfos.TryGetValue(isoCode, out var culture))
+            {
+                culture = CultureInfo.GetCultures(CultureTypes.AllCultures).Where(x => !x.IsNeutralCulture).FirstOrDefault(x =>
+                {
+                    try
+                    {
+                        var region = new RegionInfo(x.LCID);
+                        return string.Equals(region.ISOCurrencySymbol, isoCode, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                });
+                if (culture != null)
+                    _cultureInfos.TryAdd(isoCode, culture);
+            }
+          
+            if(culture != null)
+                return amount.ToString("C", culture);
+            return amount.ToString(CultureInfo.InvariantCulture);
         }
 
         public string FormatDateTime(DateTime dateTime, string languageCultureCode, bool onlyDate = false)

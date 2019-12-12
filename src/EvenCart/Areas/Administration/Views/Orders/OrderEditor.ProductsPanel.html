@@ -18,7 +18,7 @@
                         </div>
                     </td>
                     <td>
-                        {{orderItem.price | withCurrency }} x {{orderItem.quantity}}
+                        {{orderItem.formatted.price }} x {{orderItem.quantity}}
                     </td>
                     <td>
                         <table class="table table-borderless">
@@ -27,7 +27,7 @@
                                     <strong>{{"Price" | t }}</strong>
                                 </td>
                                 <td>
-                                    {{ orderItem.totalPrice | withCurrency}}
+                                    {{ orderItem.formatted.totalPrice}}
                                 </td>
                             </tr>
                             <tr>
@@ -35,7 +35,7 @@
                                     <strong>{{"Tax" | t}}</strong>
                                 </td>
                                 <td>
-                                    {{orderItem.tax | withCurrency }}
+                                    {{orderItem.formatted.tax }}
                                 </td>
                             </tr>
                             <tr>
@@ -43,7 +43,7 @@
                                     <strong>{{"Net Amount" | t}}</strong>
                                 </td>
                                 <td>
-                                    {{orderItem.lineTotal | withCurrency}}
+                                    {{orderItem.formatted.lineTotal}}
                                 </td>
                             </tr>
                         </table>

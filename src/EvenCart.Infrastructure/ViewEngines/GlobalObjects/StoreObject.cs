@@ -64,6 +64,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 ReviewModificationAllowed = catalogSettings.AllowReviewModification,
                 ActiveCurrencyCode = ApplicationEngine.CurrentCurrency.IsoCode,
                 PrimaryCurrencyCode = currencyService.Get(localizationSettings.BaseCurrencyId)?.IsoCode,
+                ActiveCurrencySymbol = ApplicationEngine.CurrentCurrency.GetSymbol(),
                 XsrfToken = antiforgery.GetToken(),
                 SoftwareVersion = ApplicationConfig.Version,
                 SoftwareTitle = ApplicationConfig.AppName,

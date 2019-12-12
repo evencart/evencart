@@ -18,7 +18,7 @@
                             <th data-column-id="groupName">{{"Group" | t}}</th>
                             <th data-column-id="totalOrders">{{"Total Orders" | t}}</th>
                             <th data-column-id="totalProducts">{{"Total Products" | t}}</th>
-                            <th data-column-id="totalAmountFormatted">{{"Total Amount" | t}}</th>
+                            <th data-column-id="totalAmount" data-formatter="formatted">{{"Total Amount" | t}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -64,6 +64,9 @@
                                     }
                                     html += "</table>";
                                     return html;
+                                },
+                                "formatted": function(column, row) {
+                                    return gridFormatters.formatted(column, row);
                                 }
                             },
                             templates: {

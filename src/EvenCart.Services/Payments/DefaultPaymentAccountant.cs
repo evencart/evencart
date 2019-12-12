@@ -51,7 +51,8 @@ namespace EvenCart.Services.Payments
             if (order.CurrencyCode != result.TransactionCurrencyCode || order.PaymentStatus != result.NewStatus)
             {
                 //update order
-                order.CurrencyCode = result.TransactionCurrencyCode;
+                if (result.TransactionCurrencyCode != null)
+                    order.CurrencyCode = result.TransactionCurrencyCode;
                 order.PaymentStatus = result.NewStatus;
                 _orderService.Update(order);
             }

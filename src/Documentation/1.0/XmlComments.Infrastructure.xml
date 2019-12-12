@@ -57,6 +57,11 @@
             Validates the model of the requested action and returns a 400 if it's an invalid model 
             </summary>
         </member>
+        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponse.CheckForFormattedValues(System.Object,System.Collections.Generic.IList{System.Reflection.PropertyInfo},System.String,System.Reflection.PropertyInfo)">
+            <summary>
+            The method checks for <see cref="T:EvenCart.Infrastructure.Mvc.Attributes.FormatAsCurrenciesAttribute"/> in the object and adds additional properties to the responses to represent formatted data
+            </summary>
+        </member>
         <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithAvailableCountries(EvenCart.Infrastructure.Mvc.CustomResponse)">
             <summary>
             Adds available countries to current response
