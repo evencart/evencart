@@ -145,7 +145,6 @@
 {% primary_navigation title=@t"Settings" systemName="Settings" groupId="settings" capability="Setting.Manage" %}
 {% secondary_navigation url="{% route GetSettings settingType="general" %}" title=@t"General" systemName="GeneralSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="user" %}" title=@t"Customer" systemName="UserSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="vendor" %}" title=@t"Vendor" systemName="VendorSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="tax" %}" title=@t"Tax" systemName="TaxSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="security" %}" title=@t"Security" systemName="SecuritySettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="order" %}" title=@t"Orders" systemName="OrderSettings" parent="Settings" %}
