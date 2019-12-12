@@ -146,6 +146,7 @@ namespace EvenCart.Services.Products
             query = query.OrderBy(orderByExpression,
                 sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
             query = query.OrderBy(x => x.DisplayOrder);
+            query = query.OrderBy(x => x.Id, RowOrder.Descending);
             //filter to include anything else in query
             query = _eventPublisherService.Filter(query);
             var products = query.SelectNestedWithTotalMatches(out totalResults, page, count).ToList();
