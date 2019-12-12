@@ -202,10 +202,7 @@ namespace EvenCart.Controllers
         [DualGet("", Name = RouteNames.ProductsPage, OnlyApi = true)]
         public IActionResult ProductsListApi(ProductSearchModel searchModel, string viewName = null)
         {
-            if (searchModel.Count > 15)
-                searchModel.Count = 15;
-            else if (searchModel.Count < 5)
-                searchModel.Count = 15;
+            searchModel.Count = _catalogSettings.NumberOfProductsPerPage;
 
             IList<int> categoryIds = null;
             if (searchModel.CategoryId.HasValue && searchModel.CategoryId.Value > 0)
