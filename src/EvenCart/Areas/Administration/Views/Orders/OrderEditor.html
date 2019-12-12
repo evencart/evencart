@@ -1,22 +1,20 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Order Editor" active_menu="GetOrder" parent_active_menu="OrdersList" menu_group="OrderEdit" %}
 
-<div class="row">
-    <div class="col-lg-6">
-        {% partial "Orders/OrderEditor.OrderInfoPanel" %}
-        {% partial "Orders/OrderEditor.ProductsPanel" %}
+    <div class="row">
+        <div class="col-lg-6">
+            {% partial "Orders/OrderEditor.OrderInfoPanel" %}
+            {% partial "Orders/OrderEditor.ProductsPanel" %}
+        </div>
+        <div class="col-lg-6">
+            {% partial "Orders/OrderEditor.CustomerInfoPanel" %}
+        </div>
+        <div class="save-button-container">
+            <form action='{% route DownloadAdminInvoice orderId="{{order.id}}" %}' target="_blank">
+                <button type="submit" class="btn btn-sm btn-success">{{"Download Invoice" | t}}</button>
+            </form>
+        </div>
     </div>
-    <div class="col-lg-6">
-        {% partial "Orders/OrderEditor.CustomerInfoPanel" %}
-    </div>
-    {% if canDownloadInvoice %}
-    <div class="save-button-container">
-        <form action='{% route DownloadInvoice orderGuid="{{order.guid}}" %}'>
-            <button type="submit" class="btn btn-sm btn-success">{{"Download Invoice" | t}}</button>
-        </form>
-    </div>
-    {% endif %}
-</div>
 {% control hidden name="id" value="{{order.id}}" %}
 <script type="text/javascript">
     ready(function () {

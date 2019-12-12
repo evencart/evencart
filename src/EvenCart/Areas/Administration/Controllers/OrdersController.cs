@@ -97,7 +97,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             searchModel = searchModel ?? new OrderSearchModel();
 
-            var orders = _orderService.GetOrders(out int totalResults, searchModel.SearchPhrase, searchModel.UserId, searchModel.OrderIds, searchModel.ProductIds,
+            var orders = _orderService.GetOrdersMinimal(out int totalResults, searchModel.SearchPhrase, searchModel.UserId, searchModel.OrderIds, searchModel.ProductIds,
                 searchModel.OrderStatus, searchModel.PaymentStatus, searchModel.VendorIds, searchModel.FromDate,
                 searchModel.ToDate, searchModel.Current, searchModel.RowCount);
 
@@ -813,14 +813,16 @@ namespace EvenCart.Areas.Administration.Controllers
                 .ToList();
 
             var downloadIds = downloads.Select(x => x.Id).ToList();
-            var itemDownloads = _itemDownloadService.Get(x => downloadIds.Contains(x.DownloadId)).ToList();
+            var itemDownloads = downloadIds.Any()
+                ? _itemDownloadService.Get(x => downloadIds.Contains(x.DownloadId)).ToList()
+                : new List<ItemDownload>();
             var models = new List<OrderDownloadModel>();
             foreach (var download in downloads)
             {
                models.Add(_downloadModelFactory.Create(download, itemDownloads.FirstOrDefault(x => x.DownloadId == download.Id)));
             }
 
-            return R.Success.With("downloads", models).WithGridResponse(models.Count, 1, models.Count).Result;
+            return R.Success.With("downloads", models).With("orderId", orderId).WithGridResponse(models.Count, 1, models.Count).Result;
         }
         [DualPost("{orderId}/downloads", Name = AdminRouteNames.SaveOrderDownload, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
