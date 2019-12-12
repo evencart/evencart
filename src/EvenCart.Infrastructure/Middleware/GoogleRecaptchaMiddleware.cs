@@ -145,7 +145,11 @@ namespace EvenCart.Infrastructure.Middleware
         private static Timer CreateBanningTimer()
         {
             var timer = GetTimer(RELEASE_INTERVAL);
-            timer.Elapsed += delegate { Banned.Pop(); };
+            timer.Elapsed += delegate
+            {
+                if (Banned.Count > 0)
+                    Banned.Pop();
+            };
             return timer;
         }
 
@@ -166,7 +170,8 @@ namespace EvenCart.Infrastructure.Middleware
         /// </summary>
         private static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (var key in IpAdresses.Keys)
+            var keys = IpAdresses.Keys.ToList();
+            foreach (var key in keys)
             {
                 IpAdresses[key]--;
                 if (IpAdresses[key] == 0)
