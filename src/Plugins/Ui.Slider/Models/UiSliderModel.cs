@@ -12,7 +12,7 @@ namespace Ui.Slider.Models
 
         public int DisplayOrder { get; set; }
 
-        public bool Visible { get; set; } = true;
+        public bool Visible { get; set; }
 
         public string ImageUrl { get; set; }
 
