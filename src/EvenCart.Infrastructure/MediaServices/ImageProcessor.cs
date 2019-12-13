@@ -29,7 +29,7 @@ namespace EvenCart.Infrastructure.MediaServices
                         Size = new Size(width, height),
                         Mode = ResizeMode.Pad
                     })
-                    .BackgroundColor(Rgba32.Transparent));
+                    .BackgroundColor(Rgba32.White));
                 
                 IImageEncoder encoder = null;
                 switch (imageFormat.Name) {
