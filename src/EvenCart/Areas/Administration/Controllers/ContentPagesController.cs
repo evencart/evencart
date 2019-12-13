@@ -45,7 +45,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 x.Content = ""; //no need to send content on list page...will save some bandwidth
                 return x;
-            });
+            }).ToList();
             return R.Success.WithGridResponse(totalResults, current, rowCount)
                 .With("contentPages", contentPageModels)
                 .WithParams(parameters)

@@ -139,7 +139,7 @@ namespace EvenCart.Areas.Administration.Controllers
                                   }
                               };
                 return model;
-            });
+            }).ToList();
             return R.Success.WithGridResponse(totalResults, parameters.Current, parameters.RowCount)
                 .WithAvailableInputTypes()
                 .With("products", productsModel)
