@@ -13,9 +13,12 @@ src/Tests/EvenCart.Services.Tests/obj/
 src/Tests/EvenCart.Tests.Data/bin/
 src/Tests/EvenCart.Tests.Data/obj/
 src/EvenCart.Infrastructure/bin/
-src/EvenCart/bin/
+src/EvenCart/bin/*/*
+!src/EvenCart/bin/plugins/index.html
 src/.vs/
-src/EvenCart/wwwroot/content/Uploads/
+src/EvenCart/wwwroot/content/Uploads/*/*
+src/EvenCart/wwwroot/content/Uploads/*.*
+!src/EvenCart/wwwroot/content/Uploads/Serves/index.html
 *.pdb
 src/EvenCart/Plugins/
 src/Plugins/Shipping.FedEx/obj/
@@ -29,7 +32,8 @@ src/Tests/EvenCart.WebHost.Tests/obj/
 src/EvenCart/wwwroot/bundles/*.js
 src/EvenCart/wwwroot/bundles/*.css
 src/Plugins/Shipping.UPS/obj/
-src/EvenCart/wwwroot/bundles/
+src/EvenCart/wwwroot/bundles/*.*
+!src/EvenCart/wwwroot/bundles/index.html
 publish/
 site-template/
 src/Build/Cleanup/obj/

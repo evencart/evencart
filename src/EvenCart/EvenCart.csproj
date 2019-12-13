@@ -18,16 +18,28 @@
   <ItemGroup>
     <Compile Remove="App_Data\Languages\Flags\**" />
     <Compile Remove="Pages\**" />
+    <Compile Remove="Plugins\**" />
     <Compile Remove="wwwroot\administration\assets\lib\dist\**" />
+    <Compile Remove="wwwroot\bundles\**" />
+    <Compile Remove="wwwroot\content\**" />
     <Content Remove="App_Data\Languages\Flags\**" />
     <Content Remove="Pages\**" />
+    <Content Remove="Plugins\**" />
     <Content Remove="wwwroot\administration\assets\lib\dist\**" />
+    <Content Remove="wwwroot\bundles\**" />
+    <Content Remove="wwwroot\content\**" />
     <EmbeddedResource Remove="App_Data\Languages\Flags\**" />
     <EmbeddedResource Remove="Pages\**" />
+    <EmbeddedResource Remove="Plugins\**" />
     <EmbeddedResource Remove="wwwroot\administration\assets\lib\dist\**" />
+    <EmbeddedResource Remove="wwwroot\bundles\**" />
+    <EmbeddedResource Remove="wwwroot\content\**" />
     <None Remove="App_Data\Languages\Flags\**" />
     <None Remove="Pages\**" />
+    <None Remove="Plugins\**" />
     <None Remove="wwwroot\administration\assets\lib\dist\**" />
+    <None Remove="wwwroot\bundles\**" />
+    <None Remove="wwwroot\content\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="App_Data\database.config" />
     <Content Remove="Content\Themes\Default\config.json" />
   </ItemGroup>
 
@@ -364,7 +377,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App_Data\database.config.ex" />
     <Content Include="App_Data\Install\EmailTemplates\ContactUsMessageToAdmin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -941,6 +953,9 @@
     <Content Include="Areas\Administration\Views\Widget\RawHtml.Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="bin\plugins\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Assets\css\animate.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1224,6 +1239,9 @@
     <Content Include="Content\Themes\Default\Views\Widgets\Index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Plugins\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Components\GoogleRecaptcha\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1314,6 +1332,12 @@
     <Content Include="Views\Layout\_Layout.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="wwwroot\bundles\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot\content\Uploads\Serves\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -1321,30 +1345,13 @@
     <Folder Include="Content\SecureData\" />
     <Folder Include="Content\Themes\Default\Views\Users\" />
     <Folder Include="Models\Installation\" />
-    <Folder Include="Plugins\Security.Recaptcha\" />
-    <Folder Include="Plugins\Ui.Slider\Views\UiSlider\" />
     <Folder Include="Widgets\" />
-    <Folder Include="wwwroot\bundles\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Content\Themes\Default\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Plugins\Payments.PaypalWithRedirect\EvenCart.Data.dll.config" />
-    <None Include="Plugins\Payments.PaypalWithRedirect\EvenCart.Services.dll.config" />
-    <None Include="Plugins\Payments.PaypalWithRedirect\RoastedMarketplace.Data.dll.config" />
-    <None Include="Plugins\Payments.PaypalWithRedirect\RoastedMarketplace.Services.dll.config" />
-    <None Include="Plugins\Shipping.FedEx\EvenCart.Data.dll.config" />
-    <None Include="Plugins\Shipping.FedEx\EvenCart.Services.dll.config" />
-    <None Include="Plugins\Shipping.FedEx\RoastedMarketplace.Data.dll.config" />
-    <None Include="Plugins\Shipping.FedEx\RoastedMarketplace.Services.dll.config" />
-    <None Include="Plugins\Shipping.UPS\EvenCart.Data.dll.config" />
-    <None Include="Plugins\Shipping.UPS\EvenCart.Services.dll.config" />
-    <None Include="Plugins\Ui.Slider\EvenCart.Data.dll.config" />
-    <None Include="Plugins\Ui.Slider\EvenCart.Services.dll.config" />
-    <None Include="Plugins\Ui.Slider\RoastedMarketplace.Data.dll.config" />
-    <None Include="Plugins\Ui.Slider\RoastedMarketplace.Services.dll.config" />
     <None Include="wwwroot\administration\assets\css\style.css" />
     <None Include="wwwroot\administration\assets\css\style.min.css" />
     <None Include="wwwroot\administration\assets\css\style.scss" />
@@ -1501,15 +1508,6 @@
     <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.css" />
     <None Include="wwwroot\administration\assets\lib\simplebar\simplebar.js" />
     <None Include="wwwroot\administration\assets\lib\typeahead\typeahead.js" />
-    <None Include="wwwroot\content\Uploads\download.png" />
-    <None Include="wwwroot\content\Uploads\downloadDVVJSIJEAA.png" />
-    <None Include="wwwroot\content\Uploads\download_PRFVPFZQXN.png" />
-    <None Include="wwwroot\content\Uploads\download_VPQPVEFXPK.png" />
-    <None Include="wwwroot\content\Uploads\Serves\downloadDVVJSIJEAA_150_150..png" />
-    <None Include="wwwroot\content\Uploads\Serves\download_PRFVPFZQXN_0_0..png" />
-    <None Include="wwwroot\content\Uploads\Serves\download_PRFVPFZQXN_150_150..png" />
-    <None Include="wwwroot\content\Uploads\Serves\download_VPQPVEFXPK_0_0..png" />
-    <None Include="wwwroot\content\Uploads\Serves\download_VPQPVEFXPK_150_150..png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1529,6 +1527,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
     <Exec Command="dotnet C:\Users\apexol\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output ..\Documentation\1.0\swagger.json $(OutputPath)\$(AssemblyName).dll v1" />
