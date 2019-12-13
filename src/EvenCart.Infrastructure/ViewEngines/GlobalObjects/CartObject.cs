@@ -3,6 +3,7 @@ using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Products;
@@ -39,13 +40,16 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             //refresh the cart items if necessary
             CartHelper.RefreshCart(cart);
 
+            var conflictingProducts = CartHelper.HasConflictingProducts(cart);
+
             var cartModel = new CartImplementation() {
                 Items = new List<CartItemImplementation>(),
                 TotalItems = cart.CartItems.Sum(x => x.Quantity),
                 DiscountCoupon = cart.DiscountCoupon?.HasCouponCode ?? false ? cart.DiscountCoupon?.CouponCode : "",
                 ShippingMethodName = cart.ShippingMethodDisplayName,
                 ShippingMethodFee = cart.ShippingFee,
-                ShippingOptionName = cart.SelectedShippingOption
+                ShippingOptionName = cart.SelectedShippingOption,
+                ConflictingProducts = conflictingProducts
             };
             
             var currentCurrency = ApplicationEngine.CurrentCurrency;

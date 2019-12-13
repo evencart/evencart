@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
+using EvenCart.Services.Payments;
+using EvenCart.Services.Purchases;
+using EvenCart.Services.Serializers;
+using Microsoft.AspNetCore.Http;
 using Stripe;
+using Address = EvenCart.Data.Entity.Addresses.Address;
 
 namespace Payments.Stripe.Helpers
 {
@@ -95,7 +105,7 @@ namespace Payments.Stripe.Helpers
             var refundService = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
-                ChargeId = refundRequest.GetParameterAs<string>("chargeId"),
+                Charge = refundRequest.GetParameterAs<string>("chargeId"),
                 Amount = 100 * (long)(refundRequest.Amount ?? refundRequest.Order.OrderTotal),
             };
             var refund = refundService.Create(refundOptions);
@@ -164,6 +174,294 @@ namespace Payments.Stripe.Helpers
             }
 
             return captureResult;
+        }
+
+
+        public static TransactionResult CreateSubscription(TransactionRequest request, StripeSettings stripeSettings,
+            ILogger logger)
+        {
+            var order = request.Order;
+            InitStripe(stripeSettings);
+            var parameters = request.Parameters;
+            parameters.TryGetValue("cardNumber", out var cardNumber);
+            parameters.TryGetValue("cardName", out var cardName);
+            parameters.TryGetValue("expireMonth", out var expireMonthStr);
+            parameters.TryGetValue("expireYear", out var expireYearStr);
+            parameters.TryGetValue("cvv", out var cvv);
+
+            var paymentMethodService = new PaymentMethodService();
+            var paymentMethod = paymentMethodService.Create(new PaymentMethodCreateOptions()
+            {
+                Card = new PaymentMethodCardCreateOptions()
+                {
+                    Number = cardNumber.ToString(),
+                    ExpYear = long.Parse(expireYearStr.ToString()),
+                    ExpMonth = long.Parse(expireMonthStr.ToString()),
+                    Cvc = cvv.ToString()
+                },
+                Type = "card"
+            });
+
+            var address = DependencyResolver.Resolve<IDataSerializer>()
+                .DeserializeAs<Address>(order.BillingAddressSerialized);
+            var options = new CustomerCreateOptions
+            {
+                Email = order.User.Email,
+                PaymentMethod = paymentMethod.Id,
+                InvoiceSettings = new CustomerInvoiceSettingsOptions
+                {
+                    DefaultPaymentMethod = paymentMethod.Id,
+                },
+                Address = new AddressOptions()
+                {
+                    City = address.City,
+                    Country = address.Country.Name,
+                    Line1 = address.Address1,
+                    Line2 = address.Address2,
+                    PostalCode = address.ZipPostalCode,
+                    State = address.StateProvinceName
+                },
+                Name = order.User.Name + "-" + order.User.Email
+            };
+
+            InitStripe(stripeSettings, true);
+            var service = new CustomerService();
+            var customer = service.Create(options);
+
+            var subscriptionItems = new List<SubscriptionItemOptions>();
+            var productService = new ProductService();
+            var planService = new PlanService();
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                var product = productService.Create(new ProductCreateOptions
+                {
+                    Name = orderItem.Product.Name,
+                    Type = "service"
+                });
+
+                var planOptions = new PlanCreateOptions()
+                {
+                    Nickname = product.Name,
+                    Product = product.Id,
+                    Amount = (long)(order.OrderTotal) * 100,
+                    Interval = GetInterval(orderItem.Product.SubscriptionCycle),
+                    IntervalCount = orderItem.Product.CycleCount == 0 ? 1 : orderItem.Product.CycleCount,
+                    Currency = order.CurrencyCode,
+                    UsageType = "licensed",
+                    TrialPeriodDays = orderItem.Product.TrialDays
+                };
+                var plan = planService.Create(planOptions);
+                subscriptionItems.Add(new SubscriptionItemOptions()
+                {
+                    Plan = plan.Id,
+                    Quantity = orderItem.Quantity
+                });
+            }
+
+            var subscriptionOptions = new SubscriptionCreateOptions()
+            {
+                Customer = customer.Id,
+                Items = subscriptionItems,
+                Metadata = new Dictionary<string, string>()
+                {
+                    { "email", order.User.Email },
+                    { "orderGuid", order.Guid },
+                    { "internalId", order.Id.ToString() }
+                },
+#if DEBUG
+                TrialEnd = DateTime.UtcNow.AddMinutes(5)
+#endif
+            };
+            subscriptionOptions.AddExpand("latest_invoice.payment_intent");
+
+            var subscriptionService = new SubscriptionService();
+            var subscription = subscriptionService.Create(subscriptionOptions);
+            var processPaymentResult = new TransactionResult()
+            {
+                OrderGuid = order.Guid,
+            };
+            if (subscription.Status == "active" || subscription.Status == "trialing")
+            {
+                processPaymentResult.NewStatus = PaymentStatus.Complete;
+                processPaymentResult.TransactionCurrencyCode = order.CurrencyCode;
+                processPaymentResult.IsSubscription = true;
+                processPaymentResult.TransactionAmount = subscription.Plan.AmountDecimal ?? order.OrderTotal;
+                processPaymentResult.ResponseParameters = new Dictionary<string, object>()
+                {
+                    {"subscriptionId", subscription.Id},
+                    {"invoiceId", subscription.LatestInvoiceId},
+                    {"feePercent", subscription.ApplicationFeePercent},
+                    {"collectionMethod", subscription.CollectionMethod},
+                    {"metaInfo", subscription.Metadata}
+                };
+                processPaymentResult.Success = true;
+            }
+            else
+            {
+                processPaymentResult.Success = false;
+                logger.Log<TransactionResult>(LogLevel.Warning, $"The subscription for Order#{order.Id} by stripe failed with status {subscription.Status}." + subscription.StripeResponse.Content);
+            }
+          
+            return processPaymentResult;
+        }
+
+        public static TransactionResult StopSubscription(TransactionRequest request, StripeSettings stripeSettings, ILogger logger)
+        {
+            var subscriptionId = request.GetParameterAs<string>("subscriptionId");
+            InitStripe(stripeSettings, true);
+            var subscriptionService = new SubscriptionService();
+            var subscription = subscriptionService.Cancel(subscriptionId, new SubscriptionCancelOptions());
+            var stopResult = new TransactionResult()
+            {
+                TransactionGuid = Guid.NewGuid().ToString(),
+                ResponseParameters = new Dictionary<string, object>()
+                {
+                    {"canceledAt", subscription.CanceledAt },
+                },
+                OrderGuid = request.Order.Guid,
+                TransactionCurrencyCode = request.Order.CurrencyCode,
+            };
+            if (subscription.Status == "canceled")
+            {
+                stopResult.Success = true;
+                stopResult.NewStatus = PaymentStatus.Complete;
+                return stopResult;
+            }
+            else
+            {
+                logger.Log<TransactionResult>(LogLevel.Warning, "The subscription cancellation request for Order#" + stopResult.Order.Id + " by stripe failed." + subscription.StripeResponse.Content);
+                stopResult.Success = false;
+                stopResult.Exception = new Exception("An error occurred while processing refund");
+                return stopResult;
+            }
+        }
+        public static async void ParseWebhookResponse(HttpRequest responseRequest)
+        {
+            var json = await new StreamReader(responseRequest.Body).ReadToEndAsync();
+
+            try
+            {
+                var stripeEvent = EventUtility.ParseEvent(json);
+                if (stripeEvent.Type == Events.CustomerSubscriptionTrialWillEnd)
+                {
+                    //later
+                }
+                if (stripeEvent.Type == Events.InvoiceUpcoming)
+                {
+                    //later
+                }
+                if (stripeEvent.Type == Events.SubscriptionScheduleCanceled)
+                {
+
+                }
+                if (stripeEvent.Type == Events.InvoicePaymentActionRequired)
+                {
+
+                }
+                if (stripeEvent.Type == Events.InvoicePaymentFailed)
+                {
+                    //deactivate the subscription
+                    dynamic obj = stripeEvent.Data.Object;
+                    string invoiceId = obj.Id;
+                    //for some reason, meta data is served from line items
+                    Dictionary<string, string> metaData = obj.Lines.Data[0].Metadata;
+                    Plan plan = obj.Lines.Data[0].Plan;
+                    decimal total = obj.Lines.Data[0].Plan.Amount;
+                    //extract order info
+                    if (!metaData.TryGetValue("internalId", out var internalIdStr))
+                    {
+                        return;
+                    }
+                    var orderId = int.Parse(internalIdStr);
+                    var orderService = DependencyResolver.Resolve<IOrderService>();
+                    var order = orderService.Get(orderId);
+                    if (order == null)
+                        return; //was order deleted from db directly. don't do anything. todo: btw should we log this
+
+                    var paymentAccountant = DependencyResolver.Resolve<IPaymentAccountant>();
+                    paymentAccountant.ProcessTransactionResult(new TransactionResult()
+                    {
+                        OrderGuid = order.Guid,
+                        Order = order,
+                        Success = true,
+                        IsSubscription = true,
+                        NewStatus = PaymentStatus.Failed,
+                        TransactionAmount = total,
+                        TransactionGuid = Guid.NewGuid().ToString(),
+                        IsOfflineTransaction = false,
+                        TransactionCurrencyCode = order.CurrencyCode,
+                        ResponseParameters = new Dictionary<string, object>()
+                        {
+                            { "invoiceId", invoiceId }
+                        }
+                    });
+                }
+                if (stripeEvent.Type == Events.InvoicePaymentSucceeded)
+                {
+                    dynamic obj = stripeEvent.Data.Object;
+                    string invoiceId = obj.Id;
+                    //for some reason, meta data is served from line items
+                    Dictionary<string, string> metaData = obj.Lines.Data[0].Metadata;
+                    Plan plan = obj.Lines.Data[0].Plan;
+                    decimal total = obj.Lines.Data[0].Plan.Amount;
+                    //extract order info
+                    if (!metaData.TryGetValue("internalId", out var internalIdStr))
+                    {
+                        return;
+                    }
+                    var orderId = int.Parse(internalIdStr);
+                    var orderService = DependencyResolver.Resolve<IOrderService>();
+                    var order = orderService.Get(orderId);
+                    if (order == null)
+                        return; //was order deleted from db directly. don't do anything. todo: btw should we log this
+                    var paymentTransactionService = DependencyResolver.Resolve<IPaymentTransactionService>();
+                    //get saved transactions
+                    var savedTransactions = paymentTransactionService.Get(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Complete).ToList();
+                    if (savedTransactions.Any(x => x.TransactionCodes.ContainsKey("invoiceId") && x.TransactionCodes["invoiceId"].ToString() == invoiceId))
+                        return; //already have this invoice, so skip it
+
+                    var paymentAccountant = DependencyResolver.Resolve<IPaymentAccountant>();
+                    paymentAccountant.ProcessTransactionResult(new TransactionResult()
+                    {
+                        OrderGuid = order.Guid,
+                        Order = order,
+                        Success = true,
+                        IsSubscription = true,
+                        NewStatus = PaymentStatus.Complete,
+                        TransactionAmount = total,
+                        TransactionGuid = Guid.NewGuid().ToString(),
+                        IsOfflineTransaction = false,
+                        TransactionCurrencyCode = order.CurrencyCode,
+                        ResponseParameters = new Dictionary<string, object>()
+                        {
+                            { "invoiceId", invoiceId }
+                        }
+                    });
+
+                }
+            }
+            catch (StripeException e)
+            {
+               
+            }
+        }
+    
+        private static string GetInterval(TimeCycle cycle)
+        {
+            switch (cycle)
+            {
+                case TimeCycle.Daily:
+                    return "day";
+                case TimeCycle.Weekly:
+                    return "week";
+                case TimeCycle.Monthly:
+                    return "month";
+                case TimeCycle.Yearly:
+                    return "year";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cycle), cycle, null);
+            }
         }
     }
 }

@@ -358,6 +358,13 @@ namespace EvenCart.Controllers
                 _cartService.Update(cart);
                 return RedirectToRoute(RouteNames.CheckoutConfirm);
             }
+
+            if ((cart != null && CartHelper.IsSubscriptionCart(cart)) || (order != null && OrderHelper.IsSubscription(order)))
+            {
+                //filter by payment methods which support subscription
+                paymentHandlers = paymentHandlers
+                    .Where(x => x.LoadPluginInstance<IPaymentHandlerPlugin>().SupportsSubscriptions).ToList();
+            }
             var paymentModels = paymentHandlers.Select(x =>
                 {
                     var pluginHandlerInstance = x.LoadPluginInstance<IPaymentHandlerPlugin>();
@@ -423,7 +430,7 @@ namespace EvenCart.Controllers
             }
 
             CustomResponse response;
-            if (cart == null)
+            if (order != null)
             {
                 order.PaymentMethodName = requestModel.SystemName;
                 order.PaymentMethodFee = paymentHandler.GetPaymentHandlerFee(order);
@@ -513,7 +520,9 @@ namespace EvenCart.Controllers
                 CurrencyCode = ApplicationEngine.BaseCurrency.IsoCode,
                 Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
                 ExchangeRate = ApplicationEngine.BaseCurrency.ExchangeRate,
-                DisableReturns = cart.CartItems.All(x => !x.Product.AllowReturns)
+                DisableReturns = cart.CartItems.All(x => !x.Product.AllowReturns),
+                User = currentUser,
+                IsSubscription = CartHelper.IsSubscriptionCart(cart)
             };
             order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
                                order.ShippingMethodFee ?? 0;
@@ -526,6 +535,9 @@ namespace EvenCart.Controllers
             order.ShippingAddressSerialized =
                 shippingAddress == null ? null : _dataSerializer.Serialize(shippingAddress);
 
+            //get all the products
+            var distinctProductIds = cart.CartItems.Select(x => x.ProductId).ToList();
+            var products = _productService.Get(x => distinctProductIds.Contains(x.Id)).ToList();
             order.OrderItems = new List<OrderItem>();
             foreach (var cartItem in cart.CartItems)
             {
@@ -540,9 +552,12 @@ namespace EvenCart.Controllers
                     TaxPercent = cartItem.TaxPercent,
                     TaxName = cartItem.TaxName,
                     ProductVariantId = cartItem.ProductVariantId,
-                    IsDownloadable = cartItem.IsDownloadable
+                    IsDownloadable = cartItem.IsDownloadable,
+                    Product = products.First(x => x.Id == cartItem.ProductId),
                 };
-              
+                orderItem.SubscriptionCycle = orderItem.Product.SubscriptionCycle;
+                orderItem.CycleCount = orderItem.Product.CycleCount;
+                orderItem.TrialDays = orderItem.Product.TrialDays;
                 order.OrderItems.Add(orderItem);
             }
             //insert complete order
@@ -592,6 +607,14 @@ namespace EvenCart.Controllers
             return R.Success.With("orderGuid", orderGuid).With("orderNumber", order.OrderNumber).Result;
         }
 
+        [HttpGet("fail/{orderGuid}", Name = RouteNames.CheckoutFailed)]
+        public IActionResult Failed(string orderGuid)
+        {
+            var order = _orderService.GetByGuid(orderGuid);
+            if (order == null || order.UserId != ApplicationEngine.CurrentUser.Id)
+                return NotFound();
+            return R.Success.With("orderGuid", orderGuid).With("orderNumber", order.OrderNumber).Result;
+        }
 
         #region Helpers
 
@@ -605,13 +628,19 @@ namespace EvenCart.Controllers
             if (!_orderSettings.AllowGuestCheckout && currentUser.IsVisitor())
                 return false;
 
+            if (CartHelper.HasConflictingProducts(cart))
+                return false;
+
             //do we have any items remaining
             return cart.CartItems.Any();
         }
 
         private bool ProcessPayment(Order order, Dictionary<string, object> paymentMethodData, out CustomResponse response)
         {
-            var transactionResult = _paymentProcessor.ProcessPayment(order, paymentMethodData);
+            var isSubscription = OrderHelper.IsSubscription(order);
+            var transactionResult = isSubscription
+                ? _paymentProcessor.ProcessCreateSubscription(order, paymentMethodData)
+                : _paymentProcessor.ProcessPayment(order, paymentMethodData);
 
             if (transactionResult.Success)
             {

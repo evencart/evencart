@@ -183,7 +183,7 @@ namespace EvenCart.Areas.Administration.Controllers
             productModel.ManufacturerId = product.Manufacturer?.Id;
             productModel.ManufacturerName = product.Manufacturer?.Name;
             return R.Success.With("product", productModel).With("productId", productId).WithWeightUnits()
-                .WithLengthUnits().Result;
+                .WithLengthUnits().WithTimeCycles().WithProductSaleTypes().WithProductTypes().Result;
         }
 
         [DualPost("", Name = AdminRouteNames.SaveProduct, OnlyApi = true)]

@@ -11,6 +11,7 @@ using EvenCart.Services.Formatter;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.MediaServices;
+using EvenCart.Services.Payments;
 using EvenCart.Services.Serializers;
 using Microsoft.CodeAnalysis.Emit;
 
@@ -22,12 +23,14 @@ namespace EvenCart.Areas.Administration.Factories.Orders
         private readonly IFormatterService _formatterService;
         private readonly IDataSerializer _dataSerializer;
         private readonly IMediaAccountant _mediaAccountant;
-        public OrderModelFactory(IModelMapper modelMapper, IFormatterService formatterService, IDataSerializer dataSerializer, IMediaAccountant mediaAccountant)
+        private readonly IPaymentTransactionService _paymentTransactionService;
+        public OrderModelFactory(IModelMapper modelMapper, IFormatterService formatterService, IDataSerializer dataSerializer, IMediaAccountant mediaAccountant, IPaymentTransactionService paymentTransactionService)
         {
             _modelMapper = modelMapper;
             _formatterService = formatterService;
             _dataSerializer = dataSerializer;
             _mediaAccountant = mediaAccountant;
+            _paymentTransactionService = paymentTransactionService;
         }
 
         public OrderModel Create(Order entity)
@@ -50,6 +53,21 @@ namespace EvenCart.Areas.Administration.Factories.Orders
                 model.ShippingAddress.StateProvinceName = shippingAddress.StateOrProvince?.Name ?? shippingAddress.StateProvinceName;
             }
             model.OrderItems = entity.OrderItems?.Select(Create).ToList();
+
+            //is this subscription model?
+            if (model.IsSubscription)
+            {
+                //get the latest payment info
+                var paymentTransaction = _paymentTransactionService
+                    .Get(x => x.OrderGuid == entity.Guid && x.PaymentStatus == PaymentStatus.Complete)
+                    .OrderByDescending(x => x.Id).FirstOrDefault();
+                model.LastInvoiceDate = paymentTransaction?.CreatedOn;
+                if (paymentTransaction != null && model.OrderItems != null)
+                {
+                    var minCycleDays = model.OrderItems.Min(x => (int) x.SubscriptionCycle);
+                    model.NextInvoiceDate = model.LastInvoiceDate.Value.AddDays(minCycleDays);
+                }
+            }
             return model;
         }
 

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -270,6 +271,7 @@
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Complete.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\Confirm.html" />
+    <None Remove="Content\Themes\Default\Views\Checkout\Failed.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\PaymentInfo.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\ShippingInfo.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\ShippingOptions.html" />
@@ -1048,6 +1050,9 @@
     <Content Include="Content\Themes\Default\Views\Cart\Wishlist.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Themes\Default\Views\Checkout\Failed.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\Default\Views\Checkout\ShippingOptions.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1517,18 +1522,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="DotEntity">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.MySql">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.SqlServer">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

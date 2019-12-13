@@ -24,6 +24,21 @@ namespace EvenCart.Services.Plugins
             return ProcessResult(order, TransactionRequestType.Void, order.OrderTotal);
         }
 
+        public TransactionResult ProcessCreateSubscription(Order order, Dictionary<string, object> paymentMethodData = null)
+        {
+            return ProcessResult(order, TransactionRequestType.SubscriptionCreate, order.OrderTotal, paymentMethodData);
+        }
+
+        public TransactionResult ProcessSubscription(Order order, Dictionary<string, object> paymentMethodData = null)
+        {
+            return ProcessResult(order, TransactionRequestType.Subscription, order.OrderTotal, paymentMethodData);
+        }
+
+        public TransactionResult ProcessCancelSubscription(Order order, Dictionary<string, object> paymentMethodData = null)
+        {
+            return ProcessResult(order, TransactionRequestType.SubscriptionCancel, null, paymentMethodData);
+        }
+
         private TransactionResult ProcessResult(Order order, TransactionRequestType requestType, decimal? amount, Dictionary<string, object> paymentMethodData = null)
         {
             var paymentMethodName = order.PaymentMethodName;

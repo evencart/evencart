@@ -26,6 +26,8 @@ namespace Payments.PaypalWithRedirect
         public PaymentOperation[] SupportedOperations => new[]
             {PaymentOperation.Authorize, PaymentOperation.Capture, PaymentOperation.Refund, PaymentOperation.Void};
 
+        public bool SupportsSubscriptions { get; } = false;
+
         public TransactionResult ProcessTransaction(TransactionRequest request)
         {
             var order = request.Order;

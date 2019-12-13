@@ -14,6 +14,8 @@ namespace EvenCart.Services.Plugins
 
         PaymentOperation[] SupportedOperations { get; }
 
+        bool SupportsSubscriptions { get; }
+
         TransactionResult ProcessTransaction(TransactionRequest request);
 
         decimal GetPaymentHandlerFee(Cart cart);

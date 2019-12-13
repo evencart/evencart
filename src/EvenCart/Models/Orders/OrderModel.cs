@@ -135,6 +135,14 @@ namespace EvenCart.Models.Orders
         /// List of <see cref="OrderTaxModel">tax</see> objects for this order
         /// </summary>
         public IList<OrderTaxModel> Taxes { get; set; }
+        /// <summary>
+        /// Specifies if the order is a subscription
+        /// </summary>
+        public bool IsSubscription { get; set; }
+        /// <summary>
+        /// Specifies if the subscription is active
+        /// </summary>
+        public bool IsSubscriptionActive { get; set; }
 
     }
 }

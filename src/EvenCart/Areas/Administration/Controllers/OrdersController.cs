@@ -25,6 +25,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Extensions;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Pdf;
@@ -36,8 +37,6 @@ namespace EvenCart.Areas.Administration.Controllers
     public class OrdersController : FoundationAdminController
     {
         private readonly IOrderService _orderService;
-        private readonly IModelMapper _modelMapper;
-        private readonly IDataSerializer _dataSerializer;
         private readonly IFormatterService _formatterService;
         private readonly IShipmentService _shipmentService;
         private readonly IShipmentItemService _shipmentItemService;
@@ -60,11 +59,10 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IOrderItemDownloadService _itemDownloadService;
         private readonly IDownloadService _downloadService;
         private readonly IDownloadModelFactory _downloadModelFactory;
-        public OrdersController(IOrderService orderService, IModelMapper modelMapper, IDataSerializer dataSerializer, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory)
+        private readonly IPaymentProcessor _paymentProcessor;
+        public OrdersController(IOrderService orderService, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, IPaymentProcessor paymentProcessor)
         {
             _orderService = orderService;
-            _modelMapper = modelMapper;
-            _dataSerializer = dataSerializer;
             _formatterService = formatterService;
             _shipmentService = shipmentService;
             _shipmentItemService = shipmentItemService;
@@ -87,6 +85,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _itemDownloadService = itemDownloadService;
             _downloadService = downloadService;
             _downloadModelFactory = downloadModelFactory;
+            _paymentProcessor = paymentProcessor;
         }
 
         #region Orders
@@ -191,7 +190,31 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
-
+        [DualPost("{orderId}/subscription/cancel", Name = AdminRouteNames.CancelAdminSubscription, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult CancelSubscription(int orderId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+            if (!order.IsSubscription || !order.IsSubscriptionActive)
+                return R.Fail.With("error", T("No subscription is available in current order")).Result;
+            //get the payment transactions
+            var paymentTransaction = _paymentTransactionService.Get(x => x.PaymentStatus == PaymentStatus.Complete && x.OrderGuid == order.Guid).FirstOrDefault();
+            if(paymentTransaction == null)
+                return R.Fail.With("error", T("No payment transaction is available in current order")).Result;
+            //cancel the subscription
+            var transactionResult =  _paymentProcessor.ProcessCancelSubscription(order, paymentTransaction.TransactionCodes);
+            if (transactionResult.Success)
+            {
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
+                order.IsSubscriptionActive = false;
+                order.OrderStatus = OrderStatus.SubscriptionCancelled;
+                _orderService.Update(order);
+                return R.Success.Result;
+            }
+            return R.Fail.With("error", T("An error occurred while cancelling subscription. Please check log for any details.")).Result;
+        }
 
         [DualPost("", Name = AdminRouteNames.SaveOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
@@ -1104,6 +1127,8 @@ namespace EvenCart.Areas.Administration.Controllers
 
         private bool CanRefund(Order order)
         {
+            if (order.IsSubscription)
+                return false;
             return order.PaymentStatus == PaymentStatus.Complete ||
                    order.PaymentStatus == PaymentStatus.Captured ||
                    order.PaymentStatus == PaymentStatus.RefundedPartially ||

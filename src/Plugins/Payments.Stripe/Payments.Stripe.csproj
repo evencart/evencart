@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Stripe.net" Version="27.21.0" />
+    <PackageReference Include="Stripe.net" Version="34.3.0" />
   </ItemGroup>
 
   <ItemGroup>

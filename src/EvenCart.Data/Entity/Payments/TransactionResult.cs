@@ -30,6 +30,8 @@ namespace EvenCart.Data.Entity.Payments
 
         public bool IsOfflineTransaction { get; set; }
 
+        public bool IsSubscription { get; set; }
+
         public TransactionResult Redirect(string url)
         {
             RedirectionUrl = url;

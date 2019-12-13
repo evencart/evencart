@@ -13,6 +13,7 @@
         Returned = 80, //auto
         PartiallyReturned = 90, //manual
         Delayed = 100, //manual
-        PendingCancellation = 110
+        PendingCancellation = 110,
+        SubscriptionCancelled = 120
     }
 }

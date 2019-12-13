@@ -153,5 +153,20 @@ namespace EvenCart.Infrastructure.Mvc
                 customResponse.With("error", errorMessage);
             return customResponse;
         }
+
+        public static CustomResponse WithTimeCycles(this CustomResponse customResponse)
+        {
+            return customResponse.With("timeCycles", SelectListHelper.GetSelectItemList<TimeCycle>());
+        }
+
+        public static CustomResponse WithProductSaleTypes(this CustomResponse customResponse)
+        {
+            return customResponse.With("productSaleTypes", SelectListHelper.GetSelectItemList<ProductSaleType>());
+        }
+
+        public static CustomResponse WithProductTypes(this CustomResponse customResponse)
+        {
+            return customResponse.With("productTypes", SelectListHelper.GetSelectItemList<ProductType>());
+        }
     }
 }

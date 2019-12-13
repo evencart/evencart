@@ -4,6 +4,11 @@
         <name>EvenCart.Infrastructure</name>
     </assembly>
     <members>
+        <member name="M:EvenCart.Infrastructure.ApplicationConfig.IgnoreAntiforgeryValidation(System.String)">
+            <summary>
+            Adds a url to exclude from antiforgery validation
+            </summary>
+        </member>
         <member name="M:EvenCart.Infrastructure.ApplicationEngine.IsAdmin">
             <summary>
             Checks if the user is inside administration area

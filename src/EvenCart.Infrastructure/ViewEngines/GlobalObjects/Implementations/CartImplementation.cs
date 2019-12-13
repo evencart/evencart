@@ -45,5 +45,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public string DiscountFormatted => Discount.ToCurrency();
 
         public string DiscountCoupon { get; set; }
+
+        public bool ConflictingProducts { get; set; }
     }
 }

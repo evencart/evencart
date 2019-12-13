@@ -1,0 +1,17 @@
+﻿{% layout "_Layout" %}
+
+<div class="product-section section wrapper">
+    <div class="checkout-container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    {{"Your recent order failed!" | t}}
+                </h3>
+                <p>
+                    {{"Hi, Your recent order with order number" | t}} {{orderNumber}} {{"didn't go through. Please check your payment method " | t}}
+                </p>
+                <a href="{% route AccountOrders %}">{{"View my orders" | t}}</a>
+            </div>
+        </div>
+    </div>
+</div>

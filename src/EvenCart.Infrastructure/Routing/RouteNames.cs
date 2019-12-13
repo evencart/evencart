@@ -23,6 +23,7 @@
         public const string CheckoutInit = "CheckoutInit";
         public const string CheckoutConfirm = "CheckoutConfirm";
         public const string CheckoutComplete = "CheckoutComplete";
+        public const string CheckoutFailed = "CheckoutFailed";
         public const string SingleProduct = "SingleProduct";
         public const string PreviewProduct = "PreviewProduct";
         public const string SinglePage = "SinglePage";

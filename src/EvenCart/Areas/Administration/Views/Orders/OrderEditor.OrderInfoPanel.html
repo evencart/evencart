@@ -111,6 +111,61 @@
                         {{order.selectedShippingOption}}
                     </td>
                 </tr>
+                {% if order.isSubscription %}
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Subscription Status" | t}}
+                    </td>
+                    <td>
+                        {% if order.isSubscriptionActive %}
+                        <strong>{{"Active" }}</strong>
+                        <form id="form-cancel-subscription" class="float-right"  method="post" action='{% route api_CancelAdminSubscription orderId="{{order.id}}" %}'>
+                            {% control hidden name="orderId" value="{{order.id}}" %}
+                            {% control xsrf %}
+                            <button type="submit" class="btn btn-danger btn-sm">{{"Cancel Subscription" | t}}</button>
+                        </form>
+                        <script type="text/javascript">
+                            ready(function() {
+                                initAjaxForm("form-cancel-subscription",
+                                    {
+                                        beforeSubmit: function() {
+                                            return confirm(
+                                                '{{"Are you sure you want to cancel this subscription?" | t}}');
+                                        },
+                                        onSuccess: function() {
+                                            notify("success", '{{"The subscription was cancelled successfully." | t}}');
+                                            window.location.reload();
+                                        }
+                                    });
+                            });
+                        </script>
+                        {% else %}
+                        <strong>{{"Inactive" }}</strong>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Last Invoice Date" | t}}
+                    </td>
+                    <td>
+                        {{order.formatted.lastInvoiceDate}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{"Next Invoice Due" | t}}
+                    </td>
+                    <td>
+                        {{order.formatted.nextInvoiceDate}}
+                    </td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td colspan="2">
                         <hr />

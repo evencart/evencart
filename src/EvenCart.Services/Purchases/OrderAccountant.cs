@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using EvenCart.Core;
 using EvenCart.Core.Services;
+using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
+using EvenCart.Services.Payments;
 using EvenCart.Services.Products;
 using EvenCart.Services.Tokens;
 
@@ -21,7 +22,8 @@ namespace EvenCart.Services.Purchases
         private readonly OrderSettings _orderSettings;
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
-        public OrderAccountant(IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, ITokenGenerator tokenGenerator, OrderSettings orderSettings, IOrderService orderService, IOrderItemService orderItemService)
+        private readonly IPaymentProcessor _paymentProcessor;
+        public OrderAccountant(IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, ITokenGenerator tokenGenerator, OrderSettings orderSettings, IOrderService orderService, IOrderItemService orderItemService, IPaymentProcessor paymentProcessor)
         {
             _warehouseInventoryService = warehouseInventoryService;
             _orderFulfillmentService = orderFulfillmentService;
@@ -29,6 +31,7 @@ namespace EvenCart.Services.Purchases
             _orderSettings = orderSettings;
             _orderService = orderService;
             _orderItemService = orderItemService;
+            _paymentProcessor = paymentProcessor;
         }
         /// <summary>
         /// Gets order fulfillments based on the following rules.

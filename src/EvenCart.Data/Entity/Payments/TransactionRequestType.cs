@@ -5,6 +5,9 @@
         Payment,
         Refund,
         Void,
-        Capture
+        Capture,
+        SubscriptionCreate,
+        Subscription,
+        SubscriptionCancel
     }
 }

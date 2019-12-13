@@ -1,5 +1,10 @@
 ﻿<!-- PAGE SECTION START -->
 <div class="page-section section" id="cart-section">
+    {% if cart.conflictingProducts %}
+    <div class="alert alert-danger">
+        {{"Your cart contains both subscription and one-time purchase products. Please remove one of them to continue checkout." | t}}
+    </div>
+    {% endif %}
     {% if cart.items.size > 0 %}
     <div class="row">
         <div class="col-12">
@@ -248,9 +253,11 @@
                     </tbody>
                 </table>
                 {% if checkout == "false" %}
+                {% unless cart.conflictingProducts %}
                 <div class="proceed-to-checkout section mt-30">
                     <a class="btn btn-primary" href="{% route CheckoutAddress %}">{{"Proceed to Checkout" | t}}</a>
                 </div>
+                {% endunless %}
                 {% endif %}
             </div>
         </div>

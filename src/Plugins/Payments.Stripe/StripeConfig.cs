@@ -11,5 +11,7 @@
         public const string StripeIpnHandlerRouteName = "StripeIpnHandler";
 
         public const string StripeSettingsRouteName = "StripeSettings";
+
+        public const string StripeWebhookUrl = "StripeWebhookUrl";
     }
 }

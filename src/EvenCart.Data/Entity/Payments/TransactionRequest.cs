@@ -19,5 +19,7 @@ namespace EvenCart.Data.Entity.Payments
         public TransactionRequestType RequestType { get; set; }
 
         public decimal? Amount { get; set; }
+
+        public decimal? InitialFee { get; set; }
     }
 }

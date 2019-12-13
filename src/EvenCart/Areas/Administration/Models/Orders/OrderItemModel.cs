@@ -1,3 +1,4 @@
+﻿using EvenCart.Data.Entity.Shop;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.Models;
 
@@ -27,5 +28,13 @@ namespace EvenCart.Areas.Administration.Models.Orders
         public decimal TaxPercent { get; set; }
 
         public bool Shipped { get; set; }
+
+        public ProductSaleType ProductSaleType { get; set; }
+
+        public TimeCycle SubscriptionCycle { get; set; }
+
+        public int CycleCount { get; set; }
+
+        public int? TrialDays { get; set; }
     }
 }

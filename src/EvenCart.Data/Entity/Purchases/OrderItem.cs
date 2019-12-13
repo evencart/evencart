@@ -25,6 +25,14 @@ namespace EvenCart.Data.Entity.Purchases
 
         public bool IsDownloadable { get; set; }
 
+        public ProductSaleType ProductSaleType { get; set; }
+
+        public TimeCycle SubscriptionCycle { get; set; }
+
+        public int CycleCount { get; set; }
+
+        public int? TrialDays { get; set; }
+
         #region Virtual Properties
         public virtual Order Order { get; set; }
 

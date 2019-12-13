@@ -91,6 +91,16 @@ namespace EvenCart.Data.Entity.Shop
 
         public int DaysForReturn { get; set; }
 
+        public ProductType ProductType { get; set; }
+
+        public ProductSaleType ProductSaleType { get; set; }
+
+        public TimeCycle SubscriptionCycle { get; set; } 
+
+        public int CycleCount { get; set; }
+
+        public int? TrialDays { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }

@@ -79,6 +79,12 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public AddressModel ShippingAddress { get; set; }
 
+        public bool IsSubscription { get; set; }
 
+        public bool IsSubscriptionActive { get; set; }
+        
+        public DateTime? LastInvoiceDate { get; set; }
+        
+        public DateTime? NextInvoiceDate { get; set; }
     }
 }

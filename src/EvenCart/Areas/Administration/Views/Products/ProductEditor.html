@@ -23,9 +23,6 @@
                         {% control label text=@t"Description" for="description" %}
                         {% control wyswyg id="description" name="description" value="{{product.description}}" %}
                     </div>
-                    <div class="form-group">
-                        {% control checkbox name="published" value="product.published" text=@t"Published" %}
-                    </div>
                 </div>
             </div>
             <div class="panel">
@@ -67,7 +64,32 @@
                         {% control checkbox name="isFeatured" text=@t"Is Featured?" value="product.isFeatured" %}
                     </div>
                     <div class="form-group">
-                        {% control checkbox name="reviewsDisabled" text=@t"Disable Reviews" value="product.reviewsDisabled" %}
+                        {% control label text=@t"Product Type" for="productType" %}
+                        {% control select name="productType" value="product.productType" items="productTypes" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Sale Type" for="productSaleType" %}
+                        {% control select name="productSaleType" value="product.productSaleType" items="productSaleTypes" required="true" %}
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group" data-show-when="jQuery">
+                                {% control label text=@t"Subscription Cycle" for="subscriptionCycle" %}
+                                {% control select name="subscriptionCycle" value="product.subscriptionCycle" items="timeCycles" required="true" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Number of Cycles" for="subscriptionCycle" %}
+                                {% control number name="cycleCount" value="{{product.cycleCount}}" min="0" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Trial Days" for="trialDays" %}
+                                {% control number name="trialDays" value="{{product.trialDays}}" min="0" %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,6 +215,19 @@
         </div>
 
         <div class="col-lg-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Publish Options" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control checkbox name="published" value="product.published" text=@t"Published" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="reviewsDisabled" text=@t"Disable Reviews" value="product.reviewsDisabled" %}
+                    </div>
+                </div>
+            </div>
             {% partial "Products/ProductEditor.ImagePanel" %}
             {% partial "Products/ProductEditor.CategoryPanel" %}
             {% partial "Products/ProductEditor.ManufacturerPanel" %}

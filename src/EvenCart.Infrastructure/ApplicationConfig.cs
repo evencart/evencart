@@ -1,4 +1,5 @@
-﻿using EvenCart.Data.Enum;
+﻿using System.Collections.Generic;
+using EvenCart.Data.Enum;
 
 namespace EvenCart.Infrastructure
 {
@@ -71,6 +72,15 @@ namespace EvenCart.Infrastructure
         public const string NewsletterSubscriptionGuid = "E0D79E93-03AC-43B8-8D35-E8FE447244FA";
 
         public const string InbuiltWidgetPluginName = "EvenCart.InbuiltWidgets";
+
+        internal static IList<string> AntiforgerySparedUrls = new List<string>();
+        /// <summary>
+        /// Adds a url to exclude from antiforgery validation
+        /// </summary>
+        public static void IgnoreAntiforgeryValidation(string url)
+        {
+            AntiforgerySparedUrls.Add(url);
+        }
 
     }
 }

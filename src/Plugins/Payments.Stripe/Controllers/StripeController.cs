@@ -1,8 +1,10 @@
 ﻿using System;
+using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Payments.Stripe.Helpers;
 using Payments.Stripe.Models;
 
 namespace Payments.Stripe.Controllers
@@ -30,6 +32,13 @@ namespace Payments.Stripe.Controllers
             model.Month = DateTime.UtcNow.Month;
             model.Year = DateTime.UtcNow.Year;
             return R.With("paymentInfo", model).Result;
+        }
+
+        [HttpPost("webhook", Name = StripeConfig.StripeWebhookUrl)]
+        public IActionResult Webhook()
+        {
+            StripeHelper.ParseWebhookResponse(ApplicationEngine.CurrentHttpContext.Request);
+            return Ok();
         }
     }
 }

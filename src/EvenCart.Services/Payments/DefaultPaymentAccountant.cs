@@ -3,6 +3,7 @@ using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
+using EvenCart.Services.Helpers;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Purchases;
 
@@ -47,12 +48,14 @@ namespace EvenCart.Services.Payments
             paymentTransaction.SetTransactionCodes(result.ResponseParameters);
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
-
+           
             if (order.CurrencyCode != result.TransactionCurrencyCode || order.PaymentStatus != result.NewStatus)
             {
                 //update order
                 if (result.TransactionCurrencyCode != null)
                     order.CurrencyCode = result.TransactionCurrencyCode;
+                if (result.IsSubscription && result.NewStatus == PaymentStatus.Complete)
+                    order.IsSubscriptionActive = true;
                 order.PaymentStatus = result.NewStatus;
                 _orderService.Update(order);
             }

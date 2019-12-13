@@ -4,6 +4,7 @@ using System.Linq;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Services.Extensions;
+using EvenCart.Services.Helpers;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Products;
 
@@ -31,7 +32,7 @@ namespace EvenCart.Services.Purchases
                 return;
             }
 
-            if (new List<OrderStatus> { OrderStatus.Cancelled, OrderStatus.Returned, OrderStatus.PartiallyReturned, OrderStatus.Closed }.Contains(order.OrderStatus))
+            if (new List<OrderStatus> { OrderStatus.Cancelled, OrderStatus.Returned, OrderStatus.PartiallyReturned, OrderStatus.Closed, OrderStatus.SubscriptionCancelled }.Contains(order.OrderStatus))
                 return;
             //if order is complete already, give up
             if (order.OrderStatus == OrderStatus.Complete)
@@ -47,7 +48,14 @@ namespace EvenCart.Services.Purchases
                 _orderService.Update(order);
                 return;
             }
-
+            //is that an order for digital products only
+            if (order.PaymentStatus == PaymentStatus.Complete && OrderHelper.IsDownloadOnly(order))
+            {
+                //the order can be marked complete here
+                order.OrderStatus = OrderStatus.Complete;
+                _orderService.Update(order);
+                return;
+            }
             //we can't do anything to update order status for now
             if (order.Shipments == null)
             {

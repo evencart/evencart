@@ -1664,6 +1664,16 @@
             List of <see cref="T:EvenCart.Models.Orders.OrderTaxModel">tax</see> objects for this order
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.IsSubscription">
+            <summary>
+            Specifies if the order is a subscription
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.IsSubscriptionActive">
+            <summary>
+            Specifies if the subscription is active
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Orders.OrderSearchModel.FromDate">
             <summary>
             The start date to search the orders from. Defaults to 6 months old

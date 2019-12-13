@@ -31,6 +31,8 @@ namespace Payments.Stripe
         public PaymentOperation[] SupportedOperations => new[]
             {PaymentOperation.Authorize, PaymentOperation.Capture, PaymentOperation.Refund, PaymentOperation.Void};
 
+        public bool SupportsSubscriptions => true;
+
         public TransactionResult ProcessTransaction(TransactionRequest request)
         {
             if (request.RequestType == TransactionRequestType.Payment)
@@ -41,17 +43,25 @@ namespace Payments.Stripe
                 return StripeHelper.ProcessRefund(request, _stripeSettings, _logger);
             if (request.RequestType == TransactionRequestType.Capture)
                 return StripeHelper.ProcessCapture(request, _stripeSettings, _logger);
+            if(request.RequestType == TransactionRequestType.SubscriptionCreate)
+                return StripeHelper.CreateSubscription(request, _stripeSettings, _logger);
+            if (request.RequestType == TransactionRequestType.SubscriptionCancel)
+                return StripeHelper.StopSubscription(request, _stripeSettings, _logger);
             return null;
         }
 
         public decimal GetPaymentHandlerFee(Cart cart)
         {
-            return 0;
+            return _stripeSettings.UsePercentageForAdditionalFee
+                ? _stripeSettings.AdditionalFee * cart.FinalAmount / 100
+                : _stripeSettings.AdditionalFee;
         }
 
         public decimal GetPaymentHandlerFee(Order order)
         {
-            return 0;
+            return _stripeSettings.UsePercentageForAdditionalFee
+                ? _stripeSettings.AdditionalFee * order.OrderTotal / 100
+                : _stripeSettings.AdditionalFee;
         }
 
         public bool ValidatePaymentInfo(Dictionary<string, string> parameters, out string error)

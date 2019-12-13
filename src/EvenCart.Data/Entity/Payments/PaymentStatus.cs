@@ -11,6 +11,7 @@
         Authorized = 60,
         Captured = 70,
         RefundPending = 80,
-        RefundedPartially = 90
+        RefundedPartially = 90,
+        Failed = 100
     }
 }
