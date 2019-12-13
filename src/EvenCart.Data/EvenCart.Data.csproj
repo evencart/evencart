@@ -14,24 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotEntity" Version="2.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EvenCart.Core\EvenCart.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="DotEntity">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.MySql">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.SqlServer">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

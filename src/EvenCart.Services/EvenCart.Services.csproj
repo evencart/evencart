@@ -47,18 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DotEntity">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.MySql">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.MySql\bin\Debug\netstandard1.5\DotEntity.MySql.dll</HintPath>
-    </Reference>
-    <Reference Include="DotEntity.SqlServer">
-      <HintPath>..\..\..\DotEntity\src\DotEntity.SqlServer\bin\Debug\netstandard1.5\DotEntity.SqlServer.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="C:\Users\apexol\.nuget\packages\htmltopdfconverter\1.0.2\contentFiles\any\netstandard2.0\NativeLibs\X64\libwkhtmltox.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
