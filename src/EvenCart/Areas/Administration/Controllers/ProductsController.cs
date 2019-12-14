@@ -1037,6 +1037,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditProduct)]
         public IActionResult DownloadList(int productId)
         {
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             var product = productId > 0 ? _productService.Get(productId) : null;
             if (product == null)
                 return NotFound();
