@@ -7,7 +7,7 @@
         <span>{{"Update Image" | t}}</span>
         {% endif %}
         <input id="imageFile-{{name}}" name="mediaFile" type="file" />
-        <input type="hidden" name="{{name}}" id="hidden-{{name}}" value="%value%" />
+        <input type="hidden" name="{{name}}" id="hidden-{{name}}" value="{{%value%}}" />
     </span>
     <span class="btn btn-danger btn-sm" id="clear-{{name}}" style="{% if %value% == 0 %}display:none;{% endif %}">
         {{"Clear" | t}}
