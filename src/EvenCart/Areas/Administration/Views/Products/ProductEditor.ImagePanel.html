@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body" id="file-dragger">
         <div id="image-container"></div>
-        {% unless product.media.size %}
+        {% unless product.media.size > 0 %}
         <div class="drag-area">
             <div class="msg">
                 <div>
