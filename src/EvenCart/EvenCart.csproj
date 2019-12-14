@@ -52,32 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
+   
     <None Remove="App_Data\database.config.ex" />
-    <None Remove="App_Data\database.configex" />
-    <None Remove="App_Data\Install\EmailTemplates\ContactUsMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\InvitationMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\InvitationRequestedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\InvitationRequestedMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\Master.html" />
-    <None Remove="App_Data\Install\EmailTemplates\OrderPaidMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\OrderPaidMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\OrderPlacedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\OrderPlacedMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\PasswordChangedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\PasswordRecoveryLinkMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\ShipmentDeliveredMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\ShipmentDeliveredMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\ShipmentShippedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserAccountDeletedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserAccountDeletedMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserActivatedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserActivationLinkMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserDeactivatedMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserDeactivatedMessageToAdmin.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserRegisteredMessage.html" />
-    <None Remove="App_Data\Install\EmailTemplates\UserRegisteredMessageToAdmin.html" />
+   
     <None Remove="App_Data\Security\.gitkeep" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
@@ -377,76 +354,76 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App_Data\Install\EmailTemplates\ContactUsMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\ContactUs.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\InvitationMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Invitation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\InvitationRequestedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Invitation.Requested.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\InvitationRequestedMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\Invitation.Requested.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Install\EmailTemplates\Master.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\OrderPaidMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Order.Paid.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\OrderPaidMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\Order.Paid.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\OrderPlacedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Order.Placed.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\OrderPlacedMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\Order.Placed.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\PasswordChangedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Common.PasswordChanged.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\PasswordRecoveryLinkMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Common.PasswordRecovery.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\ReturnRequest.Created.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\ReturnRequestCreatedMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\ReturnRequest.Created.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\ShipmentDeliveredMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Shipment.Delivered.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\ShipmentDeliveredMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\Shipment.Delivered.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\ShipmentShippedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\Shipment.Shipped.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserAccountDeletedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.AccountDeleted.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserAccountDeletedMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.AccountDeleted.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserActivatedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.Activated.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserActivationLinkMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.ActivationLink.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserDeactivatedMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.Deactivated.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserDeactivatedMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.Deactivated.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserRegisteredMessage.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.Registered.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Install\EmailTemplates\UserRegisteredMessageToAdmin.html">
+    <Content Include="App_Data\Install\EmailTemplates\User.Registered.Admin.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Security\.gitkeep">

@@ -67,39 +67,42 @@ namespace EvenCart.Data.Database
         }
 
         private static bool _versionsAdded = false;
-        public static void AppendVersions()
+        public static void AppendVersions(bool excludePlugins = false)
         {
             if (_versionsAdded)
                 return;
             DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100());
-
-            //the plugin versions
-            var pluginInfos = PluginLoader.GetAvailablePlugins();
-            foreach (var pluginInfo in pluginInfos)
+            if (!excludePlugins)
             {
-                try
+                //the plugin versions
+                var pluginInfos = PluginLoader.GetAvailablePlugins();
+                foreach (var pluginInfo in pluginInfos)
                 {
-                    var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
-                    if (versions.Any())
-                        DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                    try
+                    {
+                        var versions = pluginInfo.LoadPluginInstance<IPlugin>().GetDatabaseVersions().ToArray();
+                        if (versions.Any())
+                            DotEntityDb.EnqueueVersions(pluginInfo.SystemName, versions);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                catch
-                {
-                    // ignored
-                }
+
             }
 
             _versionsAdded = true;
         }
 
-        public static void UpgradeDatabase()
+        public static void UpgradeDatabase(bool excludePlugins = false)
         {
-            UpgradeDatabase(DatabaseContextKey);
+            UpgradeDatabase(DatabaseContextKey, excludePlugins);
         }
 
-        public static void UpgradeDatabase(string callingContextName)
+        public static void UpgradeDatabase(string callingContextName, bool excludePlugins = false)
         {
-            AppendVersions();
+            AppendVersions(excludePlugins);
             DotEntityDb.UpdateDatabaseToLatestVersion(callingContextName);
         }
 
