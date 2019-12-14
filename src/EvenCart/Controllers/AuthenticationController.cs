@@ -289,9 +289,12 @@ namespace EvenCart.Controllers
             //assign role to the user
             _roleService.SetUserRoles(user.Id, new[] { roleId });
 
-            //save the consents
-            var consentDictionary = registerModel.Consents.ToDictionary(x => x.Id, x => x.ConsentStatus);
-            _gdprService.SetUserConsents(user.Id, consentDictionary);
+            if (registerModel.Consents != null && registerModel.Consents.Any())
+            {
+                //save the consents
+                var consentDictionary = registerModel.Consents.ToDictionary(x => x.Id, x => x.ConsentStatus);
+                _gdprService.SetUserConsents(user.Id, consentDictionary);
+            }
 
             //delete the invite code & user code if any
             _inviteRequestService.Delete(x => x.Email == registerModel.Email);
