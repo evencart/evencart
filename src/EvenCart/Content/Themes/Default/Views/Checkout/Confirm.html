@@ -22,11 +22,15 @@
                     ready(function () {
                         initAjaxForm("form-checkout-confirm",
                             {
-                                onSuccess: function(response) {
+                                onSuccess: function (response) {
+                                    var orderGuid = "", url="";
                                     if (response.success) {
-                                        var orderGuid = response.orderGuid;
-                                        var url = '{% route CheckoutComplete orderGuid="%id%" %}'.replace("%id%",
-                                            orderGuid);
+                                        orderGuid = response.orderGuid;
+                                        url = '{% route CheckoutComplete orderGuid="%id%" %}'.replace("%id%",orderGuid);
+                                        window.location.href = url;
+                                    } else {
+                                        orderGuid = response.orderGuid;
+                                        url = '{% route CheckoutFailed orderGuid="%id%" %}'.replace("%id%",orderGuid);
                                         window.location.href = url;
                                     }
                                 }

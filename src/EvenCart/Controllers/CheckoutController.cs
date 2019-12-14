@@ -570,11 +570,8 @@ namespace EvenCart.Controllers
             CustomResponse response = null;
             if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, paymentMethodData, out response))
             {
-                return response.Result;
+                return response.With("orderGuid", order.Guid).Result;
             }
-
-            //initialize downloads
-            _downloadService.InitializeDownloads(order);
 
             //clear the user's cart
             _cartService.ClearCart(currentUser.Id);
@@ -590,7 +587,6 @@ namespace EvenCart.Controllers
                 _roleService.SetUserRoles(currentUser.Id, new[] { roleId });
 
                 ApplicationEngine.SignIn(currentUser.Email, null, false);
-
             }
 
             response = response ?? R.Success;
@@ -603,6 +599,9 @@ namespace EvenCart.Controllers
             var order = _orderService.GetByGuid(orderGuid);
             if (order == null || order.UserId != ApplicationEngine.CurrentUser.Id)
                 return NotFound();
+            //initialize downloads
+            _downloadService.InitializeDownloads(order);
+
             RaiseEvent(NamedEvent.OrderPlaced, order.User, order);
             return R.Success.With("orderGuid", orderGuid).With("orderNumber", order.OrderNumber).Result;
         }

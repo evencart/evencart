@@ -38,6 +38,8 @@ namespace EvenCart.Services.Products
             Transaction.Initiate(transaction =>
             {
                 var productIds = order.OrderItems.Where(x => x.IsDownloadable).Select(x => x.ProductId).ToList();
+                if (!productIds.Any())
+                    return;
                 var allDownloads = GetWithoutBytes(x => productIds.Contains(x.ProductId)).ToList();
                 foreach (var orderItem in order.OrderItems.Where(x => x.IsDownloadable))
                 {
