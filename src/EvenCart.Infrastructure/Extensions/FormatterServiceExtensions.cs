@@ -10,8 +10,8 @@ namespace EvenCart.Infrastructure.Extensions
         {
             if (ApplicationEngine.IsAdmin())
                 return formatterService.FormatCurrency(amount, ApplicationEngine.BaseCurrency.CultureCode,
-                    includeSymbol);
-            return formatterService.FormatCurrency(amount, ApplicationEngine.CurrentCurrency.CultureCode, includeSymbol);
+                    includeSymbol, ApplicationEngine.BaseCurrency.CustomFormat);
+            return formatterService.FormatCurrency(amount, ApplicationEngine.CurrentCurrency.CultureCode, includeSymbol, ApplicationEngine.BaseCurrency.CustomFormat);
         }
 
         public static string ToCurrency(this decimal amount)

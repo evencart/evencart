@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Formatter
@@ -17,13 +18,14 @@ namespace EvenCart.Services.Formatter
         }
 
 
-        public string FormatCurrency(decimal amount, string languageCultureCode, bool includeSymbol = true)
+        public string FormatCurrency(decimal amount, string languageCultureCode, bool includeSymbol = true, string customFormat = null)
         {
             var culture = new CultureInfo(languageCultureCode);
-            return amount.ToString("C", culture);
+            var format = customFormat.IsNullEmptyOrWhiteSpace() ? "C" : customFormat;
+            return amount.ToString(format, culture);
         }
 
-        public string FormatCurrencyFromIsoCode(decimal amount, string isoCode, bool includeSymbol = true)
+        public string FormatCurrencyFromIsoCode(decimal amount, string isoCode, bool includeSymbol = true, string customFormat = null)
         {
             if (!_cultureInfos.TryGetValue(isoCode, out var culture))
             {
@@ -42,10 +44,11 @@ namespace EvenCart.Services.Formatter
                 if (culture != null)
                     _cultureInfos.TryAdd(isoCode, culture);
             }
-          
-            if(culture != null)
-                return amount.ToString("C", culture);
-            return amount.ToString(CultureInfo.InvariantCulture);
+
+            var format = customFormat.IsNullEmptyOrWhiteSpace() ? "C" : customFormat;
+            if (culture != null)
+                return amount.ToString(format, culture);
+            return amount.ToString(format, CultureInfo.InvariantCulture);
         }
 
         public string FormatDateTime(DateTime dateTime, string languageCultureCode, bool onlyDate = false)
