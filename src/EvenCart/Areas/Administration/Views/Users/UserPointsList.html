@@ -1,25 +1,34 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"User Points" active_menu="UserPointsList" parent_active_menu="UsersList" menu_group="UserEdit" %}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <div class="row">
     <div class="col-md-12 col-offset-2">
         <div class="panel">
             <div class="panel-title">
-                {{"User Points" | t}} - {{totalPoints | pluralize : "point" : "points"}}
+                {{"User Points" | t}} - {{totalPoints}} {{"point(s)" | t}}
                 <button class="btn btn-primary btn-sm float-right" onclick="editUserPoint(0);">{{"Add points" | t}}</button>
+                <div class="panel-help no-margin">
+                    {{"User points are reward points earned by the customers for performing some activities on the website such as purchasing or contributing via forums etc." | t}}
+                </div>
             </div>
             <div class="panel-body no-padding">
                 <div class="form-group">
                     <table id="grid-userPoints" class="table table-condensed table-hover">
                         <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="points">{{"Points" | t }}</th>
-                            <th data-column-id="createdOn">{{"Created On" | t }}</th>
-                            <th data-column-id="reason">{{"Reason" | t }}</th>
-                            <th data-column-id="activatorUser" data-formatter="user">{{"Activator User" | t }}</th>
-                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
-                        </tr>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="points">{{"Points" | t }}</th>
+                                <th data-column-id="createdOn">{{"Created On" | t }}</th>
+                                <th data-column-id="reason">{{"Reason" | t }}</th>
+                                <th data-column-id="activatorUser" data-formatter="user">{{"Activator User" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
                         </thead>
                     </table>
                 </div>
@@ -89,3 +98,4 @@
             });
     }
 </script>
+{% endif %}

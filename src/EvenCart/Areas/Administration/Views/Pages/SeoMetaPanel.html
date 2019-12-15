@@ -5,18 +5,30 @@
     <div class="panel-body">
         <div class="form-group">
             {% control label text=@t"Page Title" for="page-title" %}
+            <div class="panel-help">
+                {{"The title is used to set the browser title for the page." | t}}
+            </div>
             {% control text name="seometa.pagetitle" id="page-title" value="{{seoMeta.pageTitle}}" %}
         </div>
         <div class="form-group">
             {% control label text=@t"Meta Keywords" for="meta-keywords" %}
+            <div class="panel-help">
+                {{"The keywords are used by search engines to index the page. You can separate multiple keywords with comma." | t}}
+            </div>
             {% control text name="seometa.metakeywords" id="meta-keywords" value="{{seoMeta.metaKeywords}}" %}
         </div>
         <div class="form-group">
             {% control label text=@t"Meta Description" for="meta-description" %}
+            <div class="panel-help">
+                {{"The meta description helps search engine to categorize the page and index it appropriately." | t}}
+            </div>
             {% control text name="seometa.metadescription" id="meta-description" value="{{seoMeta.metaDescription}}" %}
         </div>
         <div class="form-group">
             {% control label text=@t"Slug" for="slug" %}
+            <div class="panel-help">
+                {{"The slug is used to generate the url to this page. A default slug will be generated automatically for new pages." | t}}
+            </div>
             {% control text name="seometa.slug" id="slug" value="{{seoMeta.slug}}" %}
         </div>
     </div>

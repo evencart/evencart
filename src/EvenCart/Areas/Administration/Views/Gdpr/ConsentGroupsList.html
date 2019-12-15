@@ -6,6 +6,9 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Consent Groups" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editConsentGroup(0)">{{"Add consent group" | t}}</button>
+                <div class="panel-help no-margin">
+                    {{"Consent groups are used for grouping related consents together. e.g. Cookie Preferences, Newsletter Preferences etc. Any consent must be a part of a group. If there are no groups available, consents are added to the default group." | t}}
+                </div>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">

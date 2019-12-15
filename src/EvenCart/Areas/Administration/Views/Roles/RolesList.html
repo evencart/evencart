@@ -27,12 +27,10 @@
 </div>
 <div class="popup" id="edit-role-popup">
 </div>
+{{roles | scriptJson : 'initData'}}
 <script type="text/javascript">
     ready(function () {
-        var initData = null;
-        /*{% unless roles == blank %}*/
-        initData = JSON.parse('{{roles}}');
-        /*{% endunless %}*/
+      
         generateGrid({
             element: "grid-roles",
             initialData: {

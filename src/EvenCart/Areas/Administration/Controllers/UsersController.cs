@@ -180,7 +180,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditUser)]
         public IActionResult AddressList(int userId)
         {
-            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+            if(userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (userId < 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
 
             var addresses = _addressService.Get(x => x.EntityId == userId && x.EntityName == nameof(User)).ToList();
@@ -192,10 +195,17 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditUser)]
         public IActionResult AddressEditor(int userId, int addressId)
         {
-            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (userId < 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
 
-            var address = addressId > 0 ? _addressService.Get(addressId) : new Address();
+            var address = addressId > 0 ? _addressService.Get(addressId) : new Address()
+            {
+                EntityName = nameof(User),
+                EntityId = userId
+            };
             if (address?.EntityName != nameof(User) || address.EntityId != userId)
                 return NotFound();
 
@@ -233,7 +243,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditUser)]
         public IActionResult OrdersList(int userId, OrderSearchModel orderSearchModel)
         {
-            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (userId < 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
 
             var orders = _orderService.Get(out int totalResults, x => x.UserId == userId, x => x.CreatedOn,
@@ -248,8 +261,11 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.EditUser)]
         public IActionResult CapabilitiesList(int userId)
         {
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             User user = null;
-            if (userId <= 0 || (user = _userService.Get(userId)) == null)
+            if (userId < 0 || (user = _userService.Get(userId)) == null)
                 return NotFound();
 
             var roleIds = user.Roles.Select(x => x.Id).ToArray();
@@ -287,7 +303,10 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageCart)]
         public IActionResult UserCart(int userId)
         {
-            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (userId < 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
@@ -320,6 +339,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageUserPoints)]
         public IActionResult UserPointsList(UserPointSearchModel searchModel)
         {
+            if (searchModel.UserId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             var userId = searchModel.UserId;
             if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
@@ -334,6 +356,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageUserPoints)]
         public IActionResult UserPointEditor(int userId, int userPointId)
         {
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
 
@@ -374,6 +399,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ImitateUser)]
         public IActionResult Imitate(int userId)
         {
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
             return R.Success.With("userId", userId).Result;
@@ -399,6 +427,9 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageGdprPrivate)]
         public IActionResult Anonymize(int userId)
         {
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
             if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
             return R.Success.With("userId", userId).Result;

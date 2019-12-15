@@ -229,8 +229,11 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageGdpr)]
         public IActionResult ConsentLogsList(int userId, ConsentLogSearchModel searchModel)
         {
-           //is the user valid?
-           var user = userId > 0 ? _userService.Get(userId) : null;
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            //is the user valid?
+            var user = userId > 0 ? _userService.Get(userId) : null;
            if (user == null)
                return NotFound();
             var consentLogs = _consentLogService.Get(out int totalResults, x => x.UserId == userId, x => x.Id, RowOrder.Ascending,

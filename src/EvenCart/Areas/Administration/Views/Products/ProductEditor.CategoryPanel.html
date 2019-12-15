@@ -3,7 +3,12 @@
         {{"Categories" | t}}
     </div>
     <div class="panel-body">
+        {% control label text=@t"New Category" %}
+        <div class="panel-help">
+            {{"You can add category hierarchy by separating names with '>' e.g. Shoes > Men > Sports will create three categories with Shoes being topmost parent." | t}}
+        </div>
         {% control text id="category-selector" placeholder=@t"Start typing category name..." %}
+
         <div id="categories-container">
             <table id="table-categories" class="table table-bordered table-hover"></table>
             <input type="hidden" name="productid" value="{{product.id}}" />
@@ -25,7 +30,7 @@
             </tr>
         </script>
         <script type="text/javascript">
-            var addCategory = function (category) {
+            var addCategory = function(category) {
                 var template = jQuery("#category-item-template").html();
                 template = template.replaceAll("category_name", category.name);
                 template = template.replaceAll("index", jQuery("#table-categories tr").length);
@@ -33,7 +38,7 @@
                 template = template.replaceAll("category_id", category.id);
                 jQuery("#table-categories").append(template);
             }
-            var deleteCategory = function (link, productId, categoryId) {
+            var deleteCategory = function(link, productId, categoryId) {
                 confirm('{{"Are you sure you want to delete this category?" | t}}',
                     function() {
                         var url = '{% route api_DeleteProductCategories %}';
@@ -54,14 +59,14 @@
                     });
 
             }
-            ready(function () {
+            ready(function() {
                 inputTypeahead({
                     element: "category-selector",
                     initialData: null,
                     url: "{% route api_GetCategorySuggestions %}",
                     preserveAfterFirstCall: true,
                     clearAfterSelect: true,
-                    select: function (item) {
+                    select: function(item) {
                         addCategory({
                             name: item.text,
                             id: item.id,
@@ -85,7 +90,7 @@
                 displayOrderSortable({
                     container: "table-categories",
                     itemSelector: "tr",
-                    update: function () {
+                    update: function() {
                         //{% if product.id > 0 %}
                         post({
                             url: "{% route api_UpdateProductCategoryDisplayOrder %}",

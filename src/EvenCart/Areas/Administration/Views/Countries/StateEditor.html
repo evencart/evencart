@@ -16,6 +16,9 @@
                     </div>
                     <div class="form-group">
                         {% control checkbox name="shippingEnabled" value="state.shippingEnabled" text=@t"Shipping Available" %}
+                        <div class="panel-help">
+                            {{"Check if products from the store can be shipped to this state." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="published" value="state.published" text=@t"Published" %}

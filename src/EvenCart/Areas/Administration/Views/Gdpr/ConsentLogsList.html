@@ -1,6 +1,12 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"User Consent Logs" active_menu="ConsentLogsList" parent_active_menu="UsersList" menu_group="UserEdit" %}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <div class="row">
     <div class="col-12">
         <div class="panel">
@@ -10,15 +16,15 @@
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="consentTitle" data-width="50%">{{"Consent" | t}}</th>
-                            <th data-column-id="activityType" data-formatter="activityType">{{"Activity" | t}}</th>
-                            <th data-column-id="createdOn">{{"Created On" | t}}</th>
-                            {% if withUserInfo %}
-                            <th data-column-id="userInfo">{{"User" | t}}</th>
-                            {% endif %}
-                        </tr>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="consentTitle" data-width="50%">{{"Consent" | t}}</th>
+                        <th data-column-id="activityType" data-formatter="activityType">{{"Activity" | t}}</th>
+                        <th data-column-id="createdOn">{{"Created On" | t}}</th>
+                        {% if withUserInfo %}
+                        <th data-column-id="userInfo">{{"User" | t}}</th>
+                        {% endif %}
+                    </tr>
                     </thead>
                 </table>
                 {{consentLogs | scriptJson : 'initData'}}
@@ -41,14 +47,14 @@
                             formatters: {
                                 "activityType": function(column, row) {
                                     switch (row["activityType"]) {
-                                        case "ConsentAccepted":
-                                            return "{{'Accepted' | t}}";
-                                        case "ConsentDenied":
-                                            return "{{'Denied' | t}}";
-                                        case "DataExportRequested":
-                                            return "{{'Data Export Requested' | t}}";
-                                        case "DataDeleteRequested":
-                                            return "{{'Account Deletion Requested' | t}}";
+                                    case "ConsentAccepted":
+                                        return "{{'Accepted' | t}}";
+                                    case "ConsentDenied":
+                                        return "{{'Denied' | t}}";
+                                    case "DataExportRequested":
+                                        return "{{'Data Export Requested' | t}}";
+                                    case "DataDeleteRequested":
+                                        return "{{'Account Deletion Requested' | t}}";
 
                                     }
                                 }
@@ -61,3 +67,4 @@
         </div>
     </div>
 </div>
+{% endif %}

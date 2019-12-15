@@ -1,11 +1,20 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Anonymize User" active_menu="AnonymizeUser" parent_active_menu="UsersList" menu_group="UserEdit"%}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <form action='{% route api_AnonymizeUser userId="{{userId}}" %}' method="post" id="edit-user-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Anonymize User" | t}}
+            <div class="panel-help no-margin">
+                {{"The anonymization completely removes any identifiable information of the user. This will also delete the addresses, comments and reviews made by the user on this site." | t}}
+            </div>
         </div>
         <div class="panel-body">
             {% if success == "False" %}
@@ -13,9 +22,7 @@
                 {{"Unable to anonymize requested user." | t}}
             </div>
             {% endif %}
-            <p>
-                {{"The anonymization completely removes any identifiable information of the user. This will also delete the addresses, comments and reviews made by the user on this site." | t}}
-            </p>
+           
             <div class="alert alert-danger">
                 {{"WARNING: THE PROCESS IS TOTALLY IRREVERSIBLE. ONCE YOU ANONYMIZE A USER, YOU'LL NO LONGER BE ABLE TO IDENTIFY THE USER." | t}}
             </div>
@@ -38,3 +45,4 @@
     })
 </script>
 
+{% endif %}

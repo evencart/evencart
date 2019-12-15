@@ -16,10 +16,16 @@
                 <div class="panel-body">
                     <div class="form-group">
                         {% control label text=@t"Template Name" for="templateName" %}
+                        <div class="panel-help">
+                            {{"The name to identify the template. It doesn't necessarily need to be unique." | t}}
+                        </div>
                         {% control text name="templateName" value="{{emailTemplate.templateName}}"%}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"System Name" for="templateSystemName" %}
+                        <div class="panel-help">
+                            {{"The system name is used internally by EvenCart. It must be unique across email templates." | t}}
+                        </div>
                         {% if emailTemplate.isSystem %}
                         {% control text name="templateSystemName" value="{{emailTemplate.templateSystemName}}"%}
                         {% else %}
@@ -28,10 +34,16 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Subject" for="subject" %}
+                        <div class="panel-help">
+                            {{"It specifies the subject line in the email. You can also use object tokens in the subject line." | t}}
+                        </div>
                         {% control text name="subject" value="{{emailTemplate.subject}}"%}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Template" for="template" %}
+                        <div class="panel-help">
+                            {{"The body the email that will be sent. You can include values from the available objects listed below e.g. 'store.name' displays the store name in the email. Use double curly brackets to surround the object values. Refer to <a href='https://docs.evencart.com/api-endpoints/'>EvenCart API</a> to see the object properties." | t}}
+                        </div>
                         {% if availableTokens.size > 0 %}
                         <small class="text-muted text-sm">
                             <span>
@@ -43,12 +55,19 @@
                         {% control textarea id="emailTemplate_template" name="template" value="{{emailTemplate.template}}" style="height:300px" %}
                     </div>
                     <div class="form-group">
-                        {% control label text=@t"Master Template" for="parentEmailTemplateId" %}
-                        {% control select id="parentEmailTemplateId" name="parentEmailTemplateId" value="emailTemplate.parentEmailTemplateId" items="availableMasterTemplates" %}
+                        {% control checkbox text=@t"Is Master" name="isMaster" value="emailTemplate.ismaster" %}
+                        <div class="panel-help">
+                            {{"A master template is a template that is parent to all the other templates. It acts as a skin to the other templates which use it. A master template must have % bodyContent % tag which will be replaced by the template content before sending emails." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
-                        {% control checkbox text=@t"Is Master" name="isMaster" value="emailTemplate.ismaster" %}
+                        {% control label text=@t"Master Template" for="parentEmailTemplateId" %}
+                        <div class="panel-help">
+                            {{"Select a master template that'll be used for this template." | t}}
+                        </div>
+                        {% control select id="parentEmailTemplateId" name="parentEmailTemplateId" value="emailTemplate.parentEmailTemplateId" items="availableMasterTemplates" %}
                     </div>
+
                     <div class="form-group">
                         {% control label text=@t"Email Account" for="emailAccountId" %}
                         {% control select id="emailAccountId" name="emailAccountId" value="emailTemplate.emailAccountId" required="true" items="availableEmailAccounts" %}

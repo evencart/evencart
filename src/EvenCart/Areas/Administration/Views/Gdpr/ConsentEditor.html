@@ -13,6 +13,9 @@
                     {% if consent.id > 0 %}
                     <div class="form-group">
                         {% control label text=@t"Group" for="group" %}
+                        <div class="panel-help">
+                            {{"Select the consent group to which the consent belong. Select 'Select' to use the default consent group." | t}}
+                        </div>
                         {% control select name="ConsentGroup.Id" value="consent.consentGroup.id" items="consentGroups" %}
                     </div>
                     {% else %}
@@ -20,20 +23,35 @@
                     {% endif %}
                     <div class="form-group">
                         {% control label text=@t"Title" for="title" %}
+                        <div class="panel-help">
+                            {{"The title that is shown to the customer for the consent. This is optional." | t}}
+                        </div>
                         {% control textarea name="title" value="{{consent.title}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Description" for="description" %}
+                        <div class="panel-help">
+                            {{"The description that is shown to the customer for the consent." | t}}
+                        </div>
                         {% control textarea id="description" name="description" value="{{consent.description}}" %}
                     </div>
                     <div class="form-group">
                         {% control checkbox name="isRequired" value="consent.isRequired" text=@t"Required" %}
+                        <div class="panel-help">
+                            {{"Check if the consent is required. The user can't proceed without accepting the consent." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="enableLogging" value="consent.enableLogging" text=@t"Enable Logging" %}
+                        <div class="panel-help">
+                            {{"Check if the consent history should be logged." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="oneTimeSelection" value="consent.oneTimeSelection" text=@t"One time selection" %}
+                        <div class="panel-help">
+                            {{"Check if the consent is only selected on the registration page and can't be modified later." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="published" value="consent.published" text=@t"Published" %}
@@ -57,7 +75,7 @@
 <script type="text/javascript">
     initAjaxForm("consent-editor-form",
         {
-            onSuccess: function() {
+            onSuccess: function () {
                 hidePopup("edit-consent-popup");
             }
         });

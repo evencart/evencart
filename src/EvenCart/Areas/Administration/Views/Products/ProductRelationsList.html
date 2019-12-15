@@ -17,16 +17,29 @@
     <div class="col-md-12 col-offset-2">
         <div class="panel">
             <div class="panel-title">
+                <button class="btn btn-primary float-right btn-sm" onclick="editRelation()">{{"Add New" | t}}</button>
                 {% if relationType == "RelatedProduct" %}
                 {{"Related Products" | t}}
+                <div class="panel-help no-margin">
+                    {{"Related products are products which are similar to the current product. They are ideal for giving customers more options to choose from." | t}}
+                </div>
                 {% elsif relationType == "CrossSell" %}
                 {{"Cross Sell Products" | t}}
+                <div class="panel-help no-margin">
+                    {{"Cross sell products are products which add more value to an existing product. e.g. a screen guard can be cross sale on top of a mobile phone." | t}}
+                </div>
                 {% elsif relationType == "UpSell" %}
                 {{"Up Sell Products" | t}}
+                <div class="panel-help no-margin">
+                    {{"Up sell products are products which are of higher price than the current product but give better value for money to the customer." | t}}
+                </div>
                 {% elsif relationType == "FrequentlyBoughtTogether" %}
                 {{"Frequently Bought Together" | t}}
+                <div class="panel-help no-margin">
+                    {{"You can show the products which are frequently bought together to the customer thus creating an urge to get multiple sales." | t}}
+                </div>
                 {% endif %}
-                <button class="btn btn-primary float-right btn-sm" onclick="editRelation()">{{"Add New" | t}}</button>
+
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed no-margin">

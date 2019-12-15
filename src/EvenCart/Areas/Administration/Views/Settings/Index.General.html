@@ -12,6 +12,9 @@
                 </div>
                 <div class="form-group">
                     {% control label text=@t"Store Domain" for="store-domain" %}
+                    <div class="panel-help">
+                        {{"The domain on which the store is installed. You should provide the domain without protocol starting with //<br/> e.g. //www.myfancystore.com" | t}}
+                    </div>
                     {% control text name="storeDomain" value="{{settings.storeDomain}}"%}
                 </div>
                 <div class="form-group">
@@ -38,23 +41,41 @@
             <div class="panel-body">
                 <div class="form-group">
                     {% control checkbox name="enableJsBundling" text=@t"Enable JS Bundling" value="settings.enableJsBundling"%}
+                    <div class="panel-help">
+                        {{"Check if javascript files on the site should be minified and bundled into a single file. Enable this in production to improve search engine scores." | t}}
+                    </div>
                 </div>
                 <div class="form-group">
                     {% control checkbox name="enableCssBundling" text=@t"Enable CSS Bundling" value="settings.enableCssBundling"%}
+                    <div class="panel-help">
+                        {{"Check if css files on the site should be minified and bundled into a single file. Enable this in production to improve search engine scores." | t}}
+                    </div>
                 </div>
                 <div class="form-group">
                     {% control checkbox name="enableHtmlMinification" text=@t"Enable Html Minification" value="settings.enableHtmlMinification"%}
+                    <div class="panel-help">
+                        {{"Check if response html should be minified. Enable this in production to improve search engine scores." | t}}
+                    </div>
                 </div>
                 <div class="form-group">
                     {% control label text=@t"Default Page Title" for="default-page-title" %}
+                    <div class="panel-help">
+                        {{"The page title that'll be used if no other is available." | t}}
+                    </div>
                     {% control text name="defaultPageTitle" value="{{settings.defaultPageTitle}}"%}
                 </div>
                 <div class="form-group">
                     {% control label text=@t"Default Meta Keywords" for="default-meta-keywords" %}
+                    <div class="panel-help">
+                        {{"The meta keywords that'll be used if no other is available." | t}}
+                    </div>
                     {% control text name="defaultMetaKeywords" value="{{settings.defaultMetaKeywords}}"%}
                 </div>
                 <div class="form-group">
                     {% control label text=@t"Default Meta Description" for="default-meta-description" %}
+                    <div class="panel-help">
+                        {{"The meta description that'll be used if no other is available." | t}}
+                    </div>
                     {% control text name="defaultMetaDescription" value="{{settings.defaultMetaDescription}}"%}
                 </div>
             </div>
@@ -68,37 +89,37 @@
             <div class="panel-body">
                 <div class="form-group">
                     {% control checkbox name="enableBreadcrumbs" text=@t"Enable breadcrumbs" value="settings.enableBreadcrumbs"%}
+                    <div class="panel-help">
+                        {{"Breadcrumbs are collection of links that help user to easily identify the navigation structure to reach a particular page." | t}}
+                    </div>
                 </div>
                 {% if availableMenus.size > 0 %}
                 <div class="form-group">
                     {% control label text=@t"Primary Site Navigation" for="primaryNavigationId" %}
+                    <div class="panel-help">
+                        {{"Select the navigation that'll be used as primary site navigation." | t}} <a href="{% route MenuList %}">{{"Configure Navigation" | t}}</a>
+                    </div>
                     {% control select name="primaryNavigationId" value="settings.primaryNavigationId" items="availableMenus" %}
-                </div>
-                {% endif %}
-                {% if availableCurrencies.size > 1 %}
-                <div class="form-group">
-                    {% control label text=@t"Base Currency" for="baseCurrencyId" %}
-                    {% control select name="baseCurrency" value="settings.baseCurrencyId" items="availableCurrencies" %}
-                </div>
-                <div class="form-group">
-                    {% control label text=@t"Default Display Currency" for="primaryCurrencyId" %}
-                    {% control select name="primaryCurrency" value="settings.primaryCurrencyId" items="availableCurrencies" %}
+
                 </div>
                 {% endif %}
                 <div class="form-group">
                     {% control label text=@t"Active Theme" for="active-theme" %}
+                    <div class="panel-help">
+                        {{"Select the theme to be used for storefront." | t}}
+                    </div>
                     <ul class="list-no-style">
                         {% for theme in availableThemes %}
                         <li>
                             <label class="text-center">
                                 <img src="{{theme.thumbnailUrl}}" /><br />
-                                <input name="activeTheme" type="radio" {% if theme.directoryName == settings.activeTheme %}checked{% endif %} value="{{theme.directoryName}}" />
+                                <input name="activeTheme" type="radio" {% if theme.directoryName= =settings.activeTheme %}checked{% endif %} value="{{theme.directoryName}}" />
                                 <strong>{{theme.name}}</strong>
                             </label>
                         </li>
                         {% endfor %}
                     </ul>
-                 
+
                 </div>
             </div>
         </div>

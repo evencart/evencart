@@ -1,6 +1,12 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"Orders" active_menu="OrdersList" parent_active_menu="UsersList" menu_group="UserEdit" %}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <div class="panel">
     <div class="panel-title">
         {{"Orders" | t}}
@@ -83,3 +89,4 @@
         </script>
     </div>
 </div>
+{% endif %}

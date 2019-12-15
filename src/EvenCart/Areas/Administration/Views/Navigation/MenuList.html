@@ -3,37 +3,12 @@
 
 <div class="row menu-page">
     <div class="col-md-3 {% if menus.size == 0 %}disabled{% endif %}">
-        <div class="panel">
-            <div class="panel-title">
-                {{"Custom Link" | t}}
-            </div>
-            <div class="panel-body">
-                <form id="form-url-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
-                    {% control xsrf %}
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                {% control label text=@t"Name" for="name" %}
-                                {% control text name="name" placeholder=@t"e.g. About us" %}
-                            </div>
-                            <div class="form-group">
-                                {% control label text=@t"Url" for="url" %}
-                                {% control text name="url" placeholder=@t"e.g. http://www.roastedbytes.com" %}
-                            </div>
-                            <div class="text-center">
-                                <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Link' | t}}" />
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-
-            </div>
-        </div>
-
         <div class="panel" id="categories-panel">
             <div class="panel-title">
                 {{"Categories" | t}}
+                <div class="panel-help no-margin">
+                    {{"These links are linked to the specific categories." | t}}
+                </div>
             </div>
             <div class="panel-body no-padding">
                 <form id="form-category-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
@@ -51,6 +26,9 @@
         <div class="panel" id="pages-panel">
             <div class="panel-title">
                 {{"Pages" | t}}
+                <div class="panel-help no-margin">
+                    {{"These links are linked to the specific content pages." | t}}
+                </div>
             </div>
             <div class="panel-body no-padding">
                 <form id="form-pages-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
@@ -67,6 +45,9 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Group Item" | t}}
+                <div class="panel-help no-margin">
+                    {{"A group item is used as a separator for a group of links." | t}}
+                </div>
             </div>
             <div class="panel-body">
                 <form id="form-group-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
@@ -80,6 +61,36 @@
                             <div class="text-center">
                                 {% control hidden name="isGroup" value="true" %}
                                 <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Group' | t}}" />
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Custom Link" | t}}
+                <div class="panel-help no-margin">
+                    {{"Custom links are simple links which are not linked to any entity." | t}}
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="form-url-bulk" action="{% route api_BulkCreateMenuItems %}" method="post">
+                    {% control xsrf %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                {% control label text=@t"Name" for="name" %}
+                                {% control text name="name" placeholder=@t"e.g. About us" %}
+                            </div>
+                            <div class="form-group">
+                                {% control label text=@t"Url" for="url" %}
+                                {% control text name="url" placeholder=@t"e.g. http://www.roastedbytes.com" %}
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary btn-sm" value="{{'Add Link' | t}}" />
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,7 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                     <div class="form-group">
                         {% control label text=@t"Role Name" for="name" %}
                         {% control text id="name" name="name" value="{{role.name}}" %}
@@ -18,10 +18,15 @@
                     {% unless role.isSystemRole %}
                     <div class="form-group">
                         {% control label text=@t"System Name" for="systemName" %}
+                        <div class="panel-help">
+                            {{"The system name is used internally by EvenCart. It must be unique across roles." | t}}
+                        </div>
                         {% control text id="systemName" name="systemName" value="{{role.systemName}}" %}
                         {% control validator for="systemName" required="true" %}
                     </div>
                     {% endunless %}
+                </div>
+                <div class="col-lg-6">
                     <div class="form-group">
                         {% control label text=@t"Capabilities" %}
                         <div class="capabilities-selector-box">

@@ -1,11 +1,20 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Imitate" active_menu="Imitate" parent_active_menu="UsersList" menu_group="UserEdit"%}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <form action='{% route UserImitate userId="{{userId}}" %}' method="post" id="edit-imitation-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
             {{"Imitation Mode" | t}}
+            <div class="panel-help no-margin">
+                {{"The imitation mode logs you in as if you were the user. You can operate the site as the user you are imitating. All the actions (except GDPR related) done on website during imitation will be attributed to the user being imitated." | t}}
+            </div>
         </div>
         <div class="panel-body">
             {% if success == "False" %}
@@ -13,13 +22,11 @@
                 {{"Unable to imitate requested user." | t}}
             </div>
             {% endif %}
-            <p>
-                {{"The imitation mode logs you in as if you were the user. You can operate the site as if the user you are imitating is operating." | t}}
-            </p>
             <button type="submit" class="btn btn-primary btn-sm">
                 {{"Start Imitation" | t}}
             </button>
         </div>
     </div>
 </form>
+{% endif %}
 

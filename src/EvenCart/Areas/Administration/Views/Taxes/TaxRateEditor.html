@@ -20,6 +20,9 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Postal Code" for="postalCode" %}
+                        <div class="panel-help">
+                            {{"Enter if you wish to restrict this tax to some specific postal code. Leave empty to apply the tax to the entire state." | t}}
+                        </div>
                         {% control text id="postalCode" name="zipOrPostalCode" value="{{taxRate.zipOrPostalCode}}" %}
                     </div>
                     <div class="form-group">

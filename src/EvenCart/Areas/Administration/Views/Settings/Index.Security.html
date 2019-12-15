@@ -7,29 +7,52 @@
     <div class="panel-body">
         <div class="form-group">
             {% control checkbox name="enableCaptcha" text=@t"Enable Captcha" value="settings.enableCaptcha"%}
+            <div class="panel-help">
+                {{"Check to enable Google Captcha for the website. " | t}}
+            </div>
         </div>
         <div class="form-group">
             {% control label text=@t"Site Key" for="siteKey" %}
             {% control text name="siteKey" value="{{settings.siteKey}}"%}
+            <div class="panel-help">
+                {{"The site key for the Google Captcha " | t}} <a href="https://www.google.com/recaptcha/admin">{{"Get site key"}}</a>
+            </div>
         </div>
         <div class="form-group">
             {% control label text=@t"Site Secret" for="siteSecret" %}
             {% control text name="siteSecret" value="{{settings.siteSecret}}"%}
+            <div class="panel-help">
+                {{"The site secret for the Google Captcha " | t}} <a href="https://www.google.com/recaptcha/admin">{{"Get site secret"}}</a>
+            </div>
         </div>
         <div class="form-group">
             {% control label text=@t"Honeypot Field Name" for="honeypotFieldName" %}
+            <div class="panel-help">
+                {{"The honeypot fields are used to prevent automated spam from bot attacks. If you wish to enable honeypot, give the field a random name. e.g. email-lle117" | t}}
+            </div>
             {% control text name="honeypotFieldName" value="{{settings.honeypotFieldName}}"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Banned Ip Addresses" for="banned-ips" %}
+            <div class="panel-help">
+                {{"The ip addresses tha should be banned from accessing the websites. Separate multiple addresses using commas." | t}}
+            </div>
             {% control text name="bannedIps" value="{{settings.bannedIps}}"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Admin Access Ip Addresses" for="adminRestrictedIps" %}
+            <div class="panel-help">
+                {{"This protects your administration area and allows access to it only from the provided IPs." | t}}
+            </div>
             {% control text name="adminRestrictedIps" value="{{settings.adminRestrictedIps}}"%}
         </div>
         <div class="form-group">
             {% control label text=@t"Shared Api Access key" for="apiAccessKey" %}
+            <div class="panel-help">
+                {{"The calls to EvenCart API are authenticated using API key. You can use the API key to validate calls to EvenCart. You can generate a new api key if you don't have one. Note that the api key is shown only once." | t}}<br/>
+                {{"Visit <a href='https://docs.evencart.com/api-authentication/'>API Authentication page</a> to know more." | t}}
+
+            </div>
             <div class="shared-api-key alert alert-info" style="display: none"></div>
             <button type="button" class="generate-new-key btn btn-danger btn-sm">{{"Generate New Key" | t}}</button>
         </div>

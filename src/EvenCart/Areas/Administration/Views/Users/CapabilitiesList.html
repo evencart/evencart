@@ -1,12 +1,21 @@
 ﻿{% layout "_Layout" %}
 {% global page_title=@t"Capabilities" active_menu="CapabilitiesList" parent_active_menu="UsersList" menu_group="UserEdit" %}
-
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
 <form action='{% route api_SaveCapabilities userId="{{userId}}" %}' id="form-capabilities">
     <div class="row">
         <div class="col-md-6">
             <div class="panel">
                 <div class="panel-title">
                     {{"Role Based Capabilities" | t}}
+                    <div class="panel-help no-margin">
+                        {{"Capabilities are permissions that an EvenCart user must have to perform any operation across website. The role based capabilities are automatically available to user based on their role." | t}}
+                    </div>
                 </div>
                 <div class="panel-body">
                     {% if capabilities.size == 0 %}
@@ -31,6 +40,9 @@
             <div class="panel">
                 <div class="panel-title">
                     {{"Additional Capabilities" | t}}
+                    <div class="panel-help no-margin">
+                        {{"You can check any additional capabilities that you wish to assign to the user." | t}}
+                    </div>
                 </div>
                 <div class="panel-body">
                     {% if availableCapabilities.size == 0 %}
@@ -66,4 +78,5 @@
         });
     })
 </script>
+{% endif %}
 

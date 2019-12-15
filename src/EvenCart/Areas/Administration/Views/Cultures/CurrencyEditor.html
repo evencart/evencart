@@ -12,36 +12,54 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {% control label text=@t"Currency Name" for="currency-name" %}
+                        <div class="panel-help">
+                            {{"The name of currency as shown to the customers." | t}}
+                        </div>
                         {% control text id="currency-name" name="name" placeholder=@t"e.g. Indian Rupee" value="{{currency.name}}" %}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         {% control label text=@t"ISO Code" for="isoCode" %}
+                        <div class="panel-help">
+                            {{"Provide three letter ISO 4217 code for the currency." | t}}
+                        </div>
                         {% control text id="isoCOde" name="isoCode" placeholder=@t"e.g. INR" value="{{currency.isoCode}}" %}
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         {% control label text=@t"Exchange Rate" for="exchangeRate" %}
+                        <div class="panel-help">
+                            {{"The exchange rate is used to calculate amounts in the user's currency with respect to base currency." | t}} <a href='{% route GetSettings settingType="localization" %}'>{{"Change Currency Settings"}}</a>
+                        </div>
                         {% control number id="exchangeRate" name="exchangeRate" value="{{currency.exchangeRate}}" %}
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
                         {% control label text=@t"Locale" for="cultureCode" %}
+                        <div class="panel-help">
+                            {{"Specifies the culture code for the currency." | t}}
+                        </div>
                         {% control select id="cultureCode" name="cultureCode" value="currency.cultureCode" items="cultures" %}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         {% control label text=@t"Custom Format" for="customFormat" %}
+                        <div class="panel-help">
+                            {{"Customize the display format for the currency. Leave empty to use default format." | t}}
+                        </div>
                         {% control text id="customFormat" name="customFormat" value="{{currency.customFormat}}" %}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         {% control label text=@t"Flag" for="flag" %}
+                        <div class="panel-help">
+                            {{"The display flag of the currency to the customer." | t}}
+                        </div>
                         {% control select id="flag" name="flag" value="currency.flag" items="countryFlags" %}
                     </div>
                 </div>

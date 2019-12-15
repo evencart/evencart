@@ -17,10 +17,16 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Product Summary" for="summary" %}
+                        <div class="panel-help">
+                            {{"The product summary is a short description of the product details. It should give a customer a quick idea about the details of the product." | t}}
+                        </div>
                         {% control wyswyg id="summary" name="summary" value="{{product.summary}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Description" for="description" %}
+                        <div class="panel-help">
+                            {{"The product description is a detailed description of the product details. Use bullets and paragraphs to make your description easy to understand." | t}}
+                        </div>
                         {% control wyswyg id="description" name="description" value="{{product.description}}" %}
                     </div>
                 </div>
@@ -34,18 +40,27 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 {% control label text=@t"Price" for="price" %}
+                                <div class="panel-help">
+                                    {{"The price of the product that is charged to the customer." | t}}
+                                </div>
                                 {% control currency name="price" value="{{product.price}}" min="0" %}
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 {% control label text=@t"Compare Price" for="comparePrice" %}
+                                <div class="panel-help">
+                                    {{"The compare price is the price with which the actual price is compared." | t}}
+                                </div>
                                 {% control currency name="comparePrice" value="{{product.comparePrice}}" min="0" %}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="chargeTaxes" value="product.chargeTaxes" text=@t"Charge Tax" %}
+                        <div class="panel-help">
+                            {{"Check if the customer is charged for taxes when purchasing this product. You can configure the taxes on " | t}} <a href="{% route TaxesList %}">{{"Taxes"}}</a> {{"page" | t}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,37 +71,67 @@
                 <div class="panel-body">
                     <div class="form-group">
                         {% control checkbox name="isShippable" text=@t"Is Shippable?" value="product.isShippable" %}
+                        <div class="panel-help">
+                            {{"Check if the product can be shipped." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="isDownloadable" text=@t"Is Downloadable?" value="product.isDownloadable" %}
+                        <div class="panel-help">
+                            {{"Check if the product can be downloaded." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control checkbox name="isFeatured" text=@t"Is Featured?" value="product.isFeatured" %}
-                    </div>
-                    <div class="form-group">
-                        {% control label text=@t"Product Type" for="productType" %}
-                        {% control select name="productType" value="product.productType" items="productTypes" required="true" %}
-                    </div>
-                    <div class="form-group">
-                        {% control label text=@t"Sale Type" for="productSaleType" %}
-                        {% control select name="productSaleType" value="product.productSaleType" items="productSaleTypes" required="true" %}
+                        <div class="panel-help">
+                            {{"Check if the product should be shown in the featured box." | t}}
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Sale Type" for="productSaleType" %}
+                                <div class="panel-help">
+                                    {{"Sale type allows to specify if customer can subscribe for the product for regular purchase." | t}}
+                                </div>
+                                {% control select name="productSaleType" value="product.productSaleType" items="productSaleTypes" required="true" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                {% control label text=@t"Product Type" for="productType" %}
+                                <div class="panel-help">
+                                    {{"Product type specifies if the product is a good that's delivered or is service that's provided." | t}}
+                                </div>
+                                {% control select name="productType" value="product.productType" items="productTypes" required="true" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
                             <div class="form-group" data-show-when="jQuery">
                                 {% control label text=@t"Subscription Cycle" for="subscriptionCycle" %}
+                                <div class="panel-help">
+                                    {{"If the product supports subscription purchase, specify how frequently the subscription is processed." | t}}
+                                </div>
                                 {% control select name="subscriptionCycle" value="product.subscriptionCycle" items="timeCycles" required="true" %}
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <div class="form-group">
-                                {% control label text=@t"Number of Cycles" for="subscriptionCycle" %}
+                                {% control label text=@t"Cycle Length" for="cycleCount" %}
+                                <div class="panel-help">
+                                    {{"Cycle length lets you customize the the subscription cycle. e.g. a 'Daily' subscription cycle with cycle length of '5' causes subscription order to be placed every 5 days. " | t}}
+                                </div>
                                 {% control number name="cycleCount" value="{{product.cycleCount}}" min="0" %}
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <div class="form-group">
                                 {% control label text=@t"Trial Days" for="trialDays" %}
+                                <div class="panel-help">
+                                    {{"You can specify the number of trial days if there are any. The customer will not be charged before this trial period ends." | t}}
+                                </div>
                                 {% control number name="trialDays" value="{{product.trialDays}}" min="0" %}
                             </div>
                         </div>
@@ -98,21 +143,32 @@
                     {{"Inventory" | t}}
                 </div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        {% control label text=@t"Sku" for="sku" %}
-                        {% control text name="sku" value="{{product.sku}}" %}
-                    </div>
-                    <div class="form-group">
-                        {% control label text=@t"Gtin" for="gtin" %}
-                        {% control text name="gtin" value="{{product.gtin}}" %}
-                    </div>
-                    <div class="form-group">
-                        {% control label text=@t"Mpn" for="mpn" %}
-                        {% control text name="mpn" value="{{product.mpn}}" %}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Sku" for="sku" help=@t"Stock Keeping Unit" %}
+                                {% control text name="sku" value="{{product.sku}}" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Gtin" for="gtin" help=@t"Global Trade Identification Number" %}
+                                {% control text name="gtin" value="{{product.gtin}}" %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {% control label text=@t"Mpn" for="mpn" help=@t"Manufacturer Part Number" %}
+                                {% control text name="mpn" value="{{product.mpn}}" %}
+                            </div>
+                        </div>
                     </div>
                     {% if product.hasVariants == false %}
                     <div class="form-group">
                         {% control checkbox name="trackInventory" text=@t"Track Inventory" value="product.trackInventory" %}
+                        <div class="panel-help">
+                            {{"If checked, EvenCart will track the inventory and perform various inventory tracking tasks such as sending low stock notifications to administrator." | t}}
+                        </div>
                     </div>
                     {% else %}
                     <div class="form-group">
@@ -120,15 +176,15 @@
                     </div>
                     {% endif %}
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-lg-6">
                             <div class="form-group">
-                                {% control label text=@t"Min. Purchase Qty." for="minimumPurchaseQuantity" %}
+                                {% control label text=@t"Minimum Purchase Quantity" for="minimumPurchaseQuantity" %}
                                 {% control number name="minimumPurchaseQuantity" value="{{product.minimumPurchaseQuantity}}" min="1" %}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-6">
                             <div class="form-group">
-                                {% control label text=@t"Max. Purchase Qty." for="maximumPurchaseQuantity" %}
+                                {% control label text=@t"Maximum Purchase Quantity" for="maximumPurchaseQuantity" %}
                                 {% control number name="maximumPurchaseQuantity" value="{{product.maximumPurchaseQuantity}}" min="0" %}
                             </div>
                         </div>
@@ -145,6 +201,9 @@
                 <div class="panel-body">
                     <div class="form-group">
                         {% control checkbox name="individuallyShipped" value="product.individuallyShipped" text=@t"Individually shipped" %}
+                        <div class="panel-help">
+                            {{"Check this if the product is individually shipped. The shipping cost will then be calculated separately for each product quantity and added to final total." | t}}
+                        </div>
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Additional shipping charge" for="additionalShippingCharge" %}

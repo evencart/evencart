@@ -7,10 +7,16 @@
     <div class="panel-body">
         <div class="form-group">
             {% control label text=@t"Order Number Template" for="orderNumberTemplate" %}
+            <div class="panel-help">
+                {{"You can customize the order number format for new orders. See <a href=''>Token Reference</a> to know about available tokens." | t}}
+            </div>
             {% control text name="orderNumberTemplate" value="{{settings.orderNumberTemplate}}"%}
         </div>
         <div class="form-group">
             {% control checkbox name="allowReorder" text=@t"Allow customers to repeat the same order" value="settings.allowReorder" %}
+            <div class="panel-help">
+                {{"When checked allows a customer to again place an already placed order." | t}}
+            </div>
         </div>
         <div class="form-group">
             {% control checkbox name="allowGuestCheckout" text=@t"Allow guest checkout" value="settings.allowGuestCheckout" %}
@@ -27,6 +33,9 @@
         </div>
         <div class="form-group">
             {% control label text=@t"Default number of days for returns" for="DefaultReturnsDays" %}
+            <div class="panel-help">
+                {{"Defines the number of days for which return is allowed." | t}}
+            </div>
             {% control number min="0" name="DefaultReturnsDays" value="{{settings.defaultReturnsDays}}"%}
         </div>
         <div class="form-group">

@@ -49,6 +49,9 @@
                     {% if themeTemplates.size > 0 %}
                     <div class="form-group">
                         {% control label text=@t"Page Template" %}
+                        <div class="panel-help">
+                            {{"The templates are pages which have specific design for a particular type of content. e.g. ContactUs template in the default theme includes a Contact Form. You can select a template depending on the content that this page represents. The templates are provided by the active theme's config file." | t}}
+                        </div>
                         {% control select name="template" value="contentPage.template" items="themeTemplates" %}
                     </div>
                     {% endif %}

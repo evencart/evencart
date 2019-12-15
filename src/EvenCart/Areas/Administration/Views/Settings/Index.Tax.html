@@ -7,13 +7,16 @@
     <div class="panel-body">
         <div class="form-group">
             {% control label text=@t"Default Tax Rate" for="defaultTaxRate" %}
+            <div class="panel-help">
+                {{"Specify a default tax rate to be used if no other taxes are found." | t}} <a href="{% route TaxesList %}">{{"Manage Taxes" | t}}</a>
+            </div>
             {% control text name="defaultTaxRate" value="{{settings.defaultTaxRate}}"%}
         </div>
         <div class="form-group">
             {% control checkbox name="pricesIncludeTax" text=@t"Product prices include tax" value="settings.pricesIncludeTax"%}
         </div>
         <div class="form-group">
-            {% control checkbox name="displayProductPricesWithoutTax" text=@t"Display product prices without tax" value="settings.displayProductPricesWithoutTax" %}
+            {% control checkbox name="displayProductPricesWithoutTax" text=@t"Display product prices without tax" value="settings.displayProductPricesWithoutTax" %}           
         </div>
         <div class="form-group">
             {% control checkbox name="chargeTaxOnShipping" text=@t"Charge tax on shipping" value="settings.chargeTaxOnShipping" %}
@@ -23,6 +26,9 @@
         </div>
         <div class="form-group">
             {% control label text=@t"Shipping Tax Name" for="shippingTax" %}
+            <div class="panel-help">
+                {{"Select a shipping tax if shipping should be charged for taxes." | t}} <a href="{% route TaxesList %}">{{"Manage Taxes" | t}}</a>
+            </div>
             {% control select name="shippingTaxId" value="settings.shippingTaxId" items="availableTaxes" %}
         </div>
     </div>

@@ -24,6 +24,9 @@
         </div>
         <div class="form-group">
             {% control checkbox name="enableReviewModeration" text=@t"Moderate Reviews" value="settings.enableReviewModeration"%}
+            <div class="panel-help">
+                {{"When checked doesn't publish the review on the public site until manually moderated by administrator." | t}}
+            </div>
         </div>
         <div class="form-group">
             {% control checkbox name="allowReviewsForStorePurchaseOnly" text=@t"Allow Reviews For Store Purchase Only" value="settings.allowReviewsForStorePurchaseOnly"%}
@@ -44,10 +47,16 @@
         </div>
         <div class="form-group">
             {% control label text=@t"Number of days to show pending reviews" for="numberOfDaysForPendingReviews" %}
+            <div class="panel-help">
+                {{"You can set the number of days for which customer is asked to review a product after the purchase is made." | t}}
+            </div>
             {% control number min="1" name="numberOfDaysForPendingReviews" value="{{settings.numberOfDaysForPendingReviews}}"%}
         </div>
         <div class="form-group">
             {% control checkbox name="enableRelatedProducts" text=@t"Enable Related Products" value="settings.enableRelatedProducts"%}
+            <div class="panel-help">
+                {{"Check to show related products on the product page. You can configure related products of a product on product editor page." | t}}
+            </div>
         </div>
         <div class="form-group">
             {% control label text=@t"Number of related products" for="numberOfRelatedProducts" %}

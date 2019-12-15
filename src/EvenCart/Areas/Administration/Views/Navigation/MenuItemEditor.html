@@ -14,21 +14,24 @@
                         {% control text name="name" value="{{menuItem.name}}" %}
                     </div>
                     {% if menuItem.isGroup == "false" %}
-                        <div class="form-group">
-                            {% control label text=@t"Css" for="css" %}
-                            {% control text name="cssClass" value="{{menuItem.cssClass}}" %}
+                    <div class="form-group">
+                        {% control label text=@t"Css" for="css" %}
+                        <div class="panel-help">
+                            {{"The css classes that'll be added to the link's class attribute." | t}}
                         </div>
-                        {% if menuItem.seoMetaId > 0 %}
-                        <div class="form-group">
-                            {% control label text=@t"Linked Url" for="linked" %}
-                            <a href="{{menuItem.url}}" target="_blank">{{menuItem.seoMetaTargetName}}</a>
-                        </div>
-                        {% else %}
-                        <div class="form-group">
-                            {% control label text=@t"Url" for="url" %}
-                            {% control text name="url" value="{{menuItem.url}}" %}
-                        </div>
-                        {% endif %}
+                        {% control text name="cssClass" value="{{menuItem.cssClass}}" %}
+                    </div>
+                    {% if menuItem.seoMetaId > 0 %}
+                    <div class="form-group">
+                        {% control label text=@t"Linked Url" for="linked" %}
+                        <a href="{{menuItem.url}}" target="_blank">{{menuItem.seoMetaTargetName}}</a>
+                    </div>
+                    {% else %}
+                    <div class="form-group">
+                        {% control label text=@t"Url" for="url" %}
+                        {% control text name="url" value="{{menuItem.url}}" %}
+                    </div>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -51,7 +54,7 @@
 <script type="text/javascript">
     initAjaxForm("menu-item-editor-form",
         {
-            onSuccess: function() {
+            onSuccess: function () {
                 hidePopup("edit-popup");
             }
         });
