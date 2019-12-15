@@ -76,7 +76,11 @@ namespace EvenCart.Services.Emails
                         "shipment",
                         "store"
                     };
-                default: return null;
+                default: return new List<string>()
+                {
+                    "user",
+                    "store"
+                };
             }
         }
 
