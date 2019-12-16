@@ -67,7 +67,7 @@ namespace EvenCart.Core.Plugins
                 SafeFileCopy(mainAssemblyFileInfo, Path.Combine(_binDirectory, mainAssemblyFileInfo.Name));
                 var pluginAssembly = Assembly.LoadFile(Path.Combine(_binDirectory, mainAssemblyFileInfo.Name));
                 //copy the dependent assemblies
-                var dependentAssemblies = GetDependentAssemblies(pluginAssembly);
+                var dependentAssemblies = GetPluginDirectoryDlls(pluginInfo); //GetDependentAssemblies(pluginAssembly);
                 var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
                 foreach (var da in dependentAssemblies)
                 {
@@ -167,6 +167,12 @@ namespace EvenCart.Core.Plugins
             return dependentFileNames;
         }
 
+        private static IDictionary<string, string> GetPluginDirectoryDlls(PluginInfo pluginInfo)
+        {
+            var dllFiles = Directory.GetFiles(pluginInfo.PluginDirectory, "*.dll");
+            var fileInfos = dllFiles.Where(x => x != pluginInfo.SystemName + ".dll").Select(x => new FileInfo(x));
+            return fileInfos.ToDictionary(x => x.FullName, x => x.Name);
+        }
         private static bool IsNullEmptyOrWhitespace(string s)
         {
             return string.IsNullOrWhiteSpace(s) || string.IsNullOrEmpty(s);
