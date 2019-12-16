@@ -1,0 +1,91 @@
+﻿<script type="text/javascript" src="{{paymentInfo.scriptUrl}}"></script>
+<style type="text/css">
+    .form-control iframe{
+        margin-top:5px;
+    }
+</style>
+<div class="col-lg-12" id="sq-form-details">
+    <div class="form-group">
+        {% control label text=@t"Card Number" for="name" %}
+        <div class="form-control"><div id="sq-card-number"></div></div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                {% control label text=@t"Expiration Date"  %}
+                <div class="form-control"><div id="sq-expiration-date"></div></div>
+            </div>
+            <div class="col-md-6">
+                {% control label text=@t"CVC/CVV" for="cvv" %}
+                <div class="form-control"><div id="sq-cvv"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        {% control label text=@t"Postal Code" %}
+        <div class="form-control"><div id="sq-postal-code"></div></div>
+    </div>
+</div>
+{% control hidden name="nonce" id="nonce" %}
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var paymentForm = null;
+        var sqScriptLoader = setInterval(function () {
+            if (typeof SqPaymentForm == "undefined") {
+                return;
+            }
+            clearInterval(sqScriptLoader);
+            paymentForm = new SqPaymentForm(
+                {
+                    applicationId: "{{paymentInfo.applicationId}}",
+                    autoBuild: false,
+                    inputClass:"sq-control",
+                    cardNumber: {
+                        elementId: 'sq-card-number',
+                        placeholder: 'XXXX XXXX XXXX XXXX'
+                    },
+                    expirationDate: {
+                        elementId: 'sq-expiration-date',
+                        placeholder: 'MM/YY'
+                    },
+                    cvv: {
+                        elementId: 'sq-cvv',
+                        placeholder: 'CVV'
+                    },
+                    postalCode: {
+                        elementId: 'sq-postal-code'
+                    },
+                    callbacks: {
+                        cardNonceResponseReceived: function (errors, nonce, cardData) {
+                            if (errors) {
+
+                            }
+                            else {
+                                jQuery('#nonce').val(nonce);
+                                jQuery("#form-payment-info").submit();
+                            }
+                            paymentForm.destroy();
+                            paymentForm = null;
+                        },
+                        unsupportedBrowserDetected: function () {
+                            console.log('Browser is not supported');
+                        },
+
+                        paymentFormLoaded: function () {
+                            if (paymentForm) {
+                                paymentForm.setPostalCode('{{paymentInfo.postalCode}}');
+                            }
+                        }
+                    }
+                });
+
+            paymentForm.build();
+        }, 100);
+
+        jQuery("#btn-paymentform-submit").click(function(e) {
+            e.preventDefault();
+            if (paymentForm != null)
+                paymentForm.requestCardNonce();
+        });
+    });
+</script>

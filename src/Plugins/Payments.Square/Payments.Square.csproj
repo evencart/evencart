@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Payments.Square</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Payments.Square</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Payments.Square</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\PublicInfo.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Administration\Square\Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Administration\Square\_Navigation.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Square\PaymentInfoDisplayPage.html">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RestSharp" Version="106.3.1" />
+    <PackageReference Include="Square.Connect" Version="2.25.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)Build\Cleanup\Output\Cleanup.exe $(OutDir)" />
+  </Target>
+
+</Project>

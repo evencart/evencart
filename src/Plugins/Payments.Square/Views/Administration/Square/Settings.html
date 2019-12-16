@@ -1,0 +1,64 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Square Configuration" active_menu="ConfigureSquare" menu_group="SquareConfiguration" %}
+{% partial "Square/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"Square Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_SquareSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control label text=@t"Application Id" for="applicationId" %}
+                {% control text name="applicationId" value="{{settings.applicationId}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Access Token" for="accessToken" %}
+                {% control text name="accessToken" value="{{settings.accessToken}}" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="enableSandbox" text=@t"Enable Sandbox" value="settings.enableSandbox" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Sandbox Application Id" for="sandboxPublishableKey" %}
+                {% control text name="sandboxApplicationId" value="{{settings.sandboxApplicationId}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Sandbox Access Token" for="sandboxAccessToken" %}
+                {% control text name="sandboxAccessToken" value="{{settings.sandboxAccessToken}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Location Id" for="locationId" %}
+                {% control text name="locationId" value="{{settings.locationId}}" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="authorizeOnly" text=@t"Authorize Only" value="settings.authorizeOnly" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="usePercentageForAdditionalFee" text=@t"Use percentage for additional fee" value="settings.usePercentageForAdditionalFee" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Additional Fee" for="additionalFee" %}
+                {% control number name="additionalFee" value="{{settings.additionalFee}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Description" for="description" %}
+                {% control text name="description" value="{{settings.description}}" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+

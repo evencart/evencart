@@ -1,0 +1,11 @@
+﻿{
+  "name": "Square Payments",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Payments.Square.dll",
+  "systemName": "EvenCart.Payments.Square",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}
