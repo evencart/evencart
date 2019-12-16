@@ -59,7 +59,13 @@
         jQuery("#PaymentMethodSystemName").change(function() {
             var method = jQuery(this).val();
             var url = paymentMethods[method];
+            jQuery("#btn-paymentform-submit").hide();
+            if (url == "") {
+                jQuery("#payment-info-form").html("{{'The payment method is not available at the moment.' | t}}");
+                return;
+            }
             jQuery("#btn-paymentform-submit").unbind("click");
+            jQuery("#payment-info-form").html("{{'Loading...' | t}}");
             get({
                 url: url,
                 data: {
@@ -67,6 +73,7 @@
                 },
                 done: function (response) {
                     jQuery("#payment-info-form").html(response);
+                    jQuery("#btn-paymentform-submit").show();
                 }
             });
         });
