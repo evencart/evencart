@@ -7,6 +7,7 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Payments;
@@ -20,6 +21,7 @@ namespace Payments.Stripe.Helpers
 {
     public class StripeHelper
     {
+        private const string StripeCustomerIdKey = "StripeCustomerId";
         private static void InitStripe(StripeSettings stripeSettings, bool secret = false)
         {
             var publishableKey = stripeSettings.EnableTestMode
@@ -176,6 +178,10 @@ namespace Payments.Stripe.Helpers
             return captureResult;
         }
 
+        public static TransactionResult ProcessVoid(TransactionRequest captureRequest, StripeSettings stripeSettings, ILogger logger)
+        {
+            return ProcessRefund(captureRequest, stripeSettings, logger);
+        }
 
         public static TransactionResult CreateSubscription(TransactionRequest request, StripeSettings stripeSettings,
             ILogger logger)
@@ -204,30 +210,37 @@ namespace Payments.Stripe.Helpers
 
             var address = DependencyResolver.Resolve<IDataSerializer>()
                 .DeserializeAs<Address>(order.BillingAddressSerialized);
-            var options = new CustomerCreateOptions
-            {
-                Email = order.User.Email,
-                PaymentMethod = paymentMethod.Id,
-                InvoiceSettings = new CustomerInvoiceSettingsOptions
-                {
-                    DefaultPaymentMethod = paymentMethod.Id,
-                },
-                Address = new AddressOptions()
-                {
-                    City = address.City,
-                    Country = address.Country.Name,
-                    Line1 = address.Address1,
-                    Line2 = address.Address2,
-                    PostalCode = address.ZipPostalCode,
-                    State = address.StateProvinceName
-                },
-                Name = order.User.Name + "-" + order.User.Email
-            };
 
             InitStripe(stripeSettings, true);
             var service = new CustomerService();
-            var customer = service.Create(options);
-
+            //do we have a saved stripe customer id?
+            var customerId = order.User.GetPropertyValueAs<string>(StripeCustomerIdKey);
+            if (customerId.IsNullEmptyOrWhiteSpace())
+            {
+                var options = new CustomerCreateOptions
+                {
+                    Email = order.User.Email,
+                    PaymentMethod = paymentMethod.Id,
+                    InvoiceSettings = new CustomerInvoiceSettingsOptions
+                    {
+                        DefaultPaymentMethod = paymentMethod.Id,
+                    },
+                    Address = new AddressOptions()
+                    {
+                        City = address.City,
+                        Country = address.Country.Name,
+                        Line1 = address.Address1,
+                        Line2 = address.Address2,
+                        PostalCode = address.ZipPostalCode,
+                        State = address.StateProvinceName
+                    },
+                    Name = order.User.Name + "-" + order.User.Email
+                };
+                var customer = service.Create(options);
+                customerId = customer.Id;
+            }
+           
+            
             var subscriptionItems = new List<SubscriptionItemOptions>();
             var productService = new ProductService();
             var planService = new PlanService();
@@ -261,7 +274,7 @@ namespace Payments.Stripe.Helpers
 
             var subscriptionOptions = new SubscriptionCreateOptions()
             {
-                Customer = customer.Id,
+                Customer = customerId,
                 Items = subscriptionItems,
                 Metadata = new Dictionary<string, string>()
                 {
@@ -286,7 +299,7 @@ namespace Payments.Stripe.Helpers
                 processPaymentResult.NewStatus = PaymentStatus.Complete;
                 processPaymentResult.TransactionCurrencyCode = order.CurrencyCode;
                 processPaymentResult.IsSubscription = true;
-                processPaymentResult.TransactionAmount = subscription.Plan.AmountDecimal ?? order.OrderTotal;
+                processPaymentResult.TransactionAmount = (subscription.Plan.AmountDecimal / 100) ?? order.OrderTotal;
                 processPaymentResult.ResponseParameters = new Dictionary<string, object>()
                 {
                     {"subscriptionId", subscription.Id},
@@ -387,7 +400,7 @@ namespace Payments.Stripe.Helpers
                         Success = true,
                         IsSubscription = true,
                         NewStatus = PaymentStatus.Failed,
-                        TransactionAmount = total,
+                        TransactionAmount = total / 100,
                         TransactionGuid = Guid.NewGuid().ToString(),
                         IsOfflineTransaction = false,
                         TransactionCurrencyCode = order.CurrencyCode,
@@ -429,7 +442,7 @@ namespace Payments.Stripe.Helpers
                         Success = true,
                         IsSubscription = true,
                         NewStatus = PaymentStatus.Complete,
-                        TransactionAmount = total,
+                        TransactionAmount = total / 100,
                         TransactionGuid = Guid.NewGuid().ToString(),
                         IsOfflineTransaction = false,
                         TransactionCurrencyCode = order.CurrencyCode,
