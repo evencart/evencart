@@ -28,11 +28,10 @@
     <title>{{ page_title }} - {{store.softwareTitle}} {{"Administration" | t}}</title>
 </head>
 <body>
-    <div class="page-wrapper">
+    <div class="container-fluid">
         <div class="sidenav">
-            <div class="user-menu dropdown">
+            <div class="user-menu dropdown float-right">
                 <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <div class="workspace">EvenCart</div>
                     <div class="user-info">
                         <span class="user-name margin-r-5">{{currentUser.firstName}}</span>
                         <span class="rbicon-chevron-down"></span>
@@ -111,31 +110,34 @@
                     {
                         var groupItem = navigation_groups[j];
                         if (groupItem.name != '') {
-                            var groupLi = "<li class='group-item'>" + groupItem.name + "</li>";
+                            var groupLi = "<li><a>" + groupItem.name + "</a>";
+                            groupLi += "<ul class='primary-sub-menu'>";
+                            for (var i = 0; i < primary_navigation.length; i++) {
+                                var menuItem = primary_navigation[i];
+                                if (menuItem.groupId != groupItem.id)
+                                    continue;
+                                for (var k = 0; k < secondary_navigation.length; k++) {
+                                    var sMenuItem = secondary_navigation[k];
+                                    if (sMenuItem.parent === menuItem.systemName) {
+                                        menuItem.url = sMenuItem.url;
+                                        break;
+                                    }
+                                }
+                                var li = "<li class='" + (menuItem.systemName == parent_active_menu ? "active" : "") + "'>";
+                                li += "<a href='" + menuItem.url + "'>";
+                                if (menuItem.iconClass) {
+                                    li += "<span class='" + menuItem.iconClass + "'></span>";
+                                }
+                                li += menuItem.title;
+                                li += "</a>";
+                                li += "</li>";
+                                groupLi += li;
+                            }
+                            groupLi += "</ul>";
+                            groupLi += "</li>";
                             jQuery("#primaryNavigationUl").append(groupLi);
                         }
-
-                        for (var i = 0; i < primary_navigation.length; i++) {
-                            var menuItem = primary_navigation[i];
-                            if (menuItem.groupId != groupItem.id)
-                                continue;
-                            for (var k = 0; k < secondary_navigation.length; k++) {
-                                var sMenuItem = secondary_navigation[k];
-                                if (sMenuItem.parent === menuItem.systemName) {
-                                    menuItem.url = sMenuItem.url;
-                                    break;
-                                }
-                            }
-                            var li = "<li class='" + (menuItem.systemName == parent_active_menu ? "active" : "") + "'>";
-                            li += "<a href='" + menuItem.url + "'>";
-                            if (menuItem.iconClass) {
-                                li += "<span class='" + menuItem.iconClass + "'></span>";
-                            }
-                            li += menuItem.title;
-                            li += "</a>";
-                            li += "</li>";
-                            jQuery("#primaryNavigationUl").append(li);
-                        }
+                       
                     }
 
                 });
@@ -145,10 +147,12 @@
             </div>
         </div>
         <div class="client-main">
-            <div class="client-main-navlinks">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="client-main-navlinks">
 
-                <script type="text/javascript">
-                    ready(function () {
+                        <script type="text/javascript">
+                    ready(function() {
                         var active_menu = "{{active_menu}}";
                         var parent_active_menu = "{{parent_active_menu}}";
                         var menu_group = "{{menu_group}}";
@@ -166,7 +170,9 @@
                                         continue;
                                     }
                                 }
-                                var li = "<li class='desktop-secondary-navigation " + (menuItem.systemName == active_menu ? "active" : "") + "'>";
+                                var li = "<li class='desktop-secondary-navigation " +
+                                    (menuItem.systemName == active_menu ? "active" : "") +
+                                    "'>";
                                 li += "<a href='" + menuItem.url + "'>";
                                 if (menuItem.iconClass) {
                                     li += "<span class='" + menuItem.iconClass + "'></span>";
@@ -176,27 +182,37 @@
                                 li += "</li>";
                                 jQuery("#secondaryNavigationUl").append(li);
 
-                                mobileNavigation += "<option value='" + menuItem.url + "' " + (menuItem.systemName == active_menu ? "selected" : "") + ">" + menuItem.title + "</option>";
+                                mobileNavigation += "<option value='" +
+                                    menuItem.url +
+                                    "' " +
+                                    (menuItem.systemName == active_menu ? "selected" : "") +
+                                    ">" +
+                                    menuItem.title +
+                                    "</option>";
                             }
                             //now mobile nav
                             mobileNavigation += "</select></li>";
-                            jQuery("#secondaryNavigationUl").append(mobileNavigation);
+                            //jQuery("#secondaryNavigationUl").append(mobileNavigation);
                         }
 
                     });
-                </script>
-                <ul id="secondaryNavigationUl" class="list-inline">
-                    <li>
-                        <a class="mobile-navigation">
-                            <span class="rbicon rbicon-list"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="client-main-content">
-                {% bodyContent %}
-                <div class="footer">
-                    {{store.softwareTitle}} {{store.softwareVersion}}
+                        </script>
+                        <ul id="secondaryNavigationUl" class="list-no-style">
+                            <li>
+                                <a class="mobile-navigation">
+                                    <span class="rbicon rbicon-list"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="client-main-content">
+                        {% bodyContent %}
+                        <div class="footer">
+                            {{store.softwareTitle}} {{store.softwareVersion}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,7 +258,7 @@
                 });
             initAreYouSure();
         });
-        
+
     </script>
 
 </body>
