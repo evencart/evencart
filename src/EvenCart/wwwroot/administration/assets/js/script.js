@@ -24,6 +24,58 @@ $(document).on("keypress", 'form', function (e) {
     }
 });
 
+var initTopNav = function (freshRun) {
+   
+    var $moreLi = jQuery("#li-secondary-more");
+    var $moreLiA = jQuery("#li-secondary-more > a");
+    var $secondaryNavigationUl = jQuery("#secondaryNavigationUl");
+    var $moreSubMenu = jQuery("#more-sub-menu");
+    //move all more to main nav
+    while ($moreSubMenu.children("li").length > 0) {
+        $moreSubMenu.children("li:first-child").insertBefore($moreLi);
+    }
+
+    var maxWidth = jQuery(".client-main-navlinks").outerWidth();
+    var saveButtonContainerWidth = jQuery(".save-button-container").is(":visible") ? jQuery(".save-button-container").outerWidth() : 0;
+    var secondaryNavWidth = $secondaryNavigationUl.outerWidth();
+    var maxAllowedWidth = maxWidth - saveButtonContainerWidth - $moreLi.outerWidth();
+
+   
+    
+    if (maxAllowedWidth <= secondaryNavWidth) {
+        //move main nav items to more
+        while (secondaryNavWidth >= maxAllowedWidth) {
+            var lastChild = $secondaryNavigationUl.children("li.desktop-secondary-navigation").last();
+            lastChild.prependTo($moreSubMenu);
+            secondaryNavWidth = $secondaryNavigationUl.outerWidth();
+        }
+    } 
+
+    if ($moreSubMenu.children("li").length == 0) {
+        $moreLi.hide();
+    } else {
+        $moreLi.show();
+    }
+    if (freshRun) {
+        $moreLi.on("click",
+            function (e) {
+                $moreSubMenu.slideDown(100);
+                if ($moreSubMenu.offset().left < 0) {
+                    $moreSubMenu.css("left", 0);
+                } else {
+                    $moreSubMenu.css("right", 0);
+                }
+                e.stopPropagation();
+            });
+        jQuery("html").click(function (e) {
+            
+            if ($moreSubMenu.is(":visible"))
+                $moreSubMenu.hide();
+        });
+    };
+
+
+};
 var showAsPopup = function (id, ajax, onClose, onOpen) {
     var overlay = "<div class='overlay'></div>";
     var element = jQuery("#" + id);

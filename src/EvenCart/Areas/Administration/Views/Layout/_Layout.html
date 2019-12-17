@@ -153,6 +153,8 @@
                         var parent_active_menu = "{{parent_active_menu}}";
                         var menu_group = "{{menu_group}}";
                         var mobileNavigation = "<li><select class='mobile-navigation-select'>";
+                        var $secondaryNavigationUl = jQuery("#secondaryNavigationUl");
+                        var $moreLink = jQuery("<li id='li-secondary-more'><a>{{'More' | t}} <span class='rbicon-chevron-down'></span></a><ul id='more-sub-menu'></ul></li>");
                         if (secondary_navigation) {
                             for (var i = 0; i < secondary_navigation.length; i++) {
                                 var menuItem = secondary_navigation[i];
@@ -174,15 +176,19 @@
                                 li += menuItem.title;
                                 li += "</a>";
                                 li += "</li>";
-                                jQuery("#secondaryNavigationUl").append(li);
+                                $secondaryNavigationUl.append(li);
 
                                 mobileNavigation += "<option value='" + menuItem.url + "' " + (menuItem.systemName == active_menu ? "selected" : "") + ">" + menuItem.title + "</option>";
                             }
                             //now mobile nav
                             mobileNavigation += "</select></li>";
-                            jQuery("#secondaryNavigationUl").append(mobileNavigation);
+
+                            $secondaryNavigationUl.append($moreLink);
+                            //jQuery("#secondaryNavigationUl").append(mobileNavigation);
                         }
 
+                        initTopNav(true);
+                        jQuery(window).resize(initTopNav);
                     });
                 </script>
                 <ul id="secondaryNavigationUl" class="list-inline">
@@ -195,9 +201,6 @@
             </div>
             <div class="client-main-content">
                 {% bodyContent %}
-                <div class="footer">
-                    {{store.softwareTitle}} {{store.softwareVersion}}
-                </div>
             </div>
         </div>
     </div>

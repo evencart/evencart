@@ -113,7 +113,7 @@
                         <li>
                             <label class="text-center">
                                 <img src="{{theme.thumbnailUrl}}" /><br />
-                                <input name="activeTheme" type="radio" {% if theme.directoryName= =settings.activeTheme %}checked{% endif %} value="{{theme.directoryName}}" />
+                                <input name="activeTheme" type="radio" {% if theme.directoryName==settings.activeTheme %}checked{% endif %} value="{{theme.directoryName}}" />
                                 <strong>{{theme.name}}</strong>
                             </label>
                         </li>

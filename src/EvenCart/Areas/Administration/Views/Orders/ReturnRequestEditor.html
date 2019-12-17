@@ -81,7 +81,6 @@
                     {% control xsrf %}
                     <div class="save-button-container">
                         <button type="submit" name="returnRequestStatus" class="btn btn-success" value="{{returnRequest.returnRequestStatus}}">{{"Save Return Request" | t}}</button>
-                        <a class="btn btn-default" href='{% route ReturnRequestsList %}'>{{"Cancel" | t}}</a>
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Remarks" help=@t"Any additional information. This is only visible to admin." %}

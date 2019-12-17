@@ -19,7 +19,8 @@
 
 body {
   letter-spacing: 0.02rem;
-  font-size: 0.9rem; }
+  font-size: 0.9rem;
+  background-color: #ecf0f5; }
 
 .page-wrapper {
   position: fixed;
@@ -35,7 +36,7 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 1; }
+  /*z-index: 1;*/ }
   .sidenav .maintenance-dropup {
     position: fixed;
     bottom: 0;
@@ -92,11 +93,15 @@ body {
   top: 0;
   left: 140px;
   right: 0;
-  margin: 0px 15px 0;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  font-size: 14px; }
-  .client-main-navlinks ul {
-    margin: 0; }
+  font-size: 14px;
+  z-index: 1;
+  padding-left: 10px;
+  background-color: white;
+  height: 42px; }
+  .client-main-navlinks > ul {
+    margin: 0;
+    display: inline-block; }
   .client-main-navlinks a {
     color: #555;
     display: inline-block;
@@ -108,6 +113,30 @@ body {
   .client-main-navlinks li.active a {
     border-bottom: solid 2px #555;
     font-weight: bold; }
+  .client-main-navlinks #more-sub-menu {
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    right: 0;
+    top: 30px; }
+    .client-main-navlinks #more-sub-menu li {
+      display: block; }
+      .client-main-navlinks #more-sub-menu li a {
+        display: block;
+        color: #333;
+        padding: 10px 15px;
+        margin: 0;
+        border-bottom: solid 1px #eee; }
+        .client-main-navlinks #more-sub-menu li a:hover {
+          background-color: #11a266;
+          color: white; }
+  .client-main-navlinks li {
+    position: relative;
+    cursor: pointer; }
 
 .user-menu {
   padding: 5px 0px;
@@ -141,17 +170,8 @@ body {
   font-size: 2em; }
 
 .client-main-content {
-  position: fixed;
-  bottom: 0;
-  top: 43px;
-  right: 0;
-  left: 140px;
-  padding-left: 30px;
-  padding-top: 25px;
-  padding-right: 30px;
-  padding-bottom: 25px;
-  overflow: auto;
-  background-color: #ecf0f5; }
+  padding: 60px 45px;
+  overflow: auto; }
   .client-main-content.active-dialog {
     overflow: hidden; }
 
@@ -407,13 +427,16 @@ input:focus, textarea:focus {
 .save-button-container {
   position: fixed;
   top: 0;
-  right: 0;
-  padding: 5px;
+  right: 54px;
+  padding: 4px 5px;
   text-align: right;
-  background-color: white; }
+  z-index: 2; }
   .save-button-container button, .save-button-container input[type='submit'], .save-button-container input[type='button'], .save-button-container a.btn {
-    font-size: 13px;
-    margin: 0 3px; }
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    font-weight: bold;
+    text-transform: uppercase; }
 
 .bootgrid-footer {
   background-color: #f2f2f2;
@@ -665,8 +688,9 @@ button.busy {
     left: 0px; }
   .mobile-navigation {
     display: inline-block !important; }
-  .desktop-secondary-navigation {
-    display: none !important; }
+  /*.desktop-secondary-navigation {
+        display:none!important;
+    }*/
   .mobile-navigation-select {
     width: auto;
     padding: 0;

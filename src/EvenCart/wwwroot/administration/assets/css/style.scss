@@ -39,7 +39,8 @@ $node-meta-color: #999;
 
 body {
     letter-spacing: 0.02rem;
-    font-size: 0.9rem;   
+    font-size: 0.9rem;
+    background-color: #ecf0f5;
 }
 
 
@@ -59,7 +60,7 @@ body {
     position: fixed;
     top: 0;
     bottom: 0;
-    z-index: 1;
+    /*z-index: 1;*/
     .maintenance-dropup {
         position: fixed;
         bottom: 0;
@@ -138,12 +139,15 @@ body {
     top: 0;
     left: 140px;
     right: 0;
-    margin: 0px 15px 0;
     box-shadow: 0 1px 0 rgba(0,0,0,.1);
     font-size: 14px;
-
-    ul {
+    z-index: 1;
+    padding-left:10px;
+    background-color:white;
+    height:42px;
+    & > ul {
         margin: 0;
+        display: inline-block;
     }
 
     a {
@@ -163,6 +167,42 @@ body {
             border-bottom: solid 2px #555;
             font-weight: bold;
         }
+    }
+
+    #more-sub-menu {
+        padding: 0;
+        margin: 0;
+        display: none;
+        position: absolute;
+        background: white;
+        min-width: 200px;
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+        right: 0;
+        top: 30px;
+
+        li {
+            display: block;
+
+            a {
+                display: block;
+                color: #333;
+                padding: 10px 15px;
+                margin: 0;
+                border-bottom: solid 1px #eee;
+
+                &:hover {
+                    background-color: $sidebar-highlight;
+                    color: white;
+                }
+            }
+        }
+    }
+
+
+
+    li {
+        position: relative;
+        cursor:pointer;      
     }
 }
 
@@ -217,19 +257,12 @@ body {
 }
 
 .client-main-content {
-    position: fixed;
-    bottom: 0;
-    top: 43px;
-    right: 0;
-    left: 140px;
-    padding-left: 30px;
-    padding-top: 25px;
-    padding-right: 30px;
-    padding-bottom: 25px;
+    padding: 60px 45px;
     overflow: auto;
-    background-color: #ecf0f5;
-    &.active-dialog{
-        overflow:hidden;
+    
+
+    &.active-dialog {
+        overflow: hidden;
     }
 }
 
@@ -552,14 +585,17 @@ input:focus, textarea:focus {
 .save-button-container {
     position: fixed;
     top: 0;
-    right: 0;
-    padding: 5px;
+    right: 54px;
+    padding: 4px 5px;
     text-align: right;
-    background-color: white;
+    z-index: 2;
 
     button, input[type='submit'], input[type='button'], a.btn {
-        font-size: 13px;
-        margin: 0 3px;
+        font-size: 12px;
+        text-transform: uppercase;
+        padding: 7px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 }
 
@@ -907,9 +943,9 @@ button.busy {
     {
         display:inline-block!important;
     }
-    .desktop-secondary-navigation {
+    /*.desktop-secondary-navigation {
         display:none!important;
-    }
+    }*/
     .mobile-navigation-select {
         width: auto;
         padding: 0;
