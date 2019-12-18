@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCartPluginDebugger", "EvenCartPluginDebugger\EvenCartPluginDebugger.csproj", "{22DB894F-6831-415A-80AD-65E162B571CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{ECCFDEE0-562B-4305-9A5A-11510F178D23}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22DB894F-6831-415A-80AD-65E162B571CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22DB894F-6831-415A-80AD-65E162B571CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22DB894F-6831-415A-80AD-65E162B571CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22DB894F-6831-415A-80AD-65E162B571CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {951FEEE3-F3C0-4684-8C0E-F203CC9264E2}
+	EndGlobalSection
+EndGlobal

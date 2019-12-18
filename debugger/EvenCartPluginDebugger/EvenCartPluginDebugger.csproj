@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotEntity" Version="2.0.0" />
+    <PackageReference Include="DotEntity.MySql" Version="2.0.0" />
+    <PackageReference Include="DotEntity.SqlServer" Version="2.0.0" />
+    <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BundlerMinifier.Core" Version="2.9.406" />
+    <PackageReference Include="FluentScheduler" Version="5.3.0" />
+    <PackageReference Include="HtmlToPdfConverter" Version="1.0.2" />
+    <PackageReference Include="HtmlToPdfConverter.Core" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotLiquid" Version="2.0.298" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="MySqlConnector" Version="0.53.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\database.config" />
+    <Content Include="NativeLibs\X64\libwkhtmltox.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NativeLibs\X64\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NativeLibs\X64\libwkhtmltox.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EvenCart">
+      <HintPath>EvenCart.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+    <Folder Include="wwwroot\bundles\" />
+  </ItemGroup>
+
+</Project>
