@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <Authors>Team Apexol</Authors>
     <Company>Sojatia Infocrafts Private Limited</Company>
     <Description>Plugin to process payments with PayPal by redirecting to PayPal's website.</Description>
@@ -11,6 +11,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Payments.PaypalWithRedirect</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseForDemo|AnyCPU'">
     <OutputPath>$(SolutionDir)EvenCart\Plugins\Payments.PaypalWithRedirect</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>

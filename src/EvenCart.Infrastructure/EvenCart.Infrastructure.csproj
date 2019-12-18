@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <Authors>Team Apexol</Authors>
     <Company>Sojatia Infocrafts Private Limited</Company>
     <Description>The infrastructure library for EvenCart software.</Description>
@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseForDemo|AnyCPU'">
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 

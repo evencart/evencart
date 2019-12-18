@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <Authors>Team Apexol</Authors>
     <Company>Sojatia Infocrafts Private Limited</Company>
     <Description>The core library for EvenCart software.</Description>

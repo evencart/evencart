@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

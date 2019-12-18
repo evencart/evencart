@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Debug;Release;DebugWithSwagger</Configurations>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <Authors>Team Apexol</Authors>
     <Company>Sojatia Infocrafts Private Limited</Company>
     <Description>The UPS shipping provider plugin for EvenCart</Description>
@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.UPS\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseForDemo|AnyCPU'">
     <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.UPS\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>

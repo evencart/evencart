@@ -26,8 +26,23 @@ namespace EvenCart.Infrastructure.Middleware
 
         public async Task Invoke(HttpContext context)
         {
+#if RELEASEFORDEMO
+            //for our demo site, we don't allow any post requests except to the login page. all the other requests are blocked
+            if (HttpMethods.IsPost(context.Request.Method) && context.Request.Path != "/api/authentication/login" )
+            {
+                var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(dataSerializer.Serialize(new
+                {
+                    success = false,
+                    message = "The demo site is read-only. No data update is allowed."
+                }));
+                return;
+            }
+#endif
             //is the url excluded from validation
-            if(!ApplicationConfig.AntiforgerySparedUrls.Contains(context.Request.Path))
+            if (!ApplicationConfig.AntiforgerySparedUrls.Contains(context.Request.Path))
                 if (HttpMethods.IsPost(context.Request.Method) && !context.IsTokenAuthenticated())
                 {
                     //we make sure that any request that comes to us either has a antiforgery token (which means that it's a web based request)
@@ -63,7 +78,7 @@ namespace EvenCart.Infrastructure.Middleware
                         catch
                         {
                             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
-                            context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                             await context.Response.WriteAsync(dataSerializer.Serialize(new
                             {
                                 success = false,
