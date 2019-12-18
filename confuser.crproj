@@ -1,0 +1,87 @@
+<project outputDir="../publish" baseDir="publish" xmlns="http://confuser.codeplex.com">
+  <rule pattern="true" preset="aggressive">
+    <protection id="anti ildasm" />
+    <protection id="anti tamper" />
+    <protection id="constants" />
+    <protection id="ctrl flow" />
+    <protection id="anti dump" />
+    <protection id="anti debug" action="remove" />
+    <protection id="invalid metadata" action="remove" />
+    <protection id="ref proxy" />
+    <protection id="resources" action="remove" />
+    <protection id="rename" action="remove" />
+  </rule>
+  <module path="EvenCart.dll">
+    <rule pattern="true" preset="aggressive">
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="constants" action="remove" />
+      <protection id="ctrl flow" />
+      <protection id="anti dump" />
+      <protection id="anti debug" action="remove" />
+      <protection id="invalid metadata" action="remove" />
+      <protection id="ref proxy" action="remove" />
+      <protection id="resources" action="remove" />
+      <protection id="rename" action="remove"/>
+    </rule>
+  </module>  
+   <module path="EvenCart.Infrastructure.dll">
+    <rule pattern="true" preset="aggressive">
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="constants" action="remove" />
+      <protection id="ctrl flow" />
+      <protection id="anti dump" />
+      <protection id="anti debug" action="remove" />
+      <protection id="invalid metadata" action="remove" />
+      <protection id="ref proxy" action="remove" />
+      <protection id="resources" action="remove" />
+      <protection id="rename" action="remove"/>
+    </rule>
+  </module>  
+   <module path="EvenCart.Services.dll">
+    <rule pattern="true" preset="aggressive">
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="constants" action="remove" />
+      <protection id="ctrl flow" />
+      <protection id="anti dump" />
+      <protection id="anti debug" action="remove" />
+      <protection id="invalid metadata" action="remove" />
+      <protection id="ref proxy" action="remove" />
+      <protection id="resources" action="remove" />
+      <protection id="rename" action="remove"/>
+    </rule>
+  </module>  
+   <module path="EvenCart.Data.dll">
+    <rule pattern="true" preset="aggressive">
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="constants" action="remove" />
+      <protection id="ctrl flow" />
+      <protection id="anti dump" />
+      <protection id="anti debug" action="remove" />
+      <protection id="invalid metadata" action="remove" />
+      <protection id="ref proxy" action="remove" />
+      <protection id="resources" action="remove" />
+      <protection id="rename" action="remove"/>
+    </rule>
+  </module>  
+   <module path="EvenCart.Core.dll">
+    <rule pattern="true" preset="aggressive">
+      <protection id="anti ildasm" />
+      <protection id="anti tamper" />
+      <protection id="constants" action="remove" />
+      <protection id="ctrl flow" />
+      <protection id="anti dump" />
+      <protection id="anti debug" action="remove" />
+      <protection id="invalid metadata" action="remove" />
+      <protection id="ref proxy" action="remove" />
+      <protection id="resources" action="remove" />
+      <protection id="rename" action="remove"/>
+    </rule>
+  </module>  
+  <probePath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\2.2.5</probePath>
+  <probePath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.All</probePath>
+  <probePath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.2.5</probePath>
+</project>
