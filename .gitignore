@@ -20,7 +20,8 @@ src/EvenCart/wwwroot/content/Uploads/*/*
 src/EvenCart/wwwroot/content/Uploads/*.*
 !src/EvenCart/wwwroot/content/Uploads/Serves/index.html
 *.pdb
-src/EvenCart/Plugins/
+src/EvenCart/Plugins/*
+!src/EvenCart/Plugins/index.html
 src/Plugins/Shipping.FedEx/obj/
 src/Plugins/Payments.PaypalDirect/obj/
 src/Plugins/Payments.PaypalDirect/bin/
