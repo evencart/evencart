@@ -30,22 +30,4 @@ namespace EvenCart.Services.Tests.Products
             Assert.AreEqual(tShirtCategory.Id, tShirtCategory3.Id);
         }
     }
-
-    [TestFixture]
-    public class SqlServerCategoryServiceTests : CategoryServiceTests
-    {
-        public SqlServerCategoryServiceTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlCategoryServiceTests : CategoryServiceTests
-    {
-        public MySqlCategoryServiceTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

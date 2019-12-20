@@ -21,12 +21,4 @@ namespace EvenCart.Services.Tests
 
         }
     }
-    [TestFixture]
-    public class SqlServerEntityTests : EntityTests
-    {
-        public SqlServerEntityTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
 }

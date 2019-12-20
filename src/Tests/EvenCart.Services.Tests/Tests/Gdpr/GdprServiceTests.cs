@@ -5,7 +5,6 @@ using EvenCart.Data.Entity.Users;
 using EvenCart.Services.Gdpr;
 using EvenCart.Services.Users;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace EvenCart.Services.Tests.Gdpr
 {
@@ -88,24 +87,6 @@ namespace EvenCart.Services.Tests.Gdpr
 
             var pendingConsents = _gdprService.GetPendingConsents(user.Id);
             Assert.AreEqual(1, pendingConsents.Count);
-        }
-    }
-
-    [TestFixture]
-    public class SqlServerGdprServiceTests : GdprServiceTests
-    {
-        public SqlServerGdprServiceTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlGdprServiceTests : GdprServiceTests
-    {
-        public MySqlGdprServiceTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
         }
     }
 }

@@ -80,22 +80,4 @@ namespace EvenCart.Services.Tests.Users
             Assert.IsFalse(user.Can(CapabilitySystemNames.DeleteUser));
         }
     }
-
-    [TestFixture]
-    public class SqlServerRoleCapabilityTests : RoleCapabilityTests
-    {
-        public SqlServerRoleCapabilityTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlRoleCapabilityTests : RoleCapabilityTests
-    {
-        public MySqlRoleCapabilityTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

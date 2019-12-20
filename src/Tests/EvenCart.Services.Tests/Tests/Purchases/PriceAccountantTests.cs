@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
-using EvenCart.Services.Helpers;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
 using EvenCart.Services.Purchases;
@@ -869,24 +867,6 @@ namespace EvenCart.Services.Tests.Purchases
             Assert.AreEqual(0, rCart.Discount);
             Assert.AreEqual(0, rCart.CartItems[0].Discount);
             Assert.AreEqual(17, rCart.CartItems[1].Discount);
-        }
-    }
-
-    [TestFixture]
-    public class SqlServerPriceAccountantTests : PriceAccountantTests
-    {
-        public SqlServerPriceAccountantTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlPriceAccountantTests : PriceAccountantTests
-    {
-        public MySqlPriceAccountantTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
         }
     }
 }

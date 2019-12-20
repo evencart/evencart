@@ -395,22 +395,4 @@ namespace EvenCart.Services.Tests.Purchases
             Assert.AreEqual(_w2.Id, fullFillments[2].WarehouseId);
         }
     }
-
-    [TestFixture]
-    public class SqlServerOrderAccountantTests : OrderAccountantTests
-    {
-        public SqlServerOrderAccountantTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlOrderAccountantTests : OrderAccountantTests
-    {
-        public MySqlOrderAccountantTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

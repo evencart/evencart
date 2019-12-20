@@ -194,22 +194,4 @@ namespace EvenCart.Services.Tests.Products
             Assert.AreEqual(_taxSettings.DefaultTaxRate, rate); //default
         }
     }
-
-    [TestFixture]
-    public class SqlServerTaxServiceTests : TaxServiceTests
-    {
-        public SqlServerTaxServiceTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlTaxServiceTests : TaxServiceTests
-    {
-        public MySqlTaxServiceTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

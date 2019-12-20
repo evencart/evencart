@@ -2,29 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Data.Database;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Installation;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
-using Moq;
-using NUnit.Framework;
 
 namespace EvenCart.Services.Tests
 {
     public class BaseTest
     {
-        protected bool IsAppVeyor;
-        protected string MySqlConnectionString;
-        protected string MsSqlConnectionString;
-        protected string SqliteConnectionString;
-        protected const string ContextKey = "EvenCart";
-        private readonly string _sqliteFile;
+        protected static bool IsAppVeyor;
+        public static string MySqlConnectionString;
+        public static string MsSqlConnectionString;
+        public static string SqliteConnectionString;
+        public const string ContextKey = "EvenCart";
+        private static readonly string _sqliteFile;
 
-        protected BaseTest()
+        static BaseTest()
         {
             {
 #if NETSTANDARD15
@@ -34,7 +26,7 @@ namespace EvenCart.Services.Tests
 
 #endif
                 IsAppVeyor = Environment.GetEnvironmentVariable("appveyor") == "true";
-                MySqlConnectionString = this.IsAppVeyor
+                MySqlConnectionString = IsAppVeyor
                     ? @"Server=127.0.0.1;Uid=root;Pwd=Password12!;Database=mytest;"
                     : @"Server=localhost;Uid=root;Pwd=admin;Database=unittest;";
 
@@ -45,42 +37,6 @@ namespace EvenCart.Services.Tests
 
                 SqliteConnectionString = $"Data Source={_sqliteFile};";
             }
-
-            var serviceCollection = new ServiceCollection();
-            //mock the hosting env
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
-            
-            hostingEnvironment.Setup(x => x.ApplicationName)
-                .Returns("Hosting:UnitTestEnvironment");
-
-            hostingEnvironment.Setup(x => x.EnvironmentName)
-                .Returns(ApplicationConfig.TestEnvironmentName);
-
-            hostingEnvironment.Setup(x => x.ContentRootPath)
-                .Returns(AppDomain.CurrentDomain.BaseDirectory);
-
-            hostingEnvironment.Setup(x => x.ContentRootFileProvider)
-                .Returns(new LocalFileProvider(hostingEnvironment.Object));
-
-            serviceCollection.AddSingleton<IHostingEnvironment>(provider => hostingEnvironment.Object);
-            serviceCollection.AddSingleton<IConfiguration>(new TestConfiguration());
-            serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());
-            ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object);
-           
-        }
-
-        [OneTimeSetUp]
-        public void OnetimeSetup()
-        {
-            var installationService = new InstallationService(TestDbInit.DbSettings);
-            installationService.Install();
-            installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
-        }
-
-        [OneTimeTearDown]
-        public void OnetimeTeardown()
-        {
-            DatabaseManager.CleanupDatabase(ContextKey);
         }
 
         public T Resolve<T>()

@@ -53,22 +53,4 @@ namespace EvenCart.Services.Tests.Users
 
 
     }
-
-    [TestFixture]
-    public class SqlServerUserAuthenticationTests : UserAuthenticationTests
-    {
-        public SqlServerUserAuthenticationTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlUserAuthenticationTests : UserAuthenticationTests
-    {
-        public MySqlUserAuthenticationTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

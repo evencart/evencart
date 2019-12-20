@@ -76,22 +76,4 @@ namespace EvenCart.Services.Tests.Promotions
             _discountCouponService.Delete(x => x.Id > 0);
         }
     }
-
-    [TestFixture]
-    public class SqlServerDiscountServiceTests : DiscountServiceTests
-    {
-        public SqlServerDiscountServiceTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlDiscountServiceTests : DiscountServiceTests
-    {
-        public MySqlDiscountServiceTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }

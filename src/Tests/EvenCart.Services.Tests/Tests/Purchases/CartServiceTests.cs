@@ -84,22 +84,4 @@ namespace EvenCart.Services.Tests.Purchases
             Assert.AreEqual(0, cart.CartItems.Count);
         }
     }
-
-    [TestFixture]
-    public class SqlServerCartServiceTests : CartServiceTests
-    {
-        public SqlServerCartServiceTests()
-        {
-            TestDbInit.SqlServer(MsSqlConnectionString);
-        }
-    }
-
-    [TestFixture]
-    public class MySqlCartServiceTests : CartServiceTests
-    {
-        public MySqlCartServiceTests()
-        {
-            TestDbInit.MySql(MySqlConnectionString);
-        }
-    }
 }
