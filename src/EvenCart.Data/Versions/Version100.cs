@@ -9,6 +9,7 @@ using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Data.Entity.Logs;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Navigation;
+using EvenCart.Data.Entity.Notifications;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Promotions;
@@ -41,6 +42,8 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<StateOrProvince>(transaction);
             Db.CreateTable<InviteRequest>(transaction);
             Db.CreateTable<UserPoint>(transaction);
+            Db.CreateTable<Notification>(transaction);
+            Db.CreateTable<NotificationEvent>(transaction);
 
             Db.CreateConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction, true);
@@ -52,6 +55,8 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<Vendor, VendorUser>("Id", "VendorId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Country, Address>("Id", "CountryId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<User, Notification>("Id", "UserId"), transaction);
+
             //shop
             Db.CreateTable<Product>(transaction);
             Db.CreateTable<Category>(transaction);
@@ -161,7 +166,7 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction, true);
             Db.CreateConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction, true);
-            
+
             //warehouses
             Db.CreateTable<Warehouse>(transaction);
             Db.CreateTable<WarehouseInventory>(transaction);
@@ -182,7 +187,6 @@ namespace EvenCart.Data.Versions
 
         public void Downgrade(IDotEntityTransaction transaction)
         {
-
             Db.DropConstraint(Relation.Create<User, UserRole>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Role, UserRole>("Id", "RoleId"), transaction);
             Db.DropConstraint(Relation.Create<Role, RoleCapability>("Id", "RoleId"), transaction);
@@ -192,6 +196,9 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<User, VendorUser>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Vendor, VendorUser>("Id", "VendorId"), transaction);
             Db.DropConstraint(Relation.Create<Country, Address>("Id", "CountryId"), transaction);
+            Db.DropConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction);
+            Db.DropConstraint(Relation.Create<User, Notification>("Id", "UserId"), transaction);
+
             Db.DropConstraint(Relation.Create<Product, ProductCategory>("Id", "ProductId"), transaction);
             Db.DropConstraint(Relation.Create<Category, ProductCategory>("Id", "CategoryId"), transaction);
             Db.DropConstraint(Relation.Create<AvailableAttribute, AvailableAttributeValue>("Id", "AvailableAttributeId"), transaction);
@@ -217,6 +224,9 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<AvailableAttributeValue, ProductSpecificationValue>("Id", "AvailableAttributeValueId"), transaction);
             Db.DropConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction);
             Db.DropConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction);
+            Db.DropConstraint(Relation.Create<Product, Download>("Id", "ProductId"), transaction);
+            Db.DropConstraint(Relation.Create<DiscountCoupon, RestrictionValue>("Id", "DiscountCouponId"), transaction);
+            Db.DropConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction);
             Db.DropConstraint(Relation.Create<EmailAccount, EmailTemplate>("Id", "EmailAccountId"), transaction);
             Db.DropConstraint(Relation.Create<Cart, CartItem>("Id", "CartId"), transaction);
             Db.DropConstraint(Relation.Create<User, Cart>("Id", "UserId"), transaction);
@@ -226,24 +236,20 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Product, OrderItem>("Id", "ProductId"), transaction);
             Db.DropConstraint(Relation.Create<Shipment, ShipmentItem>("Id", "ShipmentId"), transaction);
             Db.DropConstraint(Relation.Create<Shipment, ShipmentHistory>("Id", "ShipmentId"), transaction);
+            Db.DropConstraint(Relation.Create<Order, OrderFulfillment>("Id", "OrderId"), transaction);
             Db.DropConstraint(Relation.Create<User, ContentPage>("Id", "UserId"), transaction);
-            Db.DropConstraint(Relation.Create<DiscountCoupon, RestrictionValue>("Id", "DiscountCouponId"), transaction);
-            Db.DropConstraint(Relation.Create<Tax, TaxRate>("Id", "TaxId"), transaction);
-            Db.DropConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Menu, MenuItem>("Id", "MenuId"), transaction);
+            Db.DropConstraint(Relation.Create<User, PreviousPassword>("Id", "UserId"), transaction);
             Db.DropConstraint(Relation.Create<Consent, ConsentLog>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<Consent, UserConsent>("Id", "ConsentId"), transaction);
             Db.DropConstraint(Relation.Create<User, UserConsent>("Id", "UserId"), transaction);
-            Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
             Db.DropConstraint(Relation.Create<Product, WarehouseInventory>("Id", "ProductId"), transaction);
             Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
-            // Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction);
-            Db.DropConstraint(Relation.Create<Order, OrderFulfillment>("Id", "OrderId"), transaction);
-            Db.DropConstraint(Relation.Create<User, UserPoint>("Id", "UserId"), transaction);
+            //Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction, false);
+            Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);
-            Db.DropTable<UserPoint>(transaction);
             Db.DropTable<Role>(transaction);
             Db.DropTable<Capability>(transaction);
             Db.DropTable<UserRole>(transaction);
@@ -255,6 +261,9 @@ namespace EvenCart.Data.Versions
             Db.DropTable<Country>(transaction);
             Db.DropTable<StateOrProvince>(transaction);
             Db.DropTable<InviteRequest>(transaction);
+            Db.DropTable<UserPoint>(transaction);
+            Db.DropTable<NotificationEvent>(transaction);
+            Db.DropTable<Notification>(transaction);
 
             //shop
             Db.DropTable<Product>(transaction);
@@ -275,43 +284,41 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ProductSpecification>(transaction);
             Db.DropTable<ProductSpecificationValue>(transaction);
             Db.DropTable<ProductRelation>(transaction);
-            Db.DropTable<Warehouse>(transaction);
-            Db.DropTable<WarehouseInventory>(transaction);
+            Db.DropTable<Download>(transaction);
+            Db.DropTable<ItemDownload>(transaction);
+
             //cart
             Db.DropTable<Cart>(transaction);
             Db.DropTable<CartItem>(transaction);
             Db.DropTable<Order>(transaction);
             Db.DropTable<OrderItem>(transaction);
+            Db.DropTable<OrderFulfillment>(transaction);
             Db.DropTable<Shipment>(transaction);
             Db.DropTable<ShipmentItem>(transaction);
             Db.DropTable<ShipmentHistory>(transaction);
             Db.DropTable<PaymentTransaction>(transaction);
-            Db.DropTable<OrderFulfillment>(transaction);
             Db.DropTable<ReturnRequest>(transaction);
-
 
             Db.DropTable<DiscountCoupon>(transaction);
             Db.DropTable<RestrictionValue>(transaction);
-
+          
             //tax
             Db.DropTable<Tax>(transaction);
             Db.DropTable<TaxRate>(transaction);
-
-
+         
             //content
             Db.DropTable<ContentPage>(transaction);
-            
+           
 
             //emails
             Db.DropTable<EmailAccount>(transaction);
             Db.DropTable<EmailTemplate>(transaction);
             Db.DropTable<EmailMessage>(transaction);
-           
-
+        
             //menus
             Db.DropTable<Menu>(transaction);
             Db.DropTable<MenuItem>(transaction);
-            
+         
 
             //old password and active codes
             Db.DropTable<PreviousPassword>(transaction);
@@ -325,16 +332,20 @@ namespace EvenCart.Data.Versions
             Db.DropTable<ConsentLog>(transaction);
             Db.DropTable<UserConsent>(transaction);
             Db.DropTable<ConsentGroup>(transaction);
+          
 
-
+            //warehouses
+            Db.DropTable<Warehouse>(transaction);
+            Db.DropTable<WarehouseInventory>(transaction);
+         
             //settings, logs, and others
             Db.DropTable<Setting>(transaction);
             Db.DropTable<Log>(transaction);
             Db.DropTable<SeoMeta>(transaction);
             Db.DropTable<ScheduledTask>(transaction);
             Db.DropTable<CustomLabel>(transaction);
-
             Db.DropTable<EntityProperty>(transaction);
+
             Db.DropTable<Subscription>(transaction);
         }
 

@@ -73,6 +73,8 @@ namespace EvenCart.Infrastructure
 
         public const string InbuiltWidgetPluginName = "EvenCart.InbuiltWidgets";
 
+        public const string TestEnvironmentName = "EvenCart.TestEnvironment";
+
         internal static IList<string> AntiforgerySparedUrls = new List<string>();
         /// <summary>
         /// Adds a url to exclude from antiforgery validation

@@ -11,14 +11,17 @@ namespace EvenCart.Infrastructure.DependencyContainer
             var coreRegistrar = new DependencyContainer();
             coreRegistrar.RegisterDependencies(registrar);
 
-            //then the plugin ones
-            var plugins = PluginLoader.GetAvailablePlugins().Where(x => x.DependencyContainer != null)
-                .OrderBy(x => x.DependencyContainer.Priority);
-            foreach (var plugin in plugins)
+            if (!ApplicationEngine.IsTestEnv())
             {
-                plugin.DependencyContainer.RegisterDependencies(registrar);
-                if (plugin.Active)
-                    plugin.DependencyContainer.RegisterDependenciesIfActive(registrar);
+                //then the plugin ones
+                var plugins = PluginLoader.GetAvailablePlugins().Where(x => x.DependencyContainer != null)
+                    .OrderBy(x => x.DependencyContainer.Priority);
+                foreach (var plugin in plugins)
+                {
+                    plugin.DependencyContainer.RegisterDependencies(registrar);
+                    if (plugin.Active)
+                        plugin.DependencyContainer.RegisterDependenciesIfActive(registrar);
+                }
             }
         }
     }

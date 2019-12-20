@@ -14,7 +14,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotEntity" Version="2.0.0" />
+    <Compile Remove="Entity\ExtraFields\**" />
+    <EmbeddedResource Remove="Entity\ExtraFields\**" />
+    <None Remove="Entity\ExtraFields\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entity\MediaEntities\EntityMedia.cs" />
+    <Compile Remove="Entity\Users\Group.cs" />
+    <Compile Remove="Entity\Users\UserGroup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotEntity" Version="2.0.1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.8.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
   </ItemGroup>

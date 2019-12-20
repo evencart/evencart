@@ -100,7 +100,7 @@ namespace EvenCart.Core.Plugins
 
         public static IList<PluginInfo> GetAvailablePlugins(bool withWidgets = false)
         {
-            if (_loadedPlugins.All(x => x.Widgets == null) && withWidgets)
+            if (_loadedPlugins != null && _loadedPlugins.All(x => x.Widgets == null) && withWidgets)
             {
                 foreach (var pluginInfo in _loadedPlugins)
                 {

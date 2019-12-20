@@ -11,18 +11,22 @@
 
   <ItemGroup>
     <Compile Remove="Configuration\**" />
+    <Compile Remove="ExtraFields\**" />
     <Compile Remove="MediaServices\**" />
     <Compile Remove="VerboseReporter\**" />
     <EmbeddedResource Remove="Configuration\**" />
+    <EmbeddedResource Remove="ExtraFields\**" />
     <EmbeddedResource Remove="MediaServices\**" />
     <EmbeddedResource Remove="VerboseReporter\**" />
     <None Remove="Configuration\**" />
+    <None Remove="ExtraFields\**" />
     <None Remove="MediaServices\**" />
     <None Remove="VerboseReporter\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Captures\ShipmentItemCapture.cs" />
+    <Compile Remove="Extensions\ExtraFieldExtensions.cs" />
     <Compile Remove="Logger\RollingFileLogger.cs" />
   </ItemGroup>
 

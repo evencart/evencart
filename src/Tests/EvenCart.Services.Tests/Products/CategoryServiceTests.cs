@@ -5,9 +5,11 @@ namespace EvenCart.Services.Tests.Products
 {
     public abstract class CategoryServiceTests : BaseTest
     {
-        private readonly ICategoryService _categoryService;
-        private readonly ICategoryAccountant _categoryAccountant;
-        protected CategoryServiceTests()
+        private ICategoryService _categoryService;
+        private ICategoryAccountant _categoryAccountant;
+        
+        [SetUp]
+        public void SetUp()
         {
             _categoryService = Resolve<ICategoryService>();
             _categoryAccountant = Resolve<ICategoryAccountant>();

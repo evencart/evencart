@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EvenCart.Core.Tests\EvenCart.Common.Tests.csproj" />
+    <ProjectReference Include="..\EvenCart.Services.Tests\EvenCart.Services.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

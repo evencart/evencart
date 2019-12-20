@@ -102,7 +102,7 @@ namespace EvenCart.Infrastructure.Extensions
                     {
 #endif
                         options.Conventions.Add((IControllerModelConvention)new AppRoutingConvention());
-                        options.Conventions.Add((IActionModelConvention) new AppRoutingConvention());
+                        options.Conventions.Add((IActionModelConvention)new AppRoutingConvention());
                         options.ModelBinderProviders.Insert(0, new WidgetSettingsModelBinderProvider());
 #if !DEBUGWS
                     }

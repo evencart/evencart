@@ -43,36 +43,39 @@ namespace EvenCart.Infrastructure
         #region Initialization
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
-            services.AddDataProtection()
-                .PersistKeysToFileSystem(
-                    new DirectoryInfo(ApplicationConfig.SecureDataDirectory));
-
-            //init db connection
-            services.InitDbConnection(hostingEnvironment);
-
-            //antiforgery
-            services.AddAntiforgeryTokens();
-
-            //add authentications
-            services.AddAppAuthentication();
-
             //register singletons
             services.AddGlobalSingletons();
 
-            //response compression
-            services.EnableResponseCompression();
+            if (!IsTestEnv(hostingEnvironment))
+            {
+                //init db connection
+                services.InitDbConnection(hostingEnvironment);
 
-            //add MVC and routing convention for api access
-            services.AddAppMvc(hostingEnvironment);
-            services.AddAppRouting();
+                services.AddDataProtection()
+                    .PersistKeysToFileSystem(
+                        new DirectoryInfo(ApplicationConfig.SecureDataDirectory));
 
-            //html to pdf
-            services.AddHtmlToPdfConverter();
+                //antiforgery
+                services.AddAntiforgeryTokens();
 
-            //add any services from plugins
-            var availablePlugins = PluginLoader.GetAvailablePlugins();
-            foreach (var ap in availablePlugins.Where(x => x.Installed))
-                ap.Startup?.ConfigureServices(services, hostingEnvironment);
+                //add authentications
+                services.AddAppAuthentication();
+
+                //response compression
+                services.EnableResponseCompression();
+
+                //add MVC and routing convention for api access
+                services.AddAppMvc(hostingEnvironment);
+                services.AddAppRouting();
+
+                //html to pdf
+                services.AddHtmlToPdfConverter();
+
+                //add any services from plugins
+                var availablePlugins = PluginLoader.GetAvailablePlugins();
+                foreach (var ap in availablePlugins.Where(x => x.Installed))
+                    ap.Startup?.ConfigureServices(services, hostingEnvironment);
+            }
 
             //fire up dependency injector
             var container = new Container();
@@ -203,6 +206,11 @@ namespace EvenCart.Infrastructure
             return routeName?.ToString() ?? "";
         }
 
+        public static bool IsTestEnv(IHostingEnvironment hostingEnvironment = null)
+        {
+            _hostingEnvironment = _hostingEnvironment ?? hostingEnvironment;
+            return _hostingEnvironment.IsEnvironment(ApplicationConfig.TestEnvironmentName);
+        }
         #endregion
 
         public static HttpContext CurrentHttpContext => DependencyResolver.Resolve<IHttpContextAccessor>().HttpContext;

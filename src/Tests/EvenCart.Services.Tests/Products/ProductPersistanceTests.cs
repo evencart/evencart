@@ -5,8 +5,10 @@ namespace EvenCart.Services.Tests.Products
 {
     public abstract class ProductPersistanceTests : BaseTest
     {
-        private readonly IProductService _productService;
-        protected ProductPersistanceTests()
+        private IProductService _productService;
+        
+        [SetUp]
+        public void Setup()
         {
             _productService = Resolve<IProductService>();
         }

@@ -45,3 +45,5 @@ plugin-project/
 src/Plugins/Ui.SearchPlus/obj/
 src/Plugins/Payments.Square/bin/
 src/Plugins/Payments.Square/obj/
+src/Tests/EvenCart.Tests.Runner/bin/
+src/Tests/EvenCart.Tests.Runner/obj/

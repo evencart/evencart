@@ -53,6 +53,9 @@ namespace EvenCart.Services.Tests
             hostingEnvironment.Setup(x => x.ApplicationName)
                 .Returns("Hosting:UnitTestEnvironment");
 
+            hostingEnvironment.Setup(x => x.EnvironmentName)
+                .Returns(ApplicationConfig.TestEnvironmentName);
+
             hostingEnvironment.Setup(x => x.ContentRootPath)
                 .Returns(AppDomain.CurrentDomain.BaseDirectory);
 
@@ -63,6 +66,7 @@ namespace EvenCart.Services.Tests
             serviceCollection.AddSingleton<IConfiguration>(new TestConfiguration());
             serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());
             ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object);
+           
         }
 
         [OneTimeSetUp]
