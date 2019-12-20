@@ -86,6 +86,6 @@
   <probePath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.2.5</probePath>
   <probePath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.0</probePath>
   <probePath>C:\Program Files\dotnet\sdk\3.1.100</probePath>
-  <probePath>publish-infrastructure</probePath>
+  <probePath>../publish-infrastructure</probePath>
 
 </project>
