@@ -52,10 +52,14 @@
                             <strong> {{availableTokens | join : ", "}}</strong>
                         </small>
                         {% endif %}
+                        {% if emailTemplate.isMaster %}
                         {% control textarea id="emailTemplate_template" name="template" value="{{emailTemplate.template}}" style="height:300px" %}
+                        {% else %}
+                        {% control wyswyg id="emailTemplate_template" name="template" value="{{emailTemplate.template}}" style="height:300px" %}
+                        {% endif %}
                     </div>
                     <div class="form-group">
-                        {% control checkbox text=@t"Is Master" name="isMaster" value="emailTemplate.ismaster" %}
+                        {% control checkbox text=@t"Is Master" name="isMaster" value="emailTemplate.isMaster" %}
                         <div class="panel-help">
                             {{"A master template is a template that is parent to all the other templates. It acts as a skin to the other templates which use it. A master template must have % bodyContent % tag which will be replaced by the template content before sending emails." | t}}
                         </div>
