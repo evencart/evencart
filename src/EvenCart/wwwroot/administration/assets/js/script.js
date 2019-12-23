@@ -382,7 +382,7 @@ var inputTypeahead = function (options) {
                     return;
                 }
             }
-            var data = options.initialData || options.data;
+            var data = options.data || options.initialData;
             var matches = dataSearch(q, data);
             syncResults(matches);
         };
