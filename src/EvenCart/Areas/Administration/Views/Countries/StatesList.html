@@ -23,11 +23,6 @@
                 <script type="text/javascript">
                    
                     ready(function() {
-                        var initData = null;
-                        /*{% unless states == blank %}*/
-                        initData = JSON.parse('{{states}}');
-                        /*{% endunless %}*/
-
                         generateGrid({
                             element: "grid-selection",
                             initialData: {
