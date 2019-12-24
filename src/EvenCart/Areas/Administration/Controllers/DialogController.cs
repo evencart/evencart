@@ -1,4 +1,5 @@
 ﻿using EvenCart.Areas.Administration.Models.Dialog;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
@@ -13,7 +14,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var model = new DialogResultModel() {
                 MultiSelect = dialogModel.MultiSelect,
-                ResponseObjectName = dialogModel.EntityName.ToLowerInvariant()
+                ResponseObjectName = dialogModel.EntityName.ToCamelCase()
             };
             var url = "";
             var title = "";
@@ -46,11 +47,11 @@ namespace EvenCart.Areas.Administration.Controllers
                     routeName = AdminRouteNames.ManufacturersList;
                     title = T("Manufacturers");
                     break;
-                case "paymentmethods":
+                case "paymentMethods":
                     routeName = AdminRouteNames.PaymentMethodsList;
                     title = T("Payment Methods");
                     break;
-                case "shippingmethods":
+                case "shippingMethods":
                     routeName = AdminRouteNames.ShippingMethodsList;
                     title = T("Shipping Methods");
                     break;

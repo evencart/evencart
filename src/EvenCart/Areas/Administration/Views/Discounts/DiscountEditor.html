@@ -40,7 +40,13 @@
                         </div>
                         {% control select name="calculationType" id="calculationType" items="availableCalculationTypes" value="discount.calculationTypeDisplay" required="true" %}
                     </div>
-
+                    <div class="form-group">
+                        {% control label text=@t"Minimum Order Subtotal" for="minimumOrderSubtotal" %}
+                        <div class="panel-help">
+                            {{"Specifies the minimum order subtotal to avail the discount. Default is 0 to make the discount available for any order value." | t}}
+                        </div>
+                        {% control number name="minimumOrderSubtotal" id="minimumOrderSubtotal" value="{{discount.minimumOrderSubtotal}}" %}
+                    </div>
                     <div class="form-group">
                         {% control label text=@t"Maximum Discount Amount" for="maximumDiscountAmount" %}
                         {% control number name="maximumDiscountAmount" id="maximumDiscountAmount" value="{{discount.maximumDiscountAmount}}" %}
@@ -105,7 +111,6 @@
                     <div class="form-group">
                         {% control label text=@t"Apply to" for="restrictionType" %}
                         {% control select name="restrictionType" id="restrictionType" value="discount.restrictionTypeDisplay" items="availableRestrictionTypes" %}
-
                     </div>
                     <div class="form-group">
                         <div id="selector-grid-area" style="display: none;">
@@ -212,10 +217,12 @@
                     case "OrderTotal":
                         break;
                     case "OrderSubTotal":
+                            break;
+                    case "ShippingFee":
                         break;
                     }
 
-                    if (value !== "0" && value !== "OrderTotal" && value !== "OrderSubTotal") {
+                    if (value !== "0" && value !== "OrderTotal" && value !== "OrderSubTotal" && value !== "ShippingFee") {
                         jQuery("#selector-grid-area").show();
                     } else {
                         jQuery("#selector-grid-area").hide();

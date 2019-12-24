@@ -19,6 +19,8 @@ namespace EvenCart.Data.Entity.Promotions
         [Description("Order Total")]
         OrderTotal = 10,
         [Description("Order SubTotal")]
-        OrderSubTotal = 11
+        OrderSubTotal = 11,
+        [Description("Shipping Fee")]
+        ShippingFee = 12,
     }
 }

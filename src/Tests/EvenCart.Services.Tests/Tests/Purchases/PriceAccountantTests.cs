@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
 using EvenCart.Services.Purchases;
+using EvenCart.Services.Settings;
 using EvenCart.Services.Users;
 using NUnit.Framework;
 
@@ -23,7 +25,8 @@ namespace EvenCart.Services.Tests.Purchases
         private IManufacturerService _manufacturerService;
         private IVendorService _vendorService;
         private IDiscountCouponService _discountCouponService;
-
+        private ISettingService _settingService;
+        private TaxSettings _taxSettings;
         private User _registeredUser;
         private User _visitor;
         private Product _product1, _product2;
@@ -46,7 +49,8 @@ namespace EvenCart.Services.Tests.Purchases
             _categoryService = Resolve<ICategoryService>();
             _vendorService = Resolve<IVendorService>();
             _manufacturerService = Resolve<IManufacturerService>();
-
+            _settingService = Resolve<ISettingService>();
+            _taxSettings = Resolve<TaxSettings>();
             _registeredUser = new User()
             {
                 Email = "priceaccountanttests_registered@teststore.com",
@@ -186,6 +190,32 @@ namespace EvenCart.Services.Tests.Purchases
                 Discount = 0,
                 Price = _product1.Price,
                 Tax = 0,
+                TaxPercent = 0,
+                FinalPrice = _product1.Price
+            });
+            var cart = _cartService.GetCart(_registeredUser.Id);
+            _priceAccountant.RefreshCartParameters(cart);
+            Assert.AreEqual(_autoCoupon.DiscountValue, cart.Discount);
+        }
+
+        [Test]
+        public void Auto_Discount_OrderSubtotal_Succeeds()
+        {
+            _autoCoupon.RestrictionType = RestrictionType.OrderSubTotal;
+            _autoCoupon.MaximumDiscountAmount = 0;
+            _discountCouponService.Update(_autoCoupon);
+
+            //clear cart
+            _cartService.ClearCart(_registeredUser.Id);
+
+            //add items
+            _cartService.AddToCart(_registeredUser.Id, new CartItem()
+            {
+                ProductId = _product1.Id,
+                Quantity = 1,
+                Discount = 0,
+                Price = _product1.Price,
+                Tax = 10,
                 TaxPercent = 0,
                 FinalPrice = _product1.Price
             });
@@ -496,7 +526,7 @@ namespace EvenCart.Services.Tests.Purchases
                 Quantity = 1,
                 Discount = 0,
                 Price = _product1.Price,
-                Tax = 0,
+                Tax = 20,
                 TaxPercent = 0,
                 FinalPrice = _product1.Price
             });
@@ -506,22 +536,75 @@ namespace EvenCart.Services.Tests.Purchases
                 Quantity = 1,
                 Discount = 0,
                 Price = _product2.Price,
-                Tax = 0,
+                Tax = 20,
                 TaxPercent = 0,
                 FinalPrice = _product2.Price
             });
+            //update tax rate
+            _taxSettings.DefaultTaxRate = 10;
+            _settingService.Save(_taxSettings);
+            var cart = _cartService.GetCart(_registeredUser.Id);
+            _priceAccountant.RefreshCartParameters(cart);
 
             _cartService.SetDiscountCoupon(_registeredUser.Id, "validcoupon");
 
-            var cart = _cartService.GetCart(_registeredUser.Id);
+            cart = _cartService.GetCart(_registeredUser.Id);
             _priceAccountant.RefreshCartParameters(cart);
             var expected = 12.5m;
             Assert.AreEqual(expected, cart.Discount); //discount coupon is percentage
         }
 
         [Test]
+        public void Manual_Discount_OrderSubTotal_Succeeds()
+        {
+            _validCoupon.RestrictionType = RestrictionType.OrderSubTotal;
+            _discountCouponService.Update(_validCoupon);
+
+            //clear cart
+            _cartService.ClearCart(_registeredUser.Id);
+
+            //add items
+            _cartService.AddToCart(_registeredUser.Id, new CartItem()
+            {
+                ProductId = _product1.Id,
+                Quantity = 1,
+                Discount = 0,
+                Price = _product1.Price,
+                Tax = 20,
+                TaxPercent = 0,
+                FinalPrice = _product1.Price
+            });
+            _cartService.AddToCart(_registeredUser.Id, new CartItem()
+            {
+                ProductId = _product2.Id,
+                Quantity = 1,
+                Discount = 0,
+                Price = _product2.Price,
+                Tax = 20,
+                TaxPercent = 0,
+                FinalPrice = _product2.Price
+            });
+
+            //update tax rate
+            _taxSettings.DefaultTaxRate = 10;
+            _settingService.Save(_taxSettings);
+            var cart = _cartService.GetCart(_registeredUser.Id);
+            _priceAccountant.RefreshCartParameters(cart);
+            _cartService.SetDiscountCoupon(_registeredUser.Id, "validcoupon");
+
+            cart = _cartService.GetCart(_registeredUser.Id);
+            _priceAccountant.RefreshCartParameters(cart);
+            var expected = 11.36m;
+            var actual = Math.Round(cart.Discount, 2);
+            Assert.AreEqual(expected, actual); //discount coupon is percentage
+        }
+
+        [Test]
         public void Manual_Discount_Product_Succeeds()
         {
+            _taxSettings.DefaultTaxRate = 0;
+            _settingService.Save(_taxSettings);
+
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
 
@@ -614,6 +697,9 @@ namespace EvenCart.Services.Tests.Purchases
         [Test]
         public void Manual_Discount_Role_Succeeds()
         {
+            _taxSettings.DefaultTaxRate = 0;
+            _settingService.Save(_taxSettings);
+
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
 
@@ -697,6 +783,9 @@ namespace EvenCart.Services.Tests.Purchases
         [Test]
         public void Manual_Discount_User_Succeeds()
         {
+            _taxSettings.DefaultTaxRate = 0;
+            _settingService.Save(_taxSettings);
+
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
 
@@ -827,6 +916,9 @@ namespace EvenCart.Services.Tests.Purchases
         [Test]
         public void Manual_Discount_Vendor_Succeeds()
         {
+            _taxSettings.DefaultTaxRate = 0;
+            _settingService.Save(_taxSettings);
+
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
 

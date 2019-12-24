@@ -32,6 +32,8 @@ namespace EvenCart.Data.Entity.Promotions
 
         public RestrictionType RestrictionType { get; set; }
 
+        public decimal MinimumOrderSubTotal { get; set; }
+
         #region Virtual Properties
 
         public virtual bool Expired => EndDate.HasValue && EndDate.Value <= DateTime.UtcNow;

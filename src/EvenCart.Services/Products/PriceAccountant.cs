@@ -71,7 +71,11 @@ namespace EvenCart.Services.Products
                 return DiscountApplicationStatus.InvalidCode;
             if (discountCoupon.EndDate.HasValue && discountCoupon.EndDate < DateTime.UtcNow)
                 return DiscountApplicationStatus.Expired;
-
+            //is there a min. total required
+            if (discountCoupon.MinimumOrderSubTotal > 0 && discountCoupon.MinimumOrderSubTotal > GetOrderSubTotal(cart))
+            {
+                return DiscountApplicationStatus.NotEligibleForCart;
+            }
             //number of usages
             if (discountCoupon.TotalNumberOfTimes > 0)
             {
@@ -125,6 +129,9 @@ namespace EvenCart.Services.Products
                     break;
                 case RestrictionType.OrderSubTotal:
                     cartUpdated = ApplyOrderSubTotalDiscount(discountCoupon, cart);
+                    break;
+                case RestrictionType.ShippingFee:
+                    cartUpdated = ApplyShippingDiscount(discountCoupon, cart);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -514,12 +521,7 @@ namespace EvenCart.Services.Products
             var shippingMethodNames = discountCoupon.RestrictionValues();
             if (shippingMethodNames.Contains(cart.ShippingMethodName))
             {
-                var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
-                var discount = discountCoupon.GetDiscountAmount(shippingHandler.GetShippingHandlerFee(cart), 1);
-                if (discountCoupon.HasCouponCode)
-                    cart.Discount = discount;
-                cart.ShippingFee = cart.ShippingFee - discount;
-                return true;
+                return ApplyShippingDiscount(discountCoupon, cart);
             }
             return false;
         }
@@ -544,8 +546,26 @@ namespace EvenCart.Services.Products
 
         private bool ApplyOrderSubTotalDiscount(DiscountCoupon discountCoupon, Cart cart)
         {
-            //todo: implement this
+            var subTotal = GetOrderSubTotal(cart);
+            cart.Discount = discountCoupon.GetDiscountAmount(subTotal, 1);
             return true;
+        }
+
+        private bool ApplyShippingDiscount(DiscountCoupon discountCoupon, Cart cart)
+        {
+            var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
+            var discount = discountCoupon.GetDiscountAmount(shippingHandler?.GetShippingHandlerFee(cart) ?? 0, 1);
+            if (discountCoupon.HasCouponCode)
+                cart.Discount = discount;
+            cart.ShippingFee = cart.ShippingFee - discount;
+            if (cart.ShippingFee < 0)
+                cart.ShippingFee = 0;
+            return true;
+        }
+
+        private decimal GetOrderSubTotal(Cart cart)
+        {
+            return cart.CartItems.Sum(x => x.Price * x.Quantity);
         }
         #endregion
 

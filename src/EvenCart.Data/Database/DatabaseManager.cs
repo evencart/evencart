@@ -71,7 +71,7 @@ namespace EvenCart.Data.Database
         {
             if (_versionsAdded)
                 return;
-            DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100());
+            DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
             if (!excludePlugins)
             {
                 //the plugin versions

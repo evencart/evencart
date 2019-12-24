@@ -17,6 +17,7 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.HttpServices;
+using EvenCart.Services.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -224,6 +225,22 @@ namespace EvenCart.Areas.Administration.Controllers
                 .WithGridResponse(marketPluginInfos.Total, marketPluginInfos.Current, marketPluginInfos.RowCount)
                 .With("plugins", marketPluginInfos.Plugins)
                 .Result;
+        }
+
+        [DualGet("payment-methods", Name = AdminRouteNames.PaymentMethodsList, OnlyApi = true)]
+        public IActionResult PaymentMethodsList()
+        {
+            var paymentHandlers = _pluginAccountant.GetActivePlugins(typeof(IPaymentHandlerPlugin));
+            var models = paymentHandlers.Select(x => new {Id = x.SystemName, x.Name}).ToList();
+            return R.Success.With("paymentMethods", models).WithGridResponse(paymentHandlers.Count, 1, paymentHandlers.Count).Result;
+        }
+
+        [DualGet("shipping-methods", Name = AdminRouteNames.ShippingMethodsList, OnlyApi = true)]
+        public IActionResult ShippingMethodsList()
+        {
+            var shipmentHandlers = _pluginAccountant.GetActivePlugins(typeof(IShipmentHandlerPlugin));
+            var models = shipmentHandlers.Select(x => new { Id = x.SystemName, x.Name }).ToList();
+            return R.Success.With("shippingMethods", models).WithGridResponse(shipmentHandlers.Count, 1, shipmentHandlers.Count).Result;
         }
     }
 }

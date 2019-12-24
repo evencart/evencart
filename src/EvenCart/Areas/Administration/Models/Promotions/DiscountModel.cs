@@ -39,6 +39,8 @@ namespace EvenCart.Areas.Administration.Models.Promotions
 
         public RestrictionType RestrictionType { get; set; }
 
+        public decimal MinimumOrderSubTotal { get; set; }
+
         public string RestrictionTypeDisplay => RestrictionType.ToString();
 
         public IList<RestrictionValueModel> RestrictionValues { get; set; }
