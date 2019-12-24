@@ -16,7 +16,7 @@ namespace Payments.Square
 
         public const string SquareWebhookUrl = "SquareWebhookUrl";
 
-        public const string UserAgentName = "evencart-" + ApplicationConfig.Version;
+        public static string UserAgentName = "evencart-" + ApplicationConfig.Version;
 
         public const string ScriptUrl = "https://js.squareup.com/v2/paymentform";
 
