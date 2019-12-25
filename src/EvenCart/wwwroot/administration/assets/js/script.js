@@ -243,7 +243,7 @@ var getGridSelections = function (id) {
     var resultRows = [];
     selectedRowIds.forEach(function (rowId) {
         currentRows.forEach(function (row) {
-            if (row.id === rowId) {
+            if (row.id == rowId) {
                 resultRows.push(row);
             }
         });
