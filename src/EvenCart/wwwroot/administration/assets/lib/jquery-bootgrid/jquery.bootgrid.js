@@ -1572,12 +1572,10 @@
             while (rowIds.length > 0 && !(!this.options.multiSelect && selectedRows.length === 1))
             {
                 id = rowIds.pop();
-                if ($.inArray(id, this.selectedRows) === -1)
-                {
+                if ($.inArray(id, this.selectedRows) === -1) {
                     for (i = 0; i < this.currentRows.length; i++)
                     {
-                        if (this.currentRows[i][this.identifier] === id)
-                        {
+                        if (this.currentRows[i][this.identifier] == id) {
                             selectedRows.push(this.currentRows[i]);
                             this.selectedRows.push(id);
                             break;
@@ -1643,7 +1641,7 @@
                 {
                     for (i = 0; i < this.currentRows.length; i++)
                     {
-                        if (this.currentRows[i][this.identifier] === id)
+                        if (this.currentRows[i][this.identifier] == id)
                         {
                             deselectedRows.push(this.currentRows[i]);
                             this.selectedRows.splice(pos, 1);
