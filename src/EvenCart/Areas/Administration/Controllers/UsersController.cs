@@ -136,9 +136,17 @@ namespace EvenCart.Areas.Administration.Controllers
             var user = userModel.Id > 0 ? _userService.FirstOrDefault(x => x.Id == userModel.Id) : new User();
             if (user == null)
                 return NotFound();
-            user = _modelMapper.Map(userModel, user,
-                excludeProperties: new[]
-                    {nameof(user.CreatedOn), nameof(user.UpdatedOn), nameof(user.LastLoginDate)});
+            user.Active = userModel.Active;
+            user.CompanyName = userModel.CompanyName;
+            user.Email = userModel.Email;
+            user.FirstName = userModel.FirstName;
+            user.LastName = userModel.LastName;
+            user.IsTaxExempt = userModel.IsTaxExempt;
+            user.DateOfBirth = userModel.DateOfBirth;
+            user.MobileNumber = userModel.MobileNumber;
+            user.NewslettersEnabled = userModel.NewslettersEnabled;
+            user.Remarks = userModel.Remarks;
+            user.RequirePasswordChange = userModel.RequirePasswordChange;
             user.Name = $"{user.FirstName} {user.LastName}";
             if (user.Id == 0)
             {

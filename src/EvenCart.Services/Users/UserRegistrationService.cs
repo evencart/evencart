@@ -76,8 +76,9 @@ namespace EvenCart.Services.Users
             //we can create a user now, we'll need to hash the password
             var salt = _cryptographyService.CreateSalt(8); //64 bits...should be good enough
             var hashedPassword = _cryptographyService.GetHashedPassword(password, salt, passwordFormat);
-            _userService.Update(new {password = hashedPassword, passwordSalt = salt, passwordFormat = passwordFormat},
+            _userService.Update(new {password = hashedPassword, passwordSalt = salt, passwordFormat = passwordFormat, requirePasswordChange = false},
                 x => x.Id == userId, null);
+            //update the require change field
         }
     }
 }
