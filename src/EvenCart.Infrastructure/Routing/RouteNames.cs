@@ -65,5 +65,10 @@
 
         public const string SaveSubscription = "SaveSubscription";
         public const string DeleteSubscription = "DeleteSubscription";
+
+        public const string VendorRegister = "AccountVendorRegister";
+        public const string GetVendor = "AccountGetVendor";
+        public const string SaveVendor = "AccountSaveVendor";
+        public const string VendorsList = "AccountVendorsList";
     }
 }

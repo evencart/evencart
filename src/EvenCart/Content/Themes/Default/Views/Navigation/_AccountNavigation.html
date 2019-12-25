@@ -24,6 +24,11 @@
     <li>
         <a href="{% route AccountReviews %}" class='{% if active_menu == "AccountReviews" %}active{% endif %}'>{{"Review Center" | t}}</a>
     </li>
+    {% if store.vendorsEnabled %}
+    <li>
+        <a href="{% route AccountVendorsList %}" class='{% if active_menu == "AccountVendors" %}active{% endif %}'>{{"Vendor Accounts" | t}}</a>
+    </li>
+    {% endif %}
     {% if withSignout %}
     <li>
         <a href="{% route ForgotPassword %}">{{"Change Password" | t}}</a>

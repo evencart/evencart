@@ -49,5 +49,15 @@ namespace EvenCart.Data.Entity.Settings
         public bool ReturnRequestCreatedEmailEnabled { get; set; }
 
         public bool ReturnRequestCreatedToAdminEmailEnabled { get; set; }
+
+        public bool VendorRegisteredEmailEnabled { get; set; }
+
+        public bool VendorRegisteredEmailToAdminEnabled { get; set; }
+
+        public bool VendorActivatedEmailEnabled { get; set; }
+
+        public bool VendorRejectedEmailEnabled { get; set; }
+
+        public bool VendorDeactivatedEmailEnabled { get; set; }
     }
 }

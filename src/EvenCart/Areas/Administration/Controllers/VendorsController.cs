@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Events;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Mvc;
@@ -9,6 +13,7 @@ using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -18,20 +23,22 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IVendorService _vendorService;
         private readonly IModelMapper _modelMapper;
         private readonly IDataSerializer _dataSerializer;
-
-        public VendorsController(IVendorService vendorService, IModelMapper modelMapper, IDataSerializer dataSerializer)
+        private readonly IRoleService _roleService;
+        private readonly IUserModelFactory _userModelFactory;
+        public VendorsController(IVendorService vendorService, IModelMapper modelMapper, IDataSerializer dataSerializer, IRoleService roleService, IUserModelFactory userModelFactory)
         {
             _vendorService = vendorService;
             _modelMapper = modelMapper;
             _dataSerializer = dataSerializer;
+            _roleService = roleService;
+            _userModelFactory = userModelFactory;
         }
 
         [DualGet("", Name = AdminRouteNames.VendorsList)]
         [CapabilityRequired(CapabilitySystemNames.ViewVendors)]
         public IActionResult VendorsList([FromQuery]VendorSearchModel searchModel)
         {
-            var vendors = _vendorService.GetVendors(searchModel.SearchPhrase, searchModel.Current, searchModel.RowCount,
-                out int totalMatches);
+            var vendors = _vendorService.GetVendors( out var totalMatches, searchModel.SearchPhrase, searchModel.UserId, searchModel.VendorStatus, searchModel.Current, searchModel.RowCount);
             var vendorModels = vendors.Select(x => _modelMapper.Map<VendorModel>(x)).ToList();
             return R.Success.With("vendors", vendorModels)
                 .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
@@ -43,11 +50,51 @@ namespace EvenCart.Areas.Administration.Controllers
         [ValidateModelState(ModelType = typeof(VendorModel))]
         public IActionResult SaveVendor(VendorModel vendorModel)
         {
-            var vendor = vendorModel.Id > 0 ? _vendorService.Get(vendorModel.Id) : new Vendor();
+            var vendor = vendorModel.Id > 0 ? _vendorService.Get(vendorModel.Id) : new Vendor()
+            {
+                VendorStatus = VendorStatus.Pending
+            };
             if (vendor == null)
                 return NotFound();
-            _modelMapper.Map(vendorModel, vendor);
+            vendor.Address = vendorModel.Address;
+            vendor.City = vendorModel.City;
+            vendor.Email = vendorModel.Email;
+            vendor.Name = vendorModel.Name;
+            vendor.GstNumber = vendorModel.GstNumber;
+            vendor.CountryId = vendorModel.CountryId;
+            vendor.Pan = vendorModel.Pan;
+            vendor.StateProvinceId = vendorModel.StateProvinceId;
+            vendor.StateProvinceName = vendorModel.StateProvinceName;
+            vendor.Tin = vendorModel.Tin;
+            vendor.ZipPostalCode = vendorModel.ZipPostalCode;
+            vendor.City = vendorModel.City;
+            vendor.Phone = vendorModel.Phone;
+            vendor.VendorStatus = vendorModel.VendorStatus;
             _vendorService.InsertOrUpdate(vendor);
+
+            if (vendor.VendorStatus != vendorModel.VendorStatus && vendorModel.SendNotification)
+            {
+                switch (vendor.VendorStatus)
+                {
+                    case VendorStatus.Active:
+                        if (vendor.Users?.Any() ?? false)
+                        {
+                            foreach (var user in vendor.Users)
+                            {
+                                _roleService.SetUserRole(user.Id, SystemRoleNames.Vendor);
+                            }
+                        }
+                        RaiseEvent(NamedEvent.VendorActivated, CurrentUser, vendor);
+                        break;
+                    case VendorStatus.Inactive:
+                        RaiseEvent(NamedEvent.VendorDeactivated, CurrentUser, vendor);
+                        break;
+                    case VendorStatus.Rejected:
+                        RaiseEvent(NamedEvent.VendorRejected, CurrentUser, vendor);
+                        break;
+                }
+            }
+
             return R.Success.Result;
         }
 
@@ -61,7 +108,10 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             }
             var vendorModel = _modelMapper.Map<VendorModel>(vendor);
-            return R.Success.With("vendor", vendorModel).WithAvailableCountries().Result;
+            var availableVendorStatus = SelectListHelper.GetSelectItemList<VendorStatus>();
+            return R.Success.With("vendor", vendorModel).WithAvailableCountries()
+                .With("vendorId", vendorId)
+                .With("availableVendorStatus", availableVendorStatus).Result;
         }
 
         [DualPost("{vendorId}", Name = AdminRouteNames.DeleteVendor)]
@@ -75,6 +125,55 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             }
             _vendorService.Delete(vendor);
+            return R.Success.Result;
+        }
+
+        [DualGet("{vendorId}/users", Name = AdminRouteNames.VendorUsersList)]
+        [CapabilityRequired(CapabilitySystemNames.ViewVendors)]
+        public IActionResult VendorUsers(int vendorId)
+        {
+            if (vendorId == 0)
+            {
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+            }
+            var vendor = vendorId > 0 ? _vendorService.Get(vendorId) : null;
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+
+            var userModels = vendor.Users.Select(_userModelFactory.CreateMini).ToList();
+            return R.Success.WithGridResponse(userModels.Count, 1, userModels.Count).With("users", userModels).Result;
+        }
+
+        [DualPost("{vendorId}/users", Name = AdminRouteNames.SaveVendorUser, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditVendor)]
+        public IActionResult SaveVendorUser(int vendorId, int[] userIds)
+        {
+            if (userIds == null || !userIds.Any())
+                return BadRequest();
+            var vendor = vendorId > 0 ? _vendorService.Get(vendorId) : null;
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var userId in userIds)
+                _vendorService.AddVendorUser(vendorId, userId);
+            return R.Success.Result;
+        }
+
+        [DualPost("{vendorId}/users/delete", Name = AdminRouteNames.DeleteVendorUser, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditVendor)]
+        public IActionResult DeleteVendorUser(int vendorId, int userId)
+        {
+            var vendor = vendorId > 0 ? _vendorService.Get(vendorId) : null;
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+
+            _vendorService.RemoveVendorUser(vendorId, userId);
             return R.Success.Result;
         }
     }

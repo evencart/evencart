@@ -1,0 +1,125 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Users" active_menu="VendorUsers" parent_active_menu="UsersList" menu_group="VendorEdit" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Managers" | t}} <button class="btn btn-sm btn-primary float-right" onclick="addUser()">{{"Add new user" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-vendor-users" class="table table-hover table-condensed no-margin">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name" data-formatter="name">{{"Name" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{users | scriptJson : 'initData'}}
+                <script type="text/javascript">
+                    ready(function() {
+                       generateGrid({
+                            element: "grid-vendor-users",
+                            initialData: {
+                                users: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_VendorUsersList %}',
+                            responseObject: "users",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                "name": function(column, row) {
+                                    var displayName = (function() {
+                                        if (row.name)
+                                            return row.name;
+                                        if (row.firstName && row.lastName)
+                                            return row.firstName + " " + row.lastName;
+                                        if (row.firstName)
+                                            return row.firstName;
+                                        if (row.lastName)
+                                            return row.lastName;
+                                        return "";
+                                    })();
+                                    return displayName;
+
+                                },
+                                "commands": function (column, row) {
+                                    console.log(row);
+                                    return "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteUser(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup-selector" class="popup" style="width: 800px; max-width: 100%;"></div>
+
+<script type="text/javascript">
+    var addUser = function() {
+        jQuery("#popup-selector").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("popup-selector",
+            true,
+            function (result, data) {
+                if (result == "ok") {
+                    var userIds = [];
+                    data.forEach(function(d) {
+                        userIds.push(d.id);
+                    });
+                    post({
+                        url: '{% route api_SaveVendorUser vendorId="{{vendorId}}" %}',
+                        data: {
+                            userIds: userIds
+                        },
+                        done: function () {
+                            notify("success", '{{"Successfully added users as manager." | t}}');
+                            reloadGrid("grid-vendor-users");
+                        }
+                    });
+                }
+            });
+        var url = '{% route SelectorDialog entityName="users" multiSelect="true" %}';
+        loadPage(url,
+            true,
+            null,
+            function(response) {
+                jQuery("#popup-selector").html(response);
+                centerPopup();
+            });
+    }
+    var deleteUser = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this user as manager of this vendor?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteVendorUser %}",
+                    data: {
+                        vendorId: "{{vendorId}}",
+                        userId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-vendor-users');
+                            notify("success", '{{"Vendor user was deleted successfully." | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>

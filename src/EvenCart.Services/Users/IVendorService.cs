@@ -17,6 +17,6 @@ namespace EvenCart.Services.Users
 
         IList<Vendor> GetVendorsByProductIds(int[] productIds);
 
-        IList<Vendor> GetVendors(string searchText, int page, int count, out int totalMatches);
+        IList<Vendor> GetVendors(out int totalMatches, string searchText, int? userId = null, VendorStatus? vendorStatus = null, int page = 1, int count = int.MaxValue);
     }
 }

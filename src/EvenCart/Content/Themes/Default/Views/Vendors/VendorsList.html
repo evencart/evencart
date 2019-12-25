@@ -1,0 +1,37 @@
+﻿{% layout "_AccountLayout" %}
+{% global pageTitle=@t"Vendor Accounts" active_menu="AccountVendors" %}
+<h3>
+    {{"Vendors" | t}}
+</h3>
+<div class="page-section section pb-120">
+    <div class="">
+        <table class="table table-striped table-bordered">
+            {% for vendor in vendors %}
+            <tr>
+                <td>
+                    <div>
+                        <strong>{{vendor.name}}</strong>
+                    </div>
+                    <div>
+                        {{vendor.address}}
+                    </div>
+                    <div>
+                        {{vendor.city}}, {{vendor.stateProvinceName}} - {{vendor.zipPostalCode}}
+                    </div>
+                    <div>
+                        {{vendor.countryName}}
+                    </div>
+                    <a href='{% route AccountGetVendor vendorId="{{vendor.id}}" %}'>
+                        <span class="fa fa-pencil"></span> {{"Edit" | t}}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="action-button-container text-center">
+            <a class="btn btn-default" href='{% route AccountVendorRegister %}'>
+                {{"Signup for new account" | t}}
+            </a>
+        </div>
+    </div>
+</div>

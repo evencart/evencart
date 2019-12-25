@@ -55,5 +55,9 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public string HoneypotFieldName { get; set; }
 
         public string ActiveCurrencySymbol { get; set; }
+
+        public bool VendorSignupEnabled { get; set; }
+
+        public bool VendorsEnabled { get; set; }
     }
 }

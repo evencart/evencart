@@ -209,6 +209,46 @@ namespace EvenCart.Events
                             _emailSenderSettings.ReturnRequestCreatedToAdminEmailEnabled);
                     }
                     break;
+                case nameof(NamedEvent.VendorRegistered):
+                case nameof(NamedEvent.VendorActivated):
+                case nameof(NamedEvent.VendorRejected):
+                    if (_emailSenderSettings.VendorRegisteredEmailEnabled ||
+                        _emailSenderSettings.VendorRegisteredEmailToAdminEnabled ||
+                        _emailSenderSettings.VendorActivatedEmailEnabled ||
+                        _emailSenderSettings.VendorDeactivatedEmailEnabled ||
+                        _emailSenderSettings.VendorRejectedEmailEnabled)
+                    {
+                        var user = (User)eventData[0];
+                        var userInfo = user.ToUserInfo();
+                        var userModel = _userModelFactory.Create(user);
+                        var model = R.With("user", userModel);
+
+                        var vendor = (Vendor) eventData[1];
+                        model.With("vendor", vendor);
+
+                        if (eventName == nameof(NamedEvent.VendorRegistered))
+                            _emailSender.SendEmail(EmailTemplateNames.VendorRegisteredMessage, userInfo, model.Result,
+                                _emailSenderSettings.VendorRegisteredEmailEnabled,
+                                _emailSenderSettings.VendorRegisteredEmailToAdminEnabled);
+                        else if (eventName == nameof(NamedEvent.VendorActivated))
+                            _emailSender.SendEmail(EmailTemplateNames.VendorActivatedMessage, userInfo, model.Result,
+                                _emailSenderSettings.VendorActivatedEmailEnabled);
+                        else if (eventName == nameof(NamedEvent.VendorRejected))
+                        {
+                            var message = eventData[2]?.ToString();
+                            model.With("rejectReason", message);
+                            _emailSender.SendEmail(EmailTemplateNames.VendorRejectedMessage, userInfo, model.Result,
+                                _emailSenderSettings.VendorRejectedEmailEnabled);
+                        }
+                        else if (eventName == nameof(NamedEvent.VendorDeactivated))
+                        {
+                            var message = eventData[2]?.ToString();
+                            model.With("deactivationReason", message);
+                            _emailSender.SendEmail(EmailTemplateNames.VendorDeactivatedMessage, userInfo, model.Result,
+                                _emailSenderSettings.VendorDeactivatedEmailEnabled);
+                        }
+                    }
+                    break;
                 case nameof(NamedEvent.ContactUs):
                     {
                         var contactUsModel = eventData[0];

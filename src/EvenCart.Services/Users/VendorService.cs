@@ -25,7 +25,7 @@ namespace EvenCart.Services.Users
 
         public void RemoveVendorUser(int vendorId, int userId)
         {
-            EntitySet<VendorUser>.Delete(x => x.UserId == userId && x.VendorId == userId);
+            EntitySet<VendorUser>.Delete(x => x.UserId == userId && x.VendorId == vendorId);
         }
 
         public void AddVendorProduct(int vendorId, int productId)
@@ -53,7 +53,7 @@ namespace EvenCart.Services.Users
                 .ToList();
         }
 
-        public IList<Vendor> GetVendors(string searchText, int page, int count, out int totalMatches)
+        public IList<Vendor> GetVendors(out int totalMatches, string searchText, int? userId = null, VendorStatus? vendorStatus = null, int page = 1, int count = int.MaxValue)
         {
             var query = Repository;
             if (!searchText.IsNullEmptyOrWhiteSpace())
@@ -61,7 +61,21 @@ namespace EvenCart.Services.Users
                 query = query.Where(x => x.Name.Contains(searchText) || x.GstNumber.Contains(searchText) ||
                                          x.Tin.Contains(searchText));
             }
+
+            if (vendorStatus.HasValue)
+            {
+                query = query.Where(x => x.VendorStatus == vendorStatus);
+            }
             query = query.OrderBy(x => x.Name);
+
+            if (userId.HasValue && userId > 0)
+            {
+                Expression<Func<VendorUser, bool>> vendorWhere = user => user.UserId == userId;
+                query.Join<VendorUser>("Id", "VendorId", joinType: JoinType.LeftOuter)
+                    .Where(vendorWhere);
+                return query.SelectNestedWithTotalMatches(out totalMatches, page, count).ToList();
+            }
+           
             return query.SelectWithTotalMatches(out totalMatches, page, count)
                 .ToList();
         }
@@ -69,7 +83,7 @@ namespace EvenCart.Services.Users
         public override Vendor Get(int id)
         {
             return Repository.Where(x => x.Id == id)
-                .Join<VendorUser>("Id", "UserId", joinType: JoinType.LeftOuter)
+                .Join<VendorUser>("Id", "VendorId", joinType: JoinType.LeftOuter)
                 .Join<User>("UserId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Vendor, User>())
                 .SelectNested()

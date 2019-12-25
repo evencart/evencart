@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Data;
+using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Interfaces;
 
 namespace EvenCart.Data.Entity.Users
 {
-    public class Vendor : FoundationEntity
+    public class Vendor : FoundationEntity, IHasEntityProperties, ISoftDeletable
     {
         public string Name { get; set; }
 
@@ -31,12 +33,21 @@ namespace EvenCart.Data.Entity.Users
 
         public string Email { get; set; }
 
+        public bool Deleted { get; set; }
+
+        public VendorStatus VendorStatus { get; set; }
+
         #region Virtual Properties
         public virtual IList<User> Users { get; set; }
 
         public virtual IList<Product> Products { get; set; }
 
         public virtual SeoMeta SeoMeta { get; set; }
+
+        public virtual IList<EntityProperty> EntityProperties { get; set; }
         #endregion
+
+
+
     }
 }

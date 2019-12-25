@@ -56,5 +56,15 @@
 
         public const string ContactUsMessageToAdmin = "ContactUs" + AdminSuffix;
 
+        public const string VendorRegisteredMessage = "Vendor.Registered";
+
+        public const string VendorRegisteredMessageToAdmin = VendorRegisteredMessage + AdminSuffix;
+
+        public const string VendorActivatedMessage = "Vendor.Activated";
+
+        public const string VendorRejectedMessage = "Vendor.Rejected";
+
+        public const string VendorDeactivatedMessage = "Vendor.Deactivated";
+
     }
 }

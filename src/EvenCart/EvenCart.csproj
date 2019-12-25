@@ -56,6 +56,14 @@
    
     <None Remove="App_Data\database.config.ex" />
    
+    <None Remove="App_Data\Install\EmailTemplates\Vendor.Activated.html" />
+   
+    <None Remove="App_Data\Install\EmailTemplates\Vendor.Deactivated.html" />
+   
+    <None Remove="App_Data\Install\EmailTemplates\Vendor.Registered.html" />
+   
+    <None Remove="App_Data\Install\EmailTemplates\Vendor.Rejected.html" />
+   
     <None Remove="App_Data\Security\.gitkeep" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
@@ -216,6 +224,7 @@
     <None Remove="Areas\Administration\Views\Users\UsersList.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorEditor.html" />
     <None Remove="Areas\Administration\Views\Vendors\VendorsList.html" />
+    <None Remove="Areas\Administration\Views\Vendors\VendorUsers.html" />
     <None Remove="Areas\Administration\Views\Warehouse\WarehouseEditor.html" />
     <None Remove="Areas\Administration\Views\Warehouse\WarehouseList.html" />
     <None Remove="Areas\Administration\Views\Widget\CustomHtml.Settings.html" />
@@ -257,6 +266,7 @@
     <None Remove="Content\Themes\Default\Views\Authentication\ForgotPassword.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\Register.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\RequestInvite.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\VendorSignup.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Wishlist.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
@@ -317,6 +327,9 @@
     <None Remove="Content\Themes\Default\Views\Authentication\Product - Copy.html" />
     <None Remove="Content\Themes\Default\Views\Reviews\_UserReviewBox.html" />
     <None Remove="Content\Themes\Default\Views\Templates\ContactUs.html" />
+    <None Remove="Content\Themes\Default\Views\Vendors\VendorEditor.html" />
+    <None Remove="Content\Themes\Default\Views\Vendors\VendorsList.html" />
+    <None Remove="Content\Themes\Default\Views\Vendors\_VendorForm.html" />
     <None Remove="Content\Themes\Default\Views\Widgets\Index.html" />
     <None Remove="Views\Components\GoogleRecaptcha\Default.html" />
     <None Remove="Views\Controls\captcha.html" />
@@ -401,6 +414,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Install\EmailTemplates\Shipment.Shipped.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Vendor.Deactivated.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Vendor.Activated.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Vendor.Rejected.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Vendor.Registered.Admin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\EmailTemplates\Vendor.Registered.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Install\EmailTemplates\User.AccountDeleted.html">
@@ -904,6 +932,9 @@
     <Content Include="Areas\Administration\Views\Users\UsersList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Vendors\VendorUsers.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Vendors\VendorEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1026,6 +1057,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Addresses\AddressForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Vendors\VendorsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Vendors\_VendorForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Vendors\VendorEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Vendors\Register.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\RequestInvite.html">

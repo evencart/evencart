@@ -1,0 +1,46 @@
+﻿{% layout "_Layout" %}
+{% global pageTitle=@t"Vendor Signup" active_menu="AccountVendors" %}
+
+
+<div class="page-section section pb-120 wrapper">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div class="text-center">
+                    {% partial "Common/Breadcrumb" %}
+                    <h3>
+                       {{"Vendor Signup" | t}}
+                    </h3>
+                </div>
+                <form action="{% route api_AccountSaveVendor %}" id="save-vendor-form" method="post">
+                    {% control xsrf %}
+                    {% partial "Vendors/_VendorForm" %}
+                    <div class="action-button-container text-center">
+                        <button type="submit" class="btn btn-default">
+                            {{"Save Vendor" | t}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        initAjaxForm("save-vendor-form",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Thank you for signing up for a vendor account. The account is pending for review." | t}}');
+                    setTimeout(function() {
+                            window.location.href = '{% route AccountVendorsList %}';
+                        },
+                        1000);
+                    
+                }
+            });
+    })
+</script>

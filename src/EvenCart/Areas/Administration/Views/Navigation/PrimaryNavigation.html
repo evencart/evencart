@@ -59,6 +59,7 @@
 
 {% secondary_navigation url="{% route VendorsList %}" title=@t"Back to vendors" iconClass="rbicon-chevron-left" groupId="VendorEdit" %}
 {% secondary_navigation url="{% route GetVendor vendorId="{{vendorId}}" %}" title=@t"Vendor Info" systemName="GetVendor" groupId="VendorEdit" %}
+{% secondary_navigation url="{% route VendorUsersList vendorId="{{vendorId}}" %}" title=@t"Vendor Managers" systemName="VendorUsers" groupId="VendorEdit" %}
 
 <!--Content Pages-->
 {% primary_navigation title=@t"Pages" systemName="ContentPagesList" groupId="store" capability="ContentPage.View" %}

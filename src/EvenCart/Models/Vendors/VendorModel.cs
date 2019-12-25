@@ -3,7 +3,7 @@ using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
 
-namespace EvenCart.Areas.Administration.Models.Vendors
+namespace EvenCart.Models.Vendors
 {
     public class VendorModel : FoundationEntityModel, IRequiresValidations<VendorModel>
     {
@@ -32,8 +32,6 @@ namespace EvenCart.Areas.Administration.Models.Vendors
         public string Email { get; set; }
 
         public VendorStatus VendorStatus { get; set; }
-
-        public bool SendNotification { get; set; }
 
         public void SetupValidationRules(ModelValidator<VendorModel> v)
         {

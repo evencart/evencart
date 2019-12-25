@@ -137,6 +137,9 @@ namespace EvenCart.Infrastructure.Routing
         public const string GetVendor = "GetVendor";
         public const string SaveVendor = "SaveVendor";
         public const string DeleteVendor = "DeleteVendor";
+        public const string VendorUsersList = "VendorUsersList";
+        public const string SaveVendorUser = "SaveVendorUser";
+        public const string DeleteVendorUser = "DeleteVendorUser";
 
         public const string DiscountsList = "DiscountsList";
         public const string GetDiscount = "GetDiscount";

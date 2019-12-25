@@ -24,7 +24,12 @@
         InvitationRequested,
         Invitation,
 
-        ContactUs
-        
+        ContactUs,
+
+        VendorRegistered,
+        VendorActivated,
+        VendorRejected,
+        VendorDeactivated
+
     }
 }
