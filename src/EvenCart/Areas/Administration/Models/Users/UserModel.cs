@@ -30,6 +30,10 @@ namespace EvenCart.Areas.Administration.Models.Users
 
         public DateTime? LastLoginDate { get; set; }
 
+        public DateTime? DateOfBirth { get; set; }
+
+        public bool IsTaxExempt { get; set; }
+
         public string Remarks { get; set; }
 
         public string LastLoginIpAddress { get; set; }
@@ -46,9 +50,15 @@ namespace EvenCart.Areas.Administration.Models.Users
 
         public int Points { get; set; }
 
+        public int? ProfilePictureId { get; set; }
+
+        public bool RequirePasswordChange { get; set; }
+
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            v.RuleFor(x => x.FirstName).NotEmpty();
+            v.RuleFor(x => x.LastName).NotEmpty();
             v.RuleFor(x => x.Password).Equal(x => x.ConfirmPassword, StringComparer.InvariantCulture);
         }
     }

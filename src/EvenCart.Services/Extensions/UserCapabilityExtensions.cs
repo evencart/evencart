@@ -143,5 +143,14 @@ namespace EvenCart.Services.Extensions
         {
             return user?.Roles != null && user.Roles.Any(x => roleSystemNames.Contains(x.SystemName));
         }
+
+        public static bool SetUserRole(this IRoleService roleService, int userId, string roleName)
+        {
+            var role = roleService.FirstOrDefault(x => x.SystemName == roleName);
+            if (role == null)
+                return false;
+            roleService.SetUserRoles(userId, new[] {role.Id});
+            return true;
+        }
     }
 }

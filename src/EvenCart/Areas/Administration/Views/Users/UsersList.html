@@ -72,7 +72,7 @@
                                         ")'><span class='rbicon-edit'></span></button> " +
                                         "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
                                         row.id +
-                                        "' onclick='deleteCategory(" +
+                                        "' onclick='deleteUser(" +
                                         row.id +
                                         ")'><span class='rbicon-trash-2'></span></button>";
                                 }
@@ -94,4 +94,24 @@
         navigate(url.replace("user_id", id));
     }
 
+    var deleteUser = function(id) {
+        var msg =
+            '{{ "Deleting a user will delete all the related data including orders. Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteUser %}",
+                    data: {
+                        userId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"User was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+        
+    }
 </script>

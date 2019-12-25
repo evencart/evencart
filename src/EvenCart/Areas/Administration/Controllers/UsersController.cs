@@ -167,7 +167,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
             //get the role ids
             var roleIds = userModel.Roles?.Select(x => x.Id).ToArray() ?? null;
-            _roleService.SetUserRoles(user.Id, roleIds);
+            _roleService.SetUserRoles(user.Id, roleIds, true);
 
             return R.Success.With("id", user.Id).Result;
         }

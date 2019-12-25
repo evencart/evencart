@@ -30,13 +30,16 @@ namespace EvenCart.Services.Users
             return userRoles;
         }
 
-        public void SetUserRoles(int userId, int[] roleIds)
+        public void SetUserRoles(int userId, int[] roleIds, bool deletePreviousRoles = false)
         {
             //if there are no roles, it means all roles have been removed
             if (roleIds == null || !roleIds.Any())
             {
-                _userRoleService.Delete(x => x.UserId == userId);
-                return;
+                if (deletePreviousRoles)
+                {
+                    _userRoleService.Delete(x => x.UserId == userId);
+                    return;
+                }
             }
             //get all the roles of current user
             var userRoles = _userRoleService.Get(x => x.UserId == userId).ToList();
@@ -55,9 +58,12 @@ namespace EvenCart.Services.Users
             }
             //insert new roles
             _userRoleService.Insert(newRoles.ToArray());
-            //delete other roles
-            foreach(var roleToRemove in userRoles.Where(x => !roleIds.Contains(x.RoleId)))
-                _userRoleService.Delete(roleToRemove);
+            if (deletePreviousRoles)
+            {
+                //delete other roles
+                foreach (var roleToRemove in userRoles.Where(x => !roleIds.Contains(x.RoleId)))
+                    _userRoleService.Delete(roleToRemove);
+            }
         }
 
         public override Role Get(int id)

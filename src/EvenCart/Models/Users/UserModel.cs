@@ -69,6 +69,8 @@ namespace EvenCart.Models.Users
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            v.RuleFor(x => x.FirstName).NotEmpty();
+            v.RuleFor(x => x.LastName).NotEmpty();
         }
     }
 }

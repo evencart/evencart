@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.Users
@@ -34,7 +35,14 @@ namespace EvenCart.Areas.Administration.Factories.Users
 
         public UserMiniModel CreateMini(User entity)
         {
-            return _modelMapper.Map<UserMiniModel>(entity);
+            var model = new UserMiniModel()
+            {
+                Name = entity.Name,
+                Id = entity.Id
+            };
+            if (model.Name.IsNullEmptyOrWhiteSpace())
+                model.Name = entity.Email;
+            return model;
         }
 
         public UserPointModel Create(UserPoint entity)

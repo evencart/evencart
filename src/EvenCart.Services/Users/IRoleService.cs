@@ -8,6 +8,6 @@ namespace EvenCart.Services.Users
     {
         IList<Role> GetUserRoles(int userId);
 
-        void SetUserRoles(int userId, int[] roleIds);
+        void SetUserRoles(int userId, int[] roleIds, bool deletePreviousRoles = false);
     }
 }
