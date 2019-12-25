@@ -49,6 +49,9 @@ namespace EvenCart.Core.Plugins
                     //ignore any invalid ones
                     if (IsNullEmptyOrWhitespace(pluginInfo.SystemName) || IsNullEmptyOrWhitespace(pluginInfo.Name) || IsNullEmptyOrWhitespace(pluginInfo.AssemblyName))
                         continue;
+                    //is this plugin version supported?
+                    if (pluginInfo.SupportedVersions.All(x => !AppVersionEvaluator.IsVersionSupported(x)))
+                        continue;
                 }
                 catch
                 {

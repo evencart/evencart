@@ -67,7 +67,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 PrimaryCurrencyCode = currencyService.Get(localizationSettings.BaseCurrencyId)?.IsoCode,
                 ActiveCurrencySymbol = ApplicationEngine.CurrentCurrency.GetSymbol(),
                 XsrfToken = antiforgery.GetToken(),
-                SoftwareVersion = ApplicationConfig.Version,
+                SoftwareVersion = AppVersionEvaluator.Version,
                 SoftwareTitle = ApplicationConfig.AppName,
                 HoneypotFieldName = securitySettings.HoneypotFieldName,
                 VendorSignupEnabled = vendorSettings.EnableVendorSignup,

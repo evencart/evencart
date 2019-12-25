@@ -1,28 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 using EvenCart.Data.Enum;
 
 namespace EvenCart.Infrastructure
 {
     public static class ApplicationConfig
     {
-        private static string _version = null;
-        public static string Version
-        {
-            get
-            {
-                if (_version == null)
-                {
-                    var assembly = Assembly.GetEntryAssembly();
-                    var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                    _version = fileVersionInfo.ProductVersion;
-                }
-
-                return _version;
-            }
-        }
-
         public const string AppName = "EvenCart";
 
         public const string ApiVersion = "1.0";
