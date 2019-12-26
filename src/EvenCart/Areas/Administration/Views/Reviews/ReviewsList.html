@@ -54,6 +54,7 @@
                                 },
                                 "review": function(column, row) {
                                     var html = "<strong>" + row.title + "</strong>";
+                                    html += "<div>{{'Posted on:' | t}}" + row.formatted.createdOn + "</div><hr/>";
                                     html += "<div style='white-space: pre-wrap;'>" + row.description + "</div>";
                                     if (row.userId > 0) {
                                         html += "<div>";
