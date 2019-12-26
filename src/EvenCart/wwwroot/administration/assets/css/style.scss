@@ -95,7 +95,7 @@ body {
         color: $foreground-for-primary-dark;
         display: block;
         padding: 4px 20px;
-
+        font-size:0.85rem;
         &:hover {
             text-decoration: none;
             background-color: $primary-dark-hover;
