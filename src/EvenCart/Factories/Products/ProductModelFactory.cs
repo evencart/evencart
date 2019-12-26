@@ -12,6 +12,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Media;
 using EvenCart.Models.Reviews;
+using EvenCart.Services.Extensions;
 using DownloadModel = EvenCart.Models.Products.DownloadModel;
 using ProductAttributeModel = EvenCart.Models.Products.ProductAttributeModel;
 using ProductAttributeValueModel = EvenCart.Models.Products.ProductAttributeValueModel;
@@ -45,6 +46,7 @@ namespace EvenCart.Factories.Products
             var productModel = _modelMapper.Map<ProductModel>(product);
             productModel.IsAvailable = !product.TrackInventory || (product.TrackInventory && product.IsAvailableInStock());
             productModel.SeName = product.SeoMeta?.Slug;
+           
             var mediaModels = product.MediaItems?.OrderBy(x => x.DisplayOrder).Select(y =>
             {
                 var mediaModel = _modelMapper.Map<MediaModel>(y);
@@ -123,28 +125,36 @@ namespace EvenCart.Factories.Products
             {
                 product.ReviewSummary = null;
             }
-
-            IList<DiscountCoupon> coupons = null;
-            //any autodiscounted price
-            var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, 1, ref coupons, out decimal discount);
-            if (price < product.Price)
+            if (productModel.RequireLoginToViewPrice && ApplicationEngine.CurrentUser.IsVisitor())
             {
-                productModel.ComparePrice = product.Price;
-                if (productModel.ComparePrice < product.ComparePrice)
-                {
-                    productModel.ComparePrice = product.ComparePrice;
-                }
+                productModel.Price = 0;
+                productModel.ComparePrice = null;
             }
-            _priceAccountant.GetProductPriceDetails(product, null, price, out decimal priceWithoutTax,
-                out decimal tax, out decimal taxRate, out _);
-            if (_taxSettings.DisplayProductPricesWithoutTax)
-                productModel.Price = priceWithoutTax;
             else
-                productModel.Price = priceWithoutTax + tax;
+            {
+                IList<DiscountCoupon> coupons = null;
+                //any autodiscounted price
+                var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, ApplicationEngine.CurrentUser, 1, ref coupons, out decimal discount);
+                if (price < product.Price)
+                {
+                    productModel.ComparePrice = product.Price;
+                    if (productModel.ComparePrice < product.ComparePrice)
+                    {
+                        productModel.ComparePrice = product.ComparePrice;
+                    }
+                }
+                _priceAccountant.GetProductPriceDetails(product, null, price, out decimal priceWithoutTax,
+                    out decimal tax, out decimal taxRate, out _);
+                if (_taxSettings.DisplayProductPricesWithoutTax)
+                    productModel.Price = priceWithoutTax;
+                else
+                    productModel.Price = priceWithoutTax + tax;
 
-            //change display prices to current currency
-            var targetCurrency = ApplicationEngine.CurrentCurrency;
-            productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
+                //change display prices to current currency
+                var targetCurrency = ApplicationEngine.CurrentCurrency;
+                productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
+            }
+          
             return productModel;
         }
 

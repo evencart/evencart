@@ -72,6 +72,8 @@ namespace EvenCart.Controllers
             var product = _productService.Get(cartItemModel.ProductId);
             if (product == null || !product.IsPublic())
                 return R.Fail.Result;
+            if (product.RequireLoginToPurchase && CurrentUser.IsVisitor())
+                return R.Fail.WithError(ErrorCodes.RequiresAuthenticatedUser, T("Please login to purchase this product.")).Result;
             //check appropriate attributes if not wishlist
             ProductVariant variant = null;
             IActionResult validationResult = null;

@@ -16,10 +16,12 @@
             <!-- Title -->
             <h5 class="title"><a href='{% route SingleProduct seName="{{product.seName}}" %}'>{{product.name}}</a></h5>
             {% partial "Products/_RatingMini" %}
+            {% unless product.requireLoginToViewPrice && currentUser.isVisitor %}
             <!-- Price -->
             <div class="price-ratting fix">
                 <span class="price"><span class="new">{{product.priceFormatted}}</span></span>
             </div>
+            {% endunless %}
         </div>
     </div>
 </div>

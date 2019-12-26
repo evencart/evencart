@@ -95,6 +95,10 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public int? TrialDays { get; set; }
 
+        public bool RequireLoginToPurchase { get; set; }
+
+        public bool RequireLoginToViewPrice { get; set; }
+
         public IList<MediaModel> Media { get; set; }
 
         public IList<CategoryModel> Categories { get; set; }

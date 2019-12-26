@@ -74,6 +74,7 @@
                     </div>
                     {% endif %}
                     {% endif %}
+                    {% unless product.requireLoginToViewPrice && currentUser.isVisitor %}
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->
@@ -86,6 +87,12 @@
                             <div class="new" id="priceFormatted">{{product.price | withCurrency }}</div>
                         </span>
                     </div>
+                    {% endunless %}
+                    {% if product.requireLoginToPurchase && currentUser.isVisitor %}
+                    <div class="alert alert-danger">
+                        {{"Please login to complete your purchase" | t}}
+                    </div>
+                    {% else %}
                     <form action="{% route api_AddToCart %}" method="post" id="form-add-to-cart">
                         {% control xsrf %}
                         <input type="hidden" name="productId" value="{{product.id}}" />
@@ -123,6 +130,8 @@
                                 });
                         });
                     </script>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

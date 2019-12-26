@@ -101,6 +101,10 @@ namespace EvenCart.Data.Entity.Shop
 
         public int? TrialDays { get; set; }
 
+        public bool RequireLoginToPurchase { get; set; }
+
+        public bool RequireLoginToViewPrice { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }

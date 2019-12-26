@@ -88,6 +88,10 @@ namespace EvenCart.Models.Products
 
         public bool IndividuallyShipped { get; set; }
 
+        public bool RequireLoginToPurchase { get; set; }
+
+        public bool RequireLoginToViewPrice { get; set; }
+
         public ReviewSummaryModel ReviewSummary { get; set; }
 
         public IList<MediaModel> Media { get; set; }
