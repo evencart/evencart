@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace EvenCart.Services.Formatter
         public FormatterService(IDataSerializer dataSerializer)
         {
             _dataSerializer = dataSerializer;
-            _cultureInfos = new Dictionary<string, CultureInfo>(StringComparer.InvariantCultureIgnoreCase);
+            _cultureInfos = new ConcurrentDictionary<string, CultureInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
 

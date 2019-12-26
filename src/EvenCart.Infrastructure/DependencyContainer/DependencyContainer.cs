@@ -38,6 +38,7 @@ using EvenCart.Infrastructure.Tasks;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Services.Cultures;
+using EvenCart.Services.Formatter;
 
 namespace EvenCart.Infrastructure.DependencyContainer
 {
@@ -146,6 +147,9 @@ namespace EvenCart.Infrastructure.DependencyContainer
                               type.GetInterfaces().Length != 0);// which implementing some interface(s)
 
             registrar.RegisterMany(serviceTypes, Reuse.Transient);
+
+            registrar.Register<IFormatterService, FormatterService>(Reuse.Singleton,
+                ifAlreadyRegistered: IfAlreadyRegistered.Replace);
 
             //find all event consumer types
             var allConsumerTypes = allTypes
