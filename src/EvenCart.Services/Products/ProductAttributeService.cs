@@ -57,9 +57,9 @@ namespace EvenCart.Services.Products
         public override ProductAttribute Get(int id)
         {
             return Repository.Where(x => x.Id == id)
-                .Join<ProductAttributeValue>("Id", "ProductAttributeId", joinType: JoinType.LeftOuter)
-                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                 .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                .Join<ProductAttributeValue>("Id", "ProductAttributeId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<ProductAttribute, ProductAttributeValue>())
                 .Relate<AvailableAttributeValue>((productAttribute, availableAttributeValue) =>
                 {
@@ -88,10 +88,12 @@ namespace EvenCart.Services.Products
         {
 
             var q = Repository.Where(x => x.ProductId == productId)
+                .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
                 //.Join<Product>("ProductId", "Id")
-                .Join<ProductAttributeValue>("Id", "ProductAttributeId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
-                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
-                .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter);
+                .Join<ProductAttributeValue>("Id", "ProductAttributeId", SourceColumn.Parent,
+                    joinType: JoinType.LeftOuter)
+                .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter);
+                
 
             //should we restrict to only variant specific attributes
             if (onlyVariantSpecific)

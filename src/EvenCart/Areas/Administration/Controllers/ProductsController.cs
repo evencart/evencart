@@ -1161,7 +1161,7 @@ namespace EvenCart.Areas.Administration.Controllers
             download.Published = downloadModel.Published;
             download.RequireLogin = downloadModel.RequireLogin;
             download.RequirePurchase = downloadModel.RequirePurchase;
-            
+
             _downloadService.InsertOrUpdate(download);
             return R.Success.Result;
         }
@@ -1212,12 +1212,13 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var attributeModel = _modelMapper.Map<ProductAttributeModel>(pa);
             attributeModel.Name = pa.AvailableAttribute.Name;
-            foreach (var pav in pa.ProductAttributeValues)
-            {
-                var valueModel = _modelMapper.Map<ProductAttributeValueModel>(pav);
-                valueModel.AttributeValue = pav.AvailableAttributeValue.Value;
-                attributeModel.Values.Add(valueModel);
-            }
+            if (pa.ProductAttributeValues != null)
+                foreach (var pav in pa.ProductAttributeValues)
+                {
+                    var valueModel = _modelMapper.Map<ProductAttributeValueModel>(pav);
+                    valueModel.AttributeValue = pav.AvailableAttributeValue.Value;
+                    attributeModel.Values.Add(valueModel);
+                }
             return attributeModel;
         }
 

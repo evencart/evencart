@@ -13,7 +13,7 @@ namespace EvenCart.Data.Enum
         Wyswyg = 3,
         Number = 4,
         Email = 5,
-        Password = 6,
+        Hidden = 6,
         CheckBox = 7,
         //CheckBoxList = 8,
         DateTime = 9,

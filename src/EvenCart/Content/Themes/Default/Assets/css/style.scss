@@ -4085,3 +4085,32 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
     position:absolute;
     left:-50000px;
 }
+.color-block {
+    position: relative;
+    overflow: hidden;
+    cursor:pointer;
+    .color {
+        border: solid 1px white;
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        margin:2px;
+        border-radius:50%;
+        text-align:center;
+        .fa{
+            color:white;
+            visibility:hidden;
+        }
+    }
+
+    input {
+        display: none;
+    }
+
+    input:checked ~ .color {
+        border: double 3px white;
+        .fa{
+            visibility:visible;
+        }
+    }
+}

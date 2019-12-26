@@ -1040,6 +1040,19 @@
             <param name="viewName"></param>
             <response code="200">A list of <see cref="T:EvenCart.Models.Products.ProductModel">products</see> objects</response>
         </member>
+        <member name="M:EvenCart.Controllers.ProductsController.UploadFile(EvenCart.Models.Products.UploadFileModel)">
+            <summary>
+            Uploads a file for a product. The product must have at least one <see cref="F:EvenCart.Data.Enum.InputFieldType.FileUpload"/> attribute to accept uploaded file.
+            </summary>
+            <param name="uploadFileModel"></param>
+            <response code="200">The url of the file as 'url' and the unique id of the file as 'guid'</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ProductsController.DownloadUploadFile(System.String)">
+            <summary>
+            Downloads an uploaded file
+            </summary>
+            <param name="guid">The guid of the file</param>
+        </member>
         <member name="T:EvenCart.Controllers.ReviewsController">
             <summary>
             Allows authenticated users to view and post reviews

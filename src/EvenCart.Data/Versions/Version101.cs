@@ -14,7 +14,9 @@ namespace EvenCart.Data.Versions
             //Db.AddColumn<Vendor, VendorStatus>(nameof(Vendor.VendorStatus), VendorStatus.Active, transaction);
             //Db.AddColumn<Vendor, bool>(nameof(Vendor.Deleted), false, transaction);
             //Db.AddColumn<Product, bool>(nameof(Product.RequireLoginToPurchase), false, transaction);
-            Db.AddColumn<Product, bool>(nameof(Product.RequireLoginToViewPrice), false, transaction);
+            //Db.AddColumn<Product, bool>(nameof(Product.RequireLoginToViewPrice), false, transaction);
+            Db.CreateTable<Upload>(transaction);
+            Db.CreateConstraint(Relation.Create<User, Upload>("Id", "UserId"), transaction, true);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -24,6 +26,8 @@ namespace EvenCart.Data.Versions
             Db.DropColumn<Vendor>(nameof(Vendor.Deleted), transaction);
             Db.DropColumn<Product>(nameof(Product.RequireLoginToPurchase), transaction);
             Db.DropColumn<Product>(nameof(Product.RequireLoginToViewPrice), transaction);
+            Db.DropConstraint(Relation.Create<User, Upload>("Id", "UserId"), transaction);
+            Db.DropTable<Upload>(transaction);
         }
 
         public string VersionKey => "EvenCart.Data.Versions.Version1_0_1";

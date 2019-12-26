@@ -31,6 +31,8 @@
         public const string PreviewPage = "PreviewPage";
         public const string ProductsSearchPage = "ProductsSearchPage";
         public const string DownloadFile = "DownloadFile";
+        public const string UploadFile = "UploadFile";
+        public const string DownloadUploadFile = "DownloadUploadFile";
 
         public const string AddToCart = "AddToCart";
         public const string UpdateCart = "UpdateCart";

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using EvenCart.Areas.Administration.Extensions;
+using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -42,7 +44,9 @@ namespace EvenCart.Controllers
         private readonly GeneralSettings _generalSettings;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IDownloadService _downloadService;
-        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings, IProductModelFactory productModelFactory, IDownloadService downloadService)
+        private readonly IUploadService _uploadService;
+        private readonly ILocalFileProvider _localFileProvider;
+        public ProductsController(IProductService productService, ICategoryService categoryService, CatalogSettings catalogSettings, IModelMapper modelMapper, IProductRelationService productRelationService, IProductVariantService productVariantService, IDataSerializer dataSerializer, IPriceAccountant priceAccountant, TaxSettings taxSettings, IReviewService reviewService, GeneralSettings generalSettings, IProductModelFactory productModelFactory, IDownloadService downloadService, IUploadService uploadService, ILocalFileProvider localFileProvider)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -57,6 +61,8 @@ namespace EvenCart.Controllers
             _generalSettings = generalSettings;
             _productModelFactory = productModelFactory;
             _downloadService = downloadService;
+            _uploadService = uploadService;
+            _localFileProvider = localFileProvider;
         }
 
         [HttpGet("product-preview/{id}", Name = RouteNames.PreviewProduct)]
@@ -292,5 +298,50 @@ namespace EvenCart.Controllers
                 .Result;
         }
 
+        /// <summary>
+        /// Uploads a file for a product. The product must have at least one <see cref="InputFieldType.FileUpload"/> attribute to accept uploaded file.
+        /// </summary>
+        /// <param name="uploadFileModel"></param>
+        /// <response code="200">The url of the file as 'url' and the unique id of the file as 'guid'</response>
+        [DualPost("upload", Name = RouteNames.UploadFile, OnlyApi = true)]
+        public IActionResult UploadFile(UploadFileModel uploadFileModel)
+        {
+            if (uploadFileModel.ProductId < 1)
+                return NotFound();
+            var product = _productService.Get(uploadFileModel.ProductId);
+            if (!product.IsPublic() && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
+                return NotFound();
+
+            if (product.ProductAttributes.All(x => x.InputFieldType != InputFieldType.FileUpload))
+                return R.Fail.With("error", T("The product doesn't accept any uploads")).Result;
+
+            //guest signin if user is not signed in
+            ApplicationEngine.GuestSignIn();
+            var fileBytes = uploadFileModel.MediaFile.GetBytesAsync().Result;
+            var upload = new Upload()
+            {
+                UserId = CurrentUser.Id,
+                FileBytes = fileBytes,
+                FileType = uploadFileModel.MediaFile.ContentType,
+                FileExtension = _localFileProvider.GetExtension(uploadFileModel.MediaFile.FileName),
+                Guid = Guid.NewGuid().ToString()
+            };
+            _uploadService.Insert(upload);
+            var downloadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadUploadFile, new {guid = upload.Guid});
+            return R.Success.With("guid", upload.Guid).With("url", downloadUrl).Result;
+        }
+
+        /// <summary>
+        /// Downloads an uploaded file
+        /// </summary>
+        /// <param name="guid">The guid of the file</param>
+        [HttpGet("upload/download/{guid}", Name = RouteNames.DownloadUploadFile)]
+        public IActionResult DownloadUploadFile(string guid)
+        {
+            var upload = _uploadService.FirstOrDefault(x => x.Guid == guid);
+            if (upload == null || upload.UserId != CurrentUser.Id)
+                return NotFound();
+            return File(upload.FileBytes, upload.FileType, $"{upload.UserId}.{upload.Guid}.{upload.FileExtension}");
+        }
     }
 }

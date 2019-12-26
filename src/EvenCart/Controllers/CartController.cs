@@ -3,6 +3,7 @@ using System.Linq;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
@@ -101,6 +102,22 @@ namespace EvenCart.Controllers
                     //check if valid values for attributes has been passed
                     foreach (var ca in cartItemModel.Attributes)
                     {
+                        var pa = product.ProductAttributes.First(x => x.Label == ca.Name);
+                        if (!pa.InputFieldType.RequireValues())
+                        {
+                            //if it's a file upload or image upload type, better provide a download url
+                            if (pa.InputFieldType == InputFieldType.FileUpload ||
+                                pa.InputFieldType == InputFieldType.ImageUpload)
+                            {
+                                //put a download link so it'll be included everywhere
+                                var uploadUid = ca.SelectedValues.FirstOrDefault()?.Name;
+                                var uploadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadUploadFile,
+                                    new {guid = uploadUid});
+                                var link = $"<a href='{uploadUrl}' target='_blank' style='display: inline;font-size: 0.8em;'>[Download]</a>";
+                                ca.SelectedValues[0].Name = link;
+                            }
+                            continue; //as we don't need to validate the values now
+                        }
                         var allowedAttributeValues = product.ProductAttributes.First(x => x.Label == ca.Name).AvailableAttribute
                             .AvailableAttributeValues.Select(x => x.Value).ToList();
                         var invalidValues = ca.SelectedValues.Where(x => !allowedAttributeValues.Contains(x.Name)).Select(x => x.Name).ToList();

@@ -7,6 +7,7 @@ using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
@@ -37,7 +38,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
             //v.RuleForEach(x => x.Values).SetValidator(new ModelValidator<ProductAttributeValueModel>());
             v.RuleFor(x => x.Values).Custom((list, context) =>
             {
-                if (!list.Any())
+                var instance = context.InstanceToValidate as ProductAttributeModel;
+                if (instance.InputFieldType.RequireValues() && !list.Any())
                 {
                     context.AddFailure(nameof(ProductAttributeValueModel.AttributeValue), "At least one attribute value must be provided");
                 }

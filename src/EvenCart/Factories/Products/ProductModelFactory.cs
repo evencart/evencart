@@ -76,16 +76,20 @@ namespace EvenCart.Factories.Products
                         Id = x.Id,
                         InputFieldType = x.InputFieldType,
                         IsRequired = x.IsRequired,
-                        AvailableValues = x.AvailableAttribute.AvailableAttributeValues.Select(y =>
-                        {
-                            var avModel = new ProductAttributeValueModel()
-                            {
-                                Name = y.Value
-                            };
-                            return avModel;
-                        })
-                            .ToList()
+                      
                     };
+                    if (x.AvailableAttribute.AvailableAttributeValues != null)
+                    {
+                        paModel.AvailableValues = x.AvailableAttribute.AvailableAttributeValues.Select(y =>
+                            {
+                                var avModel = new ProductAttributeValueModel()
+                                {
+                                    Name = y.Value
+                                };
+                                return avModel;
+                            })
+                            .ToList();
+                    }
                     if (paModel.Name.IsNullEmptyOrWhiteSpace())
                     {
                         paModel.Name = x.AvailableAttribute.Name;

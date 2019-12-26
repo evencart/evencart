@@ -1,29 +1,114 @@
 ﻿ {% for attribute in product.productAttributes %}
+ {% assign outerIndex = forloop.index0 %}
 <!-- Product Attributes -->
-<div class="section product-attribute">
-    <input type="hidden" name="attributes[{{forloop.index0}}].name" value="{{attribute.name}}" />
-    <h5 class="pd-sub-title">{{attribute.name}}</h5>
-    {% if attribute.inputFieldType == "Dropdown" %}
-    <select class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name">
-        {% unless attribute.isRequired %}
-        <option value="-1">{{"Select" | t}}</option>
+    <div class="section product-attribute">
+        <input type="hidden" name="attributes[{{forloop.index0}}].name" value="{{attribute.name}}" />
+        {% unless attribute.inputFieldType == "Hidden" %}
+        <h5 class="pd-sub-title">{{attribute.name}}</h5>
         {% endunless %}
+
+        {% if attribute.inputFieldType == "Dropdown" %}
+        <select class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name">
+            {% unless attribute.isRequired %}
+            <option value="-1">{{"Select" | t}}</option>
+            {% endunless %}
+
+            {% for value in attribute.availableValues %}
+            <option value="{{value.name}}">{{value.name}}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        {% if attribute.inputFieldType == "CheckBox" %}
         {% for value in attribute.availableValues %}
-        <option value="{{value.name}}">{{value.name}}</option>
+        <input type="checkbox" data-attribute="{{attribute.name}}" value="{{value.name}}" name="attributes[{{outerIndex}}].selectedValues[{{forloop.index0}}].name" {%if attribute.isRequired%}disabled="disabled" checked="checked" {%endif%} /> {{value.name}}
         {% endfor %}
-    </select>
-    {% endif %}
-    {% if attribute.inputFieldType == "CheckBox" %}
-    <label>
-        <input type="checkbox" data-attribute="{{attribute.name}}" value="{{attribute.availableValues[0].name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}disabled="disabled" checked="checked"{%endif%}/> {{attribute.availableValues[0].name}}
-    </label>
-    {% endif %}
-</div>
+        {% endif %}
+
+        {% if attribute.inputFieldType == "RadioButton" %}
+        {% for value in attribute.availableValues %}
+        <div>
+            <label><input type="radio" data-attribute="{{attribute.name}}" value="{{value.name}}" name="attributes[{{outerIndex}}].selectedValues[0].name" {%if attribute.isRequired %}checked="checked" {%endif%} /> {{value.name}}</label>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Text" %}
+        <input type="text" class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        {% endif %}
+
+        {% if attribute.inputFieldType == "TextArea" %}
+        <textarea class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %}></textarea>
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Wyswyg" %}
+        <textarea class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %}></textarea>
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Number" %}
+        <input type="number" class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Email" %}
+        <input type="email" class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Hidden" %}
+        <input type="hidden" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        {% endif %}
+
+        {% if attribute.inputFieldType == "DateTime" %}
+        <input type="date" class="form-control" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        {% endif %}
+
+        {% if attribute.inputFieldType == "Color" %}
+        {% for value in attribute.availableValues %}
+        <label class="color-block">
+            <input type="radio" data-attribute="{{attribute.name}}" value="{{value.name}}" name="attributes[{{outerIndex}}].selectedValues[0].name" {%if attribute.isRequired %}checked="checked" {%endif%} />
+            <span class="color" style="background-color:{{value.name}}"><i class="fa fa-check"></i></span>
+        </label>
+        {% endfor %}
+
+        {% endif %}
+
+        {% if attribute.inputFieldType == "FileUpload" or attribute.inputFieldType == "ImageUpload" %}
+        <input type="hidden" id="hidden-{{attribute.id}}" data-attribute="{{attribute.name}}" name="attributes[{{forloop.index0}}].selectedValues[0].name" {%if attribute.isRequired%}required="true" {% endif %} />
+        <div>
+            <span class="btn btn-primary clickable fileinput-button btn-sm" id="btn-upload-{{attribute.id}}">
+                <span>{{"Upload File" | t}}</span>
+                <input id="file-{{attribute.id}}" name="mediaFile" type="file" />
+            </span>
+            <a id="btn-download-{{attribute.id}}" href="" target="_blank" style="display: none;" class="btn btn-sm btn-dark"><span class="fa fa-download"></span></a>
+            <a id="btn-download-{{attribute.id}}-remove" href="" target="_blank" style="display: none;" class="btn btn-sm btn-danger"><span class="fa fa-times"></span></a>
+        </div>
+        <script type="text/javascript">
+            $(window).on("load", function() {
+                initFileUploader({
+                    element: "file-{{attribute.id}}",
+                    url: "{% route api_UploadFile %}",
+                    done: function (e, data) {
+                        var result = data.result;
+                        var guid = result.guid;
+                        jQuery("#btn-download-{{attribute.id}}").attr("href", result.url).show();
+                        jQuery("#btn-download-{{attribute.id}}-remove").show();
+                        jQuery("#hidden-{{attribute.id}}").val(guid);
+                    }
+                });
+                jQuery("#btn-download-{{attribute.id}}-remove").click(function (e) {
+                    e.preventDefault();
+                    jQuery("#btn-download-{{attribute.id}}").removeAttr("href").hide();
+                    jQuery(this).hide();
+                    jQuery("#hidden-{{attribute.id}}").val("");
+                });
+            });
+        </script>
+        {% endif %}
+    </div>
 {% endfor %}
  {% if variants.size > 0 %}
- {{variants | scriptJson : 'variants'}}
+{{variants | scriptJson : 'variants'}}
 <script type="text/javascript">
-     
+
      jQuery(document).ready(function () {
          variants = variants.sort(function (v1, v2) {
              //sort in descending order of number of attributes

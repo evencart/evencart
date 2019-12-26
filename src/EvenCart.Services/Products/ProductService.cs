@@ -568,9 +568,9 @@ namespace EvenCart.Services.Products
                 //fetch attributes and specifications
                 //we are separating this query from product query for performance reasons
                 var productAttributes = RepositoryExplorer<ProductAttribute>()
-                    .Join<ProductAttributeValue>("Id", "ProductAttributeId", joinType: JoinType.LeftOuter)
-                    .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                     .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                    .Join<ProductAttributeValue>("Id", "ProductAttributeId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                    .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
                     .Relate(RelationTypes.OneToMany<ProductAttribute, ProductAttributeValue>())
                     .Relate<AvailableAttribute>((productAttribute, attribute) =>
                     {

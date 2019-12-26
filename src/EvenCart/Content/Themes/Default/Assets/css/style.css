@@ -3280,3 +3280,25 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
 .hp-control {
   position: absolute;
   left: -50000px; }
+
+.color-block {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer; }
+  .color-block .color {
+    border: solid 1px white;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin: 2px;
+    border-radius: 50%;
+    text-align: center; }
+    .color-block .color .fa {
+      color: white;
+      visibility: hidden; }
+  .color-block input {
+    display: none; }
+  .color-block input:checked ~ .color {
+    border: double 3px white; }
+    .color-block input:checked ~ .color .fa {
+      visibility: visible; }
