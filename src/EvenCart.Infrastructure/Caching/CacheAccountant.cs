@@ -1,5 +1,6 @@
 ﻿using EvenCart.Core.Caching;
 using EvenCart.Infrastructure.Theming;
+using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Infrastructure.ViewEngines.Expanders;
 
 namespace EvenCart.Infrastructure.Caching
@@ -8,10 +9,12 @@ namespace EvenCart.Infrastructure.Caching
     {
         private readonly ICacheProvider _cacheProvider;
         private readonly IThemeProvider _themeProvider;
-        public CacheAccountant(ICacheProvider cacheProvider, IThemeProvider themeProvider)
+        private readonly IViewAccountant _viewAccountant;
+        public CacheAccountant(ICacheProvider cacheProvider, IThemeProvider themeProvider, IViewAccountant viewAccountant)
         {
             _cacheProvider = cacheProvider;
             _themeProvider = themeProvider;
+            _viewAccountant = viewAccountant;
         }
 
         public void PurgeCache()
@@ -22,6 +25,8 @@ namespace EvenCart.Infrastructure.Caching
             ReadFile.PurgeCache();
             //clear the active theme template cache
             _themeProvider.ResetActiveTheme();
+            //clear view location caches
+            _viewAccountant.ClearCachedViews();
         }
     }
 }

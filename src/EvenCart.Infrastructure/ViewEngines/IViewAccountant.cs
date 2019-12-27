@@ -24,5 +24,7 @@ namespace EvenCart.Infrastructure.ViewEngines
         Dictionary<string, object> GetCompiledViews(bool splitted = false, string area = null);
 
         Dictionary<string, object> CompileAllViews(string controller = null, string area = null, bool splitted = false);
+
+        void ClearCachedViews();
     }
 }

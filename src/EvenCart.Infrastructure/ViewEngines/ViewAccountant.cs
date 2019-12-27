@@ -13,7 +13,6 @@ using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Bundle;
 using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines.Expanders;
@@ -21,8 +20,6 @@ using EvenCart.Infrastructure.ViewEngines.Filters;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
 using EvenCart.Infrastructure.ViewEngines.NamingConventions;
 using EvenCart.Infrastructure.ViewEngines.Tags;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Infrastructure.ViewEngines
@@ -34,18 +31,12 @@ namespace EvenCart.Infrastructure.ViewEngines
         private readonly ConcurrentDictionary<CachedViewKey, CachedView> _parsedTemplateCache;
 
         private readonly ILocalFileProvider _localFileProvider;
-        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IThemeProvider _themeProvider;
-        private readonly IHtmlProcessor _htmlProcessor;
-        private readonly IAntiforgery _antiforgery;
         private readonly IMinifier _minifier;
-        public ViewAccountant(ILocalFileProvider localFileProvider, IActionContextAccessor actionContextAccessor, IThemeProvider themeProvider, IHtmlProcessor htmlProcessor, IAntiforgery antiforgery, IMinifier minifier)
+        public ViewAccountant(ILocalFileProvider localFileProvider, IThemeProvider themeProvider, IMinifier minifier)
         {
             _localFileProvider = localFileProvider;
-            _actionContextAccessor = actionContextAccessor;
             _themeProvider = themeProvider;
-            _htmlProcessor = htmlProcessor;
-            _antiforgery = antiforgery;
             _minifier = minifier;
             _parsedTemplateCache = new ConcurrentDictionary<CachedViewKey, CachedView>();
 
@@ -236,6 +227,12 @@ namespace EvenCart.Infrastructure.ViewEngines
             return GetCompiledViews(splitted, area);
         }
 
+        public void ClearCachedViews()
+        {
+            _viewLocations = null;
+            _adminViewLocations = null;
+        }
+
         private IList<string> _viewLocations;
         private IList<string> _adminViewLocations;
         private IList<string> GetViewLocations(bool ignoreAdminViews = false)
@@ -257,10 +254,11 @@ namespace EvenCart.Infrastructure.ViewEngines
                 }
                 return _adminViewLocations;
             }
-            var themePath = _themeProvider.GetThemePath(ApplicationEngine.ActiveTheme.Name);
+           
             if (_viewLocations != null)
                 return _viewLocations;
 
+            var themePath = _themeProvider.GetThemePath(ApplicationEngine.ActiveTheme.Name);
             _viewLocations = new List<string>();
             //first search for file in the active theme
             _viewLocations.Add(_localFileProvider.CombinePaths(themePath, "Views"));

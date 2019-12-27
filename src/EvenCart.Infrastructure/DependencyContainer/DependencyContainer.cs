@@ -58,7 +58,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             //localizer
             registrar.Register<ILocalizer, Localizer>(reuse: Reuse.ScopedOrSingleton);
             //view engine & friends
-            registrar.Register<IViewAccountant, ViewAccountant>(reuse: Reuse.ScopedOrSingleton);
+            registrar.Register<IViewAccountant, ViewAccountant>(reuse: Reuse.Singleton);
             registrar.Register<IAppViewEngine, DefaultAppViewEngine>(reuse: Reuse.Singleton);
             //media
             registrar.Register<IImageProcessor, ImageProcessor>(reuse: Reuse.Singleton);
@@ -71,7 +71,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IRouteTemplateParser, RouteTemplateParser>(reuse: Reuse.Singleton);
             registrar.Register<IDynamicRouteProvider, DynamicRouteProvider>(reuse: Reuse.ScopedOrSingleton);
             //themes
-            registrar.Register<IThemeProvider, ThemeProvider>(reuse: Reuse.ScopedOrSingleton);
+            registrar.Register<IThemeProvider, ThemeProvider>(reuse: Reuse.Singleton);
             //view compoenent
             registrar.Register<IViewComponentManager, ViewComponentManager>(reuse: Reuse.ScopedOrSingleton);
             //search query
