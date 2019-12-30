@@ -61,7 +61,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                     IsGroup = menuItem.IsGroup,
                     Css = menuItem.CssClass,
                     Children = GetNavigationImpl(menuItems, menuItem.Id, categories) ??
-                               new List<NavigationImplementation>()
+                               new List<NavigationImplementation>(),
+                    Id = menuItem.Id
                 };
                 navigation.Add(navigationItem);
             }
