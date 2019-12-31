@@ -117,6 +117,7 @@ namespace EvenCart.Data.Versions
             Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "SourceProductId"), transaction, true);
             Db.CreateConstraint(Relation.Create<Product, ProductRelation>("Id", "DestinationProductId"), transaction, false);
             Db.CreateConstraint(Relation.Create<Product, Download>("Id", "ProductId"), transaction, true);
+            Db.CreateConstraint(Relation.Create<Download, ItemDownload>("Id", "DownloadId"), transaction, true);
 
             Db.CreateTable<DiscountCoupon>(transaction);
             Db.CreateTable<RestrictionValue>(transaction);
