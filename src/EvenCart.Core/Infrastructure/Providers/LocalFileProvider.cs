@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -7,10 +8,8 @@ namespace EvenCart.Core.Infrastructure.Providers
 {
     public class LocalFileProvider : PhysicalFileProvider, ILocalFileProvider
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
         public LocalFileProvider(IHostingEnvironment hostingEnvironment) : base(hostingEnvironment.ContentRootPath)
         {
-            _hostingEnvironment = hostingEnvironment;
         }
 
         public string ReadAllText(string fileName)
@@ -95,8 +94,40 @@ namespace EvenCart.Core.Infrastructure.Providers
         public void DeleteFiles(string directoryName, string pattern)
         {
             var files = GetFiles(directoryName, pattern);
-            foreach(var file in files)
+            foreach (var file in files)
                 File.Delete(file);
+        }
+
+        public void ExtractArchive(string zipFileName, string directoryName)
+        {
+            ZipFile.ExtractToDirectory(zipFileName, directoryName);
+        }
+
+        public string GetTemporaryDirectory()
+        {
+            var cuTempDirectory = Path.GetTempPath();
+            var tempDirectoryName = Path.GetRandomFileName();
+            var directory = Path.Combine(cuTempDirectory, tempDirectoryName);
+            Directory.CreateDirectory(directory);
+            return directory;
+        }
+
+        public void DeleteDirectory(string directoryName, bool recursive)
+        {
+            Directory.Delete(directoryName, recursive);
+        }
+
+        public void CopyFile(string source, string destination, bool overwrite = false)
+        {
+            File.Copy(source, destination, overwrite);
+        }
+
+        public string GetTemporaryFile(byte[] content = null)
+        {
+            var tempFilePath = Path.GetTempFileName();
+            if (content != null)
+                File.WriteAllBytes(tempFilePath, content);
+            return tempFilePath;
         }
     }
 }

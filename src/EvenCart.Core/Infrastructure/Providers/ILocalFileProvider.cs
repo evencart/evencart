@@ -34,5 +34,15 @@ namespace EvenCart.Core.Infrastructure.Providers
         string[] GetDirectories(string directoryName);
 
         void DeleteFiles(string directoryName, string pattern);
+
+        void ExtractArchive(string zipFileName, string directoryName);
+
+        string GetTemporaryDirectory();
+
+        void DeleteDirectory(string directoryName, bool recursive);
+
+        void CopyFile(string source, string destination, bool overwrite = false);
+
+        string GetTemporaryFile(byte[] content = null);
     }
 }

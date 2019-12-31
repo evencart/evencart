@@ -249,6 +249,12 @@
             </summary>
             <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.System.AboutModel">info</see> object as 'info'</response>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.SystemController.InstallSampleData(EvenCart.Areas.Administration.Models.System.SampleDataModel)">
+            <summary>
+            Handles zip file uploads containing sample data and installs it on the server database
+            </summary>
+            <response code="200">A success object</response>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Controllers.UsersController">
             <summary>
             Allows admins to manage users

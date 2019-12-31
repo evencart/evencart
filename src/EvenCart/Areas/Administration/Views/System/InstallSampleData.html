@@ -1,0 +1,39 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"About" active_menu="InstallSampleData" parent_active_menu="System" %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Install Sample Data" | t}}
+                <div class="panel-help no-margin">
+                    {{"Allows you to install sample data on your store. WARNING: It's only recommended to install sample data on a fresh store." | t}}
+                </div>
+            </div>
+            <div class="panel-body">
+                <span class="btn btn-primary clickable fileinput-button btn-sm " id="btn-add">
+                    <span>{{"Upload File" | t}}</span>
+                    <input id="imageFile" type="file" name="mediaFile" />
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    ready(function() {
+        initFileUploader({
+            element: "imageFile",
+            url: '{% route api_InstallSampleData %}',
+            done: function(e, data) {
+                var result = data.result;
+                if (result.success) {
+                    notify("success", "{{'Successfully imported the package file.' | t}}");
+                }
+            },
+            formData: {
+                __RequestVerificationToken: window._xsrf
+            }
+        });
+
+    });
+</script>

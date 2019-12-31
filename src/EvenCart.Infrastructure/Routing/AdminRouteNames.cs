@@ -1,5 +1,4 @@
-﻿using EvenCart.Data.Helpers;
-
+﻿
 namespace EvenCart.Infrastructure.Routing
 {
     public static class AdminRouteNames
@@ -293,5 +292,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string DeleteDownload = "DeleteDownload";
         public const string AdminDownloadFile = "AdminDownloadFile";
         public const string UpdateDownloadDisplayOrder = "UpdateDownloadDisplayOrder";
+
+        public const string InstallSampleData = "InstallSampleData";
     }
 }

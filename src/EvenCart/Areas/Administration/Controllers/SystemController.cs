@@ -1,7 +1,11 @@
-﻿using EvenCart.Areas.Administration.Factories.System;
+﻿using System.Threading.Tasks;
+using EvenCart.Areas.Administration.Extensions;
+using EvenCart.Areas.Administration.Factories.System;
 using EvenCart.Areas.Administration.Models.System;
 using EvenCart.Infrastructure.Mvc;
+using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Services.Installation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -12,9 +16,11 @@ namespace EvenCart.Areas.Administration.Controllers
     public class SystemController : FoundationAdminController
     {
         private readonly IAboutModelFactory _aboutModelFactory;
-        public SystemController(IAboutModelFactory aboutModelFactory)
+        private readonly IInstallationService _installationService;
+        public SystemController(IAboutModelFactory aboutModelFactory, IInstallationService installationService)
         {
             _aboutModelFactory = aboutModelFactory;
+            _installationService = installationService;
         }
 
         /// <summary>
@@ -26,6 +32,28 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             var model = _aboutModelFactory.Create();
             return R.Success.With("info", model).Result;
+        }
+     
+        [DualGet("install", Name = AdminRouteNames.InstallSampleData)]
+        public IActionResult InstallSampleData()
+        {
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Handles zip file uploads containing sample data and installs it on the server database
+        /// </summary>
+        /// <response code="200">A success object</response>
+        [DualPost("install", Name = AdminRouteNames.InstallSampleData, OnlyApi = true)]
+        [ValidateModelState(ModelType = typeof(SampleDataModel))]
+        public async Task<IActionResult> InstallSampleData(SampleDataModel sampleData)
+        {
+            var fileBytes = await sampleData.MediaFile.GetBytesAsync();
+            //install the package
+            var success = _installationService.InstallSamplePackage(fileBytes);
+            if (success)
+                return R.Success.Result;
+            return R.Fail.With("error", T("Failed to install the sample package")).Result;
         }
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DotEntity;
 using EvenCart.Core;
 using EvenCart.Core.Exception;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Addresses;
@@ -20,6 +22,7 @@ using EvenCart.Data.Enum;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Emails;
+using EvenCart.Services.Logger;
 using EvenCart.Services.Notifications;
 using EvenCart.Services.Products;
 using EvenCart.Services.Security;
@@ -31,9 +34,12 @@ namespace EvenCart.Services.Installation
     public class InstallationService : IInstallationService
     {
         private readonly IDatabaseSettings _databaseSettings;
-        public InstallationService(IDatabaseSettings databaseSettings)
+        public readonly ILocalFileProvider _localFileProvider;
+        public readonly ILogger _logger;
+        public InstallationService(IDatabaseSettings databaseSettings, ILocalFileProvider localFileProvider)
         {
             _databaseSettings = databaseSettings;
+            _localFileProvider = localFileProvider;
         }
 
         public void Install()
@@ -64,6 +70,63 @@ namespace EvenCart.Services.Installation
             //seed notification events
             //SeedNotificationEvents();
             SeedCountries();
+        }
+
+        public bool InstallSamplePackage(string packageFilePath)
+        {
+            if (!File.Exists(packageFilePath))
+                return false; // do nothing
+            //first extract the zip
+            try
+            {
+                //get temporary directory to extract the package
+                var tempDirectory = _localFileProvider.GetTemporaryDirectory();
+                _localFileProvider.ExtractArchive(packageFilePath, tempDirectory);
+
+                //now copy the image files to the uploads directory
+                var wwwroot = ServerHelper.MapPath("~/", true);
+                var uploadsDirectory = _localFileProvider.CombinePaths(wwwroot, "content", "Uploads");
+                var sourceFilesDirectory = _localFileProvider.CombinePaths(tempDirectory, "images");
+                var files = _localFileProvider.GetFiles(sourceFilesDirectory);
+                foreach (var file in files)
+                {
+                    //copy the file
+                    var fileName = _localFileProvider.GetFileName(file);
+                    _localFileProvider.CopyFile(file, Path.Combine(uploadsDirectory, fileName));
+                }
+
+                //sql path if any
+                var sqlFile = _localFileProvider.CombinePaths(tempDirectory, "data.sql");
+                if (File.Exists(sqlFile))
+                {
+                    var sql = _localFileProvider.ReadAllText(sqlFile);
+                    //execute the query file
+                    using (EntitySet.Query(sql, null)) { }
+                }
+                //delete the temporary directory
+                _localFileProvider.DeleteDirectory(tempDirectory, true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Log<InstallationService>(LogLevel.Error, ex.Message, ex);
+                return false;
+            }
+        }
+
+        public bool InstallSamplePackage(byte[] bytes)
+        {
+            //get a temporary file from provided bytes
+            var fileName = _localFileProvider.GetTemporaryFile(bytes);
+            try
+            {
+                return InstallSamplePackage(fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log<InstallationService>(LogLevel.Error, ex.Message, ex);
+                return false;
+            }
         }
 
         private void SeedCountries()

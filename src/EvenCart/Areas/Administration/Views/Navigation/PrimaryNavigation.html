@@ -164,6 +164,7 @@
 {% primary_navigation url="{% route GetAbout %}" title=@t"System" systemName="System" groupId="settings" %}
 {% secondary_navigation url="{% route GetAbout %}" title=@t"About" systemName="About" parent="System" %}
 {% secondary_navigation url="{% route LogsList %}" title=@t"Activity Log" systemName="LogsList" parent="System" %}
+{% secondary_navigation url="{% route InstallSampleData %}" title=@t"Install Sample Data" systemName="InstallSampleData" parent="System" %}
 
 {% secondary_navigation url="{% route LogsList %}" iconClass="rbicon-chevron-left" title=@t"Back to logs" groupId="LogEdit" %}
 {% secondary_navigation url="" title="Log Viewer" systemName="GetLog" groupId="LogEdit" %}
