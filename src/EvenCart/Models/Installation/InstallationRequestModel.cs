@@ -28,8 +28,6 @@ namespace EvenCart.Models.Installation
 
         public bool IsConnectionString { get; set; }
 
-        public bool InstallSampleData { get; set; }
-
         public string StoreName { get; set; }
 
         public string ProviderName { get; set; }
