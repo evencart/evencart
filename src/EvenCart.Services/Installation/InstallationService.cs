@@ -40,6 +40,7 @@ namespace EvenCart.Services.Installation
         {
             _databaseSettings = databaseSettings;
             _localFileProvider = localFileProvider;
+            _logger = DependencyResolver.Resolve<ILogger>();
         }
 
         public void Install()
@@ -76,11 +77,12 @@ namespace EvenCart.Services.Installation
         {
             if (!File.Exists(packageFilePath))
                 return false; // do nothing
-            //first extract the zip
+                             
+            //get temporary directory to extract the package
+            var tempDirectory = _localFileProvider.GetTemporaryDirectory();
             try
             {
-                //get temporary directory to extract the package
-                var tempDirectory = _localFileProvider.GetTemporaryDirectory();
+                //first extract the zip
                 _localFileProvider.ExtractArchive(packageFilePath, tempDirectory);
 
                 //now copy the image files to the uploads directory
@@ -101,8 +103,11 @@ namespace EvenCart.Services.Installation
                 {
                     var sql = _localFileProvider.ReadAllText(sqlFile);
                     //execute the query file
-                    using (EntitySet.Query(sql, null)) { }
+                    using (EntitySet.Query(sql, null))
+                    {
+                    }
                 }
+
                 //delete the temporary directory
                 _localFileProvider.DeleteDirectory(tempDirectory, true);
                 return true;
@@ -111,6 +116,10 @@ namespace EvenCart.Services.Installation
             {
                 _logger.Log<InstallationService>(LogLevel.Error, ex.Message, ex);
                 return false;
+            }
+            finally
+            {
+                _localFileProvider.DeleteDirectory(tempDirectory, true);
             }
         }
 
@@ -232,7 +241,8 @@ namespace EvenCart.Services.Installation
             foreach (var f in allCapabilityFields)
             {
                 var capabilityName = f;
-                var capability = new Capability() {
+                var capability = new Capability()
+                {
                     Name = capabilityName,
                     IsActive = true
                 };
@@ -301,7 +311,7 @@ namespace EvenCart.Services.Installation
                 var user = userService.FirstOrDefault(x => x.Email == email);
                 if (user != null)
                 {
-                    roleService.SetUserRoles(user.Id, new[] {1});
+                    roleService.SetUserRoles(user.Id, new[] { 1 });
                     user.FirstName = "EvenCart";
                     user.LastName = "Administrator";
                     user.Name = $"{user.FirstName} {user.LastName}";
@@ -323,17 +333,20 @@ namespace EvenCart.Services.Installation
             var cryptographyService = DependencyResolver.Resolve<ICryptographyService>();
 
             //general settings
-            settingService.Save(new GeneralSettings() {
+            settingService.Save(new GeneralSettings()
+            {
                 StoreDomain = installDomain,
                 StoreName = storeName,
                 DefaultTimeZoneId = "UTC",
                 EnableBreadcrumbs = true,
                 LogoId = 0,
-                PrimaryNavigationId = 0
+                PrimaryNavigationId = 0,
+                ActiveTheme = "Default"
             });
 
             //media settings
-            settingService.Save(new MediaSettings() {
+            settingService.Save(new MediaSettings()
+            {
 
             });
 
@@ -343,7 +356,7 @@ namespace EvenCart.Services.Installation
                 EnableVendorSignup = true
             });
 
-            
+
 
             //order settings
             settingService.Save(new OrderSettings()
@@ -374,7 +387,8 @@ namespace EvenCart.Services.Installation
 
 
             //system settings
-            settingService.Save(new SystemSettings() {
+            settingService.Save(new SystemSettings()
+            {
                 IsInstalled = true,
                 MinimumLogLevel = LogLevel.Debug,
                 LatestFetchedOn = DateTime.UtcNow.AddHours(-24),
@@ -382,19 +396,22 @@ namespace EvenCart.Services.Installation
             });
 
             //security settings
-            settingService.Save(new SecuritySettings() {
+            settingService.Save(new SecuritySettings()
+            {
                 DefaultPasswordStorageFormat = PasswordFormat.Sha1Hashed,
                 HoneypotFieldName = "refcode-" + cryptographyService.GetRandomPassword()
             });
 
             //user settings
-            settingService.Save(new UserSettings() {
+            settingService.Save(new UserSettings()
+            {
                 UserRegistrationDefaultMode = RegistrationMode.WithActivationEmail,
                 AreUserNamesEnabled = true
             });
 
             //email sender settings
-            settingService.Save(new EmailSenderSettings() {
+            settingService.Save(new EmailSenderSettings()
+            {
                 PasswordChangedEmailEnabled = true,
                 UserRegisteredEmailToAdminEnabled = true,
                 UserRegisteredEmailEnabled = true,
@@ -415,27 +432,28 @@ namespace EvenCart.Services.Installation
             });
 
             //url settings
-            settingService.Save(new UrlSettings() {
-              CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
-              ProductUrlTemplate = "/product/{SeName}",
-              ContentPageUrlTemplate = "/{SeName}"
+            settingService.Save(new UrlSettings()
+            {
+                CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
+                ProductUrlTemplate = "/product/{SeName}",
+                ContentPageUrlTemplate = "/{SeName}"
             });
 
             //catalog settings
             settingService.Save(new CatalogSettings()
             {
-              EnableReviews = true,
-              NumberOfReviewsToDisplayOnProductPage = 5,
-              DisplayNameForPrivateReviews = $"{storeName} Customer",
-              NumberOfRelatedProducts = 10,
-              EnableReviewModeration = false,
-              DisplaySortOptions = false,
-              EnableRelatedProducts = true,
-              AllowOneReviewPerUserPerItem = true,
-              AllowReviewsForStorePurchaseOnly = false,
-              DisplayProductsFromChildCategories = true,
-              CatalogPaginationType = CatalogPaginationType.Numbered,
-              NumberOfProductsPerPage = 15
+                EnableReviews = true,
+                NumberOfReviewsToDisplayOnProductPage = 5,
+                DisplayNameForPrivateReviews = $"{storeName} Customer",
+                NumberOfRelatedProducts = 10,
+                EnableReviewModeration = false,
+                DisplaySortOptions = false,
+                EnableRelatedProducts = true,
+                AllowOneReviewPerUserPerItem = true,
+                AllowReviewsForStorePurchaseOnly = false,
+                DisplayProductsFromChildCategories = true,
+                CatalogPaginationType = CatalogPaginationType.Numbered,
+                NumberOfProductsPerPage = 15
             });
 
             //tax
@@ -496,7 +514,8 @@ namespace EvenCart.Services.Installation
                     continue;
                 //it's a constant
                 var eventName = fi.GetRawConstantValue().ToString();
-                notificationEventService.Insert(new NotificationEvent() {
+                notificationEventService.Insert(new NotificationEvent()
+                {
                     EventName = eventName,
                     Enabled = true
                 });
