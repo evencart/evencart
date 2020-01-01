@@ -50,6 +50,7 @@ namespace EvenCart.Areas.Administration.Components
                         if (!updates.Success && _systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace())
                             return R.Fail.ComponentResult;
                         _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
+                        _systemSettings.LatestFetchedOn = DateTime.UtcNow;
                         _settingService.Save(_systemSettings);
                     }
                    
