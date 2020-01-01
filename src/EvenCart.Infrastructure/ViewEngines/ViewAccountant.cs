@@ -160,11 +160,11 @@ namespace EvenCart.Infrastructure.ViewEngines
             layoutName = ValidateViewName(layoutName);
             var isAdmin = ApplicationEngine.IsAdmin();
             var pathBuilder = _localFileProvider.CombinePaths(rootPath);
+            var themePath = _themeProvider.GetThemePath(ApplicationEngine.ActiveTheme.Name);
             if (isAdmin)
                 pathBuilder = _localFileProvider.CombinePaths(pathBuilder, "Areas", "Administration");
             else
             {
-                var themePath = _themeProvider.GetThemePath(ApplicationEngine.ActiveTheme.Name);
                 pathBuilder = themePath;
             }
             var layoutPath = _localFileProvider.CombinePaths(pathBuilder, "Views", "Layout", layoutName);
@@ -175,6 +175,11 @@ namespace EvenCart.Infrastructure.ViewEngines
             var plugins = PluginLoader.GetAvailablePlugins();
             foreach (var plugin in plugins)
             {
+                //first see if theme has overridden the plugin's layout
+                layoutPath = _localFileProvider.CombinePaths(themePath, "Views", "Plugins", plugin.SystemName, layoutName);
+                if (_localFileProvider.FileExists(layoutPath))
+                    return layoutPath;
+
                 layoutPath = _localFileProvider.CombinePaths(plugin.PluginDirectory, "Views", layoutName);
                 if (_localFileProvider.FileExists(layoutPath))
                     return layoutPath;
