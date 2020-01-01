@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure;
+﻿using EvenCart.Core;
+using EvenCart.Infrastructure;
 
 namespace Payments.Square
 {
@@ -16,7 +17,7 @@ namespace Payments.Square
 
         public const string SquareWebhookUrl = "SquareWebhookUrl";
 
-        public static string UserAgentName = "evencart-" + ApplicationConfig.Version;
+        public static string UserAgentName = "evencart-" + AppVersionEvaluator.Version;
 
         public const string ScriptUrl = "https://js.squareup.com/v2/paymentform";
 
