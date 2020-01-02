@@ -15,8 +15,8 @@ namespace Ui.Slider.Versions
 
         public void Downgrade(IDotEntityTransaction transaction)
         {
-            Db.DropTable<UiSlider>(transaction);
             Db.DropConstraint(Relation.Create<Media, UiSlider>("Id", "MediaId"), transaction);
+            Db.DropTable<UiSlider>(transaction);
         }
 
         public string VersionKey { get; } = "Ui.Slider.Versions.Version_1_0";
