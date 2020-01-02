@@ -8,6 +8,7 @@ using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Extensions;
@@ -26,6 +27,7 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Checkout;
+using EvenCart.Services.Logger;
 using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +53,8 @@ namespace EvenCart.Controllers
         private readonly IProductService _productService;
         private readonly IOrderAccountant _orderAccountant;
         private readonly IDownloadService _downloadService;
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService)
+        private readonly ILogger _logger;
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService, ILogger logger)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -67,6 +70,7 @@ namespace EvenCart.Controllers
             _productService = productService;
             _orderAccountant = orderAccountant;
             _downloadService = downloadService;
+            _logger = logger;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -223,9 +227,18 @@ namespace EvenCart.Controllers
                     {
                         SystemName = x.SystemName,
                         Description = x.Description,
-                        FriendlyName = x.Name,
-                        Fee = x.LoadPluginInstance<IShipmentHandlerPlugin>().GetShippingHandlerFee(cart)
+                        FriendlyName = x.Name
                     };
+                    try
+                    {
+                        model.Fee = x.LoadPluginInstance<IShipmentHandlerPlugin>().GetShippingHandlerFee(cart);
+                    }
+                    catch(Exception ex)
+                    {
+                        //do nothing
+                        _logger.Log<CheckoutController>(LogLevel.Error, ex.Message, ex);
+                    }
+                    
                     return model;
                 })
                 .ToList();
@@ -373,11 +386,19 @@ namespace EvenCart.Controllers
                         SystemName = x.SystemName,
                         Description = x.Description,
                         FriendlyName = x.Name,
-                        Fee = order == null
-                            ? pluginHandlerInstance.GetPaymentHandlerFee(cart)
-                            : pluginHandlerInstance.GetPaymentHandlerFee(order),
                         Url = Url.RouteUrl(pluginHandlerInstance.PaymentHandlerComponentRouteName)
                     };
+                    try
+                    {
+                        model.Fee = order == null
+                            ? pluginHandlerInstance.GetPaymentHandlerFee(cart)
+                            : pluginHandlerInstance.GetPaymentHandlerFee(order);
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.Log<CheckoutController>(LogLevel.Error, ex.Message, ex);
+                        //do nothing
+                    }
                     return model;
                 })
                 .ToList();
