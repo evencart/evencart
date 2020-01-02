@@ -74,7 +74,7 @@
                     </div>
                     {% endif %}
                     {% endif %}
-                    {% unless product.requireLoginToViewPrice && currentUser.isVisitor %}
+                    {% unless product.requireLoginToViewPrice and currentUser.isVisitor %}
                     <!-- Price Ratting -->
                     <div class="price-ratting section">
                         <!-- Price -->
@@ -88,7 +88,8 @@
                         </span>
                     </div>
                     {% endunless %}
-                    {% if product.requireLoginToPurchase && currentUser.isVisitor %}
+                    
+                    {% if product.requireLoginToPurchase and currentUser.isVisitor %}
                     <div class="alert alert-danger">
                         {{"Please login to complete your purchase" | t}}
                     </div>
