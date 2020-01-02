@@ -47,3 +47,5 @@ src/Plugins/Payments.Square/bin/
 src/Plugins/Payments.Square/obj/
 src/Tests/EvenCart.Tests.Runner/bin/
 src/Tests/EvenCart.Tests.Runner/obj/
+src/Plugins/Shipping.Shippo/bin/
+src/Plugins/Shipping.Shippo/obj/

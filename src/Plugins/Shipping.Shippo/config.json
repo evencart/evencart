@@ -1,0 +1,11 @@
+﻿{
+  "name": "Shippo Provider",
+  "description": "Shippo Shipping Provider",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Shipping.Shippo.dll",
+  "systemName": "Shipping.Shippo",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}

@@ -1,0 +1,38 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Shippo Shipping Provider Configuration" active_menu="ConfigureShippo" menu_group="ShippoSettings" %}
+{% partial "Shippo/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"Shippo Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_ShippoProviderSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control label text=@t"Live Api Key" for="LiveApiKey" %}
+                {% control text name="LiveApiKey" value="{{settings.liveApiKey}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Test Api Key" for="TestApiKey" %}
+                {% control text name="TestApiKey" value="{{settings.testApiKey}}" %}
+            </div>            
+            <div class="form-group">
+                {% control checkbox name="debugMode" text=@t"Debug Mode" value="settings.debugMode" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+

@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
+    <Authors>Team Apexol</Authors>
+    <Company>Sojatia Infocrafts Private Limited</Company>
+    <Description>The Shippo shipping provider plugin for EvenCart</Description>
+    <Copyright>2019 Sojatia Infocrafts Private Limited</Copyright>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Shipping.Shippo\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomerClassificationType.cs" />
+    <Compile Remove="PackagingType.cs" />
+    <Compile Remove="PackingType.cs" />
+    <Compile Remove="PickupType.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="FluentValidation" Version="8.6.0" />
+    <PackageReference Include="Haukcode.GoShippo" Version="2.0.10">
+      <IncludeAssets>all</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EvenCart.Core\EvenCart.Core.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EvenCart.Services\EvenCart.Services.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EvenCart\EvenCart.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Administration\Shippo\Settings.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Administration\Shippo\_Navigation.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="$(SolutionDir)Build\Cleanup\Output\Cleanup.exe $(OutDir)" />
+  </Target>
+</Project>
