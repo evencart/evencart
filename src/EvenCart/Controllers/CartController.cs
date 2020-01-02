@@ -146,6 +146,10 @@ namespace EvenCart.Controllers
                     }
                     else
                     {
+                        var passedPairs = cartItemModel.Attributes
+                            .ToDictionary(x => x.Name, x => x.SelectedValues.Select(y => y.Name).ToList());
+
+
                         var attributeNames = cartItemModel.Attributes.Select(x => x.Name).ToList();
                         var attributeIds = product.ProductAttributes?.Where(x => attributeNames.Contains(x.Label))
                             .Select(x => x.Id)
@@ -153,11 +157,29 @@ namespace EvenCart.Controllers
 
                         //if the product has variants only variants should be allowed to be added
                         var variants = _productVariantService.GetByProductId(product.Id);
+
+                        //first filter out by attributes
+                        variants = variants.Where(x =>
+                        {
+                            var variantAttributeIds =
+                                x.ProductVariantAttributes.Select(y => y.ProductAttributeId).ToList();
+                            return !attributeIds.Except(variantAttributeIds).Any();
+                        }).ToList();
+
                         variant = variants.FirstOrDefault(x =>
                         {
-                            var variantAttributeIds = x.ProductVariantAttributes.Select(y => y.ProductAttributeId).ToList();
-                            return !attributeIds.Except(variantAttributeIds).Any();
+                            var variantAttributes = x.ProductVariantAttributes;
+                            foreach (var passedKv in passedPairs)
+                            {
+                                if (variantAttributes.Any(y => y.ProductAttribute.Label == passedKv.Key && y.ProductAttributeValue.Label != passedKv.Value.First()))
+                                {
+                                    return false;
+                                }
+                            }
+
+                            return true;
                         });
+
                         //is the variant available?
                         ValidateVariantQuantity(cartItemModel.Quantity, variant, out validationResult);
                         if (validationResult != null)
@@ -357,13 +379,13 @@ namespace EvenCart.Controllers
             if (variant.TrackInventory)
             {
                 var availableQuantity = variant.Inventories.Max(x => x.AvailableQuantity);
-                if (availableQuantity < quantity)
-                {
-                    result = R.Fail.With("error", T("Only {0} item unit(s) are available", arguments: availableQuantity)).Result;
-                }
-                else if (availableQuantity == 0)
+                if (availableQuantity == 0)
                 {
                     result = R.Fail.With("error", T("The item is out of stock")).Result;
+                }
+                else if (availableQuantity < quantity)
+                {
+                    result = R.Fail.With("error", T("Only {0} item unit(s) are available", arguments: availableQuantity)).Result;
                 }
             }
             
