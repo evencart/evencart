@@ -6,6 +6,7 @@ using DotEntity;
 using DotEntity.MySql;
 using DotEntity.Providers;
 using DotEntity.SqlServer;
+using DotEntity.Versioning;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Extensions;
@@ -71,7 +72,10 @@ namespace EvenCart.Data.Database
         {
             if (_versionsAdded)
                 return;
-            DotEntityDb.EnqueueVersions(DatabaseContextKey, new Version100(), new Version101());
+            IDatabaseVersion[] appVersions = {
+                new Version1()
+            };
+            DotEntityDb.EnqueueVersions(DatabaseContextKey, appVersions);
             if (!excludePlugins)
             {
                 //the plugin versions

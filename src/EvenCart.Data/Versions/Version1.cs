@@ -24,7 +24,7 @@ using EvenCart.Data.Entity.Users;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
-    public class Version100 : IDatabaseVersion
+    public class Version1 : IDatabaseVersion
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
@@ -184,6 +184,9 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<EntityProperty>(transaction);
 
             Db.CreateTable<Subscription>(transaction);
+            
+            Db.CreateTable<Upload>(transaction);
+            Db.CreateConstraint(Relation.Create<User, Upload>("Id", "UserId"), transaction, true);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
@@ -248,6 +251,8 @@ namespace EvenCart.Data.Versions
             Db.DropConstraint(Relation.Create<Warehouse, WarehouseInventory>("Id", "WarehouseId"), transaction);
             //Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction, false);
             Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
+            Db.DropConstraint(Relation.Create<User, Upload>("Id", "UserId"), transaction);
+            
 
             //user
             Db.DropTable<User>(transaction);
@@ -325,7 +330,6 @@ namespace EvenCart.Data.Versions
             Db.DropTable<PreviousPassword>(transaction);
             Db.DropTable<UserCode>(transaction);
           
-
             Db.DropTable<Currency>(transaction);
 
             //gdpr
@@ -348,8 +352,9 @@ namespace EvenCart.Data.Versions
             Db.DropTable<EntityProperty>(transaction);
 
             Db.DropTable<Subscription>(transaction);
+            Db.DropTable<Upload>(transaction);
         }
 
-        public string VersionKey => "EvenCart.Data.Versions.Version1_0_0";
+        public string VersionKey => "EvenCart.Version.1";
     }
 }
