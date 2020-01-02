@@ -1,7 +1,0 @@
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\Output\Cleanup.exe.config
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\Output\Cleanup.exe
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\Output\Cleanup.pdb
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\obj\Debug\Cleanup.csproj.CoreCompileInputs.cache
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\obj\Debug\Cleanup.exe
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\obj\Debug\Cleanup.pdb
-F:\SourceRepositories\RoastedMarketplace\src\Build\Cleanup\obj\Debug\Cleanup.csprojAssemblyReference.cache

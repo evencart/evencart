@@ -7,9 +7,9 @@ namespace Cleanup
 {
     class Program
     {
-        private static string FilesToDelete = "DotEntity.*;DotLiquid.*;EvenCart.dll;EvenCart.Core.dll;EvenCart.Data.dll;EvenCart.Services.dll;EvenCart.Infrastructure.dll;*.pdb;*.dll.config;DotEntity.*;DryIoc.*;dotnet-bundle.dll;Newtonsoft.*;Microsoft.*;System.*;BraintreeHttp-Dotnet.dll;FluentScheduler.dll;FluentValidation.*;HtmlAgilityPack.dll;NUglify.dll;SixLabors.*;Source.dll;*.deps.json;DinkToPdf.dll;HtmlToPdf*.dll;";
+        private static string FilesToDelete = "DotEntity.*;DotLiquid.*;EvenCart.dll;EvenCart.Core.dll;EvenCart.Data.dll;EvenCart.Services.dll;EvenCart.Infrastructure.dll;*.pdb;*.dll.config;DotEntity.*;DryIoc.*;dotnet-bundle.dll;Newtonsoft.*;Microsoft.*;System.*;BraintreeHttp-Dotnet.dll;FluentScheduler.dll;FluentValidation.*;HtmlAgilityPack.dll;NUglify.dll;SixLabors.*;Source.dll;*.deps.json;DinkToPdf.dll;HtmlToPdf*.dll;MySqlConnector.dll;NuGet.Frameworks.dll;dotnet-*;Swashbuckle.*";
 
-        private static string DirectoriesToDelete = "NativeLibs;it";
+        private static string DirectoriesToDelete = "App_Data;NativeLibs;it;Areas;";
 
         static void Main(string[] args)
         {
