@@ -155,6 +155,16 @@ namespace EvenCart.Controllers
             //save addresses if required
             if (requestModel.BillingAddress.Id == 0)
             {
+                //make sure that the email being provided in case of a visitor is not of an existing user
+                if (currentUser.IsVisitor())
+                {
+                    var email = requestModel.BillingAddress.Email;
+                    var userExists = _userService.Count(x => x.Email == email) > 0;
+                    if (userExists)
+                    {
+                        return R.Fail.With("error", T("The email address is already registered with us. Please login or use a different email address.")).Result;
+                    }
+                }
                 var address = _modelMapper.Map<Address>(requestModel.BillingAddress);
                 address.EntityId = currentUser.Id;
                 address.EntityName = nameof(User);
