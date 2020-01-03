@@ -15,7 +15,7 @@
                             <input name="ShippingMethod.SystemName" value="{{shippingMethod.systemName}}" type="radio" />
                             {{shippingMethod.description}}
                             {% if shippingMethod.fee > 0 %}
-                            [ + {{shippingMethod.fee | withCurrency}} ]
+                            [+{{shippingMethod.fee | withCurrency}} ]
                             {% endif %}
                         </label>
                     </li>

@@ -3255,6 +3255,10 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
     #shipping-methods-list label:hover, #shipping-options-list label:hover {
       background-color: #f1f1f1;
       cursor: pointer; }
+  #shipping-methods-list .description, #shipping-options-list .description {
+    font-size: 0.7rem;
+    display: block;
+    padding-left: 15px; }
   #shipping-methods-list li, #shipping-options-list li {
     border-bottom: solid 1px #eee; }
 

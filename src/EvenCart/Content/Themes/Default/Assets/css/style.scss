@@ -4050,7 +4050,11 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
             cursor:pointer;
         }
     }
-
+    .description{
+        font-size:0.7rem;
+        display:block;
+        padding-left:15px;
+    }
     li {
         border-bottom: solid 1px #eee;
     }
