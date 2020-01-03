@@ -11,6 +11,7 @@ using EvenCart.Services.Promotions;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
@@ -64,7 +65,8 @@ namespace EvenCart.Controllers
             {
                 if (cartItemModel.IsWishlist || !_orderSettings.AllowGuestCheckout)
                 {
-                    var loginUrl = ApplicationEngine.RouteUrl(RouteNames.Login);
+                    var loginUrl = ApplicationEngine.RouteUrl(RouteNames.Login,
+                        new {ReturnUrl = ApplicationEngine.CurrentHttpContext.GetReferer()});
                     return R.Redirect(loginUrl).Result;
                 }
             }

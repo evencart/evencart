@@ -40,6 +40,9 @@
                     if (confirm('{{"Are you sure you wish to proceed with anonymization of this user?" | t}}'))
                         return true;
                     return false;
+                },
+                onSuccess: function() {
+                    notify("success", "{{'The user was anonymized successfully.' | t}}");
                 }
             });
     })
