@@ -14,3 +14,4 @@ echo d | xcopy /S /E /Y %source%\NativeLibs\*.* %dest%\NativeLibs
 echo d | xcopy /S /E /Y %source%\Views\*.* %dest%\Views
 echo d | xcopy /S /E /Y %source%\wwwroot\*.* %dest%\wwwroot
 echo d | xcopy /S /E /Y %source%\Plugins\*.* %dest%\Plugins
+echo d | xcopy /S /E /Y src\Build\*.* debugger\Build
