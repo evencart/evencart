@@ -16,19 +16,19 @@
             <div class="single-cart clearfix">
                 <div class="cart-info">
                     <div class="row">
-                        <div class="col-xs-2">
+                        <div class="col-2">
                             <div class="cart-image">
                                 <a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'><img src="{{cartItem.imageUrl}}" alt=""></a>
                             </div>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-8 no-padding">
                             <h5><a href='{% route SingleProduct seName="{{cartItem.slug}}" %}'>{{cartItem.productName}}</a></h5>
                             <p>
                                 {{cartItem.attributeText  | newLine2Br}}
                             </p>
                             <p>{{cartItem.quantity}} x {{cartItem.price | withCurrency}}</p>
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col-2 no-padding text-center">
                             <form action="{% route api_UpdateCart %}" method="post" id="mini-remove-form-cart-{{cartItem.id}}">
                                 {% control xsrf %}
                                 <input name="quantity" id="remove-quantity-{{cartItem.id}}" type="hidden" value="0" />
