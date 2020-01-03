@@ -88,5 +88,10 @@ namespace EvenCart.Infrastructure.Extensions
         {
             return httpContext.Items.ContainsKey(IsTokenAuthenticatedKey) && (bool) httpContext.Items[IsTokenAuthenticatedKey];
         }
+
+        public static string GetReferer(this HttpContext httpContext)
+        {
+            return httpContext.Request.Headers["Referer"];
+        }
     }
 }
