@@ -1,6 +1,6 @@
 ﻿{% layout "_LayoutCheckout" %}
 {% global active_menu="ShippingInfo" step_index="1" %}
-<form method="post" id="form-shipping-info" action="{% route api_CheckoutShippingInfo %}">
+<form method="post" id="form-shipping-info" action="{% route api_CheckoutShippingOptions %}">
     {% control xsrf %}
     <div class="checkout-container">
         <div class="row">
