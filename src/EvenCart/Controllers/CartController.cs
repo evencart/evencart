@@ -219,7 +219,7 @@ namespace EvenCart.Controllers
                     Quantity = cartItemModel.Quantity,
                     AttributeJson = attributeJson,
                     ComparePrice = product.ComparePrice,
-                    Price = product.Price,
+                    Price = variant != null ? variant.Price ?? product.Price : product.Price,
                     ProductVariantId = variant?.Id ?? 0,
                     IsDownloadable = product.IsDownloadable
                 };
