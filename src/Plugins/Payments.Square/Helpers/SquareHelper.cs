@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
@@ -15,6 +17,7 @@ namespace Payments.Square.Helpers
 {
     public class SquareHelper
     {
+        private const string SquareCustomerIdKey = "SquareCustomerId";
         private static Configuration _squareConfiguration;
         public static Configuration InitSquare(SquareSettings squareSettings)
         {
@@ -27,7 +30,7 @@ namespace Payments.Square.Helpers
                 AccessToken = accessToken,
                 UserAgent = SquareConfig.UserAgentName,
             };
-            if(squareSettings.EnableSandbox)
+            if (squareSettings.EnableSandbox)
             {
                 config.ApiClient = new ApiClient(SquareConfig.SandboxConnectUrl);
             }
@@ -47,26 +50,45 @@ namespace Payments.Square.Helpers
             var config = GetConfiguration(squareSettings);
             var nonce = request.GetParameterAs<string>("nonce");
             var location = GetApplicationLocations(squareSettings, logger).FirstOrDefault(x => x.Id == squareSettings.LocationId);
+            var billingAddress = order.BillingAddressSerialized.To<EvenCart.Data.Entity.Addresses.Address>();
+            var shippingAddress = order.ShippingAddressSerialized?.To<EvenCart.Data.Entity.Addresses.Address>();
+            var customerId = order.User.GetPropertyValueAs<string>(SquareCustomerIdKey);
+            if (customerId.IsNullEmptyOrWhiteSpace())
+            {
+                var createCustomerRequest = new CreateCustomerRequest(EmailAddress: order.User.Email, GivenName: order.User.Name);
+                var customerApi = new CustomersApi(config);
+                var customerCreateResponse = customerApi.CreateCustomer(createCustomerRequest);
+                customerId = customerCreateResponse.Customer.Id;
+            }
             var paymentRequest = new CreatePaymentRequest(SourceId: nonce,
-                IdempotencyKey: Guid.NewGuid().ToString(),
-                LocationId: location?.Id,
-                AmountMoney: new Money()
-                {
-                    Amount = (long) order.OrderTotal * 100,
-                    Currency = order.CurrencyCode
-                },
-                AppFeeMoney: new Money()
-                {
-                    Amount = 100 * (long?) order.PaymentMethodFee,
-                    Currency = order.CurrencyCode
-                }
-            );
+            IdempotencyKey: Guid.NewGuid().ToString(),
+            LocationId: location?.Id,
+            CustomerId: customerId,
+            AmountMoney: new Money()
+            {
+                Amount = (long)order.OrderTotal * 100,
+                Currency = order.CurrencyCode
+            },
+            AppFeeMoney: new Money()
+            {
+                Amount = 100 * (long?)order.PaymentMethodFee,
+                Currency = order.CurrencyCode
+            },
+            BillingAddress: new Address(billingAddress.Address1, billingAddress.Address2,
+                FirstName: billingAddress.Name, Locality: billingAddress.Landmark,
+                PostalCode: billingAddress.ZipPostalCode),
+            BuyerEmailAddress: order.User.Email
+        );
+            if (shippingAddress != null)
+                paymentRequest.ShippingAddress = new Address(shippingAddress.Address1, shippingAddress.Address2,
+                    FirstName: shippingAddress.Name, Locality: shippingAddress.Landmark,
+                    PostalCode: shippingAddress.ZipPostalCode);
             if (squareSettings.AuthorizeOnly)
             {
                 paymentRequest.Autocomplete = false; //authorize only
             }
             var paymentsApi = new PaymentsApi(config);
-            var paymentResponse = paymentsApi.CreatePayment(paymentRequest); 
+            var paymentResponse = paymentsApi.CreatePayment(paymentRequest);
             var transactionResult = new TransactionResult()
             {
                 OrderGuid = order.Guid,
@@ -77,12 +99,13 @@ namespace Payments.Square.Helpers
             {
                 var payment = paymentResponse.Payment;
                 transactionResult.Success = true;
-                transactionResult.TransactionAmount = (decimal) (payment.AmountMoney.Amount ?? 0) / 100;
+                transactionResult.TransactionAmount = (decimal)(payment.AmountMoney.Amount ?? 0) / 100;
                 transactionResult.ResponseParameters = new Dictionary<string, object>()
                 {
                     { "paymentId", payment.Id },
                     { "referenceId", payment.ReferenceId },
-                    { "orderId", payment.OrderId }
+                    { "orderId", payment.OrderId },
+                    { "cardDetails", payment.CardDetails }
                 };
                 if (payment.Status == "APPROVED")
                     transactionResult.NewStatus = PaymentStatus.Authorized;
@@ -96,7 +119,7 @@ namespace Payments.Square.Helpers
                     transactionResult.Exception = new Exception("An error occurred while processing payment. Error Details: " + errors);
                     transactionResult.Success = false;
                 }
-                
+
             }
             else
             {
@@ -120,7 +143,7 @@ namespace Payments.Square.Helpers
                 IdempotencyKey = Guid.NewGuid().ToString(),
                 AmountMoney = new Money()
                 {
-                    Amount = (refundRequest.IsPartialRefund ? (long?) refundRequest.Amount : (long) order.OrderTotal) * 100
+                    Amount = (refundRequest.IsPartialRefund ? (long?)refundRequest.Amount : (long)order.OrderTotal) * 100
                 },
                 PaymentId = paymentId,
                 Reason = "Refunded by administrator " + ApplicationEngine.CurrentUser.Name
@@ -247,7 +270,7 @@ namespace Payments.Square.Helpers
                     { "PaymentId", payment.Id },
                     { "ReferenceId", payment.ReferenceId }
                 };
-               
+
                 if (payment.Status == "COMPLETED")
                     transactionResult.NewStatus = PaymentStatus.Complete;
                 else
@@ -283,7 +306,7 @@ namespace Payments.Square.Helpers
         }
         public static async void ParseWebhookResponse(HttpRequest responseRequest)
         {
-           
+
         }
 
 
@@ -294,7 +317,7 @@ namespace Payments.Square.Helpers
                 var config = GetConfiguration(squareSettings);
                 var locationsApi = new LocationsApi(config);
                 var locationsResponse = locationsApi.ListLocations();
-                if(locationsResponse?.Locations == null)
+                if (locationsResponse?.Locations == null)
                 {
                     throw new Exception("Empty locations response received");
                 }
