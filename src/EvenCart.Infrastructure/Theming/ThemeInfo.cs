@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace EvenCart.Infrastructure.Theming
 {
@@ -22,7 +23,7 @@ namespace EvenCart.Infrastructure.Theming
 
         public Dictionary<string, string> WidgetZones { get; set; }
 
-        public Dictionary<string, string> Templates { get; set; } = new  Dictionary<string, string>();
+        public ConcurrentDictionary<string, string> Templates { get; set; } = new ConcurrentDictionary<string, string>();
 
         public string ThumbnailUrl { get; set; }
 
