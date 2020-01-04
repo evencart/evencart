@@ -62,8 +62,7 @@ namespace EvenCart.Events
 
                         if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.WithActivationEmail)
                         {
-                            var code = eventData[1].ToString();
-                            var activationLink = ApplicationEngine.RouteUrl(RouteNames.VerifyEmail, new {code = code});
+                            var activationLink = eventData[1].ToString();
                             model.With("activationLink", activationLink);
                             _emailSender.SendEmail(EmailTemplateNames.UserActivationLinkMessage, userInfo, model.Result);
                         }
