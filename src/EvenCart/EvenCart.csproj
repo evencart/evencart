@@ -268,6 +268,7 @@
     <None Remove="Content\Themes\Default\Views\Authentication\Register.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\RequestInvite.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\VendorSignup.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\VerifyEmail.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Wishlist.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
@@ -1061,6 +1062,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Addresses\AddressForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Vendors\VendorsList.html">
