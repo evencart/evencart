@@ -47,16 +47,7 @@ namespace EvenCart.Services.ScheduledTasks
                 //schedule the task
                 registry.Schedule(() =>
                 {
-                    
-                    try
-                    {
-                        ScheduledTaskHelper.RunScheduledTask(sTask, task, _scheduledTaskService, _logger);
-                    }
-                    catch (Exception ex)
-                    {
-                        //do nothing here
-                    }
-
+                    ScheduledTaskHelper.RunScheduledTask(sTask, task, _scheduledTaskService, _logger);
                 }).ToRunEvery(sTask.Seconds).Seconds();
             }
             //initialize the jobmanager
