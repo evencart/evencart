@@ -117,7 +117,12 @@ namespace EvenCart.Infrastructure.Emails
             if (sendToUser)
                 QueueEmailMessage(templateName, userInfo, model);
             if (sendEmailToAdmin)
-                QueueEmailMessageToAdmin(templateName + EmailTemplateNames.AdminSuffix, model);
+            {
+                if (templateName.EndsWith(EmailTemplateNames.AdminSuffix))
+                    QueueEmailMessageToAdmin(templateName, model);
+                else
+                    QueueEmailMessageToAdmin(templateName + EmailTemplateNames.AdminSuffix, model);
+            }
         }
     }
 }

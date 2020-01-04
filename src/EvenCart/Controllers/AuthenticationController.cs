@@ -300,9 +300,18 @@ namespace EvenCart.Controllers
             _inviteRequestService.Delete(x => x.Email == registerModel.Email);
             if (userCode != null)
                 _userCodeService.Delete(userCode);
-
+            var verificationCode = "";
+            if (registerModel.InviteCode.IsNullEmptyOrWhiteSpace())
+            {
+                //if there was no invite code, the email needs to be verified (if the admin wants so)
+                if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.WithActivationEmail)
+                {
+                    userCode = _userCodeService.GetUserCode(user.Id, UserCodeType.EmailVerification);
+                    verificationCode = userCode.Code;
+                }
+            }
             //raise the event
-            RaiseEvent(NamedEvent.UserRegistered, user);
+            RaiseEvent(NamedEvent.UserRegistered, user, verificationCode);
 
             return R.Success.With("mode", _userSettings.UserRegistrationDefaultMode).Result;
         }
