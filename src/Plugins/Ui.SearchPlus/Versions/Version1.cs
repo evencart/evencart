@@ -5,7 +5,7 @@ using Ui.SearchPlus.Data;
 using Db = DotEntity.DotEntity.Database;
 namespace Ui.SearchPlus.Versions
 {
-    public class Version_1_0 : IDatabaseVersion
+    public class Version1 : IDatabaseVersion
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
@@ -17,6 +17,6 @@ namespace Ui.SearchPlus.Versions
             Db.DropTable<SearchTerm>(transaction);
         }
 
-        public string VersionKey { get; } = "Ui.SearchPlus.Versions.Version_1_0";
+        public string VersionKey { get; } = "Ui.SearchPlus.Version.1";
     }
 }

@@ -24,7 +24,7 @@ namespace Ui.SearchPlus
         public override IList<IDatabaseVersion> GetDatabaseVersions()
         {
             var versions = base.GetDatabaseVersions();
-            versions.Add(new Version_1_0());
+            versions.Add(new Version1());
             return versions;
         }
 

@@ -5,7 +5,7 @@ using Ui.Slider.Data;
 using Db = DotEntity.DotEntity.Database;
 namespace Ui.Slider.Versions
 {
-    public class Version_1_0 : IDatabaseVersion
+    public class Version1 : IDatabaseVersion
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
@@ -19,6 +19,6 @@ namespace Ui.Slider.Versions
             Db.DropTable<UiSlider>(transaction);
         }
 
-        public string VersionKey { get; } = "Ui.Slider.Versions.Version_1_0";
+        public string VersionKey { get; } = "Ui.Slider.Version.1";
     }
 }
