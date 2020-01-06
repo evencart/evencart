@@ -256,7 +256,7 @@ namespace EvenCart.Events
                     {
                         var contactUsModel = eventData[0];
                         var model = R.With("contact", contactUsModel);
-                        _emailSender.SendEmail(EmailTemplateNames.ContactUsMessageToAdmin, null, model, false, true);
+                        _emailSender.SendEmail(EmailTemplateNames.ContactUsMessageToAdmin, null, model.Result, false, true);
                     }
                     break;
             }
