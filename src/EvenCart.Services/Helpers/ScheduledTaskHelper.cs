@@ -27,7 +27,6 @@ namespace EvenCart.Services.Helpers
                 {
                     sTask.Enabled = false;
                 }
-                throw;
             }
             finally
             {

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using EvenCart;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
@@ -43,6 +44,11 @@ namespace Payments.Stripe.Helpers
             parameters.TryGetValue("expireYear", out var expireYearStr);
             parameters.TryGetValue("cvv", out var cvv);
 
+            var order = request.Order;
+            //do we have a saved stripe customer id?
+            var address = order.BillingAddressSerialized.To<Address>();
+            var customerId = GetCustomerId(order.User, null, address);
+
             var tokenCreateOptions = new TokenCreateOptions
             {
                 Card = new CreditCardOptions
@@ -52,22 +58,26 @@ namespace Payments.Stripe.Helpers
                     ExpMonth = long.Parse(expireMonthStr.ToString()),
                     Cvc = cvv.ToString(),
                     Name = cardName.ToString(),
-                }
+                },
+                Customer = customerId
             };
             //get token for card
             var tokenService = new TokenService();
             var stripeToken = tokenService.Create(tokenCreateOptions);
-            var order = request.Order;
+           
+
             var options = new ChargeCreateOptions
             {
-                Amount = (long)(order.OrderTotal) * 100,
+                Amount = (long) (order.OrderTotal) * 100,
                 Currency = order.CurrencyCode.ToLower(),
                 Description = stripeSettings.Description,
                 Source = stripeToken.Id,
-                Capture = !stripeSettings.AuthorizeOnly
+                Capture = !stripeSettings.AuthorizeOnly,
+                Customer = customerId
             };
             InitStripe(stripeSettings, true);
             var service = new ChargeService();
+            
             var charge = service.Create(options);
             var processPaymentResult = new TransactionResult()
             {
@@ -212,35 +222,8 @@ namespace Payments.Stripe.Helpers
                 .DeserializeAs<Address>(order.BillingAddressSerialized);
 
             InitStripe(stripeSettings, true);
-            var service = new CustomerService();
             //do we have a saved stripe customer id?
-            var customerId = order.User.GetPropertyValueAs<string>(StripeCustomerIdKey);
-            if (customerId.IsNullEmptyOrWhiteSpace())
-            {
-                var options = new CustomerCreateOptions
-                {
-                    Email = order.User.Email,
-                    PaymentMethod = paymentMethod.Id,
-                    InvoiceSettings = new CustomerInvoiceSettingsOptions
-                    {
-                        DefaultPaymentMethod = paymentMethod.Id,
-                    },
-                    Address = new AddressOptions()
-                    {
-                        City = address.City,
-                        Country = address.Country.Name,
-                        Line1 = address.Address1,
-                        Line2 = address.Address2,
-                        PostalCode = address.ZipPostalCode,
-                        State = address.StateProvinceName
-                    },
-                    Name = order.User.Name + "-" + order.User.Email
-                };
-                var customer = service.Create(options);
-                customerId = customer.Id;
-            }
-           
-            
+            var customerId = GetCustomerId(order.User, paymentMethod, address);
             var subscriptionItems = new List<SubscriptionItemOptions>();
             var productService = new ProductService();
             var planService = new PlanService();
@@ -315,7 +298,7 @@ namespace Payments.Stripe.Helpers
                 processPaymentResult.Success = false;
                 logger.Log<TransactionResult>(LogLevel.Warning, $"The subscription for Order#{order.Id} by stripe failed with status {subscription.Status}." + subscription.StripeResponse.Content);
             }
-          
+
             return processPaymentResult;
         }
 
@@ -456,10 +439,10 @@ namespace Payments.Stripe.Helpers
             }
             catch (StripeException e)
             {
-               
+
             }
         }
-    
+
         private static string GetInterval(TimeCycle cycle)
         {
             switch (cycle)
@@ -475,6 +458,42 @@ namespace Payments.Stripe.Helpers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cycle), cycle, null);
             }
+        }
+
+        private static string GetCustomerId(User user, PaymentMethod paymentMethod, Address address)
+        {
+            var customerId = user.GetPropertyValueAs<string>(StripeCustomerIdKey);
+            if (!customerId.IsNullEmptyOrWhiteSpace())
+            {
+                return customerId;
+            }
+            var service = new CustomerService();
+            var options = new CustomerCreateOptions
+            {
+                Email = user.Email,
+                Address = new AddressOptions()
+                {
+                    City = address.City,
+                    Country = address.Country.Name,
+                    Line1 = address.Address1,
+                    Line2 = address.Address2,
+                    PostalCode = address.ZipPostalCode,
+                    State = address.StateProvinceName
+                },
+                Name = user.Name + "-" + user.Email
+            };
+            if (paymentMethod != null)
+            {
+                options.PaymentMethod = paymentMethod.Id;
+                options.InvoiceSettings = new CustomerInvoiceSettingsOptions
+                {
+                    DefaultPaymentMethod = paymentMethod.Id,
+                };
+
+            }
+            var customer = service.Create(options);
+            customerId = customer.Id;
+            return customerId;
         }
     }
 }

@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
-    <Version>1.0.1-beta</Version>
+    <Version>1.0.2-beta</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -268,6 +268,7 @@
     <None Remove="Content\Themes\Default\Views\Authentication\Register.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\RequestInvite.html" />
     <None Remove="Content\Themes\Default\Views\Authentication\VendorSignup.html" />
+    <None Remove="Content\Themes\Default\Views\Authentication\VerifyEmail.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Index.html" />
     <None Remove="Content\Themes\Default\Views\Cart\Wishlist.html" />
     <None Remove="Content\Themes\Default\Views\Checkout\AddressInfo.html" />
@@ -1061,6 +1062,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Addresses\AddressForm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Vendors\VendorsList.html">

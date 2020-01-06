@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Mvc.Models;
@@ -13,14 +14,14 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 
         public abstract bool RenderInPublic { get; }
 
-        public static readonly Dictionary<string, GlobalObject> RegisteredObjects = new Dictionary<string, GlobalObject>();
+        public static readonly ConcurrentDictionary<string, GlobalObject> RegisteredObjects = new ConcurrentDictionary<string, GlobalObject>();
 
         public static void RegisterObject<T>(string key) where T : GlobalObject
         {
             if (!DatabaseManager.IsDatabaseInstalled())
                 return;
             if(!RegisteredObjects.ContainsKey(key))
-                RegisteredObjects.Add(key, Activator.CreateInstance<T>());
+                RegisteredObjects.TryAdd(key, Activator.CreateInstance<T>());
         }
 
         public static object ExecuteObject(string key)

@@ -12,6 +12,8 @@ using EvenCart.Services.Extensions;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Shipments;
 using EvenCart.Factories.Users;
+using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Orders;
 
 namespace EvenCart.Events
@@ -60,7 +62,7 @@ namespace EvenCart.Events
 
                         if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.WithActivationEmail)
                         {
-                            var activationLink = "";
+                            var activationLink = eventData[1].ToString();
                             model.With("activationLink", activationLink);
                             _emailSender.SendEmail(EmailTemplateNames.UserActivationLinkMessage, userInfo, model.Result);
                         }
@@ -212,6 +214,7 @@ namespace EvenCart.Events
                 case nameof(NamedEvent.VendorRegistered):
                 case nameof(NamedEvent.VendorActivated):
                 case nameof(NamedEvent.VendorRejected):
+                case nameof(NamedEvent.VendorDeactivated):
                     if (_emailSenderSettings.VendorRegisteredEmailEnabled ||
                         _emailSenderSettings.VendorRegisteredEmailToAdminEnabled ||
                         _emailSenderSettings.VendorActivatedEmailEnabled ||
@@ -262,15 +265,21 @@ namespace EvenCart.Events
         public string[] EventNames { get; } =
         {
             NamedEvent.UserRegistered.ToString(),
+            NamedEvent.UserActivated.ToString(),
             NamedEvent.OrderPaid.ToString(),
             NamedEvent.OrderPlaced.ToString(),
             NamedEvent.ShipmentShipped.ToString(),
             NamedEvent.ShipmentDelivered.ToString(),
+            NamedEvent.ShipmentDeliveryFailed.ToString(),
             NamedEvent.PasswordReset.ToString(),
             NamedEvent.PasswordResetRequested.ToString(),
             NamedEvent.InvitationRequested.ToString(),
             NamedEvent.Invitation.ToString(),
             NamedEvent.ReturnRequestCreated.ToString(),
+            NamedEvent.VendorRegistered.ToString(),
+            NamedEvent.VendorActivated.ToString(),
+            NamedEvent.VendorRejected.ToString(),
+            NamedEvent.VendorDeactivated.ToString(),
             NamedEvent.ContactUs.ToString()
         };
 

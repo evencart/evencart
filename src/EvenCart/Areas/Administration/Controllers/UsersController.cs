@@ -501,7 +501,7 @@ namespace EvenCart.Areas.Administration.Controllers
             }
 
             var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, UserCodeType.RegistrationInvitation);
-            var invitationLink = ApplicationEngine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code});
+            var invitationLink = ApplicationEngine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code}, true);
             RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
             return R.Success.Result;
         }

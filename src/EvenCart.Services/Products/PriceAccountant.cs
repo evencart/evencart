@@ -211,12 +211,14 @@ namespace EvenCart.Services.Products
                                 //is there a difference in quantity that's required
                                 ci.Quantity = product.MaximumPurchaseQuantity;
                             }
+
+                            var variant = product.HasVariants && ci.ProductVariantId > 0
+                                ? productVariants.FirstOrDefault(x => x.Id == ci.ProductVariantId)
+                                : null;
                             //are there any discounted price for product
-                            var basePrice =  GetAutoDiscountedPriceForUser(product, cart.User, ci.Quantity, ref discountCoupons, out decimal discount);
+                            var basePrice =  GetAutoDiscountedPriceForUser(product, variant, cart.User, ci.Quantity, ref discountCoupons, out decimal discount);
                             if (product.HasVariants && ci.ProductVariantId > 0)
                             {
-                                //find the product variants
-                                var variant = productVariants.FirstOrDefault(x => x.Id == ci.ProductVariantId);
                                 if (variant == null || (variant.TrackInventory && !variant.IsAvailableInStock(product)))
                                     //remove from cart because we can't find the variant or it's out of stock
                                     _cartService.RemoveFromCart(ci.Id, transaction);
@@ -291,18 +293,18 @@ namespace EvenCart.Services.Products
             }
         }
 
-        public decimal GetAutoDiscountedPriceForUser(Product product, User user, int quantity, ref IList<DiscountCoupon> discountCoupons, out decimal discount)
+        public decimal GetAutoDiscountedPriceForUser(Product product, ProductVariant variant, User user, int quantity, ref IList<DiscountCoupon> discountCoupons, out decimal discount)
         {
             //get active discount coupons which don't have any code
             discountCoupons = discountCoupons ?? _discountCouponService.Get(x => x.Enabled && !x.HasCouponCode).Where(x => !x.Expired).ToList();
             discount = decimal.Zero;
             foreach (var dc in discountCoupons)
             {
-                var currentDiscount = GetProductDiscountedPrice(dc, product, user, quantity);
+                var currentDiscount = GetProductDiscountedPrice(dc, product, variant, user, quantity);
                 if (currentDiscount > discount)
                     discount = currentDiscount;
             }
-            return product.Price - discount;
+            return (variant?.Price ?? product.Price) - discount;
         }
 
         public void GetProductPriceDetails(Product product, Address address, decimal? basePrice, out decimal price, out decimal tax, out decimal taxRate, out string taxName)
@@ -333,31 +335,32 @@ namespace EvenCart.Services.Products
 
         #region Helpers
 
-        private decimal GetProductDiscountedPrice(DiscountCoupon discountCoupon, Product product, User user, int quantity)
+        private decimal GetProductDiscountedPrice(DiscountCoupon discountCoupon, Product product, ProductVariant variant, User user, int quantity)
         {
+            var price = variant?.Price ?? product.Price;
             switch (discountCoupon.RestrictionType)
             {
                 case RestrictionType.Products:
-                    return discountCoupon.RestrictionIds().Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
+                    return discountCoupon.RestrictionIds().Contains(product.Id) ? discountCoupon.GetDiscountAmount(price, quantity) : 0;
                 case RestrictionType.Categories:
                     var categoryIds = discountCoupon.RestrictionIds().ToArray();
                     var categoryProductIds = _productService.GetProductIdsByCategoryIds(categoryIds);
-                    return categoryProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
+                    return categoryProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(price, quantity) : 0;
                 case RestrictionType.Users:
-                    return discountCoupon.RestrictionIds().Contains(user.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
+                    return discountCoupon.RestrictionIds().Contains(user.Id) ? discountCoupon.GetDiscountAmount(price, quantity) : 0;
                 case RestrictionType.UserGroups:
                     return 0;
                 case RestrictionType.Roles:
                     var roleIds = discountCoupon.RestrictionIds();
-                    return user.Roles.Any(x => roleIds.Contains(x.Id)) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
+                    return user.Roles.Any(x => roleIds.Contains(x.Id)) ? discountCoupon.GetDiscountAmount(price, quantity) : 0;
                 case RestrictionType.Vendors:
                     var vendorIds = discountCoupon.RestrictionIds().ToArray();
                     var vendorProductIds = _productService.GetProductIdsByVendorIds(vendorIds);
-                    return vendorProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(product.Price, quantity) : 0;
+                    return vendorProductIds.Contains(product.Id) ? discountCoupon.GetDiscountAmount(price, quantity) : 0;
                 case RestrictionType.Manufacturers:
                     return product.ManufacturerId.HasValue &&
                            discountCoupon.RestrictionIds().Contains(product.ManufacturerId.Value)
-                        ? discountCoupon.GetDiscountAmount(product.Price, quantity)
+                        ? discountCoupon.GetDiscountAmount(price, quantity)
                         : 0;
                 default:
                     return 0;

@@ -49,7 +49,7 @@ namespace EvenCart.Infrastructure.Theming
                 foreach (var templateFile in templateFiles)
                 {
                     var fileName = _localFileProvider.GetFileNameWithoutExtension(templateFile);
-                    _cachedThemeInfo.Templates.Add(fileName, $"Templates/{fileName}");
+                    _cachedThemeInfo.Templates.TryAdd(fileName, $"Templates/{fileName}");
                 }
             }
             return _cachedThemeInfo;

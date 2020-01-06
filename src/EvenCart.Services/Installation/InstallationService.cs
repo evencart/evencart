@@ -77,7 +77,7 @@ namespace EvenCart.Services.Installation
         {
             if (!File.Exists(packageFilePath))
                 return false; // do nothing
-                             
+
             //get temporary directory to extract the package
             var tempDirectory = _localFileProvider.GetTemporaryDirectory();
             try
@@ -143,21 +143,35 @@ namespace EvenCart.Services.Installation
             var countryService = DependencyResolver.Resolve<ICountryService>();
             var warehouseService = DependencyResolver.Resolve<IWarehouseService>();
             var addressService = DependencyResolver.Resolve<IAddressService>();
-
-            countryService.Insert(new Country()
+            var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
+            //read sql file and execute it
+            var sqlFilePath = ServerHelper.MapPath("~/App_Data/Install/country-state.sql");
+            var countryId = 0;
+            if (localFileProvider.FileExists(sqlFilePath))
             {
-                Name = "India",
-                Code = "IN",
-                Published = true,
-                ShippingEnabled = true,
-                DisplayOrder = 0
-            });
-
+                var sql = localFileProvider.ReadAllText(sqlFilePath);
+                using (EntitySet.Query(sql, null)) { }
+                //set to India - 101 from data file
+                countryId = 101;
+            }
+            else
+            {
+                var country = new Country()
+                {
+                    Name = "India",
+                    Code = "IN",
+                    Published = true,
+                    ShippingEnabled = true,
+                    DisplayOrder = 0
+                };
+                countryService.Insert(country);
+                countryId = country.Id;
+            }
             var address = new Address()
             {
                 EntityName = nameof(Warehouse),
                 Name = "Primary Fulfillment Center",
-                CountryId = 1
+                CountryId = countryId
             };
             addressService.Insert(address);
             //insert warehouse
@@ -166,7 +180,6 @@ namespace EvenCart.Services.Installation
                 AddressId = address.Id
             };
             warehouseService.Insert(wareHouse);
-
         }
         /// <summary>
         /// Seed roles
