@@ -21,29 +21,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Tests.Data", "Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{FADC9182-0E32-4883-833C-081EC75BA5F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.FedEx", "Plugins\Shipping.FedEx\Shipping.FedEx.csproj", "{E3992960-ED94-4B76-9590-3AAF061F129C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.Slider", "..\plugins\Ui.Slider\Ui.Slider.csproj", "{6B272832-8C62-4B95-9615-F54FCD96F2DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.Slider", "Plugins\Ui.Slider\Ui.Slider.csproj", "{6B272832-8C62-4B95-9615-F54FCD96F2DB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PaypalWithRedirect", "Plugins\Payments.PaypalWithRedirect\Payments.PaypalWithRedirect.csproj", "{91BA7EEF-EB02-46E9-BCB6-BB27463270B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PaypalWithRedirect", "..\plugins\Payments.PaypalWithRedirect\Payments.PaypalWithRedirect.csproj", "{91BA7EEF-EB02-46E9-BCB6-BB27463270B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Services", "EvenCart.Services\EvenCart.Services.csproj", "{7BF02EED-4F28-447C-952A-395E53710D7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.UPS", "Plugins\Shipping.UPS\Shipping.UPS.csproj", "{942A748E-770A-43B7-A805-01D75D014AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.UPS", "..\plugins\Shipping.UPS\Shipping.UPS.csproj", "{942A748E-770A-43B7-A805-01D75D014AF5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3545BB05-0273-4C20-B232-C9BA08E9A939}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup", "Build\Cleanup\Cleanup.csproj", "{E2C1EBE3-98F1-42FF-9BB1-D2B171E10471}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.Stripe", "Plugins\Payments.Stripe\Payments.Stripe.csproj", "{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.Stripe", "..\plugins\Payments.Stripe\Payments.Stripe.csproj", "{45FAEA43-BBC4-4C3A-8138-68B0B555DE17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.SearchPlus", "Plugins\Ui.SearchPlus\Ui.SearchPlus.csproj", "{69F4380E-5EBC-4920-901A-07FF0235CE9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.SearchPlus", "..\plugins\Ui.SearchPlus\Ui.SearchPlus.csproj", "{69F4380E-5EBC-4920-901A-07FF0235CE9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.Square", "Plugins\Payments.Square\Payments.Square.csproj", "{E5511A3A-F248-4D42-BD1C-0DEED6FB5267}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.Square", "..\plugins\Payments.Square\Payments.Square.csproj", "{E5511A3A-F248-4D42-BD1C-0DEED6FB5267}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Tests.Runner", "Tests\EvenCart.Tests.Runner\EvenCart.Tests.Runner.csproj", "{1B18208B-8A74-4E54-915D-43EAAA61744B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.Shippo", "Plugins\Shipping.Shippo\Shipping.Shippo.csproj", "{20D083EC-E655-47CA-B551-90056DB5CAD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping.Shippo", "..\plugins\Shipping.Shippo\Shipping.Shippo.csproj", "{20D083EC-E655-47CA-B551-90056DB5CAD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,14 +107,6 @@ Global
 		{EC8E7E6A-9256-43F3-906B-0B575313919E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC8E7E6A-9256-43F3-906B-0B575313919E}.ReleaseForDemo|Any CPU.ActiveCfg = ReleaseForDemo|Any CPU
 		{EC8E7E6A-9256-43F3-906B-0B575313919E}.ReleaseForDemo|Any CPU.Build.0 = ReleaseForDemo|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.DebugWithSwagger|Any CPU.ActiveCfg = DebugWithSwagger|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.DebugWithSwagger|Any CPU.Build.0 = DebugWithSwagger|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.ReleaseForDemo|Any CPU.ActiveCfg = ReleaseForDemo|Any CPU
-		{E3992960-ED94-4B76-9590-3AAF061F129C}.ReleaseForDemo|Any CPU.Build.0 = ReleaseForDemo|Any CPU
 		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B272832-8C62-4B95-9615-F54FCD96F2DB}.DebugWithSwagger|Any CPU.ActiveCfg = DebugWithSwagger|Any CPU
@@ -204,7 +194,6 @@ Global
 		{A0D2A383-52E9-4FC4-8D67-4DE93F4C0FA1} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
 		{CA05CE5C-692E-489D-B243-A60F4C5163B6} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
 		{EC8E7E6A-9256-43F3-906B-0B575313919E} = {7B01FA3E-FA4B-4CB7-9B44-27047F7FB67B}
-		{E3992960-ED94-4B76-9590-3AAF061F129C} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{6B272832-8C62-4B95-9615-F54FCD96F2DB} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{91BA7EEF-EB02-46E9-BCB6-BB27463270B2} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{942A748E-770A-43B7-A805-01D75D014AF5} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
