@@ -54,7 +54,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
 
         public static string Pretty(DateTime date)
         {
-            return DateTimeHelper.GetRelativeDate(date);
+            return DateTimeHelper.GetRelativeDate(date, ApplicationEngine.CurrentUser);
         }
     }
 }

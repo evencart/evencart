@@ -144,10 +144,12 @@ namespace EvenCart.Services.Helpers
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static string GetRelativeDate(DateTime date)
+        public static string GetRelativeDate(DateTime date, User user)
         {
-         
-            var s = DateTime.Now.Subtract(date);
+            //the date is in user's timezone therefore first convert it to utc
+            var utcDate = GetDateInUserTimeZone(date, DateTimeKind.Local, user);
+
+            var s = DateTime.UtcNow.Subtract(date);
             var dayDiff = (int)s.TotalDays;
             var secDiff = (int)s.TotalSeconds;
             if (dayDiff < 0 || dayDiff >= 31)
