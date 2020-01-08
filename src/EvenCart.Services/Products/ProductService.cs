@@ -158,14 +158,18 @@ namespace EvenCart.Services.Products
             //store all the product ids possible with this combination to find available filters etc. later
             var allProductIds = categoryProductIds ?? query.CustomSelectNested("Product_Id").Select(x => (int) x[0]).ToList();
 
+            query = query.OrderBy(x => x.DisplayOrder);
             if (orderByExpression == null)
             {
-                orderByExpression = product => product.Id;
+                query = query.OrderBy(x => x.Id,
+                    sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
             }
-            query = query.OrderBy(orderByExpression,
-                sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
-            query = query.OrderBy(x => x.DisplayOrder);
-            query = query.OrderBy(x => x.Id, RowOrder.Descending);
+            else
+            {
+                query = query.OrderBy(orderByExpression,
+                    sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+                query = query.OrderBy(x => x.Id, RowOrder.Descending);
+            }
             //filter to include anything else in query
             query = _eventPublisherService.Filter(query);
             var products = query.SelectNestedWithTotalMatches(out totalResults, page, count).ToList();

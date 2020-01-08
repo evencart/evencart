@@ -15,7 +15,8 @@ namespace EvenCart.Data.Versions
 
         public void Downgrade(IDotEntityTransaction transaction)
         {
-            
+            Db.DropColumn<Product>(nameof(Product.RestrictedToRoles), transaction);
+            Db.DropTable<EntityRole>(transaction);
         }
 
         public string VersionKey => "EvenCart.Version.2";
