@@ -153,6 +153,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 user.Guid = Guid.NewGuid();
                 user.CreatedOn = DateTime.UtcNow;
                 user.UpdatedOn = DateTime.UtcNow;
+                user.Password = userModel.Password;
                 _userRegistrationService.Register(user, ApplicationConfig.DefaultPasswordFormat);
             }
             else
