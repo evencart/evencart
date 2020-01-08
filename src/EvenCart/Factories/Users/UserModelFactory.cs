@@ -1,4 +1,5 @@
-﻿using EvenCart.Data.Entity.Settings;
+﻿using EvenCart.Data.Entity.MediaEntities;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
@@ -26,11 +27,13 @@ namespace EvenCart.Factories.Users
         {
             var model = _modelMapper.Map<UserModel>(user);
             model.CanChangeProfilePicture = _userSettings.AreProfilePicturesEnabled;
+
+            Media media = null;
             if (user.ProfilePictureId.HasValue && user.ProfilePictureId > 0)
             {
-                var media = _mediaService.Get(user.ProfilePictureId.Value);
-                model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+                media = _mediaService.Get(user.ProfilePictureId.Value);
             }
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
 
@@ -43,12 +46,12 @@ namespace EvenCart.Factories.Users
                 Points = user.Points,
                 CreatedOn = user.CreatedOn
             };
+            Media media = null;
             if (user.ProfilePictureId.HasValue && user.ProfilePictureId > 0)
             {
-                var media = _mediaService.Get(user.ProfilePictureId.Value);
-                model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+                media = _mediaService.Get(user.ProfilePictureId.Value);
             }
-
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
     }
