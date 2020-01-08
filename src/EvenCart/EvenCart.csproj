@@ -163,6 +163,7 @@
     <None Remove="Areas\Administration\Views\Products\ProductEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.ImagePanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.ManufacturerPanel.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.RolesPanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductRelationEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductRelationsList.html" />
     <None Remove="Areas\Administration\Views\Products\ProductsList.html" />
@@ -740,6 +741,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductAttributesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.RolesPanel.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html">

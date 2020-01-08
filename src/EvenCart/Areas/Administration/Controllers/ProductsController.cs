@@ -9,6 +9,7 @@ using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Services;
@@ -29,7 +30,10 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Services.Common;
+using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
@@ -58,7 +62,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IDownloadModelFactory _downloadModelFactory;
         private readonly ILocalFileProvider _localFileProvider;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider)
+        private readonly IRoleService _roleService;
+        private readonly IEntityRoleService _entityRoleService;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -83,6 +89,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _downloadService = downloadService;
             _downloadModelFactory = downloadModelFactory;
             _localFileProvider = localFileProvider;
+            _roleService = roleService;
+            _entityRoleService = entityRoleService;
         }
 
 
@@ -119,7 +127,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
                 out Dictionary<int, string> availableVendors,
                 out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published,
-                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, null, orderByExpression,
+                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, true, null, null, orderByExpression,
                 parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
             var productsModel = products.Select(x =>
@@ -182,8 +190,17 @@ namespace EvenCart.Areas.Administration.Controllers
 
             productModel.ManufacturerId = product.Manufacturer?.Id;
             productModel.ManufacturerName = product.Manufacturer?.Name;
-            return R.Success.With("product", productModel).With("productId", productId).WithWeightUnits()
-                .WithLengthUnits().WithTimeCycles().WithProductSaleTypes().WithProductTypes().Result;
+            var roles = _roleService.Get(x => true).ToList();
+            productModel.RestrictedToRoles =
+                roles.Select(x => new SelectListItem($"{x.Name}({x.SystemName})", x.Id.ToString(),
+                    product.RestrictedToRoles && product.EntityRoles.Any(y => y.RoleId == x.Id))).ToList();
+
+            return R.Success.With("product", productModel).With("productId", productId)
+                .WithWeightUnits()
+                .WithLengthUnits()
+                .WithTimeCycles()
+                .WithProductSaleTypes()
+                .WithProductTypes().Result;
         }
 
         [DualPost("", Name = AdminRouteNames.SaveProduct, OnlyApi = true)]
@@ -232,7 +249,19 @@ namespace EvenCart.Areas.Administration.Controllers
             //perform the requisites
             if (product.MinimumPurchaseQuantity < 1)
                 product.MinimumPurchaseQuantity = 1;
+
+            product.RestrictedToRoles = model.RestrictedToRoleIds?.Any() ?? false;
             _productService.InsertOrUpdate(product);
+            //do we need to place any restrictions
+            if (model.RestrictedToRoleIds != null && model.RestrictedToRoleIds.Any())
+            {
+                var roleIds = model.RestrictedToRoleIds;
+                _entityRoleService.SetEntityRoles<Product>(product.Id, roleIds);
+            }
+            else
+            {
+                _entityRoleService.ClearEntityRoles<Product>(product.Id);
+            }
             //attach media for new products only
             if (model.Id == 0 && model.Media != null && model.Media.Any(x => x.Id > 0))
             {

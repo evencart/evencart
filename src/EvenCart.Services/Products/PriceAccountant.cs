@@ -193,6 +193,15 @@ namespace EvenCart.Services.Products
                                 //remove from cart because product shouldn't be visible
                                 _cartService.RemoveFromCart(ci.Id, transaction);
                             }
+                            else if (product.RestrictedToRoles)
+                            {
+                                var roleIds = cart.User.Roles.Select(x => x.Id).ToList();
+                                if (product.EntityRoles.All(x => !roleIds.Contains(x.RoleId)))
+                                {
+                                    //remove because role is not allowed to buy this product
+                                    _cartService.RemoveFromCart(ci.Id, transaction);
+                                }
+                            }
                             else if (product.TrackInventory)
                             {
                                 if (!product.HasVariants && !product.IsAvailableInStock())
