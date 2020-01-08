@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Users;
@@ -105,6 +106,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public bool RequireLoginToViewPrice { get; set; }
 
+        public bool RestrictedToRoles { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<Category> Categories { get; set; }
@@ -126,6 +129,8 @@ namespace EvenCart.Data.Entity.Shop
         public virtual IList<ProductVariant> ProductVariants { get; set; }
 
         public virtual IList<WarehouseInventory> Inventories { get; set; }
+
+        public virtual IList<EntityRole> EntityRoles { get; set; }
         #endregion
 
         #region Relations

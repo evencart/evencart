@@ -32,9 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotEntity" Version="2.0.3" />
-    <PackageReference Include="DotEntity.MySql" Version="2.0.2" />
-    <PackageReference Include="DotEntity.SqlServer" Version="2.0.0" />
+    <PackageReference Include="DotEntity" Version="2.1.0" />
+    <PackageReference Include="DotEntity.MySql" Version="2.1.0" />
+    <PackageReference Include="DotEntity.SqlServer" Version="2.1.0" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.1" />

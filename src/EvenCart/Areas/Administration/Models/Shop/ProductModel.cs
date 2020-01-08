@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
@@ -105,10 +108,21 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public SeoMetaModel SeoMeta { get; set; }
 
+        public IList<int> RestrictedToRoleIds { get; set; }
+
+        public IList<SelectListItem> RestrictedToRoles { get; set; }
+
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();
             v.RuleFor(x => x.MinimumPurchaseQuantity).GreaterThan(0);
+            v.RuleFor(x => x.RestrictedToRoles).Custom((list, context) =>
+            {
+                if (list != null && list.Any(x => int.TryParse(x.Value, out _) == false))
+                {
+                    context.AddFailure("Restricted to roles", LocalizationHelper.Localize("Invalid value for role id"));
+                }
+            });
         }
     }
 }

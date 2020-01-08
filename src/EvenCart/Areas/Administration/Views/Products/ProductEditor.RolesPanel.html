@@ -1,0 +1,17 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Restrict to Roles" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="panel-help">
+            {{"If you wish to restrict product visibility to specific roles, check them" | t}}
+        </div>
+        {% for rRole in product.restrictedToRoles %}
+        <div>
+            <label>
+                <input type="checkbox" name="RestrictedToRoleIds[]" value="{{rRole.value}}" {% if rRole.selected %}checked{% endif %} /> {{rRole.text}}
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+</div>

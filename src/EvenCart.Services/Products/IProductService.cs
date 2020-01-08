@@ -17,7 +17,7 @@ namespace EvenCart.Services.Products
             string searchText = null,
             string filterExpression = null,
             bool? published = true, IList<int> manufacturerIds = null, IList<int> vendorIds = null,
-            IList<int> categoryids = null, decimal? fromPrice = null, decimal? toPrice = null,
+            IList<int> categoryids = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null, decimal? toPrice = null,
             Expression<Func<Product, object>> orderByExpression = null, SortOrder sortOrder = SortOrder.Descending,
             int page = 1, int count = int.MaxValue);
 
