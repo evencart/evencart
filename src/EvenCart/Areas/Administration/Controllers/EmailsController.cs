@@ -2,6 +2,7 @@
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
+using EvenCart.Core;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;
@@ -84,12 +85,16 @@ namespace EvenCart.Areas.Administration.Controllers
             var availableMasterTemplates =
                 SelectListHelper.GetSelectItemList(masterTemplates, x => x.Id, x => x.TemplateName);
 
+            var isAdminEmailRequired = emailTemplate.TemplateSystemName != null && 
+                ((emailTemplate.TemplateSystemName.EndsWith(EmailTemplateNames.AdminSuffix) && emailTemplate.IsSystem) ||
+                (emailTemplate.TemplateSystemName.EndsWith(EmailTemplateNames.AdminSuffix)));
             //available tokens
             var tokens = _emailTemplateService.GetTemplateTokens(emailTemplate.TemplateSystemName).OrderBy(x => x);
             return R.Success.With("emailTemplate", model)
                 .With("availableEmailAccounts", availableEmailAccounts)
                 .With("availableMasterTemplates", availableMasterTemplates)
                 .With("availableTokens", tokens)
+                .With("adminEmailRequired", isAdminEmailRequired)
                 .Result;
         }
 
@@ -229,7 +234,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult EmailMessagesList(EmailMessageSearchModel searchModel)
         {
-            var emailMessages = _emailService.Get(out int totalResults, x => true, x => x.SendingDate,
+            var emailMessages = _emailService.Get(out int totalResults, x => true, x => x.Id,
                     RowOrder.Descending, searchModel.Current, searchModel.RowCount)
                 .ToList();
             var models = emailMessages.Select(x =>
@@ -255,19 +260,28 @@ namespace EvenCart.Areas.Administration.Controllers
             if (emailMessage == null)
                 return NotFound();
             var model = _modelMapper.Map<EmailMessageModel>(emailMessage);
+            model.Tos = emailMessage.Tos?.Select(x => $"{x.Name} ({x.Email})").ToList();
+            model.Bccs = emailMessage.Bccs?.Select(x => $"{x.Name} ({x.Email})").ToList();
+            model.Ccs = emailMessage.Ccs?.Select(x => $"{x.Name} ({x.Email})").ToList();
+            model.ReplyTos = emailMessage.ReplyTos?.Select(x => $"{x.Name} ({x.Email})").ToList();
+            
             return R.Success.With("emailMessage", model).With("emailMessageId", emailMessageId).Result;
         }
 
         [DualPost("emailmessages", Name = AdminRouteNames.SaveEmailMessage, OnlyApi = true)]
-        [ValidateModelState(ModelType = typeof(EmailMessageModel))]
         [CapabilityRequired(CapabilitySystemNames.ManageEmailMessage)]
         public IActionResult SaveEmailMessage(EmailMessageModel model)
         {
-            var emailMessage = model.Id > 0 ? _emailService.Get(model.Id) : new EmailMessage();
+            var emailMessage = model.Id > 0 ? _emailService.Get(model.Id) : null;
             if (emailMessage == null)
                 return NotFound();
-
-            _modelMapper.Map(model, emailMessage, nameof(EmailMessage.Id));
+            //clone the message and insert again
+            var newEmailMessage = ObjectHelper.Clone(emailMessage);
+            newEmailMessage.Id = 0;
+            newEmailMessage.EmailBody = model.EmailBody;
+            newEmailMessage.IsSent = false;
+            newEmailMessage.SendingDate = DateTime.UtcNow;
+            _emailService.Queue(newEmailMessage);
             return R.Success.Result;
         }
 

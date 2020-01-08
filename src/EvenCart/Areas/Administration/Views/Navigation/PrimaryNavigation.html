@@ -96,6 +96,9 @@
 {% secondary_navigation url="{% route EmailTemplatesList %}" iconClass="rbicon-chevron-left" title=@t"Back to email templates" groupId="EmailTemplateEdit" %}
 {% secondary_navigation url="{% route GetEmailTemplate emailTemplateId="{{emailTemplateId}}" %}" title=@t"Edit Email Template" systemName="GetEmailTemplate" groupId="EmailTemplateEdit" %}
 
+{% secondary_navigation url="{% route EmailMessagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to emails" groupId="EmailMessageEdit" %}
+{% secondary_navigation url="{% route GetEmailMessage emailMessageId="{{emailMessageId}}" %}" title=@t"Edit Email Message" systemName="GetEmailMessage" groupId="EmailMessageEdit" %}
+
 <!--Warehouses-->
 {% primary_navigation title=@t"Warehouses" systemName="WarehouseList" groupId="masters" capability="Warehouse.Manage" %}
 {% secondary_navigation url="{% route WarehouseList %}" title=@t"All Warehouses" systemName="WarehouseList" parent="WarehouseList" %}

@@ -141,7 +141,7 @@ body {
     right: 0;
     box-shadow: 0 1px 0 rgba(0,0,0,.1);
     font-size: 14px;
-    z-index: 1;
+    z-index: 13;
     padding-left:10px;
     background-color:white;
     height:42px;
@@ -588,7 +588,7 @@ input:focus, textarea:focus {
     right: 54px;
     padding: 4px 5px;
     text-align: right;
-    z-index: 2;
+    z-index: 13;
 
     button, input[type='submit'], input[type='button'], a.btn {
         font-size: 12px;

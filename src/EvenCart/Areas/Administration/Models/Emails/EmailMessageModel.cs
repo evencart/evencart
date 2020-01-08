@@ -23,5 +23,7 @@ namespace EvenCart.Areas.Administration.Models.Emails
         public DateTime SendingDate { get; set; }
 
         public bool IsSent { get; set; }
+
+        public bool DeleteExisting { get; set; }
     }
 }

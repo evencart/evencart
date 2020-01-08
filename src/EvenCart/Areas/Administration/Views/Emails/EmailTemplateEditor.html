@@ -71,14 +71,15 @@
                         </div>
                         {% control select id="parentEmailTemplateId" name="parentEmailTemplateId" value="emailTemplate.parentEmailTemplateId" items="availableMasterTemplates" %}
                     </div>
+                    {% if adminEmailRequired %}
                     <div class="form-group">
                         {% control label text=@t"Administration Email" for="adminEmail" %}
                         <div class="panel-help">
-                            {{"The email address to which administration email for this email template is sent." | t}}
+                            {{"The email address to which administration email for this email template is sent. If left empty, the parent template's email is used. The value can't be empty for topmost parent." | t}}
                         </div>
-                        {% control text name="administrationEmail" id="administrationEmail" value="{{emailTemplate.AdministrationEmail}}" %}
-                        {% control validator for="administrationEmail" email="true" required="true" %}
+                        {% control text name="administrationEmail" id="administrationEmail" value="{{emailTemplate.administrationEmail}}" %}
                     </div>
+                    {% endif %}
                     <div class="form-group">
                         {% control label text=@t"Email Account" for="emailAccountId" %}
                         {% control select id="emailAccountId" name="emailAccountId" value="emailTemplate.emailAccountId" required="true" items="availableEmailAccounts" %}

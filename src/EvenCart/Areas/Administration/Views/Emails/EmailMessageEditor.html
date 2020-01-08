@@ -1,0 +1,58 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Email Editor" active_menu="GetEmailMessage" parent_active_menu="EmailsList" menu_group="EmailMessageEdit" %}
+
+<form action="{% route api_SaveEmailMessage %}" method="post" id="template-editor-form">
+    {% control xsrf %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-title">
+                   {{"Queued Email #" | t}}{{emailMessage.id}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"To" for="templateName" %}
+                        <div>
+                            {% for to in emailMessage.tos %}
+                            <div>
+                                {{to}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Subject" for="subject" %}
+                        {% control text name="subject" value="{{emailMessage.subject}}"%}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Email Body" for="templateSystemName" %}
+                        {% control textarea name="emailBody" id="emailBody" value="{{emailMessage.emailBody}}" style="height:500px" %}
+                    </div>
+                </div>
+            </div>
+            {% control hidden name="id" value="{{emailMessage.id}}" %}
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Requeue Email" | t}}</button>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("template-editor-form",
+            {
+                beforeSubmit: function() {
+                    return confirm("{{'This will re-queue the email to the same receivers. Are you sure you wish to continue?' | t}}");
+                },
+                onSuccess: function() {
+                    notify("success", '{{"Email was queued successfully." | t }}');
+                    setTimeout(function() {
+                            navigate("{% route EmailMessagesList %}");
+                        },
+                        500);
+
+                }
+            });
+    });
+</script>

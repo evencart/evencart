@@ -31,7 +31,6 @@ namespace EvenCart.Areas.Administration.Models.Emails
             v.RuleFor(x => x.TemplateName).NotEmpty();
             v.RuleFor(x => x.TemplateSystemName).NotEmpty().When(x => x.Id == 0);
             v.RuleFor(x => x.EmailAccountId).GreaterThan(0);
-            v.RuleFor(x => x.AdministrationEmail).NotEmpty().EmailAddress();
         }
     }
 }

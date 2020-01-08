@@ -20,6 +20,7 @@ namespace EvenCart.Services.Emails
             if (emailTemplate.ParentEmailTemplateId == 0)
                 return emailTemplate.Template;
             var parentTemplate = emailTemplate.ParentEmailTemplate ?? Get(emailTemplate.ParentEmailTemplateId);
+            emailTemplate.ParentEmailTemplate = parentTemplate;
             return GetProcessedContentTemplate(parentTemplate)
                 .Replace(EmailTokenNames.MessageContent, emailTemplate.Template);
         }
