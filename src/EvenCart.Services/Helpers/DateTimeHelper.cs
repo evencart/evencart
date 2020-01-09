@@ -144,22 +144,9 @@ namespace EvenCart.Services.Helpers
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static string GetRelativeDate(DateTime date, User user)
+        public static string GetRelativeDate(DateTime date)
         {
-            TimeZoneInfo timeZoneInfo;
-            try
-            {
-                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
-            }
-            catch
-            {
-                //in case of error let's default to local timezone
-                timeZoneInfo = TimeZoneInfo.Local;
-            }
-            //the date is in user's timezone therefore first convert it to utc
-            var utcDate = GetDateInTimeZone(date, timeZoneInfo, TimeZoneInfo.Utc);
-
-            var s = DateTime.UtcNow.Subtract(utcDate);
+            var s = DateTime.UtcNow.Subtract(date);
             var dayDiff = (int)s.TotalDays;
             var secDiff = (int)s.TotalSeconds;
             if (dayDiff < 0 || dayDiff >= 31)
