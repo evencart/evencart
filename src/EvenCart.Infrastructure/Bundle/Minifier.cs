@@ -6,7 +6,7 @@ namespace EvenCart.Infrastructure.Bundle
     public class Minifier : IMinifier
     {
         static readonly Regex BetweenScriptTagsRegEx = new Regex(@"<script[^>]*>[\w|\t|\r|\W]*?</script>", RegexOptions.Compiled);
-        static readonly Regex BetweenTagsRegex = new Regex(@"(?<=[^])\t{2,}|(?<=[>])\s{2,}(?=[<])|(?<=[>])\s{2,11}(?=[<])|(?=[\n])\s{2,}|(?=[\r])\s{2,}", RegexOptions.Compiled);
+        static readonly Regex BetweenTagsRegex = new Regex(@"(?<=[^])\t{2,}|(?<=[>])\s{2,}(?=[<])|(?<=[>])\s{2,11}(?=[<])", RegexOptions.Compiled);
         static readonly Regex MatchBodyRegEx = new Regex(@"</body>", RegexOptions.Compiled);
 
         public string MinifyHtml(string html)
