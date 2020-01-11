@@ -21,5 +21,7 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public List<SelectListItem> AvailableUserRegistrationModes { get; set; }
 
         public bool AreProfilePicturesEnabled { get; set; }
+
+        public bool ActivateUserForConnectedAccount { get; set; }
     }
 }

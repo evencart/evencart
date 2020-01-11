@@ -7,8 +7,12 @@
                     {{"Login" | t}}
                 </h3>
             </div>
-           
-            <div class="col-sm-8 offset-2">
+            {% if otherLoginsAvailable %}
+            <div class="col-6">
+                <div class="text-center"> {% widget login %}</div>
+            </div>
+            {% endif %}
+            <div class="{% if otherLoginsAvailable %}col-6{% else %}col-8 offset-2{% endif %}">
                 <div class="login-reg-form">
                     <form action="{% route api_Login %}" method="post" id="login-form">
                         {% control xsrf %}

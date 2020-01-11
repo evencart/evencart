@@ -56,6 +56,7 @@
     <Compile Remove="Plugins\DefaultPaymentModule.cs" />
     <Compile Remove="Routing\Conventions\AppActionDiscoveryConvention.cs" />
     <Compile Remove="Routing\GenericRoute.cs" />
+    <Compile Remove="Social\OAuthProvider.cs" />
     <Compile Remove="ViewEngines\F1SuiteRazorProviderViewEngine.cs" />
     <Compile Remove="ViewEngines\Filters\Filter.cs" />
     <Compile Remove="ViewEngines\Filters\TranslateFilter.cs" />

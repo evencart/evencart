@@ -32,11 +32,13 @@ namespace EvenCart.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        private static bool _dbHasSettings = false;
         public static void InitDbConnection(this IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
             var dbSettings = new DatabaseSettings(hostingEnvironment);
             services.AddSingleton<IDatabaseSettings>(provider => dbSettings);
-            if (dbSettings.HasSettings())
+            _dbHasSettings = dbSettings.HasSettings();
+            if (_dbHasSettings)
             {
                 //initialize database
                 DatabaseManager.InitDatabase(dbSettings);
@@ -61,6 +63,11 @@ namespace EvenCart.Infrastructure.Extensions
                     options.LoginPath = new PathString(ApplicationConfig.DefaultLoginUrl);
                     options.AccessDeniedPath = new PathString(ApplicationConfig.DefaultLoginUrl);
                     options.Events = new CookieAuthEvents();
+                })
+                .AddCookie(ApplicationConfig.ExternalAuthenticationScheme, options =>
+                {
+                    options.LoginPath = new PathString(ApplicationConfig.DefaultLoginUrl);
+                    options.AccessDeniedPath = new PathString(ApplicationConfig.DefaultLoginUrl);
                 });
 
             services.AddAuthentication(ApplicationConfig.ApiAuthenticationScheme)
@@ -148,7 +155,9 @@ namespace EvenCart.Infrastructure.Extensions
         {
             PluginLoader.Init(hostingEnvironment);
             PluginLoader.LoadAvailablePlugins();
-            var pluginInfos = PluginLoader.GetAvailablePlugins().UpdateInstallStatus();
+            var pluginInfos = PluginLoader.GetAvailablePlugins();
+            if (_dbHasSettings)
+                pluginInfos.UpdateInstallStatus();
             mvcBuilder.ConfigureApplicationPartManager(manager =>
             {
                 foreach (var pluginInfo in pluginInfos)

@@ -127,8 +127,8 @@ namespace EvenCart.Infrastructure.Extensions
         {
             //this is called during app startup when database has been initialized and services are not available yet, therefore we'll manually fetch the plugin install status
             //todo: find if there is a better way than this
-            if (!DatabaseManager.IsDatabaseInstalled())
-                return pluginInfos;
+            //if (!DatabaseManager.IsDatabaseInstalled())
+            //    return pluginInfos;
             var setting = FoundationEntityService<Setting>.Get(x =>
                 x.GroupName == nameof(PluginSettings) && x.Key == nameof(PluginSettings.SitePlugins)).FirstOrDefault();
             if (setting == null || setting.Value.IsNullEmptyOrWhiteSpace())

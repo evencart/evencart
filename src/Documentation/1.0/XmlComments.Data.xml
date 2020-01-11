@@ -349,6 +349,11 @@
             Specifies if profile pictures are enabled
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.UserSettings.ActivateUserForConnectedAccount">
+            <summary>
+            Specifies if user logging in with connected account be immediately activated
+            </summary>
+        </member>
         <member name="F:EvenCart.Data.Entity.Shop.DownloadActivationType.PaymentComplete">
             <summary>
             Activation type when payment is complete
