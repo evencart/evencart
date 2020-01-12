@@ -33,6 +33,8 @@ namespace EvenCart.Infrastructure.Social
             var connectedAccount = _connectedAccountService.FirstOrDefault(x =>
                 x.ProviderName == request.ProviderName && x.ProviderUserId == request.ProviderUserId);
             request.AutoLogin = true;
+            //get user by email
+            var user = _userService.GetByUserInfo(request.Email);
             if (connectedAccount == null)
             {
                 if (request.Name.IsNullEmptyOrWhiteSpace())
@@ -41,7 +43,7 @@ namespace EvenCart.Infrastructure.Social
                 }
                 //connect the account
                 //first register the user
-                var user = new User()
+                user = user ?? new User()
                 {
                     Email = request.Email,
                     Password = Guid.NewGuid().ToString(),
@@ -55,20 +57,24 @@ namespace EvenCart.Infrastructure.Social
                     Name = request.Name
                 };
                 //register this user
-               _userRegistrationService.Register(user, _securitySettings.DefaultPasswordStorageFormat);
-                //set the role
-                var roleId = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Registered).Id;
-                //assign role to the user
-                _roleService.SetUserRoles(user.Id, new[] { roleId });
+                var status = _userRegistrationService.Register(user, _securitySettings.DefaultPasswordStorageFormat);
+                if (status == UserRegistrationStatus.Success)
+                {
+                    //set the role
+                    var roleId = _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Registered).Id;
+                    //assign role to the user
+                    _roleService.SetUserRoles(user.Id, new[] { roleId });
+                }
+
                 //it's possible that user is already registered with this email or it may be a new registration
                 //in any case create a connected account
                 connectedAccount = new ConnectedAccount()
-               {
-                   ProviderName = request.ProviderName,
-                   ProviderUserId = request.ProviderUserId,
-                   AccessToken = request.AccessToken,
-                   UserId = user.Id
-               };
+                {
+                    ProviderName = request.ProviderName,
+                    ProviderUserId = request.ProviderUserId,
+                    AccessToken = request.AccessToken,
+                    UserId = user.Id
+                };
                 _connectedAccountService.Insert(connectedAccount);
             }
             else
@@ -81,7 +87,6 @@ namespace EvenCart.Infrastructure.Social
             if (request.AutoLogin)
             {
                 //get the user
-                var user = _userService.FirstOrDefault(x => x.Id == connectedAccount.UserId);
                 var loginStatus = ApplicationEngine.SignIn(user.Email, user.Name, true);
                 return loginStatus == LoginStatus.Success;
             }
