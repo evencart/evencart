@@ -43,7 +43,17 @@ namespace EvenCart.Services.Formatter
                     }
                 });
                 if (culture != null)
-                    _cultureInfos.TryAdd(isoCode, culture);
+                {
+                    try
+                    {
+                        _cultureInfos.TryAdd(isoCode, culture);
+                    }
+                    catch
+                    {
+                        //other thread might have added
+                        //todo: keep checking if this is indeed the issue.
+                    }
+                }
             }
 
             var format = customFormat.IsNullEmptyOrWhiteSpace() ? "C" : customFormat;

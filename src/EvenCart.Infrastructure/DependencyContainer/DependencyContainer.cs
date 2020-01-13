@@ -34,6 +34,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Routing.Parsers;
+using EvenCart.Infrastructure.Social;
 using EvenCart.Infrastructure.Tasks;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines;
@@ -86,7 +87,8 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IMinifier, Minifier>(reuse: Reuse.Transient);
             //interceptor
             registrar.Register<IInterceptorService, InterceptorService>(reuse: Reuse.Singleton);
-
+            //conection accountant
+            registrar.Register<IConnectionAccountant, ConnectionAccountant>(Reuse.Transient);
             var asm = AssemblyLoader.GetAppDomainAssemblies();
             var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
                 {

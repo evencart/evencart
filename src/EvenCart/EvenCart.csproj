@@ -295,6 +295,7 @@
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\RawHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\SocialIcons\Default.html" />
+    <None Remove="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\_404.html" />
@@ -1073,6 +1074,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Vendors\VendorsList.html">

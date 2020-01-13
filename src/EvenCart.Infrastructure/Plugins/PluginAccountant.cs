@@ -130,5 +130,11 @@ namespace EvenCart.Infrastructure.Plugins
         {
             _pluginSettings.DeleteWidget(id);
         }
+
+        public int GetActiveWidgetCount(string widgetZone)
+        {
+            var activeWidgetStatuses = _pluginSettings.GetSiteWidgets(true);
+            return activeWidgetStatuses.Count(x => x.ZoneName == widgetZone);
+        }
     }
 }

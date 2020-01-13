@@ -419,7 +419,9 @@ namespace EvenCart.Services.Installation
             settingService.Save(new UserSettings()
             {
                 UserRegistrationDefaultMode = RegistrationMode.WithActivationEmail,
-                AreUserNamesEnabled = true
+                AreUserNamesEnabled = true,
+                AreProfilePicturesEnabled = true,
+                ActivateUserForConnectedAccount = true
             });
 
             //email sender settings
