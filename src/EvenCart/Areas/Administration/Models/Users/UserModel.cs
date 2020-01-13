@@ -59,6 +59,7 @@ namespace EvenCart.Areas.Administration.Models.Users
             v.RuleFor(x => x.Email).NotEmpty().EmailAddress();
             v.RuleFor(x => x.FirstName).NotEmpty();
             v.RuleFor(x => x.LastName).NotEmpty();
+            v.RuleFor(x => x.Password).NotEmpty().When(x => x.Id == 0);
             v.RuleFor(x => x.Password).Equal(x => x.ConfirmPassword, StringComparer.InvariantCulture);
         }
     }

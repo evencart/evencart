@@ -146,8 +146,7 @@ namespace EvenCart.Services.Helpers
         /// <returns></returns>
         public static string GetRelativeDate(DateTime date)
         {
-         
-            var s = DateTime.Now.Subtract(date);
+            var s = DateTime.UtcNow.Subtract(date);
             var dayDiff = (int)s.TotalDays;
             var secDiff = (int)s.TotalSeconds;
             if (dayDiff < 0 || dayDiff >= 31)

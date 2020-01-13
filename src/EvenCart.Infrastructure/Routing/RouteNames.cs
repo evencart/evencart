@@ -50,6 +50,7 @@
         public const string AccountReviews = "AccountReviews";
         public const string AccountWishlist = "AccountWishlist";
         public const string AccountGdpr = "AccountGdpr";
+        public const string AccountConnectedAccounts = "AccountConnectedAccounts";
         public const string SaveUser = "AccountSaveUser";
         public const string SaveUserPicture = "AccountSaveUserPicture";
         public const string SaveAddress = "AccountSaveAddress";
@@ -64,6 +65,7 @@
         public const string Error = "Error";
         public const string KeepAlive = "KeepAlive";
         public const string DownloadInvoice = "DownloadInvoice";
+        public const string DeleteConnectedAccount = "DeleteConnectedAccount";
 
         public const string SaveSubscription = "SaveSubscription";
         public const string DeleteSubscription = "DeleteSubscription";

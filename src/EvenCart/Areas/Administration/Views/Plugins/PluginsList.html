@@ -65,28 +65,28 @@
 
                                     if (!row.installed) {
                                         return "<button type='button' class='btn btn-sm btn-primary command-edit' " +
-                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", \"install\")'>" +
                                             '{{"Install" | t}}' +
                                             "</button> ";
                                     }
                                     else if (!row.active) {
                                         return "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
-                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, true)'>" +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", \"activate\")'>" +
                                             '{{"Activate" | t}}' +
                                             "</button> " + upgradeBtn + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
-                                            "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", \"uninstall\")'>" +
                                             '{{"Uninstall" | t}}' +
                                             "</button> " + actionLinks;
                                     }
                                     else if (row.active) {
                                         return upgradeBtn + "<button type='button' class='btn btn-sm btn-danger command-edit' " +
-                                            "onclick='updatePlugin(\"" + row.systemName + "\", true, false)'>" +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", \"deactivate\")'>" +
                                             '{{"Deactivate" | t}}' +
                                             "</button> " + actionLinks;
                                     }
                                     else if (row.installed) {
                                         return upgradeBtn + "<button type='button' class='btn btn-sm btn-secondary command-edit' " +
-                                            "onclick='updatePlugin(\"" + row.systemName + "\", false, false)'>" +
+                                            "onclick='updatePlugin(\"" + row.systemName + "\", \"uninstall\")'>" +
                                             '{{"Uninstall" | t}}' +
                                             "</button> " + actionLinks;
                                     }
@@ -128,7 +128,26 @@
             });
     }
 
-    var updatePlugin = function(systemName, installed, active) {
+    var updatePlugin = function (systemName, action) {
+        var installed = false, active = false;
+        switch (action) {
+            case "install":
+                installed = true;
+                active = false;
+                break;
+            case "uninstall":
+                installed = false;
+                active = false;
+                break;
+            case "activate":
+                installed = true;
+                active = true;
+                break;
+            case "deactivate":
+                installed = true;
+                active = false;
+                break;
+        }
         post({
             url: "{% route api_UpdatePluginStatus %}",
             data: {
@@ -139,16 +158,16 @@
             done: function(response) {
                 if (response.success) {
                     reloadGrid('grid-selection');
-                    if (installed && !active) {
+                    if (action == "install") {
                         notify("success", '{{"Plugin was installed successfully" | t}}');
                     }
-                    else if (installed && active) {
+                    else if (action == "activate") {
                         notify("success", '{{"Plugin was activated successfully" | t}}');
                     }
-                    else if (installed && !active) {
+                    else if (action == "deactivate") {
                         notify("success", '{{"Plugin was deactivated successfully" | t}}');
                     }
-                    else if (!installed && !active) {
+                    else if (action == "uninstall") {
                         notify("success", '{{"Plugin was uninstalled successfully" | t}}');
                     }
 

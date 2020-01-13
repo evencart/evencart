@@ -9,6 +9,8 @@ using EvenCart.Core.Helpers;
 using EvenCart.Core.Services;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Common;
+using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Reviews;
@@ -37,7 +39,7 @@ namespace EvenCart.Services.Products
             out Dictionary<int, string> availableVendors, out Dictionary<string, List<string>> availableFilters,
             string searchText = null, string filterExpression = null, bool? published = true,
             IList<int> manufacturerIds = null,
-            IList<int> vendorIds = null, IList<int> categoryIds = null, decimal? fromPrice = null,
+            IList<int> vendorIds = null, IList<int> categoryIds = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null,
             decimal? toPrice = null, Expression<Func<Product, object>> orderByExpression = null,
             SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
         {
@@ -92,7 +94,24 @@ namespace EvenCart.Services.Products
                 }
             }
 
-            //do we have category ids?
+            if (!ignoreRoles)
+            {
+                //do we have role ids?
+                if (roleIds?.Any() ?? false)
+                {
+                    Expression<Func<EntityRole, Product, bool>> roleWhere = (role, product) => roleIds.Contains(role.RoleId) || !product.RestrictedToRoles;
+                    query.Join<EntityRole>("Id", "EntityId", joinType: JoinType.LeftOuter,
+                        additionalExpression: (product, role) => role.EntityName == nameof(Product));
+                    query.Where(roleWhere);
+
+                }
+                else
+                {
+                    query = query.Where(x => !x.RestrictedToRoles);
+                }
+            }
+           
+            //do we have category ids?;
             //categories?
             IList<int> categoryProductIds = null;
             if (categoryIds != null && categoryIds.Any())
@@ -139,14 +158,18 @@ namespace EvenCart.Services.Products
             //store all the product ids possible with this combination to find available filters etc. later
             var allProductIds = categoryProductIds ?? query.CustomSelectNested("Product_Id").Select(x => (int) x[0]).ToList();
 
+            query = query.OrderBy(x => x.DisplayOrder);
             if (orderByExpression == null)
             {
-                orderByExpression = product => product.Id;
+                query = query.OrderBy(x => x.Id,
+                    sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
             }
-            query = query.OrderBy(orderByExpression,
-                sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
-            query = query.OrderBy(x => x.DisplayOrder);
-            query = query.OrderBy(x => x.Id, RowOrder.Descending);
+            else
+            {
+                query = query.OrderBy(orderByExpression,
+                    sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+                query = query.OrderBy(x => x.Id, RowOrder.Descending);
+            }
             //filter to include anything else in query
             query = _eventPublisherService.Filter(query);
             var products = query.SelectNestedWithTotalMatches(out totalResults, page, count).ToList();
@@ -488,10 +511,12 @@ namespace EvenCart.Services.Products
                 .Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<EntityRole>("Id", "EntityId", SourceColumn.Parent, joinType: JoinType.LeftOuter, additionalExpression: ((product, role) => role.EntityName == nameof(Product)))
                 .Where(seoMetaWhere)
                 .Relate(RelationTypes.OneToMany<Product, Media>())
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
                 .Relate(RelationTypes.OneToMany<Product, WarehouseInventory>())
+                .Relate(RelationTypes.OneToMany<Product, EntityRole>())
                 .SelectNested()
                 .ToList();
             if (withReviews)
@@ -501,8 +526,7 @@ namespace EvenCart.Services.Products
 
         public override Product Get(int id)
         {
-            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == "Product";
-
+            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == nameof(Product);
             var product = Repository.Where(x => x.Id == id)
                 .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
@@ -565,6 +589,11 @@ namespace EvenCart.Services.Products
                 .FirstOrDefault();
             if (product != null)
             {
+                if (product.RestrictedToRoles)
+                {
+                    product.EntityRoles = RepositoryExplorer<EntityRole>()
+                        .Where(x => x.EntityId == id && x.EntityName == nameof(Product)).Select().ToList();
+                }
                 //fetch attributes and specifications
                 //we are separating this query from product query for performance reasons
                 var productAttributes = RepositoryExplorer<ProductAttribute>()
@@ -642,10 +671,9 @@ namespace EvenCart.Services.Products
 
                 product.ProductAttributes = productAttributes;
                 product.ProductSpecifications = productSpecifications;
+                PopulateReviewSummary(new List<Product>() { product });
             }
-
-
-            PopulateReviewSummary(new List<Product>() { product });
+            
             return product;
         }
 

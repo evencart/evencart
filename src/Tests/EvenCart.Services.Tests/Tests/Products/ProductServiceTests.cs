@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Services.Addresses;
+using EvenCart.Services.Common;
 using EvenCart.Services.Products;
 using EvenCart.Services.Users;
 using NUnit.Framework;
@@ -23,7 +25,7 @@ namespace EvenCart.Services.Tests.Products
         private IWarehouseService _warehouseService;
         private IWarehouseInventoryService _warehouseInventoryService;
         private IAddressService _addressService;
-
+        private IEntityRoleService _entityRoleService;
         private Warehouse _w1, _w2;
 
         [SetUp]
@@ -40,6 +42,7 @@ namespace EvenCart.Services.Tests.Products
             _warehouseService = Resolve<IWarehouseService>();
             _warehouseInventoryService = Resolve<IWarehouseInventoryService>();
             _addressService = Resolve<IAddressService>();
+            _entityRoleService = Resolve<IEntityRoleService>();
 
             var address = new Address()
             {
@@ -340,5 +343,87 @@ namespace EvenCart.Services.Tests.Products
             Assert.AreEqual(mRedVariant.Id, variants[0].Id);
         }
 
+        [Test]
+        public void Role_Based_Products_Succeeds()
+        {
+            var product1 = new Product()
+            {
+                Name = "Microsoft Surface Pro",
+                CanOrderWhenOutOfStock = true,
+                ChargeTaxes = true,
+                ComparePrice = 100,
+                Price = 80,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
+                IsShippable = true,
+                IsFeatured = true,
+                IsVisibleIndividually = true,
+                DisplayOrder = 1,
+                Mpn = "1",
+                Gtin = "2",
+                Sku = "SUR12",
+                IsDownloadable = false,
+                Description =
+                    "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
+                Summary =
+                    "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
+                Published = true,
+                Deleted = false,
+                TrackInventory = true,
+            };
+            var product2 = new Product()
+            {
+                Name = "Microsoft Surface Pro",
+                CanOrderWhenOutOfStock = true,
+                ChargeTaxes = true,
+                ComparePrice = 100,
+                Price = 80,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
+                IsShippable = true,
+                IsFeatured = true,
+                IsVisibleIndividually = true,
+                DisplayOrder = 1,
+                Mpn = "1",
+                Gtin = "2",
+                Sku = "SUR12",
+                IsDownloadable = false,
+                Description =
+                    "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
+                Summary =
+                    "Surface Pro delivers even more speed and performance thanks to a powerful Intel® Core™ processor — with up to 50% more battery life1 than Surface Pro 4 and 2.5x more performance than Surface Pro 3.",
+                Published = true,
+                Deleted = false,
+                TrackInventory = true,
+            };
+            _productService.Insert(product1);
+            _productService.Insert(product2);
+            _entityRoleService.Insert(new EntityRole()
+            {
+                EntityId = product1.Id,
+                EntityName = nameof(Product),
+                RoleId = 1
+            });
+
+            //retrieve now
+            var products = _productService.GetProducts(out _, out _, out _, out _, out _, out _, roleIds: new List<int>()
+            {
+                1
+            });
+
+            Assert.GreaterOrEqual(products.Count, 2);
+
+            products = _productService.GetProducts(out _, out _, out _, out _, out _, out _, roleIds: new List<int>()
+            {
+                1
+            }, ignoreRoles: true);
+            Assert.GreaterOrEqual(products.Count, 2);
+
+            products = _productService.GetProducts(out _, out _, out _, out _, out _, out _, roleIds: new List<int>()
+            {
+                2
+            });
+            Assert.GreaterOrEqual(products.Count, 1); //only product2 should be available
+        }
     }
 }

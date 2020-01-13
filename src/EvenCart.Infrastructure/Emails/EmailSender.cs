@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Emails;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
@@ -90,6 +91,14 @@ namespace EvenCart.Infrastructure.Emails
             }
 
             email = email ?? message.OriginalEmailTemplate.AdministrationEmail;
+            var currentTemplate = message.OriginalEmailTemplate;
+            while (email.IsNullEmptyOrWhiteSpace())
+            {
+                if (currentTemplate.ParentEmailTemplate == null)
+                    return;
+                currentTemplate = currentTemplate.ParentEmailTemplate;
+                email = currentTemplate.AdministrationEmail;
+            }
             message.Tos.Add(new EmailMessage.UserInfo("Administrator", email));
             _emailService.Queue(message);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Gdpr;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
@@ -16,6 +17,7 @@ using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Authentication;
 using EvenCart.Models.Gdpr;
@@ -65,7 +67,10 @@ namespace EvenCart.Controllers
             //if already logged in, redirect to home
             if (!CurrentUser.IsVisitor())
                 return RedirectToRoute(RouteNames.Home);
-            return R.Success.Result;
+            //are there any active login methods available 
+            var otherLoginMethodsAvailable =
+                DependencyResolver.Resolve<IPluginAccountant>().GetActiveWidgetCount(widgetZone: "login") > 0;
+            return R.Success.With("otherLoginsAvailable", otherLoginMethodsAvailable).Result;
         }
 
         /// <summary>

@@ -19,5 +19,10 @@ namespace EvenCart.Data.Entity.Settings
         /// Specifies if profile pictures are enabled
         /// </summary>
         public bool AreProfilePicturesEnabled { get; set; }
+
+        /// <summary>
+        /// Specifies if user logging in with connected account be immediately activated
+        /// </summary>
+        public bool ActivateUserForConnectedAccount { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace EvenCart.Infrastructure.Routing.Parsers
             //perf: get and/or preserve the regex
             if (!_regexCache.TryGetValue(template, out Regex regEx))
             {
-                regEx = new Regex(template);
+                regEx = new Regex(template, RegexOptions.Compiled);
                 _regexCache.TryAdd(template, regEx);
             }
             ParseTemplate(path, regEx, parsedValues);

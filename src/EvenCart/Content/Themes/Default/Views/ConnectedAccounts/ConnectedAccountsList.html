@@ -1,0 +1,46 @@
+﻿{% layout "_AccountLayout" %}
+{% global pageTitle=@t"Connected Accounts" active_menu="AccountConnectedAccounts" %}
+<h3>
+    {{"Connected Accounts" | t}}
+</h3>
+<div class="page-section section pb-120">
+    {% if connectedAccounts.size == 0 %}
+    <div class="alert alert-danger">
+        {{"You have not connected any accounts with your profile." | t}}
+    </div>
+    {% else %}
+    <div>
+        {% for connectedAccount in connectedAccounts %}
+        <div class="row">
+            <div class="col-8">
+                <h5>{{connectedAccount.providerName}}</h5>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-sm btn-danger" onclick="deleteAccount('{{connectedAccount.id}}')">
+                    {{"Disconnect" | t}}
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    var deleteAccount = function (id) {
+        if (!confirm('{{"Are you sure you wish to disconnect this connected account?" | t}}'))
+            return;
+        post({
+            url: '{% route api_DeleteConnectedAccount %}',
+            data: {
+                id: id
+            },
+            done: function() {
+                notify("success", '{{"The account was disconnected successfully" | t}}');
+                setTimeout(function() {
+                        window.location.reload();
+                    },
+                    1000);
+            }
+        });
+    }
+</script>

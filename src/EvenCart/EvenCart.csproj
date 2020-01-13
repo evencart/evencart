@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
-    <Version>1.0.2-beta</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -110,6 +110,7 @@
     <None Remove="Areas\Administration\Views\Discounts\DiscountsList.html" />
     <None Remove="Areas\Administration\Views\Emails\EmailAccountEditor.html" />
     <None Remove="Areas\Administration\Views\Emails\EmailAccountsList.html" />
+    <None Remove="Areas\Administration\Views\Emails\EmailMessageEditor.html" />
     <None Remove="Areas\Administration\Views\Emails\EmailMessagesList.html" />
     <None Remove="Areas\Administration\Views\Emails\EmailTemplateEditor.html" />
     <None Remove="Areas\Administration\Views\Emails\EmailTemplatesList.html" />
@@ -163,6 +164,7 @@
     <None Remove="Areas\Administration\Views\Products\ProductEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.ImagePanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.ManufacturerPanel.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.RolesPanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductRelationEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductRelationsList.html" />
     <None Remove="Areas\Administration\Views\Products\ProductsList.html" />
@@ -293,6 +295,7 @@
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\RawHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\SocialIcons\Default.html" />
+    <None Remove="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\Index.html" />
     <None Remove="Content\Themes\Default\Views\Error\_404.html" />
@@ -601,6 +604,9 @@
     <Content Include="Areas\Administration\Views\Emails\EmailMessagesList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Emails\EmailMessageEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Emails\EmailTemplateEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -740,6 +746,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductAttributesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.RolesPanel.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html">
@@ -1065,6 +1074,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Vendors\VendorsList.html">

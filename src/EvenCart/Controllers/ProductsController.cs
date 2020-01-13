@@ -80,7 +80,15 @@ namespace EvenCart.Controllers
             var product = _productService.Get(id);
             if (!product.IsPublic() && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
                 return NotFound();
-
+            //is the product restricted to roles
+            if (product.RestrictedToRoles)
+            {
+                var userRoleIds = CurrentUser?.Roles?.Select(x => x.Id).ToList();
+                if(userRoleIds == null || product.EntityRoles.All(x => !userRoleIds.Contains(x.RoleId)))
+                {
+                    return NotFound();
+                }
+            }
             var productModel = _productModelFactory.Create(product);
 
             var response = R.Success;
@@ -253,6 +261,7 @@ namespace EvenCart.Controllers
                     break;
             }
 
+            IList<int> roleIds = CurrentUser?.Roles?.Select(x => x.Id).ToList();
             var products = _productService.GetProducts(out int totalResults,
                 out decimal availableFromPrice,
                 out decimal availableToPrice,
@@ -265,6 +274,7 @@ namespace EvenCart.Controllers
                 vendorIds: searchModel.VendorIds,
                 manufacturerIds: searchModel.ManufacturerIds,
                 categoryids: categoryIds,
+                roleIds:roleIds,
                 fromPrice: searchModel.FromPrice,
                 toPrice: searchModel.ToPrice,
                 sortOrder: searchModel.SortOrder,

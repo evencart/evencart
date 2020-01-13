@@ -252,7 +252,7 @@ namespace EvenCart.Data.Versions
             //Db.DropConstraint(Relation.Create<ProductVariant, WarehouseInventory>("Id", "ProductVariantId"), transaction, false);
             Db.DropConstraint(Relation.Create<Address, Warehouse>("Id", "AddressId"), transaction);
             Db.DropConstraint(Relation.Create<User, Upload>("Id", "UserId"), transaction);
-            
+            Db.DropConstraint(Relation.Create<Download, ItemDownload>("Id", "DownloadId"), transaction);
 
             //user
             Db.DropTable<User>(transaction);

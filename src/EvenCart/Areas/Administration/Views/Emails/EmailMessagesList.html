@@ -68,11 +68,18 @@
                                     });
                                     return tos;
                                 },
-                                "issent": function(column, row) {
-                                    return gridFormatters.binary(column, row, "isSent");
+                                "issent": function (column, row) {
+                                    if (row.isSent)
+                                        return gridFormatters.binary(column, row, "isSent");
+                                    return "";
                                 },
                                 "commands": function(column, row) {
-                                    return "<button class=\"btn btn-sm btn-danger command-preview\" data-row-id=\"" +
+                                    return "<button class=\"btn btn-sm btn-secondary command-preview\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editEmailMessage(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-sm btn-danger command-preview\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='deleteEmailMessage(" +
                                         row.id +
