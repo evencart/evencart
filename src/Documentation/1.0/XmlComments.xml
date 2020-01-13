@@ -923,6 +923,24 @@
             <param name="componentName">The name of component to render</param>
             <response code="200">The html for the rendered component</response>
         </member>
+        <member name="T:EvenCart.Controllers.ConnectedAccountsController">
+            <summary>
+            Manages connected accounts for a user
+            </summary>
+        </member>
+        <member name="M:EvenCart.Controllers.ConnectedAccountsController.ConnectedAccountsList">
+            <summary>
+            Returns the list of connected accounts to the logged in user
+            </summary>
+            <response>A list of <see cref="T:EvenCart.Models.ConnectedAccounts.ConnectedAccountModel">connected accounts</see> as 'connectedAccounts'</response>
+        </member>
+        <member name="M:EvenCart.Controllers.ConnectedAccountsController.DeleteConnectedAccount(System.Int32)">
+            <summary>
+            Deletes a connected account for the logged in user
+            </summary>
+            <param name="id">The id of the connected account</param>
+            <response code="200">A success response object on success</response>
+        </member>
         <member name="T:EvenCart.Controllers.ContentPagesController">
             <summary>
             Allows users to get the content pages
