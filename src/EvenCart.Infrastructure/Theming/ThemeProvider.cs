@@ -37,7 +37,13 @@ namespace EvenCart.Infrastructure.Theming
             var themeDirectoryName = generalSettings.ActiveTheme;
             if(themeDirectoryName.IsNullEmptyOrWhiteSpace())
                 themeDirectoryName = defaultThemeDirectoryName;
+            //does theme directory exist
             var themePath = GetThemePath(themeDirectoryName);
+            if (!_localFileProvider.DirectoryExists(themePath))
+            {
+                //reset theme path to default
+                themePath = GetThemePath(defaultThemeDirectoryName);
+            }
             _cachedThemeInfo = GetThemeInfo(new DirectoryInfo(themePath));
 
             //load if there are any templates
