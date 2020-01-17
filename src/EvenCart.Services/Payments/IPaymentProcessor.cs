@@ -6,13 +6,15 @@ namespace EvenCart.Services.Payments
 {
     public interface IPaymentProcessor
     {
-        TransactionResult ProcessPayment(Order order, Dictionary<string, object> paymentMethodData = null);
+        TransactionResult ProcessPayment(Order order, decimal creditAmount, Dictionary<string, object> paymentMethodData = null);
 
-        TransactionResult ProcessRefund(Order order, decimal amount);
+        TransactionResult ProcessRefund(Order order, decimal amount, bool isPartial, RefundType refundType);
 
         TransactionResult ProcessVoid(Order order);
 
-        TransactionResult ProcessCreateSubscription(Order order, Dictionary<string, object> paymentMethodData = null);
+        TransactionResult ProcessCapture(Order order);
+
+        TransactionResult ProcessCreateSubscription(Order order, decimal creditAmount, Dictionary<string, object> paymentMethodData = null);
 
         TransactionResult ProcessSubscription(Order order, Dictionary<string, object> paymentMethodData = null);
 

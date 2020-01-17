@@ -1153,6 +1153,12 @@
             <param name="mediaModel"></param>
             <response code="200">A <see cref="T:EvenCart.Models.Media.MediaModel">media</see> object as media</response>
         </member>
+        <member name="M:EvenCart.Controllers.UsersController.RequestAffiliateAccount">
+            <summary>
+            Sends request for logged in user to become an affiliate
+            </summary>
+            <response code="200">A success response object</response>
+        </member>
         <member name="P:EvenCart.Models.Addresses.AddressInfoModel.Name">
             <summary>
             The name of the addressee
@@ -1298,11 +1304,6 @@
             The invite code if any for registration
             </summary>
         </member>
-        <member name="P:EvenCart.Models.Authentication.RegisterModel.AffiliateCode">
-            <summary>
-            The affiliate code if any for registration
-            </summary>
-        </member>
         <member name="P:EvenCart.Models.Authentication.RegisterRequestModel.InviteCode">
             <summary>
             The invite code if any for the request.
@@ -1361,6 +1362,11 @@
         <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.OrderGuid">
             <summary>
             The order guid for which this payment method is being used. This is used only for retrying a previously failed order.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.PaymentMethodModel.UseStoreCredits">
+            <summary>
+            Specifies if store credits should be used if available
             </summary>
         </member>
         <member name="T:EvenCart.Models.Checkout.ShippingInfoModel">
@@ -2074,6 +2080,21 @@
         <member name="P:EvenCart.Models.Users.UserModel.Points">
             <summary>
             The points earned by user as reputation
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.IsAffiliate">
+            <summary>
+            Specifies if the user is or 'has applied to be' an affiliate
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.AffiliateActive">
+            <summary>
+            Specifies if the affiliate account is active
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Users.UserModel.AffiliateFirstActivationDate">
+            <summary>
+            The date of activation of affiliate account
             </summary>
         </member>
     </members>

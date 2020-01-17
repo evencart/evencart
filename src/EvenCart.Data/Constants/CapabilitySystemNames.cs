@@ -114,5 +114,7 @@ namespace EvenCart.Data.Constants
         public const string ManageInventory = "Inventory.Manage";
 
         public const string ManageCustomLabels = "CustomLabel.Manage";
+
+        public const string ManageStoreCredits = "StoreCredit.Manage";
     }
 }

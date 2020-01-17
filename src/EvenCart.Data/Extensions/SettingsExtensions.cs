@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using EvenCart.Data.Entity.Settings;
 
 namespace EvenCart.Data.Extensions
@@ -20,6 +19,13 @@ namespace EvenCart.Data.Extensions
         public static IList<string> GetAdminRestrictedIps(this SecuritySettings securitySettings)
         {
             return securitySettings.AdminRestrictedIps?.Split(';', StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static decimal GetAffiliateAmount(this AffiliateSettings affiliateSettings, decimal amount)
+        {
+            return affiliateSettings.UseCommissionPercentage
+                ? (amount * affiliateSettings.CommissionValue) / 100
+                : affiliateSettings.CommissionValue;
         }
     }
 }

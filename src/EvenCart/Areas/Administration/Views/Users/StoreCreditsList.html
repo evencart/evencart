@@ -1,0 +1,97 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Store Credits" active_menu="StoreCreditsList" parent_active_menu="UsersList" menu_group="UserEdit" %}
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"User must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Store Credits" | t}} - {{availableBalance}} {{"credit(s)" | t}}
+                <button class="btn btn-primary btn-sm float-right" onclick="editStoreCredit(0);">{{"Add Credits" | t}}</button>
+                <div class="panel-help no-margin">
+                    {{"Store credits are virtual currencies that customer can use to make purchases." | t}}
+                </div>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-credits" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="credit">{{"Credits" | t }}</th>
+                                <th data-column-id="createdOn" data-formatter="formatted">{{"Created On" | t }}</th>
+                                <th data-column-id="description">{{"Description" | t }}</th>
+                                <th data-column-id="availableOn" data-formatter="formatted">{{"Available On" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" id="edit-store-credit-popup">
+</div>
+
+{{ storeCredits | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-credits",
+            initialData: {
+                userPoints: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_StoreCreditsList userId="{{userId}}" %}',
+            responseObject: "storeCredits",
+            selection: false,
+            navigation: 2,
+            columnSelection: false,
+            formatters: {
+                "formatted": function(column, row) {
+                    return gridFormatters.formatted(column, row);
+                },
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editStoreCredit(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button>";
+
+                }
+            }
+        });
+    });
+
+
+    var editStoreCredit = function (id) {
+        jQuery("#edit-store-credit-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-store-credit-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-credits');
+                    notify("success", '{{"Store credit was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetStoreCredit userId="{0}" storeCreditId="{1}" %}'.replace("{0}", "{{userId}}").replace("{1}", id);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-store-credit-popup").html(response);
+                centerPopup();
+            });
+    }
+</script>
+{% endif %}

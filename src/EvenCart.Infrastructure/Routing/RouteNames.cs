@@ -51,6 +51,7 @@
         public const string AccountWishlist = "AccountWishlist";
         public const string AccountGdpr = "AccountGdpr";
         public const string AccountConnectedAccounts = "AccountConnectedAccounts";
+        public const string AccountStoreCredits = "AccountStoreCredits";
         public const string SaveUser = "AccountSaveUser";
         public const string SaveUserPicture = "AccountSaveUserPicture";
         public const string SaveAddress = "AccountSaveAddress";
@@ -74,5 +75,7 @@
         public const string GetVendor = "AccountGetVendor";
         public const string SaveVendor = "AccountSaveVendor";
         public const string VendorsList = "AccountVendorsList";
+
+        public const string RequestAffiliate = "RequestAffiliate";
     }
 }

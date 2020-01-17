@@ -74,6 +74,12 @@ namespace EvenCart.Data.Entity.Purchases
 
         public bool IsSubscriptionActive { get; set; }
 
+        public bool UsedStoreCredits { get; set; }
+
+        public decimal StoreCredits { get; set; }
+
+        public decimal StoreCreditAmount { get; set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }

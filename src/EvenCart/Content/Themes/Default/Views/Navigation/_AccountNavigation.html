@@ -9,7 +9,10 @@
     <li>
         <a href="{% route AccountProfile %}" class='{% if active_menu == "AccountProfile" %}active{% endif %}'>{{"Profile" | t}}</a>
     </li>
-     <li>
+    <li>
+        <a href="{% route AccountStoreCredits %}" class='{% if active_menu == "AccountStoreCredits" %}active{% endif %}'>{{"Store Credits" | t}}</a>
+    </li>
+    <li>
         <a href="{% route AccountConnectedAccounts %}" class='{% if active_menu == "AccountConnectedAccounts" %}active{% endif %}'>{{"Connected Accounts" | t}}</a>
     </li>
     <li>

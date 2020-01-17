@@ -13,12 +13,12 @@
                     <div class="form-group">
                         <div>
                             <label>
-                                <input type="radio" name="isPartialRefund" value="false" checked="checked"/> {{"Full/Balance Refund" | t}} - {{order.orderTotalFormatted }}
+                                <input type="radio" name="isPartialRefund" value="false" checked="checked" /> {{"Full/Balance Refund" | t}} - {{balanceAmount | withCurrency}}
                             </label>
                         </div>
                         <div>
                             <label>
-                                <input type="radio" name="isPartialRefund" value="true"/> {{"Partial Refund" | t}}
+                                <input type="radio" name="isPartialRefund" value="true" /> {{"Partial Refund" | t}}
                             </label>
                         </div>
                     </div>
@@ -26,9 +26,13 @@
                         {% control label text=@t"Amount" for="amount" %}
                         {% control currency name="amount" value="{{order.orderTotal}}" max="{{order.orderTotal}}" %}
                     </div>
+                    <div class="form-group">
+                        {% control label text=@t"Refund Target" for="refundType" %}
+                        {% control select name="refundType" items="availableRefundTypes" required="true" %}
+                    </div>
                     <script type="text/javascript">
-                        ready(function() {
-                            jQuery("input[name='isPartialRefund']").change(function() {
+                        ready(function () {
+                            jQuery("input[name='isPartialRefund']").change(function () {
                                 jQuery("#group-amount").toggle();
                             });
                         })

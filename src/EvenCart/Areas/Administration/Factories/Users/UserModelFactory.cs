@@ -3,6 +3,7 @@ using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
+using NotImplementedException = System.NotImplementedException;
 
 namespace EvenCart.Areas.Administration.Factories.Users
 {
@@ -50,6 +51,21 @@ namespace EvenCart.Areas.Administration.Factories.Users
             var model = _modelMapper.Map<UserPointModel>(entity);
             if (entity.ActivatorUser != null)
                 model.ActivatorUser = CreateMini(entity.ActivatorUser);
+            return model;
+        }
+
+        public StoreCreditModel Create(StoreCredit entity)
+        {
+            var model = new StoreCreditModel()
+            {
+                Id = entity.Id,
+                UserId = entity.UserId,
+                Description = entity.Description,
+                CreatedOn = entity.CreatedOn,
+                AvailableOn = entity.AvailableOn,
+                Credit = entity.Credit,
+                ExpiresOn = entity.ExpiresOn
+            };
             return model;
         }
     }

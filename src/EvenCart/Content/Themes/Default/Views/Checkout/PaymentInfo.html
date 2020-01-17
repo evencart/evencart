@@ -15,18 +15,37 @@
                 <h4>
                     {{"Payment Info" | t}}
                 </h4>
-                {% if paymentMethods.size > 0 %}
-                <select name="SystemName" class="form-control" id="PaymentMethodSystemName">
-                    {% for paymentMethod in paymentMethods %}
-                    <option value="{{paymentMethod.systemName}}">
-                        {{paymentMethod.friendlyName}}
-                    </option>
-                    {% endfor %}
-                </select>
+                {% if availableStoreCredits > 0 %}
+                <label for="useStoreCredits">
+                    <input type="checkbox" name="useStoreCredits" value="true" id="useStoreCredits" /> {{"Use store credits"}} ~ <strong>{{"Available Credits: " | t}}{{availableStoreCreditAmount | withCurrency}}</strong>
+                </label>
                 {% endif %}
-                <div id="payment-info-form">
-
+                <div id="payment-selection-section">
+                    {% if paymentMethods.size > 0 %}
+                    <select name="SystemName" class="form-control" id="PaymentMethodSystemName">
+                        {% for paymentMethod in paymentMethods %}
+                        <option value="{{paymentMethod.systemName}}">
+                            {{paymentMethod.friendlyName}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
+                    <div id="payment-info-form">
+                    </div>
                 </div>
+                {% if cart.finalAmount <= availableStoreCreditAmount %}
+                <script type="text/javascript">
+                    ready(function () {
+                        jQuery("#useStoreCredits").change(function () {
+                            if (jQuery(this).is(":checked")) {
+                                jQuery("#payment-selection-section").hide();
+                            } else {
+                                jQuery("#payment-selection-section").show();
+                            }
+                        });
+                    });
+                </script>
+                {% endif %}
             </div>
         </div>
         <div class="text-center checkout-proceed">

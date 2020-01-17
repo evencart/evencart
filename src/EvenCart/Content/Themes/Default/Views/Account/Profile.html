@@ -54,6 +54,38 @@
             </button>
         </div>
     </form>
+    <h3>{{"Affiliate Profile" | t}}</h3>
+    <div class="row">
+        {% unless user.isAffiliate %}
+        <div class="col-12">
+            <p>
+                {{"Become an affiliate and earn commissions when your referrals make a purchase" | t}}
+            </p>
+        </div>
+        <div class="col-12">
+            <form action="{% route api_RequestAffiliate %}" id="form-activate-affiliate" method="post">
+                {% control xsrf %}
+                <button class="btn btn-primary btn-sm" type="submit">
+                    {{"Activate Affiliate Account"}}
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="col-sm-12 mb-20">
+            {% control label text=@t"Affiliate Url" %}
+            {% if user.affiliateActive %}
+            <div class="input-group">
+                {% control text id="affiliateUrl" value="{{store.affiliateUrl}}" readonly="readonly" %}
+                <div class="input-group-append">
+                    <button class="btn btn-dark btn-sm" id="copy-to-clipboard" type="button">{{"copy" | t}}</button>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">{{"Your affiliate account request is under review." | t}}</div>
+            {% endif %}
+        </div>
+        {% endunless %}
+    </div>
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function() {
@@ -63,5 +95,23 @@
                     notify("success", '{{"Profile saved successfully" | t}}');
                 }
             });
-    })
+        initAjaxForm("form-activate-affiliate",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Your affiliate activation request was sent successfully." | t}}');
+                    window.location.reload();
+                }
+            });
+
+        jQuery("#copy-to-clipboard").click(function (e) {
+            e.preventDefault();
+            var copyText = document.getElementById("affiliateUrl");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            jQuery(this).text("{{'copied!' | t}}");
+        });
+    }); 
+
+   
 </script>

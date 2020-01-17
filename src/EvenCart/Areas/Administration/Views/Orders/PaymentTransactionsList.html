@@ -105,7 +105,7 @@
                             },
                             method: "GET",
                             navigation: 0,
-                            url: '{% route api_PaymentTransactionsList %}',
+                            url: '{% route api_PaymentTransactionsList orderId="{{orderId}}" %}',
                             responseObject: "transactions",
                             selection: false,
                             formatters: {

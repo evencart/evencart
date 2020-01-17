@@ -41,6 +41,8 @@ namespace EvenCart.Data.Entity.Users
 
         public DateTime? LastActivityDate { get; set; }
 
+        public DateTime? FirstActivationDate { get; set; }
+
         public string LastActivityIpAddress { get; set; }
 
         public bool IsSystemAccount { get; set; }
@@ -68,6 +70,12 @@ namespace EvenCart.Data.Entity.Users
         public int Points { get; set; }
 
         public int? ProfilePictureId { get; set; }
+
+        public bool IsAffiliate { get; set; }
+
+        public bool AffiliateActive { get; set; }
+
+        public DateTime? AffiliateFirstActivationDate { get; set; }
 
         #region Virtual Properties
         public virtual IList<Role> Roles { get; set; }

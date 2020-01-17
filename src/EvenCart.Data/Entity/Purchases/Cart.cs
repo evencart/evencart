@@ -42,6 +42,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public decimal Discount { get; set; }
 
+        public bool UseStoreCredits { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<CartItem> CartItems { get; set; }

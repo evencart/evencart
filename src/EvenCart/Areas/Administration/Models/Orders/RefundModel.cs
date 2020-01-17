@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using EvenCart.Data.Entity.Purchases;
+using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
 
@@ -13,6 +14,8 @@ namespace EvenCart.Areas.Administration.Models.Orders
         public decimal Amount { get; set; }
 
         public int OrderId { get; set; }
+
+        public RefundType RefundType { get; set; }
 
         public void SetupValidationRules(ModelValidator<RefundModel> v)
         {

@@ -26,13 +26,15 @@ namespace EvenCart.Controllers
         private readonly UserSettings _userSettings;
         private readonly IMediaService _mediaService;
         private readonly IModelMapper _modelMapper;
-        public UsersController(IUserService userService, IMediaAccountant mediaAccountant, UserSettings userSettings, IMediaService mediaService, IModelMapper modelMapper)
+        private readonly AffiliateSettings _affiliateSettings;
+        public UsersController(IUserService userService, IMediaAccountant mediaAccountant, UserSettings userSettings, IMediaService mediaService, IModelMapper modelMapper, AffiliateSettings affiliateSettings)
         {
             _userService = userService;
             _mediaAccountant = mediaAccountant;
             _userSettings = userSettings;
             _mediaService = mediaService;
             _modelMapper = modelMapper;
+            _affiliateSettings = affiliateSettings;
         }
 
         /// <summary>
@@ -85,6 +87,20 @@ namespace EvenCart.Controllers
             model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
             model.ImageUrl = _mediaAccountant.GetPictureUrl(media);
             return R.Success.With("media", model).Result;
+        }
+        /// <summary>
+        /// Sends request for logged in user to become an affiliate
+        /// </summary>
+        /// <response code="200">A success response object</response>
+        [DualPost("affiliate", Name = RouteNames.RequestAffiliate, OnlyApi = true)]
+        public IActionResult RequestAffiliateAccount()
+        {
+            if (CurrentUser.IsAffiliate)
+                return R.Fail.With("error", T("The current user is already an affiliate")).Result;
+            CurrentUser.IsAffiliate = true;
+            CurrentUser.AffiliateActive = _affiliateSettings.AutoActivateAffiliateAccount;
+            _userService.Update(CurrentUser);
+            return R.Success.Result;
         }
     }
 }
