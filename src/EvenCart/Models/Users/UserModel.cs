@@ -65,6 +65,18 @@ namespace EvenCart.Models.Users
         /// The points earned by user as reputation
         /// </summary>
         public int Points { get; set; }
+        /// <summary>
+        /// Specifies if the user is or 'has applied to be' an affiliate
+        /// </summary>
+        public bool IsAffiliate { get; set; }
+        /// <summary>
+        /// Specifies if the affiliate account is active
+        /// </summary>
+        public bool AffiliateActive { get; set; }
+        /// <summary>
+        /// The date of activation of affiliate account
+        /// </summary>
+        public DateTime? AffiliateFirstActivationDate { get; set; }
 
         public void SetupValidationRules(ModelValidator<UserModel> v)
         {

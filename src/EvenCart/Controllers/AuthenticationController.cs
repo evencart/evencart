@@ -43,8 +43,8 @@ namespace EvenCart.Controllers
         private readonly IGdprService _gdprService;
         private readonly IGdprModelFactory _gdprModelFactory;
         private readonly IInviteRequestService _inviteRequestService;
-
-        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService, IConsentService consentService, IGdprService gdprService, IGdprModelFactory gdprModelFactory, IInviteRequestService inviteRequestService)
+        private readonly AffiliateSettings _affiliateSettings;
+        public AuthenticationController(IAppAuthenticationService appAuthenticationService, UserSettings userSettings, SecuritySettings securitySettings, IUserRegistrationService userRegistrationService, IRoleService roleService, IUserService userService, ICryptographyService cryptographyService, IUserCodeService userCodeService, IPreviousPasswordService previousPasswordService, IConsentService consentService, IGdprService gdprService, IGdprModelFactory gdprModelFactory, IInviteRequestService inviteRequestService, AffiliateSettings affiliateSettings)
         {
             _appAuthenticationService = appAuthenticationService;
             _userSettings = userSettings;
@@ -59,6 +59,7 @@ namespace EvenCart.Controllers
             _gdprService = gdprService;
             _gdprModelFactory = gdprModelFactory;
             _inviteRequestService = inviteRequestService;
+            _affiliateSettings = affiliateSettings;
         }
 
         [HttpGet("login", Name = RouteNames.Login)]
@@ -285,6 +286,10 @@ namespace EvenCart.Controllers
                 Guid = Guid.NewGuid(),
                 Active = _userSettings.UserRegistrationDefaultMode == RegistrationMode.Immediate || _userSettings.UserRegistrationDefaultMode == RegistrationMode.InviteOnly
             };
+            if (user.Active)
+            {
+                user.FirstActivationDate = DateTime.UtcNow;
+            }
             //register this user
             var registrationStatus = _userRegistrationService.Register(user, _securitySettings.DefaultPasswordStorageFormat);
             if (registrationStatus == UserRegistrationStatus.FailedAsEmailAlreadyExists)
@@ -317,9 +322,21 @@ namespace EvenCart.Controllers
                         ApplicationEngine.RouteUrl(RouteNames.VerifyEmail, new {code = verificationCode}, true);
                 }
             }
+
+            //do we have any affiliate?
+            var affiliate = ApplicationEngine.CurrentAffiliate;
+            if (affiliate != null)
+            {
+                user.ReferrerId = affiliate.Id;
+                _userService.Update(user);
+            }
+
             //raise the event
             RaiseEvent(NamedEvent.UserRegistered, user, verificationLink);
-
+            if (user.Active)
+            {
+                RaiseEvent(NamedEvent.UserActivated, user);
+            }
             return R.Success.With("mode", _userSettings.UserRegistrationDefaultMode).Result;
         }
 
@@ -382,6 +399,7 @@ namespace EvenCart.Controllers
             _userService.Update(userCode.User);
             //delete the user code
             _userCodeService.Delete(userCode);
+            RaiseEvent(NamedEvent.UserActivated, userCode.User);
             return R.Success.Result;
         }
         #region Helpers

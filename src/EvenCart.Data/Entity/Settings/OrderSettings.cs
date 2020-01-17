@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Config;
-using EvenCart.Data.Entity.Purchases;
 
 namespace EvenCart.Data.Entity.Settings
 {

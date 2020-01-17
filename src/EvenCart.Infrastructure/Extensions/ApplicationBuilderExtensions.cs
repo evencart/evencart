@@ -201,5 +201,10 @@ namespace EvenCart.Infrastructure.Extensions
             app.UseMiddleware<ErrorLoggingMiddleware>();
         }
 
+        public static void UseAffiliateTracking(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AffiliateTrackingMiddleware>();
+        }
+
     }
 }

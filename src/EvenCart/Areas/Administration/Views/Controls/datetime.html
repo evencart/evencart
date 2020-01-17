@@ -3,9 +3,10 @@
 <script type="text/javascript">
     ready(function() {
         jQuery("#{{id}}").datepicker({
-            autoclose: true
+            autoclose: true,
+            format: 'yyyy/mm/dd'
         });
-        var date = new Date("{{ %value% | date : 'o'}}");
+        var date = new Date("{{ %value% | date : 'O'}}");
         if (date == "Invalid Date")
             date = new Date("{{ '%value%' }}");
         jQuery("#{{id}}").datepicker('setDate', date);

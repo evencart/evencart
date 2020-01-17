@@ -152,5 +152,15 @@ namespace EvenCart.Services.Extensions
             roleService.SetUserRoles(userId, new[] {role.Id});
             return true;
         }
+
+        public static bool IsAvailable(this User user)
+        {
+            return user != null && !user.Deleted && user.Active;
+        }
+
+        public static bool IsActiveAffiliate(this User user)
+        {
+            return user.IsAvailable() && user.IsAffiliate && user.AffiliateActive;
+        }
     }
 }

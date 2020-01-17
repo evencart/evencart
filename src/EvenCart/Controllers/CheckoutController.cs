@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core;
 using EvenCart.Data.Entity.Addresses;
+using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -54,7 +55,10 @@ namespace EvenCart.Controllers
         private readonly IOrderAccountant _orderAccountant;
         private readonly IDownloadService _downloadService;
         private readonly ILogger _logger;
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService, ILogger logger)
+        private readonly AffiliateSettings _affiliateSettings;
+        private readonly IStoreCreditService _storeCreditService;
+        private readonly IPriceAccountant _priceAccountant;
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService, ILogger logger, AffiliateSettings affiliateSettings, IStoreCreditService storeCreditService, IPriceAccountant priceAccountant)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -71,6 +75,9 @@ namespace EvenCart.Controllers
             _orderAccountant = orderAccountant;
             _downloadService = downloadService;
             _logger = logger;
+            _affiliateSettings = affiliateSettings;
+            _storeCreditService = storeCreditService;
+            _priceAccountant = priceAccountant;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -412,12 +419,16 @@ namespace EvenCart.Controllers
                     return model;
                 })
                 .ToList();
+            //get if there are store credits available
+            GetAvailableStoreCredits(out var availableStoreCredits, out var availableStoreCreditAmount, ApplicationEngine.CurrentCurrency, cart);
 
             //if order guid is set, it means a payment transaction has failed in previous attempt
             //we can use this identifier to skip confirmation page for subsequent attempt
             //this will be same as retry payment from a failed order page
             return R.Success.With("paymentMethods", paymentModels)
                 .With("error", error)
+                .With("availableStoreCredits", availableStoreCredits)
+                .With("availableStoreCreditAmount", availableStoreCreditAmount)
                 .With("orderGuid", orderGuid).Result;
         }
 
@@ -448,37 +459,52 @@ namespace EvenCart.Controllers
 
             if (order == null && cart == null)
                 return R.Fail.Result;
+            var paymentMethodRequired = true;
+            //can we use store credits
+            if (_affiliateSettings.AllowStoreCreditsForPurchases && requestModel.UseStoreCredits)
+            {
+                //get the balance
+                var balance = _storeCreditService.GetBalance(CurrentUser.Id);
+                paymentMethodRequired = _affiliateSettings.MinimumStoreCreditsToAllowPurchases > balance || balance < (order?.OrderTotal ?? cart.FinalAmount);
+            }
 
-            //check if payment method is valid
-            var paymentHandler = PluginHelper.GetPaymentHandler(requestModel.SystemName);
-            if (paymentHandler == null)
-                return R.Fail.With("error", T("Payment method unavailable")).Result;
+            IPaymentHandlerPlugin paymentHandler = null;
             var formAsDictionary =
                 requestModel.FormCollection.Keys.ToDictionary(x => x, x => requestModel.FormCollection[x].ToString());
-            if (!paymentHandler.ValidatePaymentInfo(formAsDictionary, out string error))
+            if (paymentMethodRequired)
             {
-                return R.Fail.With("error", error).Result;
+                //check if payment method is valid
+                paymentHandler = PluginHelper.GetPaymentHandler(requestModel.SystemName);
+                if (paymentHandler == null)
+                    return R.Fail.With("error", T("Payment method unavailable")).Result;
+              
+                if (!paymentHandler.ValidatePaymentInfo(formAsDictionary, out string error)){
+                    return R.Fail.With("error", error).Result;
+                }
             }
+           
 
             CustomResponse response;
             if (order != null)
             {
                 order.PaymentMethodName = requestModel.SystemName;
-                order.PaymentMethodFee = paymentHandler.GetPaymentHandlerFee(order);
+                order.PaymentMethodFee = paymentMethodRequired ? paymentHandler.GetPaymentHandlerFee(order) : 0;
                 order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
                                    order.ShippingMethodFee ?? 0;
                 _orderService.Update(order);
-
+                //do we have available credit
+                GetAvailableStoreCredits(out _, out var creditAmount, ApplicationEngine.BaseCurrency, null);
                 //process the payment immediately
-                ProcessPayment(order, formAsDictionary.ToDictionary(x => x.Key, x => (object)x.Value), out response);
+                ProcessPayment(order, creditAmount, formAsDictionary.ToDictionary(x => x.Key, x => (object)x.Value), out response);
                 return response.Result;
             }
             else
             {
                 //if we are here, the payment method can be saved
-                cart.PaymentMethodName = requestModel.SystemName;
+                cart.PaymentMethodName = paymentMethodRequired ? requestModel.SystemName : "";
                 cart.PaymentMethodData = _dataSerializer.Serialize(formAsDictionary);
-                cart.PaymentMethodDisplayName = paymentHandler.PluginInfo.Name;
+                cart.PaymentMethodDisplayName = paymentMethodRequired ? paymentHandler.PluginInfo.Name : "Store Credits";
+                cart.UseStoreCredits = requestModel.UseStoreCredits;
                 _cartService.Update(cart);
 
                 RaiseEvent(NamedEvent.OrderPaymentInfoSaved, cart);
@@ -501,7 +527,7 @@ namespace EvenCart.Controllers
             //do we have addresses?
             if (cart.BillingAddressId == 0 || (cart.ShippingAddressId == 0 && CartHelper.IsShippingRequired(cart)))
                 return RedirectToRoute(RouteNames.CheckoutAddress);
-            if (CartHelper.IsPaymentRequired(cart) && cart.PaymentMethodName.IsNullEmptyOrWhiteSpace())
+            if (CartHelper.IsPaymentRequired(cart) && cart.PaymentMethodName.IsNullEmptyOrWhiteSpace() && !cart.UseStoreCredits)
             {
                 return RedirectToRoute(RouteNames.CheckoutAddress);
             }
@@ -523,7 +549,7 @@ namespace EvenCart.Controllers
             {
                 return R.Fail.With("error", T("The address details were not provided")).Result;
             }
-            if (CartHelper.IsPaymentRequired(cart) && cart.PaymentMethodName.IsNullEmptyOrWhiteSpace())
+            if (CartHelper.IsPaymentRequired(cart) && cart.PaymentMethodName.IsNullEmptyOrWhiteSpace() && !cart.UseStoreCredits)
             {
                 return R.Fail.With("error", T("The payment method was not provided")).Result;
             }
@@ -591,15 +617,28 @@ namespace EvenCart.Controllers
                 orderItem.TrialDays = orderItem.Product.TrialDays;
                 order.OrderItems.Add(orderItem);
             }
+            var creditAmount = 0m;
+            if (cart.UseStoreCredits)
+            {
+                GetAvailableStoreCredits(out var credits, out creditAmount, ApplicationEngine.BaseCurrency, cart);
+                if (credits > 0 && _affiliateSettings.MinimumStoreCreditsToAllowPurchases <= credits)
+                {
+                    order.UsedStoreCredits = true;
+                    order.StoreCredits = credits;
+                    order.StoreCreditAmount = creditAmount;
+                }
+            }
+
             //insert complete order
             _orderAccountant.InsertCompleteOrder(order);
-
+          
             //process payment
             var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()
                 ? null
                 : _dataSerializer.DeserializeAs<Dictionary<string, object>>(cart.PaymentMethodData);
             CustomResponse response = null;
-            if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, paymentMethodData, out response))
+           
+            if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, creditAmount, paymentMethodData, out response))
             {
                 return response.With("orderGuid", order.Guid).Result;
             }
@@ -665,12 +704,12 @@ namespace EvenCart.Controllers
             return cart.CartItems.Any();
         }
 
-        private bool ProcessPayment(Order order, Dictionary<string, object> paymentMethodData, out CustomResponse response)
+        private bool ProcessPayment(Order order, decimal creditAmount, Dictionary<string, object> paymentMethodData, out CustomResponse response)
         {
             var isSubscription = OrderHelper.IsSubscription(order);
             var transactionResult = isSubscription
-                ? _paymentProcessor.ProcessCreateSubscription(order, paymentMethodData)
-                : _paymentProcessor.ProcessPayment(order, paymentMethodData);
+                ? _paymentProcessor.ProcessCreateSubscription(order, creditAmount, paymentMethodData)
+                : _paymentProcessor.ProcessPayment(order, creditAmount, paymentMethodData);
 
             if (transactionResult.Success)
             {
@@ -683,6 +722,11 @@ namespace EvenCart.Controllers
                     //create payment transaction object and save it to database
                     _paymentAccountant.ProcessTransactionResult(transactionResult);
                 return true;
+            }
+            else
+            {
+                //unlock the credits
+                _storeCreditService.UnlockCredits(order.StoreCredits, order.UserId);
             }
 
             response = R.Fail.With("error", T("An error occurred while checking out"));
@@ -733,6 +777,23 @@ namespace EvenCart.Controllers
                 shippingOptionModels = shippingOptionModels.Concat(shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x))).ToList();
             }
             return shippingOptionModels;
+        }
+
+        private void GetAvailableStoreCredits(out decimal availableStoreCredits, out decimal availableStoreCreditAmount, Currency targetCurrency, Cart cart)
+        {
+            availableStoreCredits = 0;
+            availableStoreCreditAmount = 0;
+            //check if store credits can be used
+            if (_affiliateSettings.AllowStoreCreditsForPurchases && (cart == null || !CartHelper.IsSubscriptionCart(cart)))
+            {
+                availableStoreCredits = _storeCreditService.GetBalance(CurrentUser.Id);
+                if (availableStoreCredits < _affiliateSettings.MinimumStoreCreditsToAllowPurchases)
+                {
+                    availableStoreCredits = 0;
+                }
+                availableStoreCreditAmount = _priceAccountant.ConvertCurrency(
+                    availableStoreCredits * _affiliateSettings.StoreCreditsExchangeRate, targetCurrency);
+            }
         }
         #endregion
 

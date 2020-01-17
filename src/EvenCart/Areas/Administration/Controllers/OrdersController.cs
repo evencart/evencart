@@ -11,13 +11,16 @@ using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using EvenCart.Services.Shipping;
 using EvenCart.Events;
+using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
@@ -30,6 +33,7 @@ using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Pdf;
 using EvenCart.Services.Products;
+using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -60,7 +64,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IDownloadModelFactory _downloadModelFactory;
         private readonly IPaymentProcessor _paymentProcessor;
-        public OrdersController(IOrderService orderService, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, IPaymentProcessor paymentProcessor)
+        private readonly IStoreCreditService _storeCreditService;
+        private readonly AffiliateSettings _affiliateSettings;
+        public OrdersController(IOrderService orderService, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, IPaymentProcessor paymentProcessor, IStoreCreditService storeCreditService, AffiliateSettings affiliateSettings)
         {
             _orderService = orderService;
             _formatterService = formatterService;
@@ -86,6 +92,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _downloadService = downloadService;
             _downloadModelFactory = downloadModelFactory;
             _paymentProcessor = paymentProcessor;
+            _storeCreditService = storeCreditService;
+            _affiliateSettings = affiliateSettings;
         }
 
         #region Orders
@@ -232,8 +240,13 @@ namespace EvenCart.Areas.Administration.Controllers
                 order.OrderStatus = orderModel.OrderStatus.Value;
                 order.ManualModeTriggered = true;
             }
+
+            var paymentStatusChanged = false;
             if (orderModel.PaymentStatus.HasValue)
+            {
+                paymentStatusChanged = order.PaymentStatus != orderModel.PaymentStatus;
                 order.PaymentStatus = orderModel.PaymentStatus.Value;
+            }
             if (!orderModel.PaymentMethodDisplayName.IsNullEmptyOrWhiteSpace())
                 order.PaymentMethodDisplayName = orderModel.PaymentMethodDisplayName;
             if (!orderModel.PaymentMethodName.IsNullEmptyOrWhiteSpace())
@@ -254,6 +267,10 @@ namespace EvenCart.Areas.Administration.Controllers
                 order.Discount = orderModel.Discount.Value;
             _orderService.Update(order);
 
+            if (paymentStatusChanged && (order.PaymentStatus == PaymentStatus.Complete || order.PaymentStatus == PaymentStatus.Captured))
+            {
+                RaiseEvent(NamedEvent.OrderPaid, order.User, order);
+            }
             return R.Success.Result;
         }
 
@@ -945,7 +962,9 @@ namespace EvenCart.Areas.Administration.Controllers
                 {
                     response.With("canRefundOffline", refundedAmount < order.OrderTotal);
                 }
-                return response.With("order", orderModel).Result;
+
+                var availableRefundTypes = SelectListHelper.GetSelectItemList<RefundType>();
+                return response.With("order", orderModel).With("balanceAmount", order.OrderTotal - refundedAmount).With("availableRefundTypes", availableRefundTypes).Result;
             }
 
             return R.Fail.With("error", T("The order is not eligible for refund")).Result;
@@ -965,6 +984,9 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 return R.Fail.With("error", T("Unable to refund more than the order total")).Result;
             }
+
+            requestModel.IsPartialRefund = requestModel.Amount < order.OrderTotal;
+            //todo:move this to payment processor service
             var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
             if (paymentHandler != null && paymentHandler.Supports(PaymentOperation.Refund))
             {
@@ -987,20 +1009,53 @@ namespace EvenCart.Areas.Administration.Controllers
                                                   x.PaymentStatus == PaymentStatus.Captured ||
                                                   x.PaymentStatus == PaymentStatus.Complete);
 
-                var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
+                var amountToRefund = requestModel.IsPartialRefund
+                    ? requestModel.Amount
+                    : order.OrderTotal - refundedAmount;
+
+                if (requestModel.RefundType == RefundType.ToStoreCredits)
                 {
-                    Order = order,
-                    IsPartialRefund = requestModel.IsPartialRefund,
-                    RequestType = TransactionRequestType.Refund,
-                    TransactionGuid = Guid.NewGuid().ToString(),
-                    Amount = requestModel.IsPartialRefund ? requestModel.Amount : order.OrderTotal - refundedAmount,
-                    Parameters = transaction?.TransactionCodes
-                });
-                if (transactionResult.Success)
-                {
-                    transactionResult.OrderGuid = order.Guid;
-                    _paymentAccountant.ProcessTransactionResult(transactionResult);
+                    //just refund to store credits
+                    _paymentAccountant.ProcessTransactionResult(new TransactionResult()
+                    {
+                        Success = true,
+                        NewStatus = requestModel.IsPartialRefund ? PaymentStatus.RefundedPartially : PaymentStatus.Refunded,
+                        IsStoreCreditTransaction = true,
+                        Order = order,
+                        OrderGuid = order.Guid,
+                        TransactionAmount = amountToRefund,
+                        TransactionCurrencyCode = order.CurrencyCode,
+                        TransactionGuid = Guid.NewGuid().ToString()
+                    });
                 }
+                else
+                {
+                    var paymentMethodPaidAmount = order.OrderTotal - order.StoreCreditAmount;
+                 
+                    amountToRefund = paymentMethodPaidAmount - refundedAmount;
+                    if (requestModel.IsPartialRefund && requestModel.Amount > amountToRefund)
+                    {
+                        return R.Fail.With("error", T("Unable to refund more than the balance order total")).Result;
+                    }
+
+                    if (requestModel.IsPartialRefund)
+                        amountToRefund = requestModel.Amount;
+                    var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
+                    {
+                        Order = order,
+                        IsPartialRefund = requestModel.IsPartialRefund,
+                        RequestType = TransactionRequestType.Refund,
+                        TransactionGuid = Guid.NewGuid().ToString(),
+                        Amount = amountToRefund,
+                        Parameters = transaction?.TransactionCodes
+                    });
+                    if (transactionResult.Success)
+                    {
+                        transactionResult.OrderGuid = order.Guid;
+                        _paymentAccountant.ProcessTransactionResult(transactionResult);
+                    }
+                }
+              
             }
             else if (requestModel.RefundOffline)
             {
@@ -1031,30 +1086,16 @@ namespace EvenCart.Areas.Administration.Controllers
             if (order.PaymentStatus != PaymentStatus.Authorized)
                 return R.Fail.With("error", T("The order is not eligible for void")).Result;
 
-            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
-            if (paymentHandler != null)
+            var transactionResult = _paymentProcessor.ProcessVoid(order);
+            if (transactionResult.Success)
             {
-                if (paymentHandler.Supports(PaymentOperation.Void))
-                {
-                    var transaction = _paymentTransactionService.FirstOrDefault(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Authorized);
-                    var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
-                    {
-                        Order = order,
-                        RequestType = TransactionRequestType.Void,
-                        TransactionGuid = Guid.NewGuid().ToString(),
-                        Parameters = transaction?.TransactionCodes
-                    });
-                    if (transactionResult.Success)
-                    {
-                        order.PaymentStatus = PaymentStatus.Voided;
-                        order.OrderStatus = OrderStatus.Cancelled;
-                        _paymentAccountant.ProcessTransactionResult(transactionResult);
-                    }
-                }
+                order.PaymentStatus = PaymentStatus.Voided;
+                order.OrderStatus = OrderStatus.Cancelled;
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
             }
             else
             {
-                var transactionResult = new TransactionResult()
+                transactionResult = new TransactionResult()
                 {
                     TransactionGuid = Guid.NewGuid().ToString(),
                     Success = true,
@@ -1067,7 +1108,6 @@ namespace EvenCart.Areas.Administration.Controllers
                 };
                 _paymentAccountant.ProcessTransactionResult(transactionResult);
             }
-
             return R.Success.Result;
         }
 
@@ -1081,30 +1121,16 @@ namespace EvenCart.Areas.Administration.Controllers
             if (order.PaymentStatus != PaymentStatus.Authorized)
                 return R.Fail.With("error", T("The order is not eligible for capture")).Result;
 
-            var paymentHandler = PluginHelper.GetPaymentHandler(order.PaymentMethodName);
-            if (paymentHandler != null)
+            var transactionResult = _paymentProcessor.ProcessCapture(order);
+            if (transactionResult.Success)
             {
-                if (paymentHandler.Supports(PaymentOperation.Capture))
-                {
-                    var transaction = _paymentTransactionService.FirstOrDefault(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Authorized);
-                    var transactionResult = paymentHandler.ProcessTransaction(new TransactionRequest()
-                    {
-                        Order = order,
-                        RequestType = TransactionRequestType.Capture,
-                        TransactionGuid = Guid.NewGuid().ToString(),
-                        Parameters = transaction?.TransactionCodes
-                    });
-                    if (transactionResult.Success)
-                    {
-                        order.PaymentStatus = PaymentStatus.Captured;
-                        order.OrderStatus = OrderStatus.Processing;
-                        _paymentAccountant.ProcessTransactionResult(transactionResult);
-                    }
-                }
+                order.PaymentStatus = PaymentStatus.Captured;
+                order.OrderStatus = OrderStatus.Processing;
+                _paymentAccountant.ProcessTransactionResult(transactionResult);
             }
             else
             {
-                var transactionResult = new TransactionResult()
+                transactionResult = new TransactionResult()
                 {
                     TransactionGuid = Guid.NewGuid().ToString(),
                     Success = true,
@@ -1117,7 +1143,6 @@ namespace EvenCart.Areas.Administration.Controllers
                 };
                 _paymentAccountant.ProcessTransactionResult(transactionResult);
             }
-
             return R.Success.Result;
         }
         #endregion

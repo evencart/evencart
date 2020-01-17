@@ -9,7 +9,7 @@ namespace EvenCart.Services.Users
 {
     public interface IUserService : IFoundationEntityService<User>
     {
-        IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false);
+        IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false, Expression<Func<User, bool>> where = null);
 
         User GetByUserInfo(string email, string guid = null);
 

@@ -34,11 +34,6 @@ namespace EvenCart.Models.Authentication
         /// </summary>
         public string InviteCode { get; set; }
 
-        /// <summary>
-        /// The affiliate code if any for registration
-        /// </summary>
-        public string AffiliateCode { get; set; }
-
         public void SetupValidationRules(ModelValidator<RegisterModel> v)
         {
             v.RuleFor(x => x.Email).NotEmpty();

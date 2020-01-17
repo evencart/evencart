@@ -1,0 +1,118 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Users" active_menu="AffiliatesList" parent_active_menu="UsersList" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Affiliates" | t}} <a class="btn btn-sm btn-primary float-right" href='{% route GetUser userId="0" %}'>{{"Add new user" | t}}</a>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed no-margin">
+                    <thead>
+                        <tr>
+                            <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                            <th data-column-id="name" data-formatter="name">{{"Name" | t}}</th>
+                            <th data-column-id="email">{{"Email" | t}}</th>
+                            <th data-column-id="active" data-formatter="active">{{"Active" | t}}</th>
+                            <th data-column-id="affiliateActive" data-formatter="active">{{"Affiliate Active" | t}}</th>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                        </tr>
+                    </thead>
+                </table>
+                {{users | scriptJson : 'initData'}}
+                <script type="text/javascript">
+                    ready(function() {
+                       generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                users: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_UsersList %}',
+                            responseObject: "users",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                active: function(column, row) {
+                                    return gridFormatters.binary(column, row);
+                                },
+                                "name": function(column, row) {
+                                    var displayName = (function() {
+                                        if (row.name)
+                                            return row.name;
+                                        if (row.firstName && row.lastName)
+                                            return row.firstName + " " + row.lastName;
+                                        if (row.firstName)
+                                            return row.firstName;
+                                        if (row.lastName)
+                                            return row.lastName;
+                                        return "";
+                                    })();
+                                    if (row.roles) {
+                                        displayName += "<div>";
+                                        row.roles.forEach(function(item) {
+                                            displayName += "<span class='badge badge-success'>" +
+                                                item.name +
+                                                "</span> ";
+                                        });
+                                        displayName += "</div>";
+                                    }
+                                    return displayName;
+
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editUser(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteUser(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var editUser = function(id) {
+        var url = '{% route GetUser userId="user_id" %}';
+        navigate(url.replace("user_id", id));
+    }
+
+    var deleteUser = function(id) {
+        var msg =
+            '{{ "Deleting a user will delete all the related data including orders. Are you sure you wish to continue?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_DeleteUser %}",
+                    data: {
+                        userId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"User was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+        
+    }
+</script>

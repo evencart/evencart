@@ -8,6 +8,7 @@ using EvenCart.Infrastructure.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.MediaServices;
+using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
@@ -30,6 +31,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var localizationSettings = DependencyResolver.Resolve<LocalizationSettings>();
             var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
             var vendorSettings = DependencyResolver.Resolve<VendorSettings>();
+            var affiliateSettings = DependencyResolver.Resolve<AffiliateSettings>();
 
             var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
             var categoryService = DependencyResolver.Resolve<ICategoryService>();
@@ -57,7 +59,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 LogoUrl = logoUrl,
                 FaviconUrl = faviconUrl,
                 CurrentPage = ApplicationEngine.GetActiveRouteName(),
-                CurrentUrl = ApplicationEngine.CurrentHttpContext.Request.GetEncodedPathAndQuery(),
+                CurrentUrl = ApplicationEngine.CurrentHttpContext.Request.GetDisplayUrl(),
                 Categories = SelectListHelper.GetSelectItemList(categories, x => x.Id, x => x.Name, categoryDefaultName),
                 WishlistEnabled = orderSettings.EnableWishlist,
                 RepeatOrdersEnabled = orderSettings.AllowReorder,
@@ -73,7 +75,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 VendorSignupEnabled = vendorSettings.EnableVendorSignup,
                 VendorsEnabled = vendorSettings.EnableVendorSignup
             };
+
             var currentUser = ApplicationEngine.CurrentUser;
+            if (affiliateSettings.EnableAffiliates && currentUser.IsActiveAffiliate())
+            {
+                store.AffiliateUrl = store.CurrentPage == RouteNames.SingleProduct ? currentUser.GetAffiliateUrl(store.CurrentUrl) : currentUser.GetAffiliateUrl();
+            }
             if (!ApplicationEngine.CurrentHttpContext.IsTokenAuthenticated() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
             {
                 store.CookiePopupText = gdprSettings.CookiePopupText;

@@ -41,6 +41,7 @@ namespace EvenCart.Areas.Administration.Controllers
             { typeof(UserSettingsModel), typeof(UserSettings) },
             { typeof(LocalizationSettingsModel), typeof(LocalizationSettings) },
             { typeof(GdprSettingsModel), typeof(GdprSettings) },
+            { typeof(AffiliateSettingsModel), typeof(AffiliateSettings) },
         };
 
 
@@ -161,6 +162,16 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        [DualPost("{settingType}", Name = AdminRouteNames.SaveSettings, OnlyApi = true)]
+        [FieldRequired("settingType", "affiliate")]
+        [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
+        [ValidateModelState(ModelType = typeof(AffiliateSettingsModel))]
+        public IActionResult SaveSettings(AffiliateSettingsModel affiliateSettings)
+        {
+            SaveSetting(affiliateSettings);
+            return R.Success.Result;
+        }
+
         [DualPost("security/shared-key", Name = AdminRouteNames.SaveSharedSecuritySetting, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.ManageSettings)]
         public IActionResult SaveSharedSecurityKey(string sharedKey)
@@ -262,6 +273,10 @@ namespace EvenCart.Areas.Administration.Controllers
                 case "security":
                     settings = DependencyResolver.Resolve<SecuritySettings>();
                     model = _modelMapper.Map<SecuritySettingsModel>(settings);
+                    break;
+                case "affiliate":
+                    settings = DependencyResolver.Resolve<AffiliateSettings>();
+                    model = _modelMapper.Map<AffiliateSettingsModel>(settings);
                     break;
             }
 

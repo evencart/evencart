@@ -122,6 +122,9 @@ namespace EvenCart.Infrastructure
                 //init database
                 app.InitializeDatabase();
 
+                //affiliate tracking
+                app.UseAffiliateTracking();
+
                 //use authentication
                 app.UseAppAuthentication();
 
@@ -218,6 +221,8 @@ namespace EvenCart.Infrastructure
         public static User CurrentUser => DependencyResolver.Resolve<IAppAuthenticationService>().GetCurrentUser();
 
         public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
+
+        public static User CurrentAffiliate => CurrentHttpContext.GetCurrentAffiliate();
 
         public static string CurrentLanguageCultureCode => "en-US";
 

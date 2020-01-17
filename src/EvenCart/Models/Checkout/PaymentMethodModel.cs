@@ -42,9 +42,14 @@ namespace EvenCart.Models.Checkout
         /// </summary>
         public string OrderGuid { get; set; }
 
+        /// <summary>
+        /// Specifies if store credits should be used if available
+        /// </summary>
+        public bool UseStoreCredits { get; set; }
+
         public void SetupValidationRules(ModelValidator<PaymentMethodModel> v)
         {
-            v.RuleFor(x => x.SystemName).NotEmpty();
+            v.RuleFor(x => x.SystemName).NotEmpty().When(x => !x.UseStoreCredits);
         }
     }
 }
