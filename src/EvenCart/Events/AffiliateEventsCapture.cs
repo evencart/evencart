@@ -37,7 +37,7 @@ namespace EvenCart.Events
                             CreatedOn = DateTime.UtcNow,
                             AvailableOn = DateTime.UtcNow,
                             Credit = _affiliateSettings.SignupCreditToAffiliate,
-                            Description = $"{user.Name} - {user.Email} account was activated",
+                            Description = $"{user.Name} account was activated",
                             UserId = user.ReferrerId
                         });
                     }
