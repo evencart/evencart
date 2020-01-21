@@ -3,15 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+	   <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotEntity" Version="2.0.3" />
-    <PackageReference Include="DotEntity.MySql" Version="2.0.2" />
-    <PackageReference Include="DotEntity.SqlServer" Version="2.0.0" />
+    <PackageReference Include="DotEntity" Version="2.1.1" />
+    <PackageReference Include="DotEntity.MySql" Version="2.1.0" />
+    <PackageReference Include="DotEntity.SqlServer" Version="2.1.0" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />

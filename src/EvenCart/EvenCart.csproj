@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
