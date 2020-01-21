@@ -38,6 +38,7 @@
 <!--Users-->
 {% primary_navigation title=@t"Users" systemName="UsersList" groupId="store" capability="User.View" %}
 {% secondary_navigation url="{% route UsersList %}" title=@t"Customers" systemName="UsersList" parent="UsersList" %}
+{% secondary_navigation url="{% route AffiliatesList %}" title=@t"Affiliates" systemName="AffiliatesList" parent="UsersList" %}
 {% secondary_navigation url="{% route VendorsList %}" title=@t"Vendors" systemName="VendorsList" parent="UsersList" %}
 {% secondary_navigation url="{% route ManufacturersList %}" title=@t"Manufacturers" systemName="ManufacturersList" parent="UsersList" %}
 {% secondary_navigation url="{% route RolesList %}" title=@t"Roles" systemName="RolesList" parent="UsersList" %}
@@ -49,6 +50,7 @@
 {% secondary_navigation url="{% route UserOrdersList userId="{{userId}}" %}" title=@t"Orders" systemName="OrdersList" groupId="UserEdit" capability="User.Edit" %}
 {% secondary_navigation url="{% route CapabilitiesList userId="{{userId}}" %}" title=@t"Capabilities" systemName="CapabilitiesList" groupId="UserEdit" capability="User.Edit" %}
 {% secondary_navigation url="{% route UserPointsList userId="{{userId}}" %}" title=@t"User Points" systemName="UserPointsList" groupId="UserEdit" capability="UserPoint.Manage" %}
+{% secondary_navigation url="{% route StoreCreditsList userId="{{userId}}" %}" title=@t"Store Credits" systemName="StoreCreditsList" groupId="UserEdit" capability="StoreCredit.Manage" %}
 {% secondary_navigation url="{% route UserCart userId="{{userId}}" %}" title=@t"Current Cart" systemName="UserCart" groupId="UserEdit" capability="Cart.Manage" %}
 {% secondary_navigation url="{% route UserImitate userId="{{userId}}" %}" title=@t"Imitation" systemName="Imitate" groupId="UserEdit" capability="User.Imitate" %}
 {% secondary_navigation url="{% route ConsentLogsList userId="{{userId}}" %}" title=@t"GDPR Consent Log" systemName="ConsentLogsList" groupId="UserEdit" capability="GDPR.Manage" %}
@@ -149,6 +151,7 @@
 {% primary_navigation title=@t"Settings" systemName="Settings" groupId="settings" capability="Setting.Manage" %}
 {% secondary_navigation url="{% route GetSettings settingType="general" %}" title=@t"General" systemName="GeneralSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="user" %}" title=@t"Customer" systemName="UserSettings" parent="Settings" %}
+{% secondary_navigation url="{% route GetSettings settingType="affiliate" %}" title=@t"Affiliate" systemName="AffiliateSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="tax" %}" title=@t"Tax" systemName="TaxSettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="security" %}" title=@t"Security" systemName="SecuritySettings" parent="Settings" %}
 {% secondary_navigation url="{% route GetSettings settingType="order" %}" title=@t"Orders" systemName="OrderSettings" parent="Settings" %}

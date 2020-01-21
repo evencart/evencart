@@ -45,7 +45,7 @@
                         <div class="panel-help">
                             {{"Specifies the minimum order subtotal to avail the discount. Default is 0 to make the discount available for any order value." | t}}
                         </div>
-                        {% control number name="minimumOrderSubtotal" id="minimumOrderSubtotal" value="{{discount.minimumOrderSubtotal}}" %}
+                        {% control number name="minimumOrderSubtotal" id="minimumOrderSubtotal" value="{{discount.minimumOrderSubTotal}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Maximum Discount Amount" for="maximumDiscountAmount" %}
@@ -90,13 +90,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 {% control label text=@t"Start Date" for="startDate" %}
-                                {% control datetime name="startDate" id="startDate" value="{{discount.startDate}}"%}
+                                {% control datetime name="startDate" id="startDate" value="discount.startDate"%}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 {% control label text=@t"End Date" for="endDate" %}
-                                {% control datetime name="endDate" id="endDate" value="{{discount.endDate}}"%}
+                                {% control datetime name="endDate" id="endDate" value="discount.endDate"%}
                             </div>
                         </div>
                     </div>

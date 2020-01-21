@@ -87,10 +87,8 @@ namespace EvenCart.Areas.Administration.Factories.Orders
         public PaymentTransactionModel Create(PaymentTransaction entity)
         {
             var model = _modelMapper.Map<PaymentTransactionModel>(entity);
-            var paymentHandler = PluginHelper.GetPaymentHandler(entity.PaymentMethodName);
-            if (paymentHandler != null)
             {
-                model.PaymentMethodDisplay = paymentHandler.PluginInfo.Name;
+                model.PaymentMethodDisplay = entity.PaymentMethodName;
             }
             return model;
         }

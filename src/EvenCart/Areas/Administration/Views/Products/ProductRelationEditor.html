@@ -18,7 +18,7 @@
                         </a>
                     </div>
                     <div class="form-group">
-                        {% control checkbox text=@t"Create Reciprocal Relation" value="true" name="isreciprocal" %}
+                        {% control checkbox text=@t"Create Reciprocal Relation" value="true" name="isReciprocal" %}
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
         jQuery("#popup-selector").show().html("{{'Please wait...'}}");
         var centerPopup = showAsPopup("popup-selector",
             true,
-            function(result, data) {
+            function (result, data) {
                 if (result == "ok") {
                     var trs = "";
                     data.forEach(function (d) {
@@ -54,8 +54,10 @@
                         trs += "</tr>";
                     });
                     jQuery("#products-list").html(trs);
-                    if (trs != "")
+                    if (trs != "") {
                         jQuery("#select-products-link").hide();
+                        jQuery("#products-list").show();
+                    }
                 }
             });
         var url =

@@ -13,6 +13,14 @@ namespace EvenCart.Infrastructure.Helpers
             });
         }
 
+        public static void SetResponseCookie(string cookieName, string cookieValue, int expirationHours)
+        {
+            ApplicationEngine.CurrentHttpContext.Response.Cookies.Append(cookieName, cookieValue, new CookieOptions()
+            {
+                Expires = DateTimeOffset.UtcNow.AddHours(expirationHours)
+            });
+        }
+
         public static string GetRequestCookie(string cookieName)
         {
             return ApplicationEngine.CurrentHttpContext.Request.Cookies[cookieName];

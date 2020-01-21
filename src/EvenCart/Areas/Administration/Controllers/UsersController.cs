@@ -53,7 +53,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly IUserPointService _userPointService;
         private readonly IUserModelFactory _userModelFactory;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory, IUserPointService userPointService, IUserModelFactory userModelFactory)
+        private readonly IStoreCreditService _storeCreditService;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory, IUserPointService userPointService, IUserModelFactory userModelFactory, IStoreCreditService storeCreditService)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -71,6 +72,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _addressModelFactory = addressModelFactory;
             _userPointService = userPointService;
             _userModelFactory = userModelFactory;
+            _storeCreditService = storeCreditService;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -85,6 +87,35 @@ namespace EvenCart.Areas.Administration.Controllers
             };
             var users = _userService.GetUsers(searchModel.SearchPhrase, searchModel.RoleIds, null, SortOrder.Ascending, searchModel.Current,
                 searchModel.RowCount, out int totalMatches, negate);
+
+            //convert to model
+            var userModels = users.Select(x =>
+            {
+                var userModel = _modelMapper.Map<UserModel>(x);
+                userModel.Roles = x.Roles?.Select(y => _modelMapper.Map<RoleModel>(y)).ToList();
+                return userModel;
+            }).ToList();
+
+            var roles = _roleService.Get(x => true);
+            var roleModels = roles.Select(x => _modelMapper.Map<RoleModel>(x)).ToList();
+            return R.Success.With("users", userModels)
+                .With("roles", roleModels)
+                .WithGridResponse(totalMatches, searchModel.Current, searchModel.RowCount)
+                .Result;
+        }
+
+        [DualGet("affiliates", Name = AdminRouteNames.AffiliatesList)]
+        [ValidateModelState(ModelType = typeof(UserSearchModel))]
+        [CapabilityRequired(CapabilitySystemNames.ViewUsers)]
+        public IActionResult AffiliatesList([FromQuery] UserSearchModel searchModel)
+        {
+            var negate = searchModel.RoleIds == null;
+            searchModel.RoleIds = searchModel.RoleIds ?? new int[]
+            {
+                _roleService.FirstOrDefault(x => x.SystemName == SystemRoleNames.Visitor)?.Id ?? 0
+            };
+            var users = _userService.GetUsers(searchModel.SearchPhrase, searchModel.RoleIds, null, SortOrder.Ascending, searchModel.Current,
+                searchModel.RowCount, out int totalMatches, negate, x => x.IsAffiliate);
 
             //convert to model
             var userModels = users.Select(x =>
@@ -148,6 +179,17 @@ namespace EvenCart.Areas.Administration.Controllers
             user.Remarks = userModel.Remarks;
             user.RequirePasswordChange = userModel.RequirePasswordChange;
             user.Name = $"{user.FirstName} {user.LastName}";
+            user.IsAffiliate = userModel.IsAffiliate;
+            user.AffiliateActive = userModel.AffiliateActive;
+            var firstActivation = user.Active && user.FirstActivationDate == null;
+            if (firstActivation)
+            {
+                user.FirstActivationDate = DateTime.UtcNow;
+            }
+            if (user.AffiliateFirstActivationDate == null && userModel.AffiliateActive)
+            {
+                user.AffiliateFirstActivationDate = DateTime.UtcNow;
+            }
             if (user.Id == 0)
             {
                 user.Guid = Guid.NewGuid();
@@ -169,7 +211,10 @@ namespace EvenCart.Areas.Administration.Controllers
             //get the role ids
             var roleIds = userModel.Roles?.Select(x => x.Id).ToArray() ?? null;
             _roleService.SetUserRoles(user.Id, roleIds, true);
-
+            if (firstActivation)
+            {
+                RaiseEvent(NamedEvent.UserActivated, user);
+            }
             return R.Success.With("id", user.Id).Result;
         }
 
@@ -504,6 +549,67 @@ namespace EvenCart.Areas.Administration.Controllers
             var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, UserCodeType.RegistrationInvitation);
             var invitationLink = ApplicationEngine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code}, true);
             RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
+            return R.Success.Result;
+        }
+
+        [DualGet("{userId}/credits", Name = AdminRouteNames.StoreCreditsList)]
+        [CapabilityRequired(CapabilitySystemNames.ManageStoreCredits)]
+        public IActionResult StoreCreditsList(StoreCreditSearchModel searchModel)
+        {
+            if (searchModel.UserId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var userId = searchModel.UserId;
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+            var userCredits = _storeCreditService.Get(out int totalResults, x => x.UserId == userId, x => x.Id, RowOrder.Descending, searchModel.Current, searchModel.RowCount);
+            var creditsTotal = _storeCreditService.GetBalance(userId);
+            var models = userCredits.Select(_userModelFactory.Create).ToList();
+            return R.Success.With("userId", userId).With("storeCredits", models).With("availableBalance", creditsTotal)
+                .WithGridResponse(totalResults, searchModel.Current, searchModel.RowCount).Result;
+        }
+
+        [DualGet("{userId}/credits/{storeCreditId}", Name = AdminRouteNames.GetStoreCredit)]
+        [CapabilityRequired(CapabilitySystemNames.ManageStoreCredits)]
+        public IActionResult StoreCreditEditor(int userId, int storeCreditId)
+        {
+            if (userId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            if (userId <= 0 || _userService.Count(x => x.Id == userId) == 0)
+                return NotFound();
+
+            var userCredit = storeCreditId > 0 ? _storeCreditService.Get(storeCreditId) : new StoreCredit()
+            {
+                UserId = userId,
+                AvailableOn = DateTime.UtcNow
+            };
+            if (userCredit == null)
+                return NotFound();
+            var model = _userModelFactory.Create(userCredit);
+            return R.Success.With("storeCredit", model).Result;
+        }
+
+        [DualPost("credits", Name = AdminRouteNames.SaveStoreCredit, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageStoreCredits)]
+        [ValidateModelState(ModelType = typeof(StoreCreditModel))]
+        public IActionResult SaveStoreCredit(StoreCreditModel userCreditModel)
+        {
+            var id = userCreditModel.Id;
+            var userCredit = id > 0 ? _storeCreditService.Get(id) : new StoreCredit()
+            {
+                CreatedOn = DateTime.UtcNow,
+                UserId = userCreditModel.UserId
+            };
+
+
+            if (userCredit == null)
+                return NotFound();
+            userCredit.Credit = userCreditModel.Credit;
+            userCredit.Description = userCreditModel.Description;
+            userCredit.AvailableOn = userCreditModel.AvailableOn;
+            userCredit.ExpiresOn = userCreditModel.ExpiresOn;
+            _storeCreditService.InsertOrUpdate(userCredit);
             return R.Success.Result;
         }
     }

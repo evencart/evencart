@@ -106,6 +106,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string DeleteShipment = "DeleteShipment";
 
         public const string UsersList = "UsersList";
+        public const string AffiliatesList = "AffiliatesList";
         public const string GetUser = "GetUser";
         public const string SaveUser = "SaveUser";
         public const string DeleteUser = "DeleteUser";
@@ -120,6 +121,9 @@ namespace EvenCart.Infrastructure.Routing
         public const string UserPointsList = "UserPointsList";
         public const string SaveUserPoint = "SaveUserPoint";
         public const string GetUserPoint = "GetUserPoint";
+        public const string StoreCreditsList = "StoreCreditsList";
+        public const string SaveStoreCredit = "SaveStoreCredit";
+        public const string GetStoreCredit = "GetStoreCredit";
         public const string UserImitate = "UserImitate";
         public const string AnonymizeUser = "AnonymizeUser";
         public const string GenerateInviteLink = "GenerateInviteLink";

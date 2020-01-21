@@ -18,6 +18,7 @@ namespace EvenCart.Infrastructure.Extensions
         private const string RequestSeoMetaKey = "RequestSeoMetaKey";
         private const string ApiTokenKey = "ApiTokenKey";
         private const string IsTokenAuthenticatedKey = "IsTokenAuthenticated";
+        private const string CurrentAffiliateKey = "CurrentAffiliateKey";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -82,6 +83,16 @@ namespace EvenCart.Infrastructure.Extensions
         public static string GetApiToken(this HttpContext httpContext)
         {
             return httpContext.Items[ApiTokenKey]?.ToString();
+        }
+
+        public static void SetCurrentAffiliate(this HttpContext httpContext, User affiliate)
+        {
+            httpContext.Items[CurrentAffiliateKey] = affiliate;
+        }
+
+        public static User GetCurrentAffiliate(this HttpContext httpContext)
+        {
+            return (User) httpContext.Items[CurrentAffiliateKey];
         }
 
         public static bool IsTokenAuthenticated(this HttpContext httpContext)

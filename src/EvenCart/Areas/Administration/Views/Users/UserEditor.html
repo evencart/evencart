@@ -31,13 +31,25 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Date of birth" for="dateofbirth" %}
-                        {% control datetime name="dateofbirth" id="dateofbirth" value="{{user.dateofbirth}}"%}
+                        {% control datetime name="dateofbirth" id="dateofbirth" value="user.dateOfBirth"%}
                     </div>
                     <div class="form-group">
                         {% control checkbox name="newslettersenabled" value="user.newslettersEnabled" text=@t"Can receive newsletters?" %}
                     </div>
                     <div class="form-group">
                         {% control checkbox name="active" value="user.active" text=@t"Active" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="isAffiliate" value="user.isAffiliate" text=@t"Affiliate" %}
+                        <div class="panel-help">
+                            {{"Check if the user is or has applied to be an affiliate partner" | t}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="affiliateActive" value="user.affiliateActive" text=@t"Activate Affiliate" %}
+                        <div class="panel-help">
+                            {{"Check if the affiliate account for the user is active" | t}}
+                        </div>
                     </div>
                 </div>
             </div>

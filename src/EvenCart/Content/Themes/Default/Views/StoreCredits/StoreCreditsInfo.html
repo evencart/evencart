@@ -1,0 +1,63 @@
+﻿{% layout "_AccountLayout" %}
+{% global pageTitle=@t"Account Profile" active_menu="AccountStoreCredits" %}
+<h3>
+    {{"Store Credits" | t}}
+</h3>
+<div class="page-section section pb-120">
+    <div class="alert alert-info">
+        {{"Available Balance: "}}{{availableBalance}}
+    </div>
+    {% if storeCredits.size > 0 %}
+    <table class="table table-bordered">
+        <tr>
+            <th>
+                {{"Date" | t}}
+            </th>
+            <th>
+                {{"Description" | t}}
+            </th>
+            <th>
+                {{"Credit" | t}}
+            </th>
+            <th>
+                {{"Expiration" | t}}
+            </th>
+        </tr>
+        {% for storeCredit in storeCredits %}
+        <tr>
+            <td>
+                {{storeCredit.formatted.availableOn}}
+            </td>
+
+            <td>
+                {{storeCredit.description}}
+            </td>
+            <td>
+                {{storeCredit.credit}}
+            </td>
+            <td>
+                {% if storeCredit.expiresOn %}
+                {{storeCredit.formatted.expiresOn}}
+                {% else %}
+                {{"" | t}}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="col-12">
+        {% component "Pagination" rowCount="@rowCount" total="@total" current="@current" callback="loadPage" %}
+    </div>
+    <script type="text/javascript">
+        var loadPage = function(page) {
+            var url = '{% route AccountStoreCredits %}';
+            url += "?page=" + page;
+            window.location.href = url;
+        }
+    </script>
+    {% else %}
+    <div class="alert-danger text-center">
+        {{"You do not have any store credits available." | t}}
+    </div>
+    {% endif %}
+</div>

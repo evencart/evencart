@@ -264,6 +264,7 @@ var clearGrid = function (id) {
 
 var gridFormatters = {
     binary: function (column, row, key) {
+        key = key || column.id;
         if (row[key])
             return "<span class='rbicon-check text-success'></span>";
         else

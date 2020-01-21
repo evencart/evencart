@@ -75,6 +75,7 @@ namespace EvenCart.Data.Database
             IDatabaseVersion[] appVersions = {
                 new Version1(),
                 new Version1A(), 
+                new Version1B()
             };
             DotEntityDb.EnqueueVersions(DatabaseContextKey, appVersions);
             if (!excludePlugins)

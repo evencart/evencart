@@ -64,7 +64,7 @@
                     element: "category-selector",
                     initialData: null,
                     url: "{% route api_GetCategorySuggestions %}",
-                    preserveAfterFirstCall: true,
+                    preserveAfterFirstCall: false,
                     clearAfterSelect: true,
                     select: function(item) {
                         addCategory({

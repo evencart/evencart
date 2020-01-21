@@ -32,7 +32,7 @@ namespace EvenCart.Services.Users
             _emailService = emailService;
         }
 
-        public IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false)
+        public IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false, Expression<Func<User, bool>> where = null)
         {
             var query = Repository
                 .Where(x => !x.Deleted)
@@ -64,6 +64,8 @@ namespace EvenCart.Services.Users
 
             if (orderBy == null)
                 orderBy = x => x.Name;
+            if (where != null)
+                query = query.Where(where);
             query = query.OrderBy(orderBy, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
             return query.SelectNestedWithTotalMatches(out totalMatches, page, count).ToList();
         }
