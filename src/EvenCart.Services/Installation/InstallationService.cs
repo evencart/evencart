@@ -516,6 +516,22 @@ namespace EvenCart.Services.Installation
                 SitePlugins = "[]",
                 SiteWidgets = "[]"
             });
+
+            settingService.Save(new AffiliateSettings()
+            {
+                StoreCreditsExchangeRate = 1,
+                MinimumStoreCreditsToAllowPurchases = 0,
+                AllowStoreCreditsForPurchases = true,
+                EnableAffiliates = false,
+                AffiliateCookieExpirationDays = 1,
+                AffiliateCookieName = "ref",
+                AutoActivateAffiliateAccount = true,
+                CommissionValue = 1,
+                ExcludeTaxFromCalculation = true,
+                SignupCreditToAffiliate = 0,
+                SignupCreditToNewUser = 0,
+                UseCommissionPercentage = true
+            });
         }
 
         private void SeedNotificationEvents()
