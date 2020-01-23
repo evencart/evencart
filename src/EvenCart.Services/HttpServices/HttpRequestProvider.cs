@@ -36,6 +36,17 @@ namespace EvenCart.Services.HttpServices
             return _dataSerializer.DeserializeAs<T>(response);
         }
 
+        public T Post<T>(string url, object data)
+        {
+            return PostAsync<T>(url, data).Result;
+        }
+
+        public async Task<T> PostAsync<T>(string url, object data)
+        {
+            var response = await SendProxyRequest(url, "POST", data);
+            return _dataSerializer.DeserializeAs<T>(response);
+        }
+
         public string GetString(string url, NameValueCollection data = null)
         {
             return GetStringAsync(url, data).Result;
@@ -49,7 +60,7 @@ namespace EvenCart.Services.HttpServices
 
         #region Helpers
 
-        private async Task<string> SendProxyRequest(string url, string method, NameValueCollection parameters)
+        private async Task<string> SendProxyRequest(string url, string method, object parameters)
         {
             using (var webClient = new WebClient())
             {
@@ -69,7 +80,18 @@ namespace EvenCart.Services.HttpServices
                     }
                     else
                     {
-                        resBytes = await webClient.UploadValuesTaskAsync(url, method, parameters);
+                        if (parameters is NameValueCollection collection)
+                            resBytes = await webClient.UploadValuesTaskAsync(url, method, collection);
+                        else
+                        {
+                            var data = "";
+                            if (parameters != null)
+                                data = _dataSerializer.Serialize(parameters);
+                            webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
+                            return await webClient.UploadStringTaskAsync(url, method, data);
+
+                        }
+
                     }
                     var result = System.Text.Encoding.UTF8.GetString(resBytes);
                     return result;

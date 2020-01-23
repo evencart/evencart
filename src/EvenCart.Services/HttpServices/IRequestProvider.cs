@@ -13,6 +13,10 @@ namespace EvenCart.Services.HttpServices
 
         Task<T> PostAsync<T>(string url, NameValueCollection data = null);
 
+        T Post<T>(string url, object data);
+        
+        Task<T> PostAsync<T>(string url, object data);
+        
         string GetString(string url, NameValueCollection data = null);
 
         Task<string> GetStringAsync(string url, NameValueCollection data = null);

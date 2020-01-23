@@ -19,8 +19,12 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public override bool Equals(object obj)
         {
-            var grpModel = (ProductSpecificationGroupModel) obj;
-            return this.Name == grpModel.Name && this.ProductId == grpModel.ProductId;
+            if (obj is ProductSpecificationGroupModel grpModel)
+            {
+                return this.Name == grpModel.Name && this.ProductId == grpModel.ProductId;
+            }
+
+            return false;
         }
 
         public override int GetHashCode()
