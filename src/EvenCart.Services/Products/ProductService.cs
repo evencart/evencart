@@ -38,6 +38,7 @@ namespace EvenCart.Services.Products
             out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
             out Dictionary<int, string> availableVendors, out Dictionary<string, List<string>> availableFilters,
             string searchText = null, string filterExpression = null, bool? published = true,
+            IList<string> tags = null,
             IList<int> manufacturerIds = null,
             IList<int> vendorIds = null, IList<int> categoryIds = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null,
             decimal? toPrice = null, Expression<Func<Product, object>> orderByExpression = null,
@@ -48,11 +49,7 @@ namespace EvenCart.Services.Products
             availableToPrice = 0;
             availableManufacturers = null;
             availableVendors = null;
-            //search text
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                query = query.Where(x => x.Name.Contains(searchText));
-            }
+           
             //published or not?
             if (published.HasValue)
             {
@@ -110,7 +107,31 @@ namespace EvenCart.Services.Products
                     query = query.Where(x => !x.RestrictedToRoles);
                 }
             }
-           
+
+            //if we have tags, we'll restrict the products to them
+            if (!searchText.IsNullEmptyOrWhiteSpace() || (tags != null && tags.Any()))
+            {
+                query = query.Join<EntityTag>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter,
+                    (product, tag) => tag.EntityName == nameof(Product))
+                    .Relate<EntityTag>((product, tag) =>
+                    {
+                        product.Tags = product.Tags ?? new List<string>();
+                        if (!product.Tags.Contains(tag.Tag))
+                            product.Tags.Add(tag.Tag);
+                    });
+                if (tags?.Any() ?? false)
+                {
+                    Expression<Func<EntityTag, bool>> tagsWhere = tag => tags.Contains(tag.Tag);
+                    query.Where(tagsWhere);
+                }
+
+                if (!searchText.IsNullEmptyOrWhiteSpace())
+                {
+                    Expression<Func<EntityTag, Product, bool>> tagsWhere = (tag, product) => product.Name.Contains(searchText) || tag.Tag.Contains(searchText);
+                    query.Where(tagsWhere);
+                }
+            }
+
             //do we have category ids?;
             //categories?
             IList<int> categoryProductIds = null;
@@ -156,7 +177,7 @@ namespace EvenCart.Services.Products
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>());
 
             //store all the product ids possible with this combination to find available filters etc. later
-            var allProductIds = categoryProductIds ?? query.CustomSelectNested("Product_Id").Select(x => (int) x[0]).ToList();
+            var allProductIds = categoryProductIds ?? query.CustomSelectNested("Product_Id").Select(x => (int)x[0]).ToList();
 
             query = query.OrderBy(x => x.DisplayOrder);
             if (orderByExpression == null)
@@ -230,7 +251,7 @@ namespace EvenCart.Services.Products
                     availableVendors = vendors.ToDictionary(x => x.Id, x => x.Name);
                 }
             }
-           
+
             return products;
         }
 
@@ -538,6 +559,7 @@ namespace EvenCart.Services.Products
                 .Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<EntityTag>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter, (product1, tag) => tag.EntityName == nameof(Product))
                 .Where(seoMetaWhere)
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
                 .Relate<ProductCategory>((product1, category) =>
@@ -585,6 +607,11 @@ namespace EvenCart.Services.Products
                     }
                 })
                 .Relate(Product.WithWarehouse())
+                .Relate<EntityTag>((product1, tag) =>
+                {
+                    product1.Tags = product1.Tags ?? new List<string>();
+                    product1.Tags.Add(tag.Tag);
+                })
                 .SelectNested()
                 .FirstOrDefault();
             if (product != null)
@@ -673,7 +700,7 @@ namespace EvenCart.Services.Products
                 product.ProductSpecifications = productSpecifications;
                 PopulateReviewSummary(new List<Product>() { product });
             }
-            
+
             return product;
         }
 
@@ -730,7 +757,7 @@ namespace EvenCart.Services.Products
                             ProductId = product.Id
                         };
                 }
-               
+
                 reviewSummaryData = multiresult.SelectAllAs<Product.ReviewSummaryData>().ToList();
                 foreach (var summaryData in reviewSummaryData)
                 {

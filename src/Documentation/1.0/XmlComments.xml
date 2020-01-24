@@ -1862,6 +1862,11 @@
             The filter string to filter products. The format should be encoded string of attribute-name1:value1,value2 attribute-name2:value3
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.Tags">
+            <summary>
+            A list of tags to restrict the search to
+            </summary>
+        </member>
         <member name="P:EvenCart.Models.Purchases.CartItemModel.ProductId">
             <summary>
             The id of product to be added

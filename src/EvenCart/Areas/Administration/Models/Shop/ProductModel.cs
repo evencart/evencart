@@ -112,6 +112,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public IList<SelectListItem> RestrictedToRoles { get; set; }
 
+        public IList<string> Tags { get; set; }
+
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();
