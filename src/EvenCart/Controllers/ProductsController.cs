@@ -271,6 +271,7 @@ namespace EvenCart.Controllers
                 searchText: searchModel.Search,
                 filterExpression: searchModel.Filters,
                 published: true,
+                tags: searchModel.Tags,
                 vendorIds: searchModel.VendorIds,
                 manufacturerIds: searchModel.ManufacturerIds,
                 categoryids: categoryIds,

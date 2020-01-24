@@ -16,5 +16,7 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public SortOrder SortOrder { get; set; }
 
         public bool? Published { get; set; }
+
+        public string[] Tags { get; set; }
     }
 }

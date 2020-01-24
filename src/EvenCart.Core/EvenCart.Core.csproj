@@ -32,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotEntity" Version="2.1.1" />
-    <PackageReference Include="DotEntity.MySql" Version="2.1.0" />
+    <PackageReference Include="DotEntity" Version="2.1.2" />
+    <PackageReference Include="DotEntity.MySql" Version="2.1.1" />
     <PackageReference Include="DotEntity.SqlServer" Version="2.1.0" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />

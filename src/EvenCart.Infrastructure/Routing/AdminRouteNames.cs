@@ -298,5 +298,6 @@ namespace EvenCart.Infrastructure.Routing
         public const string UpdateDownloadDisplayOrder = "UpdateDownloadDisplayOrder";
 
         public const string InstallSampleData = "InstallSampleData";
+        public const string GetEntityTagsSuggestions = "GetEntityTagsSuggestions";
     }
 }

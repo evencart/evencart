@@ -1,4 +1,4 @@
-﻿jQuery(document).ready(function() {
+﻿jQuery(document).ready(function () {
     var width = jQuery(".sidenav").width();
     jQuery(".mobile-navigation").on("click",
         function () {
@@ -10,7 +10,7 @@
                 currentLeft = 0;
             }
             jQuery(".sidenav").animate({ left: currentLeft });
-            jQuery(".client-main, .client-main-navlinks, .client-main-content").animate({ left: currentLeft+width });
+            jQuery(".client-main, .client-main-navlinks, .client-main-content").animate({ left: currentLeft + width });
         });
 });
 $(document).on("keypress", 'form', function (e) {
@@ -25,7 +25,7 @@ $(document).on("keypress", 'form', function (e) {
 });
 
 var initTopNav = function (freshRun) {
-   
+
     var $moreLi = jQuery("#li-secondary-more");
     var $moreLiA = jQuery("#li-secondary-more > a");
     var $secondaryNavigationUl = jQuery("#secondaryNavigationUl");
@@ -40,8 +40,8 @@ var initTopNav = function (freshRun) {
     var secondaryNavWidth = $secondaryNavigationUl.outerWidth();
     var maxAllowedWidth = maxWidth - saveButtonContainerWidth - $moreLi.outerWidth();
 
-   
-    
+
+
     if (maxAllowedWidth <= secondaryNavWidth) {
         //move main nav items to more
         while (secondaryNavWidth >= maxAllowedWidth) {
@@ -49,7 +49,7 @@ var initTopNav = function (freshRun) {
             lastChild.prependTo($moreSubMenu);
             secondaryNavWidth = $secondaryNavigationUl.outerWidth();
         }
-    } 
+    }
 
     if ($moreSubMenu.children("li").length == 0) {
         $moreLi.hide();
@@ -68,7 +68,7 @@ var initTopNav = function (freshRun) {
                 e.stopPropagation();
             });
         jQuery("html").click(function (e) {
-            
+
             if ($moreSubMenu.is(":visible"))
                 $moreSubMenu.hide();
         });
@@ -296,24 +296,27 @@ var displayOrderSortable = function (options) {
     });
 }
 
-var inputTypeahead = function (options) {
-    options = jQuery.extend({}, {
-        substringMatch: true,
-        url: null,
-        select: function (selectedItem) { },
-        suggestNewAdditions: true,
-        clearAfterSelect: false,
-        preserveAfterFirstCall: false,
-        openOnFocus: false,
-        minLength: 1,
-        destroy: false,
-        multiple: false,
-        value: false,
-        beforeItemRemoved: function (evt) { },
-        itemRemoved: function (evt) { },
-        itemAdded: function (evt) { },
-        data: []
-    }, options);
+var inputTypeahead = function(options) {
+    options = jQuery.extend({},
+        {
+            substringMatch: true,
+            url: null,
+            select: function(selectedItem) {},
+            suggestNewAdditions: true,
+            clearAfterSelect: false,
+            preserveAfterFirstCall: false,
+            openOnFocus: false,
+            minLength: 1,
+            destroy: false,
+            multiple: false,
+            value: false,
+            beforeItemRemoved: function(evt) {},
+            itemRemoved: function(evt) {},
+            itemAdded: function(evt) {},
+            data: [],
+            stringTags: false
+        },
+        options);
 
     var element = options.element;
     if (options.destroy) {
@@ -333,7 +336,7 @@ var inputTypeahead = function (options) {
             return jQuery('#' + element).tagsinput("items");
         }
     }
-    var dataSearch = function (q, data) {
+    var dataSearch = function(q, data) {
         // an array that will be populated with substring matches
         var matches = [];
 
@@ -342,23 +345,28 @@ var inputTypeahead = function (options) {
 
         // iterate through the pool of strings and for any string that
         // contains the substring `q`, add it to the `matches` array
-        jQuery.each(data, function (index, obj) {
-            var str = typeof obj === "object" ? obj.text : obj;
-            if (substrRegex.test(str)) {
-                matches.push(obj);
-            }
-        });
+        jQuery.each(data,
+            function(index, obj) {
+                var str = typeof obj === "object" ? obj.text : obj;
+                if (substrRegex.test(str)) {
+                    matches.push(obj);
+                }
+            });
 
         if (matches.length == 0 && options.suggestNewAdditions) {
-            matches.push({
-                id: 0,
-                text: q
-            });
+            if (options.stringTags) {
+                matches.push(q);
+            } else {
+                matches.push({
+                    id: 0,
+                    text: q
+                });
+            }
         }
         return matches;
-    }
-    var sourceFunction = function (options) {
-        return function (q, syncResults, asyncResults) {
+    };
+    var sourceFunction = function(options) {
+        return function(q, syncResults, asyncResults) {
             if (!options.initialData && options.url) {
                 var url = options.url;
                 if (isFunction(url))
@@ -367,14 +375,14 @@ var inputTypeahead = function (options) {
                     get({
                         url: url,
                         data: { q: q },
-                        done: function (r) {
+                        done: function(r) {
                             if (r.success) {
                                 if (options.preserveAfterFirstCall)
                                     options.initialData = r.suggestions;
                                 var matches = dataSearch(q, r.suggestions);
-                                setTimeout(function () {
-                                    asyncResults(matches);
-                                },
+                                setTimeout(function() {
+                                        asyncResults(matches);
+                                    },
                                     0);
 
                             }
@@ -387,15 +395,13 @@ var inputTypeahead = function (options) {
             var matches = dataSearch(q, data);
             syncResults(matches);
         };
-    }
+    };
 
-    if (options.multiple) {       
-        jQuery('#' + element).tagsinput({
-            allowDuplicates: true,
+    if (options.multiple) {
+        var inputOptions = {
+            allowDuplicates: false,
             trimValue: true,
             freeInput: options.suggestNewAdditions,
-            itemText: "text",
-            itemValue: "id",
             confirmKeys: [13, 9],
             typeaheadjs: [
                 {
@@ -404,16 +410,25 @@ var inputTypeahead = function (options) {
                     minLength: options.minLength
                 }, {
                     source: sourceFunction(options),
-                    display: function (selection) {
+                    display: function(selection) {
+                        if (options.stringTags)
+                            return selection;
                         if (selection.id == 0)
                             return "+ " + selection.text;
                         return selection.text;
                     }
                 }
             ]
-        });
+        };
+        if (!options.stringTags) {
+            inputOptions.itemText = "text";
+            inputOptions.itemValue = "id";
+        } else {
+            inputOptions.stringTags = true;
+        }
+        jQuery('#' + element).tagsinput(inputOptions);
         if (options.initialData) {
-            options.initialData.forEach(function (item) {
+            options.initialData.forEach(function(item) {
                 jQuery('#' + element).tagsinput('add', item);
             });
         }
@@ -423,28 +438,29 @@ var inputTypeahead = function (options) {
             jQuery('#' + element).on("beforeItemRemove", options.beforeItemRemoved);
         if (options.itemRemoved)
             jQuery('#' + element).on("itemRemoved", options.itemRemoved);
-       
+
         jQuery('#' + element).data("taginit", true);
 
-    }
-    else {
+    } else {
 
         jQuery('#' + element).typeahead({
-            hint: true,
-            highlight: true,
-            minLength: options.minLength
-        },
-            {
-                source: sourceFunction(options),
-                display: function (selection) {
-                    if (selection.id == 0) {
-                        return "+ " + selection.text;
+                    hint: true,
+                    highlight: true,
+                    minLength: options.minLength
+                },
+                {
+                    source: sourceFunction(options),
+                    display: function(selection) {
+                        if (options.stringTags)
+                            return "+ " + selection;
+                        if (selection.id == 0) {
+                            return "+ " + selection.text;
+                        }
+                        return selection.text;
                     }
-                    return selection.text;
-                }
-            })
+                })
             .bind('typeahead:select',
-                function (ev, suggestion) {
+                function(ev, suggestion) {
                     if (suggestion.id == 0) {
                         jQuery(this).typeahead('val', suggestion.text);
                     }
@@ -452,24 +468,25 @@ var inputTypeahead = function (options) {
                     if (options.clearAfterSelect)
                         jQuery(this).typeahead('val', "");
                 });
-        jQuery('#' + element).on('blur', function (e) {
-            var val = jQuery(this).val();
-            if (val.startsWith("+ "))
-                jQuery(this).val(val.substring(2));
+        jQuery('#' + element).on('blur',
+            function(e) {
+                var val = jQuery(this).val();
+                if (val.startsWith("+ "))
+                    jQuery(this).val(val.substring(2));
 
-        });
+            });
         if (options.openOnFocus) {
-            jQuery('#' + element).focus(function () {
+            jQuery('#' + element).focus(function() {
                 if (jQuery(this).val() == "")
                     jQuery(this).typeahead('open');
             });
         }
     }
 
-}
+};
 
 
-var initAreYouSure = function() {
+var initAreYouSure = function () {
     //init are you sure
     jQuery('form').areYouSure();
 };

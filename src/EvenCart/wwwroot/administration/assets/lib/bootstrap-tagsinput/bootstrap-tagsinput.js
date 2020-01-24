@@ -432,13 +432,17 @@
          
          var text = $input.val(),
          maxLengthReached = self.options.maxChars && text.length >= self.options.maxChars;
-         if ((keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
+          if ((keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
             // Only attempt to add a tag if there is data in the field
-            if (text.length !== 0) {
-                self.add({
-                    text: maxLengthReached ? text.substr(0, self.options.maxChars) : text,
-                    id:0
-                });
+              if (text.length !== 0) {
+                  if (self.options.stringTags) {
+                      self.add(maxLengthReached ? text.substr(0, self.options.maxChars) : text);
+                  } else {
+                      self.add({
+                          text: maxLengthReached ? text.substr(0, self.options.maxChars) : text,
+                          id: 0
+                      });
+                  }
                $input.val('');
             }
 
