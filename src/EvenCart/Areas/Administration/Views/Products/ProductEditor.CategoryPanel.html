@@ -105,15 +105,15 @@
 
     <div class="panel-title">
         {{"Tags" | t}}
+    </div>
+    <div class="panel-body">
         <div class="panel-help">
             {{"Tags are collection of words or phrases that give extra information about the product. Whenever the user searches for a product, EvenCart also looks for those keywords in tags." | t}}
         </div>
-    </div>
-    <div class="panel-body">
         {% control text id="tags-selector" placeholder=@t"Add tags..." %}
         <div id="tags-container">
             {% for tag in product.tags %}
-            <input type="hidden" name="tags[]" value="{{tag}}"/>
+            <input type="hidden" name="tags[]" value="{{tag}}" />
             {% endfor %}
         </div>
         <script type="text/javascript">
@@ -132,7 +132,7 @@
                 }
                 jQuery("#tags-container").html(fields);
             }
-            ready(function () {
+            ready(function() {
                 var initData = [];
                 //add existing tags
                 //{% for tag in product.tags %}
@@ -142,7 +142,7 @@
                     element: "tags-selector",
                     initialData: initData,
                     multiple: true,
-                    substringMatch:false,
+                    substringMatch: false,
                     url: "{% route api_GetEntityTagsSuggestions %}",
                     preserveAfterFirstCall: false,
                     suggestNewAdditions: true,
@@ -150,9 +150,9 @@
                     clearAfterSelect: true,
                     stringTags: true,
                     itemAdded: tagsToHiddenFields,
-                    itemRemoved:tagsToHiddenFields
+                    itemRemoved: tagsToHiddenFields
                 });
-              
+
             });
         </script>
     </div>
