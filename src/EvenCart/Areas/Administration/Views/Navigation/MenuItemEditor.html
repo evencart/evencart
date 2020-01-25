@@ -32,6 +32,9 @@
                         {% control text name="url" value="{{menuItem.url}}" %}
                     </div>
                     {% endif %}
+                    <div class="form-group">
+                        {% control checkbox name="openInNewWindow" text=@t"Open in new window" value="menuItem.openInNewWindow" %}
+                    </div>
                     {% endif %}
                 </div>
             </div>

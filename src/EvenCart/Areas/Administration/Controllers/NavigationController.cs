@@ -229,7 +229,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 menuItem.Url = menuItemModel.Url;
             }
             menuItem.Name = menuItemModel.Name;
-
+            menuItem.OpenInNewWindow = menuItemModel.OpenInNewWindow;
             _menuItemService.InsertOrUpdate(menuItem);
             return R.Success.Result;
         }
