@@ -412,7 +412,10 @@ namespace EvenCart.Services.Installation
             settingService.Save(new SecuritySettings()
             {
                 DefaultPasswordStorageFormat = PasswordFormat.Sha1Hashed,
-                HoneypotFieldName = "refcode-" + cryptographyService.GetRandomPassword()
+                HoneypotFieldName = "refcode-" + cryptographyService.GetRandomPassword(),
+                EmailVerificationCodeExpirationMinutes = 5,
+                EmailVerificationLinkExpirationHours = 24,
+                InviteLinkExpirationHours = 48
             });
 
             //user settings

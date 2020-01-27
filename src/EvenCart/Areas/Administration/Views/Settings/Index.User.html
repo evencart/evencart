@@ -13,6 +13,12 @@
             {% control select name="userRegistrationDefaultMode" value="settings.userRegistrationDefaultMode" items="registrationModes" required="true" %}
         </div>
         <div class="form-group">
+            {% control checkbox name="useNumericCodeForActivationEmail" text=@t"Use numeric code for activation emails" value="settings.useNumericCodeForActivationEmail"%}
+            <div class="panel-help">
+                {{"Check this if a 6 digit code should be sent to user instead of activation link. Used only if registration mode is set to Activation email." | t}}
+            </div>
+        </div>
+        <div class="form-group">
             {% control checkbox name="areProfilePicturesEnabled" text=@t"Enable profile pictures" value="settings.areProfilePicturesEnabled"%}
         </div>
         <div class="form-group">

@@ -4,11 +4,19 @@ using DotEntity.Enumerations;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
+using EvenCart.Services.Security;
 
 namespace EvenCart.Services.Users
 {
     public class UserCodeService : FoundationEntityService<UserCode>, IUserCodeService
     {
+        private readonly ICryptographyService _cryptographyService;
+
+        public UserCodeService(ICryptographyService cryptographyService)
+        {
+            _cryptographyService = cryptographyService;
+        }
+
         public UserCode GetUserCode(int userId, UserCodeType userCodeType)
         {
             var userCode = Repository.Where(x => x.UserId == userId && x.CodeType == userCodeType)
@@ -18,7 +26,8 @@ namespace EvenCart.Services.Users
                 .FirstOrDefault() ?? new UserCode();
 
             userCode.UserId = userId;
-            userCode.Code = Guid.NewGuid().ToString("D");
+            userCode.Code = userCodeType == UserCodeType.EmailOtp ? _cryptographyService.GetNumericCode(6) : Guid.NewGuid().ToString("D");
+         
             userCode.CodeType = userCodeType;
             userCode.CreatedOn = DateTime.UtcNow;
             InsertOrUpdate(userCode);

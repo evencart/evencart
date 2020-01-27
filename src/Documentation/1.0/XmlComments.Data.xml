@@ -274,6 +274,11 @@
             The number of hours after which invite link should expire. Set to 0 for no expiration.
             </summary>
         </member>
+        <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.EmailVerificationCodeExpirationMinutes">
+            <summary>
+            The number of minutes after which email verification code should expire. Set to 0 for no expiration
+            </summary>
+        </member>
         <member name="P:EvenCart.Data.Entity.Settings.SecuritySettings.EnableCaptcha">
             <summary>
             If captcha should be enabled
@@ -352,6 +357,11 @@
         <member name="P:EvenCart.Data.Entity.Settings.UserSettings.ActivateUserForConnectedAccount">
             <summary>
             Specifies if user logging in with connected account be immediately activated
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Settings.UserSettings.UseNumericCodeForActivationEmail">
+            <summary>
+            Specifies if activation code should be a 6 digit numeric code instead of alphanumeric strings
             </summary>
         </member>
         <member name="F:EvenCart.Data.Entity.Shop.DownloadActivationType.PaymentComplete">
@@ -457,6 +467,11 @@
         <member name="F:EvenCart.Data.Entity.Users.UserCodeType.RegistrationInvitation">
             <summary>
             Specifies a code for registration by invitation
+            </summary>
+        </member>
+        <member name="F:EvenCart.Data.Entity.Users.UserCodeType.EmailOtp">
+            <summary>
+            Specifies a 6 digit otp for email verification
             </summary>
         </member>
         <member name="F:EvenCart.Data.Enum.CreditTransactionType.Issued">

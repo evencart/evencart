@@ -13,6 +13,10 @@
         /// <summary>
         /// Specifies a code for registration by invitation
         /// </summary>
-        RegistrationInvitation
+        RegistrationInvitation,
+        /// <summary>
+        /// Specifies a 6 digit otp for email verification
+        /// </summary>
+        EmailOtp
     }
 }

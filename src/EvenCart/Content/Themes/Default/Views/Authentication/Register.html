@@ -62,6 +62,22 @@
                             </div>
                         </div>
                     </form>
+                    {% if numericActivation %}
+                    <form id="formVerification" style="display: none" action="{% route api_VerifyEmail %}" method="post">
+                        {% control xsrf %}
+                        <div class="row">
+                            <div class="col-sm-12 mb-20">
+                                {% control label text=@t"Verification Code" for="verificationCode" %}
+                                {% control number name="code" id="verificationCode" class="form-control" %}
+                                {% control validator for="verificationCode" required="true" %}
+                            </div>
+                            <div class="col-sm-12">
+                                {% control hidden id="verification-email" name="email" value="" %}
+                                <button type="submit">{{"Verify" | t}}</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
                     <script type="text/javascript">
                         ready(function () {
                             initAjaxForm("formRegistration",
@@ -72,24 +88,49 @@
                                             msg += "{{'You will be redirected to login page to proceed.' | t}}";
                                         }
                                         else if (response.mode == "WithActivationEmail") {
-                                            msg += "{{'Please check your email inbox for activation link.' | t}}";
+                                            if (response.numericActivation) {
+                                                msg += "{{'Please provide the verification code sent to your email.' | t}}";
+                                                jQuery("#verification-email").val(jQuery("#email").val());
+                                                jQuery("#formRegistration").remove();
+                                                jQuery("#formVerification").show();
+
+
+                                            } else {
+                                                msg += "{{'Please check your email inbox for activation link.' | t}}";
+                                            }
+
                                         }
                                         else if (response.mode == "ManualApproval") {
                                             msg += "{{'You will get an email once your account is approved.' | t}}";
                                         }
                                         notify("success", msg);
-                                        setTimeout(function() {
-                                                var loginUrl = "{% route Login %}";
-                                                window.location.href = loginUrl;
-                                            },
-                                            1000);
+                                        if (!response.numericActivation) {
+                                            setTimeout(function() {
+                                                    var loginUrl = "{% route Login %}";
+                                                    window.location.href = loginUrl;
+                                                },
+                                                1000);
+                                        }
                                     },
                                     errorPlacement: function (error, element) {
-                    
+
                                     }
                                 });
+
+                            //{% if numericActivation %}
+                            initAjaxForm("formVerification",
+                                {
+                                    onSuccess: function(response) {
+                                        notify("success",
+                                            "{{'Thank you for email verification. You have been logged in now. Redirecting to home...' | t}}");
+                                        setTimeout(function() {
+                                            window.location.href = "/";
+                                        });
+                                    }
+                                });
+                            //{% endif %}
                         });
-   
+
                     </script>
                     {% endif %}
                 </div>
