@@ -198,5 +198,20 @@ namespace EvenCart.Services.Security
         {
             return GetMd5Hash(MD5.Create(), plainText);
         }
+
+        public string GetNumericCode(int length)
+        {
+            var numbers = "0123456789";
+            var code = new StringBuilder();
+            var random = new Random();
+            while (code.Length < length)
+            {
+                var nextDigitIndex = random.Next(0, numbers.Length);
+                code.Append(numbers[nextDigitIndex]);
+            }
+
+            return code.ToString();
+
+        }
     }
 }

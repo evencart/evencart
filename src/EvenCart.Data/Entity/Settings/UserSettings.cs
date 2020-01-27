@@ -24,5 +24,10 @@ namespace EvenCart.Data.Entity.Settings
         /// Specifies if user logging in with connected account be immediately activated
         /// </summary>
         public bool ActivateUserForConnectedAccount { get; set; }
+
+        /// <summary>
+        /// Specifies if activation code should be a 6 digit numeric code instead of alphanumeric strings
+        /// </summary>
+        public bool UseNumericCodeForActivationEmail { get; set; }
     }
 }

@@ -32,14 +32,18 @@ namespace EvenCart.Events
                     var user = (User) eventData[0];
                     if (_affiliateSettings.SignupCreditToAffiliate > 0)
                     {
-                        _storeCreditService.Insert(new StoreCredit()
+                        if (user.ReferrerId > 0)
                         {
-                            CreatedOn = DateTime.UtcNow,
-                            AvailableOn = DateTime.UtcNow,
-                            Credit = _affiliateSettings.SignupCreditToAffiliate,
-                            Description = $"{user.Name} account was activated",
-                            UserId = user.ReferrerId
-                        });
+                            _storeCreditService.Insert(new StoreCredit()
+                            {
+                                CreatedOn = DateTime.UtcNow,
+                                AvailableOn = DateTime.UtcNow,
+                                Credit = _affiliateSettings.SignupCreditToAffiliate,
+                                Description = $"{user.Name} account was activated",
+                                UserId = user.ReferrerId
+                            });
+                        }
+                       
                     }
                     if (_affiliateSettings.SignupCreditToNewUser > 0)
                     {

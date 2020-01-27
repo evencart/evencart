@@ -217,7 +217,12 @@ namespace EvenCart.Controllers
             //get one time consents
             var consents = _consentService.Get(x => x.OneTimeSelection && x.Published).ToList();
             var models = consents.Select(_gdprModelFactory.Create).ToList();
-            return R.Success.With("consents", models).With("inviteCode", inviteCode).WithAvailableCountries().Result;
+            return R.Success
+                .With("consents", models)
+                .With("inviteCode", inviteCode)
+                .WithAvailableCountries()
+                .With("mode", _userSettings.UserRegistrationDefaultMode)
+                .With("numericActivation", _userSettings.UseNumericCodeForActivationEmail).Result;
         }
 
         /// <summary>
@@ -316,10 +321,14 @@ namespace EvenCart.Controllers
                 //if there was no invite code, the email needs to be verified (if the admin wants so)
                 if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.WithActivationEmail)
                 {
-                    userCode = _userCodeService.GetUserCode(user.Id, UserCodeType.EmailVerification);
+                    userCode = _userCodeService.GetUserCode(user.Id, _userSettings.UseNumericCodeForActivationEmail ? UserCodeType.EmailOtp : UserCodeType.EmailVerification);
                     var verificationCode = userCode.Code;
-                    verificationLink =
-                        ApplicationEngine.RouteUrl(RouteNames.VerifyEmail, new {code = verificationCode}, true);
+                    verificationLink = verificationCode;
+                    if (!_userSettings.UseNumericCodeForActivationEmail)
+                    {
+                        verificationLink =
+                            ApplicationEngine.RouteUrl(RouteNames.VerifyEmail, new { code = verificationCode }, true);
+                    }
                 }
             }
 
@@ -337,7 +346,7 @@ namespace EvenCart.Controllers
             {
                 RaiseEvent(NamedEvent.UserActivated, user);
             }
-            return R.Success.With("mode", _userSettings.UserRegistrationDefaultMode).Result;
+            return R.Success.With("mode", _userSettings.UserRegistrationDefaultMode).With("numericActivation", _userSettings.UseNumericCodeForActivationEmail).Result;
         }
 
         [HttpGet("request-invite", Name = RouteNames.RequestInvite)]
@@ -402,6 +411,36 @@ namespace EvenCart.Controllers
             RaiseEvent(NamedEvent.UserActivated, userCode.User);
             return R.Success.Result;
         }
+
+        /// <summary>
+        /// Verifies the email address with the code and immediately logs in the user
+        /// </summary>
+        /// <param name="verificationModel"></param>
+        /// <response code="200">A success response object</response>
+        [DualPost("verify-email", Name = RouteNames.VerifyEmail, OnlyApi = true)]
+        [ValidateModelState(ModelType = typeof(EmailVerificationModel))]
+        public IActionResult VerifyEmail(EmailVerificationModel verificationModel)
+        {
+            var userCode = _userCodeService.GetUserCode(verificationModel.Code, UserCodeType.EmailOtp);
+            if (userCode == null || userCode.User.Email != verificationModel.Email || !IsCodeValid(userCode) || verificationModel.Code != userCode.Code)
+            {
+                return R.Fail.With("error", T("The code is invalid or expired")).Result;
+            }
+
+            userCode.User.Active = true;
+            _userService.Update(userCode.User);
+            //delete the user code
+            _userCodeService.Delete(userCode);
+            RaiseEvent(NamedEvent.UserActivated, userCode.User);
+            //and signin the current user
+            var loginStatus = ApplicationEngine.SignIn(userCode.User.Email, userCode.User.Name, false, verificationModel.Token);
+            //get api token if it was requested
+            var token = ApplicationEngine.CurrentHttpContext.GetApiToken();
+            if (loginStatus == LoginStatus.Success)
+                return R.Success.With("token", token).Result;
+
+            return R.Fail.With("message", T("An error occured while login")).Result;
+        }
         #region Helpers
 
         [NonAction]
@@ -442,6 +481,11 @@ namespace EvenCart.Controllers
                 return _securitySettings.EmailVerificationLinkExpirationHours <= 0 ||
                        DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
                        _securitySettings.EmailVerificationLinkExpirationHours;
+
+            if (userCode.CodeType == UserCodeType.EmailOtp)
+                return _securitySettings.EmailVerificationCodeExpirationMinutes <= 0 ||
+                       DateTime.UtcNow.Subtract(userCode.CreatedOn).Minutes <=
+                       _securitySettings.EmailVerificationCodeExpirationMinutes;
 
             return false;
         }
