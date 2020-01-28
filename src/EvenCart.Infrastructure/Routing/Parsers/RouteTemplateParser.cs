@@ -9,6 +9,7 @@ namespace EvenCart.Infrastructure.Routing.Parsers
     {
         internal const string SeNameKey = "SeName";
         internal const string CategoryPathKey = "CategoryPath";
+        internal const string ParentEntityPathKey = "ParentEntityPath";
         internal const string IdKey = "Id";
         internal const string YearKey = "Year";
         internal const string MonthKey = "Month";
@@ -20,6 +21,7 @@ namespace EvenCart.Infrastructure.Routing.Parsers
         {
             { SeNameKey, $@"(?<{SeNameKey}>([a-zA-Z0-9\-_$%\.~]+))(?:/?)" },
             { CategoryPathKey, $@"?(?<{CategoryPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)*" },
+            { ParentEntityPathKey, $@"?(?<{ParentEntityPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)*" },
             { IdKey, $@"(?<{IdKey}>[0-9]+)" },
             { YearKey, $@"(?<{YearKey}>[0-9][0-9][0-9][0-9])" },
             { MonthKey, $@"(?<{MonthKey}>([1-9]|0[1-9]|1[0-2]))" },
@@ -78,6 +80,10 @@ namespace EvenCart.Infrastructure.Routing.Parsers
                 if (match.Groups[CategoryPathKey].Captures.Any())
                 {
                     AddSingleGroup(CategoryPathKey, match, resultCollection);
+                }
+                if (match.Groups[ParentEntityPathKey].Captures.Any())
+                {
+                    AddSingleGroup(ParentEntityPathKey, match, resultCollection);
                 }
                 if (match.Groups[IdKey].Captures.Any())
                 {

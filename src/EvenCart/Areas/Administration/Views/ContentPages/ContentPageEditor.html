@@ -54,6 +54,15 @@
                         {% control select name="template" value="contentPage.template" items="themeTemplates" %}
                     </div>
                     {% endif %}
+                    {% if availablePages.size > 0 %}
+                    <div class="form-group">
+                        {% control label text=@t"Parent" %}
+                        <div class="panel-help">
+                            {{"Parent Page" | t}}
+                        </div>
+                        {% control select name="ParentId" items="availablePages" value="contentPage.parentId"  %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% assign seoMeta = contentPage.seoMeta %}

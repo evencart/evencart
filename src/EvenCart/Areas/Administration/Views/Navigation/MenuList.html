@@ -211,10 +211,10 @@
                 });
             });
     }
-    var renderCategory = function(allCategories, parentCategoryId, level) {
+    var renderCategory = function(allCategories, parentId, level) {
         var categoryLine = "<ul>";
         allCategories.forEach(function(c) {
-            if (c.parentCategoryId == parentCategoryId) {
+            if (c.parentId == parentId) {
                 categoryLine += "<li>";
                 categoryLine += "<label><input type='checkbox' class='margin-r-5' name='categoryIds[]' value='" + c.id + "'/>" + c.name + "</label>";
                 categoryLine += renderCategory(allCategories, c.id, level + 1);

@@ -21,10 +21,10 @@ namespace EvenCart.Infrastructure.Helpers
                     Url = category.SeoMeta != null ? ApplicationEngine.RouteUrl(RouteNames.ProductsPage, new
                     {
                         seName = category.SeoMeta.Slug,
-                        categoryPath = category.GetCategoryPath(allCategories)
+                        categoryPath = category.GetCategoryPath()
                     }, true) : ""
                 });
-                category = category.ParentCategory;
+                category = category.Parent;
             }
 
             foreach (var node in breadcrumbNodes)

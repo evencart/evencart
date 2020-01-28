@@ -38,7 +38,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var antiforgery = DependencyResolver.Resolve<IAntiforgery>();
             var currencyService = DependencyResolver.Resolve<ICurrencyService>();
 
-            var categories = categoryService.Get(x => x.ParentCategoryId == 0).ToList();
+            var categories = categoryService.Get(x => x.ParentId == 0).ToList();
             var logoUrl = generalSettings.LogoId > 0
                 ? mediaAccountant.GetPictureUrl(generalSettings.LogoId)
                 : ApplicationEngine.MapUrl(ApplicationConfig.DefaultLogoUrl, true);

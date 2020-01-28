@@ -1,7 +1,10 @@
-﻿using DotEntity;
+﻿using System.Linq;
+using DotEntity;
 using DotEntity.Versioning;
 using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Navigation;
+using EvenCart.Data.Entity.Pages;
+using EvenCart.Data.Entity.Shop;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -10,13 +13,37 @@ namespace EvenCart.Data.Versions
         public void Upgrade(IDotEntityTransaction transaction)
         {
             Db.CreateTable<EntityTag>(transaction);
-            Db.AddColumn<MenuItem, bool>(nameof(MenuItem.OpenInNewWindow), false, transaction);
+
+            //execute the following only if it's not a fresh install
+            if (transaction.CurrentlyRanVersions.All(x => x.GetType() != typeof(Version1)))
+            {
+                Db.AddColumn<MenuItem, bool>(nameof(MenuItem.OpenInNewWindow), false, transaction);
+                var parentCategoryIdCol = DotEntityDb.Provider.SafeEnclose(nameof(Category.ParentCategoryId));
+                var parentIdCol = DotEntityDb.Provider.SafeEnclose(nameof(Category.ParentId));
+                var categoryTable = DotEntityDb.GetTableNameForType<Category>();
+                Db.AddColumn<Category, int>(nameof(Category.ParentId), 0, transaction);
+                Db.Query($"UPDATE {categoryTable} SET {parentIdCol}={parentCategoryIdCol}", null, transaction);
+                Db.DropColumn<Category>(nameof(Category.ParentCategoryId), transaction);
+                Db.AddColumn<ContentPage, int>(nameof(ContentPage.ParentId), 0, transaction);
+            }
+      
         }
 
         public void Downgrade(IDotEntityTransaction transaction)
         {
+
             Db.DropTable<EntityTag>(transaction);
             Db.DropColumn<MenuItem>(nameof(MenuItem.OpenInNewWindow), transaction);
+
+            var parentCategoryIdCol = DotEntityDb.Provider.SafeEnclose(nameof(Category.ParentCategoryId));
+            var parentIdCol = DotEntityDb.Provider.SafeEnclose(nameof(Category.ParentId));
+            var categoryTable = DotEntityDb.GetTableNameForType<Category>();
+
+            Db.AddColumn<Category, int>(nameof(Category.ParentCategoryId), 0, transaction);
+            Db.Query($"UPDATE {categoryTable} SET {parentCategoryIdCol}={parentIdCol}", null, transaction);
+            Db.DropColumn<Category>(nameof(Category.ParentId), transaction);
+
+            Db.DropColumn<ContentPage>(nameof(ContentPage.ParentId), transaction);
         }
 
         public string VersionKey => "EvenCart.Version.1C";

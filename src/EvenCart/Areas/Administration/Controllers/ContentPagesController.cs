@@ -3,12 +3,14 @@ using System.Linq;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Users;
+using EvenCart.Core.Extensions;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Pages;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
@@ -39,9 +41,14 @@ namespace EvenCart.Areas.Administration.Controllers
             var current = parameters?.Current ?? 1;
             var rowCount = parameters?.RowCount ?? 15;
             var contentPages =
-                _contentPageService.GetContentPages(out int totalResults, parameters?.SearchPhrase, current, rowCount);
+                _contentPageService.GetContentPages(out int totalResults, parameters?.SearchPhrase, current, rowCount).ToList().GetWithParentTree();
 
-            var contentPageModels = contentPages.Select(PrepareModel).Select(x =>
+            var contentPageModels = contentPages.Select(x =>
+            {
+                var model = PrepareModel(x);
+                model.ParentPath = x.GetNameBreadCrumb();
+                return model;
+            }).Select(x =>
             {
                 x.Content = ""; //no need to send content on list page...will save some bandwidth
                 return x;
@@ -60,7 +67,15 @@ namespace EvenCart.Areas.Administration.Controllers
             if (contentPage == null)
                 return NotFound();
             var model = PrepareModel(contentPage);
+            //get all pages to make a tree
+            var availablePages = _contentPageService.Get(x => x.Id != contentPageId).ToList().GetWithParentTree();
+            var contentPageModels =
+                SelectListHelper.GetSelectItemListWithAction(availablePages, x => x.Id, x => x.GetNameBreadCrumb())
+                    .OrderBy(x => x.Text).ToList();
+
+
             return R.Success.With("contentPage", model)
+                .With("availablePages", contentPageModels)
                 .WithActiveThemeTemplates()
                 .Result;
         }
@@ -86,6 +101,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 contentPage.UserId = ApplicationEngine.CurrentUser.Id;
             }
             contentPage.UpdatedOn = DateTime.UtcNow;
+            contentPage.ParentId = model.ParentId;
             _contentPageService.InsertOrUpdate(contentPage);
 
             //update the seometa

@@ -234,7 +234,7 @@ namespace EvenCart.Controllers
                 {
                     if (currentCategory != null)
                     {
-                        var childIds = currentCategory.ChildCategories.SelectManyRecursive(x => x.ChildCategories).Select(x => x.Id);
+                        var childIds = currentCategory.Children.SelectManyRecursive(x => x.Children).Select(x => x.Id);
                         categoryIds = categoryIds.Concat(childIds).ToList();
                     }
                 }

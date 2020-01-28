@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Users;
 
 namespace EvenCart.Data.Entity.Pages
 {
-    public class ContentPage : FoundationEntity, ISeoEntity
+    public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>
     {
         public string Name { get; set; }
 
@@ -28,10 +29,17 @@ namespace EvenCart.Data.Entity.Pages
 
         public string Template { get; set; }
 
+        public int ParentId { get; set; }
+
         #region Virtual Properties
         public virtual SeoMeta SeoMeta { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual ContentPage Parent { get; set; }
+        
+        public virtual IList<ContentPage> Children { get; set; }
         #endregion
+       
     }
 }

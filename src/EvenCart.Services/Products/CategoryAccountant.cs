@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Shop;
 
 namespace EvenCart.Services.Products
@@ -16,9 +16,7 @@ namespace EvenCart.Services.Products
 
         public string GetFullBreadcrumb(Category category, string separator = " > ")
         {
-            var builder = new StringBuilder();
-            BuildBreadCrumb(category, separator, builder);
-            return builder.ToString().TrimEnd(separator.ToCharArray());
+            return category.GetNameBreadCrumb(separator);
         }
 
         public Category CreateCategoryTree(string categoryTree, IList<Category> allCategories, string separator = ">")
@@ -35,7 +33,7 @@ namespace EvenCart.Services.Products
             Category resultantCategory = null;
             foreach (var categoryName in categoryParts) {
                 var expectedParentId = previousId;
-                var category = allCategories.FirstOrDefault(x => x.ParentCategoryId == expectedParentId && x.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase));
+                var category = allCategories.FirstOrDefault(x => x.ParentId == expectedParentId && x.Name.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase));
 
                 // we didn't find this category, so it's a new category that needs to be created
                 if (category == null)
@@ -44,7 +42,7 @@ namespace EvenCart.Services.Products
                     category = new Category()
                     {
                         Name = categoryName,
-                        ParentCategoryId = expectedParentId
+                        ParentId = expectedParentId
                     };
                     _categoryService.Insert(category);
                     //add to all categories
@@ -55,16 +53,6 @@ namespace EvenCart.Services.Products
                 resultantCategory = category;
             }
             return resultantCategory;
-        }
-
-        private void BuildBreadCrumb(Category category, string separator, StringBuilder builder)
-        {
-            if (category == null)
-                return;
-            BuildBreadCrumb(category.ParentCategory, separator, builder);
-            if (category.ParentCategory != null)
-                builder.Append(separator);
-            builder.Append(category.Name);
         }
     }
 }
