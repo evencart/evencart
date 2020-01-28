@@ -16,7 +16,7 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public string ImageUrl { get; set; }
 
-        public int ParentCategoryId { get; set; }
+        public int ParentId { get; set; }
 
         public int MediaId { get; set; }
 

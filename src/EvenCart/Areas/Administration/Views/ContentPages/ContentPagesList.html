@@ -13,7 +13,7 @@
                     <thead>
                     <tr>
                         <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="name" data-formatter="name">{{"Name" | t}}</th>
                         <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
                     </tr>
@@ -58,6 +58,12 @@
                             url: "{% route api_ContentPagesList %}",
                             responseObject: "contentPages",
                             formatters: {
+                                "name": function (column, row) {
+                                    var text = "<div>" + row.name + "</div>";
+                                    if (row.parentPath != row.name)
+                                        text += "<small>" + row.parentPath + "</small>";
+                                    return text;
+                                },
                                 "binary": function(column, row) {
                                     return gridFormatters.binary(column, row, column.id);
                                 },

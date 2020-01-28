@@ -11,7 +11,7 @@ namespace EvenCart.Models.Components
 
         public bool Selected { get; set; }
 
-        public int ParentCategoryId { get; set; }
+        public int ParentId { get; set; }
 
         public List<CategoryFilterModel> ChildCategories { get; set; } = new List<CategoryFilterModel>();
        

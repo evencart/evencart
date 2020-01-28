@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using EvenCart.Core.Infrastructure.Utils;
+using EvenCart.Data.Extensions;
 
 namespace EvenCart.Services.Seo
 {
@@ -20,9 +21,20 @@ namespace EvenCart.Services.Seo
                 .Select(x => (ISitemapProvider) Activator.CreateInstance(x));
             foreach (var provider in sitemapProviders)
             {
-                var urls = provider.GetUrls();
-                foreach (var url in urls)
-                    AppendUrlNode(xmlDoc, url);
+                try
+                {
+                    var urls = provider.GetUrls();
+                    foreach (var url in urls)
+                    {
+                        if (!url.IsNullEmptyOrWhiteSpace())
+                            AppendUrlNode(xmlDoc, url);
+                    }
+                }
+                catch
+                {
+                    //continue;
+                }
+               
             }
 #if DEBUG
             return FormatXml(xmlDoc.OuterXml);

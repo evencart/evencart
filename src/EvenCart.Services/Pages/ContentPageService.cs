@@ -19,7 +19,7 @@ namespace EvenCart.Services.Pages
             if (!search.IsNullEmptyOrWhiteSpace())
                 query = query.Where(x => x.Name.Contains(search));
             query = WithRelations(query);
-            query = query.OrderBy(x => x.CreatedOn, RowOrder.Descending);
+            query = query.OrderBy(x => x.Name, RowOrder.Ascending);
 ;            return query.SelectNestedWithTotalMatches(out totalResults, page, count)
                  .ToList();
         }

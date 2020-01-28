@@ -58,7 +58,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 Id = x.Id,
                 Name = x.Name,
-                ParentCategoryId = x.ParentCategoryId
+                ParentId = x.ParentId
             }).ToList();
 
             var pageModels = pages.Select(x => new ContentPageModel()
@@ -308,7 +308,7 @@ namespace EvenCart.Areas.Administration.Controllers
                     menu.MenuItems.Add(menuItem);
 
                     //now the child categories
-                    foreach (var childCategory in category.ChildCategories.Where(x => categoryIds.Contains(x.Id)))
+                    foreach (var childCategory in category.Children.Where(x => categoryIds.Contains(x.Id)))
                     {
                         InsertCategoryMenu(childCategory, menuItem.Id);
                     }
