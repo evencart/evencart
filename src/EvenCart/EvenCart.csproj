@@ -316,6 +316,7 @@
     <None Remove="Content\Themes\Default\Views\Orders\Index.Returns.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Invoice.html" />
     <None Remove="Content\Themes\Default\Views\Orders\Orders.html" />
+    <None Remove="Content\Themes\Default\Views\Orders\PackingSlip.html" />
     <None Remove="Content\Themes\Default\Views\Orders\ReturnOrder.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.html" />
     <None Remove="Content\Themes\Default\Views\Products\Index.ProductAttributes.html" />
@@ -1094,6 +1095,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Orders\PackingSlip.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\StoreCredits\StoreCreditsInfo.html">

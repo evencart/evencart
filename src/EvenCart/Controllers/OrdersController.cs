@@ -332,7 +332,7 @@ namespace EvenCart.Controllers
             if (order == null || order.UserId != CurrentUser.Id || !CanDownloadInvoice(order))
                 return NotFound();
 
-            var pdfBytes = _pdfService.GetPdfBytes(InvoiceHelper.GetInvoice(order));
+            var pdfBytes = _pdfService.GetPdfBytes(PrintHelper.GetInvoice(order));
             return File(pdfBytes, "application/pdf", $"order_invoice_{order.Id}.pdf");
         }
         #region Helpers
