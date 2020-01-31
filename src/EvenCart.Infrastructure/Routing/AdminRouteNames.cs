@@ -299,5 +299,9 @@ namespace EvenCart.Infrastructure.Routing
 
         public const string InstallSampleData = "InstallSampleData";
         public const string GetEntityTagsSuggestions = "GetEntityTagsSuggestions";
+
+        public const string ApiKeysList = "ApiKeysList";
+        public const string SaveApiKey = "SaveApiKey";
+        public const string DeleteApiKey = "DeleteApiKey";
     }
 }
