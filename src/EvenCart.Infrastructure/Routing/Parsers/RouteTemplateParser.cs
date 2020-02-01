@@ -20,8 +20,8 @@ namespace EvenCart.Infrastructure.Routing.Parsers
         private readonly Dictionary<string, string> _templateMap = new Dictionary<string, string>()
         {
             { SeNameKey, $@"(?<{SeNameKey}>([a-zA-Z0-9\-_$%\.~]+))(?:/?)" },
-            { CategoryPathKey, $@"?(?<{CategoryPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)*" },
-            { ParentEntityPathKey, $@"?(?<{ParentEntityPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)*" },
+            { CategoryPathKey, $@"?(?<{CategoryPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)?" },
+            { ParentEntityPathKey, $@"?(?<{ParentEntityPathKey}>[a-zA-Z0-9\-_$%\.~\/]+)?" },
             { IdKey, $@"(?<{IdKey}>[0-9]+)" },
             { YearKey, $@"(?<{YearKey}>[0-9][0-9][0-9][0-9])" },
             { MonthKey, $@"(?<{MonthKey}>([1-9]|0[1-9]|1[0-2]))" },
