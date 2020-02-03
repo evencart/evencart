@@ -4114,3 +4114,24 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
         }
     }
 }
+
+.carousel {
+    position: relative;
+
+    .carousel-prev, .carousel-next {
+        position: absolute;
+        z-index: 5;
+        font-size: 2rem;
+        top: 40%;
+        color: white;
+        cursor: pointer;
+    }
+
+    .carousel-prev {
+        left: -7%;
+    }
+
+    .carousel-next {
+        right: -7%;
+    }
+}
