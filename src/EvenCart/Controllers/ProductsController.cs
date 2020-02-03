@@ -161,7 +161,7 @@ namespace EvenCart.Controllers
                     var reviewModels = reviews.Select(x =>
                     {
                         var model = _modelMapper.Map<ReviewModel>(x);
-                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User.Name;
+                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User?.Name;
                         if (model.DisplayName.IsNullEmptyOrWhiteSpace())
                         {
                             model.DisplayName = T("Store Customer");
