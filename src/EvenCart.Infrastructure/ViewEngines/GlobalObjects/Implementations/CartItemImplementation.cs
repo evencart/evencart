@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure.Extensions;
+﻿using EvenCart.Data.Entity.Shop;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
@@ -42,6 +43,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public decimal SubTotal { get; set; }
 
         public string SubTotalFormatted => SubTotal.ToCurrency();
+
+        public ProductSaleType ProductSaleType { get; set; }
+
+        public TimeCycle SubscriptionCycle { get; set; }
+
+        public int CycleCount { get; set; }
 
         public int Id { get; set; }
     }

@@ -37,6 +37,20 @@
                                 <p>
                                     {{cartItem.attributeText | newLine2Br}}
                                 </p>
+                                {% unless cartItem.productSaleType == "OneTime" %}
+                                <p>
+                                   {{"repeats every" | t}} 
+                                    <strong>
+                                        {{cartItem.CycleCount}}
+                                        {% if cartItem.subscriptionCycle == "Daily" %}
+                                        {{"day(s)" | t}}
+                                        {% endif %}
+                                        {% if cartItem.subscriptionCycle == "Monthly" %}
+                                        {{"month(s)" | t}}
+                                        {% endif %}
+                                    </strong>
+                                </p>
+                                {% endunless %}
                             </td>
                             <td class="pro-price">
                                 {% if cartItem.comparePrice > 0 %}
