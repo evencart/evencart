@@ -281,8 +281,20 @@ namespace EvenCart.Areas.Administration.Controllers
             var order = orderId > 0 ? _orderService.Get(orderId) : null;
             if (order == null)
                 return NotFound();
-            var pdfBytes = _pdfService.GetPdfBytes(InvoiceHelper.GetInvoice(order));
+            var pdfBytes = _pdfService.GetPdfBytes(PrintHelper.GetInvoice(order));
             return File(pdfBytes, "application/pdf", $"order_invoice_{order.Id}.pdf");
+        }
+
+        [HttpGet("{shipmentId}/packing-slip", Name = AdminRouteNames.DownloadPackingSlip)]
+        [CapabilityRequired(CapabilitySystemNames.EditOrder)]
+        public IActionResult DownloadPackingSlip(int shipmentId)
+        {
+            var shipment = shipmentId > 0 ? _shipmentService.Get(shipmentId) : null;
+            if (shipment == null)
+                return NotFound();
+           
+            var pdfBytes = _pdfService.GetPdfBytes(PrintHelper.GetPackingSlip(shipment));
+            return File(pdfBytes, "application/pdf", $"order_packing-slip_{shipment.Id}.pdf");
         }
 
         #endregion

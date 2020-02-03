@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Core.Extensions;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Shop;
@@ -91,8 +92,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 .Select(x =>
                 {
                     var model = _modelMapper.Map<CategoryModel>(x);
-                    model.FullCategoryPath =
-                        _categoryAccountant.GetFullBreadcrumb(categoryTree.First(y => y.Id == x.Id));
+                    model.FullCategoryPath = categoryTree.First(y => y.Id == x.Id).GetNameBreadCrumb();
                     return model;
                 })
                 .OrderBy(x => x.FullCategoryPath)
@@ -113,7 +113,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 var category = new Category() {
                     Name = categoryModel.Name,
-                    ParentCategoryId = categoryModel.ParentCategoryId,
+                    ParentId = categoryModel.ParentId,
                     Description = categoryModel.Description
                 };
                 _categoryService.Insert(category);
@@ -124,14 +124,14 @@ namespace EvenCart.Areas.Administration.Controllers
                 var category = _categoryService.GetFullCategoryTree().FirstOrDefault(x => x.Id == categoryModel.Id);
                 if (category == null)
                     return NotFound();
-                if(category.Id == categoryModel.ParentCategoryId)
+                if(category.Id == categoryModel.ParentId)
                     return R.Fail.With("error", T("Can't make a category a parent of self.")).Result;
                 //check if parent category is valid
-                if (category.IsAnyChild(categoryModel.ParentCategoryId))
+                if (category.IsAnyChild(categoryModel.ParentId))
                     return R.Fail.With("error", T("Can't make a child category as new parent")).Result;
                 category.Name = categoryModel.Name;
                 category.Description = categoryModel.Description;
-                category.ParentCategoryId = categoryModel.ParentCategoryId;
+                category.ParentId = categoryModel.ParentId;
                 _categoryService.Update(category);
             }
             return R.Success.Result;

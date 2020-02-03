@@ -32,6 +32,10 @@ namespace EvenCart.Areas.Administration.Models.Pages
 
         public string Template { get; set; }
 
+        public int ParentId { get; set; }
+
+        public string ParentPath { get; set; }
+
         #region Virtual Properties
         public SeoMetaModel SeoMeta { get; set; }
 

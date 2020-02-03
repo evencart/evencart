@@ -566,12 +566,11 @@ namespace EvenCart.Services.Products
         private bool ApplyShippingDiscount(DiscountCoupon discountCoupon, Cart cart)
         {
             var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
-            var discount = discountCoupon.GetDiscountAmount(shippingHandler?.GetShippingHandlerFee(cart) ?? 0, 1);
+            cart.ShippingFee = shippingHandler?.GetShippingHandlerFee(cart) ?? 0;
+            var discount = discountCoupon.GetDiscountAmount(cart.ShippingFee, 1);
             if (discountCoupon.HasCouponCode)
                 cart.Discount = discount;
-            cart.ShippingFee = cart.ShippingFee - discount;
-            if (cart.ShippingFee < 0)
-                cart.ShippingFee = 0;
+            cart.Discount = discount;
             return true;
         }
 

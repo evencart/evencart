@@ -22,6 +22,8 @@ namespace EvenCart.Data.Entity.Navigation
 
         public bool IsGroup { get; set; }
 
+        public bool OpenInNewWindow { get; set; }
+
         #region Virtual Properties
         public virtual Menu Menu { get; set; }
 

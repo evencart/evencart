@@ -23,5 +23,7 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public bool AreProfilePicturesEnabled { get; set; }
 
         public bool ActivateUserForConnectedAccount { get; set; }
+
+        public bool UseNumericCodeForActivationEmail { get; set; }
     }
 }

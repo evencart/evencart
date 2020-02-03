@@ -53,7 +53,10 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            navigation: 0,
+                            navigation: 3,
+                            templates:{
+                                "search":""
+                            },
                             selection: false,
                             url: "{% route api_EmailMessagesList %}",
                             responseObject: "emailMessages",

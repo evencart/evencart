@@ -65,5 +65,9 @@ namespace EvenCart.Services.Security
         /// Gets the MD5 hash of the provided text
         /// </summary>
         string GetMd5Hash(string plainText);
+
+        /// <summary>
+        /// Gets a random numeric code of specified length
+        string GetNumericCode(int length);
     }
 }

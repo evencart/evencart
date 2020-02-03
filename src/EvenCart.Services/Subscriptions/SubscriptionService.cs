@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity;
+using DotEntity.Enumerations;
 using EvenCart.Core.DataStructures;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
@@ -55,14 +56,18 @@ namespace EvenCart.Services.Subscriptions
             var emailCol = DotEntityDb.Provider.SafeEnclose(nameof(Subscription.Email));
             var guidCol = DotEntityDb.Provider.SafeEnclose(nameof(Subscription.SubscriptionGuid));
             var dataCol = DotEntityDb.Provider.SafeEnclose(nameof(Subscription.Data));
+            var activeCol = DotEntityDb.Provider.SafeEnclose(nameof(User.Active));
+            var deletedCol = DotEntityDb.Provider.SafeEnclose(nameof(User.Deleted));
 
+            var dataColString = data == null ? $"{dataCol} IS NULL" : $"{dataCol}=@data";
             var query =
-                $"SELECT * FROM {userTable} WHERE {idCol} IN (SELECT {userIdCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data AND {userIdCol} IS NOT NULL) OR " +
-                $"{emailCol} IN (SELECT {emailCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataCol}=@data AND {emailCol} IS NOT NULL)";
+                $"SELECT * FROM {userTable} WHERE {activeCol}=@active AND {deletedCol}=@deleted AND {idCol} IN (SELECT {userIdCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataColString} AND {userIdCol} IS NOT NULL) OR " +
+                $"{emailCol} IN (SELECT {emailCol} FROM {subscriptionTable} WHERE {guidCol}=@subscriptionGuid AND {dataColString} AND {emailCol} IS NOT NULL)";
 
-
-            return RepositoryExplorer<User>().QueryNested(query, new {subscriptionGuid, data = dataSerialized})
-                .ToList();
+            using(var result = EntitySet.Query(query, new { subscriptionGuid, data = dataSerialized, active = true, deleted = false }))
+            {
+                return result.SelectAllAs<User>().ToList();
+            }
 
             //Repository.Join<User>("Email", "Email")
             //    .Join<User>("UserId", "Id", SourceColumn.Parent)

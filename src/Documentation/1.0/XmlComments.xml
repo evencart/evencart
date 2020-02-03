@@ -848,6 +848,13 @@
             <param name="code">The verification code</param>
             <returns></returns>
         </member>
+        <member name="M:EvenCart.Controllers.AuthenticationController.VerifyEmail(EvenCart.Models.Authentication.EmailVerificationModel)">
+            <summary>
+            Verifies the email address with the code and immediately logs in the user
+            </summary>
+            <param name="verificationModel"></param>
+            <response code="200">A success response object</response>
+        </member>
         <member name="T:EvenCart.Controllers.CartController">
             <summary>
             Allows authenticated user to manage cart
@@ -1227,6 +1234,26 @@
         <member name="P:EvenCart.Models.Addresses.AddressInfoModel.AddressType">
             <summary>
             The address type
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Authentication.EmailVerificationModel">
+            <summary>
+            Represents an email verification object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.EmailVerificationModel.Email">
+            <summary>
+            The email of the user
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.EmailVerificationModel.Code">
+            <summary>
+            The code for verification
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Authentication.EmailVerificationModel.Token">
+            <summary>
+            Set to true if a token should be returned upon successful login
             </summary>
         </member>
         <member name="P:EvenCart.Models.Authentication.ForgotPasswordModel.Email">
@@ -1860,6 +1887,11 @@
         <member name="P:EvenCart.Models.Products.ProductSearchModel.Filters">
             <summary>
             The filter string to filter products. The format should be encoded string of attribute-name1:value1,value2 attribute-name2:value3
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Products.ProductSearchModel.Tags">
+            <summary>
+            A list of tags to restrict the search to
             </summary>
         </member>
         <member name="P:EvenCart.Models.Purchases.CartItemModel.ProductId">

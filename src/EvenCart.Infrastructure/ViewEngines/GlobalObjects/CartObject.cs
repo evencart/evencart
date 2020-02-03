@@ -36,11 +36,12 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var cart = _isWishList
                 ? cartService.GetWishlist(ApplicationEngine.CurrentUser.Id)
                 : cartService.GetCart(ApplicationEngine.CurrentUser.Id);
-
-            //refresh the cart items if necessary
-            CartHelper.RefreshCart(cart);
+            
 
             var conflictingProducts = CartHelper.HasConflictingProducts(cart);
+            if(!conflictingProducts)
+                //refresh the cart items if necessary
+                CartHelper.RefreshCart(cart);
 
             var cartModel = new CartImplementation() {
                 Items = new List<CartItemImplementation>(),
@@ -55,7 +56,6 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var currentCurrency = ApplicationEngine.CurrentCurrency;
             cartModel.Items = cart.CartItems.Select(x =>
                 {
-
                     var cartItem = new CartItemImplementation {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -68,7 +68,10 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                         TaxPercent = x.TaxPercent,
                         ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(), ApplicationEngine.ActiveTheme.CartItemImageSize, true),
                         Slug = x.Product.SeoMeta.Slug,
-                        AttributeText = formatterService.FormatProductAttributes(x.AttributeJson)
+                        AttributeText = formatterService.FormatProductAttributes(x.AttributeJson),
+                        ProductSaleType = x.Product.ProductSaleType,
+                        SubscriptionCycle = x.Product.SubscriptionCycle,
+                        CycleCount = x.Product.CycleCount
                     };
                     cartItem.SubTotal = cartItem.Price * cartItem.Quantity;
                     cartItem.FinalPrice = cartItem.SubTotal + cartItem.Tax - cartItem.Discount;

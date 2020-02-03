@@ -38,6 +38,10 @@ namespace EvenCart.Models.Products
         /// The filter string to filter products. The format should be encoded string of attribute-name1:value1,value2 attribute-name2:value3
         /// </summary>
         public string Filters { get; set; }
+        /// <summary>
+        /// A list of tags to restrict the search to
+        /// </summary>
+        public IList<string> Tags { get; set; }
 
         #region Virtual Properties
 

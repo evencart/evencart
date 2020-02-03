@@ -64,7 +64,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly ILocalFileProvider _localFileProvider;
         private readonly IRoleService _roleService;
         private readonly IEntityRoleService _entityRoleService;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService)
+        private readonly IEntityTagService _entityTagService;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService, IEntityTagService entityTagService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -91,6 +92,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _localFileProvider = localFileProvider;
             _roleService = roleService;
             _entityRoleService = entityRoleService;
+            _entityTagService = entityTagService;
         }
 
 
@@ -126,7 +128,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var products = _productService.GetProducts(out int totalResults, out decimal availableFromPrice,
                 out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
                 out Dictionary<int, string> availableVendors,
-                out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published,
+                out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published, parameters.Tags,
                 parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, true, null, null, orderByExpression,
                 parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
@@ -275,7 +277,11 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 LinkProductWithCategories(product.Id, model.Categories);
             }
-
+            //tags?
+            if (model.Tags != null)
+            {
+                _entityTagService.SetEntityTags<Product>(product.Id, model.Tags.ToArray());
+            }
             //update seo
             _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
             return R.Success.With("productId", product.Id).Result;

@@ -24,6 +24,8 @@ namespace EvenCart.Areas.Administration.Models.Navigation
 
         public bool IsGroup { get; set; }
 
+        public bool OpenInNewWindow { get; set; }
+
         public void SetupValidationRules(ModelValidator<MenuItemModel> v)
         {
             v.RuleFor(x => x.MenuId).GreaterThan(0);

@@ -44,20 +44,20 @@ namespace EvenCart.Components
                     //add child categories to current category
                     if (categoryFilterModel.Selected)
                     {
-                        foreach (var child in category.ChildCategories)
+                        foreach (var child in category.Children)
                         {
                             var childModel = PrepareModel(child, currentCategoryId, allCategories);
                             categoryFilterModel.ChildCategories.Add(childModel);
                         }
                     }
-                    category = category.ParentCategory;
+                    category = category.Parent;
                 }
                 //reverse the list to show correct order
                 filterModels.Reverse();
             }
             else
             {
-                var rootCategories = allCategories.Where(x => x.ParentCategoryId == 0);
+                var rootCategories = allCategories.Where(x => x.ParentId == 0);
                 foreach (var category in rootCategories)
                 {
                     var categoryFilterModel = PrepareModel(category, currentCategoryId, allCategories);
@@ -75,11 +75,11 @@ namespace EvenCart.Components
                 Url = ApplicationEngine.RouteUrl(RouteNames.ProductsPage,
                     new {
                         seName = category.SeoMeta.Slug,
-                        categoryPath = category.GetCategoryPath(allCategories)
+                        categoryPath = category.GetCategoryPath()
                     }),
                 Selected = category.Id == currentCategoryId,
                 Id = category.Id,
-                ParentCategoryId = category.ParentCategoryId
+                ParentId = category.ParentId
             };
             return categoryFilterModel;
         }

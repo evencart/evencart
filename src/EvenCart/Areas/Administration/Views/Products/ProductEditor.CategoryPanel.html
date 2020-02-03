@@ -102,4 +102,58 @@
             });
         </script>
     </div>
+
+    <div class="panel-title">
+        {{"Tags" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="panel-help">
+            {{"Tags are collection of words or phrases that give extra information about the product. Whenever the user searches for a product, EvenCart also looks for those keywords in tags." | t}}
+        </div>
+        {% control text id="tags-selector" placeholder=@t"Add tags..." %}
+        <div id="tags-container">
+            {% for tag in product.tags %}
+            <input type="hidden" name="tags[]" value="{{tag}}" />
+            {% endfor %}
+        </div>
+        <script type="text/javascript">
+            var tagsToHiddenFields = function() {
+                //recreate hidden tag fields
+                jQuery("#tags-container").html("");
+
+                var tags = inputTypeahead({
+                    element: "tags-selector",
+                    value: true,
+                    multiple: true
+                });
+                var fields = "";
+                for (var i = 0; i < tags.length; i++) {
+                    fields += "<input type='hidden' name='tags[]' value='" + tags[i] + "' />";
+                }
+                jQuery("#tags-container").html(fields);
+            }
+            ready(function() {
+                var initData = [];
+                //add existing tags
+                //{% for tag in product.tags %}
+                initData.push("{{tag}}");
+                //{% endfor %}
+                inputTypeahead({
+                    element: "tags-selector",
+                    initialData: initData,
+                    multiple: true,
+                    substringMatch: false,
+                    url: "{% route api_GetEntityTagsSuggestions %}",
+                    preserveAfterFirstCall: false,
+                    suggestNewAdditions: true,
+                    minLength: 1,
+                    clearAfterSelect: true,
+                    stringTags: true,
+                    itemAdded: tagsToHiddenFields,
+                    itemRemoved: tagsToHiddenFields
+                });
+
+            });
+        </script>
+    </div>
 </div>

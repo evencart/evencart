@@ -20,7 +20,10 @@
     {% for shipment in ws.shipments %}
     <tr>
         <td>
-            {{shipment.trackingNumber}}
+            {{shipment.trackingNumber}}  
+            <a class="btn btn-sm btn-primary" href='{% route DownloadAdminPackingSlip shipmentId="{{shipment.id}}" %}'>
+                {{"Download Packing Slip" | t}}
+            </a>
         </td>
         <td>
             {% for shipmentItem in shipment.shipmentItems %}

@@ -161,7 +161,7 @@ namespace EvenCart.Controllers
                     var reviewModels = reviews.Select(x =>
                     {
                         var model = _modelMapper.Map<ReviewModel>(x);
-                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User.Name;
+                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User?.Name;
                         if (model.DisplayName.IsNullEmptyOrWhiteSpace())
                         {
                             model.DisplayName = T("Store Customer");
@@ -234,7 +234,7 @@ namespace EvenCart.Controllers
                 {
                     if (currentCategory != null)
                     {
-                        var childIds = currentCategory.ChildCategories.SelectManyRecursive(x => x.ChildCategories).Select(x => x.Id);
+                        var childIds = currentCategory.Children.SelectManyRecursive(x => x.Children).Select(x => x.Id);
                         categoryIds = categoryIds.Concat(childIds).ToList();
                     }
                 }
@@ -271,6 +271,7 @@ namespace EvenCart.Controllers
                 searchText: searchModel.Search,
                 filterExpression: searchModel.Filters,
                 published: true,
+                tags: searchModel.Tags,
                 vendorIds: searchModel.VendorIds,
                 manufacturerIds: searchModel.ManufacturerIds,
                 categoryids: categoryIds,

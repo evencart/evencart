@@ -54,9 +54,9 @@ namespace EvenCart.Services.Products
 
         private void MakeTree(Category parentCategory, IList<Category> categories)
         {
-            parentCategory.ChildCategories = categories.Where(x => x.ParentCategoryId == parentCategory.Id).ToList();
-            foreach (var c in parentCategory.ChildCategories)
-                c.ParentCategory = parentCategory;
+            parentCategory.Children = categories.Where(x => x.ParentId == parentCategory.Id).ToList();
+            foreach (var c in parentCategory.Children)
+                c.Parent = parentCategory;
         }
     }
 }

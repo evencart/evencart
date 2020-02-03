@@ -24,8 +24,8 @@ namespace EvenCart.Services.Tests.Products
             var tShirtCategory = _categoryAccountant.CreateCategoryTree("Clothing > Shirts > T-Shirts", allCategories);
             var tShirtCategory2 = _categoryAccountant.CreateCategoryTree("Clothing>Shirts>T-Shirts", allCategories);
             var tShirtCategory3 = _categoryAccountant.CreateCategoryTree("clothing>shirts > t-SHIRTS", allCategories);
-            Assert.AreEqual(clothingCategory.Id, shirtCategory.ParentCategoryId);
-            Assert.AreEqual(shirtCategory.Id, tShirtCategory.ParentCategoryId);
+            Assert.AreEqual(clothingCategory.Id, shirtCategory.ParentId);
+            Assert.AreEqual(shirtCategory.Id, tShirtCategory.ParentId);
             Assert.AreEqual(tShirtCategory.Id, tShirtCategory2.Id);
             Assert.AreEqual(tShirtCategory.Id, tShirtCategory3.Id);
         }

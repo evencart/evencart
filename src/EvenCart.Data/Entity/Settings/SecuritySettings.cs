@@ -26,6 +26,10 @@ namespace EvenCart.Data.Entity.Settings
         /// </summary>
         public int InviteLinkExpirationHours { get; set; }
         /// <summary>
+        /// The number of minutes after which email verification code should expire. Set to 0 for no expiration
+        /// </summary>
+        public int EmailVerificationCodeExpirationMinutes { get; set; }
+        /// <summary>
         /// If captcha should be enabled
         /// </summary>
         public bool EnableCaptcha { get; set; }

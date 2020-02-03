@@ -13,6 +13,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public bool IsGroup { get; set; }
 
+        public bool OpenInNewWindow { get; set; }
+
         public IList<NavigationImplementation> Children { get; set; }
 
         public int Id { get; set; }

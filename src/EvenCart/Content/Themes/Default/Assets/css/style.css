@@ -3303,3 +3303,17 @@ input[type=number].no-spinner::-webkit-outer-spin-button {
     border: double 3px white; }
     .color-block input:checked ~ .color .fa {
       visibility: visible; }
+
+.carousel {
+  position: relative; }
+  .carousel .carousel-prev, .carousel .carousel-next {
+    position: absolute;
+    z-index: 5;
+    font-size: 2rem;
+    top: 40%;
+    color: white;
+    cursor: pointer; }
+  .carousel .carousel-prev {
+    left: -7%; }
+  .carousel .carousel-next {
+    right: -7%; }

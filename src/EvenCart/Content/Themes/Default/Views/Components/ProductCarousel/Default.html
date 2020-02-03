@@ -1,10 +1,18 @@
 ﻿<div class="product-carousel">
     <div class="container">
         <h3 class="title">{{title}}</h3>
-        <div class="row" id="product-carousel-{{widgetId}}">
-            {% for product in products %}
-            {% partial "Products/_ProductBox" %}
-            {% endfor %}
+        <div class="carousel">
+            <button id="carousel-prev-{{widgetId}}" class="carousel-prev btn btn-sm btn-secondary">
+                <i class="fa fa-angle-left"></i>
+            </button>
+            <button id="carousel-next-{{widgetId}}" class="carousel-next btn btn-sm btn-secondary">
+                <i class="fa fa-angle-right"></i>
+            </button>
+            <div class="row" id="product-carousel-{{widgetId}}">
+                {% for product in products %}
+                {% partial "Products/_ProductBox" %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
@@ -15,6 +23,8 @@
             infinite: true,
             slidesToShow: 4,
             slidesToScroll: 4,
+            prevArrow: jQuery('#carousel-prev-{{widgetId}}'),
+            nextArrow: jQuery('#carousel-next-{{widgetId}}'),
             responsive: [
                 {
                     breakpoint: 1024,

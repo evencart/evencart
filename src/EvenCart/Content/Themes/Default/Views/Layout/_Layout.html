@@ -96,7 +96,7 @@
         <ul>
             {% for navigationItem in navigation %}
             <li>
-                <a href="{{navigationItem.url}}" class="{{navigationItem.css}}">
+                <a href="{{navigationItem.url}}" class="{{navigationItem.css}}" {% if navigationItem.openInNewWindow %}target="_blank"{% endif %}>
                     {{navigationItem.title}}
                     {% if navigationItem.children.size > 0 %}
                     <span class="more-arrow">
@@ -108,7 +108,7 @@
                 <ul class="sub-menu">
                     {% for childNavigationItem in navigationItem.children %}
                     <li>
-                        <a href="{{childNavigationItem.url}}" class="{{childNavigationItem.css}}">
+                        <a href="{{childNavigationItem.url}}" class="{{childNavigationItem.css}}" {% if childNavigationItem.openInNewWindow %}target="_blank"{% endif %}>
                             {{childNavigationItem.title}}
                         </a>
                     </li>

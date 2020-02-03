@@ -1,5 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using DotEntity.Enumerations;
+using EvenCart.Core.Caching;
 using EvenCart.Core.Data;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Services;
 
 namespace EvenCart.Core.Extensions
 {
@@ -22,8 +30,56 @@ namespace EvenCart.Core.Extensions
                 return default(T);
             var value = entity.MetaData[key];
             if (value.GetType() == typeof(T))
-                return (T) entity.MetaData[key];
+                return (T)entity.MetaData[key];
             return default(T);
+        }
+
+        public static T GetWithTree<T>(this IFoundationEntityService<T> service, int id) where T : FoundationEntity, IAllowsParent<T>
+        {
+            var entity = service.Get(id);
+            if (entity == null)
+                return null;
+            var currentEntity = entity;
+            while (currentEntity.ParentId != 0)
+            {
+                currentEntity.Parent = service.Get(currentEntity.ParentId);
+                currentEntity = currentEntity.Parent;
+            }
+            return entity;
+        }
+
+        public static IList<T> GetWithParentTree<T>(this IList<T> entities) where T : FoundationEntity, IAllowsParent<T>
+        {
+            var key = $"{typeof(T).Name}_Tree";
+            foreach (var entity in entities)
+            {
+                MakeTree(entity, entities);
+            }
+            return entities.ToList();
+        }
+
+        public static string GetNameBreadCrumb<T>(this T entity, string separator = " > ") where T : FoundationEntity, IAllowsParent<T>, ISeoEntity
+        {
+            var builder = new StringBuilder();
+            BuildBreadCrumb(entity, separator, builder);
+            return builder.ToString().TrimEnd(separator.ToCharArray());
+        }
+
+        private static void MakeTree<T>(T parent, IList<T> allEntities) where T : FoundationEntity, IAllowsParent<T>
+        {
+            parent.Children = allEntities.Where(x => x.ParentId == parent.Id).ToList();
+            foreach (var c in parent.Children)
+                c.Parent = parent;
+        }
+
+        private static void BuildBreadCrumb<T>(T entity, string separator, StringBuilder builder) where T : FoundationEntity, IAllowsParent<T>, ISeoEntity
+        {
+            if (entity == null)
+                return;
+            BuildBreadCrumb(entity.Parent, separator, builder);
+            if (entity.Parent != null)
+                builder.Append(separator);
+            builder.Append(entity.Name);
         }
     }
 }

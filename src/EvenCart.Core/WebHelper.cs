@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Web;
 using EvenCart.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +16,8 @@ namespace EvenCart.Core
         /// <returns></returns>
         public static string GetUrlFromPath(string path, string rootDomain = "", string protocol = "http")
         {
+            if (path == null)
+                return null;
             if (rootDomain.StartsWith("//"))
                 rootDomain = protocol + ":" + rootDomain;
             if(!string.IsNullOrEmpty(rootDomain))

@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Caching;
+using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Navigation;
+using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Navigation;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
+using EvenCart.Infrastructure.Routing.Extensions;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Services.Extensions;
+using EvenCart.Services.Pages;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {
@@ -26,12 +31,18 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             if (menu == null)
                 return null;
             var allCategories = categoryService.GetFullCategoryTree();
-            return GetNavigationImpl(menu.MenuItems, 0, allCategories);
+            return GetNavigation(menu.MenuItems, "PRIMARY_NAVIGATION", allCategories);
         }
 
+        public static IList<NavigationImplementation> GetNavigation(IList<MenuItem> menuItems, string navigationName, IList<Category> categories)
+        {
+            var cacheProvider = DependencyResolver.Resolve<ICacheProvider>();
+            var cacheKey = $"NAVIGATION_{navigationName}";
+            return cacheProvider.Get(cacheKey, () => GetNavigationImpl(menuItems, 0, categories));
+        }
         ///Making this method static so we can use the same method in MenuWidget.
         /// todo: is there a better way of doing this? may be move this to a helper function
-        public static IList<NavigationImplementation> GetNavigationImpl(IList<MenuItem> menuItems, int parentMenuItemId, IList<Category> categories)
+        private static IList<NavigationImplementation> GetNavigationImpl(IList<MenuItem> menuItems, int parentMenuItemId, IList<Category> categories)
         {
             if (menuItems == null)
                 return null;
@@ -40,17 +51,11 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             {
                 if (parentMenuItemId == 0 && menuItem.IsGroup)
                     continue;
-                string categoryPath = null;
 
                 var url = menuItem.SeoMeta == null ? menuItem.Url : null;
                 if (url == null && menuItem.SeoMeta != null)
                 {
-                    if (menuItem.SeoMeta.EntityName == nameof(Category))
-                    {
-                        var category = categories.First(x => x.Id == menuItem.SeoMeta.EntityId);
-                        categoryPath = category.GetCategoryPath(categories);
-                    }
-                    url = SeoMetaHelper.GetUrl(menuItem.SeoMeta, categoryPath);
+                    url = SeoMetaHelper.GetUrl(menuItem.SeoMeta);
                 }
                
                 var title = menuItem.Name;
@@ -62,7 +67,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                     Css = menuItem.CssClass,
                     Children = GetNavigationImpl(menuItems, menuItem.Id, categories) ??
                                new List<NavigationImplementation>(),
-                    Id = menuItem.Id
+                    Id = menuItem.Id,
+                    OpenInNewWindow = menuItem.OpenInNewWindow
                 };
                 navigation.Add(navigationItem);
             }
