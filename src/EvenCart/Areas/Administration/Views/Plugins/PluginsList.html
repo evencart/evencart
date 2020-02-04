@@ -6,6 +6,10 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Plugins" | t}}
+                <span class="btn btn-primary clickable fileinput-button btn-sm float-right" id="btn-add">
+                    <span>{{"Upload Package" | t}}</span>
+                    <input id="packageFile" type="file" name="mediaFile" />
+                </span>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed">
@@ -49,6 +53,9 @@
                                 },
                                 "commands": function (column, row) {
                                     var actionLinks = "";
+                                    if (row.pendingRestart) {
+                                        return "<i>{{'The plugin will be loaded on application restart.' | t}}</i>";
+                                    }
                                     if (row.installed && row.configurationUrl) {
                                         actionLinks = "<a class='btn btn-sm btn-primary' href='" + row.configurationUrl + "'>" +
                                             '{{"Configuration" | t}}' +
@@ -131,22 +138,22 @@
     var updatePlugin = function (systemName, action) {
         var installed = false, active = false;
         switch (action) {
-            case "install":
-                installed = true;
-                active = false;
-                break;
-            case "uninstall":
-                installed = false;
-                active = false;
-                break;
-            case "activate":
-                installed = true;
-                active = true;
-                break;
-            case "deactivate":
-                installed = true;
-                active = false;
-                break;
+        case "install":
+            installed = true;
+            active = false;
+            break;
+        case "uninstall":
+            installed = false;
+            active = false;
+            break;
+        case "activate":
+            installed = true;
+            active = true;
+            break;
+        case "deactivate":
+            installed = true;
+            active = false;
+            break;
         }
         post({
             url: "{% route api_UpdatePluginStatus %}",
@@ -191,4 +198,25 @@
             }
         });
     }
+</script>
+<script type="text/javascript">
+    ready(function() {
+        initFileUploader({
+            element: "packageFile",
+            url: '{% route api_UploadPackage %}',
+            done: function(e, data) {
+                var result = data.result;
+                if (result.success) {
+                    reloadGrid('grid-selection');
+                    notify("success", "{{'Successfully imported the package file.' | t}}");
+                } else {
+                    notify("error", result.error);
+                }
+            },
+            formData: {
+                __RequestVerificationToken: window._xsrf
+            }
+        });
+
+    });
 </script>

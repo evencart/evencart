@@ -27,5 +27,7 @@ namespace EvenCart.Infrastructure.Plugins
         void DeleteWidget(string id);
 
         int GetActiveWidgetCount(string widgetZone);
+
+        bool HandleZipUpload(byte[] fileBytes);
     }
 }
