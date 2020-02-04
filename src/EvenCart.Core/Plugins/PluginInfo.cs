@@ -41,13 +41,15 @@ namespace EvenCart.Core.Plugins
 
         public bool Dirty { get; set; }
 
+        public bool PendingRestart { get; set; }
+
         public IList<IWidget> Widgets { get; set; }
 
         public IAppStartup Startup { get; set; }
 
         public IDependencyContainer DependencyContainer { get; set; }
 
-        public string ConfigurationUrl => LoadPluginInstance<IPlugin>().ConfigurationUrl;
+        public string ConfigurationUrl => LoadPluginInstance<IPlugin>()?.ConfigurationUrl;
 
         public static PluginInfo Load(string fileName)
         {
@@ -61,6 +63,8 @@ namespace EvenCart.Core.Plugins
 
         public T LoadPluginInstance<T>() where T : class, IPlugin
         {
+            if (this.PendingRestart)
+                return default(T);
             var instance = DependencyResolver.Resolve(this.PluginType);
             var pluginTypedInstance = instance as T;
             if (pluginTypedInstance != null)

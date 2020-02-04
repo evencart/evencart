@@ -27,6 +27,8 @@ namespace EvenCart.Infrastructure.Theming
 
         public string ThumbnailUrl { get; set; }
 
+        public bool PendingRestart { get; set; }
+
         public string GetTemplatePath(string templateKey)
         {
             Templates.TryGetValue(templateKey, out var template);

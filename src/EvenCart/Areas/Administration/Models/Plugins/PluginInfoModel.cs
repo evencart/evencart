@@ -32,6 +32,8 @@ namespace EvenCart.Areas.Administration.Models.Plugins
 
         public string ConfigurationUrl{ get; set; }
 
+        public bool PendingRestart { get; set; }
+
         public void SetupValidationRules(ModelValidator<PluginInfoModel> v)
         {
             v.RuleFor(x => x.SystemName).NotEmpty();

@@ -10,6 +10,8 @@ namespace EvenCart.Infrastructure.Theming
 
         IList<ThemeInfo> GetAvailableThemes();
 
+        ThemeInfo LoadTheme(string directoryPath, bool pendingRestart = false);
+
         void ResetActiveTheme();
     }
 }

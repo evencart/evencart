@@ -9,5 +9,7 @@ namespace EvenCart.Areas.Administration.Models.Themes
         public string DirectoryName { get; set; }
 
         public string ThumbnailUrl { get; set; }
+
+        public bool PendingRestart { get; set; }
     }
 }

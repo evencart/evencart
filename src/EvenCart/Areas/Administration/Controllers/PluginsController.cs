@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.Plugins;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
@@ -53,7 +54,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 var pluginInfo = _modelMapper.Map<PluginInfoModel>(x);
                 pluginInfo.ConfigurationUrl = x.ConfigurationUrl;
                 return pluginInfo;
-            }).ToList();
+            }).OrderBy(x => x.Name).ToList();
             return R.Success.WithGridResponse(plugins.Count, 1, pluginModels.Count)
                 .With("plugins", pluginModels)
                 .Result;
@@ -241,6 +242,16 @@ namespace EvenCart.Areas.Administration.Controllers
             var shipmentHandlers = _pluginAccountant.GetActivePlugins(typeof(IShipmentHandlerPlugin));
             var models = shipmentHandlers.Select(x => new { Id = x.SystemName, x.Name }).ToList();
             return R.Success.With("shippingMethods", models).WithGridResponse(shipmentHandlers.Count, 1, shipmentHandlers.Count).Result;
+        }
+
+        [DualPost("package-upload", Name = AdminRouteNames.UploadPackage, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
+        [ValidateModelState(ModelType = typeof(UploadPackageModel))]
+        public async Task<IActionResult> UploadArchive(UploadPackageModel packageModel)
+        {
+            var fileBytes = await packageModel.MediaFile.GetBytesAsync();
+            var success = _pluginAccountant.HandleZipUpload(fileBytes);
+            return success ? R.Success.Result : R.Fail.With("error", T("An error occurred while handling package. Please check log for details.")).Result;
         }
     }
 }
