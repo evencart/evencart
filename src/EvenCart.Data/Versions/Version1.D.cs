@@ -9,8 +9,8 @@ namespace EvenCart.Data.Versions
     {
         public void Upgrade(IDotEntityTransaction transaction)
         {
-            //Db.AddColumn<MenuItem, string>(nameof(MenuItem.Description), "", transaction);
-            //Db.AddColumn<MenuItem, string>(nameof(MenuItem.ExtraData), "", transaction);
+            Db.AddColumn<MenuItem, string>(nameof(MenuItem.Description), "", transaction);
+            Db.AddColumn<MenuItem, string>(nameof(MenuItem.ExtraData), "", transaction);
             //execute the following only if it's not a fresh install
             if (transaction.CurrentlyRanVersions.All(x => x.GetType() != typeof(Version1)))
             {
