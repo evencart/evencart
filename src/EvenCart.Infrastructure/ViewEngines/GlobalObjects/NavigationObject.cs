@@ -47,7 +47,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             if (menuItems == null)
                 return null;
             var navigation = new List<NavigationImplementation>();
-            foreach (var menuItem in menuItems.Where(x => x.ParentMenuItemId == parentMenuItemId))
+            foreach (var menuItem in menuItems.Where(x => x.ParentId == parentMenuItemId))
             {
                 if (parentMenuItemId == 0 && menuItem.IsGroup)
                     continue;
@@ -68,7 +68,9 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                     Children = GetNavigationImpl(menuItems, menuItem.Id, categories) ??
                                new List<NavigationImplementation>(),
                     Id = menuItem.Id,
-                    OpenInNewWindow = menuItem.OpenInNewWindow
+                    OpenInNewWindow = menuItem.OpenInNewWindow,
+                    Description = menuItem.Description,
+                    ExtraData = menuItem.ExtraData
                 };
                 navigation.Add(navigationItem);
             }

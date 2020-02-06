@@ -20,7 +20,7 @@ namespace EvenCart.Services.Navigation
                 return menu;
             foreach (var menuItem in menu.MenuItems)
             {
-                menuItem.ChildMenuItems = menu.MenuItems.Where(x => x.ParentMenuItemId == menuItem.Id).ToList();
+                menuItem.Children = menu.MenuItems.Where(x => x.ParentId == menuItem.Id).ToList();
             }
 
             return menu;

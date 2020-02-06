@@ -8,7 +8,7 @@ namespace EvenCart.Areas.Administration.Models.Navigation
     {
         public int MenuId { get; set; }
 
-        public int ParentMenuItemId { get; set; }
+        public int ParentId { get; set; }
 
         public string Name { get; set; }
 
@@ -25,6 +25,10 @@ namespace EvenCart.Areas.Administration.Models.Navigation
         public bool IsGroup { get; set; }
 
         public bool OpenInNewWindow { get; set; }
+
+        public string Description { get; set; }
+
+        public string ExtraData { get; set; }
 
         public void SetupValidationRules(ModelValidator<MenuItemModel> v)
         {

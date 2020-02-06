@@ -15,6 +15,10 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public bool OpenInNewWindow { get; set; }
 
+        public string Description { get; set; }
+
+        public string ExtraData { get; set; }
+
         public IList<NavigationImplementation> Children { get; set; }
 
         public int Id { get; set; }

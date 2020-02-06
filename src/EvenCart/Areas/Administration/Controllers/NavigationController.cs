@@ -3,6 +3,7 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Navigation;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Core.Extensions;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Navigation;
@@ -20,6 +21,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
@@ -127,7 +129,7 @@ namespace EvenCart.Areas.Administration.Controllers
             if (parentMenuItem != null && parentMenuItem.IsGroup)
                 return NotFound();
 
-            var menuItems = menu.MenuItems.Where(x => x.ParentMenuItemId == parentMenuItemId).ToList();
+            var menuItems = menu.MenuItems.Where(x => x.ParentId == parentMenuItemId).ToList();
             var menuItemModels = menuItems.Select(x =>
             {
                 var itemModel = _modelMapper.Map<MenuItemModel>(x);
@@ -161,7 +163,7 @@ namespace EvenCart.Areas.Administration.Controllers
             }).ToList();
 
             var parentMenuItemModel = _modelMapper.Map<MenuItemModel>(parentMenuItem);
-            var grandParent = menu.MenuItems.FirstOrDefault(x => x.Id == parentMenuItem?.ParentMenuItemId);
+            var grandParent = menu.MenuItems.FirstOrDefault(x => x.Id == parentMenuItem?.ParentId);
             var grandParentMenuItemModel = _modelMapper.Map<MenuItemModel>(grandParent);
             return R.Success.With("menuItems", menuItemModels).With("parentMenuItem", parentMenuItemModel)
                 .With("grandParentMenuItem", grandParentMenuItemModel).Result;
@@ -197,7 +199,18 @@ namespace EvenCart.Areas.Administration.Controllers
                         break;
                 }
             }
-            return R.Success.With("menuItem", model).Result;
+
+            IList<SelectListItem> availableMenuItems = null;
+            //send available parent menu items to which this menu item can be moved to
+            if (menu.MenuItems != null)
+            {
+                menu.MenuItems = menu.MenuItems.GetWithParentTree();
+                availableMenuItems = SelectListHelper.GetSelectItemListWithAction(
+                    menu.MenuItems.Where(x => x.ParentId != menuItemId).ToList(), x => x.Id,
+                    item => item.GetFieldBreadCrumb(y => y.Name)).OrderBy(x => x.Text).ToList();
+            }
+
+            return R.Success.With("menuItem", model).With("availableMenuItems", availableMenuItems).Result;
         }
 
         [DualPost("{menuId}/menuitems", Name = AdminRouteNames.SaveMenuItem, OnlyApi = true)]
@@ -215,21 +228,27 @@ namespace EvenCart.Areas.Administration.Controllers
 
             //check for parent
             var parentMenuItem =
-                menu.MenuItems.FirstOrDefault(x => x.Id == menuItemModel.ParentMenuItemId);
-            if (menuItemModel.ParentMenuItemId > 0 && (parentMenuItem == null || parentMenuItem.IsGroup))
+                menu.MenuItems.FirstOrDefault(x => x.Id == menuItemModel.ParentId);
+            if (menuItemModel.ParentId > 0 && (parentMenuItem == null || parentMenuItem.IsGroup))
                 return BadRequest();
-            menuItem.ParentMenuItemId = parentMenuItem?.Id ?? 0;
+
+            menuItem.ParentId = parentMenuItem?.Id ?? 0;
+            if (menuItem.Id > 0 && menuItem.Id == menuItem.ParentId)
+            {
+                return R.Fail.With("error", "A menu item can't be parent to itself.").Result;
+            }
             if (!menuItem.IsGroup)
             {
                 menuItem.CssClass = menuItemModel.CssClass;
             }
-
             if (!menuItem.SeoMetaId.HasValue)
             {
                 menuItem.Url = menuItemModel.Url;
             }
             menuItem.Name = menuItemModel.Name;
             menuItem.OpenInNewWindow = menuItemModel.OpenInNewWindow;
+            menuItem.Description = menuItemModel.Description;
+            menuItem.ExtraData = menuItemModel.ExtraData;
             _menuItemService.InsertOrUpdate(menuItem);
             return R.Success.Result;
         }
@@ -248,12 +267,12 @@ namespace EvenCart.Areas.Administration.Controllers
             Transaction.Initiate(transaction =>
             {
                 _menuItemService.Delete(menuItem, transaction);
-               //get all the children
-               var childMenuItems = menu.MenuItems.First(x => x.Id == menuItemId).ChildMenuItems.SelectManyRecursive(x => x.ChildMenuItems);
-               foreach (var cm in childMenuItems)
-                   _menuItemService.Delete(cm, transaction);
+                //get all the children
+                var childMenuItems = menu.MenuItems.First(x => x.Id == menuItemId).Children.SelectManyRecursive(x => x.Children);
+                foreach (var cm in childMenuItems)
+                    _menuItemService.Delete(cm, transaction);
             });
-      
+
             return R.Success.Result;
         }
 
@@ -299,9 +318,9 @@ namespace EvenCart.Areas.Administration.Controllers
                     {
                         Name = category.Name,
                         SeoMetaId = category.SeoMeta.Id,
-                        ParentMenuItemId = parentMenuItemId,
+                        ParentId = parentMenuItemId,
                         MenuId = menu.Id,
-                        DisplayOrder = menu.MenuItems.Count(x => x.ParentMenuItemId == parentMenuItemId)
+                        DisplayOrder = menu.MenuItems.Count(x => x.ParentId == parentMenuItemId)
                     };
                     _menuItemService.Insert(menuItem);
                     categoryIds.Remove(category.Id);
@@ -334,7 +353,7 @@ namespace EvenCart.Areas.Administration.Controllers
                         Name = contentPage.Name,
                         SeoMetaId = contentPage.SeoMeta.Id,
                         DisplayOrder = menuItemCount + 1,
-                        ParentMenuItemId = menuItemModel.ParentMenuItemId,
+                        ParentId = menuItemModel.ParentMenuItemId,
                         MenuId = menu.Id
                     });
                     menuItemCount++;
@@ -348,7 +367,7 @@ namespace EvenCart.Areas.Administration.Controllers
                     Name = menuItemModel.Name,
                     Url = menuItemModel.Url,
                     DisplayOrder = menuItemCount + 1,
-                    ParentMenuItemId = menuItemModel.ParentMenuItemId,
+                    ParentId = menuItemModel.ParentMenuItemId,
                     MenuId = menu.Id,
                     IsGroup = menuItemModel.IsGroup
                 });

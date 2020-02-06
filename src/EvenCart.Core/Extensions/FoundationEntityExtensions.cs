@@ -50,7 +50,6 @@ namespace EvenCart.Core.Extensions
 
         public static IList<T> GetWithParentTree<T>(this IList<T> entities) where T : FoundationEntity, IAllowsParent<T>
         {
-            var key = $"{typeof(T).Name}_Tree";
             foreach (var entity in entities)
             {
                 MakeTree(entity, entities);
@@ -62,6 +61,13 @@ namespace EvenCart.Core.Extensions
         {
             var builder = new StringBuilder();
             BuildBreadCrumb(entity, separator, builder);
+            return builder.ToString().TrimEnd(separator.ToCharArray());
+        }
+
+        public static string GetFieldBreadCrumb<T>(this T entity, Func<T, string> fieldFunc, string separator = " > ") where T : FoundationEntity, IAllowsParent<T>
+        {
+            var builder = new StringBuilder();
+            BuildFieldBreadCrumb(entity, fieldFunc, separator, builder);
             return builder.ToString().TrimEnd(separator.ToCharArray());
         }
 
@@ -80,6 +86,17 @@ namespace EvenCart.Core.Extensions
             if (entity.Parent != null)
                 builder.Append(separator);
             builder.Append(entity.Name);
+        }
+
+        private static void BuildFieldBreadCrumb<T>(T entity, Func<T, string> fieldFunc, string separator, StringBuilder builder) where T : FoundationEntity, IAllowsParent<T>
+        {
+            if (entity == null)
+                return;
+            BuildFieldBreadCrumb(entity.Parent, fieldFunc, separator, builder);
+            if (entity.Parent != null)
+                builder.Append(separator);
+            
+            builder.Append(fieldFunc(entity));
         }
     }
 }

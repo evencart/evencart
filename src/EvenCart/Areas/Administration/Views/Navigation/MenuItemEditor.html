@@ -10,8 +10,16 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="form-group">
+                        {% control label text=@t"Parent" for="parentId" %}
+                        {% control select name="parentId" items="availableMenuItems" value="menuItem.parentId" %}
+                    </div>
+                    <div class="form-group">
                         {% control label text=@t"Name" for="name" %}
                         {% control text name="name" value="{{menuItem.name}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Description" for="description" %}
+                        {% control textarea name="description" value="{{menuItem.description}}" %}
                     </div>
                     {% if menuItem.isGroup == "false" %}
                     <div class="form-group">
@@ -36,6 +44,13 @@
                         {% control checkbox name="openInNewWindow" text=@t"Open in new window" value="menuItem.openInNewWindow" %}
                     </div>
                     {% endif %}
+                    <div class="form-group">
+                        {% control label text=@t"Extra Data" for="extraData" %}
+                        <div class="panel-help">
+                            {{"Any additional data for the link that you may wish to use in your theme." | t}}
+                        </div>
+                        {% control text name="extraData" value="{{menuItem.extraData}}" %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +58,7 @@
             <div class="col-lg-12">
                 <div class="popup-actions text-center">
                     {% control hidden name="id" value="{{menuItem.id}}" %}
-                    {% control hidden name="parentMenuItemId" value="{{menuItem.parentMenuItemId}}" %}
+                    {% control hidden name="parentId" value="{{menuItem.parentId}}" %}
                     {% control xsrf %}
                     <button type="submit" class="btn btn-sm btn-primary">{{"Save Menu Item" | t}}</button>
                     <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
