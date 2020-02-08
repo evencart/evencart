@@ -2,6 +2,7 @@
 using DotEntity;
 using DotEntity.Versioning;
 using EvenCart.Data.Entity.Navigation;
+using EvenCart.Data.Entity.Purchases;
 using Db = DotEntity.DotEntity.Database;
 namespace EvenCart.Data.Versions
 {
@@ -21,6 +22,16 @@ namespace EvenCart.Data.Versions
                 Db.Query($"UPDATE {menuItemTable} SET {parentIdCol}={parentMenuItemIdCol}", null, transaction);
                 Db.DropColumn<MenuItem>("ParentMenuItemId", transaction);
             }
+
+            var cartTable = DotEntityDb.Provider.SafeEnclose(DotEntityDb.GetTableNameForType<Cart>());
+            var orderTable = DotEntityDb.Provider.SafeEnclose(DotEntityDb.GetTableNameForType<Order>());
+            var selectedShippingOptionCol = DotEntityDb.Provider.SafeEnclose(nameof(Cart.SelectedShippingOption));
+            var query =
+                $"UPDATE {cartTable} SET {selectedShippingOptionCol}='[{{\"name\":\"' + {selectedShippingOptionCol} + '\"}}]'";
+            Db.Query(query, null, transaction);
+            query =
+                $"UPDATE {orderTable} SET {selectedShippingOptionCol}='[{{\"name\":\"' + {selectedShippingOptionCol} + '\"}}]'";
+            Db.Query(query, null, transaction);
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

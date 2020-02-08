@@ -245,6 +245,17 @@ namespace EvenCart.Controllers
                 cartItem.Quantity = cartItem.Quantity + cartItemModel.Quantity;
                 _cartService.UpdateCart(ApplicationEngine.CurrentUser.Id, cartItem);
             }
+            //reset shipping details
+            if (cart.ShippingMethodName.IsNullEmptyOrWhiteSpace())
+            {
+                //clear the shipping methods
+                cart.ShippingMethodName = string.Empty;
+                cart.ShippingMethodDisplayName = string.Empty;
+                cart.ShippingOptionsSerialized = string.Empty;
+                cart.SelectedShippingOption = string.Empty;
+                cart.ShippingOptionsSerialized = string.Empty;
+                _cartService.Update(cart);
+            }
             return R.Success.Result;
         }
 
@@ -298,6 +309,14 @@ namespace EvenCart.Controllers
                 var product = _productService.Get(cartItem.ProductId);
                 if (product == null)
                     return R.Fail.Result;
+
+                //reset shipping details
+                cart.ShippingFee = 0;
+                cart.ShippingMethodName = string.Empty;
+                cart.ShippingMethodDisplayName = string.Empty;
+                cart.ShippingOptionsSerialized = string.Empty;
+                cart.SelectedShippingOption = string.Empty;
+                _cartService.Update(cart);
 
                 IActionResult validationResult = null;
                 if (!product.HasVariants)

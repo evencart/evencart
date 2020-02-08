@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Selected Shipping Option" for="selectedShippingOption" %}
-                        {% control text name="selectedShippingOption" value="{{selectedShippingOption}}" %}
+                        {% control textarea name="selectedShippingOption" value="{{selectedShippingOption}}" %}
                     </div>
                     {% endif %}
                     {% if infoType == "totals" %}

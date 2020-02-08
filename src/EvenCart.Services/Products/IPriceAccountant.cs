@@ -15,6 +15,12 @@ namespace EvenCart.Services.Products
 
         DiscountApplicationStatus ApplyDiscountCoupon(DiscountCoupon coupon, Cart cart);
 
+        bool CanApplyDiscount(DiscountCoupon coupon, int userId, out DiscountApplicationStatus status);
+
+        bool CanApplyDiscount(string couponCode, int userId, out DiscountApplicationStatus status);
+
+        bool CanApplyDiscount(int couponCodeId, int userId, out DiscountApplicationStatus status);
+
         void ClearCouponCode(Cart cart);
 
         void RefreshCartParameters(Cart cart);

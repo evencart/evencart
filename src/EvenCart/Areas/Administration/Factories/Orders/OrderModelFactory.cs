@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Services.Formatter;
@@ -67,6 +69,20 @@ namespace EvenCart.Areas.Administration.Factories.Orders
                     var minCycleDays = model.OrderItems.Min(x => (int) x.SubscriptionCycle);
                     model.NextInvoiceDate = model.LastInvoiceDate.Value.AddDays(minCycleDays);
                 }
+            }
+
+            if (!entity.SelectedShippingOption.IsNullEmptyOrWhiteSpace())
+            {
+                var selectedOptions =
+                    _dataSerializer.DeserializeAs<IList<ShippingOption>>(entity.SelectedShippingOption);
+                model.SelectedShippingOptions = selectedOptions.Select(x => new ShippingOptionModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Rate = x.Rate,
+                    DeliveryTime = x.DeliveryTime
+                }).ToList();
             }
             return model;
         }

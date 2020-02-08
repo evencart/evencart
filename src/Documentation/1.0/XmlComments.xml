@@ -440,6 +440,36 @@
             A list <see cref="T:EvenCart.Areas.Administration.Models.Orders.ShipmentModel">shipment</see> objects for the warehouse
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel">
+            <summary>
+            Represents an individual shipping option of a shipment handler
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel.Id">
+            <summary>
+            The id of the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel.Rate">
+            <summary>
+            The rate of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel.Name">
+            <summary>
+            The name of this shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel.Description">
+            <summary>
+            The description of the option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.ShippingOptionModel.DeliveryTime">
+            <summary>
+            The delivery time of this option
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel">
             <summary>
             Represents a plugin search object
@@ -1408,7 +1438,7 @@
         </member>
         <member name="P:EvenCart.Models.Checkout.ShippingInfoModel.ShippingOption">
             <summary>
-            The <see cref="T:EvenCart.Models.Checkout.ShippingOptionModel">shipping option</see> to be used. Ignore if not applicable.
+            The list of <see cref="T:EvenCart.Models.Checkout.ShippingOptionModel">shipping option</see> to be used. Ignore if not applicable.
             </summary>
         </member>
         <member name="T:EvenCart.Models.Checkout.ShippingOptionModel">
@@ -1439,6 +1469,21 @@
         <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.DeliveryTime">
             <summary>
             The delivery time of this option
+            </summary>
+        </member>
+        <member name="T:EvenCart.Models.Checkout.WarehouseShippingOptionModel">
+            <summary>
+            Represents shipping options grouped by warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.WarehouseShippingOptionModel.WarehouseAddress">
+            <summary>
+            The <see cref="T:EvenCart.Models.Addresses.AddressInfoModel">address</see> of the warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.WarehouseShippingOptionModel.ShippingOptions">
+            <summary>
+            The list of available shipping options for this warehouse
             </summary>
         </member>
         <member name="P:EvenCart.Models.Countries.StateOrProvinceModel.CountryId">
@@ -1629,6 +1674,11 @@
         <member name="P:EvenCart.Models.Orders.OrderModel.ShippingMethodDisplayName">
             <summary>
             The shipping method display name
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Orders.OrderModel.SelectedShippingOption">
+            <summary>
+            The shipping option selected by the user
             </summary>
         </member>
         <member name="P:EvenCart.Models.Orders.OrderModel.PaymentMethodName">
