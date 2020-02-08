@@ -61,36 +61,17 @@ namespace EvenCart.Services.Products
 
         public DiscountApplicationStatus ApplyDiscountCoupon(DiscountCoupon discountCoupon, Cart cart)
         {
-            if (discountCoupon == null || !discountCoupon.Enabled)
-                return DiscountApplicationStatus.InvalidCode;
-            if (discountCoupon.Expired)
-                return DiscountApplicationStatus.Expired;
-
-            //first the dates
-            if (discountCoupon.StartDate > DateTime.UtcNow)
-                return DiscountApplicationStatus.InvalidCode;
-            if (discountCoupon.EndDate.HasValue && discountCoupon.EndDate < DateTime.UtcNow)
-                return DiscountApplicationStatus.Expired;
+            if (!CanApplyDiscount(discountCoupon, cart.UserId, out var status))
+            {
+                return status;
+            }
+          
             //is there a min. total required
             if (discountCoupon.MinimumOrderSubTotal > 0 && discountCoupon.MinimumOrderSubTotal > GetOrderSubTotal(cart))
             {
                 return DiscountApplicationStatus.NotEligibleForCart;
             }
-            //number of usages
-            if (discountCoupon.TotalNumberOfTimes > 0)
-            {
-                var orderCount = _orderService.Count(x =>
-                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete);
-                if (orderCount >= discountCoupon.TotalNumberOfTimes)
-                    return DiscountApplicationStatus.Exhausted;
-            }
-            if (discountCoupon.NumberOfTimesPerUser > 0)
-            {
-                var orderCount = _orderService.Count(x =>
-                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete && x.UserId == cart.UserId);
-                if (orderCount >= discountCoupon.NumberOfTimesPerUser)
-                    return DiscountApplicationStatus.Exhausted;
-            }
+      
 
             var cartItemUpdated = false;
             var cartUpdated = false;
@@ -152,6 +133,76 @@ namespace EvenCart.Services.Products
                 return DiscountApplicationStatus.Success;
             }
             return DiscountApplicationStatus.NotEligibleForCart;
+        }
+
+        public bool CanApplyDiscount(DiscountCoupon discountCoupon, int userId, out DiscountApplicationStatus status)
+        {
+            if (discountCoupon == null || !discountCoupon.Enabled)
+            {
+                status = DiscountApplicationStatus.InvalidCode;
+                return false;
+            }
+            if (discountCoupon.Expired)
+            {
+                status = DiscountApplicationStatus.Expired;
+                return false;
+            }
+
+            //first the dates
+            if (discountCoupon.StartDate > DateTime.UtcNow)
+            {
+                status = DiscountApplicationStatus.InvalidCode;
+                return false;
+            }
+
+            if (discountCoupon.EndDate.HasValue && discountCoupon.EndDate < DateTime.UtcNow)
+            {
+                status = DiscountApplicationStatus.Expired;
+                return false;
+            }
+            //number of usages
+            if (discountCoupon.TotalNumberOfTimes > 0)
+            {
+                var orderCount = _orderService.Count(x =>
+                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete);
+                if (orderCount >= discountCoupon.TotalNumberOfTimes)
+                {
+                    status = DiscountApplicationStatus.Exhausted;
+                    return false;
+                }
+            }
+            if (discountCoupon.NumberOfTimesPerUser > 0)
+            {
+                var orderCount = _orderService.Count(x =>
+                    x.DiscountId == discountCoupon.Id && x.PaymentStatus == PaymentStatus.Complete && x.UserId == userId);
+                if (orderCount >= discountCoupon.NumberOfTimesPerUser)
+                {
+                    status = DiscountApplicationStatus.Exhausted;
+                    return false;
+                }
+            }
+
+            status = DiscountApplicationStatus.Success;
+            return true;
+        }
+
+        public bool CanApplyDiscount(string couponCode, int userId, out DiscountApplicationStatus status)
+        {
+            if (couponCode.IsNullEmptyOrWhiteSpace())
+            {
+                status = DiscountApplicationStatus.InvalidCode;
+                return false;
+            }
+
+            //first get the coupon
+            var discountCoupon = _discountCouponService.GetByCouponCode(couponCode);
+            return CanApplyDiscount(discountCoupon, userId, out status);
+        }
+
+        public bool CanApplyDiscount(int couponCodeId, int userId, out DiscountApplicationStatus status)
+        {
+            var discountCoupon = _discountCouponService.FirstOrDefault(x => x.Id == couponCodeId);
+            return CanApplyDiscount(discountCoupon, userId, out status);
         }
 
         public void ClearCouponCode(Cart cart)
@@ -565,11 +616,7 @@ namespace EvenCart.Services.Products
 
         private bool ApplyShippingDiscount(DiscountCoupon discountCoupon, Cart cart)
         {
-            var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
-            cart.ShippingFee = shippingHandler?.GetShippingHandlerFee(cart) ?? 0;
             var discount = discountCoupon.GetDiscountAmount(cart.ShippingFee, 1);
-            if (discountCoupon.HasCouponCode)
-                cart.Discount = discount;
             cart.Discount = discount;
             return true;
         }

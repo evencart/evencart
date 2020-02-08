@@ -23,7 +23,7 @@ namespace EvenCart.Services.Plugins
         {
             //if store credits are available, they must be deducted from the amount being processed by payment processor
             var amount = order.OrderTotal - creditAmount;
-            if (creditAmount > 0)
+            if (creditAmount > 0 && order.StoreCredits > 0)
             {
                 //lock these many credits so they can't be used till this transaction is complete
                 _storeCreditService.LockCredits(order.StoreCredits, order.UserId);

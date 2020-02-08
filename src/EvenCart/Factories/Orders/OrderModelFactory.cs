@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Extensions;
 using EvenCart.Factories.Shipments;
 using EvenCart.Services.Formatter;
 using EvenCart.Infrastructure.MediaServices;
@@ -34,6 +36,12 @@ namespace EvenCart.Factories.Orders
         public OrderModel Create(Order order)
         {
             var model = _modelMapper.Map<OrderModel>(order);
+            if (!order.SelectedShippingOption.IsNullEmptyOrWhiteSpace())
+            {
+                var selectedOptions =
+                    _dataSerializer.DeserializeAs<IList<ShippingOption>>(order.SelectedShippingOption);
+                model.SelectedShippingOption = string.Join(", ", selectedOptions.Select(x => x.Name));
+            }
             if (order.BillingAddressSerialized != null)
             {
                 var billingAddress = _dataSerializer.DeserializeAs<Address>(order.BillingAddressSerialized);

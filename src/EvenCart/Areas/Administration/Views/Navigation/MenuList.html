@@ -185,6 +185,7 @@
             function(result) {
                 if (result == "ok") {
                     notify("success", '{{"Menu item was saved successfully" | t}}');
+                    loadMenuItems(jQuery("#aMenuLevelUp").data("parentMenuItemId"));
                 }
             });
         var url = '{% route GetMenuItem menuId="%menuId%" menuItemId="%menuItemId%" %}'.replaceAll("%menuId%", menuId).replaceAll("%menuItemId%", menuItemId);

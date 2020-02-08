@@ -49,6 +49,10 @@ namespace EvenCart.Models.Orders
         /// </summary>
         public string ShippingMethodDisplayName { get; set; }
         /// <summary>
+        /// The shipping option selected by the user
+        /// </summary>
+        public string SelectedShippingOption { get; set; }
+        /// <summary>
         /// The payment method name used while placing the order
         /// </summary>
         public string PaymentMethodName { get; set; }

@@ -2,14 +2,17 @@
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
+using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
+using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {
@@ -30,6 +33,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
             var taxSettings = DependencyResolver.Resolve<TaxSettings>();
             var priceAccountant = DependencyResolver.Resolve<IPriceAccountant>();
+            var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
 
             if (ApplicationEngine.CurrentUser == null)
                 return null;
@@ -43,13 +47,19 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 //refresh the cart items if necessary
                 CartHelper.RefreshCart(cart);
 
+            var selectedShippingOption = "";
+            if (!cart.SelectedShippingOption.IsNullEmptyOrWhiteSpace())
+            {
+                var selectionOptions = dataSerializer.DeserializeAs<IList<ShippingOption>>(cart.SelectedShippingOption);
+                selectedShippingOption = string.Join(", ", selectionOptions.Select(x => x.Name));
+            }
             var cartModel = new CartImplementation() {
                 Items = new List<CartItemImplementation>(),
                 TotalItems = cart.CartItems.Sum(x => x.Quantity),
                 DiscountCoupon = cart.DiscountCoupon?.HasCouponCode ?? false ? cart.DiscountCoupon?.CouponCode : "",
                 ShippingMethodName = cart.ShippingMethodDisplayName,
                 ShippingMethodFee = cart.ShippingFee,
-                ShippingOptionName = cart.SelectedShippingOption,
+                ShippingOptionName = selectedShippingOption,
                 ConflictingProducts = conflictingProducts
             };
             

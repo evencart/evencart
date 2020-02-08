@@ -108,7 +108,11 @@
                         {{"Shipping Option" | t}}
                     </td>
                     <td>
-                        {{order.selectedShippingOption}}
+                        {% for option in order.selectedShippingOptions %}
+                        <div>
+                            {{option.name}} [{{option.rate}}]
+                        </div>
+                        {% endfor %}
                     </td>
                 </tr>
                 {% if order.isSubscription %}

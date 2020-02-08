@@ -167,7 +167,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string SaveWidget = "SaveWidget";
         public const string DeleteWidget = "DeleteWidget";
         public const string UpdateWidgetsDisplayOrder = "UpdateWidgetsDisplayOrder";
-        public const string UploadPlugin = "UploadPlugin";
+        public const string UploadPackage = "UploadPackage";
         public const string GetSettings = "GetSettings";
         public const string SaveSettings = "SaveSettings";
         public const string SaveSharedSecuritySetting = "SaveSharedSecuritySetting";

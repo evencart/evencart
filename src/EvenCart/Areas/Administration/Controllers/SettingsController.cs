@@ -212,7 +212,8 @@ namespace EvenCart.Areas.Administration.Controllers
                         {
                             DirectoryName = x.DirectoryName,
                             Name = x.Name,
-                            ThumbnailUrl = x.ThumbnailUrl
+                            ThumbnailUrl = x.ThumbnailUrl,
+                            PendingRestart = x.PendingRestart
                         }).ToList();
                     result.With("availableThemes", themes);
                     break;

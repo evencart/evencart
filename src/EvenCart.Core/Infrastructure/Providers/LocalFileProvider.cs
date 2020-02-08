@@ -98,6 +98,11 @@ namespace EvenCart.Core.Infrastructure.Providers
                 File.Delete(file);
         }
 
+        public void DeleteFile(string fileName)
+        {
+            File.Delete(fileName);
+        }
+
         public void ExtractArchive(string zipFileName, string directoryName)
         {
             ZipFile.ExtractToDirectory(zipFileName, directoryName);
@@ -120,6 +125,31 @@ namespace EvenCart.Core.Infrastructure.Providers
         public void CopyFile(string source, string destination, bool overwrite = false)
         {
             File.Copy(source, destination, overwrite);
+        }
+
+        public void CopyDirectory(string source, string destination, bool overwriteExisting = false)
+        {
+            var sourceInfo = new DirectoryInfo(source);
+            var dirs = sourceInfo.GetDirectories();
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destination))
+            {
+                Directory.CreateDirectory(destination);
+            }
+
+            // Get the files in the directory and copy them to the new location.
+            var files = sourceInfo.GetFiles();
+            foreach (var file in files)
+            {
+                var tempPath = CombinePaths(destination, file.Name);
+                file.CopyTo(tempPath, overwriteExisting);
+            }
+
+            foreach (var subDir in dirs)
+            {
+                var tempPath = Path.Combine(destination, subDir.Name);
+                CopyDirectory(subDir.FullName, tempPath, overwriteExisting);
+            }
         }
 
         public string GetTemporaryFile(byte[] content = null)

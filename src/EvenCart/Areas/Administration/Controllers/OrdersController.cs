@@ -13,26 +13,22 @@ using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Purchases;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Shipping;
 using EvenCart.Events;
-using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Extensions;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Pdf;
 using EvenCart.Services.Products;
+using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,7 +62,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IPaymentProcessor _paymentProcessor;
         private readonly IStoreCreditService _storeCreditService;
         private readonly AffiliateSettings _affiliateSettings;
-        public OrdersController(IOrderService orderService, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, IPaymentProcessor paymentProcessor, IStoreCreditService storeCreditService, AffiliateSettings affiliateSettings)
+        private readonly IDataSerializer _dataSerializer;
+        public OrdersController(IOrderService orderService, IFormatterService formatterService, IShipmentService shipmentService, IShipmentItemService shipmentItemService, IShipmentStatusHistoryService shipmentStatusHistoryService, IOrderModelFactory orderModelFactory, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IOrderFulfillmentService orderFulfillmentService, IOrderFulfillmentModelFactory orderFulfillmentModelFactory, IOrderItemService orderItemService, IWarehouseModelFactory warehouseModelFactory, IShipmentModelFactory shipmentModelFactory, IReturnRequestService returnRequestService, IReturnRequestModelFactory returnRequestModelFactory, IOrderAccountant orderAccountant, IPurchaseAccountant purchaseAccountant, IPaymentTransactionService paymentTransactionService, IPaymentAccountant paymentAccountant, IPdfService pdfService, IOrderItemDownloadService itemDownloadService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, IPaymentProcessor paymentProcessor, IStoreCreditService storeCreditService, AffiliateSettings affiliateSettings, IDataSerializer dataSerializer)
         {
             _orderService = orderService;
             _formatterService = formatterService;
@@ -94,6 +91,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _paymentProcessor = paymentProcessor;
             _storeCreditService = storeCreditService;
             _affiliateSettings = affiliateSettings;
+            _dataSerializer = dataSerializer;
         }
 
         #region Orders
@@ -226,7 +224,7 @@ namespace EvenCart.Areas.Administration.Controllers
 
         [DualPost("", Name = AdminRouteNames.SaveOrder, OnlyApi = true)]
         [CapabilityRequired(CapabilitySystemNames.EditOrder)]
-        [ValidateModelState(ModelType = typeof(OrderModel))]
+        [ValidateModelState(ModelType = typeof(SaveOrderModel))]
         public IActionResult SaveOrder(SaveOrderModel orderModel)
         {
             var order = _orderService.Get(orderModel.Id);
@@ -256,7 +254,18 @@ namespace EvenCart.Areas.Administration.Controllers
             if (!orderModel.ShippingMethodDisplayName.IsNullEmptyOrWhiteSpace())
                 order.ShippingMethodDisplayName = orderModel.ShippingMethodDisplayName;
             if (!orderModel.SelectedShippingOption.IsNullEmptyOrWhiteSpace())
+            {
+                //make sure it's a valid serializable json
+                try
+                {
+                    _dataSerializer.DeserializeAs<IList<ShippingOption>>(orderModel.SelectedShippingOption);
+                }
+                catch
+                {
+                    return R.Fail.With("error", T("Selected shipping option must be a valid json")).Result;
+                }
                 order.SelectedShippingOption = orderModel.SelectedShippingOption;
+            }
             if (orderModel.PaymentMethodFee.HasValue)
                 order.PaymentMethodFee = orderModel.PaymentMethodFee;
             if (orderModel.ShippingMethodFee.HasValue)

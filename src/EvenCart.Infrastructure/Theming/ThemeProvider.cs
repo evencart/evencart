@@ -66,27 +66,38 @@ namespace EvenCart.Infrastructure.Theming
             return ServerHelper.MapPath($"{ApplicationConfig.ThemeDirectory}/{themeName}");
         }
 
+        private IList<ThemeInfo> _themeInfos = null;
         public IList<ThemeInfo> GetAvailableThemes()
         {
-          
+            if (_themeInfos != null)
+                return _themeInfos;
+            _themeInfos = new List<ThemeInfo>();
             var themeDirectories = _localFileProvider.GetDirectories(_themeDirectory);
-            var themeInfos = new List<ThemeInfo>();
             //only the directories which have theme config files should be selected
             foreach (var dir in themeDirectories)
             {
-                var directoryInfo = new DirectoryInfo(dir);
-                var themeInfo = GetThemeInfo(directoryInfo);
-                if (themeInfo == null)
-                    continue;
-                themeInfos.Add(themeInfo);
+               LoadTheme(dir);
             }
 
-            return themeInfos;
+            return _themeInfos;
         }
+
+        public ThemeInfo LoadTheme(string directoryPath, bool pendingRestart = false)
+        {
+            var directoryInfo = new DirectoryInfo(directoryPath);
+            var themeInfo = GetThemeInfo(directoryInfo);
+            if (themeInfo == null)
+                return null;
+            _themeInfos.Add(themeInfo);
+            themeInfo.PendingRestart = pendingRestart;
+            return themeInfo;
+        }
+
 
         public void ResetActiveTheme()
         {
             _cachedThemeInfo = null;
+            _themeInfos = null;
         }
 
         private ThemeInfo GetThemeInfo(DirectoryInfo directoryInfo)

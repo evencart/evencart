@@ -86,5 +86,7 @@ namespace EvenCart.Areas.Administration.Models.Orders
         public DateTime? LastInvoiceDate { get; set; }
         
         public DateTime? NextInvoiceDate { get; set; }
+
+        public virtual IList<ShippingOptionModel> SelectedShippingOptions { get; set; }
     }
 }

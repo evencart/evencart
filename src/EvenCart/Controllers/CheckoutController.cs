@@ -5,6 +5,7 @@ using EvenCart.Core;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Payments;
+using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -30,6 +31,7 @@ using EvenCart.Models.Addresses;
 using EvenCart.Models.Checkout;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Products;
+using EvenCart.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -58,7 +60,8 @@ namespace EvenCart.Controllers
         private readonly AffiliateSettings _affiliateSettings;
         private readonly IStoreCreditService _storeCreditService;
         private readonly IPriceAccountant _priceAccountant;
-        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService, ILogger logger, AffiliateSettings affiliateSettings, IStoreCreditService storeCreditService, IPriceAccountant priceAccountant)
+        private readonly ICryptographyService _cryptographyService;
+        public CheckoutController(IPaymentProcessor paymentProcessor, IPaymentAccountant paymentAccountant, IModelMapper modelMapper, IAddressService addressService, ICartService cartService, IDataSerializer dataSerializer, IPluginAccountant pluginAccountant, IOrderService orderService, OrderSettings orderSettings, IRoleService roleService, IUserService userService, IProductService productService, IOrderAccountant orderAccountant, IDownloadService downloadService, ILogger logger, AffiliateSettings affiliateSettings, IStoreCreditService storeCreditService, IPriceAccountant priceAccountant, ICryptographyService cryptographyService)
         {
             _paymentProcessor = paymentProcessor;
             _paymentAccountant = paymentAccountant;
@@ -78,6 +81,7 @@ namespace EvenCart.Controllers
             _affiliateSettings = affiliateSettings;
             _storeCreditService = storeCreditService;
             _priceAccountant = priceAccountant;
+            _cryptographyService = cryptographyService;
         }
 
         [HttpGet("billing-shipping", Name = RouteNames.CheckoutAddress)]
@@ -246,15 +250,6 @@ namespace EvenCart.Controllers
                         Description = x.Description,
                         FriendlyName = x.Name
                     };
-                    try
-                    {
-                        model.Fee = x.LoadPluginInstance<IShipmentHandlerPlugin>().GetShippingHandlerFee(cart);
-                    }
-                    catch(Exception ex)
-                    {
-                        //do nothing
-                        _logger.Log<CheckoutController>(LogLevel.Error, ex.Message, ex);
-                    }
                     
                     return model;
                 })
@@ -285,22 +280,13 @@ namespace EvenCart.Controllers
             if (shippingHandler == null)
                 return R.Fail.With("error", T("Shipping method unavailable")).Result;
 
-            IList<ShippingOptionModel> shippingOptionModels;
-            if (cart.ShippingMethodName == shippingMethodSystemName &&
-                !cart.ShippingOptionsSerialized.IsNullEmptyOrWhiteSpace())
-            {
-                shippingOptionModels =
-                    _dataSerializer.DeserializeAs<IList<ShippingOptionModel>>(cart.ShippingOptionsSerialized);
-            }
-            else
-            {
-                shippingOptionModels = GetShipmentOptionModels(shippingHandler, cart);
-                cart.ShippingOptionsSerialized = shippingOptionModels != null ? _dataSerializer.Serialize(shippingOptionModels) : null;
-                //select the first option as default one
-                cart.SelectedShippingOption = shippingOptionModels?.FirstOrDefault()?.Name;
-                _cartService.Update(cart);
+            var shippingOptionModels = GetShipmentOptionModels(shippingHandler, cart);
+            cart.ShippingOptionsSerialized = _dataSerializer.Serialize(shippingOptionModels);
 
-            }
+            //select the first option as default one
+            var selectedOptions = shippingOptionModels.Select(x => x.ShippingOptions.FirstOrDefault()).ToList();
+            cart.SelectedShippingOption = _dataSerializer.Serialize(ToShippingOptions(selectedOptions));
+            _cartService.Update(cart);
             return R.Success.With("shippingOptions", shippingOptionModels).Result;
         }
 
@@ -320,17 +306,23 @@ namespace EvenCart.Controllers
             {
                 return R.Fail.With("error", T("The address details were not provided")).Result;
             }
-            if (cart.ShippingOptionsSerialized.IsNullEmptyOrWhiteSpace() || requestModel.ShippingOption?.Id == null)
+            if (cart.ShippingOptionsSerialized.IsNullEmptyOrWhiteSpace() || requestModel.ShippingOption == null || !requestModel.ShippingOption.Any())
                 return R.Fail.With("error", T("No shipping options selected")).Result;
 
             var shippingOptionModels =
-               _dataSerializer.DeserializeAs<IList<ShippingOptionModel>>(cart.ShippingOptionsSerialized);
-            var shippingOptionId = requestModel.ShippingOption.Id;
-            requestModel.ShippingOption = shippingOptionModels.FirstOrDefault(x => x.Id == shippingOptionId);
-            if (requestModel.ShippingOption == null)
+               _dataSerializer.DeserializeAs<IList<WarehouseShippingOptionModel>>(cart.ShippingOptionsSerialized).SelectMany(x => x.ShippingOptions).ToList();
+            var selectedOptions = new List<ShippingOptionModel>();
+            foreach (var shippingOptionModel in requestModel.ShippingOption)
             {
-                return R.Fail.With("error", T("Could not find selected shipping option")).Result;
+                var shippingOptionId = shippingOptionModel.Id;
+                var option = shippingOptionModels.FirstOrDefault(x => x.Id == shippingOptionId);
+                if (option == null)
+                {
+                    return R.Fail.With("error", T("Could not find one of selected shipping option")).Result;
+                }
+                selectedOptions.Add(option);
             }
+
             var additionalFee = cart.CartItems.Sum(x => x.Product.AdditionalShippingCharge);
             //shipping handler validation
             if (requestModel.ShippingMethod != null)
@@ -340,11 +332,11 @@ namespace EvenCart.Controllers
                 if (shippingHandler == null)
                     return R.Fail.With("error", T("Shipping method unavailable")).Result;
                 cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
-                cart.ShippingFee = additionalFee + requestModel.ShippingOption.Rate;
+                cart.ShippingFee = additionalFee + selectedOptions.Sum(x => x.Rate);
                 cart.ShippingMethodDisplayName = shippingHandler.PluginInfo.Name;
             }
 
-            cart.SelectedShippingOption = $"{requestModel.ShippingOption.Name}";
+            cart.SelectedShippingOption = _dataSerializer.Serialize(ToShippingOptions(selectedOptions));
             _cartService.Update(cart);
             return R.Success.Result;
         }
@@ -489,11 +481,22 @@ namespace EvenCart.Controllers
             {
                 order.PaymentMethodName = requestModel.SystemName;
                 order.PaymentMethodFee = paymentMethodRequired ? paymentHandler.GetPaymentHandlerFee(order) : 0;
-                order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
-                                   order.ShippingMethodFee ?? 0;
+                order.OrderTotal = order.Subtotal + order.Tax + (order.PaymentMethodFee ?? 0) + (order.ShippingMethodFee ?? 0);
+                //check if discount is available
+                if (order.DiscountId.HasValue)
+                {
+                    if (_priceAccountant.CanApplyDiscount(order.DiscountId.Value, order.UserId, out _))
+                    {
+                        order.OrderTotal -= order.Discount;
+                    }
+                }
                 _orderService.Update(order);
-                //do we have available credit
-                GetAvailableStoreCredits(out _, out var creditAmount, ApplicationEngine.BaseCurrency, null);
+                var creditAmount = 0m;
+                if (requestModel.UseStoreCredits)
+                {
+                    //do we have available credit
+                    GetAvailableStoreCredits(out _, out creditAmount, ApplicationEngine.BaseCurrency, null);
+                }
                 //process the payment immediately
                 ProcessPayment(order, creditAmount, formAsDictionary.ToDictionary(x => x.Key, x => (object)x.Value), out response);
                 return response.Result;
@@ -502,7 +505,8 @@ namespace EvenCart.Controllers
             {
                 //if we are here, the payment method can be saved
                 cart.PaymentMethodName = paymentMethodRequired ? requestModel.SystemName : "";
-                cart.PaymentMethodData = _dataSerializer.Serialize(formAsDictionary);
+                //always store encrypted information about payment data
+                cart.PaymentMethodData = _cryptographyService.Encrypt(_dataSerializer.Serialize(formAsDictionary));
                 cart.PaymentMethodDisplayName = paymentMethodRequired ? paymentHandler.PluginInfo.Name : "Store Credits";
                 cart.UseStoreCredits = requestModel.UseStoreCredits;
                 _cartService.Update(cart);
@@ -543,12 +547,17 @@ namespace EvenCart.Controllers
         {
             if (!CanCheckout(out Cart cart))
                 return R.Fail.With("error", T("An error occurred while checking out")).Result;
-            if (cart.BillingAddressId == 0 ||
-                ((cart.ShippingAddressId == 0 || cart.ShippingMethodName.IsNullEmptyOrWhiteSpace()) &&
-                 CartHelper.IsShippingRequired(cart)))
+            var shippingRequired = CartHelper.IsShippingRequired(cart);
+            if (cart.BillingAddressId == 0 || cart.ShippingAddressId == 0 && shippingRequired)
             {
                 return R.Fail.With("error", T("The address details were not provided")).Result;
             }
+
+            if (cart.ShippingMethodName.IsNullEmptyOrWhiteSpace() && shippingRequired)
+            {
+                return R.Fail.With("error", T("The shipping details were not provided.")).Result;
+            }
+
             if (CartHelper.IsPaymentRequired(cart) && cart.PaymentMethodName.IsNullEmptyOrWhiteSpace() && !cart.UseStoreCredits)
             {
                 return R.Fail.With("error", T("The payment method was not provided")).Result;
@@ -581,8 +590,7 @@ namespace EvenCart.Controllers
                 User = currentUser,
                 IsSubscription = CartHelper.IsSubscriptionCart(cart)
             };
-            order.OrderTotal = order.Subtotal + order.Tax + order.PaymentMethodFee ?? 0 +
-                               order.ShippingMethodFee ?? 0;
+            order.OrderTotal = order.Subtotal + order.Tax + (order.PaymentMethodFee ?? 0) + (order.ShippingMethodFee ?? 0) - order.Discount;
             //load the addresses
             var addressIds = new List<int>() { cart.BillingAddressId, cart.ShippingAddressId };
             var addresses = _addressService.Get(x => addressIds.Contains(x.Id)).ToList();
@@ -635,7 +643,9 @@ namespace EvenCart.Controllers
             //process payment
             var paymentMethodData = cart.PaymentMethodData.IsNullEmptyOrWhiteSpace()
                 ? null
-                : _dataSerializer.DeserializeAs<Dictionary<string, object>>(cart.PaymentMethodData);
+                : _dataSerializer.DeserializeAs<Dictionary<string, object>>(
+                    _cryptographyService.Decrypt(cart.PaymentMethodData));
+
             CustomResponse response = null;
            
             if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, creditAmount, paymentMethodData, out response))
@@ -733,7 +743,7 @@ namespace EvenCart.Controllers
             return false;
         }
 
-        private IList<ShippingOptionModel> GetShipmentOptionModels(IShipmentHandlerPlugin shipmentHandler, Cart cart)
+        private IList<WarehouseShippingOptionModel> GetShipmentOptionModels(IShipmentHandlerPlugin shipmentHandler, Cart cart)
         {
             //find the product ids of the cart
             var productIds = cart.CartItems.Select(x => x.ProductId).ToList();
@@ -758,9 +768,18 @@ namespace EvenCart.Controllers
                 {
                     warehouseWiseProducts.Add(warehouse, new List<Product>());
                 }
-                warehouseWiseProducts[warehouse].Add(product);
+
+                if (product.IndividuallyShipped)
+                {
+                    for (var count = 0; count < item.Quantity; count++)
+                        warehouseWiseProducts[warehouse].Add(product);//add those many times so each product is covered
+                }
+                else
+                {
+                    warehouseWiseProducts[warehouse].Add(product);
+                }
             }
-            var shippingOptionModels = new List<ShippingOptionModel>();
+            var shippingOptionModels = new List<WarehouseShippingOptionModel>();
             //if there are more than two warehouses, we'll need to calculate shipping for each warehouse
             foreach (var warehousePair in warehouseWiseProducts)
             {
@@ -771,10 +790,22 @@ namespace EvenCart.Controllers
                     warehouseProducts.Where(x => x.IndividuallyShipped).ToList();
 
                 var shippingOptions = shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress);
-                //set unique ids
-                foreach (var so in shippingOptions)
-                    so.Id = Guid.NewGuid().ToString();
-                shippingOptionModels = shippingOptionModels.Concat(shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x))).ToList();
+                var models = shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
+                shippingOptionModels.Add(new WarehouseShippingOptionModel()
+                {
+                    WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
+                    ShippingOptions = models
+                });
+                foreach (var p in productsThatShouldBeShippedIndividually)
+                {
+                    shippingOptions = shipmentHandler.GetAvailableOptions(new List<Product>() { p }, shipper, cart.ShippingAddress);
+                    models = shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
+                    shippingOptionModels.Add(new WarehouseShippingOptionModel()
+                    {
+                        WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
+                        ShippingOptions = models
+                    });
+                }
             }
             return shippingOptionModels;
         }
@@ -794,6 +825,18 @@ namespace EvenCart.Controllers
                 availableStoreCreditAmount = _priceAccountant.ConvertCurrency(
                     availableStoreCredits * _affiliateSettings.StoreCreditsExchangeRate, targetCurrency);
             }
+        }
+
+        private IList<ShippingOption> ToShippingOptions(List<ShippingOptionModel> models)
+        {
+            return models.Where(x => x != null).Select(option => new ShippingOption()
+            {
+                DeliveryTime = option.DeliveryTime,
+                Id = option.Id,
+                Name = option.Name,
+                Description = option.Description,
+                Rate = option.Rate
+            }).ToList();
         }
         #endregion
 

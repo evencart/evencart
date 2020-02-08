@@ -1,20 +1,35 @@
 ﻿{% if shippingOptions.size > 0 %}
+{% if shippingOptions.size > 1 %}
+<div class="alert alert-info">
+    {{"Your order items will be shipped from multiple locations."}}
+</div>
+{% endif %}
+{% for warehouseOption in shippingOptions %}
+{% if shippingOptions.size > 1 %}
+<div>
+    <strong>
+        {{"Warehouse # "}} {{forloop.index}}
+    </strong>
+</div>
+{% endif %}
+{% assign warehouseIndex = forloop.index0 %}
 <ul class="shipping-options">
-    {% for shippingOption in shippingOptions %}
+    {% for shippingOption in warehouseOption.shippingOptions %}
     <li>
         <label>
-            <input name="ShippingOption.Id" value="{{shippingOption.id}}" type="radio" {% if forloop.index0 == 0 %}checked{% endif %} />
+            <input name="ShippingOption[{{warehouseIndex}}].Id" value="{{shippingOption.id}}" type="radio" {% if forloop.index0= =0 %}checked{% endif %} />
             {{shippingOption.name}}
             {% if shippingOption.rate > 0 %}
             [+{{shippingOption.rate | withCurrency}} ]
             {% endif %}
-        <span class="description">
-            {{shippingOption.description}}
-        </span>
+            <span class="description">
+                {{shippingOption.description}}
+            </span>
         </label>
     </li>
     {% endfor %}
 </ul>
+{% endfor %}
 {% else %}
 <div class="alert alert-danger">
     {{"No shipping options available for this provider"}}

@@ -1,4 +1,5 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using System.Collections.Generic;
+using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Checkout
@@ -14,8 +15,8 @@ namespace EvenCart.Models.Checkout
         public ShippingMethodModel ShippingMethod { get; set; }
 
         /// <summary>
-        /// The <see cref="ShippingOptionModel">shipping option</see> to be used. Ignore if not applicable.
+        /// The list of <see cref="ShippingOptionModel">shipping option</see> to be used. Ignore if not applicable.
         /// </summary>
-        public ShippingOptionModel ShippingOption { get; set; }
+        public IList<ShippingOptionModel> ShippingOption { get; set; }
     }
 }
