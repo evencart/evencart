@@ -12,6 +12,20 @@
             jQuery(".sidenav").animate({ left: currentLeft });
             jQuery(".client-main, .client-main-navlinks, .client-main-content").animate({ left: currentLeft + width });
         });
+
+    //dependent controls
+    jQuery("[data-visible]").hide();
+    setInterval(function() {
+            jQuery("[data-visible]").each(function() {
+                var result = eval(jQuery(this).attr("data-visible"));
+                if (result) {
+                    jQuery(this).slideDown();
+                } else {
+                    jQuery(this).slideUp();
+                }
+            });
+        },
+        100);
 });
 $(document).on("keypress", 'form', function (e) {
     var code = e.keyCode || e.which;

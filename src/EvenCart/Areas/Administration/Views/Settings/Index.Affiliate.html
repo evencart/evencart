@@ -9,39 +9,39 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
-            {% control checkbox name="enableAffiliates" text=@t"Enable affiliates" value="settings.enableAffiliates"%}
+            {% control checkbox id="enableAffiliates" name="enableAffiliates" text=@t"Enable affiliates" value="settings.enableAffiliates"%}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control checkbox name="autoActivateAffiliateAccount" text=@t"Auto activate affiliates" value="settings.autoActivateAffiliateAccount" %}
             <div class="panel-help">
                 {{"Specifies if affiliate account should be immediately activated or manually approved." | t}}
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control label text=@t"Affiliate Cookie Name" for="affiliateCookieName" %}
             {% control text name="affiliateCookieName" value="{{settings.affiliateCookieName}}" required="true" %}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control label text=@t"Affiliate Cookie Expiration Days" for="affiliateCookieExpirationDays" %}
             <div class="panel-help">
                 {{"The number of days for which the affiliate cookie is valid. In most common cases it expires in 1 day." | t}}
             </div>
             {% control number name="affiliateCookieExpirationDays" value="{{settings.affiliateCookieExpirationDays}}" required="true" %}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control label text=@t"Commission Value" for="commissionValue" %}
             <div class="panel-help">
                 {{"The number or percentage of credits that'll be credited to affiliate's account." | t}}
             </div>
             {% control number name="commissionValue" value="{{settings.commissionValue}}" required="true" %}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control checkbox name="useCommissionPercentage" text=@t"Commission value is percentage of order total" value="settings.useCommissionPercentage"%}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control checkbox name="excludeTaxFromCalculation" text=@t"Exclude tax from calculation" value="settings.excludeTaxFromCalculation"%}
         </div>
-        <div class="form-group">
+        <div class="form-group" data-visible="jQuery('#enableAffiliates').is(':checked')">
             {% control label text=@t"Signup Credit to Affiliate" for="signupCreditToAffiliate" %}
             <div class="panel-help">
                 {{"The number of credits given to the affiliate when a user signs up with their affiliate code" | t}}
