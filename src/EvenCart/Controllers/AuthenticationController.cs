@@ -455,6 +455,8 @@ namespace EvenCart.Controllers
         [NonAction]
         private bool ShouldSignIn(User user, string password)
         {
+            if (user.PasswordFormat == PasswordFormat.Plain)
+                return user.Password == password;
             //get hashed password
             var hashedPassword = _cryptographyService.GetHashedPassword(password, user.PasswordSalt, user.PasswordFormat);
             return user.Password == hashedPassword;
