@@ -105,7 +105,8 @@ namespace EvenCart.Areas.Administration.Controllers
             if (stateOrProvince == null)
                 return NotFound();
             var stateOrProvinceModel = _modelMapper.Map<StateOrProvinceModel>(stateOrProvince);
-            return R.Success.With("state", stateOrProvinceModel).WithAvailableCountries().Result;
+            stateOrProvinceModel.CountryId = countryId;
+            return R.Success.With("state", stateOrProvinceModel).With("countryId", countryId).WithAvailableCountries().Result;
         }
 
         [DualPost("{countryId}/states", Name = AdminRouteNames.SaveState, OnlyApi = true)]
@@ -113,7 +114,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [ValidateModelState(ModelType = typeof(StateOrProvinceModel))]
         public IActionResult SaveStateOrProvince(StateOrProvinceModel stateOrProvinceModel)
         {
-            if (stateOrProvinceModel.CountryId <= 0 || _countryService.Count(x => x.Id == stateOrProvinceModel.CountryId) == 0)
+            if (_countryService.Count(x => x.Id == stateOrProvinceModel.CountryId) == 0)
                 return NotFound();
 
             var stateOrProvince = stateOrProvinceModel.Id > 0 ? _stateOrProvinceService.Get(stateOrProvinceModel.Id) : new StateOrProvince();

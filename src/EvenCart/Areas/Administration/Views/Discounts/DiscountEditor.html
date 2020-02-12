@@ -17,21 +17,14 @@
                         {% control validator for="name" required="true" %}
                     </div>
                     <div class="form-group">
-                        {% control checkbox name="hasCouponCode" value="discount.hasCouponCode" text=@t"Require coupon code?" %}
+                        {% control checkbox id="hasCouponCode" name="hasCouponCode" value="discount.hasCouponCode" text=@t"Require coupon code?" %}
                         <div class="panel-help">
                             {{"Check if the customer must enter a coupon code on checkout page to avail the promotion." | t}}
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-visible="jQuery('#hasCouponCode').is(':checked')">
                         {% control label text=@t"Coupon Code" for="couponCode" %}
                         {% control text name="couponCode" id="couponCode" placeholder=@t"e.g. DISC50 or pyz10" value="{{discount.couponCode}}"%}
-                    </div>
-                    <div class="form-group">
-                        {% control label text=@t"Discount Value" for="discountValue" %}
-                        <div class="panel-help">
-                            {{"The discount that is provided to the customer." | t}}
-                        </div>
-                        {% control number name="discountValue" id="discountValue" value="{{discount.discountValue}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Calculate as" for="calculationType" %}
@@ -39,6 +32,13 @@
                             {{"Specifies the method used for calculating the discount from the discount value above." | t}}
                         </div>
                         {% control select name="calculationType" id="calculationType" items="availableCalculationTypes" value="discount.calculationTypeDisplay" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Discount Value" for="discountValue" %}
+                        <div class="panel-help">
+                            {{"The discount that is provided to the customer." | t}}
+                        </div>
+                        {% control number name="discountValue" id="discountValue" value="{{discount.discountValue}}" %}
                     </div>
                     <div class="form-group">
                         {% control label text=@t"Minimum Order Subtotal" for="minimumOrderSubtotal" %}

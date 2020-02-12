@@ -94,7 +94,7 @@
                                 <div class="panel-help">
                                     {{"Sale type allows to specify if customer can subscribe for the product for regular purchase." | t}}
                                 </div>
-                                {% control select name="productSaleType" value="product.productSaleType" items="productSaleTypes" required="true" %}
+                                {% control select id="productSaleType" name="productSaleType" value="product.productSaleType" items="productSaleTypes" required="true" %}
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -103,11 +103,11 @@
                                 <div class="panel-help">
                                     {{"Product type specifies if the product is a good that's delivered or is service that's provided." | t}}
                                 </div>
-                                {% control select name="productType" value="product.productType" items="productTypes" required="true" %}
+                                {% control select id="productType" name="productType" value="product.productType" items="productTypes" required="true" %}
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row"  data-visible="jQuery('#productSaleType').val()!='OneTime'">
                         <div class="col-lg-6">
                             <div class="form-group" data-show-when="jQuery">
                                 {% control label text=@t"Subscription Cycle" for="subscriptionCycle" %}
@@ -285,12 +285,12 @@
                         {% control checkbox name="reviewsDisabled" text=@t"Disable Reviews" value="product.reviewsDisabled" %}
                     </div>
                     <div class="form-group">
-                        {% control checkbox name="requireLoginToPurchase" text=@t"Require Login to Purchase" value="product.requireLoginToPurchase" %}
+                        {% control checkbox id="requireLoginToPurchase" name="requireLoginToPurchase" text=@t"Require Login to Purchase" value="product.requireLoginToPurchase" %}
                         <div class="panel-help">
                             {{"Check to force user to login before product can be added to shopping cart." | t}}
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-visible="jQuery('#requireLoginToPurchase').is(':checked')">
                         {% control checkbox name="requireLoginToViewPrice" text=@t"Require Login to View Price" value="product.requireLoginToViewPrice" %}
                         <div class="panel-help">
                             {{"Specifies if prices are visible only to the logged in users. Note that 'Require Login to Purchase' must also be checked, otherwise customer will be able to add products to cart to see their prices." | t}}
