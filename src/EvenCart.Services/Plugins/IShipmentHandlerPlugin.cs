@@ -8,10 +8,8 @@ namespace EvenCart.Services.Plugins
 {
     public interface IShipmentHandlerPlugin : IPlugin
     {
-        decimal GetShippingHandlerFee(Cart cart);
-
         bool IsMethodAvailable(Cart cart);
 
-        IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo);
+        IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo);
     }
 }

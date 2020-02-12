@@ -234,7 +234,8 @@ namespace EvenCart.Controllers
             }
 
             //find available shipping methods
-            var shippingHandlers = _pluginAccountant.GetActivePlugins(typeof(IShipmentHandlerPlugin));
+            var shippingHandlers = _pluginAccountant.GetActivePlugins(typeof(IShipmentHandlerPlugin))
+                .Where(x => x.LoadPluginInstance<IShipmentHandlerPlugin>().IsMethodAvailable(cart)).ToList();
             if (!shippingHandlers.Any())
             {
                 cart.ShippingMethodName = ApplicationConfig.UnavailableMethodName;
@@ -277,7 +278,7 @@ namespace EvenCart.Controllers
 
             //validate shipping method
             var shippingHandler = PluginHelper.GetShipmentHandler(shippingMethodSystemName);
-            if (shippingHandler == null)
+            if (shippingHandler == null || !shippingHandler.IsMethodAvailable(cart))
                 return R.Fail.With("error", T("Shipping method unavailable")).Result;
 
             var shippingOptionModels = GetShipmentOptionModels(shippingHandler, cart);
@@ -329,7 +330,7 @@ namespace EvenCart.Controllers
             {
                 //validate shipping method
                 var shippingHandler = PluginHelper.GetShipmentHandler(requestModel.ShippingMethod.SystemName);
-                if (shippingHandler == null)
+                if (shippingHandler == null || !shippingHandler.IsMethodAvailable(cart))
                     return R.Fail.With("error", T("Shipping method unavailable")).Result;
                 cart.ShippingMethodName = requestModel.ShippingMethod.SystemName;
                 cart.ShippingFee = additionalFee + selectedOptions.Sum(x => x.Rate);
@@ -563,6 +564,15 @@ namespace EvenCart.Controllers
                 return R.Fail.With("error", T("The payment method was not provided")).Result;
             }
 
+            if (shippingRequired)
+            {
+                //validate shipping method
+                var shippingHandler = PluginHelper.GetShipmentHandler(cart.ShippingMethodName);
+                if (shippingHandler == null || !shippingHandler.IsMethodAvailable(cart))
+                    return R.Fail.With("error", T("Shipping method unavailable")).Result;
+            }
+         
+
             var currentUser = ApplicationEngine.CurrentUser;
             var order = new Order()
             {
@@ -748,7 +758,7 @@ namespace EvenCart.Controllers
             //find the product ids of the cart
             var productIds = cart.CartItems.Select(x => x.ProductId).ToList();
             var products = _productService.GetProductsWithVariants(productIds);
-            var warehouseWiseProducts = new Dictionary<Warehouse, IList<Product>>();
+            var warehouseWiseProducts = new Dictionary<Warehouse, IList<(Product, int)>>();
             foreach (var item in cart.CartItems)
             {
                 var product = products.First(x => x.Id == item.ProductId);
@@ -766,17 +776,17 @@ namespace EvenCart.Controllers
                 }
                 if (warehouseWiseProducts.All(x => x.Key.Id != warehouse.Id))
                 {
-                    warehouseWiseProducts.Add(warehouse, new List<Product>());
+                    warehouseWiseProducts.Add(warehouse, new List<(Product, int)>());
                 }
 
                 if (product.IndividuallyShipped)
                 {
                     for (var count = 0; count < item.Quantity; count++)
-                        warehouseWiseProducts[warehouse].Add(product);//add those many times so each product is covered
+                        warehouseWiseProducts[warehouse].Add((product, 1));//add those many times so each product is covered
                 }
                 else
                 {
-                    warehouseWiseProducts[warehouse].Add(product);
+                    warehouseWiseProducts[warehouse].Add((product, item.Quantity));
                 }
             }
             var shippingOptionModels = new List<WarehouseShippingOptionModel>();
@@ -785,9 +795,9 @@ namespace EvenCart.Controllers
             {
                 var shipper = warehousePair.Key.Address;
                 var warehouseProducts = warehousePair.Value;
-                var productsThatCanBeShippedTogether = warehouseProducts.Where(x => !x.IndividuallyShipped).ToList();
+                var productsThatCanBeShippedTogether = warehouseProducts.Where(x => !x.Item1.IndividuallyShipped).ToList();
                 var productsThatShouldBeShippedIndividually =
-                    warehouseProducts.Where(x => x.IndividuallyShipped).ToList();
+                    warehouseProducts.Where(x => x.Item1.IndividuallyShipped).ToList();
 
                 var shippingOptions = shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress);
                 var models = shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
@@ -798,7 +808,7 @@ namespace EvenCart.Controllers
                 });
                 foreach (var p in productsThatShouldBeShippedIndividually)
                 {
-                    shippingOptions = shipmentHandler.GetAvailableOptions(new List<Product>() { p }, shipper, cart.ShippingAddress);
+                    shippingOptions = shipmentHandler.GetAvailableOptions(new List<(Product, int)>() { p }, shipper, cart.ShippingAddress);
                     models = shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
                     shippingOptionModels.Add(new WarehouseShippingOptionModel()
                     {
