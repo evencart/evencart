@@ -288,16 +288,22 @@ namespace EvenCart.Services.Products
                                     var price = Math.Min(basePrice, variant.Price ?? product.Price);
 
                                     GetProductPriceDetails(product, cart.BillingAddress, price, out decimal priceWithoutTax, out decimal tax, out decimal taxRate, out var taxName);
-
+                                    var expectedFinalPrice = priceWithoutTax * ci.Quantity + tax * ci.Quantity;
                                     //do we need an update?
-                                    if (priceWithoutTax != ci.Price || comparisonPrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0 || ci.TaxName != taxName)
+                                    if (priceWithoutTax != ci.Price 
+                                        || comparisonPrice != ci.ComparePrice 
+                                        || tax != ci.Tax 
+                                        || taxRate != ci.TaxPercent 
+                                        || ci.FinalPrice == 0 
+                                        || ci.TaxName != taxName 
+                                        || ci.FinalPrice != expectedFinalPrice)
                                     {
                                         ci.Price = priceWithoutTax;
                                         ci.ComparePrice = comparisonPrice;
                                         ci.Tax = tax * ci.Quantity;
                                         ci.TaxPercent = taxRate;
                                         ci.Discount = discount;
-                                        ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
+                                        ci.FinalPrice = expectedFinalPrice;
                                         ci.TaxName = taxName;
                                         _cartItemService.Update(ci);
                                     }
@@ -307,15 +313,22 @@ namespace EvenCart.Services.Products
                             {
                                 GetProductPriceDetails(product, cart.BillingAddress, basePrice, out decimal priceWithoutTax, out decimal tax, out decimal taxRate, out var taxName);
                                 tax = tax * ci.Quantity;
+                                var expectedFinalPrice = priceWithoutTax * ci.Quantity + tax * ci.Quantity;
                                 //do we need an update?
-                                if (priceWithoutTax != ci.Price || product.ComparePrice != ci.ComparePrice || tax != ci.Tax || taxRate != ci.TaxPercent || ci.FinalPrice == 0 || ci.TaxName != taxName)
+                                if (priceWithoutTax != ci.Price 
+                                    || product.ComparePrice != ci.ComparePrice 
+                                    || tax != ci.Tax 
+                                    || taxRate != ci.TaxPercent 
+                                    || ci.FinalPrice == 0 
+                                    || ci.TaxName != taxName
+                                    || ci.FinalPrice != expectedFinalPrice)
                                 {
                                     ci.Price = priceWithoutTax;
                                     ci.ComparePrice = product.ComparePrice;
                                     ci.Tax = tax;
                                     ci.TaxPercent = taxRate;
                                     ci.Discount = discount;
-                                    ci.FinalPrice = ci.Price * ci.Quantity + ci.Tax;
+                                    ci.FinalPrice = expectedFinalPrice;
                                     ci.TaxName = taxName;
                                     _cartItemService.Update(ci);
                                 }
