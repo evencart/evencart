@@ -13,11 +13,12 @@
 </div>
 {% endif %}
 {% assign warehouseIndex = forloop.index0 %}
+<input name="ShippingOption[{{warehouseIndex}}].warehouseId" value="{{warehouseOption.warehouseId}}" type="hidden"/>
 <ul class="shipping-options">
     {% for shippingOption in warehouseOption.shippingOptions %}
     <li>
         <label>
-            <input name="ShippingOption[{{warehouseIndex}}].Id" value="{{shippingOption.id}}" type="radio" {% if forloop.index0= =0 %}checked{% endif %} />
+            <input name="ShippingOption[{{warehouseIndex}}].Id" value="{{shippingOption.id}}" type="radio" {% if forloop.index0 == 0 %}checked{% endif %} />
             {{shippingOption.name}}
             {% if shippingOption.rate > 0 %}
             [+{{shippingOption.rate | withCurrency}} ]

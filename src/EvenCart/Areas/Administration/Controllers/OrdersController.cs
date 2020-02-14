@@ -636,6 +636,9 @@ namespace EvenCart.Areas.Administration.Controllers
             shipment.Remarks = shipmentModel.Remarks;
             shipment.ShipmentStatus = shipmentModel.ShipmentStatus;
             shipment.ShippingMethodName = shipmentModel.ShippingMethodName;
+            if (shipment.ShippingMethodName.IsNullEmptyOrWhiteSpace())
+                shipment.ShippingMethodName = order.ShippingMethodName;
+
             if (shipment.Id == 0)
             {
                 shipment.WarehouseId = shipmentModel.WarehouseId;
@@ -756,6 +759,43 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
 
+        [DualPost("{orderId}/shipment-label/{shipmentId}", Name = AdminRouteNames.BuyShipmentLabel, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.ManageShipment)]
+        public IActionResult BuyShipmentLabel(int orderId, int shipmentId)
+        {
+            var order = orderId > 0 ? _orderService.Get(orderId) : null;
+            if (order == null)
+                return NotFound();
+
+            //get shipment
+            var shipment = _shipmentService.Get(shipmentId);
+            if (shipment == null)
+                return NotFound();
+
+            if (!shipment.ShippingLabelUrl.IsNullEmptyOrWhiteSpace())
+                return R.Fail.With("error", "The label has been already purchased").Result;
+
+            //get the shipment handler
+            var shippingHandler = PluginHelper.GetShipmentHandler(shipment.ShippingMethodName);
+            if (shippingHandler == null || !shippingHandler.SupportsLabelPurchase)
+                return R.Fail.With("error", T("Shipping provider doesn't exist or support label purchase")).Result;
+
+            var shippingOption = _dataSerializer.DeserializeAs<IList<ShippingOption>>(order.SelectedShippingOption)?.FirstOrDefault(x => x.WarehouseId == shipment.WarehouseId);
+            if(shippingOption == null)
+                return R.Fail.With("error", T("Shipping option doesn't exist")).Result;
+            var productsWithCount = shipment.ShipmentItems.Select(x => (x.OrderItem.Product, x.Quantity)).ToList();
+            var shipmentInfo = shippingHandler.GetShipmentInfo(shippingOption, productsWithCount);
+            if (shipmentInfo == null)
+            {
+                return R.Fail.With("error", T("Unable to retrieve shipping label.")).Result;
+            }
+
+            shipment.ShippingLabelUrl = shipmentInfo.ShippingLabelUrl;
+            shipment.TrackingNumber = shipmentInfo.TrackingNumber;
+            shipment.TrackingUrl = shipmentInfo.TrackingUrl;
+            _shipmentService.Update(shipment);
+            return R.Success.Result;
+        }
         #endregion
 
         #region Return Requests

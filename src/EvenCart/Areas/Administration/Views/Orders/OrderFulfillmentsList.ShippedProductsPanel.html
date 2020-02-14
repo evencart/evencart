@@ -3,7 +3,7 @@
         {{"Shipped Products" | t}}
         <a class="float-right clickable margin-r-10" onclick="window['reload_shipment_list']();"><span class="rbicon rbicon-refresh-ccw"></span></a>
     </div>
-    <div class="panel-body no-padding">
+    <div class="panel-body">
         <div class="row">
             <div class="col-12" id="shipment_list">
                 {% control ajaxedcontent source="getShipmentListUrl" id="shipment_list" %}

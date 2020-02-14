@@ -154,6 +154,26 @@
             The return item has been repaired
             </summary>
         </member>
+        <member name="T:EvenCart.Data.Entity.Purchases.ShipmentInfo">
+            <summary>
+            Represents shipping info object
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShipmentInfo.TrackingUrl">
+            <summary>
+            Tracking url of the shipment
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShipmentInfo.TrackingNumber">
+            <summary>
+            Tracking number of the shipment
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShipmentInfo.ShippingLabelUrl">
+            <summary>
+            Url of the shipping label
+            </summary>
+        </member>
         <member name="T:EvenCart.Data.Entity.Purchases.ShipmentStatus">
             <summary>
             The status of the shiopment
@@ -232,6 +252,11 @@
         <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.Remarks">
             <summary>
             Any additional information about shipping option
+            </summary>
+        </member>
+        <member name="P:EvenCart.Data.Entity.Purchases.ShippingOption.WarehouseId">
+            <summary>
+            The id of the warehouse
             </summary>
         </member>
         <member name="P:EvenCart.Data.Entity.Settings.GeneralSettings.StoreDomain">
