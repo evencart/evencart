@@ -11,5 +11,9 @@ namespace EvenCart.Services.Plugins
         bool IsMethodAvailable(Cart cart);
 
         IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo);
+
+        ShipmentInfo GetShipmentInfo(ShippingOption selectedShippingOption, IList<(Product, int)> products);
+
+        bool SupportsLabelPurchase { get; }
     }
 }

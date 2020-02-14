@@ -3,8 +3,10 @@ using System.Linq;
 using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Services.Formatter;
+using EvenCart.Services.Helpers;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {
@@ -42,6 +44,17 @@ namespace EvenCart.Areas.Administration.Factories.Orders
                     return historyModel;
                 })
                 .ToList();
+
+            if (shipment.ShippingLabelUrl.IsNullEmptyOrWhiteSpace())
+            {
+                //does the shipping handler support purchase
+                var shipmentHandler = PluginHelper.GetShipmentHandler(shipment.ShippingMethodName);
+                shipmentModel.SupportsLabelPurchase = shipmentHandler?.SupportsLabelPurchase ?? false;
+            }
+            else
+            {
+                shipmentModel.SupportsLabelPurchase = false;
+            }
             return shipmentModel;
         }
 

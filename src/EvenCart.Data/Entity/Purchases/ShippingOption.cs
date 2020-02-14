@@ -33,5 +33,9 @@
         /// Any additional information about shipping option
         /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// The id of the warehouse
+        /// </summary>
+        public int WarehouseId { get; set; }
     }
 }
