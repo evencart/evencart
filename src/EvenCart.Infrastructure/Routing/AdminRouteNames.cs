@@ -105,6 +105,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string SaveShipmentHistory = "SaveShipmentHistory";
         public const string DeleteShipmentHistory = "DeleteShipmentHistory";
         public const string DeleteShipment = "DeleteShipment";
+        public const string BuyShipmentLabel = "BuyShipmentLabel";
 
         public const string UsersList = "UsersList";
         public const string AffiliatesList = "AffiliatesList";

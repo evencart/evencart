@@ -10,6 +10,11 @@ namespace EvenCart.Models.Checkout
     public class WarehouseShippingOptionModel : FoundationModel
     {
         /// <summary>
+        /// The id of the warehouse
+        /// </summary>
+        public int WarehouseId { get; set; }
+
+        /// <summary>
         /// The <see cref="AddressInfoModel">address</see> of the warehouse
         /// </summary>
         public AddressInfoModel WarehouseAddress { get; set; }

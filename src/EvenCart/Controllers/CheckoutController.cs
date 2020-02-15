@@ -804,7 +804,8 @@ namespace EvenCart.Controllers
                 shippingOptionModels.Add(new WarehouseShippingOptionModel()
                 {
                     WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
-                    ShippingOptions = models
+                    ShippingOptions = models,
+                    WarehouseId = warehousePair.Key.Id
                 });
                 foreach (var p in productsThatShouldBeShippedIndividually)
                 {
@@ -813,7 +814,8 @@ namespace EvenCart.Controllers
                     shippingOptionModels.Add(new WarehouseShippingOptionModel()
                     {
                         WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
-                        ShippingOptions = models
+                        ShippingOptions = models,
+                        WarehouseId = warehousePair.Key.Id
                     });
                 }
             }
@@ -845,7 +847,8 @@ namespace EvenCart.Controllers
                 Id = option.Id,
                 Name = option.Name,
                 Description = option.Description,
-                Rate = option.Rate
+                Rate = option.Rate,
+                WarehouseId = option.WarehouseId
             }).ToList();
         }
         #endregion

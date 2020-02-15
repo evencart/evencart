@@ -28,5 +28,9 @@ namespace EvenCart.Models.Checkout
         /// The delivery time of this option
         /// </summary>
         public string DeliveryTime { get; set; }
+        /// <summary>
+        /// The id of the warehouse
+        /// </summary>
+        public int WarehouseId { get; set; }
     }
 }

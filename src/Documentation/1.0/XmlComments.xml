@@ -1471,9 +1471,19 @@
             The delivery time of this option
             </summary>
         </member>
+        <member name="P:EvenCart.Models.Checkout.ShippingOptionModel.WarehouseId">
+            <summary>
+            The id of the warehouse
+            </summary>
+        </member>
         <member name="T:EvenCart.Models.Checkout.WarehouseShippingOptionModel">
             <summary>
             Represents shipping options grouped by warehouse
+            </summary>
+        </member>
+        <member name="P:EvenCart.Models.Checkout.WarehouseShippingOptionModel.WarehouseId">
+            <summary>
+            The id of the warehouse
             </summary>
         </member>
         <member name="P:EvenCart.Models.Checkout.WarehouseShippingOptionModel.WarehouseAddress">

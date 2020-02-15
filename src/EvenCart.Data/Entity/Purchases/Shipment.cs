@@ -18,6 +18,10 @@ namespace EvenCart.Data.Entity.Purchases
 
         public int WarehouseId { get; set; }
 
+        public string ShippingLabelUrl { get; set; }
+
+        public string TrackingUrl { get; set; }
+
         #region Virtual Properties
         public virtual IList<ShipmentItem> ShipmentItems { get; set; }
 

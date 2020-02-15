@@ -28,6 +28,12 @@ namespace EvenCart.Areas.Administration.Models.Orders
 
         public int WarehouseId { get; set; }
 
+        public string ShippingLabelUrl { get; set; }
+
+        public string TrackingUrl { get; set; }
+
+        public bool SupportsLabelPurchase { get; set; }
+
         public void SetupValidationRules(ModelValidator<ShipmentModel> v)
         {
             v.RuleFor(x => x.OrderId).GreaterThan(0);
