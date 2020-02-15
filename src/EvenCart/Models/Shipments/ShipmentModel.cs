@@ -15,5 +15,7 @@ namespace EvenCart.Models.Shipments
         public ShipmentStatus ShipmentStatus { get; set; }
 
         public IList<ShipmentItemModel> ShipmentItems { get; set; }
+
+        public string TrackingUrl { get; set; }
     }
 }

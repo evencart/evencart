@@ -27,7 +27,8 @@ namespace EvenCart.Factories.Shipments
                 ShippingMethodName = entity.ShippingMethodName,
                 TrackingNumber = entity.TrackingNumber,
                 ShipmentItems = entity.ShipmentItems.Select(Create).ToList(),
-                Id = entity.Id
+                Id = entity.Id,
+                TrackingUrl = entity.TrackingUrl
             };
             return model;
         }
