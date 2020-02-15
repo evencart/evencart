@@ -800,7 +800,13 @@ namespace EvenCart.Controllers
                     warehouseProducts.Where(x => x.Item1.IndividuallyShipped).ToList();
 
                 var shippingOptions = shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress);
-                var models = shippingOptions.Select(x => _modelMapper.Map<ShippingOptionModel>(x)).ToList();
+                var models = shippingOptions.Select(x =>
+                {
+                    var xModel = _modelMapper.Map<ShippingOptionModel>(x);
+                    xModel.WarehouseId = warehousePair.Key.Id;
+                    return xModel;
+                }).ToList();
+
                 shippingOptionModels.Add(new WarehouseShippingOptionModel()
                 {
                     WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
