@@ -9,6 +9,8 @@ namespace EvenCart.Data.Entity.Settings
         public string Key { get; set; }
 
         public string Value { get; set; }
+
+        public int StoreId { get; set; }
     }
 
 }
