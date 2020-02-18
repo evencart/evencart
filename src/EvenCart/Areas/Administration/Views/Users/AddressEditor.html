@@ -31,8 +31,17 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"State or Province" for="state" %}
-                        {% control select id="state" value="address.stateOrProvinceId" items="items" %}
+                        {% control select id="state" name="stateProvinceId" value="address.stateProvinceId" items="items" %}
                     </div>
+                    <div class="form-group" id="other-state-container">
+                        {% control label text=@t"State or Province" for="state" %}
+                        {% control text name="stateProvinceName" value="{{address.stateProvinceName}}" %}
+                    </div>
+                    <script type="text/javascript">
+                                ready(function () {
+                                    initCountryState("country", "state", "other-state-container", "{{address.stateProvinceId}}");
+                                });
+                    </script>
                     <div class="form-group">
                         {% control label text=@t"City" for="city" %}
                         {% control text id="city" name="city" value="{{address.city}}" %}
@@ -75,7 +84,7 @@
         initAjaxForm("edit-address-form",
             {
                 onSuccess: function() {
-                    
+
                     notify("success", '{{"Address was saved successfully" | t}}');
                     setTimeout(function() {
                             navigate('{% route AddressList userId="{{userId}}" %}');
@@ -84,5 +93,5 @@
                 }
             });
     });
- 
+
 </script>

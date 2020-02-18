@@ -319,7 +319,9 @@ namespace EvenCart.Areas.Administration.Controllers
                 return NotFound();
             var fulfillments = _orderFulfillmentService.Get(x => x.OrderId == orderId).ToList();
             var models = _orderFulfillmentModelFactory.Create(fulfillments);
-            var canEditFulfillments = order.Shipments == null || !order.Shipments.Any();
+            var canEditFulfillments = order.Shipments == null || !order.Shipments.Any() ||
+                                      order.Shipments.Sum(x => x.ShipmentItems.Sum(y => y.Quantity)) <
+                                      order.OrderItems.Sum(x => x.Quantity);
             return R.Success.With("orderFulfillments", models).With("canEditFulfillments", canEditFulfillments).Result;
         }
 
@@ -330,14 +332,45 @@ namespace EvenCart.Areas.Administration.Controllers
             var order = orderId > 0 ? _orderService.Get(orderId) : null;
             if (order == null)
                 return NotFound();
-            if (order.Shipments?.Any() ?? false)
-                return R.Fail.With("error", "Unable to update order fulfillments after shipments have been added")
-                    .Result;
+            //if (order.Shipments?.Any() ?? false)
+            //    return R.Fail.With("error", "Unable to update order fulfillments after shipments have been added")
+            //        .Result;
 
             //get the warehouses where orderitems for this order are available
             var productIds = order.OrderItems.Select(x => x.ProductId).ToList();
             var inventories = _warehouseInventoryService.GetByProducts(productIds).ToList();
             var fulfillments = _orderFulfillmentService.Get(x => x.OrderId == orderId).ToList();
+            if (fulfillments.Sum(x => x.Quantity) < order.OrderItems.Sum(x => x.Quantity))
+            {
+                //get the available warehouses and send fulfillments objects
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var remainingQuantity = orderItem.Quantity - fulfillments.Where(x => x.OrderItemId == orderItem.Id).Sum(x => x.Quantity);
+                    if (remainingQuantity == 0)
+                        continue;
+                    foreach (var inventory in inventories.Where(x =>
+                        orderItem.ProductVariantId > 0
+                            ? x.ProductVariantId == orderItem.ProductVariantId
+                            : x.ProductId == orderItem.ProductId))
+                    {
+                        if (fulfillments.Any(x =>
+                            x.OrderItemId == orderItem.Id && x.WarehouseId == inventory.WarehouseId && !x.Locked))
+                            continue;
+
+                        fulfillments.Add(new OrderFulfillment()
+                        {
+                            OrderId = orderId,
+                            OrderItemId = orderItem.Id,
+                            Quantity = 0,
+                            WarehouseId = inventory.WarehouseId,
+                            Warehouse = inventory.Warehouse,
+                            Order = order,
+                            OrderItem = orderItem,
+                            WarehouseInventory = inventory
+                        });
+                    }
+                }
+            }
             var models = _orderFulfillmentModelFactory.Create(inventories, fulfillments);
             var totalOrderedCount = order.OrderItems.Sum(x => x.Quantity);
             return R.Success.With("orderFulfillments", models).With("orderedItemsCount", totalOrderedCount).Result;
@@ -353,20 +386,22 @@ namespace EvenCart.Areas.Administration.Controllers
             var order = orderId > 0 ? _orderService.Get(orderId) : null;
             if (order == null)
                 return NotFound();
-
-            if (order.Shipments?.Any() ?? false)
+            var canEditFulfillments = order.Shipments == null || !order.Shipments.Any() ||
+                                      order.Shipments.Sum(x => x.ShipmentItems.Sum(y => y.Quantity)) <
+                                      order.OrderItems.Sum(x => x.Quantity);
+            if (!canEditFulfillments)
                 return R.Fail.With("error", "Unable to update order fulfillments after shipments have been added")
                     .Result;
-
+            
             var orderItemIds = orderFulfillments.Select(x => x.OrderItemId).Distinct().ToList();
             var warehouseIds = orderFulfillments.Select(x => x.WarehouseId).Distinct().ToList();
-            if (order.OrderItems.Count > orderItemIds.Count)
-                return R.Fail.With("error", T("All order item ids must be provided to update any fulfillment")).Result;
+            //if (order.OrderItems.Count > orderItemIds.Count)
+            //    return R.Fail.With("error", T("All order item ids must be provided to update any fulfillment")).Result;
 
             var orderItems = _orderItemService.GetWithProducts(orderItemIds).ToList();
             //get the saved fulfillments
             var savedFulfillments = _orderFulfillmentService
-                .Get(x => warehouseIds.Contains(x.WarehouseId) && orderItemIds.Contains(x.OrderItemId)).ToList();
+                .Get(x => !x.Locked && warehouseIds.Contains(x.WarehouseId) && orderItemIds.Contains(x.OrderItemId)).ToList();
 
             var warehouses = _warehouseService.Get(x => warehouseIds.Contains(x.Id)).ToList();
             //first validate if provided distribution can be done
@@ -384,13 +419,13 @@ namespace EvenCart.Areas.Administration.Controllers
                 var savedFullfilment =
                     savedFulfillments.FirstOrDefault(x =>
                         x.OrderItemId == orderItem.Id && x.WarehouseId == warehouseId);
-                if (savedFullfilment != null && savedFullfilment.Quantity <= quantityRequested)
+                if (savedFullfilment != null && !savedFullfilment.Locked && savedFullfilment.Quantity >= quantityRequested)
                 {
                     //nothing needs to be done here, as the new fulfillment scheme for this order item is same as the saved one
                     continue;
                 }
 
-                if (savedFullfilment != null && savedFullfilment.Quantity < quantityRequested)
+                if (savedFullfilment != null && !savedFullfilment.Locked && savedFullfilment.Quantity < quantityRequested)
                 {
                     //do we have an increment or decrement of quantity...if it's a decrement, no issues (already tackled above), but if it's an increment, we need to check for 
                     //additional quantities
@@ -400,7 +435,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 if (orderItem.ProductVariantId > 0)
                 {
                     //is the requested quantity available in requested warehouse
-                    if (!orderItem.ProductVariant.IsAvailableInStock(quantityRequested, warehouseId))
+                    if (quantityRequested > 0 && !orderItem.ProductVariant.IsAvailableInStock(quantityRequested, warehouseId))
                     {
                         return R.Fail.With("error",
                             T("The product '{0}' is not sufficiently available in warehouse '{1}'",
@@ -410,7 +445,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 else
                 {
                     //is the requested quantity available in requested warehouse
-                    if (!orderItem.Product.IsAvailableInStock(quantityRequested, warehouseId))
+                    if (quantityRequested > 0 && !orderItem.Product.IsAvailableInStock(quantityRequested, warehouseId))
                     {
                         return R.Fail.With("error",
                             T("The product '{0}' is not sufficiently available in warehouse '{1}'",
@@ -431,7 +466,8 @@ namespace EvenCart.Areas.Administration.Controllers
                     var savedFullfilment =
                         savedFulfillments.FirstOrDefault(x =>
                             x.OrderItemId == orderItem.Id && x.WarehouseId == warehouseId);
-
+                    if (savedFullfilment == null && quantityRequested == 0)
+                        continue; //don't do anything. we don't want to insert new fulfillment with 0 quantity
                     var inventory = orderItem.GetWarehouseInventory(warehouseId);
                     if (savedFullfilment != null)
                     {
@@ -512,10 +548,6 @@ namespace EvenCart.Areas.Administration.Controllers
             //get shipments
             var shipments = _shipmentService.GetShipmentsByOrderId(orderId);
             var shipmentModels = _shipmentModelFactory.Create(shipments);
-            if (!shipmentModels.Any())
-            {
-
-            }
             return R.Success.With("orderId", orderId)
                 .With("shipments", shipmentModels)
                 .WithAvailableShipmentStatusTypes()
@@ -554,8 +586,11 @@ namespace EvenCart.Areas.Administration.Controllers
                         .Where(x => x.ShipmentItems.Any(y => y.OrderItemId == orderItem.Id))
                         .ToList();
 
-                    var quantityShipped = orderItemShipments.SelectMany(x => x.ShipmentItems).Sum(x => x.Quantity);
-                    var quantityOrdered = fulfillments.First(x => x.OrderItemId == orderItem.Id).Quantity;
+                    var quantityShipped = orderItemShipments.Any() ? orderItemShipments.SelectMany(x => x.ShipmentItems).Sum(x => x.Quantity) : 0;
+                    var fulfillment = fulfillments.FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                    if (fulfillment == null)
+                        continue;
+                    var quantityOrdered = orderItem.Quantity;
                     var remainingQuantities = quantityOrdered - quantityShipped;
                     if (remainingQuantities < 0)
                         remainingQuantities = 0;
@@ -624,7 +659,7 @@ namespace EvenCart.Areas.Administration.Controllers
             //very that store is not shipping more items than fulfilled
             foreach (var fulfillment in fulfillments)
             {
-                var orderItem = shipmentModel.ShipmentItems.FirstOrDefault(x => x.OrderItemId == fulfillment.OrderItemId);
+                var orderItem = shipmentModel.ShipmentItems.FirstOrDefault(x => x.Quantity > 0 && x.OrderItemId == fulfillment.OrderItemId);
                 if (orderItem == null)
                     continue;
                 if (fulfillment.Quantity < orderItem.Quantity)
@@ -644,37 +679,53 @@ namespace EvenCart.Areas.Administration.Controllers
                 shipment.WarehouseId = shipmentModel.WarehouseId;
                 _shipmentService.Insert(shipment);
 
-                //add shipment items
-                foreach (var shipmentItemModel in shipmentModel.ShipmentItems)
+                Transaction.Initiate(transaction =>
                 {
-                    var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == shipmentItemModel.OrderItemId);
-                    if (orderItem == null)
-                        continue;
-                    var shipmentItem = new ShipmentItem()
+                    //add shipment items
+                    foreach (var shipmentItemModel in shipmentModel.ShipmentItems)
                     {
-                        OrderItem = orderItem,
-                        Shipment = shipment,
-                        ShipmentId = shipment.Id,
-                        OrderItemId = orderItem.Id,
-                        Quantity = shipmentItemModel.Quantity
-                    };
-                    _shipmentItemService.Insert(shipmentItem);
-                }
+                        if (shipmentItemModel.Quantity < 1)
+                            continue;
+                        var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == shipmentItemModel.OrderItemId);
+                        if (orderItem == null)
+                            continue;
+                        var shipmentItem = new ShipmentItem()
+                        {
+                            OrderItem = orderItem,
+                            Shipment = shipment,
+                            ShipmentId = shipment.Id,
+                            OrderItemId = orderItem.Id,
+                            Quantity = shipmentItemModel.Quantity
+                        };
+                        _shipmentItemService.Insert(shipmentItem, transaction);
+
+                        var fulfillment = fulfillments.First(x => x.OrderItemId == orderItem.Id);
+                        fulfillment.Locked = true;
+                        fulfillment.Quantity = shipmentItemModel.Quantity;
+                        _orderFulfillmentService.Update(fulfillment, transaction);
+                    }
+                });
+               
             }
             else
             {
-                //add shipment items
-                foreach (var shipmentItemModel in shipmentModel.ShipmentItems)
+                Transaction.Initiate(transaction =>
                 {
-                    var shipmentItem =
-                        shipment.ShipmentItems.FirstOrDefault(x => x.OrderItemId == shipmentItemModel.OrderItemId);
-                    if (shipmentItem != null && shipmentItem.Quantity != shipmentItemModel.Quantity)
+                    //add shipment items
+                    foreach (var shipmentItemModel in shipmentModel.ShipmentItems)
                     {
-                        shipmentItem.Quantity = shipmentItemModel.Quantity;
-                        _shipmentItemService.Update(shipmentItem);
+                        var shipmentItem =
+                            shipment.ShipmentItems.FirstOrDefault(x => x.OrderItemId == shipmentItemModel.OrderItemId);
+                        if (shipmentItem != null && shipmentItem.Quantity != shipmentItemModel.Quantity)
+                        {
+                            shipmentItem.Quantity = shipmentItemModel.Quantity;
+                            _shipmentItemService.Update(shipmentItem);
+                        }
                     }
-                }
-                _shipmentService.Update(shipment);
+
+                    _shipmentService.Update(shipment, transaction);
+                });
+
             }
 
             return R.Success.Result;

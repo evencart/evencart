@@ -52,13 +52,10 @@ namespace EvenCart.Services.Purchases
                     }
                     else
                     {
-                        if (item.ProductVariantId > 0)
-                        {
-                            item.Product.Inventories =
-                                item.Product.Inventories ?? new List<WarehouseInventory>();
-                            if (!item.Product.Inventories.Contains(inventory))
-                                item.Product.Inventories.Add(inventory);
-                        }
+                        item.Product.Inventories =
+                            item.Product.Inventories ?? new List<WarehouseInventory>();
+                        if (!item.Product.Inventories.Contains(inventory))
+                            item.Product.Inventories.Add(inventory);
                     }
                 })
                 /*.Relate<Warehouse>((item, warehouse) =>

@@ -48,11 +48,24 @@
                 {% endif %}
             </div>
             <div class="panel-body">
+                {% if orderFulfillments.size == 0 %}
+                <div class="alert alert-danger">
+                    {{"There are no saved fulfillments for this order" | t}}
+                </div>
+                {% endif %}
                 {% for f in orderFulfillments %}
-                <h6>{{f.warehouse.address.name}}</h6>
-                <div class="row">
+                <div class="panel-title">
+                    {{f.warehouse.address.name}}
+                    <button type="button" class="btn btn-primary btn-sm float-right" onclick="editShipment(0, '{{f.warehouse.id}}')">{{"Add Shipment" | t}}</button>
+                </div>
+               
+                <div>
                     <div class="col-12">
                         <table class="table  table-borderless">
+                            <tr>
+                                <td colspan="2">
+                                </td>
+                            </tr>
                             {% for orderItem in f.orderItems %}
                             <tr>
                                 <td>
@@ -66,10 +79,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {{orderItem.price | withCurrency }} x <strong>{{orderItem.quantity}}</strong>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm float-right" onclick="editShipment(0, '{{f.warehouse.id}}')">{{"Add Shipment" | t}}</button>
+                                    {{orderItem.formatted.price }} x <strong>{{orderItem.quantity}}</strong>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -77,7 +87,7 @@
                     </div>
                 </div>
                 {% if forloop.last == false %}
-                <hr/>
+                <hr />
                 {% endif %}
                 {% endfor %}
             </div>

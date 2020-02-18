@@ -20,7 +20,8 @@ namespace EvenCart.Data.Extensions
 
         public static bool IsAvailableInStock(this ProductVariant variant, Product product)
         {
-            return variant.Inventories?.Any(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity) ?? false;
+            return variant.CanOrderWhenOutOfStock ||
+                   (variant.Inventories?.Any(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity) ?? false);
         }
 
         public static bool IsAvailableInStock(this ProductVariant variant, int quantity)
@@ -40,17 +41,27 @@ namespace EvenCart.Data.Extensions
 
         public static bool IsAvailableInStock(this Product product, out Warehouse warehouse)
         {
+            warehouse = null;
             warehouse = product.Inventories?.Where(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity)
                 .OrderBy(x => x.Warehouse.DisplayOrder).FirstOrDefault()?.Warehouse;
-
-            return IsAvailableInStock(product);
+            
+            if (warehouse == null && (!product.TrackInventory || product.CanOrderWhenOutOfStock))
+            {
+                warehouse = product.Inventories?.OrderBy(x => x.Warehouse.DisplayOrder).FirstOrDefault()?.Warehouse;
+            }
+            return !product.TrackInventory || IsAvailableInStock(product);
         }
 
         public static bool IsAvailableInStock(this ProductVariant variant, Product product, out Warehouse warehouse)
         {
+            warehouse = null;
             warehouse = variant.Inventories?.Where(x => x.AvailableQuantity >= product.MinimumPurchaseQuantity)
-                .OrderBy(x => x.Warehouse.DisplayOrder).FirstOrDefault()?.Warehouse;
-            return IsAvailableInStock(variant, product);
+              .OrderBy(x => x.Warehouse.DisplayOrder).FirstOrDefault()?.Warehouse;
+            if (warehouse == null && (!variant.TrackInventory || variant.CanOrderWhenOutOfStock))
+            {
+                warehouse = variant.Inventories?.OrderBy(x => x.Warehouse.DisplayOrder).FirstOrDefault()?.Warehouse;
+            }
+            return !variant.TrackInventory || IsAvailableInStock(variant, product);
         }
 
         public static WarehouseInventory GetWarehouseInventory(this OrderItem orderItem, int warehouseId)

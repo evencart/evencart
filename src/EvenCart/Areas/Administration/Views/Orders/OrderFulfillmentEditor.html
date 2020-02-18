@@ -12,9 +12,9 @@
             {% for fulfillment in orderFulfillments %}
             <div class="row">
                 <div class="col-12">
-                    <h4>
+                    <h6>
                         {{fulfillment.warehouse.address.name}}
-                    </h4>
+                    </h6>
                 </div>
                 <div class="col-12">
                     <table class="table table-bordered" id="table-items">
@@ -28,7 +28,6 @@
                         </thead>
                         <tbody>
                         {% for oi in fulfillment.orderItems %}
-                        {% increment index %}
                         <tr>
                             <td>
                                 <div class="productName">
@@ -41,15 +40,24 @@
                                 </div>
                             </td>
                             <td>
+                                {% unless oi.locked %}
                                 <strong>{{oi.orderItem.quantity}}</strong>
+                                {% endunless %}
                             </td>
                             <td>
+                                {% unless oi.locked %}
                                 {{oi.availableQuantity}}
+                                {% endunless %}
                             </td>
                             <td>
-                                <input type="hidden" name="orderFulfillments[{{index}}].orderItemId" value="{{oi.orderItem.id}}"/>
-                                <input type="hidden" name="orderFulfillments[{{index}}].warehouseId" value="{{fulfillment.warehouse.id}}"/>
-                                <input type="number" max="{{oi.availableQuantity}}" min="0" value="{{oi.currentQuantity}}" name="orderFulfillments[{{index}}].quantity"/>
+                                {% if oi.locked %}
+                                {{oi.currentQuantity}}
+                                {% else %}
+                                {% increment index %}
+                                <input type="hidden" name="orderFulfillments[{{index}}].orderItemId" value="{{oi.orderItem.id}}" />
+                                <input type="hidden" name="orderFulfillments[{{index}}].warehouseId" value="{{fulfillment.warehouse.id}}" />
+                                <input type="number" max="{{oi.availableQuantity}}" min="0" value="{{oi.currentQuantity}}" name="orderFulfillments[{{index}}].quantity" />
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -79,7 +87,7 @@
                 var expected = parseInt("{{orderedItemsCount}}");
                 var actual = 0;
                 jQuery("#table-items input[type='number']").each(function() {
-                    actual += jQuery(this).val();
+                    actual += parseInt(jQuery(this).val());
                 });
                 if (expected < actual) {
                     return confirm(msg);
