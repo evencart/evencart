@@ -399,6 +399,10 @@ namespace EvenCart.Controllers
             
             if (variant.TrackInventory)
             {
+                if (variant.CanOrderWhenOutOfStock)
+                {
+                    return;
+                }
                 var availableQuantity = variant.Inventories.Max(x => x.AvailableQuantity);
                 if (availableQuantity == 0)
                 {
