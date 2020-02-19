@@ -2,9 +2,13 @@
 using System.Linq;
 using EvenCart.Core.Config;
 using EvenCart.Core.Extensions;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
+using EvenCart.Services.Logger;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Settings
@@ -12,9 +16,11 @@ namespace EvenCart.Services.Settings
     public class SettingService : FoundationEntityService<Setting>, ISettingService
     {
         private readonly IDataSerializer _dataSerializer;
-        public SettingService(IDataSerializer dataSerializer)
+        private readonly ILogger _logger;
+        public SettingService(IDataSerializer dataSerializer, ILogger logger)
         {
             _dataSerializer = dataSerializer;
+            _logger = logger;
         }
 
         public Setting Get<T>(string keyName) where T : ISettingGroup
@@ -29,51 +35,17 @@ namespace EvenCart.Services.Settings
 
         public void Save<T>(string keyName, string keyValue) where T : ISettingGroup
         {
-            var groupName = typeof(T).Name;
-
-            //check if setting exist
-            var setting = Get<T>(keyName);
-            if (setting == null)
-            {
-                setting = new Setting() {
-                    GroupName = groupName,
-                    Key = keyName,
-                    Value = keyValue
-                };
-                Insert(setting);
-            }
-            else
-            {
-                setting.Value = keyValue;
-                Update(setting);
-            }
+            Save(typeof(T), keyName, keyValue);
+          
         }
 
         public void Save<T>(T settings) where T : ISettingGroup
         {
-            //each setting group will have some properties. We'll loop through these using reflection
-            var propertyFields = typeof(T).GetProperties();
-            foreach (var property in propertyFields)
-            {
-                var propertyName = property.Name;
-                var valueObj = property.GetValue(settings);
-                var value = "";
-                if (!property.PropertyType.IsPrimitive())
-                {
-                    value = valueObj != null ? _dataSerializer.Serialize(valueObj) : "";
-                }
-                else
-                {
-                    value = valueObj != null ? valueObj.ToString() : "";
-                }
-                //save the property
-                Save<T>(propertyName, value);
-            }
+            Save(typeof(T), settings);
         }
 
         public void Save(Type settingType, object settings)
         {
-            //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingType.GetProperties();
             foreach (var property in propertyFields)
             {
@@ -146,19 +118,23 @@ namespace EvenCart.Services.Settings
             {
                 var propertyName = property.Name;
 
-                //retrive the value of setting from db
+                //retrieve the value of setting from db
                 var savedSettingEntity = allSettings.FirstOrDefault(x => x.Key == propertyName);
 
                 if (savedSettingEntity != null)
                 {
-                    if (property.PropertyType.IsPrimitive())
+                    try
                     {
-                        //set the property
-                        property.SetValue(settingsInstance, TypeConverter.CastPropertyValue(property, savedSettingEntity.Value));
+                        property.SetValue(settingsInstance,
+                            property.PropertyType.IsPrimitive()
+                                ? TypeConverter.CastPropertyValue(property, savedSettingEntity.Value)
+                                : _dataSerializer.Deserialize(savedSettingEntity.Value, property.PropertyType));
                     }
-                    else
+                    catch(Exception ex)
                     {
-                        property.SetValue(settingsInstance, _dataSerializer.Deserialize(savedSettingEntity.Value, property.PropertyType));
+                        _logger.Log<Setting>(LogLevel.Error,
+                            $"Invalid value '{savedSettingEntity.Value}' for setting '{settingInstanceType.Name}.{property.Name}'",
+                            ex);
                     }
                    
                 }
