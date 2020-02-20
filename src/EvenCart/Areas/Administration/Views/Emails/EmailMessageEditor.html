@@ -1,7 +1,7 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Email Editor" active_menu="GetEmailMessage" parent_active_menu="EmailsList" menu_group="EmailMessageEdit" %}
 
-<form action="{% route api_SaveEmailMessage %}" method="post" id="template-editor-form">
+<form action="{% route api_Admin.SaveEmailMessage %}" method="post" id="template-editor-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-md-12">
@@ -48,7 +48,7 @@
                 onSuccess: function() {
                     notify("success", '{{"Email was queued successfully." | t }}');
                     setTimeout(function() {
-                            navigate("{% route EmailMessagesList %}");
+                            navigate("{% route Admin.EmailMessagesList %}");
                         },
                         500);
 

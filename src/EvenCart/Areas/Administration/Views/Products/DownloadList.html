@@ -53,7 +53,7 @@
                 itemSelector: "tr",
                 update: function() {
                     post({
-                        url: "{% route api_UpdateDownloadDisplayOrder %}",
+                        url: "{% route api_Admin.UpdateDownloadDisplayOrder %}",
                         data: jQuery("#grid-downloads input").serialize()
                     });
                 }
@@ -71,7 +71,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_DownloadList productId="{{productId}}" %}',
+            url: '{% route api_Admin.DownloadList productId="{{productId}}" %}',
             responseObject: "downloads",
             selection: false,
             navigation: false,
@@ -121,7 +121,7 @@
                     notify("success", '{{"Download was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetDownload productId="{{productId}}" downloadId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetDownload productId="{{productId}}" downloadId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function (response) {
@@ -136,7 +136,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteDownload %}",
+                    url: "{% route api_Admin.DeleteDownload %}",
                     data: {
                         downloadId: id
                     },
@@ -160,7 +160,7 @@
     ready(function() {
         initFileUploader({
             element: "imageFile",
-            url: '{% route api_UploadDownloadFile productId="{{productId}}" %}',
+            url: '{% route api_Admin.UploadDownloadFile productId="{{productId}}" %}',
             done: function(e, data) {
                 var result = data.result;
                 editDownload(result.downloadId);
@@ -178,7 +178,7 @@
             var element = "imageFile-" + id;
             initFileUploader({
                 element: element,
-                url: '{% route api_UploadDownloadFile productId="{{productId}}" %}',
+                url: '{% route api_Admin.UploadDownloadFile productId="{{productId}}" %}',
                 done: function(e, data) {
                     notify("success", "{{'Download was replaced successfully' | t}}");
                 },

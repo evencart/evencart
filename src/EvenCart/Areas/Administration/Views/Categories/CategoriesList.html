@@ -29,7 +29,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_CategoriesList %}',
+                            url: '{% route api_Admin.CategoriesList %}',
                             responseObject: "categories",
                             selection: false,
                             navigation: 3,
@@ -74,7 +74,7 @@
                     notify("success", '{{"Category was saved successfully" | t}}');
                 }
             });
-        var url = '{% route EditCategory categoryId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.EditCategory categoryId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -89,7 +89,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteCategory %}",
+                    url: "{% route api_Admin.DeleteCategory %}",
                     data: {
                       productAttributeId: id
                     },

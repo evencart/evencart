@@ -23,14 +23,14 @@
                 {{emailMessages | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailMessage = function(id) {
-                        var url = '{% route GetEmailMessage emailMessageId="_id" %}';
+                        var url = '{% route Admin.GetEmailMessage emailMessageId="_id" %}';
                         url = url.replace("_id", id);
                         navigate(url);
                     }
                     var deleteEmailMessage = function (id) {
                         confirm('{{"Are you sure you want to delete this message?" | t}}',
                             function() {
-                                var url = '{% route api_DeleteEmailMessage %}';
+                                var url = '{% route api_Admin.DeleteEmailMessage %}';
                                 post({
                                     url: url,
                                     data: {
@@ -58,7 +58,7 @@
                                 "search":""
                             },
                             selection: false,
-                            url: "{% route api_EmailMessagesList %}",
+                            url: "{% route api_Admin.EmailMessagesList %}",
                             responseObject: "emailMessages",
                             formatters: {
                                 "formatted": function(column, row) {

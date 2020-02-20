@@ -10,7 +10,7 @@
                         {{"Customer Name" | t}}
                     </td>
                     <td>
-                        <a href='{% route GetUser userId="{{order.user.id}}" %}'>
+                        <a href='{% route Admin.GetUser userId="{{order.user.id}}" %}'>
                             {% if order.user.name %}
                             {{order.user.name}} -
                             {% endif %}

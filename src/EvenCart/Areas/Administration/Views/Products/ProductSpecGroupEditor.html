@@ -1,4 +1,4 @@
-﻿<form action="{% route api_SaveProductSpecificationGroup %}" method="post" id="add-spec-group-form">
+﻿<form action="{% route api_Admin.SaveProductSpecificationGroup %}" method="post" id="add-spec-group-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -59,7 +59,7 @@
         inputTypeahead({
             element: "product-productSpecification-group-selector",
             initialData: null,
-            url: "{% route api_GetProductSpecificationsGroupSuggestions %}",
+            url: "{% route api_Admin.GetProductSpecificationsGroupSuggestions %}",
             preserveAfterFirstCall: true,
             openOnFocus: true,
             minLength: 0,

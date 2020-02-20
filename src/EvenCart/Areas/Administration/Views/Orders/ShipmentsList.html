@@ -38,7 +38,7 @@
             </td>
             <td>
                 <div class="form-group">
-                    <form id="form-shipping-{{shipment.id}}" action='{% route api_SaveShipmentHistory orderId="{{orderId}}" %}' method="post">
+                    <form id="form-shipping-{{shipment.id}}" action='{% route api_Admin.SaveShipmentHistory orderId="{{orderId}}" %}' method="post">
                         {% control xsrf %}
                         {% control hidden name="shipmentId" value="{{shipment.id}}" %}
                         {% case shipment.shipmentStatusId %}
@@ -132,11 +132,11 @@
                 </script>
             </td>
             <td>
-                <a class="btn btn-sm btn-primary" href='{% route DownloadAdminPackingSlip shipmentId="{{shipment.id}}" %}'>
+                <a class="btn btn-sm btn-primary" href='{% route Admin.DownloadAdminPackingSlip shipmentId="{{shipment.id}}" %}'>
                     {{"Download Packing Slip" | t}}
                 </a>
                 {% if shipment.supportsLabelPurchase %}
-                <form action='{% route api_BuyShipmentLabel orderId="{{orderId}}" shipmentId="{{shipment.id}}" %}' id="form-buy-label" class="float-left margin-r-5">
+                <form action='{% route api_Admin.BuyShipmentLabel orderId="{{orderId}}" shipmentId="{{shipment.id}}" %}' id="form-buy-label" class="float-left margin-r-5">
                     {% control xsrf %}
                     <button class="btn btn-sm btn-primary">
                         {{"Buy Shipping Label" | t}}

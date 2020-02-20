@@ -10,7 +10,7 @@
             {% partial "Orders/OrderEditor.CustomerInfoPanel" %}
         </div>
         <div class="save-button-container">
-            <form action='{% route DownloadAdminInvoice orderId="{{order.id}}" %}' target="_blank">
+            <form action='{% route Admin.DownloadAdminInvoice orderId="{{order.id}}" %}' target="_blank">
                 <button type="submit" class="btn btn-sm btn-success">{{"Download Invoice" | t}}</button>
             </form>
         </div>
@@ -23,7 +23,7 @@
                 onSuccess: function () {
                     notify("success", '{{"Order was saved successfully." | t }}');
                     setTimeout(function () {
-                        navigate("{% route OrdersList %}");
+                        navigate("{% route Admin.OrdersList %}");
                     }, 500);
 
                 }

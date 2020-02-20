@@ -35,7 +35,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: "{% route api_CountriesList %}",
+                            url: "{% route api_Admin.CountriesList %}",
                             responseObject: "countries",
                             formatters: {
                                 "published": function(column, row) {
@@ -45,7 +45,7 @@
                                     return gridFormatters.binary(column, row, "shippingEnabled");
                                 },
                                 "commands": function (column, row) {
-                                    var statesUrl = '{% route StatesList countryId="_id_" %}'.replace("_id_", row.id);
+                                    var statesUrl = '{% route Admin.StatesList countryId="_id_" %}'.replace("_id_", row.id);
                                     return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editCountry(" +
@@ -79,7 +79,7 @@
                     notify("success", '{{"Country was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetCountry countryId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetCountry countryId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {

@@ -40,7 +40,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ProductVariantsList productId="{{product.id}}" %}',
+                            url: '{% route api_Admin.ProductVariantsList productId="{{product.id}}" %}',
                             responseObject: "variants",
                             selection: false,
                             navigation: false,
@@ -122,7 +122,7 @@
                     notify("success", '{{"Variant was saved successfully" | t}}');
                 }
             });
-        var url = '{% route EditProductVariant productId="{{product.id}}" productVariantId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.EditProductVariant productId="{{product.id}}" productVariantId="%id%" %}'.replaceAll("%id%", id);
         get({
             url: url,
             done: function(response) {
@@ -137,7 +137,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductVariant %}",
+                    url: "{% route api_Admin.DeleteProductVariant %}",
                     data: {
                         productVariantId: id
                     },

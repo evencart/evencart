@@ -2,7 +2,7 @@
 <script type="text/javascript">
     var loadTotals = function () {
         get({
-            url: '{% route TotalsReport %}',
+            url: '{% route Admin.TotalsReport %}',
             done: function (response) {
                 jQuery("#target-totals").html(response);
             }

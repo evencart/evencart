@@ -63,7 +63,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ProductRelationsList productId="{{productId}}" relationType="{{relationType}}" %}',
+                            url: '{% route api_Admin.ProductRelationsList productId="{{productId}}" relationType="{{relationType}}" %}',
                             responseObject: "relations",
                             selection: false,
                             navigation: 0,
@@ -114,7 +114,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductRelation %}",
+                    url: "{% route api_Admin.DeleteProductRelation %}",
                     data: {
                         productRelationId: id
                     },

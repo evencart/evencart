@@ -34,7 +34,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_StatesList countryId="{{countryId}}" %}',
+                            url: '{% route api_Admin.StatesList countryId="{{countryId}}" %}',
                             responseObject: "states",
                             formatters: {
                                 "published": function(column, row) {
@@ -81,7 +81,7 @@
                     notify("success", '{{"State was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetState countryId="{{countryId}}" stateId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetState countryId="{{countryId}}" stateId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -93,7 +93,7 @@
     var deleteState = function(id) {
         confirm('{{"Are you sure you wish to delete this state?" | t}}',
             function() {
-                var url = '{% route api_DeleteState %}';
+                var url = '{% route api_Admin.DeleteState %}';
                 post({
                     url: url,
                     data: {

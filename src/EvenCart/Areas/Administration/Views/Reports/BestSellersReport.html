@@ -9,7 +9,7 @@
     {% for product in products %}
         <tr>
             <td>
-                <a href='{% route GetProduct productId="{{product.id}}" %}'>{{product.name}}</a>
+                <a href='{% route Admin.GetProduct productId="{{product.id}}" %}'>{{product.name}}</a>
             </td>
             <td>
                 {{product.totalOrders}}

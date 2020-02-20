@@ -10,7 +10,7 @@
 <script type="text/javascript">
     var loadRecentOrdersChart = function() {
         get({
-            url: '{% route RecentOrdersReport %}',
+            url: '{% route Admin.RecentOrdersReport %}',
             done: function(response) {
                 jQuery("#target-latest-orders-chart").html(response);
             }

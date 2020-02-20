@@ -1,7 +1,7 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Warehouses" active_menu="GetWarehouse" parent_active_menu="WarehouseList" menu_group="WarehouseEdit" %}
 
-<form action="{% route api_SaveWarehouse %}" method="post" id="edit-address-form">
+<form action="{% route api_Admin.SaveWarehouse %}" method="post" id="edit-address-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -97,7 +97,7 @@
                     
                     notify("success", '{{"Warehouse was saved successfully" | t}}');
                     setTimeout(function() {
-                            navigate('{% route WarehouseList %}');
+                            navigate('{% route Admin.WarehouseList %}');
                         },
                         1000);
                 }

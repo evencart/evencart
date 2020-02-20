@@ -1,178 +1,178 @@
-﻿{% primary_navigation url="{% route Dashboard %}" title=@t"Dashboard" systemName="Dashboard" %}
-{% secondary_navigation url="{% route Dashboard %}" title=@t"Dashboard" systemName="Dashboard" parent="Dashboard" %}
+﻿{% primary_navigation url="{% route Admin.Dashboard %}" title=@t"Dashboard" systemName="Dashboard" %}
+{% secondary_navigation url="{% route Admin.Dashboard %}" title=@t"Dashboard" systemName="Dashboard" parent="Dashboard" %}
 
 {% primary_navigation group=@t"Store" order="1" id="store" %}
 <!--Orders-->
 {% primary_navigation title=@t"Orders" systemName="OrdersList" groupId="store" capability="Order.View" %}
-{% secondary_navigation url="{% route OrdersList %}" title=@t"All Orders" systemName="OrdersList" parent="OrdersList" %}
-{% secondary_navigation url="{% route ReturnRequestsList %}" title=@t"Return Requests" systemName="ReturnRequestsList" parent="OrdersList" %}
+{% secondary_navigation url="{% route Admin.OrdersList %}" title=@t"All Orders" systemName="OrdersList" parent="OrdersList" %}
+{% secondary_navigation url="{% route Admin.ReturnRequestsList %}" title=@t"Return Requests" systemName="ReturnRequestsList" parent="OrdersList" %}
 
-{% secondary_navigation url="{% route OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
-{% secondary_navigation url="{% route GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
-{% secondary_navigation url="{% route OrderDownloadsList orderId="{{orderId}}" %}" title=@t"Downloads" systemName="OrderDownloadsList" groupId="OrderEdit" %}
-{% secondary_navigation url="{% route OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
-{% secondary_navigation url="{% route PaymentTransactionsList orderId="{{orderId}}" %}" title=@t"Payment Transactions" systemName="PaymentTransactionsList" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route Admin.OrdersList %}" title=@t"Back to orders" iconClass="rbicon-chevron-left" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route Admin.GetOrder orderId="{{orderId}}" %}" title=@t"Order Info" systemName="GetOrder" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route Admin.OrderDownloadsList orderId="{{orderId}}" %}" title=@t"Downloads" systemName="OrderDownloadsList" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route Admin.OrderFulfillmentsList orderId="{{orderId}}" %}" title=@t"Order Fulfillments" systemName="OrderFulfillmentsList" groupId="OrderEdit" %}
+{% secondary_navigation url="{% route Admin.PaymentTransactionsList orderId="{{orderId}}" %}" title=@t"Payment Transactions" systemName="PaymentTransactionsList" groupId="OrderEdit" %}
 
-{% secondary_navigation url="{% route ReturnRequestsList %}" title=@t"Back to return requests" iconClass="rbicon-chevron-left" groupId="ReturnRequestEdit" %}
-{% secondary_navigation url="{% route GetReturnRequest returnRequestId="{{returnRequestId}}" %}" title=@t"Request Request Info" systemName="GetReturnRequest" groupId="ReturnRequestEdit" %}
+{% secondary_navigation url="{% route Admin.ReturnRequestsList %}" title=@t"Back to return requests" iconClass="rbicon-chevron-left" groupId="ReturnRequestEdit" %}
+{% secondary_navigation url="{% route Admin.GetReturnRequest returnRequestId="{{returnRequestId}}" %}" title=@t"Request Request Info" systemName="GetReturnRequest" groupId="ReturnRequestEdit" %}
 
 <!--Catalog-->
 {% primary_navigation title=@t"Catalog" systemName="ProductsList" groupId="store" capability="Product.View" %}
-{% secondary_navigation url="{% route ProductsList %}" title=@t"All Products" parent="ProductsList" systemName="ProductsList" %}
-{% secondary_navigation url="{% route CategoriesList %}" title=@t"Categories" parent="ProductsList" systemName="CategoriesList" capability="Category.View" %}
-{% secondary_navigation url="{% route AvailableAttributesList%}" title=@t"Attributes" parent="ProductsList" systemName="AvailableAttributesList" capability="AvailableAttribute.Manage" %}
-{% secondary_navigation url="{% route ReviewsList%}" title=@t"Reviews" parent="ProductsList" systemName="ReviewsList" capability="Review.Manage" %}
+{% secondary_navigation url="{% route Admin.ProductsList %}" title=@t"All Products" parent="ProductsList" systemName="ProductsList" %}
+{% secondary_navigation url="{% route Admin.CategoriesList %}" title=@t"Categories" parent="ProductsList" systemName="CategoriesList" capability="Category.View" %}
+{% secondary_navigation url="{% route Admin.AvailableAttributesList%}" title=@t"Attributes" parent="ProductsList" systemName="AvailableAttributesList" capability="AvailableAttribute.Manage" %}
+{% secondary_navigation url="{% route Admin.ReviewsList%}" title=@t"Reviews" parent="ProductsList" systemName="ReviewsList" capability="Review.Manage" %}
 
-{% secondary_navigation url="{% route ProductsList %}" title=@t"Back to products" iconClass="rbicon-chevron-left" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route DownloadList productId="{{productId}}" %}" title=@t"Downloads" systemName="DownloadsList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route InventoryList productId="{{productId}}" %}" title=@t"Inventory" systemName="InventoryList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductSpecificationsList productId="{{productId}}" %}" title=@t"Specifications" systemName="ProductSpecificationsList" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="relatedproduct" %}" title=@t"Related Products" systemName="RelatedProducts" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="crosssell" %}" title=@t"Cross Sell" systemName="CrossSell" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="upsell" %}" title=@t"Up Sell" systemName="UpSell" groupId="ProductEdit" %}
-{% secondary_navigation url="{% route ProductRelationsList productId="{{productId}}" relationType="frequentlyboughttogether" %}" title=@t"Bought Together" systemName="FbtProducts" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductsList %}" title=@t"Back to products" iconClass="rbicon-chevron-left" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.DownloadList productId="{{productId}}" %}" title=@t"Downloads" systemName="DownloadsList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.InventoryList productId="{{productId}}" %}" title=@t"Inventory" systemName="InventoryList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductSpecificationsList productId="{{productId}}" %}" title=@t"Specifications" systemName="ProductSpecificationsList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="relatedproduct" %}" title=@t"Related Products" systemName="RelatedProducts" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="crosssell" %}" title=@t"Cross Sell" systemName="CrossSell" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="upsell" %}" title=@t"Up Sell" systemName="UpSell" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="frequentlyboughttogether" %}" title=@t"Bought Together" systemName="FbtProducts" groupId="ProductEdit" %}
 
 <!--Users-->
 {% primary_navigation title=@t"Users" systemName="UsersList" groupId="store" capability="User.View" %}
-{% secondary_navigation url="{% route UsersList %}" title=@t"Customers" systemName="UsersList" parent="UsersList" %}
-{% secondary_navigation url="{% route AffiliatesList %}" title=@t"Affiliates" systemName="AffiliatesList" parent="UsersList" %}
-{% secondary_navigation url="{% route VendorsList %}" title=@t"Vendors" systemName="VendorsList" parent="UsersList" %}
-{% secondary_navigation url="{% route ManufacturersList %}" title=@t"Manufacturers" systemName="ManufacturersList" parent="UsersList" %}
-{% secondary_navigation url="{% route RolesList %}" title=@t"Roles" systemName="RolesList" parent="UsersList" %}
-{% secondary_navigation url="{% route InvitationRequestsList %}" title=@t"Invitation Requests" systemName="InvitationRequestsList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.UsersList %}" title=@t"Customers" systemName="UsersList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.AffiliatesList %}" title=@t"Affiliates" systemName="AffiliatesList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.VendorsList %}" title=@t"Vendors" systemName="VendorsList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.ManufacturersList %}" title=@t"Manufacturers" systemName="ManufacturersList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.RolesList %}" title=@t"Roles" systemName="RolesList" parent="UsersList" %}
+{% secondary_navigation url="{% route Admin.InvitationRequestsList %}" title=@t"Invitation Requests" systemName="InvitationRequestsList" parent="UsersList" %}
 
-{% secondary_navigation url="{% route UsersList %}" title=@t"Back to users" iconClass="rbicon-chevron-left" groupId="UserEdit" capability="User.Edit" %}
-{% secondary_navigation url="{% route GetUser userId="{{userId}}" %}" title=@t"User Info" systemName="GetUser" groupId="UserEdit" capability="User.Edit" %}
-{% secondary_navigation url="{% route AddressList  userId="{{userId}}" %}" title=@t"Addresses" systemName="AddressList" groupId="UserEdit" capability="User.Edit" %}
-{% secondary_navigation url="{% route UserOrdersList userId="{{userId}}" %}" title=@t"Orders" systemName="OrdersList" groupId="UserEdit" capability="User.Edit" %}
-{% secondary_navigation url="{% route CapabilitiesList userId="{{userId}}" %}" title=@t"Capabilities" systemName="CapabilitiesList" groupId="UserEdit" capability="User.Edit" %}
-{% secondary_navigation url="{% route UserPointsList userId="{{userId}}" %}" title=@t"User Points" systemName="UserPointsList" groupId="UserEdit" capability="UserPoint.Manage" %}
-{% secondary_navigation url="{% route StoreCreditsList userId="{{userId}}" %}" title=@t"Store Credits" systemName="StoreCreditsList" groupId="UserEdit" capability="StoreCredit.Manage" %}
-{% secondary_navigation url="{% route UserCart userId="{{userId}}" %}" title=@t"Current Cart" systemName="UserCart" groupId="UserEdit" capability="Cart.Manage" %}
-{% secondary_navigation url="{% route UserImitate userId="{{userId}}" %}" title=@t"Imitation" systemName="Imitate" groupId="UserEdit" capability="User.Imitate" %}
-{% secondary_navigation url="{% route ConsentLogsList userId="{{userId}}" %}" title=@t"GDPR Consent Log" systemName="ConsentLogsList" groupId="UserEdit" capability="GDPR.Manage" %}
-{% secondary_navigation url="{% route AnonymizeUser userId="{{userId}}" %}" title=@t"Anonymize" systemName="AnonymizeUser" groupId="UserEdit" capability="GDPR.ManagePrivate" %}
+{% secondary_navigation url="{% route Admin.UsersList %}" title=@t"Back to users" iconClass="rbicon-chevron-left" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route Admin.GetUser userId="{{userId}}" %}" title=@t"User Info" systemName="GetUser" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route Admin.AddressList  userId="{{userId}}" %}" title=@t"Addresses" systemName="AddressList" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route Admin.UserOrdersList userId="{{userId}}" %}" title=@t"Orders" systemName="OrdersList" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route Admin.CapabilitiesList userId="{{userId}}" %}" title=@t"Capabilities" systemName="CapabilitiesList" groupId="UserEdit" capability="User.Edit" %}
+{% secondary_navigation url="{% route Admin.UserPointsList userId="{{userId}}" %}" title=@t"User Points" systemName="UserPointsList" groupId="UserEdit" capability="UserPoint.Manage" %}
+{% secondary_navigation url="{% route Admin.StoreCreditsList userId="{{userId}}" %}" title=@t"Store Credits" systemName="StoreCreditsList" groupId="UserEdit" capability="StoreCredit.Manage" %}
+{% secondary_navigation url="{% route Admin.UserCart userId="{{userId}}" %}" title=@t"Current Cart" systemName="UserCart" groupId="UserEdit" capability="Cart.Manage" %}
+{% secondary_navigation url="{% route Admin.UserImitate userId="{{userId}}" %}" title=@t"Imitation" systemName="Imitate" groupId="UserEdit" capability="User.Imitate" %}
+{% secondary_navigation url="{% route Admin.ConsentLogsList userId="{{userId}}" %}" title=@t"GDPR Consent Log" systemName="ConsentLogsList" groupId="UserEdit" capability="GDPR.Manage" %}
+{% secondary_navigation url="{% route Admin.AnonymizeUser userId="{{userId}}" %}" title=@t"Anonymize" systemName="AnonymizeUser" groupId="UserEdit" capability="GDPR.ManagePrivate" %}
 
-{% secondary_navigation url="{% route AddressList userId="{{userId}}" %}" iconClass="rbicon-chevron-left" title=@t"Back to addresses" groupId="AddressEdit" %}
-{% secondary_navigation url="{% route GetAddress addressId="{{addressId}}" %}" title=@t"Address Info" systemName="GetAddress" groupId="AddressEdit"  %}
+{% secondary_navigation url="{% route Admin.AddressList userId="{{userId}}" %}" iconClass="rbicon-chevron-left" title=@t"Back to addresses" groupId="AddressEdit" %}
+{% secondary_navigation url="{% route Admin.GetAddress addressId="{{addressId}}" %}" title=@t"Address Info" systemName="GetAddress" groupId="AddressEdit"  %}
 
-{% secondary_navigation url="{% route VendorsList %}" title=@t"Back to vendors" iconClass="rbicon-chevron-left" groupId="VendorEdit" %}
-{% secondary_navigation url="{% route GetVendor vendorId="{{vendorId}}" %}" title=@t"Vendor Info" systemName="GetVendor" groupId="VendorEdit" %}
-{% secondary_navigation url="{% route VendorUsersList vendorId="{{vendorId}}" %}" title=@t"Vendor Managers" systemName="VendorUsers" groupId="VendorEdit" %}
+{% secondary_navigation url="{% route Admin.VendorsList %}" title=@t"Back to vendors" iconClass="rbicon-chevron-left" groupId="VendorEdit" %}
+{% secondary_navigation url="{% route Admin.GetVendor vendorId="{{vendorId}}" %}" title=@t"Vendor Info" systemName="GetVendor" groupId="VendorEdit" %}
+{% secondary_navigation url="{% route Admin.VendorUsersList vendorId="{{vendorId}}" %}" title=@t"Vendor Managers" systemName="VendorUsers" groupId="VendorEdit" %}
 
 <!--Content Pages-->
 {% primary_navigation title=@t"Pages" systemName="ContentPagesList" groupId="store" capability="ContentPage.View" %}
-{% secondary_navigation url="{% route ContentPagesList %}" title=@t"All Pages" systemName="ContentPagesList" parent="ContentPagesList"%}
+{% secondary_navigation url="{% route Admin.ContentPagesList %}" title=@t"All Pages" systemName="ContentPagesList" parent="ContentPagesList"%}
 
-{% secondary_navigation url="{% route ContentPagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to pages" groupId="ContentPageEdit" %}
-{% secondary_navigation url="{% route GetContentPage contentPageId="{{contentPageId}}" %}" title=@t"Page Info" systemName="GetContentPage" groupId="ContentPageEdit" %}
+{% secondary_navigation url="{% route Admin.ContentPagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to pages" groupId="ContentPageEdit" %}
+{% secondary_navigation url="{% route Admin.GetContentPage contentPageId="{{contentPageId}}" %}" title=@t"Page Info" systemName="GetContentPage" groupId="ContentPageEdit" %}
 
 <!--Discounts-->
 {% primary_navigation title=@t"Promotions" systemName="DiscountsList" groupId="store" capability="Discount.Manage" %}
-{% secondary_navigation url="{% route DiscountsList %}" title=@t"All Discounts" systemName="DiscountsList" parent="DiscountsList" %}
+{% secondary_navigation url="{% route Admin.DiscountsList %}" title=@t"All Discounts" systemName="DiscountsList" parent="DiscountsList" %}
 
-{% secondary_navigation url="{% route DiscountsList %}" iconClass="rbicon-chevron-left" title=@t"Back to discounts" groupId="DiscountEdit" %}
-{% secondary_navigation url="{% route GetDiscount discountId="{{discountId}}" %}" title=@t"Discount Info" systemName="GetDiscount" groupId="DiscountEdit" %}
+{% secondary_navigation url="{% route Admin.DiscountsList %}" iconClass="rbicon-chevron-left" title=@t"Back to discounts" groupId="DiscountEdit" %}
+{% secondary_navigation url="{% route Admin.GetDiscount discountId="{{discountId}}" %}" title=@t"Discount Info" systemName="GetDiscount" groupId="DiscountEdit" %}
 
 <!--Reports-->
 {% primary_navigation title=@t"Reports" systemName="Reports" groupId="store" capability="Report.Manage" %}
-{% secondary_navigation url="{% route StockReport %}" title=@t"Stock Report" systemName="StockReport" parent="Reports" %}
-{% secondary_navigation url="{% route OrdersReport %}" title=@t"Sales Report" systemName="OrdersReport" parent="Reports" %}
-{% secondary_navigation url="{% route UserOrdersReport %}" title=@t"Purchase Report" systemName="UserOrdersReport" parent="Reports" %}
-{% secondary_navigation url="{% route ProductOrdersReport %}" title=@t"Product Selling Report" systemName="ProductOrdersReport" parent="Reports" %}
+{% secondary_navigation url="{% route Admin.StockReport %}" title=@t"Stock Report" systemName="StockReport" parent="Reports" %}
+{% secondary_navigation url="{% route Admin.OrdersReport %}" title=@t"Sales Report" systemName="OrdersReport" parent="Reports" %}
+{% secondary_navigation url="{% route Admin.UserOrdersReport %}" title=@t"Purchase Report" systemName="UserOrdersReport" parent="Reports" %}
+{% secondary_navigation url="{% route Admin.ProductOrdersReport %}" title=@t"Product Selling Report" systemName="ProductOrdersReport" parent="Reports" %}
 
 
 {% primary_navigation group=@t"Masters" order="2" id="masters" %}
 <!--Emails-->
 {% primary_navigation title=@t"Emails" systemName="EmailsList" groupId="masters" capability="EmailMessage.Manage or EmailTemplate.Manage or EmailAccount.Manage" %}
-{% secondary_navigation url="{% route EmailMessagesList %}" title=@t"Emails Queue" systemName="EmailMessagesList" parent="EmailsList" capability="EmailMessage.Manage" %}
-{% secondary_navigation url="{% route EmailTemplatesList %}" title=@t"Email Templates" systemName="EmailTemplatesList" parent="EmailsList" capability="EmailTemplate.Manage" %}
-{% secondary_navigation url="{% route EmailAccountsList %}" title=@t"Email Accounts" systemName="EmailAccountsList" parent="EmailsList" capability="EmailAccount.Manage"  %}
+{% secondary_navigation url="{% route Admin.EmailMessagesList %}" title=@t"Emails Queue" systemName="EmailMessagesList" parent="EmailsList" capability="EmailMessage.Manage" %}
+{% secondary_navigation url="{% route Admin.EmailTemplatesList %}" title=@t"Email Templates" systemName="EmailTemplatesList" parent="EmailsList" capability="EmailTemplate.Manage" %}
+{% secondary_navigation url="{% route Admin.EmailAccountsList %}" title=@t"Email Accounts" systemName="EmailAccountsList" parent="EmailsList" capability="EmailAccount.Manage"  %}
 
-{% secondary_navigation url="{% route EmailAccountsList %}" iconClass="rbicon-chevron-left" title=@t"Back to email accounts" groupId="EmailAccountEdit" %}
-{% secondary_navigation url="{% route GetEmailAccount emailAccountId="{{emailAccountId}}" %}" title=@t"Edit Email Account" systemName="GetEmailAccount" groupId="EmailAccountEdit" %}
+{% secondary_navigation url="{% route Admin.EmailAccountsList %}" iconClass="rbicon-chevron-left" title=@t"Back to email accounts" groupId="EmailAccountEdit" %}
+{% secondary_navigation url="{% route Admin.GetEmailAccount emailAccountId="{{emailAccountId}}" %}" title=@t"Edit Email Account" systemName="GetEmailAccount" groupId="EmailAccountEdit" %}
 
-{% secondary_navigation url="{% route EmailTemplatesList %}" iconClass="rbicon-chevron-left" title=@t"Back to email templates" groupId="EmailTemplateEdit" %}
-{% secondary_navigation url="{% route GetEmailTemplate emailTemplateId="{{emailTemplateId}}" %}" title=@t"Edit Email Template" systemName="GetEmailTemplate" groupId="EmailTemplateEdit" %}
+{% secondary_navigation url="{% route Admin.EmailTemplatesList %}" iconClass="rbicon-chevron-left" title=@t"Back to email templates" groupId="EmailTemplateEdit" %}
+{% secondary_navigation url="{% route Admin.GetEmailTemplate emailTemplateId="{{emailTemplateId}}" %}" title=@t"Edit Email Template" systemName="GetEmailTemplate" groupId="EmailTemplateEdit" %}
 
-{% secondary_navigation url="{% route EmailMessagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to emails" groupId="EmailMessageEdit" %}
-{% secondary_navigation url="{% route GetEmailMessage emailMessageId="{{emailMessageId}}" %}" title=@t"Edit Email Message" systemName="GetEmailMessage" groupId="EmailMessageEdit" %}
+{% secondary_navigation url="{% route Admin.EmailMessagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to emails" groupId="EmailMessageEdit" %}
+{% secondary_navigation url="{% route Admin.GetEmailMessage emailMessageId="{{emailMessageId}}" %}" title=@t"Edit Email Message" systemName="GetEmailMessage" groupId="EmailMessageEdit" %}
 
 <!--Warehouses-->
 {% primary_navigation title=@t"Warehouses" systemName="WarehouseList" groupId="masters" capability="Warehouse.Manage" %}
-{% secondary_navigation url="{% route WarehouseList %}" title=@t"All Warehouses" systemName="WarehouseList" parent="WarehouseList" %}
+{% secondary_navigation url="{% route Admin.WarehouseList %}" title=@t"All Warehouses" systemName="WarehouseList" parent="WarehouseList" %}
 
-{% secondary_navigation url="{% route WarehouseList %}" iconClass="rbicon-chevron-left" title=@t"Back to warehouses" groupId="WarehouseEdit" capability="Warehouse.Manage" %}
-{% secondary_navigation url="{% route GetWarehouse warehouseId="{{warehouseId}}" %}" title=@t"Warehouse Info" systemName="GetWarehouse" groupId="WarehouseEdit" capability="EmailAccount.Manage" %}
+{% secondary_navigation url="{% route Admin.WarehouseList %}" iconClass="rbicon-chevron-left" title=@t"Back to warehouses" groupId="WarehouseEdit" capability="Warehouse.Manage" %}
+{% secondary_navigation url="{% route Admin.GetWarehouse warehouseId="{{warehouseId}}" %}" title=@t"Warehouse Info" systemName="GetWarehouse" groupId="WarehouseEdit" capability="EmailAccount.Manage" %}
 
 <!--Countries-->
 {% primary_navigation title=@t"Countries" systemName="CountriesList" groupId="masters" capability="Country.Manage" %}
-{% secondary_navigation url="{% route CountriesList %}" title=@t"All Countries" systemName="CountriesList" parent="CountriesList" %}
+{% secondary_navigation url="{% route Admin.CountriesList %}" title=@t"All Countries" systemName="CountriesList" parent="CountriesList" %}
 
-{% secondary_navigation url="{% route CountriesList %}" title=@t"Back to countries" iconClass="rbicon-chevron-left" groupId="StateEdit"  %}
+{% secondary_navigation url="{% route Admin.CountriesList %}" title=@t"Back to countries" iconClass="rbicon-chevron-left" groupId="StateEdit"  %}
 {% secondary_navigation url="" title="{{countryName}} States" systemName="StatesList" groupId="StateEdit" %}
 
 {% primary_navigation title=@t"Currencies" systemName="CurrenciesList" groupId="masters" capability="Currency.Manage" %}
-{% secondary_navigation url="{% route CurrenciesList %}" title=@t"All Currencies" systemName="CurrenciesList" parent="CurrenciesList" %}
+{% secondary_navigation url="{% route Admin.CurrenciesList %}" title=@t"All Currencies" systemName="CurrenciesList" parent="CurrenciesList" %}
 
 <!--Taxes-->
 {% primary_navigation title=@t"Taxes" systemName="TaxesList" groupId="masters" capability="Tax.Manage" %}
-{% secondary_navigation url="{% route TaxesList %}" title=@t"All Taxes" systemName="TaxesList" parent="TaxesList" %}
+{% secondary_navigation url="{% route Admin.TaxesList %}" title=@t"All Taxes" systemName="TaxesList" parent="TaxesList" %}
 
-{% secondary_navigation url="{% route TaxesList %}" iconClass="rbicon-chevron-left" title=@t"Back to taxes" groupId="TaxRateEdit" %}
+{% secondary_navigation url="{% route Admin.TaxesList %}" iconClass="rbicon-chevron-left" title=@t"Back to taxes" groupId="TaxRateEdit" %}
 {% secondary_navigation url="" title="{{taxName}} Rates" systemName="TaxRatesList" groupId="TaxRateEdit" %}
 
 <!--Navigation-->
 {% primary_navigation title=@t"Navigation" systemName="Navigation" groupId="masters" capability="Menu.Manage" %}
-{% secondary_navigation url="{% route MenuList %}" title=@t"Navigation" systemName="MenuList" parent="Navigation" %}
+{% secondary_navigation url="{% route Admin.MenuList %}" title=@t"Navigation" systemName="MenuList" parent="Navigation" %}
 
 {% primary_navigation group=@t"Config" order="2" id="settings" %}
 
 <!--Plugins-->
 {% primary_navigation title=@t"Plugins" systemName="PluginsList" groupId="settings" capability="Plugin.Manage" %}
-{% secondary_navigation url="{% route PluginsList %}" title=@t"Local Plugins" parent="PluginsList" systemName="PluginsList" %}
-{% secondary_navigation url="{% route WidgetsList %}" title=@t"Widgets" parent="PluginsList" systemName="WidgetsList" %}
-{% secondary_navigation url="{% route MarketPluginsList %}" title=@t"Plugin Market" parent="PluginsList" systemName="MarketPluginsList" %}
-{% secondary_navigation url="{% route WidgetsList %}" iconClass="rbicon-chevron-left" title=@t"Back to widgets" groupId="WidgetEdit" %}
+{% secondary_navigation url="{% route Admin.PluginsList %}" title=@t"Local Plugins" parent="PluginsList" systemName="PluginsList" %}
+{% secondary_navigation url="{% route Admin.WidgetsList %}" title=@t"Widgets" parent="PluginsList" systemName="WidgetsList" %}
+{% secondary_navigation url="{% route Admin.MarketPluginsList %}" title=@t"Plugin Market" parent="PluginsList" systemName="MarketPluginsList" %}
+{% secondary_navigation url="{% route Admin.WidgetsList %}" iconClass="rbicon-chevron-left" title=@t"Back to widgets" groupId="WidgetEdit" %}
 {% secondary_navigation url="" title=@t"Configure Widget" systemName="WidgetConfiguration" groupId="WidgetEdit" %}
 
 <!--GDPR -->
 {% primary_navigation title=@t"GDPR" systemName="Gdpr" groupId="settings" capability="GDPR.Manage" %}
-{% secondary_navigation url="{% route ConsentGroupsList %}" title=@t"Consent Groups" systemName="ConsentGroupsList" parent="Gdpr" %}
+{% secondary_navigation url="{% route Admin.ConsentGroupsList %}" title=@t"Consent Groups" systemName="ConsentGroupsList" parent="Gdpr" %}
 {% secondary_navigation url="" title=@t"Deletion Requests" systemName="DeletionRequestsList" %}
 
-{% secondary_navigation url="{% route ConsentGroupsList %}" iconClass="rbicon-chevron-left" title=@t"Back to consent groups" groupId="ConsentEdit" %}
+{% secondary_navigation url="{% route Admin.ConsentGroupsList %}" iconClass="rbicon-chevron-left" title=@t"Back to consent groups" groupId="ConsentEdit" %}
 {% secondary_navigation url="" title="{{consentGroupName}}" systemName="ConsentsList" groupId="ConsentEdit" %}
 
 <!--Settings-->
 {% primary_navigation title=@t"Settings" systemName="Settings" groupId="settings" capability="Setting.Manage" %}
-{% secondary_navigation url="{% route GetSettings settingType="general" %}" title=@t"General" systemName="GeneralSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="user" %}" title=@t"Customer" systemName="UserSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="affiliate" %}" title=@t"Affiliate" systemName="AffiliateSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="tax" %}" title=@t"Tax" systemName="TaxSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="security" %}" title=@t"Security" systemName="SecuritySettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="order" %}" title=@t"Orders" systemName="OrderSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="catalog" %}" title=@t"Catalog" systemName="CatalogSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="email" %}" title=@t"Email" systemName="EmailSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="url" %}" title=@t"Url" systemName="UrlSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="localization" %}" title=@t"Localization" systemName="LocalizationSettings" parent="Settings" %}
-{% secondary_navigation url="{% route GetSettings settingType="gdpr" %}" title=@t"Gdpr" systemName="GdprSettings" parent="Settings" %}
-{% secondary_navigation url="{% route ScheduledTasksList %}" title=@t"Scheduled Tasks" systemName="ScheduledTasksList" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="general" %}" title=@t"General" systemName="GeneralSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="user" %}" title=@t"Customer" systemName="UserSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="affiliate" %}" title=@t"Affiliate" systemName="AffiliateSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="tax" %}" title=@t"Tax" systemName="TaxSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="security" %}" title=@t"Security" systemName="SecuritySettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="order" %}" title=@t"Orders" systemName="OrderSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="catalog" %}" title=@t"Catalog" systemName="CatalogSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="email" %}" title=@t"Email" systemName="EmailSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="url" %}" title=@t"Url" systemName="UrlSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="localization" %}" title=@t"Localization" systemName="LocalizationSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="gdpr" %}" title=@t"Gdpr" systemName="GdprSettings" parent="Settings" %}
+{% secondary_navigation url="{% route Admin.ScheduledTasksList %}" title=@t"Scheduled Tasks" systemName="ScheduledTasksList" parent="Settings" %}
 
-{% secondary_navigation url="{% route GetSettings settingType="order" %}" iconClass="rbicon-chevron-left" title=@t"Back to order settings" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
-{% secondary_navigation url="{% route CustomLabelsList labelType="returnReason" %}" title=@t"Return Request Reasons" systemName="ReturnReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
-{% secondary_navigation url="{% route CustomLabelsList labelType="cancellationReason" %}" title=@t"Cancellation Reasons" systemName="CancellationReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
-{% secondary_navigation url="{% route CustomLabelsList labelType="returnAction" %}" title=@t"Preferred Return Actions" systemName="ReturnActionsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route Admin.GetSettings settingType="order" %}" iconClass="rbicon-chevron-left" title=@t"Back to order settings" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route Admin.CustomLabelsList labelType="returnReason" %}" title=@t"Return Request Reasons" systemName="ReturnReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route Admin.CustomLabelsList labelType="cancellationReason" %}" title=@t"Cancellation Reasons" systemName="CancellationReasonsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
+{% secondary_navigation url="{% route Admin.CustomLabelsList labelType="returnAction" %}" title=@t"Preferred Return Actions" systemName="ReturnActionsList" groupId="CustomLabelsList" capability="CustomLabels.Manage" %}
 
-{% primary_navigation url="{% route GetAbout %}" title=@t"System" systemName="System" groupId="settings" %}
-{% secondary_navigation url="{% route GetAbout %}" title=@t"About" systemName="About" parent="System" %}
-{% secondary_navigation url="{% route LogsList %}" title=@t"Activity Log" systemName="LogsList" parent="System" %}
-{% secondary_navigation url="{% route InstallSampleData %}" title=@t"Install Sample Data" systemName="InstallSampleData" parent="System" %}
+{% primary_navigation url="{% route Admin.GetAbout %}" title=@t"System" systemName="System" groupId="settings" %}
+{% secondary_navigation url="{% route Admin.GetAbout %}" title=@t"About" systemName="About" parent="System" %}
+{% secondary_navigation url="{% route Admin.LogsList %}" title=@t"Activity Log" systemName="LogsList" parent="System" %}
+{% secondary_navigation url="{% route Admin.InstallSampleData %}" title=@t"Install Sample Data" systemName="InstallSampleData" parent="System" %}
 
-{% secondary_navigation url="{% route LogsList %}" iconClass="rbicon-chevron-left" title=@t"Back to logs" groupId="LogEdit" %}
+{% secondary_navigation url="{% route Admin.LogsList %}" iconClass="rbicon-chevron-left" title=@t"Back to logs" groupId="LogEdit" %}
 {% secondary_navigation url="" title="Log Viewer" systemName="GetLog" groupId="LogEdit" %}
 
 {% partial "Navigation/Navigation" includeAll="true" %}

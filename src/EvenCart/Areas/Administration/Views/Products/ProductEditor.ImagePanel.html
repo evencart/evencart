@@ -33,7 +33,7 @@
                 initFileUploader({
                     element: "imageFile",
                     dropZone: jQuery("#file-dragger"),
-                    url: "{% route api_UploadMedia %}",
+                    url: "{% route api_Admin.UploadMedia %}",
                     done: function(e, data) {
                         var result = data.result;
                         addMedia(result.media);
@@ -68,7 +68,7 @@
                     update: function () {
                         //{% if product.id > 0 %}
                         post({
-                            url: "{% route api_UpdateMediaDisplayOrder %}",
+                            url: "{% route api_Admin.UpdateMediaDisplayOrder %}",
                             data: jQuery("#image-container input").serialize()
                         });
                         //{% endif %}
@@ -91,7 +91,7 @@
                 confirm('{{"Are you sure you wish to delete this media?" | t}}',
                     function() {
                         post({
-                            'url': '{% route api_DeleteMedia %}',
+                            'url': '{% route api_Admin.DeleteMedia %}',
                             data: {
                                 mediaId: id
                             },

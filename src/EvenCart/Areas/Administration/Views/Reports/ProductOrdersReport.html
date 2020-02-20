@@ -37,11 +37,11 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_ProductOrdersReport %}',
+                            url: '{% route api_Admin.ProductOrdersReport %}',
                             responseObject: "reportItems",
                             formatters: {
                                 "product": function (column, row) {
-                                    var userUrl = '{% route GetProduct productId="%id%" %}'.replace("%id%", row.id);
+                                    var userUrl = '{% route Admin.GetProduct productId="%id%" %}'.replace("%id%", row.id);
                                     return "<a href='" + userUrl + "'>" + row.name + "</a>";
                                 }
                             },

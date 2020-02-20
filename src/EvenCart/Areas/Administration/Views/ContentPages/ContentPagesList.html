@@ -6,7 +6,7 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Content Pages" | t}}
-                <a class="btn btn-sm btn-primary float-right" href='{% route GetContentPage contentPageId="0" %}'>{{"Add page" | t}}</a>
+                <a class="btn btn-sm btn-primary float-right" href='{% route Admin.GetContentPage contentPageId="0" %}'>{{"Add page" | t}}</a>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
@@ -22,12 +22,12 @@
                 {{contentPages | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editContentPage = function(id) {
-                        var url = '{% route GetContentPage contentPageId="_id" %}';
+                        var url = '{% route Admin.GetContentPage contentPageId="_id" %}';
                         url = url.replace("_id", id);
                         navigate(url);
                     }
                     var deleteContentPage = function(id) {
-                        var url = '{% route api_DeleteContentPage %}';
+                        var url = '{% route api_Admin.DeleteContentPage %}';
                         confirm('{{"Are you sure you want to delete this page?" | t }}',
                             function() {
                                 post({
@@ -55,7 +55,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: "{% route api_ContentPagesList %}",
+                            url: "{% route api_Admin.ContentPagesList %}",
                             responseObject: "contentPages",
                             formatters: {
                                 "name": function (column, row) {

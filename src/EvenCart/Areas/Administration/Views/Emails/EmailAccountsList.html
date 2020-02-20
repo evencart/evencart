@@ -21,7 +21,7 @@
                 {{emailAccounts | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailAccount = function(id) {
-                        var url = '{% route GetEmailAccount emailAccountId="_id" %}';
+                        var url = '{% route Admin.GetEmailAccount emailAccountId="_id" %}';
                         url = url.replace("_id", id);
                         navigate(url);
                     }
@@ -37,7 +37,7 @@
                             method: "GET",
                             navigation: 0,
                             selection: false,
-                            url: "{% route api_EmailAccountsList %}",
+                            url: "{% route api_Admin.EmailAccountsList %}",
                             responseObject: "emailAccounts",
                             formatters: {
                                 "commands": function(column, row) {

@@ -27,8 +27,8 @@
         <div class="form-group">
             {% control checkbox id="allowReturns" name="allowReturns" text=@t"Allow customers to return an order" value="settings.allowReturns" %}
             <div data-visible="jQuery('#allowReturns').is(':checked')">
-                <a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="returnReason" %}'>{{"Configure Return Request Reasons" | t}}</a>
-                <a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="returnAction" %}'>{{"Configure Return Actions" | t}}</a>
+                <a class="btn btn-info btn-sm" href='{% route Admin.CustomLabelsList labelType="returnReason" %}'>{{"Configure Return Request Reasons" | t}}</a>
+                <a class="btn btn-info btn-sm" href='{% route Admin.CustomLabelsList labelType="returnAction" %}'>{{"Configure Return Actions" | t}}</a>
             </div>
         </div>
         <div class="form-group" data-visible="jQuery('#allowReturns').is(':checked')">
@@ -41,7 +41,7 @@
         <div class="form-group">
             {% control checkbox id="allowCancellation" name="allowCancellation" text=@t"Allow customers to cancel an order" value="settings.allowCancellation" %}
             <div data-visible="jQuery('#allowCancellation').is(':checked')">
-                <a class="btn btn-info btn-sm" href='{% route CustomLabelsList labelType="cancellationReason" %}'>{{"Configure Cancellation Reasons" | t}}</a>
+                <a class="btn btn-info btn-sm" href='{% route Admin.CustomLabelsList labelType="cancellationReason" %}'>{{"Configure Cancellation Reasons" | t}}</a>
             </div>
         </div>
         <div class="form-group" data-visible="jQuery('#allowCancellation').is(':checked')">

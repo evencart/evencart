@@ -52,7 +52,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_StoreCreditsList userId="{{userId}}" %}',
+            url: '{% route api_Admin.StoreCreditsList userId="{{userId}}" %}',
             responseObject: "storeCredits",
             selection: false,
             navigation: 2,
@@ -85,7 +85,7 @@
                     notify("success", '{{"Store credit was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetStoreCredit userId="{0}" storeCreditId="{1}" %}'.replace("{0}", "{{userId}}").replace("{1}", id);
+        var url = '{% route Admin.GetStoreCredit userId="{0}" storeCreditId="{1}" %}'.replace("{0}", "{{userId}}").replace("{1}", id);
         loadPage(url, true,
             null,
             function (response) {

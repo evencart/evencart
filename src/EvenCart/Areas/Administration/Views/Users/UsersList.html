@@ -5,7 +5,7 @@
     <div class="col-md-12 col-offset-2">
         <div class="panel">
             <div class="panel-title">
-                {{"Customers" | t}} <a class="btn btn-sm btn-primary float-right" href='{% route GetUser userId="0" %}'>{{"Add new user" | t}}</a>
+                {{"Customers" | t}} <a class="btn btn-sm btn-primary float-right" href='{% route Admin.GetUser userId="0" %}'>{{"Add new user" | t}}</a>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-hover table-condensed no-margin">
@@ -31,7 +31,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_UsersList %}',
+                            url: '{% route api_Admin.UsersList %}',
                             responseObject: "users",
                             selection: false,
                             navigation: 3,
@@ -90,7 +90,7 @@
 <script type="text/javascript">
 
     var editUser = function(id) {
-        var url = '{% route GetUser userId="user_id" %}';
+        var url = '{% route Admin.GetUser userId="user_id" %}';
         navigate(url.replace("user_id", id));
     }
 
@@ -100,7 +100,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteUser %}",
+                    url: "{% route api_Admin.DeleteUser %}",
                     data: {
                         userId: id
                     },

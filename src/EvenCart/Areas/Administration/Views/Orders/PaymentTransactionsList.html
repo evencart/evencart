@@ -23,7 +23,7 @@
                                     notify("success", '{{"Refund was processed successfully" | t}}');
                                 }
                             });
-                        var url = '{% route RefundEditor orderId="%id%" %}'.replaceAll("%id%", "{{orderId}}");
+                        var url = '{% route Admin.RefundEditor orderId="%id%" %}'.replaceAll("%id%", "{{orderId}}");
                         loadPage(url, true,
                             null,
                             function(response) {
@@ -36,7 +36,7 @@
                 </script>
                 {% endif %}
                 {% if canVoid == true %}
-                <form method="post" action='{% route api_ApproveVoid orderId="{{orderId}}" %}' class="float-right" id="form-void-transaction">
+                <form method="post" action='{% route api_Admin.ApproveVoid orderId="{{orderId}}" %}' class="float-right" id="form-void-transaction">
                     {% control xsrf %}
                     <button class="btn btn-sm btn-danger" type="submit">
                         {{"Void Transaction" | t}}
@@ -58,7 +58,7 @@
                 </script>
                 {% endif %}
                 {% if canCapture == true %}
-                <form method="post" action='{% route api_ApproveCapture orderId="{{orderId}}" %}' class="float-right margin-r-10" id="form-capture-transaction">
+                <form method="post" action='{% route api_Admin.ApproveCapture orderId="{{orderId}}" %}' class="float-right margin-r-10" id="form-capture-transaction">
                     {% control xsrf %}
                     <button class="btn btn-sm btn-primary" type="submit">
                         {{"Capture Transaction" | t}}
@@ -105,7 +105,7 @@
                             },
                             method: "GET",
                             navigation: 0,
-                            url: '{% route api_PaymentTransactionsList orderId="{{orderId}}" %}',
+                            url: '{% route api_Admin.PaymentTransactionsList orderId="{{orderId}}" %}',
                             responseObject: "transactions",
                             selection: false,
                             formatters: {
