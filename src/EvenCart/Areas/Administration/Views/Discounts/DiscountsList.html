@@ -29,7 +29,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_DiscountsList %}',
+                            url: '{% route api_Admin.DiscountsList %}',
                             responseObject: "discounts",
                             selection: false,
                             navigation: 3,
@@ -60,7 +60,7 @@
 <script type="text/javascript">
 
     var editDiscount = function(id) {
-        var url = '{% route GetDiscount discountId="?" %}';
+        var url = '{% route Admin.GetDiscount discountId="?" %}';
         url = url.replace("?", id);
         navigate(url);
     }
@@ -71,7 +71,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteDiscount %}",
+                    url: "{% route api_Admin.DeleteDiscount %}",
                     data: {
                       discountId: id
                     },

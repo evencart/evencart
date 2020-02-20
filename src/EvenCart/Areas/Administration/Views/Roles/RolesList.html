@@ -40,7 +40,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_RolesList %}',
+            url: '{% route api_Admin.RolesList %}',
             responseObject: "roles",
             selection: false,
             navigation: false,
@@ -72,7 +72,7 @@
                     notify("success", '{{"Role was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetRole roleId="?" %}'.replaceAll("?", id);
+        var url = '{% route Admin.GetRole roleId="?" %}'.replaceAll("?", id);
         loadPage(url, true,
             null,
             function (response) {
@@ -87,7 +87,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteRole %}",
+                    url: "{% route api_Admin.DeleteRole %}",
                     data: {
                         roleId: id
                     },

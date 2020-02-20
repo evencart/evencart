@@ -60,7 +60,7 @@
             ready(function () {
                 var generateKey = function() {
                     post({
-                        url: "{% route api_SaveSharedSecuritySetting %}",
+                        url: "{% route api_Admin.SaveSharedSecuritySetting %}",
                         done: function(response) {
                             notify("success",
                                 "{{'Successfully generated the following key. Please save the key as it will not be displayed again' | t}}");

@@ -35,7 +35,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_TaxRatesList taxId="{{taxId}}" %}',
+                            url: '{% route api_Admin.TaxRatesList taxId="{{taxId}}" %}',
                             responseObject: "taxRates",
                             formatters: {
                                 "commands": function(column, row) {
@@ -76,7 +76,7 @@
                     notify("success", '{{"Tax rate was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetTaxRate taxId="%taxId%" taxRateId="%id%" %}'.replaceAll("%id%", id).replace("%taxId%", "{{taxId}}");
+        var url = '{% route Admin.GetTaxRate taxId="%taxId%" taxRateId="%id%" %}'.replaceAll("%id%", id).replace("%taxId%", "{{taxId}}");
         loadPage(url, true,
             null,
             function(response) {
@@ -88,7 +88,7 @@
     var deleteTaxRate = function(id) {
         confirm('{{"Are you sure you wish to delete this tax rate?" | t}}',
             function() {
-                var url = '{% route api_DeleteTaxRate %}';
+                var url = '{% route api_Admin.DeleteTaxRate %}';
                 post({
                     url: url,
                     data: {

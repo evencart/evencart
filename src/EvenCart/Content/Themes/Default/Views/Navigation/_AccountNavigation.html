@@ -2,7 +2,7 @@
     {% if withSignout %}
     {% if currentUser.isAdministrator %}
     <li>
-        <a href="{% route Dashboard %}">{{"Administration" | t}}</a>
+        <a href="{% route Admin.Dashboard %}">{{"Administration" | t}}</a>
     </li>
     {% endif %}
     {% endif %}

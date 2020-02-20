@@ -39,15 +39,15 @@
                     </div>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% route Home %}" target="_blank">{{"Public Store" | t}}</a>
-                    <a class="dropdown-item" href="{% route Logout %}">{{"Logout" | t}}</a>
+                    <a class="dropdown-item" href="{% route Admin.Home %}" target="_blank">{{"Public Store" | t}}</a>
+                    <a class="dropdown-item" href="{% route Admin.Logout %}">{{"Logout" | t}}</a>
                     <div class="dropdown-divider"></div>
                     <h6 class="dropdown-header">{{"Maintenance" | t}}</h6>
-                    <form method="post" action="{% route api_PurgeCache %}" id="form-purge-cache">
+                    <form method="post" action="{% route api_Admin.PurgeCache %}" id="form-purge-cache">
                         {% control xsrf %}
                         <button class="dropdown-item" type="submit">{{"Purge Cache" | t}}</button>
                     </form>
-                    <form method="post" action="{% route api_RestartApplication %}" id="form-restart">
+                    <form method="post" action="{% route api_Admin.RestartApplication %}" id="form-restart">
                         {% control xsrf %}
                         <button class="dropdown-item" type="submit">{{"Restart" | t}} {{store.softwareTitle}}</button>
                     </form>
@@ -238,7 +238,7 @@
     <script type="text/javascript">
         ready(function () {
             if ("{{context}}" !== "dashboard")
-                useContext("{{ context }}", "{% route api_GetTemplates %}");
+                useContext("{{ context }}", "{% route api_Admin.GetTemplates %}");
 
             jQuery(".mobile-navigation-select").on("change",
                 function() {

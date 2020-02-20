@@ -45,7 +45,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_UserCart userId="{{userId}}" %}',
+            url: '{% route api_Admin.UserCart userId="{{userId}}" %}',
             responseObject: "cartItems",
             selection: false,
             navigation: false,
@@ -56,7 +56,7 @@
                     return html;
                 },
                 "product": function (column, row) {
-                    var url = '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                    var url = '{% route Admin.GetProduct productId="%id%" %}'.replace("%id%", row.productId);
                     var html = "<a href='" + url + "'>" + row["productName"] + "</a>";
                     if (row.attributeText)
                         html += "<div><span>" + row.attributeText + "</span></div>";

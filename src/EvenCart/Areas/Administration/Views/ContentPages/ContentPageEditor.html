@@ -1,7 +1,7 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Page Editor" active_menu="GetContentPage" parent_active_menu="ContentPagesList" menu_group="ContentPageEdit" %}
 
-<form action="{% route api_SaveContentPage %}" method="post" id="content-editor-form">
+<form action="{% route api_Admin.SaveContentPage %}" method="post" id="content-editor-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-lg-8">
@@ -28,7 +28,7 @@
             {% control hidden name="id" value="{{contentPage.id}}" %}
             <div class="save-button-container">
                 {% if contentPage.id > 0 %}
-                <a class="btn btn-sm btn-warning" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
+                <a class="btn btn-sm btn-warning" target="_blank" href='{% route Admin.PreviewPage id="{{contentPage.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>
@@ -79,7 +79,7 @@
                     notify("success", '{{"Content was saved successfully." | t }}');
                     //{% if contentPage.id == 0 %}
                     window.location.href =
-                        '{% route GetContentPage contentPageId="%id%" %}'.replace("%id%", response.contentPageId);
+                        '{% route Admin.GetContentPage contentPageId="%id%" %}'.replace("%id%", response.contentPageId);
                     //{% endif %}
                 }
             });

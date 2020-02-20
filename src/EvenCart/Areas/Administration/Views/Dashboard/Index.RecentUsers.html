@@ -10,7 +10,7 @@
 <script type="text/javascript">
     var loadRecentUsersChart = function() {
         get({
-            url: '{% route RecentUsersReport %}',
+            url: '{% route Admin.RecentUsersReport %}',
             done: function(response) {
                 jQuery("#target-latest-users-chart").html(response);
             }

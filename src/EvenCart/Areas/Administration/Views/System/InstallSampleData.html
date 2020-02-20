@@ -23,7 +23,7 @@
     ready(function() {
         initFileUploader({
             element: "imageFile",
-            url: '{% route api_InstallSampleData %}',
+            url: '{% route api_Admin.InstallSampleData %}',
             done: function(e, data) {
                 var result = data.result;
                 if (result.success) {

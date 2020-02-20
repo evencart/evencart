@@ -41,7 +41,7 @@
             var deleteCategory = function(link, productId, categoryId) {
                 confirm('{{"Are you sure you want to delete this category?" | t}}',
                     function() {
-                        var url = '{% route api_DeleteProductCategories %}';
+                        var url = '{% route api_Admin.DeleteProductCategories %}';
                         post({
                             url: url,
                             data: {
@@ -63,7 +63,7 @@
                 inputTypeahead({
                     element: "category-selector",
                     initialData: null,
-                    url: "{% route api_GetCategorySuggestions %}",
+                    url: "{% route api_Admin.GetCategorySuggestions %}",
                     preserveAfterFirstCall: false,
                     clearAfterSelect: true,
                     select: function(item) {
@@ -93,7 +93,7 @@
                     update: function() {
                         //{% if product.id > 0 %}
                         post({
-                            url: "{% route api_UpdateProductCategoryDisplayOrder %}",
+                            url: "{% route api_Admin.UpdateProductCategoryDisplayOrder %}",
                             data: jQuery("#categories-container input").serialize()
                         });
                         //{% endif %}
@@ -143,7 +143,7 @@
                     initialData: initData,
                     multiple: true,
                     substringMatch: false,
-                    url: "{% route api_GetEntityTagsSuggestions %}",
+                    url: "{% route api_Admin.GetEntityTagsSuggestions %}",
                     preserveAfterFirstCall: false,
                     suggestNewAdditions: true,
                     minLength: 1,

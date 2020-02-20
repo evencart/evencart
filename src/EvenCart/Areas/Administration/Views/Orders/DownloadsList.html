@@ -27,7 +27,7 @@
                 {{ downloads | scriptJson : 'initData' }}
                 <script type="text/javascript">
                     var editDownload = function(id) {
-                        var url = '{% route GetDownload DownloadId="request_id" %}';
+                        var url = '{% route Admin.GetDownload DownloadId="request_id" %}';
                         url = url.replace("request_id", id);
                         navigate(url);
                     }
@@ -43,7 +43,7 @@
                             },
                             method: "GET",
                             navigation: 0,
-                            url: '{% route api_OrderDownloadsList orderId="{{orderId}}" %}',
+                            url: '{% route api_Admin.OrderDownloadsList orderId="{{orderId}}" %}',
                             responseObject: "downloads",
                             selection: false,
                             formatters: {
@@ -72,7 +72,7 @@
 <script type="text/javascript">
     var changeDownloadStatus = function (itemDownloadId, downloadId, active) {
         post({
-            url: '{% route api_SaveOrderDownload orderId="{{orderId}}" %}',
+            url: '{% route api_Admin.SaveOrderDownload orderId="{{orderId}}" %}',
             data: {
                 itemDownloadId: itemDownloadId,
                 downloadId: downloadId,

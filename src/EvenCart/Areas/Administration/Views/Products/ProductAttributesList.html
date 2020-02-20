@@ -45,7 +45,7 @@
                                 itemSelector: "tr",
                                 update: function() {
                                     post({
-                                        url: "{% route api_UpdateProductAttributeDisplayOrder %}",
+                                        url: "{% route api_Admin.UpdateProductAttributeDisplayOrder %}",
                                         data: jQuery("#grid-selection input").serialize()
                                     });
                                 }
@@ -63,7 +63,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ProductAttributesList productId="{{product.id}}" %}',
+                            url: '{% route api_Admin.ProductAttributesList productId="{{product.id}}" %}',
                             responseObject: "attributes",
                             selection: false,
                             navigation: false,
@@ -140,7 +140,7 @@
                     notify("success", '{{"Attribute was saved successfully" | t}}');
                 }
             });
-        var url = '{% route EditProductAttribute productId="{{product.id}}" productAttributeId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.EditProductAttribute productId="{{product.id}}" productAttributeId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -155,7 +155,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductAttribute %}",
+                    url: "{% route api_Admin.DeleteProductAttribute %}",
                     data: {
                         productAttributeId: id
                     },
@@ -175,7 +175,7 @@
         return confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductAttributeValue %}",
+                    url: "{% route api_Admin.DeleteProductAttributeValue %}",
                     data: {
                         productAttributeValueId: id
                     },

@@ -41,7 +41,7 @@
                 itemSelector: "tr",
                 update: function() {
                     post({
-                        url: "{% route api_UpdateWarehouseDisplayOrder %}",
+                        url: "{% route api_Admin.UpdateWarehouseDisplayOrder %}",
                         data: jQuery("#grid-addresses input").serialize()
                     });
                 }
@@ -59,7 +59,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_WarehouseList %}',
+            url: '{% route api_Admin.WarehouseList %}',
             responseObject: "warehouses",
             selection: false,
             navigation: false,
@@ -110,7 +110,7 @@
 
 
     var editAddress = function (id) {
-        var url = '{% route GetWarehouse warehouseId="?" %}';
+        var url = '{% route Admin.GetWarehouse warehouseId="?" %}';
         navigate(url.replace("?", id));
     }
 
@@ -120,7 +120,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteWarehouse %}",
+                    url: "{% route api_Admin.DeleteWarehouse %}",
                     data: {
                         warehouseId: id
                     },

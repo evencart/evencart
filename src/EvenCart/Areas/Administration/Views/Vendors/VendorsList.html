@@ -42,7 +42,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_VendorsList %}',
+            url: '{% route api_Admin.VendorsList %}',
             responseObject: "vendors",
             selection: false,
             navigation: false,
@@ -78,7 +78,7 @@
 
 
     var editVendor = function (id) {
-        var url = '{% route GetVendor vendorId="?" %}';
+        var url = '{% route Admin.GetVendor vendorId="?" %}';
         navigate(url.replace("?", id));
     }
 
@@ -88,7 +88,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteVendor %}",
+                    url: "{% route api_Admin.DeleteVendor %}",
                     data: {
                         addressId: id
                     },

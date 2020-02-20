@@ -33,7 +33,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ScheduledTasksList %}',
+                            url: '{% route api_Admin.ScheduledTasksList %}',
                             responseObject: "tasks",
                             selection: false,
                             navigation: false,
@@ -95,7 +95,7 @@
                     notify("success", '{{"Scheduled Task was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetScheduledTask scheduledTaskId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetScheduledTask scheduledTaskId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -105,7 +105,7 @@
     }
 
     var runTask = function(name) {
-        var url = '{% route api_RunScheduledTask scheduledTaskSystemName="%name%" %}'.replaceAll("%name%", name);
+        var url = '{% route api_Admin.RunScheduledTask scheduledTaskSystemName="%name%" %}'.replaceAll("%name%", name);
         post({
             url: url,
             done: function(response) {

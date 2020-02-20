@@ -6,7 +6,7 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Products" | t}}
-                <a class="btn btn-sm btn-primary float-right" href='{% route GetProduct productId="0" %}'>{{"Add new product" | t}}</a>
+                <a class="btn btn-sm btn-primary float-right" href='{% route Admin.GetProduct productId="0" %}'>{{"Add new product" | t}}</a>
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">
@@ -24,13 +24,13 @@
                 {{products | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editProduct = function(id) {
-                        var url = '{% route GetProduct productId="product_id" %}';
+                        var url = '{% route Admin.GetProduct productId="product_id" %}';
                         url = url.replace("product_id", id);
                         navigate(url);
                     }
                     var deleteProduct = function (id) {
                         if (confirm("{{'The products are soft deleted to maintain cross references with order. Are you sure proceed with soft delete?' | t}}")) {
-                            var url = '{% route api_DeleteProduct productId="product_id" %}';
+                            var url = '{% route api_Admin.DeleteProduct productId="product_id" %}';
                             url = url.replace("product_id", id);
                             post({
                                 url: url,
@@ -53,7 +53,7 @@
                             },
                             method: "GET",
                             navigation : 3,
-                            url: "{% route api_ProductsList %}",
+                            url: "{% route api_Admin.ProductsList %}",
                             responseObject: "products",
                             selection:false,
                             formatters: {

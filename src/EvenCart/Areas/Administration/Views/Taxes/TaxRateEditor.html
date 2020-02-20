@@ -1,4 +1,4 @@
-﻿<form action='{% route api_SaveTaxRate taxId="{{taxRate.taxId}}" %}' method="post" id="tax-rate-editor-form">
+﻿<form action='{% route api_Admin.SaveTaxRate taxId="{{taxRate.taxId}}" %}' method="post" id="tax-rate-editor-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">

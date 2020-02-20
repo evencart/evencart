@@ -10,7 +10,7 @@
 <script type="text/javascript">
     var loadBestSellersChart = function() {
         get({
-            url: '{% route BestSellersReport %}',
+            url: '{% route Admin.BestSellersReport %}',
             done: function(response) {
                 jQuery("#target-bestsellers-chart").html(response);
             }

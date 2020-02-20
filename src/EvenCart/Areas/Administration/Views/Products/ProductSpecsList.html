@@ -34,7 +34,7 @@
                                 itemSelector: "tr",
                                 update: function () {
                                     post({
-                                        url: "{% route api_UpdateProductSpecificationDisplayOrder %}",
+                                        url: "{% route api_Admin.UpdateProductSpecificationDisplayOrder %}",
                                         data: jQuery("#grid-selection-" + id + " input").serialize()
                                     });
                                 }
@@ -85,7 +85,7 @@
                             initialData: initData,
                             method: "GET",
                             url:
-                                '{% route api_ProductSpecificationsListByGroup productId="{{product.id}}" groupId="{{psl.productSpecificationGroup.id}}" %}',
+                                '{% route api_Admin.ProductSpecificationsListByGroup productId="{{product.id}}" groupId="{{psl.productSpecificationGroup.id}}" %}',
                             responseObject: function (response) {
                                 if (response.data)
                                     return response.data;
@@ -187,7 +187,7 @@
                 }
             });
         var url =
-            '{% route EditProductSpecification productId="{{product.id}}" productSpecificationId="%id%" productSpecificationGroupId="%groupId%" %}'
+            '{% route Admin.EditProductSpecification productId="{{product.id}}" productSpecificationId="%id%" productSpecificationGroupId="%groupId%" %}'
                 .replaceAll("%id%", id)
                 .replaceAll("%groupId%", groupId);
 
@@ -210,7 +210,7 @@
                     notify("success", '{{"Group was saved successfully" | t}}');
                 }
             });
-        var url = '{% route EditProductSpecificationGroup productId="{{product.id}}" productSpecificationId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.EditProductSpecificationGroup productId="{{product.id}}" productSpecificationId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -225,7 +225,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductSpecification %}",
+                    url: "{% route api_Admin.DeleteProductSpecification %}",
                     data: {
                         productSpecificationId: id
                     },
@@ -245,7 +245,7 @@
         return confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteProductSpecificationValue %}",
+                    url: "{% route api_Admin.DeleteProductSpecificationValue %}",
                     data: {
                         productSpecificationValueId: id
                     },

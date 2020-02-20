@@ -34,14 +34,14 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: "{% route api_LogsList %}",
+                            url: "{% route api_Admin.LogsList %}",
                             responseObject: "logs",
                             formatters: {
                                 "formatted": function(c, r) {
                                     return gridFormatters.formatted(c, r);
                                 },
                                 "commands": function (column, row) {
-                                    var logUrl = '{% route GetLog logId="_id_" %}'.replace("_id_", row.id);
+                                    var logUrl = '{% route Admin.GetLog logId="_id_" %}'.replace("_id_", row.id);
                                     return "<a class=\"btn btn-sm btn-primary\" href='" + logUrl + "'><span class=\"rbicon-external-link\"></span></a> " +
                                         "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
                                         row.id +
@@ -63,7 +63,7 @@
     var deleteLog = function(id) {
         confirm('{{"Are you sure you wish to delete this log?" | t}}',
             function() {
-                var url = '{% route api_DeleteLog %}';
+                var url = '{% route api_Admin.DeleteLog %}';
                 post({
                     url: url,
                     data: {
@@ -80,7 +80,7 @@
     var clearLogs = function() {
         confirm('{{"Are you sure you wish to delete all the logs?" | t}}',
             function() {
-                var url = '{% route api_ClearLogs %}';
+                var url = '{% route api_Admin.ClearLogs %}';
                 post({
                     url: url,
                     done: function () {

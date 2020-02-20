@@ -1,7 +1,7 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Email Template Editor" active_menu="GetEmailTemplate" parent_active_menu="EmailsList" menu_group="EmailTemplateEdit" %}
 
-<form action="{% route api_SaveEmailTemplate %}" method="post" id="template-editor-form">
+<form action="{% route api_Admin.SaveEmailTemplate %}" method="post" id="template-editor-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-md-8">
@@ -101,7 +101,7 @@
                 onSuccess: function() {
                     notify("success", '{{"Email template was saved successfully." | t }}');
                     setTimeout(function() {
-                            navigate("{% route EmailTemplatesList %}");
+                            navigate("{% route Admin.EmailTemplatesList %}");
                         },
                         500);
 

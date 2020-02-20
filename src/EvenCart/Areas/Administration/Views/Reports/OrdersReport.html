@@ -38,7 +38,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_OrdersReport %}',
+                            url: '{% route api_Admin.OrdersReport %}',
                             responseObject: "reportItems",
                             formatters: {
                                 "binary": function(column, row) {
@@ -47,7 +47,7 @@
                                 "product": function(column, row) {
                                     var productName = row.productName;
                                     var productUrl =
-                                        '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                                        '{% route Admin.GetProduct productId="%id%" %}'.replace("%id%", row.productId);
                                     var productLink = "<a href='" + productUrl + "'>" + productName + "</a>";
                                     return productLink;
                                 },

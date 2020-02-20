@@ -12,7 +12,7 @@
                     notify("success", '{{"Shipment was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetShipment orderId="{{orderId}}" shipmentId="%sid%" warehouseId="%wid%" %}'.replace("%sid%", id).replace("%wid%", warehouseId);
+        var url = '{% route Admin.GetShipment orderId="{{orderId}}" shipmentId="%sid%" warehouseId="%wid%" %}'.replace("%sid%", id).replace("%wid%", warehouseId);
         loadPage(url, true,
             null,
             function (response) {
@@ -25,7 +25,7 @@
         confirm('{{"Deleting a shipment will delete all the activity? Are you sure you want to continue?"}}',
             function() {
                 var deleteUrl =
-                    '{% route api_DeleteShipment orderId="{{orderId}}" shipmentId="%id%" warehouseId="%wid%" %}'
+                    '{% route api_Admin.DeleteShipment orderId="{{orderId}}" shipmentId="%id%" warehouseId="%wid%" %}'
                         .replace("%id%", shipmentId).replace("%wid%", warehouseId);
 
                 post({
@@ -70,7 +70,7 @@
                             <tr>
                                 <td>
                                     <div class="productName">
-                                        <a href='{% route GetProduct productId="{{orderItem.productId}}" %}'>
+                                        <a href='{% route Admin.GetProduct productId="{{orderItem.productId}}" %}'>
                                             {{orderItem.productName}}
                                         </a>
                                     </div>
@@ -115,7 +115,7 @@
                     window.location.reload();
                 }
             });
-        var url = '{% route GetOrderFulfillment orderId="{{orderId}}" %}';
+        var url = '{% route Admin.GetOrderFulfillment orderId="{{orderId}}" %}';
         loadPage(url, true,
             null,
             function (response) {

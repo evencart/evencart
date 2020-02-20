@@ -33,7 +33,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_CurrenciesList %}',
+                            url: '{% route api_Admin.CurrenciesList %}',
                             responseObject: "currencies",
                             selection: false,
                             navigation: 3,
@@ -81,7 +81,7 @@
                     notify("success", '{{"Currency was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetCurrency currencyId="?" %}'.replaceAll("?", id);
+        var url = '{% route Admin.GetCurrency currencyId="?" %}'.replaceAll("?", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -96,7 +96,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteCurrency %}",
+                    url: "{% route api_Admin.DeleteCurrency %}",
                     data: {
                       currencyId: id
                     },

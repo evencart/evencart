@@ -38,14 +38,14 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_UserOrdersReport %}',
+                            url: '{% route api_Admin.UserOrdersReport %}',
                             responseObject: "reportItems",
                             formatters: {
                                 "binary": function(column, row) {
                                     return gridFormatters.binary(column, row, column.id);
                                 },
                                 "customer": function (column, row) {
-                                    var userUrl = '{% route GetUser userId="%id%" %}'.replace("%id%", row.id);
+                                    var userUrl = '{% route Admin.GetUser userId="%id%" %}'.replace("%id%", row.id);
                                     return "<a href='" + userUrl + "'>" + row.name + "</a><div>" + row.email + "</div><div>" + row.currencyCode + "</div>";
                                 },
                                 "formatted": function(column, row) {

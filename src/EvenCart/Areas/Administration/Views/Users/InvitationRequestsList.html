@@ -8,7 +8,7 @@
                 {{"Invitation Requests" | t}}
                 <div class="panel-help no-margin">
                     {{"Invitation requests are requests from customers who wish to register on your website. The list will populate when Customer Registration Mode is set to Invite Only.<br/> You can change the registration mode setting on "}}
-                    <a href='{% route GetSettings settingType="user" %}'>{{"customer settings"}}</a> {{"page"}}.
+                    <a href='{% route Admin.GetSettings settingType="user" %}'>{{"customer settings"}}</a> {{"page"}}.
 
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_InvitationRequestsList %}',
+            url: '{% route api_Admin.InvitationRequestsList %}',
             responseObject: "invitationRequests",
             selection: false,
             navigation: 2,
@@ -69,7 +69,7 @@
 
     var generateLink = function (email) {
         post({
-            url: '{% route api_GenerateInviteLink %}',
+            url: '{% route api_Admin.GenerateInviteLink %}',
             data: {
                 email: email
             },
@@ -85,7 +85,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteInvitationRequest %}",
+                    url: "{% route api_Admin.DeleteInvitationRequest %}",
                     data: {
                         invitationRequestId: id
                     },

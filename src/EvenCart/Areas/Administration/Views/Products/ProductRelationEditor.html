@@ -1,4 +1,4 @@
-﻿<form action="{% route api_SaveProductRelation %}" method="post" id="add-product-relation-form">
+﻿<form action="{% route api_Admin.SaveProductRelation %}" method="post" id="add-product-relation-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -61,7 +61,7 @@
                 }
             });
         var url =
-            '{% route SelectorDialog entityName="products" multiSelect="true" %}';
+            '{% route Admin.SelectorDialog entityName="products" multiSelect="true" %}';
         loadPage(url,
             false,
             null,

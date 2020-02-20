@@ -2,7 +2,7 @@
     <div class="panel-title">
         {{"Order Info" | t}}
         {% if canCancel %}
-        <form id="form-cancel-order" class="float-right" method="post" action='{% route api_CancelAdminOrder orderId="{{order.id}}" %}'>
+        <form id="form-cancel-order" class="float-right" method="post" action='{% route api_Admin.CancelAdminOrder orderId="{{order.id}}" %}'>
             {% control hidden name="orderId" value="{{order.id}}" %}
             {% control xsrf %}
             <button type="submit" class="btn btn-danger btn-sm">{{"Cancel Order" | t}}</button>
@@ -128,7 +128,7 @@
                     <td>
                         {% if order.isSubscriptionActive %}
                         <strong>{{"Active" }}</strong>
-                        <form id="form-cancel-subscription" class="float-right"  method="post" action='{% route api_CancelAdminSubscription orderId="{{order.id}}" %}'>
+                        <form id="form-cancel-subscription" class="float-right"  method="post" action='{% route api_Admin.CancelAdminSubscription orderId="{{order.id}}" %}'>
                             {% control hidden name="orderId" value="{{order.id}}" %}
                             {% control xsrf %}
                             <button type="submit" class="btn btn-danger btn-sm">{{"Cancel Subscription" | t}}</button>
@@ -195,7 +195,7 @@
                         - {{order.formatted.discount}}
                         {% if order.discountId > 0 %}
                         {{"via" | t}}
-                        <a href='{% route GetDiscount discountId="{{order.discountId}}" %}'>
+                        <a href='{% route Admin.GetDiscount discountId="{{order.discountId}}" %}'>
                             {% if order.discountCoupon != "" %}
                             {{order.discountCoupon}}
                             {% else %}
@@ -260,7 +260,7 @@
                     window.location.reload();
                 }
             });
-        var url = '{% route GetOrderInfo orderId="%id%" infoType="%infoType%" %}'.replaceAll("%id%", "{{orderId}}").replaceAll("%infoType%", infoType);
+        var url = '{% route Admin.GetOrderInfo orderId="%id%" infoType="%infoType%" %}'.replaceAll("%id%", "{{orderId}}").replaceAll("%infoType%", infoType);
         loadPage(url, true,
             null,
             function(response) {
