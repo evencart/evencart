@@ -1,5 +1,4 @@
-﻿using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
+﻿using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Orders
 {

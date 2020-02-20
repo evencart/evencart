@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.UI;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {

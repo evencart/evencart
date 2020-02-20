@@ -1,5 +1,4 @@
-﻿using EvenCart.Infrastructure.Helpers;
-using Microsoft.AspNetCore.Antiforgery;
+﻿using Microsoft.AspNetCore.Antiforgery;
 
 namespace EvenCart.Infrastructure.Extensions
 {

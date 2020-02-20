@@ -3,7 +3,6 @@ using System.Linq;
 using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;

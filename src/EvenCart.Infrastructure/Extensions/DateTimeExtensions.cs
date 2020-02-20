@@ -1,11 +1,4 @@
-﻿#region Author Information
-// DateTimeExtensions.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using System.Globalization;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;

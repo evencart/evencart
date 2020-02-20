@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using EvenCart.Core;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Infrastructure.Middleware

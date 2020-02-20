@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 

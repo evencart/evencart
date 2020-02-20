@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
@@ -10,7 +9,6 @@ using EvenCart.Core.Services;
 using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Common;
-using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Reviews;

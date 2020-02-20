@@ -4,8 +4,6 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {

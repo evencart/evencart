@@ -1,11 +1,4 @@
-﻿#region Author Information
-// DbLogger.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Logs;

@@ -1,10 +1,4 @@
-﻿#region Author Information
-// NotificationEventNames.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-namespace EvenCart.Data.Constants
+﻿namespace EvenCart.Data.Constants
 {
     public class NotificationEventNames
     {

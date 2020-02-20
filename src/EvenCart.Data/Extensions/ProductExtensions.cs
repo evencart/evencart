@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.SymbolStore;
-using System.Linq;
+﻿using System.Linq;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
 

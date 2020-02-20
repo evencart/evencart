@@ -1,8 +1,6 @@
-﻿using EvenCart.Data.Entity.Settings;
-using EvenCart.Factories.Users;
+﻿using EvenCart.Factories.Users;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Users;
 using Microsoft.AspNetCore.Authorization;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Core.Services;
-using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;

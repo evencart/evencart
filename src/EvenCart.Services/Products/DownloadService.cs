@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DotEntity;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;

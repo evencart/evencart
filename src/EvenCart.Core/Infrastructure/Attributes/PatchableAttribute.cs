@@ -1,11 +1,4 @@
-﻿#region Author Information
-// NonPatchableAttribute.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 
 namespace EvenCart.Core.Infrastructure.Attributes
 {

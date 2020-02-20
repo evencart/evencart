@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EvenCart.Data.Extensions;
+﻿using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;

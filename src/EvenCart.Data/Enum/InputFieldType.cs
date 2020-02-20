@@ -1,10 +1,4 @@
-﻿#region Author Information
-// TicketFieldType.cs
-// 
-// 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-namespace EvenCart.Data.Enum
+﻿namespace EvenCart.Data.Enum
 {
     public enum InputFieldType
     {

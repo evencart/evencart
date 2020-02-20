@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity;
-using DotEntity.Enumerations;
 using EvenCart.Core.DataStructures;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;

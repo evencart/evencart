@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Net;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
-using EvenCart.Data.Entity.Settings;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.Middleware;
@@ -15,7 +13,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 
 namespace EvenCart.Infrastructure.Extensions

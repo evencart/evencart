@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Core.Plugins;
-using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Services.Widgets;

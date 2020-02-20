@@ -1,13 +1,4 @@
-﻿#region Author Information
-// IInterceptorService.cs
-// 
-// Author 2016 Apexol Technologies. All Rights Reserved.
-// 
-// Created On: 01 07 2016 08:26 PM
-// Last Modified: 01 07 2016 08:26 PM
-#endregion
-
-using EvenCart.Core.Infrastructure.Interceptor;
+﻿using EvenCart.Core.Infrastructure.Interceptor;
 
 namespace EvenCart.Core.Services.Interceptor
 {

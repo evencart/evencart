@@ -4,7 +4,6 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Helpers;

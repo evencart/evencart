@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Updates
 {

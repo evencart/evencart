@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using DotEntity.Enumerations;
-using EvenCart.Core.Caching;
 using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services;
 
 namespace EvenCart.Core.Extensions

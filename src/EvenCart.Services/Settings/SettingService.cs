@@ -2,12 +2,10 @@
 using System.Linq;
 using EvenCart.Core.Config;
 using EvenCart.Core.Extensions;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Serializers;
 

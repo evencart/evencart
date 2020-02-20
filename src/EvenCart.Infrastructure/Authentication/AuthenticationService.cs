@@ -13,7 +13,6 @@ using EvenCart.Services.Security;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EvenCart.Infrastructure.Authentication

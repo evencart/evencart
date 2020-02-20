@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using DryIoc;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
@@ -35,7 +33,6 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Routing.Parsers;
 using EvenCart.Infrastructure.Social;
-using EvenCart.Infrastructure.Tasks;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Services.Cultures;

@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using EvenCart.Data.Entity.Addresses;
-using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Taxes;
 
 namespace EvenCart.Services.Taxes
 {

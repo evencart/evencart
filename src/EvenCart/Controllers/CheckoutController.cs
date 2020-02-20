@@ -5,7 +5,6 @@ using EvenCart.Core;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;

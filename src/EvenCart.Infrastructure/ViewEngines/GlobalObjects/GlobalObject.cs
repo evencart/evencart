@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Mvc.Models;
 

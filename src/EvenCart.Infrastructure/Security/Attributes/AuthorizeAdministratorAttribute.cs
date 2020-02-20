@@ -1,11 +1,4 @@
-﻿#region Author Information
-// AuthorizedAdministratorAttribute.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Database;
 using EvenCart.Services.Extensions;

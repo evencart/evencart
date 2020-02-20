@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Checkout
 {

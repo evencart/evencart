@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Data.Entity.Purchases;

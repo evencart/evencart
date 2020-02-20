@@ -1,5 +1,4 @@
 ﻿using System;
-using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;

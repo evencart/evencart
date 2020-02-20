@@ -1,5 +1,4 @@
 ﻿using EvenCart.Areas.Administration.Models.Addresses;
-using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;

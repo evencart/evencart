@@ -13,7 +13,6 @@ using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Gdpr;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http.Extensions;
 

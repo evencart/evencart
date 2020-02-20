@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using FluentScheduler;
-using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.ScheduledTasks;
-using EvenCart.Services.Extensions;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Logger;
 

@@ -1,13 +1,4 @@
-﻿#region Author Information
-// InterceptionExceptionFilter.cs
-// 
-// Author 2016 Apexol Technologies. All Rights Reserved.
-// 
-// Created On: 04 07 2016 06:18 PM
-// Last Modified: 04 07 2016 06:18 PM
-#endregion
-
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace EvenCart.Infrastructure.Mvc.Filters

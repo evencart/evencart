@@ -1,10 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EvenCart.Data.Database;
-using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace EvenCart.Infrastructure.Middleware
 {

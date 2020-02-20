@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Caching;
-using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Navigation;
-using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Navigation;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Routing.Extensions;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Pages;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {

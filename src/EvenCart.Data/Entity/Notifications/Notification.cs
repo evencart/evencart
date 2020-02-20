@@ -1,11 +1,4 @@
-﻿#region Author Information
-// Notification.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;

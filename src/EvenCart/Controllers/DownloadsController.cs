@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
