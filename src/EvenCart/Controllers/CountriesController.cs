@@ -35,7 +35,7 @@ namespace EvenCart.Controllers
             Country country = null;
             if (countryId <= 0 || (country = _countryService.FirstOrDefault(x => x.Id == countryId)) == null)
                 return NotFound();
-            var stateOrProvinces = _stateOrProvinceService.GetStateOrProvinces(out _, countryId);
+            var stateOrProvinces = _stateOrProvinceService.GetStateOrProvinces(out _, countryId, count: int.MaxValue);
 
             var models = stateOrProvinces.Select(x => _modelMapper.Map<StateOrProvinceModel>(x)).ToList();
 

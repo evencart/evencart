@@ -82,6 +82,9 @@ var initCountryState = function (countryElementId, stateElementId, otherStateCon
         if (countryId > 0) {
             get({
                 url: "/api/countries/" + countryId + "/states",
+                data: {
+                    rowCount: 99999//a sufficiently large number
+                },
                 done: function (response) {
                     if (response.states.length > 0) {
                         response.states.forEach(function (state) {
