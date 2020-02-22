@@ -83,7 +83,7 @@
                         itemSelector: "div",
                         update: function() {
                             post({
-                                url: "{% route api_UpdateWidgetsDisplayOrder %}",
+                                url: "{% route api_Admin.UpdateWidgetsDisplayOrder %}",
                                 data: jQuery("#zone-{{zone.systemName}}-widgets input").serialize()
                             });
                         }
@@ -98,7 +98,7 @@
 <script type="text/javascript">
     var addWidgetToZone = function(pluginName, widgetName, zoneName) {
         post({
-            url: '{% route api_SaveWidget %}',
+            url: '{% route api_Admin.SaveWidget %}',
             data: {
                 pluginSystemName: pluginName,
                 widgetSystemName: widgetName,
@@ -113,7 +113,7 @@
         confirm('{{"Are you sure you wish to remove this widget?" | t}}',
             function() {
                 post({
-                    url: '{% route api_DeleteWidget %}',
+                    url: '{% route api_Admin.DeleteWidget %}',
                     data: {
                         id: id
                     },

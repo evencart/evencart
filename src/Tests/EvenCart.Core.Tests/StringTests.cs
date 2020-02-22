@@ -1,6 +1,5 @@
 ﻿using System;
 using EvenCart.Data.Extensions;
-using EvenCart.Data.Helpers;
 using NUnit.Framework;
 
 namespace EvenCart.Common.Tests

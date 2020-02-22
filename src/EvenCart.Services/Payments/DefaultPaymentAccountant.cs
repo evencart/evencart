@@ -6,7 +6,6 @@ using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
-using EvenCart.Services.Helpers;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Users;

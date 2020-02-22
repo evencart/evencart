@@ -97,7 +97,7 @@
                 <div class="form-group">
                     {% control label text=@t"Primary Site Navigation" for="primaryNavigationId" %}
                     <div class="panel-help">
-                        {{"Select the navigation that'll be used as primary site navigation." | t}} <a href="{% route MenuList %}">{{"Configure Navigation" | t}}</a>
+                        {{"Select the navigation that'll be used as primary site navigation." | t}} <a href="{% route Admin.MenuList %}">{{"Configure Navigation" | t}}</a>
                     </div>
                     {% control select name="primaryNavigationId" value="settings.primaryNavigationId" items="availableMenus" %}
 
@@ -138,7 +138,7 @@
                         ready(function() {
                             initFileUploader({
                                 element: "packageFile",
-                                url: '{% route api_UploadPackage %}',
+                                url: '{% route api_Admin.UploadPackage %}',
                                 done: function(e, data) {
                                     var result = data.result;
                                     if (result.success) {

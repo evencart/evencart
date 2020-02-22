@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using EvenCart.Data.Database;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
 using Microsoft.AspNetCore.Http;

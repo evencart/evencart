@@ -1,4 +1,4 @@
-﻿<form action='{% route api_SaveState countryId="{{state.countryId}}" %}' method="post" id="state-editor-form">
+﻿<form action='{% route api_Admin.SaveState countryId="{{state.countryId}}" %}' method="post" id="state-editor-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">

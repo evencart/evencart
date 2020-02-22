@@ -32,11 +32,11 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_TaxesList %}',
+                            url: '{% route api_Admin.TaxesList %}',
                             responseObject: "taxes",
                             formatters: {
                                 "commands": function (column, row) {
-                                    var taxRatesUrl = '{% route TaxRatesList taxId="_id_" %}'.replace("_id_", row.id);
+                                    var taxRatesUrl = '{% route Admin.TaxRatesList taxId="_id_" %}'.replace("_id_", row.id);
                                     return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='editTax(" +
@@ -75,7 +75,7 @@
                     notify("success", '{{"Tax was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetTax taxId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetTax taxId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -87,7 +87,7 @@
     var deleteTax = function(id) {
         confirm('{{"Are you sure you wish to delete this tax?" | t}}',
             function() {
-                var url = '{% route api_DeleteTax %}';
+                var url = '{% route api_Admin.DeleteTax %}';
                 post({
                     url: url,
                     data: {

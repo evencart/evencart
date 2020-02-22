@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Reviews;
 

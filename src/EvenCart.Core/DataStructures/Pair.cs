@@ -1,10 +1,4 @@
-﻿#region Author Information
-// Pair.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-namespace EvenCart.Core.DataStructures
+﻿namespace EvenCart.Core.DataStructures
 {
     /// <summary>
     /// Represents a pair of two objects

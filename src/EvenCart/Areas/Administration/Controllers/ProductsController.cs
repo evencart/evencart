@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using EvenCart.Areas.Administration.Extensions;
@@ -9,7 +8,6 @@ using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
-using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Services;

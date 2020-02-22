@@ -2,7 +2,7 @@
 {% global page_title=@t"Product Editor" active_menu="GetProduct" parent_active_menu="ProductsList" menu_group="ProductEdit" %}
 
 
-<form action="{% route api_SaveProduct %}" method="post" id="product-editor-form">
+<form action="{% route api_Admin.SaveProduct %}" method="post" id="product-editor-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-lg-6">
@@ -59,7 +59,7 @@
                     <div class="form-group">
                         {% control checkbox name="chargeTaxes" value="product.chargeTaxes" text=@t"Charge Tax" %}
                         <div class="panel-help">
-                            {{"Check if the customer is charged for taxes when purchasing this product. You can configure the taxes on " | t}} <a href="{% route TaxesList %}">{{"Taxes"}}</a> {{"page" | t}}
+                            {{"Check if the customer is charged for taxes when purchasing this product. You can configure the taxes on " | t}} <a href="{% route Admin.TaxesList %}">{{"Taxes"}}</a> {{"page" | t}}
                         </div>
                     </div>
                 </div>
@@ -262,7 +262,7 @@
             {% control hidden name="id" value="{{product.id}}" %}
             <div class="save-button-container">
                 {% if product.id > 0 %}
-                <a class="btn btn-sm btn-primary" target="_blank" href='{% route PreviewProduct id="{{product.id}}" %}'>
+                <a class="btn btn-sm btn-primary" target="_blank" href='{% route Admin.PreviewProduct id="{{product.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>
@@ -316,7 +316,7 @@
                     notify("success", '{{"Product was saved successfully." | t }}');
                     //{% if productId == 0 %}
                     setTimeout(function () {
-                        window.location.href = '{% route GetProduct productId="%id%" %}'.replace("%id%", productId);
+                        window.location.href = '{% route Admin.GetProduct productId="%id%" %}'.replace("%id%", productId);
                     }, 500);
                     //{% endif %}
                 }

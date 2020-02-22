@@ -1,5 +1,4 @@
-﻿using System;
-using EvenCart.Infrastructure.Extensions;
+﻿using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.Models;
 

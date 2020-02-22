@@ -21,7 +21,7 @@
                 {{emailTemplates | scriptJson : 'initData'}}
                 <script type="text/javascript">
                     var editEmailTemplate = function(id) {
-                        var url = '{% route GetEmailTemplate emailTemplateId="_id" %}';
+                        var url = '{% route Admin.GetEmailTemplate emailTemplateId="_id" %}';
                         url = url.replace("_id", id);
                         navigate(url);
                     }
@@ -38,7 +38,7 @@
                             method: "GET",
                             navigation: 0,
                             selection: false,
-                            url: "{% route api_EmailTemplatesList %}",
+                            url: "{% route api_Admin.EmailTemplatesList %}",
                             responseObject: "emailTemplates",
                             formatters: {
                                 "commands": function(column, row) {

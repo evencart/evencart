@@ -15,6 +15,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public bool Verified { get; set; }
 
+        public bool Locked { get; set; }
+
         #region Virtual Properties
         public virtual Order Order { get; set; }
 

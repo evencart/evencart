@@ -36,6 +36,11 @@ namespace EvenCart.Areas.Administration.Models.Orders
             /// The available quantity of the item in the warehouse
             /// </summary>
             public int AvailableQuantity { get; set; }
+
+            /// <summary>
+            /// Specifies if the order fulfillment is locked for editing
+            /// </summary>
+            public bool Locked { get; set; }
         }
     }
 }

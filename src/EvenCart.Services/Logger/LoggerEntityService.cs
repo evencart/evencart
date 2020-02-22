@@ -1,15 +1,7 @@
-﻿#region Author Information
-// LoggerEntityService.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity.Enumerations;
-using EvenCart.Core.Data;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Logs;
 using EvenCart.Data.Extensions;

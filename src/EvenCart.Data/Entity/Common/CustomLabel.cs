@@ -1,5 +1,4 @@
-﻿using System;
-using EvenCart.Core.Data;
+﻿using EvenCart.Core.Data;
 
 namespace EvenCart.Data.Entity.Common
 {

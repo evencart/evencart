@@ -29,7 +29,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_VendorUsersList %}',
+                            url: '{% route api_Admin.VendorUsersList %}',
                             responseObject: "users",
                             selection: false,
                             navigation: 3,
@@ -81,7 +81,7 @@
                         userIds.push(d.id);
                     });
                     post({
-                        url: '{% route api_SaveVendorUser vendorId="{{vendorId}}" %}',
+                        url: '{% route api_Admin.SaveVendorUser vendorId="{{vendorId}}" %}',
                         data: {
                             userIds: userIds
                         },
@@ -92,7 +92,7 @@
                     });
                 }
             });
-        var url = '{% route SelectorDialog entityName="users" multiSelect="true" %}';
+        var url = '{% route Admin.SelectorDialog entityName="users" multiSelect="true" %}';
         loadPage(url,
             true,
             null,
@@ -107,7 +107,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteVendorUser %}",
+                    url: "{% route api_Admin.DeleteVendorUser %}",
                     data: {
                         vendorId: "{{vendorId}}",
                         userId: id

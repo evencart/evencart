@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;

@@ -9,7 +9,7 @@
     {% for user in users %}
         <tr>
             <td>
-                <a href='{% route GetUser userId="{{user.id}}" %}'>
+                <a href='{% route Admin.GetUser userId="{{user.id}}" %}'>
                     {% if user.name %}
                     {{user.name}}
                     {% else %}

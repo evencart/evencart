@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace EvenCart.Data.Entity.Shop
+﻿namespace EvenCart.Data.Entity.Shop
 {
     public enum DownloadActivationType
     {

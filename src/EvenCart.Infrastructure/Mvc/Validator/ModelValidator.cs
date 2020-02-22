@@ -1,11 +1,4 @@
-﻿#region Author Information
-// F1SuiteValidator.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using FluentValidation;
 using FluentValidation.Results;
 

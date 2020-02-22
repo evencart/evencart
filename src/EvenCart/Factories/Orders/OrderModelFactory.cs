@@ -10,7 +10,6 @@ using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Orders;
-using EvenCart.Models.Shipments;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Factories.Orders

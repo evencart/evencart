@@ -370,6 +370,11 @@
             The available quantity of the item in the warehouse
             </summary>
         </member>
+        <member name="P:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel.OrderItemFulfillmentModel.Locked">
+            <summary>
+            Specifies if the order fulfillment is locked for editing
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentListModel">
             <summary>
             The order fulfillment group object

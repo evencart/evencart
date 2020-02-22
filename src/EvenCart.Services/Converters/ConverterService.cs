@@ -1,5 +1,4 @@
-﻿using System;
-using EvenCart.Data.Entity.Shop;
+﻿using EvenCart.Data.Entity.Shop;
 
 namespace EvenCart.Services.Converters
 {

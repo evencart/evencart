@@ -2,7 +2,7 @@
 {% global page_title=@t"Discount Editor" active_menu="GetDiscount" parent_active_menu="DiscountsList" menu_group="DiscountEdit" %}
 
 
-<form action="{% route api_SaveDiscount %}" method="post" id="save-discount-form">
+<form action="{% route api_Admin.SaveDiscount %}" method="post" id="save-discount-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-lg-6">
@@ -269,7 +269,7 @@
                         }
                     });
                 var url =
-                    '{% route SelectorDialog entityName="%" multiSelect="true" %}'.replace("%", type);
+                    '{% route Admin.SelectorDialog entityName="%" multiSelect="true" %}'.replace("%", type);
                 loadPage(url,
                     true,
                     null,
@@ -281,7 +281,7 @@
 
             var deleteRestriction = function(id) {
                 function deleteImpl() {
-                    var url = '{% route api_DeleteDiscountRestriction %}';
+                    var url = '{% route api_Admin.DeleteDiscountRestriction %}';
                     post({
                         url: url,
                         data: {
@@ -335,7 +335,7 @@
                 onSuccess: function () {
                     notify("success", '{{"Discount was saved successfully." | t }}');
                     setTimeout(function () {
-                        navigate("{% route DiscountsList %}");
+                        navigate("{% route Admin.DiscountsList %}");
                     }, 500);
 
                 }

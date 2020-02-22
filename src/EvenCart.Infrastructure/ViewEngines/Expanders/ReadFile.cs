@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
-using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {

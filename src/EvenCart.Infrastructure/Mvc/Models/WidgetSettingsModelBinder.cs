@@ -1,13 +1,4 @@
-﻿// #region Author Information
-// // FoundationModelBinder.cs
-// // 
-// // (c) 2017 Apexol Technologies. All Rights Reserved.
-// // 
-// #endregion
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Core.Infrastructure;

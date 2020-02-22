@@ -28,7 +28,7 @@
         {{orders | scriptJson : 'initData'}}
         <script type="text/javascript">
                     var editOrder = function(id) {
-                        var url = '{% route GetOrder OrderId="order_id" %}';
+                        var url = '{% route Admin.GetOrder OrderId="order_id" %}';
                         url = url.replace("order_id", id);
                         navigate(url);
                     }
@@ -58,7 +58,7 @@
                             },
                             method: "GET",
                             navigation: 3,
-                            url: '{% route api_UserOrdersList userId="{{userId}}" %}',
+                            url: '{% route api_Admin.UserOrdersList userId="{{userId}}" %}',
                             data: function() {
                                 return searchParams;
                             },

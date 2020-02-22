@@ -12,7 +12,7 @@
                     notify("success", '{{"Shipment was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetShipment orderId="{{orderId}}" shipmentId="%sid%" warehouseId="%wid%" %}'.replace("%sid%", id).replace("%wid%", warehouseId);
+        var url = '{% route Admin.GetShipment orderId="{{orderId}}" shipmentId="%sid%" warehouseId="%wid%" %}'.replace("%sid%", id).replace("%wid%", warehouseId);
         loadPage(url, true,
             null,
             function (response) {
@@ -25,7 +25,7 @@
         confirm('{{"Deleting a shipment will delete all the activity? Are you sure you want to continue?"}}',
             function() {
                 var deleteUrl =
-                    '{% route api_DeleteShipment orderId="{{orderId}}" shipmentId="%id%" warehouseId="%wid%" %}'
+                    '{% route api_Admin.DeleteShipment orderId="{{orderId}}" shipmentId="%id%" warehouseId="%wid%" %}'
                         .replace("%id%", shipmentId).replace("%wid%", warehouseId);
 
                 post({
@@ -48,16 +48,29 @@
                 {% endif %}
             </div>
             <div class="panel-body">
+                {% if orderFulfillments.size == 0 %}
+                <div class="alert alert-danger">
+                    {{"There are no saved fulfillments for this order" | t}}
+                </div>
+                {% endif %}
                 {% for f in orderFulfillments %}
-                <h6>{{f.warehouse.address.name}}</h6>
-                <div class="row">
+                <div class="panel-title">
+                    {{f.warehouse.address.name}}
+                    <button type="button" class="btn btn-primary btn-sm float-right" onclick="editShipment(0, '{{f.warehouse.id}}')">{{"Add Shipment" | t}}</button>
+                </div>
+               
+                <div>
                     <div class="col-12">
                         <table class="table  table-borderless">
+                            <tr>
+                                <td colspan="2">
+                                </td>
+                            </tr>
                             {% for orderItem in f.orderItems %}
                             <tr>
                                 <td>
                                     <div class="productName">
-                                        <a href='{% route GetProduct productId="{{orderItem.productId}}" %}'>
+                                        <a href='{% route Admin.GetProduct productId="{{orderItem.productId}}" %}'>
                                             {{orderItem.productName}}
                                         </a>
                                     </div>
@@ -66,10 +79,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {{orderItem.price | withCurrency }} x <strong>{{orderItem.quantity}}</strong>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm float-right" onclick="editShipment(0, '{{f.warehouse.id}}')">{{"Add Shipment" | t}}</button>
+                                    {{orderItem.formatted.price }} x <strong>{{orderItem.quantity}}</strong>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -77,7 +87,7 @@
                     </div>
                 </div>
                 {% if forloop.last == false %}
-                <hr/>
+                <hr />
                 {% endif %}
                 {% endfor %}
             </div>
@@ -105,7 +115,7 @@
                     window.location.reload();
                 }
             });
-        var url = '{% route GetOrderFulfillment orderId="{{orderId}}" %}';
+        var url = '{% route Admin.GetOrderFulfillment orderId="{{orderId}}" %}';
         loadPage(url, true,
             null,
             function (response) {

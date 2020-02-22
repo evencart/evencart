@@ -4,7 +4,6 @@ using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Routing.Extensions;
 using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
 using EvenCart.Services.Seo;

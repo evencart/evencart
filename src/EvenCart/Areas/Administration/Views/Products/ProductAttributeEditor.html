@@ -1,4 +1,4 @@
-﻿<form action="{% route api_SaveProductAttribute %}" method="post" id="add-attribute-form">
+﻿<form action="{% route api_Admin.SaveProductAttribute %}" method="post" id="add-attribute-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -115,7 +115,7 @@
         inputTypeahead({
             element: "product-attribute-selector",
             initialData: null,
-            url: "{% route api_GetAttributeSuggestions %}",
+            url: "{% route api_Admin.GetAttributeSuggestions %}",
             preserveAfterFirstCall: true,
             openOnFocus: true,
             substringMatch: false,
@@ -151,7 +151,7 @@
                     var attributeId = jQuery("#product-attribute").val();
                     if (attributeId == 0)
                         return null;
-                    var baseUrl = '{% route api_GetAttributeValueSuggestions attributeId="0" %}';
+                    var baseUrl = '{% route api_Admin.GetAttributeValueSuggestions attributeId="0" %}';
                     baseUrl = baseUrl.replaceAll("/0", "/" + attributeId);
                     return baseUrl;
                 },

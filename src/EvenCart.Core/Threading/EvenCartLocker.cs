@@ -1,11 +1,4 @@
-﻿#region Author Information
-// EvenCartLocker.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using System.Threading;
 
 namespace EvenCart.Core.Threading

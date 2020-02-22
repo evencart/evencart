@@ -14,7 +14,7 @@
                             {{"Order Number" | t}}
                         </td>
                         <td>
-                            <a href='{% route GetOrder orderId="{{returnRequest.orderId}}" %}'>{{returnRequest.orderNumber}}</a>
+                            <a href='{% route Admin.GetOrder orderId="{{returnRequest.orderId}}" %}'>{{returnRequest.orderNumber}}</a>
                         </td>
                     </tr>
                     <tr>
@@ -22,7 +22,7 @@
                             {{"Product" | t}}
                         </td>
                         <td>
-                            <a href='{% route GetProduct productId="{{returnRequest.productId}}" %}'>{{returnRequest.productName}}</a>
+                            <a href='{% route Admin.GetProduct productId="{{returnRequest.productId}}" %}'>{{returnRequest.productName}}</a>
                             <div> {{returnRequest.attributeText | newLine2Br }}</div>
                         </td>
                     </tr>
@@ -76,7 +76,7 @@
     <div class="col-md-6">
         <div class="panel">
             <div class="panel-body">
-                <form action="{% route api_SaveReturnRequest %}" method="post" id="request-editor-form">
+                <form action="{% route api_Admin.SaveReturnRequest %}" method="post" id="request-editor-form">
                     {% control hidden name="id" value="{{returnRequest.id}}" %}
                     {% control xsrf %}
                     <div class="save-button-container">
@@ -119,7 +119,7 @@
                         <button type="submit" class="btn btn-danger btn-sm" name="returnRequestStatus" value="Rejected">{{"Reject Return"}}</button>
                         <button type="submit" class="btn btn-default btn-sm" name="returnRequestStatus" value="Cancelled">{{"Cancel Return"}}</button>
                         {% when 'Complete' %}
-                        {{"Return complete with order #" | t}} <a href='{% route GetOrder orderId="{{returnRequest.returnOrderId}}" %}'>{{returnRequest.returnOrderNumber}}</a>
+                        {{"Return complete with order #" | t}} <a href='{% route Admin.GetOrder orderId="{{returnRequest.returnOrderId}}" %}'>{{returnRequest.returnOrderNumber}}</a>
                         {% endcase %}
                         <!--{% control select name="returnRequestStatus" items="availableReturnStatusValues" value="returnRequest.returnRequestStatus" required="true" %}-->
                     </div>

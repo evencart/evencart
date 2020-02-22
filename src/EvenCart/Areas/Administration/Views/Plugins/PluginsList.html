@@ -33,7 +33,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_PluginsList %}',
+                            url: '{% route api_Admin.PluginsList %}',
                             responseObject: "plugins",
                             selection: false,
                             navigation: 0,
@@ -126,7 +126,7 @@
                     notify("success", '{{"Plugin was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetPlugin pluginSystemName="?" %}'.replaceAll("?", systemName);
+        var url = '{% route Admin.GetPlugin pluginSystemName="?" %}'.replaceAll("?", systemName);
         loadPage(url, true,
             null,
             function(response) {
@@ -156,7 +156,7 @@
             break;
         }
         post({
-            url: "{% route api_UpdatePluginStatus %}",
+            url: "{% route api_Admin.UpdatePluginStatus %}",
             data: {
                 systemName: systemName,
                 installed: installed,
@@ -185,7 +185,7 @@
 
     var upgradePlugin = function(systemName) {
         post({
-            url: "{% route api_UpgradeDbPlugin%}",
+            url: "{% route api_Admin.UpgradeDbPlugin%}",
             data: {
                 systemName: systemName
             },
@@ -203,7 +203,7 @@
     ready(function() {
         initFileUploader({
             element: "packageFile",
-            url: '{% route api_UploadPackage %}',
+            url: '{% route api_Admin.UploadPackage %}',
             done: function(e, data) {
                 var result = data.result;
                 if (result.success) {

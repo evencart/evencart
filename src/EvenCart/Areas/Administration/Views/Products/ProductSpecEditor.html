@@ -1,4 +1,4 @@
-﻿<form action="{% route api_SaveProductSpecification %}" method="post" id="add-spec-form">
+﻿<form action="{% route api_Admin.SaveProductSpecification %}" method="post" id="add-spec-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -93,7 +93,7 @@
         inputTypeahead({
             element: "product-productSpecification-selector",
             initialData: null,
-            url: "{% route api_GetAttributeSuggestions %}",
+            url: "{% route api_Admin.GetAttributeSuggestions %}",
             preserveAfterFirstCall: true,
             substringMatch: false,
             openOnFocus: true,
@@ -133,7 +133,7 @@
                     var productSpecificationId = jQuery("#product-productSpecification").val();
                     if (productSpecificationId == 0)
                         return null;
-                    var baseUrl = '{% route api_GetAttributeValueSuggestions attributeId="0" %}';
+                    var baseUrl = '{% route api_Admin.GetAttributeValueSuggestions attributeId="0" %}';
                     baseUrl = baseUrl.replaceAll("/0", "/" + productSpecificationId);
                     return baseUrl;
                 },

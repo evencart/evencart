@@ -45,7 +45,7 @@
                 rowCount: parseInt("{{rowCount}}")
             },
             method: "GET",
-            url: '{% route api_AddressList userId="{{userId}}" %}',
+            url: '{% route api_Admin.AddressList userId="{{userId}}" %}',
             responseObject: "addresses",
             selection: false,
             navigation: false,
@@ -83,7 +83,7 @@
 
 
     var editAddress = function (id) {
-        var url = '{% route GetAddress userId="{{userId}}" addressId="?" %}';
+        var url = '{% route Admin.GetAddress userId="{{userId}}" addressId="?" %}';
         navigate(url.replace("?", id));
     }
 
@@ -93,7 +93,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteAddress %}",
+                    url: "{% route api_Admin.DeleteAddress %}",
                     data: {
                         addressId: id
                     },

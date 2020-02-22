@@ -1,6 +1,5 @@
 ﻿using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Database;
-using EvenCart.Services.Installation;
 
 namespace EvenCart.Services.Tests
 {

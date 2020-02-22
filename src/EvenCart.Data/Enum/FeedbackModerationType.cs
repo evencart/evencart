@@ -1,10 +1,4 @@
-﻿// #region Author Information
-// // FeedbackModerationType.cs
-// // 
-// // (c) 2017 Apexol Technologies. All Rights Reserved.
-// // 
-// #endregion
-namespace EvenCart.Data.Enum
+﻿namespace EvenCart.Data.Enum
 {
     public enum FeedbackModerationType
     {

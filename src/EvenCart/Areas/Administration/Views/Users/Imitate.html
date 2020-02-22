@@ -7,7 +7,7 @@
     </div>
 </div>
 {% else %}
-<form action='{% route UserImitate userId="{{userId}}" %}' method="post" id="edit-imitation-form">
+<form action='{% route Admin.UserImitate userId="{{userId}}" %}' method="post" id="edit-imitation-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">

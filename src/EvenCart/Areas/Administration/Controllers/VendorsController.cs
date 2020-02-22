@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Data.Constants;

@@ -5,7 +5,6 @@ using EvenCart.Core;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -766,14 +765,15 @@ namespace EvenCart.Controllers
                 if (item.ProductVariantId > 0)
                 {
                     var productVariant = product.ProductVariants.First(x => x.Id == item.ProductVariantId);
-                    if (!productVariant.IsAvailableInStock(product, out warehouse))
-                        continue;
+                    productVariant.IsAvailableInStock(product, out warehouse);
                 }
                 else
                 {
-                    if (!product.IsAvailableInStock(out warehouse))
-                        continue;
+                    product.IsAvailableInStock(out warehouse);
                 }
+                if (warehouse == null)
+                    return new List<WarehouseShippingOptionModel>();
+
                 if (warehouseWiseProducts.All(x => x.Key.Id != warehouse.Id))
                 {
                     warehouseWiseProducts.Add(warehouse, new List<(Product, int)>());

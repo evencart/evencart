@@ -1,11 +1,4 @@
-﻿#region Author Information
-// LinqExtensions.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;

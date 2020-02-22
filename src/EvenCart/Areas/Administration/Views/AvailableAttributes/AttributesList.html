@@ -29,7 +29,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_AvailableAttributesList %}',
+                            url: '{% route api_Admin.AvailableAttributesList %}',
                             responseObject: "attributes",
                             selection: false,
                             navigation: 3,
@@ -74,7 +74,7 @@
                     notify("success", '{{"Attribute was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetAvailableAttribute availableAttributeId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetAvailableAttribute availableAttributeId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -89,7 +89,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteAvailableAttribute %}",
+                    url: "{% route api_Admin.DeleteAvailableAttribute %}",
                     data: {
                       productAttributeId: id
                     },

@@ -16,7 +16,7 @@
     }
 </script>
 <div class="col-md-12">
-    <form action='{% route api_SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form">
+    <form action='{% route api_Admin.SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form">
         {% control xsrf %}
         <div class="panel">
             <div class="panel-title">
@@ -48,7 +48,7 @@
                             },
                             method: "GET",
                             responseObject: "warehouses",
-                            url: '{% route api_InventoryList productId="{{productId}}" %}',
+                            url: '{% route api_Admin.InventoryList productId="{{productId}}" %}',
                             selection: false,
                             navigation: 0,
                             columnSelection: false,

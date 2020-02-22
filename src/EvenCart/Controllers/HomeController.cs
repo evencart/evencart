@@ -4,7 +4,6 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Home;
-using EvenCart.Services.Emails;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers

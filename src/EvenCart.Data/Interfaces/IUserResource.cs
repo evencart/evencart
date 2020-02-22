@@ -1,10 +1,4 @@
-﻿#region Author Information
-// IUserResource.cs
-// 
-// (c) 2016 Apexol Technologies. All Rights Reserved.
-// 
-#endregion
-namespace EvenCart.Data.Interfaces
+﻿namespace EvenCart.Data.Interfaces
 {
     public interface IUserResource
     {

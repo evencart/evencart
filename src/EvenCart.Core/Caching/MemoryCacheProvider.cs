@@ -1,12 +1,4 @@
-﻿// #region Author Information
-// // MemoryCacheProvider.cs
-// // 
-// // (c) 2017 Apexol Technologies. All Rights Reserved.
-// // 
-// #endregion
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace EvenCart.Core.Caching

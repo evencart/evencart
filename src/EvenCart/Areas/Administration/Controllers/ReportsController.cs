@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Factories.Orders;
 using EvenCart.Areas.Administration.Factories.Reports;
 using EvenCart.Areas.Administration.Factories.Users;

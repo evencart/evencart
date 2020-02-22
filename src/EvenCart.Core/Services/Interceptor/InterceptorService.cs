@@ -1,14 +1,4 @@
-﻿#region Author Information
-// InterceptorService.cs
-// 
-// Author 2016 Apexol Technologies. All Rights Reserved.
-// 
-// Created On: 02 07 2016 10:41 AM
-// Last Modified: 02 07 2016 10:41 AM
-#endregion
-
-using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;

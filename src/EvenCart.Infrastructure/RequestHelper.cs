@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 

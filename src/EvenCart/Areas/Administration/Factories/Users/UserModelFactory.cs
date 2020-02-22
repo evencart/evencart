@@ -3,7 +3,6 @@ using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
-using NotImplementedException = System.NotImplementedException;
 
 namespace EvenCart.Areas.Administration.Factories.Users
 {

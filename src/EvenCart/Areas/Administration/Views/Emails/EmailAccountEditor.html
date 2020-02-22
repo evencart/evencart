@@ -3,7 +3,7 @@
 
 
 
-<form action="{% route api_SaveEmailAccount %}" method="post" id="account-editor-form">
+<form action="{% route api_Admin.SaveEmailAccount %}" method="post" id="account-editor-form">
     {% control xsrf %}
     <div class="row">
         <div class="col-md-8">
@@ -87,7 +87,7 @@
                 onSuccess: function() {
                     notify("success", '{{"Email account was saved successfully." | t }}');
                     setTimeout(function() {
-                            navigate("{% route EmailAccountsList %}");
+                            navigate("{% route Admin.EmailAccountsList %}");
                         },
                         500);
 
@@ -97,7 +97,7 @@
 
     jQuery("#validate-settings").click(function() {
         post({
-            url: "{% route api_TestEmailAccount %}",
+            url: "{% route api_Admin.TestEmailAccount %}",
             data: jQuery("#account-editor-form").serialize(),
             done: function (response) {
                 if (response.success) {

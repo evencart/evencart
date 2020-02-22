@@ -1,4 +1,4 @@
-﻿<form action="{% route api_SaveCurrency %}" method="post" id="currency-editor-form">
+﻿<form action="{% route api_Admin.SaveCurrency %}" method="post" id="currency-editor-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -31,7 +31,7 @@
                     <div class="form-group">
                         {% control label text=@t"Exchange Rate" for="exchangeRate" %}
                         <div class="panel-help">
-                            {{"The exchange rate is used to calculate amounts in the user's currency with respect to base currency." | t}} <a href='{% route GetSettings settingType="localization" %}'>{{"Change Currency Settings"}}</a>
+                            {{"The exchange rate is used to calculate amounts in the user's currency with respect to base currency." | t}} <a href='{% route Admin.GetSettings settingType="localization" %}'>{{"Change Currency Settings"}}</a>
                         </div>
                         {% control number id="exchangeRate" name="exchangeRate" value="{{currency.exchangeRate}}" %}
                     </div>

@@ -12,9 +12,6 @@ using EvenCart.Services.Extensions;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Shipments;
 using EvenCart.Factories.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Models.Orders;
 
 namespace EvenCart.Events
 {

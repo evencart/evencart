@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EvenCart.Core.DataStructures;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;

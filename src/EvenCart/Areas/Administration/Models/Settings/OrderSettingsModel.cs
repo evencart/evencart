@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EvenCart.Data.Entity.Purchases;
 
 namespace EvenCart.Areas.Administration.Models.Settings
 {

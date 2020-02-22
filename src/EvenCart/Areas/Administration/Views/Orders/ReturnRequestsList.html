@@ -23,7 +23,7 @@
                 {{ returnRequests | scriptJson : 'initData' }}
                 <script type="text/javascript">
                     var editReturnRequest = function(id) {
-                        var url = '{% route GetReturnRequest ReturnRequestId="request_id" %}';
+                        var url = '{% route Admin.GetReturnRequest ReturnRequestId="request_id" %}';
                         url = url.replace("request_id", id);
                         navigate(url);
                     }
@@ -47,7 +47,7 @@
                             },
                             method: "GET",
                             navigation: 3,
-                            url: '{% route api_ReturnRequestsList %}',
+                            url: '{% route api_Admin.ReturnRequestsList %}',
                             data: function() {
                                 return searchParams;
                             },

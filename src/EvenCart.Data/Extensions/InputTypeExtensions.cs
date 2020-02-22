@@ -1,5 +1,4 @@
-﻿using System;
-using EvenCart.Data.Enum;
+﻿using EvenCart.Data.Enum;
 
 namespace EvenCart.Data.Extensions
 {

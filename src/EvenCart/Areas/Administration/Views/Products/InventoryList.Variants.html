@@ -36,7 +36,7 @@
             }
         </script>
         {% for warehouse in warehouses %}
-        <form action='{% route api_SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form-{{warehouse.value}}">
+        <form action='{% route api_Admin.SaveInventory productId="{{productId}}" %}' method="post" id="inventory-form-{{warehouse.value}}">
             {% control xsrf %}
             <div class="panel" {% unless warehouse.selected %}style="display: none" {%endunless%} id="inventory-panel-{{warehouse.value}}">
                 <div class="panel-title">
@@ -68,7 +68,7 @@
                                 },
                                 method: "GET",
                                 responseObject: "variants",
-                                url: '{% route api_InventoryList productId="{{productId}}" %}',
+                                url: '{% route api_Admin.InventoryList productId="{{productId}}" %}',
                                 selection: false,
                                 navigation: 0,
                                 columnSelection: false,

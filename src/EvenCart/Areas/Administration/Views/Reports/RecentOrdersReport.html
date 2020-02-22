@@ -12,10 +12,10 @@
     {% for order in orders %}
         <tr>
             <td>
-                <a href='{% route GetOrder orderId="{{order.id}}" %}'>{{order.orderNumber}}</a>
+                <a href='{% route Admin.GetOrder orderId="{{order.id}}" %}'>{{order.orderNumber}}</a>
             </td>
             <td>
-                <a href='{% route GetUser userId="{{order.user.id}}" %}'>{{order.user.name}}</a>
+                <a href='{% route Admin.GetUser userId="{{order.user.id}}" %}'>{{order.user.name}}</a>
             </td>
             <td>
                 {{order.orderStatus}}

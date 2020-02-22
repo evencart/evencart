@@ -4,8 +4,6 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {
@@ -51,7 +49,6 @@ namespace EvenCart.Areas.Administration.Factories.Orders
         {
             var groupedByWarehouse = inventories.GroupBy(x => x.Warehouse);
             var models = new List<OrderFulfillmentEditorModel>();
-            var orderItems = entity.Select(x => x.OrderItem).Distinct().ToList();
             foreach (var groupItem in groupedByWarehouse)
             {
                 var warehouse = groupItem.Key;
@@ -59,26 +56,33 @@ namespace EvenCart.Areas.Administration.Factories.Orders
                 var model = new OrderFulfillmentEditorModel()
                 {
                     Warehouse = _warehouseModelFactory.Create(warehouse),
-                    OrderItems = orderItems.Select(x =>
+                    OrderItems = entity.Select(x =>
                     {
-                        var availableQuantity = x.ProductVariantId > 0
-                            ? wInventories.FirstOrDefault(y => y.ProductVariantId == x.ProductVariantId)
-                                  ?.AvailableQuantity ?? 0
-                            : wInventories.FirstOrDefault(y => y.ProductId == x.ProductVariantId)?.AvailableQuantity ??
-                              0;
-
+                        var orderItem = x.OrderItem;
                         var orderItemModel = new OrderFulfillmentEditorModel.OrderItemFulfillmentModel()
                         {
-                            OrderItem = _orderModelFactory.Create(x),
-                            AvailableQuantity = availableQuantity,
-                            CurrentQuantity = entity.FirstOrDefault(y => y.WarehouseId == warehouse.Id && y.OrderItemId == x.Id)?.Quantity ?? 0
+                            OrderItem = _orderModelFactory.Create(orderItem),
+                            AvailableQuantity = 0,
+                            CurrentQuantity = x.Quantity,
+                            Locked = x.Locked
                         };
+
+                        if (x.Locked)
+                            return orderItemModel;
+
+                        var availableQuantity = orderItem.ProductVariantId > 0
+                            ? wInventories.FirstOrDefault(y => y.ProductVariantId == orderItem.ProductVariantId)
+                                  ?.AvailableQuantity ?? 0
+                            : wInventories.FirstOrDefault(y => y.ProductId == orderItem.ProductId)?.AvailableQuantity ??
+                              0;
+                        orderItemModel.AvailableQuantity = availableQuantity;
+                        orderItemModel.CurrentQuantity = x.Quantity;
                         if (orderItemModel.CurrentQuantity > 0 && orderItemModel.AvailableQuantity > 0)
                         {
                             orderItemModel.AvailableQuantity += orderItemModel.CurrentQuantity;
                         }
                         return orderItemModel;
-                    }).Where(x => true || x.AvailableQuantity > 0).ToList() //filter out warehouses with no availability at all
+                    }).ToList()                    
                 };
                 models.Add(model);
             }

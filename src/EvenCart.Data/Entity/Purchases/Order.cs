@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 
 namespace EvenCart.Data.Entity.Purchases

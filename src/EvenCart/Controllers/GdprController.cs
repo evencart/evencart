@@ -10,7 +10,6 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Models.Gdpr;
-using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

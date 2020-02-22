@@ -1,7 +1,7 @@
 ﻿{% layout "_Layout"%}
 {% global page_title=@t"Addresses" active_menu="GetAddress" parent_active_menu="UsersList" menu_group="AddressEdit" %}
 
-<form action="{% route api_SaveAddress %}" method="post" id="edit-address-form">
+<form action="{% route api_Admin.SaveAddress %}" method="post" id="edit-address-form">
     {% control xsrf %}
     <div class="panel">
         <div class="panel-title">
@@ -31,8 +31,17 @@
                     </div>
                     <div class="form-group">
                         {% control label text=@t"State or Province" for="state" %}
-                        {% control select id="state" value="address.stateOrProvinceId" items="items" %}
+                        {% control select id="state" name="stateProvinceId" value="address.stateProvinceId" items="items" %}
                     </div>
+                    <div class="form-group" id="other-state-container">
+                        {% control label text=@t"State or Province" for="state" %}
+                        {% control text name="stateProvinceName" value="{{address.stateProvinceName}}" %}
+                    </div>
+                    <script type="text/javascript">
+                                ready(function () {
+                                    initCountryState("country", "state", "other-state-container", "{{address.stateProvinceId}}");
+                                });
+                    </script>
                     <div class="form-group">
                         {% control label text=@t"City" for="city" %}
                         {% control text id="city" name="city" value="{{address.city}}" %}
@@ -75,14 +84,14 @@
         initAjaxForm("edit-address-form",
             {
                 onSuccess: function() {
-                    
+
                     notify("success", '{{"Address was saved successfully" | t}}');
                     setTimeout(function() {
-                            navigate('{% route AddressList userId="{{userId}}" %}');
+                            navigate('{% route Admin.AddressList userId="{{userId}}" %}');
                         },
                         1000);
                 }
             });
     });
- 
+
 </script>

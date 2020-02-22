@@ -29,7 +29,7 @@
                                 rowCount: parseInt("{{rowCount}}")
                             },
                             method: "GET",
-                            url: '{% route api_ManufacturersList %}',
+                            url: '{% route api_Admin.ManufacturersList %}',
                             responseObject: "manufacturers",
                             selection: false,
                             navigation: 3,
@@ -74,7 +74,7 @@
                     notify("success", '{{"Manufacturer was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetManufacturer manufacturerId="?" %}'.replaceAll("?", id);
+        var url = '{% route Admin.GetManufacturer manufacturerId="?" %}'.replaceAll("?", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -89,7 +89,7 @@
         confirm(msg,
             function() {
                 post({
-                    url: "{% route api_DeleteManufacturer %}",
+                    url: "{% route api_Admin.DeleteManufacturer %}",
                     data: {
                       manufacturerId: id
                     },

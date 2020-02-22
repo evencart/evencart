@@ -40,7 +40,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_ReviewsList countryId="{{countryId}}" %}',
+                            url: '{% route api_Admin.ReviewsList countryId="{{countryId}}" %}',
                             responseObject: "reviews",
                             formatters: {
                                 "binary": function(column, row) {
@@ -49,7 +49,7 @@
                                 "product": function(column, row) {
                                     var productName = row.productName;
                                     var productUrl =
-                                        '{% route GetProduct productId="%id%" %}'.replace("%id%", row.productId);
+                                        '{% route Admin.GetProduct productId="%id%" %}'.replace("%id%", row.productId);
                                     return "<a href='" + productUrl + "'>" + productName + "</a>";
                                 },
                                 "review": function(column, row) {
@@ -58,7 +58,7 @@
                                     html += "<div style='white-space: pre-wrap;'>" + row.description + "</div>";
                                     if (row.userId > 0) {
                                         html += "<div>";
-                                        var userUrl = '{% route GetUser userId="%id%" %}'.replace("%id%", row.userId);
+                                        var userUrl = '{% route Admin.GetUser userId="%id%" %}'.replace("%id%", row.userId);
                                         html += "{{'Posted by' | t}} : ";
                                         html += "<a href='" + userUrl + "'>" + row.userName + "</a>";
                                         html += "</div>";
@@ -119,7 +119,7 @@
                     notify("success", '{{"Review was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetReview reviewId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetReview reviewId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
@@ -131,7 +131,7 @@
     var deleteReview = function(id) {
         confirm('{{"Are you sure you wish to delete this review?" | t}}',
             function() {
-                var url = '{% route api_DeleteReview %}';
+                var url = '{% route api_Admin.DeleteReview %}';
                 post({
                     url: url,
                     data: {
