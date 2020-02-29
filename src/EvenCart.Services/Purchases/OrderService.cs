@@ -218,7 +218,7 @@ namespace EvenCart.Services.Purchases
                 orderStatusCounts.Add(status, 0);
             }
 
-            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} GROUP BY OrderStatus WHERE StoreId=@storeId", new { storeId = storeId }))
+            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} WHERE StoreId=@storeId GROUP BY OrderStatus", new { storeId = storeId }))
             {
                 var totals = result.SelectAllAs<OrderStatusTotal>().ToList();
                 foreach (var t in totals)
