@@ -7,20 +7,22 @@ namespace EvenCart.Services.Settings
 {
     public interface ISettingService : IFoundationEntityService<Setting>
     {
-        Setting Get<T>(string keyName) where T : ISettingGroup;
+        Setting Get<T>(string keyName, int storeId) where T : ISettingGroup;
 
-        void Save<T>(string keyName, string keyValue) where T : ISettingGroup;
+        void Save<T>(string keyName, string keyValue, int storeId) where T : ISettingGroup;
 
-        void Save<T>(T settings) where T: ISettingGroup;
+        void Save<T>(T settings, int storeId) where T: ISettingGroup;
 
-        void Save(Type settingType, object settings);
+        void Save(Type settingType, object settings, int storeId);
 
-        void Save(Type settingType, string keyName, string keyValue);
+        void Save(Type settingType, string keyName, string keyValue, int storeId);
 
-        T GetSettings<T>() where T : ISettingGroup;
+        T GetSettings<T>(int storeId) where T : ISettingGroup;
 
-        void LoadSettings<T>(T settingsObject) where T : ISettingGroup;
+        object GetSettings(Type settingType, int storeId);
 
-        void DeleteSettings<T>() where T : ISettingGroup;
+        void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup;
+
+        void DeleteSettings<T>(int storeId) where T : ISettingGroup;
     }
 }

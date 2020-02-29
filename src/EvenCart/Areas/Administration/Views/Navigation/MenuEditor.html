@@ -14,6 +14,13 @@
                         {% control label text=@t"Name" for="name" %}
                         {% control text name="name" value="{{menu.name}}" %}
                     </div>
+                    <div class="form-group">
+                        {% control label text=@t"Available in stores" for="name" %}
+                        <div class="panel-help">
+                            {{"Select the stores in which this menu is available."}}
+                        </div>
+                        {% partial "Stores/AvailableStoresSelector" %}
+                    </div>
                 </div>
             </div>
         </div>

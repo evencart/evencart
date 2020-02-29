@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Core.Data;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 
 namespace EvenCart.Data.Entity.Pages
 {
-    public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>
+    public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>, IStoreEntity
     {
         public string Name { get; set; }
 
@@ -39,7 +40,10 @@ namespace EvenCart.Data.Entity.Pages
         public virtual ContentPage Parent { get; set; }
         
         public virtual IList<ContentPage> Children { get; set; }
+
+        public virtual IList<int> StoreIds { get; set; }
+
+        public virtual IList<Store> Stores { get; set; }
         #endregion
-       
     }
 }

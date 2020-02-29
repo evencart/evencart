@@ -1,4 +1,5 @@
-﻿using EvenCart.Data.Entity.Users;
+﻿using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Infrastructure.Mvc
@@ -10,5 +11,7 @@ namespace EvenCart.Infrastructure.Mvc
         public CustomResponse R => CustomResponse.ComponentResponse(this);
 
         public User CurrentUser => ApplicationEngine.CurrentUser;
+
+        protected Store CurrentStore => ApplicationEngine.CurrentStore;
     }
 }

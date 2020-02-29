@@ -42,6 +42,10 @@ namespace EvenCart.Infrastructure.Extensions
             {
                 //initialize database
                 DatabaseManager.InitDatabase(dbSettings);
+
+                //upgrade to latest version without plugins
+                DatabaseManager.UpgradeDatabase(true);
+
             }
         }
 
@@ -139,11 +143,13 @@ namespace EvenCart.Infrastructure.Extensions
             //use lowercase urls
             services.AddRouting(options => options.LowercaseUrls = true);
         }
-        public static void AddGlobalSingletons(this IServiceCollection services)
+        public static void AddGlobalSingletons(this IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
-            //add httpcontext accessor
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            if (!ApplicationEngine.IsTestEnv(hostingEnvironment))
+            {
+                //add httpcontext accessor
+                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            }
             //add action context
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 

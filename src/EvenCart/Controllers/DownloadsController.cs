@@ -37,7 +37,7 @@ namespace EvenCart.Controllers
             if (download.RequirePurchase)
             {
                 //find the orders of the user
-                var orders = _orderService.GetOrders(out _, userId: CurrentUser.Id,
+                var orders = _orderService.GetOrders(out _, userId: CurrentUser.Id, storeId: CurrentStore.Id,
                     productIds: new List<int>() {download.ProductId},
                     paymentStatus: new List<PaymentStatus>() {PaymentStatus.Complete}).ToList();
                 if (!orders.Any())

@@ -85,12 +85,13 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
         {
             var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
             var lastModified = localFileProvider.GetLastModifiedDateTime(fileName);
-            if (!ReadFileCache.TryGetValue(fileName, out ReadFile readFile) || readFile.IsModified())
+            var cacheKey = fileName + ApplicationEngine.CurrentStore.Id;
+            if (!ReadFileCache.TryGetValue(cacheKey, out ReadFile readFile) || readFile.IsModified())
             {
                 if (readFile == null)
                 {
                     readFile = new ReadFile();
-                    ReadFileCache.TryAdd(fileName, readFile);
+                    ReadFileCache.TryAdd(cacheKey, readFile);
                 }
                 
                 readFile.Content = localFileProvider.ReadAllText(fileName);

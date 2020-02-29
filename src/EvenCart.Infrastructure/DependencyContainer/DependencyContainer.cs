@@ -166,7 +166,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 .Where(type => type.GetInterfaces()
                     .Any(x => x.IsAssignableTo(typeof(IFoundationEvent))));// which implementing some interface(s)
             //all consumers which are not interfaces
-            registrar.RegisterMany(allConsumerTypes, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
+            registrar.RegisterMany(allConsumerTypes);
 
             //components
             //find all event consumer types
@@ -182,10 +182,10 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 var type = settingType;
                 registrar.RegisterDelegate(type, resolver =>
                 {
-                    var instance = (ISettingGroup)Activator.CreateInstance(type);
-                    resolver.Resolve<ISettingService>().LoadSettings(instance);
-                    return instance;
-                }, reuse: Reuse.Singleton);
+                    var storeId = ApplicationEngine.CurrentStore?.Id ?? 0;
+                    return resolver.Resolve<ISettingService>().GetSettings(type, storeId);
+                 
+                }, reuse: Reuse.Transient);
 
             }
 

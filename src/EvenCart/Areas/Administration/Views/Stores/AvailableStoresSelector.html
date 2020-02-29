@@ -1,0 +1,7 @@
+﻿{% for store in availableStores %}
+<div>
+    <label>
+        <input type="checkbox" name="storeIds[]" value="{{store.value}}" {% if store.selected %}checked{% endif %} /> {{store.text}}
+    </label>
+</div>
+{% endfor %}

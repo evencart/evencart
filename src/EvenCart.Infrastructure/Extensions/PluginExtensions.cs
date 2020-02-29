@@ -12,7 +12,6 @@ using EvenCart.Services.Settings;
 using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Newtonsoft.Json;
 
 namespace EvenCart.Infrastructure.Extensions
@@ -37,7 +36,7 @@ namespace EvenCart.Infrastructure.Extensions
             if (save)
             {
                 var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(pluginSettings);
+                settingService.Save(pluginSettings, 0);
             }
         }
 
@@ -54,8 +53,17 @@ namespace EvenCart.Infrastructure.Extensions
                 };
                 pluginStatus.Add(ps);
             }
-            ps.Active = active;
             ps.Installed = installed;
+            var storeId = ApplicationEngine.CurrentStore.Id;
+            if (active)
+            {
+                if (!ps.ActiveStoreIds.Contains(storeId))
+                    ps.ActiveStoreIds.Add(storeId);
+            }
+            else
+            {
+                ps.ActiveStoreIds.Remove(storeId);
+            }
             pluginSettings.SetSitePlugins(pluginStatus, true);
         }
 
@@ -64,12 +72,12 @@ namespace EvenCart.Infrastructure.Extensions
             var siteWidgets = pluginSettings.SiteWidgets;
             if (siteWidgets.IsNullEmptyOrWhiteSpace())
                 return new List<WidgetStatus>();
-
+            var storeId = ApplicationEngine.CurrentStore.Id;
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
-            var widgets = dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets);
+            var widgets = dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets).Where(x => x.StoreId == storeId);
             if (activeOnly)
             {
-                var sitePlugins = pluginSettings.GetSitePlugins().Where(x => x.Active).Select(x => x.PluginSystemName);
+                var sitePlugins = pluginSettings.GetSitePlugins().Where(x => x.ActiveStoreIds.Contains(storeId)).Select(x => x.PluginSystemName);
                 widgets = widgets.Where(x => x.PluginSystemName == ApplicationConfig.InbuiltWidgetPluginName || sitePlugins.Contains(x.PluginSystemName)).ToList();
             }
             return widgets.OrderBy(x => x.DisplayOrder).ToList();
@@ -87,7 +95,8 @@ namespace EvenCart.Infrastructure.Extensions
                 PluginSystemName = pluginSystemName,
                 ZoneName = zoneName,
                 DisplayOrder = zoneWidgetCount,
-                Id = widgetId
+                Id = widgetId,
+                StoreId = ApplicationEngine.CurrentStore.Id
             });
 
             pluginSettings.SaveWidgets(siteWidgets, true);
@@ -102,7 +111,7 @@ namespace EvenCart.Infrastructure.Extensions
             if (save)
             {
                 var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(pluginSettings);
+                settingService.Save(pluginSettings, ApplicationEngine.CurrentStore.Id);
             }
         }
 
@@ -138,7 +147,7 @@ namespace EvenCart.Infrastructure.Extensions
             {
                 var ps = pluginStatus.FirstOrDefault(x => x.PluginSystemName == pluginInfo.SystemName);
                 pluginInfo.Installed = ps?.Installed ?? false;
-                pluginInfo.Active = ps?.Active ?? false;
+                pluginInfo.ActiveStoreIds = ps?.ActiveStoreIds ?? new List<int>();
             }
 
             return pluginInfos;

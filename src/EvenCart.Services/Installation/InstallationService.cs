@@ -50,9 +50,12 @@ namespace EvenCart.Services.Installation
             DatabaseManager.UpgradeDatabase(true);
         }
 
-
+        private Store primaryStore;
         public void FillRequiredSeedData(string defaultUserEmail, string defaultUserPassword, string installDomain, string storeName)
         {
+            //first create the store
+            primaryStore = CreateStore(storeName);
+
             //first the settings
             SeedSettings(installDomain, storeName);
 
@@ -136,6 +139,17 @@ namespace EvenCart.Services.Installation
                 _logger.Log<InstallationService>(LogLevel.Error, ex.Message, ex);
                 return false;
             }
+        }
+
+        private Store CreateStore(string storeName)
+        {
+            var storeService = DependencyResolver.Resolve<IStoreService>();
+            var store = new Store()
+            {
+                Name = storeName
+            };
+            storeService.Insert(store);
+            return store;
         }
 
         private void SeedCountries()
@@ -355,19 +369,19 @@ namespace EvenCart.Services.Installation
                 LogoId = 0,
                 PrimaryNavigationId = 0,
                 ActiveTheme = "Default"
-            });
+            }, primaryStore.Id);
 
             //media settings
             settingService.Save(new MediaSettings()
             {
 
-            });
+            }, primaryStore.Id);
 
             //vendor settings
             settingService.Save(new VendorSettings()
             {
                 EnableVendorSignup = true
-            });
+            }, primaryStore.Id);
 
 
 
@@ -386,7 +400,7 @@ namespace EvenCart.Services.Installation
                     OrderStatus.OnHold.ToString(),
                     OrderStatus.Delayed.ToString()
                 }
-            });
+            }, primaryStore.Id);
             //tax settings
             settingService.Save(new TaxSettings()
             {
@@ -396,7 +410,7 @@ namespace EvenCart.Services.Installation
                 PricesIncludeTax = true,
                 ShippingPricesIncludeTax = true,
                 ShippingTaxId = null
-            });
+            }, primaryStore.Id);
 
 
             //system settings
@@ -406,7 +420,7 @@ namespace EvenCart.Services.Installation
                 MinimumLogLevel = LogLevel.Debug,
                 LatestFetchedOn = DateTime.UtcNow.AddHours(-24),
                 LatestUpdatesFetched = null
-            });
+            }, primaryStore.Id);
 
             //security settings
             settingService.Save(new SecuritySettings()
@@ -416,7 +430,7 @@ namespace EvenCart.Services.Installation
                 EmailVerificationCodeExpirationMinutes = 5,
                 EmailVerificationLinkExpirationHours = 24,
                 InviteLinkExpirationHours = 48
-            });
+            }, primaryStore.Id);
 
             //user settings
             settingService.Save(new UserSettings()
@@ -425,7 +439,7 @@ namespace EvenCart.Services.Installation
                 AreUserNamesEnabled = true,
                 AreProfilePicturesEnabled = true,
                 ActivateUserForConnectedAccount = true
-            });
+            }, primaryStore.Id);
 
             //email sender settings
             settingService.Save(new EmailSenderSettings()
@@ -447,7 +461,7 @@ namespace EvenCart.Services.Installation
                 ShipmentDeliveredEmailToAdminEnabled = true,
                 ShipmentShippedEmailEnabled = true,
                 DefaultEmailAccountId = 1
-            });
+            }, primaryStore.Id);
 
             //url settings
             settingService.Save(new UrlSettings()
@@ -455,7 +469,7 @@ namespace EvenCart.Services.Installation
                 CategoryUrlTemplate = "/c/{CategoryPath}/{SeName}",
                 ProductUrlTemplate = "/product/{SeName}",
                 ContentPageUrlTemplate = "/{SeName}"
-            });
+            }, primaryStore.Id);
 
             //catalog settings
             settingService.Save(new CatalogSettings()
@@ -472,7 +486,7 @@ namespace EvenCart.Services.Installation
                 DisplayProductsFromChildCategories = true,
                 CatalogPaginationType = CatalogPaginationType.Numbered,
                 NumberOfProductsPerPage = 15
-            });
+            }, primaryStore.Id);
 
             //tax
             settingService.Save(new TaxSettings()
@@ -483,13 +497,13 @@ namespace EvenCart.Services.Installation
                 DisplayProductPricesWithoutTax = false,
                 PricesIncludeTax = true,
                 ShippingPricesIncludeTax = true
-            });
+            }, primaryStore.Id);
 
             settingService.Save(new LocalizationSettings()
             {
                 AllowUserToSelectCurrency = true,
                 AllowUserToSelectLanguage = false,
-            });
+            }, primaryStore.Id);
 
             settingService.Save(new EmailSenderSettings()
             {
@@ -512,13 +526,13 @@ namespace EvenCart.Services.Installation
                 UserDeletedEmailToAdminEnabled = true,
                 UserRegisteredEmailEnabled = true,
                 UserRegisteredEmailToAdminEnabled = true
-            });
+            }, primaryStore.Id);
 
             settingService.Save(new PluginSettings()
             {
                 SitePlugins = "[]",
                 SiteWidgets = "[]"
-            });
+            }, primaryStore.Id);
 
             settingService.Save(new AffiliateSettings()
             {
@@ -534,7 +548,7 @@ namespace EvenCart.Services.Installation
                 SignupCreditToAffiliate = 0,
                 SignupCreditToNewUser = 0,
                 UseCommissionPercentage = true
-            });
+            }, primaryStore.Id);
         }
 
         private void SeedNotificationEvents()

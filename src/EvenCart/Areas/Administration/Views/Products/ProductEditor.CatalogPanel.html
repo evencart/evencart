@@ -1,0 +1,17 @@
+﻿<div class="panel">
+    <div class="panel-title">
+        {{"Available in Catalogs" | t}}
+    </div>
+    <div class="panel-body">
+        <div class="panel-help">
+            {{"Select the catalogs in which this product is available" | t}}
+        </div>
+        {% for catalog in product.catalogs %}
+        <div>
+            <label>
+                <input type="checkbox" name="CatalogIds[]" value="{{catalog.value}}" {% if catalog.selected %}checked{% endif %} /> {{catalog.text}}
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+</div>

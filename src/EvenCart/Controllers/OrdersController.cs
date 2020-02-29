@@ -154,7 +154,7 @@ namespace EvenCart.Controllers
                     break;//do nothing we'll show all orders by default
             }
 
-            var orders = _orderService.GetOrders(out int totalResults, userId: CurrentUser.Id, startDate: searchModel.FromDate, endDate: searchModel.ToDate,
+            var orders = _orderService.GetOrders(out int totalResults, userId: CurrentUser.Id, storeId: CurrentStore.Id, startDate: searchModel.FromDate, endDate: searchModel.ToDate,
                 orderStatus: orderStatus, page: searchModel.Current, count: searchModel.RowCount);
             var orderModels = orders.Select(x => _orderModelFactory.Create(x)).ToList();
 

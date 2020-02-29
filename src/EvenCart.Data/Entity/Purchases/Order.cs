@@ -80,6 +80,8 @@ namespace EvenCart.Data.Entity.Purchases
 
         public decimal StoreCreditAmount { get; set; }
 
+        public int StoreId { get; set; }
+
         #region Virtual Properties
 
         public virtual User User { get; set; }

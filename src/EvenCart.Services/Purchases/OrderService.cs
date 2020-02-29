@@ -32,13 +32,17 @@ namespace EvenCart.Services.Purchases
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Order> GetOrders(out int totalResults, string productName = null, int? userId = null, IList<int> orderIds = null, IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = int.MaxValue)
+        public IEnumerable<Order> GetOrders(out int totalResults, string productName = null, int? userId = null, int? storeId = null, IList<int> orderIds = null, IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = int.MaxValue)
         {
             var query = Repository;
             //check one by one for each filter
             if (userId.HasValue)
             {
                 query = query.Where(x => x.UserId == userId);
+            }
+            if (storeId.HasValue)
+            {
+                query = query.Where(x => x.StoreId == storeId);
             }
             if (orderIds != null && orderIds.Any())
             {
@@ -108,7 +112,7 @@ namespace EvenCart.Services.Purchases
             return orders;
         }
 
-        public IEnumerable<Order> GetOrdersMinimal(out int totalResults, string productName = null, int? userId = null, IList<int> orderIds = null,
+        public IEnumerable<Order> GetOrdersMinimal(out int totalResults, string productName = null, int? userId = null, int? storeId = null, IList<int> orderIds = null,
             IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null,
             DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = Int32.MaxValue)
         {
@@ -117,6 +121,10 @@ namespace EvenCart.Services.Purchases
             if (userId.HasValue)
             {
                 query = query.Where(x => x.UserId == userId);
+            }
+            if(storeId.HasValue)
+            {
+                query = query.Where(x => x.StoreId == storeId);
             }
             if (orderIds != null && orderIds.Any())
             {
@@ -200,7 +208,7 @@ namespace EvenCart.Services.Purchases
                 .FirstOrDefault();
         }
 
-        public Dictionary<OrderStatus, int> GetOrderCountsByStatus()
+        public Dictionary<OrderStatus, int> GetOrderCountsByStatus(int? storeId = null)
         {
             var tableName = DotEntityDb.GetTableNameForType<Order>();
             var enclosedTableName = DotEntityDb.Provider.SafeEnclose(tableName);
@@ -209,7 +217,8 @@ namespace EvenCart.Services.Purchases
             {
                 orderStatusCounts.Add(status, 0);
             }
-            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} GROUP BY OrderStatus", null))
+
+            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} GROUP BY OrderStatus WHERE StoreId=@storeId", new { storeId = storeId }))
             {
                 var totals = result.SelectAllAs<OrderStatusTotal>().ToList();
                 foreach (var t in totals)

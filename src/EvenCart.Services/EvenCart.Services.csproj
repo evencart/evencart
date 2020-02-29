@@ -28,6 +28,8 @@
     <Compile Remove="Captures\ShipmentItemCapture.cs" />
     <Compile Remove="Extensions\ExtraFieldExtensions.cs" />
     <Compile Remove="Logger\RollingFileLogger.cs" />
+    <Compile Remove="Products\IStoreCatalogService.cs" />
+    <Compile Remove="Products\StoreCatalogService.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Services.Events;
 using EvenCart.Core.Services.Interceptor;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
@@ -43,6 +44,8 @@ namespace EvenCart.Infrastructure.Mvc
         public CustomResponse R => CustomResponse.Response(this);
 
         protected User CurrentUser => ApplicationEngine.CurrentUser;
+
+        protected Store CurrentStore => ApplicationEngine.CurrentStore;
 
         /// <summary>
         /// Raises a named event so other services and plugins can capture

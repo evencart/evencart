@@ -78,7 +78,7 @@ namespace EvenCart.Controllers
             if (id < 1)
                 return NotFound();
             var product = _productService.Get(id);
-            if (!product.IsPublic() && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
+            if (!product.IsPublic(CurrentStore.Id) && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
                 return NotFound();
             //is the product restricted to roles
             if (product.RestrictedToRoles)
@@ -271,6 +271,7 @@ namespace EvenCart.Controllers
                 searchText: searchModel.Search,
                 filterExpression: searchModel.Filters,
                 published: true,
+                storeId: CurrentStore.Id,
                 tags: searchModel.Tags,
                 vendorIds: searchModel.VendorIds,
                 manufacturerIds: searchModel.ManufacturerIds,
@@ -320,7 +321,7 @@ namespace EvenCart.Controllers
             if (uploadFileModel.ProductId < 1)
                 return NotFound();
             var product = _productService.Get(uploadFileModel.ProductId);
-            if (!product.IsPublic() && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
+            if (!product.IsPublic(CurrentStore.Id) && !CurrentUser.Can(CapabilitySystemNames.EditProduct))
                 return NotFound();
 
             if (product.ProductAttributes.All(x => x.InputFieldType != InputFieldType.FileUpload))

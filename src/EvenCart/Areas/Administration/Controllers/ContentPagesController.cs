@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.Pages;
@@ -72,10 +73,11 @@ namespace EvenCart.Areas.Administration.Controllers
             var contentPageModels =
                 SelectListHelper.GetSelectItemListWithAction(availablePages, x => x.Id, x => x.GetNameBreadCrumb())
                     .OrderBy(x => x.Text).ToList();
-
-
+            var storeIds = contentPage.Stores?.Select(x => x.Id).ToList();
+            model.StoreIds = storeIds;
             return R.Success.With("contentPage", model)
                 .With("availablePages", contentPageModels)
+                .WithAvailableStores(storeIds)
                 .WithActiveThemeTemplates()
                 .Result;
         }
@@ -102,6 +104,7 @@ namespace EvenCart.Areas.Administration.Controllers
             }
             contentPage.UpdatedOn = DateTime.UtcNow;
             contentPage.ParentId = model.ParentId;
+            contentPage.StoreIds = model.StoreIds;
             _contentPageService.InsertOrUpdate(contentPage);
 
             //update the seometa

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Areas.Administration.Models.Catalog;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Data.Entity.Shop;
@@ -113,6 +114,10 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public IList<SelectListItem> RestrictedToRoles { get; set; }
 
         public IList<string> Tags { get; set; }
+
+        public IList<SelectListItem> Catalogs { get; set; }
+
+        public IList<int> CatalogIds { get; set; }
 
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {

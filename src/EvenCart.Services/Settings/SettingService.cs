@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
 using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
@@ -12,12 +13,14 @@ namespace EvenCart.Services.Settings
     public class SettingService : FoundationEntityService<Setting>, ISettingService
     {
         private readonly IDataSerializer _dataSerializer;
-        public SettingService(IDataSerializer dataSerializer)
+        private readonly ICacheProvider _cacheProvider;
+        public SettingService(IDataSerializer dataSerializer, ICacheProvider cacheProvider)
         {
             _dataSerializer = dataSerializer;
+            _cacheProvider = cacheProvider;
         }
 
-        public Setting Get<T>(string keyName) where T : ISettingGroup
+        public Setting Get<T>(string keyName, int storeId) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
             var settings = Repository.Where(x => x.Key == keyName);
@@ -27,18 +30,19 @@ namespace EvenCart.Services.Settings
             return settings.SelectSingle();
         }
 
-        public void Save<T>(string keyName, string keyValue) where T : ISettingGroup
+        public void Save<T>(string keyName, string keyValue, int storeId) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
 
             //check if setting exist
-            var setting = Get<T>(keyName);
+            var setting = Get<T>(keyName, storeId);
             if (setting == null)
             {
                 setting = new Setting() {
                     GroupName = groupName,
                     Key = keyName,
-                    Value = keyValue
+                    Value = keyValue,
+                    StoreId = storeId
                 };
                 Insert(setting);
             }
@@ -49,7 +53,7 @@ namespace EvenCart.Services.Settings
             }
         }
 
-        public void Save<T>(T settings) where T : ISettingGroup
+        public void Save<T>(T settings, int storeId) where T : ISettingGroup
         {
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = typeof(T).GetProperties();
@@ -67,11 +71,11 @@ namespace EvenCart.Services.Settings
                     value = valueObj != null ? valueObj.ToString() : "";
                 }
                 //save the property
-                Save<T>(propertyName, value);
+                Save<T>(propertyName, value, storeId);
             }
         }
 
-        public void Save(Type settingType, object settings)
+        public void Save(Type settingType, object settings, int storeId)
         {
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingType.GetProperties();
@@ -89,11 +93,11 @@ namespace EvenCart.Services.Settings
                     value = valueObj != null ? valueObj.ToString() : "";
                 }
                 //save the property
-                Save(settingType, propertyName, value);
+                Save(settingType, propertyName, value, storeId);
             }
         }
 
-        public void Save(Type settingType, string keyName, string keyValue)
+        public void Save(Type settingType, string keyName, string keyValue, int storeId)
         {
             var groupName = settingType.Name;
 
@@ -104,7 +108,8 @@ namespace EvenCart.Services.Settings
                 setting = new Setting() {
                     GroupName = groupName,
                     Key = keyName,
-                    Value = keyValue
+                    Value = keyValue,
+                    StoreId = storeId
                 };
                 Insert(setting);
             }
@@ -115,33 +120,44 @@ namespace EvenCart.Services.Settings
             }
         }
 
-        public T GetSettings<T>() where T : ISettingGroup
+        public T GetSettings<T>(int storeId) where T : ISettingGroup
         {
-            //create a new settings object
-            var settingsObj = Activator.CreateInstance<T>();
-
-            FurnishInstance(settingsObj);
-
-            return settingsObj;
+            return (T) GetSettings(typeof(T), storeId);
         }
 
-        public void LoadSettings<T>(T settingsObject) where T : ISettingGroup
+        public object GetSettings(Type settingType, int storeId)
         {
-            FurnishInstance(settingsObject);
+            if (typeof(IGlobalSettingGroup).IsAssignableFrom(settingType))
+                storeId = 0; //no matter what storeId is , if it's global setting, it's 0
+
+            var settingCacheKey = $"{settingType.FullName}-{storeId}";
+            return _cacheProvider.Get(settingCacheKey, () =>
+            {
+                //create a new settings object
+                var settingsObj = Activator.CreateInstance(settingType);
+                FurnishInstance(settingsObj, storeId);
+
+                return settingsObj;
+            }, int.MaxValue);
         }
 
-        public void DeleteSettings<T>() where T : ISettingGroup
+        public void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup
+        {
+            FurnishInstance(settingsObject, storeId);
+        }
+
+        public void DeleteSettings<T>(int storeId) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
-            Delete(x => x.GroupName == groupName);
+            Delete(x => x.GroupName == groupName && x.StoreId == storeId);
         }
 
-        private void FurnishInstance<T>(T settingsInstance) where T : ISettingGroup
+        private void FurnishInstance(object settingsInstance, int storeId)
         {
             var settingInstanceType = settingsInstance.GetType();
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingInstanceType.GetProperties();
-            var allSettings = Repository.Where(x => x.GroupName == settingInstanceType.Name).Select().ToList();
+            var allSettings = Repository.Where(x => x.GroupName == settingInstanceType.Name && x.StoreId == storeId).Select().ToList();
             foreach (var property in propertyFields)
             {
                 var propertyName = property.Name;

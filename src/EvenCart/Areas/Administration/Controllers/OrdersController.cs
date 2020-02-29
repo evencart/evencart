@@ -102,7 +102,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             searchModel = searchModel ?? new OrderSearchModel();
 
-            var orders = _orderService.GetOrdersMinimal(out int totalResults, searchModel.SearchPhrase, searchModel.UserId, searchModel.OrderIds, searchModel.ProductIds,
+            var orders = _orderService.GetOrdersMinimal(out int totalResults, searchModel.SearchPhrase, searchModel.UserId, CurrentStore.Id, searchModel.OrderIds, searchModel.ProductIds,
                 searchModel.OrderStatus, searchModel.PaymentStatus, searchModel.VendorIds, searchModel.FromDate,
                 searchModel.ToDate, searchModel.Current, searchModel.RowCount);
 

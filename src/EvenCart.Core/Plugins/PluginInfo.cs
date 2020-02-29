@@ -37,7 +37,10 @@ namespace EvenCart.Core.Plugins
 
         public bool Installed { get; set; }
 
+        [Obsolete("Use ActiveStoreIds instead", true)]
         public bool Active { get; set; }
+
+        public IList<int> ActiveStoreIds { get; set; }
 
         public bool Dirty { get; set; }
 
@@ -50,16 +53,6 @@ namespace EvenCart.Core.Plugins
         public IDependencyContainer DependencyContainer { get; set; }
 
         public string ConfigurationUrl => LoadPluginInstance<IPlugin>()?.ConfigurationUrl;
-
-        public static PluginInfo Load(string fileName)
-        {
-            return PluginConfigurator.LoadModuleInfo(fileName);
-        }
-
-        public static PluginInfo Load(IPlugin module)
-        {
-            return PluginConfigurator.LoadModuleInfo(module);
-        }
 
         public T LoadPluginInstance<T>() where T : class, IPlugin
         {

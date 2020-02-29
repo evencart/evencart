@@ -16,7 +16,8 @@ namespace EvenCart.Services.Products
             out Dictionary<string, List<string>> availableFilters, 
             string searchText = null,
             string filterExpression = null,
-            bool? published = true, IList<string> tags = null, IList<int> manufacturerIds = null, IList<int> vendorIds = null,
+            bool? published = true, int? storeId = null, IList<string> tags = null, IList<int> manufacturerIds = null, IList<int> vendorIds = null,
+            IList<int> catalogIds = null,
             IList<int> categoryids = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null, decimal? toPrice = null,
             Expression<Func<Product, object>> orderByExpression = null, SortOrder sortOrder = SortOrder.Descending,
             int page = 1, int count = int.MaxValue);
@@ -44,5 +45,7 @@ namespace EvenCart.Services.Products
         IList<Product> GetProductsWithVariants(out int totalResults, int warehouseId, string searchText = null, bool? published = null, bool? trackInventory = null, int page = 1, int count = int.MaxValue);
 
         IList<Product> GetProductsWithVariants(IList<int> ids);
+
+        void SetProductCatalogs(int productId, IList<int> catalogIds);
     }
 }

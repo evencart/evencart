@@ -46,7 +46,8 @@ namespace EvenCart.Infrastructure.Plugins
 
         public IList<PluginInfo> GetActivePlugins(Type type = null)
         {
-            var activePlugins = GetInstalledPlugins().Where(x => x.Active);
+            var activeStoreId = ApplicationEngine.CurrentStore.Id;
+            var activePlugins = GetInstalledPlugins().Where(x => x.ActiveStoreIds.Contains(activeStoreId));
             return type != null ? activePlugins.Where(x => type.IsAssignableFrom(x.PluginType)).ToList() : activePlugins.ToList();
         }
 
@@ -60,7 +61,7 @@ namespace EvenCart.Infrastructure.Plugins
                 if (sp != null)
                 {
                     ap.Installed = sp.Installed;
-                    ap.Active = sp.Active;
+                    ap.ActiveStoreIds = sp.ActiveStoreIds ?? new List<int>();
                 }
             }
             return availablePlugins;
@@ -95,8 +96,9 @@ namespace EvenCart.Infrastructure.Plugins
 
         public IList<WidgetInfo> GetAvailableWidgets()
         {
-            var plugins = GetAvailablePlugins(true).Where(x => x.Active).ToList();
-            var widgetInfos = plugins.Where(x => x.Installed && x.Active).SelectMany(x =>
+            var storeId = ApplicationEngine.CurrentStore.Id;
+            var plugins = GetAvailablePlugins(true).Where(x => x.ActiveStoreIds.Contains(storeId)).ToList();
+            var widgetInfos = plugins.Where(x => x.Installed && x.ActiveStoreIds.Contains(storeId)).SelectMany(x =>
             {
                 return x.Widgets.Select(y => new WidgetInfo()
                 {

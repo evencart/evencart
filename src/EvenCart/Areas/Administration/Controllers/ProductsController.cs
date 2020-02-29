@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Factories.Products;
+using EvenCart.Areas.Administration.Models.Catalog;
 using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
@@ -65,7 +66,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IRoleService _roleService;
         private readonly IEntityRoleService _entityRoleService;
         private readonly IEntityTagService _entityTagService;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService, IEntityTagService entityTagService)
+        private readonly ICatalogService _catalogService;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService, IEntityTagService entityTagService, ICatalogService catalogService)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -93,6 +95,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _roleService = roleService;
             _entityRoleService = entityRoleService;
             _entityTagService = entityTagService;
+            _catalogService = catalogService;
         }
 
 
@@ -128,8 +131,8 @@ namespace EvenCart.Areas.Administration.Controllers
             var products = _productService.GetProducts(out int totalResults, out decimal availableFromPrice,
                 out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
                 out Dictionary<int, string> availableVendors,
-                out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published, parameters.Tags,
-                parameters.ManufacturerIds, parameters.VendorIds, parameters.CategoryIds, null, true, null, null, orderByExpression,
+                out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published, storeId: null, parameters.Tags,
+                parameters.ManufacturerIds, parameters.VendorIds, catalogIds: null, categoryids: parameters.CategoryIds, null, true, null, null, orderByExpression,
                 parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
             var productsModel = products.Select(x =>
@@ -196,6 +199,16 @@ namespace EvenCart.Areas.Administration.Controllers
             productModel.RestrictedToRoles =
                 roles.Select(x => new SelectListItem($"{x.Name}({x.SystemName})", x.Id.ToString(),
                     product.RestrictedToRoles && product.EntityRoles.Any(y => y.RoleId == x.Id))).ToList();
+
+            //catalogs
+            var catalogs = _catalogService.Get(x => true).ToList();
+            var availableCatalogs = SelectListHelper.GetSelectItemList(catalogs, x => x.Id, x => x.Name);
+            productModel.Catalogs = availableCatalogs.Select(x =>
+            {
+                if (product.Catalogs?.Any(y => y.Id.ToString() == x.Value) ?? false)
+                    x.Selected = true;
+                return x;
+            }).ToList();
 
             return R.Success.With("product", productModel).With("productId", productId)
                 .WithWeightUnits()
@@ -282,6 +295,8 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 _entityTagService.SetEntityTags<Product>(product.Id, model.Tags.ToArray());
             }
+            //catalog ids
+            _productService.SetProductCatalogs(product.Id, model.CatalogIds);
             //update seo
             _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
             return R.Success.With("productId", product.Id).Result;
