@@ -7,6 +7,6 @@ namespace EvenCart.Services.Products
     {
         Store GetByDomain(string domain);
 
-        void CloneStore(Store store, string newStoreName, string domain);
+        Store CloneStore(Store store, string newStoreName, string domain);
     }
 }

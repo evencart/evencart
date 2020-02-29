@@ -36,7 +36,7 @@ namespace EvenCart.Services.Products
             });
         }
 
-        public void CloneStore(Store store, string newStoreName, string domain)
+        public Store CloneStore(Store store, string newStoreName, string domain)
         {
             //get settings of source store
             var sourceStoreSettings = _settingService.Get(x => x.StoreId == store.Id).ToList();
@@ -61,7 +61,8 @@ namespace EvenCart.Services.Products
                     setting.Id = 0;
                     _settingService.Insert(setting, transaction);
                 }
-            });           
+            });
+            return newStore;
         }
     }
 }
