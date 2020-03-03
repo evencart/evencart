@@ -16,6 +16,7 @@ using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Addresses;
 using EvenCart.Services.Emails;
+using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Infrastructure.Helpers
@@ -186,6 +187,13 @@ namespace EvenCart.Infrastructure.Helpers
             var files = localFileProvider.GetFiles(ServerHelper.MapPath(ApplicationConfig.FlagsDirectory, true), "*.png");
             var fileInfos = files.Select(x => new FileInfo(x));
             return GetSelectItemList(fileInfos.ToList(), x => x.Name, x => x.Name);
+        }
+
+        public static List<SelectListItem> GetAvailableStores()
+        {
+            var storeService = DependencyResolver.Resolve<IStoreService>();
+            var stores = storeService.Get(x => true).ToList();
+            return GetSelectItemList(stores, store => store.Id, store => store.Name);
         }
     }
 }

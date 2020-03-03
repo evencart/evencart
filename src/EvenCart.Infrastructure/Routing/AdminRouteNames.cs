@@ -303,5 +303,16 @@ namespace EvenCart.Infrastructure.Routing
 
         public const string InstallSampleData = Prefix + "InstallSampleData";
         public const string GetEntityTagsSuggestions = Prefix + "GetEntityTagsSuggestions";
+
+        public const string StoresList = Prefix + "StoresList";
+        public const string GetStore = Prefix + "GetStore";
+        public const string DeleteStore = Prefix + "DeleteStore";
+        public const string SaveStore = Prefix + "SaveStore";
+        public const string CloneStore = Prefix + "CloneStore";
+
+        public const string CatalogsList = Prefix + "CatalogsList";
+        public const string GetCatalog = Prefix + "GetCatalog";
+        public const string DeleteCatalog = Prefix + "DeleteCatalog";
+        public const string SaveCatalog = Prefix + "SaveCatalog";
     }
 }

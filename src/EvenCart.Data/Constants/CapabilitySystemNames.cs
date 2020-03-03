@@ -109,5 +109,9 @@
         public const string ManageCustomLabels = "CustomLabel.Manage";
 
         public const string ManageStoreCredits = "StoreCredit.Manage";
+
+        public const string ManageStores = "Store.Manage";
+
+        public const string ManageCatalog = "Catalog.Manage";
     }
 }

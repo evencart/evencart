@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Pages;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Breadcrumbs;
@@ -19,6 +20,7 @@ namespace EvenCart.Infrastructure.Extensions
         private const string ApiTokenKey = "ApiTokenKey";
         private const string IsTokenAuthenticatedKey = "IsTokenAuthenticated";
         private const string CurrentAffiliateKey = "CurrentAffiliateKey";
+        private const string CurrentStoreKey = "CurrentStoreKey";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -103,6 +105,16 @@ namespace EvenCart.Infrastructure.Extensions
         public static string GetReferer(this HttpContext httpContext)
         {
             return httpContext.Request.Headers["Referer"];
+        }
+
+        public static Store GetCurrentStore(this HttpContext httpContext)
+        {
+            return (Store) httpContext.Items[CurrentStoreKey];
+        }
+
+        public static void SetCurrentStore(this HttpContext httpContext, Store store)
+        {
+            httpContext.Items[CurrentStoreKey] = store;
         }
     }
 }

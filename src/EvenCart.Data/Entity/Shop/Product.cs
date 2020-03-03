@@ -133,6 +133,8 @@ namespace EvenCart.Data.Entity.Shop
         public virtual IList<EntityRole> EntityRoles { get; set; }
 
         public virtual IList<string> Tags { get; set; }
+
+        public virtual IList<Catalog> Catalogs { get; set; }
         #endregion
 
         #region Relations

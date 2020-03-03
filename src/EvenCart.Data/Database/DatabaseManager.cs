@@ -74,7 +74,7 @@ namespace EvenCart.Data.Database
                 return;
             IDatabaseVersion[] appVersions = {
                 new Version1(),
-                new Version1A(), 
+                new Version1A(),
                 new Version1B(),
                 new Version1C(),
                 new Version1D(),

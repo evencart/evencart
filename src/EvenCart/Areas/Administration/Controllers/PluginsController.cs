@@ -52,6 +52,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var pluginModels = plugins.Select(x =>
             {
                 var pluginInfo = _modelMapper.Map<PluginInfoModel>(x);
+                pluginInfo.Active = x.ActiveStoreIds.Contains(CurrentStore.Id);
                 pluginInfo.ConfigurationUrl = x.ConfigurationUrl;
                 return pluginInfo;
             }).OrderBy(x => x.Name).ToList();
@@ -175,11 +176,11 @@ namespace EvenCart.Areas.Administration.Controllers
                 _pluginAccountant.UninstallPlugin(plugin);
             }
 
-            if (pluginInfoModel.Active && !plugin.Active)
+            if (pluginInfoModel.Active && !plugin.ActiveStoreIds.Contains(CurrentStore.Id))
             {
                 _pluginAccountant.ActivatePlugin(plugin);
             }
-            else if (!pluginInfoModel.Active && plugin.Active)
+            else if (!pluginInfoModel.Active && plugin.ActiveStoreIds.Contains(CurrentStore.Id))
             {
                 _pluginAccountant.DeactivatePlugin(plugin);
             }

@@ -11,6 +11,7 @@ using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
@@ -41,7 +42,7 @@ namespace EvenCart.Infrastructure
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
             //register singletons
-            services.AddGlobalSingletons();
+            services.AddGlobalSingletons(hostingEnvironment);
 
             if (!IsTestEnv(hostingEnvironment))
             {
@@ -107,11 +108,14 @@ namespace EvenCart.Infrastructure
 
             if (DatabaseManager.IsDatabaseInstalled())
             {
-                //https redirection
-                app.UseHttps();
-
                 //ip filtering
                 app.UseIpFilter();
+
+                //store loader
+                app.UseStoreLoader();
+                
+                //https redirection
+                app.UseHttps();
 
                 //use response pages
                 app.UseStatusPages();
@@ -137,7 +141,7 @@ namespace EvenCart.Infrastructure
 
             //add any middlewares from plugins
             var availablePlugins = PluginLoader.GetAvailablePlugins();
-            foreach (var ap in availablePlugins.Where(x => x.Active))
+            foreach (var ap in availablePlugins.Where(x => x.ActiveStoreIds.Any()))
             {
                 ap.Startup?.Configure(app);
             }
@@ -220,6 +224,8 @@ namespace EvenCart.Infrastructure
         public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
 
         public static User CurrentAffiliate => CurrentHttpContext.GetCurrentAffiliate();
+
+        public static Store CurrentStore => CurrentHttpContext?.GetCurrentStore();
 
         public static string CurrentLanguageCultureCode => "en-US";
 

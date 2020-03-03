@@ -7,6 +7,7 @@ using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure;
 using EvenCart.Services.Emails;
 using EvenCart.Services.Security;
 using EvenCart.Services.Serializers;
@@ -185,7 +186,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 //mark all the others as non default
                 _emailSenderSettings.DefaultEmailAccountId = emailAccount.Id;
-                _settingService.Save(_emailSenderSettings);
+                _settingService.Save(_emailSenderSettings, CurrentStore.Id);
             }
             return R.Success.Result;
         }

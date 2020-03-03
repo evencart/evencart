@@ -19,7 +19,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 foreach (var plugin in plugins)
                 {
                     plugin.DependencyContainer.RegisterDependencies(registrar);
-                    if (plugin.Active)
+                    if (plugin.ActiveStoreIds.Any())
                         plugin.DependencyContainer.RegisterDependenciesIfActive(registrar);
                 }
             }

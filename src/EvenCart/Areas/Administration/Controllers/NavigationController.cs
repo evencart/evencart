@@ -33,9 +33,7 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IContentPageService _contentPageService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        private readonly ICategoryAccountant _categoryAccountant;
-        private readonly IDataSerializer _dataSerializer;
-        public NavigationController(IMenuService menuService, IMenuItemService menuItemService, IModelMapper modelMapper, IContentPageService contentPageService, IProductService productService, ICategoryService categoryService, ICategoryAccountant categoryAccountant, IDataSerializer dataSerializer)
+        public NavigationController(IMenuService menuService, IMenuItemService menuItemService, IModelMapper modelMapper, IContentPageService contentPageService, IProductService productService, ICategoryService categoryService)
         {
             _menuService = menuService;
             _menuItemService = menuItemService;
@@ -43,8 +41,6 @@ namespace EvenCart.Areas.Administration.Controllers
             _contentPageService = contentPageService;
             _productService = productService;
             _categoryService = categoryService;
-            _categoryAccountant = categoryAccountant;
-            _dataSerializer = dataSerializer;
         }
 
         [DualGet("", Name = AdminRouteNames.MenuList)]
@@ -82,8 +78,10 @@ namespace EvenCart.Areas.Administration.Controllers
             var menu = menuId > 0 ? _menuService.Get(menuId) : new Menu();
             if (menu == null)
                 return NotFound();
+            var menuStoreIds = menu.Stores?.Select(x => x.Id).ToList();
             var menuModel = _modelMapper.Map<MenuModel>(menu);
-            return R.Success.With("menu", menuModel).Result;
+            menuModel.StoreIds = menuStoreIds;
+            return R.Success.With("menu", menuModel).WithAvailableStores(menuStoreIds).Result;
         }
 
         [DualPost("", Name = AdminRouteNames.SaveMenu, OnlyApi = true)]
@@ -95,6 +93,7 @@ namespace EvenCart.Areas.Administration.Controllers
             if (menu == null)
                 return NotFound();
             menu.Name = menuModel.Name;
+            menu.StoreIds = menuModel.StoreIds;
             _menuService.InsertOrUpdate(menu);
             menuModel.Id = menu.Id;
             return R.Success.With("menu", menuModel).Result;

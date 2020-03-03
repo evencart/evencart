@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Helpers;
@@ -35,6 +36,8 @@ namespace EvenCart.Areas.Administration.Models.Pages
         public int ParentId { get; set; }
 
         public string ParentPath { get; set; }
+
+        public IList<int> StoreIds { get; set; }
 
         #region Virtual Properties
         public SeoMetaModel SeoMeta { get; set; }

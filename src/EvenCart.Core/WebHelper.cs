@@ -39,7 +39,7 @@ namespace EvenCart.Core
         public static string GetClientIpAddress()
         {
             var httpContextAccessor = DependencyResolver.Resolve<IHttpContextAccessor>();
-            return httpContextAccessor.HttpContext?.Connection.RemoteIpAddress.ToString() ?? "";
+            return httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "";
         }
 
         /// <summary>

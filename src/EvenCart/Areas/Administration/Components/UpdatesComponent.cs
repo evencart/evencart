@@ -51,7 +51,7 @@ namespace EvenCart.Areas.Administration.Components
                             return R.Fail.ComponentResult;
                         _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
                         _systemSettings.LatestFetchedOn = DateTime.UtcNow;
-                        _settingService.Save(_systemSettings);
+                        _settingService.Save(_systemSettings, CurrentStore.Id);
                     }
                    
                 }

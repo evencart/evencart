@@ -1,4 +1,4 @@
-﻿namespace EvenCart.Infrastructure.Plugins
+﻿namespace EvenCart.Data.Entity.Settings
 {
     public class WidgetStatus
     {
@@ -11,5 +11,7 @@
         public string ZoneName { get; set; }
 
         public string Id { get; set; }
+
+        public int StoreId { get; set; }
     }
 }

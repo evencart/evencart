@@ -184,7 +184,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var cryptedKey = _cryptographyService.GetMd5Hash(sharedKey);
             var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
             securitySettings.SharedVerificationKey = cryptedKey;
-            _settingService.Save(securitySettings);
+            _settingService.Save(securitySettings, CurrentStore.Id);
             return R.Success.With("key", sharedKey).Result;
         }
 
@@ -287,11 +287,11 @@ namespace EvenCart.Areas.Administration.Controllers
         private void SaveSetting(SettingsModel settingsModel)
         {
             var settingType = settingsModel.GetType();
-            if (_settingsMap.TryGetValue(settingType, out Type targetType))
+            if (_settingsMap.TryGetValue(settingType, out var targetType))
             {
                 var resolvedSettings = DependencyResolver.Resolve(targetType);
                 _modelMapper.MapType(targetType, settingsModel, resolvedSettings);
-                _settingService.Save(targetType, resolvedSettings);
+                _settingService.Save(targetType, resolvedSettings, CurrentStore.Id);
             }
         }
         #endregion

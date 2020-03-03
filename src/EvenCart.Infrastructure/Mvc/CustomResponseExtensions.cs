@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
@@ -48,6 +49,18 @@ namespace EvenCart.Infrastructure.Mvc
         public static CustomResponse WithAvailableAddressTypes(this CustomResponse customResponse)
         {
             return customResponse.With("availableAddressTypes", SelectListHelper.GetAddressTypes());
+        }
+
+        public static CustomResponse WithAvailableStores(this CustomResponse customResponse,
+            IList<int> selectedStores = null)
+        {
+            var availableStores = SelectListHelper.GetAvailableStores().Select(x =>
+            {
+                if (selectedStores?.Any(y => y.ToString() == x.Value) ?? false)
+                    x.Selected = true;
+                return x;
+            }).ToList();
+            return customResponse.With("availableStores", availableStores);
         }
 
         /// <summary>

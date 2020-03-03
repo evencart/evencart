@@ -35,7 +35,7 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<MenuWidgetSettings>(widgetId);
             var menu = _menuService.Get(widgetSettings.MenuId);
-            if (menu == null)
+            if (menu == null || menu.Stores == null || menu.Stores.All(x => x.Id != CurrentStore.Id))
                 return R.Success.ComponentResult;
             var widgetNavigation = NavigationObject.GetNavigation(menu.MenuItems, widgetId, _categoryService.GetFullCategoryTree());
             return R.Success.With("title", widgetSettings.Title)

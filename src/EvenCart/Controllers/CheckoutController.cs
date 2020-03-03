@@ -597,7 +597,8 @@ namespace EvenCart.Controllers
                 ExchangeRate = ApplicationEngine.BaseCurrency.ExchangeRate,
                 DisableReturns = cart.CartItems.All(x => !x.Product.AllowReturns),
                 User = currentUser,
-                IsSubscription = CartHelper.IsSubscriptionCart(cart)
+                IsSubscription = CartHelper.IsSubscriptionCart(cart),
+                StoreId = CurrentStore.Id
             };
             order.OrderTotal = order.Subtotal + order.Tax + (order.PaymentMethodFee ?? 0) + (order.ShippingMethodFee ?? 0) - order.Discount;
             //load the addresses

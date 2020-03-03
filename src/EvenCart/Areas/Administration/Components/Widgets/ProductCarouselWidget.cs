@@ -43,7 +43,7 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             var widgetSettings = _widgetService.LoadWidgetSettings<ProductCarouselWidgetSettings>(widgetId);
             if (widgetSettings.ProductIds == null || !widgetSettings.ProductIds.Any())
                 return R.Success.ComponentResult;
-            var products = _productService.GetProducts(widgetSettings.ProductIds, true).Where(x => x.IsPublic());
+            var products = _productService.GetProducts(widgetSettings.ProductIds, true).Where(x => x.IsPublic(CurrentStore.Id));
             var productsModel = products.Select(_productModelFactory.Create)
                 .OrderBy(x => widgetSettings.ProductIds.IndexOf(x.Id))
                 .ToList();
