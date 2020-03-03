@@ -1,5 +1,6 @@
 ﻿using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Database;
 using EvenCart.Services.Installation;
 using EvenCart.Infrastructure;
@@ -17,11 +18,13 @@ namespace EvenCart.Controllers
         private readonly IInstallationService _installationService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly ICryptographyService _cryptographyService;
-        public InstallController(IInstallationService installationService, IApplicationConfiguration applicationConfiguration, ICryptographyService cryptographyService)
+        private readonly ILocalFileProvider _localFileProvider;
+        public InstallController(IInstallationService installationService, IApplicationConfiguration applicationConfiguration, ICryptographyService cryptographyService, ILocalFileProvider localFileProvider)
         {
             _installationService = installationService;
             _applicationConfiguration = applicationConfiguration;
             _cryptographyService = cryptographyService;
+            _localFileProvider = localFileProvider;
         }
 
         [HttpGet("install", Name = RouteNames.Install)]
@@ -32,7 +35,10 @@ namespace EvenCart.Controllers
 
             if (areTableInstalled)
                 return RedirectToRoute(RouteNames.Home);
-            return R.Success.Result;
+
+            //read the license
+            var license = _localFileProvider.ReadAllText(ServerHelper.MapPath("~/App_Data/Install/license.txt"));
+            return R.Success.With("license", license).Result;
         }
 
         [HttpPost("install", Name = RouteNames.Install)]

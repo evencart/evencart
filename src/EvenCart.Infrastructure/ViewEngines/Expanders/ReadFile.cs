@@ -84,7 +84,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
         {
             var localFileProvider = DependencyResolver.Resolve<ILocalFileProvider>();
             var lastModified = localFileProvider.GetLastModifiedDateTime(fileName);
-            var cacheKey = fileName + ApplicationEngine.CurrentStore.Id;
+            var cacheKey = fileName + ApplicationEngine.CurrentStore?.Id;
             if (!ReadFileCache.TryGetValue(cacheKey, out ReadFile readFile) || readFile.IsModified())
             {
                 if (readFile == null)

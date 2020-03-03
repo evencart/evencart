@@ -134,17 +134,19 @@ namespace EvenCart.Infrastructure
 
                 //recaptcha
                 app.UseRecaptcha();
+
+                //add any middlewares from plugins
+                var availablePlugins = PluginLoader.GetAvailablePlugins();
+                foreach (var ap in availablePlugins.Where(x => x.ActiveStoreIds != null && x.ActiveStoreIds.Any()))
+                {
+                    ap.Startup?.Configure(app);
+                }
+
             }
             
 #endif
             app.UseResponseCompression();
 
-            //add any middlewares from plugins
-            var availablePlugins = PluginLoader.GetAvailablePlugins();
-            foreach (var ap in availablePlugins.Where(x => x.ActiveStoreIds.Any()))
-            {
-                ap.Startup?.Configure(app);
-            }
 
             //use mvc
             app.UseMvc(builder =>
