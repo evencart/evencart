@@ -6,6 +6,8 @@ using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Enum;
+using EvenCart.Services.Logger;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Settings
@@ -13,10 +15,12 @@ namespace EvenCart.Services.Settings
     public class SettingService : FoundationEntityService<Setting>, ISettingService
     {
         private readonly IDataSerializer _dataSerializer;
+        private readonly ILogger _logger;
         private readonly ICacheProvider _cacheProvider;
-        public SettingService(IDataSerializer dataSerializer, ICacheProvider cacheProvider)
+        public SettingService(IDataSerializer dataSerializer, ILogger logger, ICacheProvider cacheProvider)
         {
             _dataSerializer = dataSerializer;
+            _logger = logger;
             _cacheProvider = cacheProvider;
         }
 
@@ -32,52 +36,17 @@ namespace EvenCart.Services.Settings
 
         public void Save<T>(string keyName, string keyValue, int storeId) where T : ISettingGroup
         {
-            var groupName = typeof(T).Name;
-
-            //check if setting exist
-            var setting = Get<T>(keyName, storeId);
-            if (setting == null)
-            {
-                setting = new Setting() {
-                    GroupName = groupName,
-                    Key = keyName,
-                    Value = keyValue,
-                    StoreId = storeId
-                };
-                Insert(setting);
-            }
-            else
-            {
-                setting.Value = keyValue;
-                Update(setting);
-            }
+            Save(typeof(T), keyName, keyValue, storeId);
+          
         }
 
         public void Save<T>(T settings, int storeId) where T : ISettingGroup
         {
-            //each setting group will have some properties. We'll loop through these using reflection
-            var propertyFields = typeof(T).GetProperties();
-            foreach (var property in propertyFields)
-            {
-                var propertyName = property.Name;
-                var valueObj = property.GetValue(settings);
-                var value = "";
-                if (!property.PropertyType.IsPrimitive())
-                {
-                    value = valueObj != null ? _dataSerializer.Serialize(valueObj) : "";
-                }
-                else
-                {
-                    value = valueObj != null ? valueObj.ToString() : "";
-                }
-                //save the property
-                Save<T>(propertyName, value, storeId);
-            }
+            Save(typeof(T), settings, storeId);
         }
 
         public void Save(Type settingType, object settings, int storeId)
         {
-            //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingType.GetProperties();
             foreach (var property in propertyFields)
             {
@@ -108,8 +77,7 @@ namespace EvenCart.Services.Settings
                 setting = new Setting() {
                     GroupName = groupName,
                     Key = keyName,
-                    Value = keyValue,
-                    StoreId = storeId
+                    Value = keyValue
                 };
                 Insert(setting);
             }
@@ -122,7 +90,12 @@ namespace EvenCart.Services.Settings
 
         public T GetSettings<T>(int storeId) where T : ISettingGroup
         {
-            return (T) GetSettings(typeof(T), storeId);
+            //create a new settings object
+            var settingsObj = Activator.CreateInstance<T>();
+
+            FurnishInstance(settingsObj, storeId);
+
+            return settingsObj;
         }
 
         public object GetSettings(Type settingType, int storeId)
@@ -140,7 +113,6 @@ namespace EvenCart.Services.Settings
                 return settingsObj;
             }, int.MaxValue);
         }
-
         public void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup
         {
             FurnishInstance(settingsObject, storeId);
@@ -162,19 +134,21 @@ namespace EvenCart.Services.Settings
             {
                 var propertyName = property.Name;
 
-                //retrive the value of setting from db
+                //retrieve the value of setting from db
                 var savedSettingEntity = allSettings.FirstOrDefault(x => x.Key == propertyName);
 
                 if (savedSettingEntity != null)
                 {
-                    if (property.PropertyType.IsPrimitive())
+                    try
                     {
-                        //set the property
-                        property.SetValue(settingsInstance, TypeConverter.CastPropertyValue(property, savedSettingEntity.Value));
+                        property.SetValue(settingsInstance,
+                            property.PropertyType.IsPrimitive()
+                                ? TypeConverter.CastPropertyValue(property, savedSettingEntity.Value)
+                                : _dataSerializer.Deserialize(savedSettingEntity.Value, property.PropertyType));
                     }
-                    else
+                    catch(Exception ex)
                     {
-                        property.SetValue(settingsInstance, _dataSerializer.Deserialize(savedSettingEntity.Value, property.PropertyType));
+                        //keep default value
                     }
                    
                 }
