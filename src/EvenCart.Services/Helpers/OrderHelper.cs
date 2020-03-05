@@ -12,7 +12,7 @@ namespace EvenCart.Services.Helpers
         }
         public static bool IsDownloadOnly(Order order)
         {
-            return order.OrderItems.All(x => x.IsDownloadable && x.Product.IsShippable);
+            return order.OrderItems.All(x => x.IsDownloadable && !x.Product.IsShippable);
         }
     }
 }
