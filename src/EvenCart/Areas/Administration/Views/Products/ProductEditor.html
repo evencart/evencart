@@ -262,7 +262,7 @@
             {% control hidden name="id" value="{{product.id}}" %}
             <div class="save-button-container">
                 {% if product.id > 0 %}
-                <a class="btn btn-sm btn-primary" target="_blank" href='{% route Admin.PreviewProduct id="{{product.id}}" %}'>
+                <a class="btn btn-sm btn-primary" target="_blank" href='{% route PreviewProduct id="{{product.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>

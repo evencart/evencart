@@ -28,7 +28,7 @@
             {% control hidden name="id" value="{{contentPage.id}}" %}
             <div class="save-button-container">
                 {% if contentPage.id > 0 %}
-                <a class="btn btn-sm btn-warning" target="_blank" href='{% route Admin.PreviewPage id="{{contentPage.id}}" %}'>
+                <a class="btn btn-sm btn-warning" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>
