@@ -65,9 +65,9 @@ namespace EvenCart.Infrastructure.Extensions
             }
             ps.Installed = installed;
             var storeId = ApplicationEngine.CurrentStore.Id;
+            ps.ActiveStoreIds = ps.ActiveStoreIds ?? new List<int>();
             if (active)
-            {
-                ps.ActiveStoreIds = ps.ActiveStoreIds ?? new List<int>();
+            {               
                 if (!ps.ActiveStoreIds.Contains(storeId))
                     ps.ActiveStoreIds.Add(storeId);
             }
