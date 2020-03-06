@@ -29,8 +29,6 @@ namespace EvenCart.Services.ScheduledTasks
             var scheduledTasks = _scheduledTaskService.Get(x => true).ToList();
             //first sync available tasks and database tasks
             UpdateTasksInDatabase(availableTasks, scheduledTasks);
-            if (!scheduledTasks.Any(x => x.Enabled))
-                return;
             var registry = new Registry();
             //add each enabled task to the scheduler
             foreach (var sTask in scheduledTasks.Where(x => x.Enabled))
@@ -44,6 +42,8 @@ namespace EvenCart.Services.ScheduledTasks
                 //schedule the task
                 registry.Schedule(() =>
                 {
+                    if (!sTask.Enabled)
+                        return;
                     ScheduledTaskHelper.RunScheduledTask(sTask, task, _scheduledTaskService, _logger);
                 }).ToRunEvery(sTask.Seconds).Seconds();
             }

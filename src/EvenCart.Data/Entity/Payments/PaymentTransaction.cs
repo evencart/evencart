@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvenCart.Core.Data;
+using EvenCart.Data.Entity.Purchases;
 using Newtonsoft.Json;
 
 namespace EvenCart.Data.Entity.Payments
@@ -33,6 +34,9 @@ namespace EvenCart.Data.Entity.Payments
             }
             set => _transactionCodes = value;
         }
+
+        public virtual Order Order { get; set; }
+
         #endregion
 
         //use serialized string to store data

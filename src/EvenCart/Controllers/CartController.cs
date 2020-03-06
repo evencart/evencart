@@ -153,7 +153,7 @@ namespace EvenCart.Controllers
 
 
                         var attributeNames = cartItemModel.Attributes.Select(x => x.Name).ToList();
-                        var attributeIds = product.ProductAttributes?.Where(x => attributeNames.Contains(x.Label))
+                        var attributeIds = product.ProductAttributes?.Where(x => x.InputFieldType.RequireValues() && attributeNames.Contains(x.Label))
                             .Select(x => x.Id)
                             .ToList() ?? new List<int>();
 

@@ -372,7 +372,7 @@ var inputTypeahead = function(options) {
                 matches.push(q);
             } else {
                 matches.push({
-                    id: 0,
+                    id: q,
                     text: q
                 });
             }

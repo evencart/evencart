@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DryIoc;
 using EvenCart.Core.Plugins;
-using EvenCart.Data.Database;
 
 namespace EvenCart.Infrastructure.DependencyContainer
 {
@@ -12,7 +11,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             var coreRegistrar = new DependencyContainer();
             coreRegistrar.RegisterDependencies(registrar);
 
-            if (!ApplicationEngine.IsTestEnv() && DatabaseManager.IsDatabaseInstalled())
+            if (!ApplicationEngine.IsTestEnv())
             {
                 //then the plugin ones
                 var plugins = PluginLoader.GetAvailablePlugins().Where(x => x.DependencyContainer != null)
@@ -20,7 +19,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 foreach (var plugin in plugins)
                 {
                     plugin.DependencyContainer.RegisterDependencies(registrar);
-                    if (plugin.ActiveStoreIds.Any())
+                    if (plugin.ActiveStoreIds?.Any() ?? false)
                         plugin.DependencyContainer.RegisterDependenciesIfActive(registrar);
                 }
             }

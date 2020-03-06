@@ -47,7 +47,8 @@ namespace EvenCart.Services.Payments
                 UserIpAddress = order.UserIpAddress,
                 TransactionAmount = result.TransactionAmount,
                 TransactionGuid = result.TransactionGuid,
-                TransactionCurrencyCode = result.TransactionCurrencyCode
+                TransactionCurrencyCode = result.TransactionCurrencyCode,
+                Order = order
             };
             if (paymentTransaction.TransactionGuid.IsNullEmptyOrWhiteSpace())
                 paymentTransaction.TransactionGuid = Guid.NewGuid().ToString();
@@ -55,16 +56,11 @@ namespace EvenCart.Services.Payments
             paymentTransaction.SetTransactionCodes(result.ResponseParameters);
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
-       
-           
-            if (order.CurrencyCode != result.TransactionCurrencyCode || order.PaymentStatus != result.NewStatus)
+
+
+            if (result.IsSubscription && result.NewStatus == PaymentStatus.Complete && !order.IsSubscriptionActive)
             {
-                //update order
-                if (result.TransactionCurrencyCode != null)
-                    order.CurrencyCode = result.TransactionCurrencyCode;
-                if (result.IsSubscription && result.NewStatus == PaymentStatus.Complete)
-                    order.IsSubscriptionActive = true;
-                order.PaymentStatus = result.NewStatus;
+                order.IsSubscriptionActive = true;
                 _orderService.Update(order);
             }
 
@@ -97,7 +93,8 @@ namespace EvenCart.Services.Payments
                             UserIpAddress = order.UserIpAddress,
                             TransactionAmount = order.StoreCreditAmount,
                             TransactionGuid = Guid.NewGuid().ToString(),
-                            TransactionCurrencyCode = order.CurrencyCode
+                            TransactionCurrencyCode = order.CurrencyCode,
+                            Order = order
                         };
                         if (paymentTransaction.TransactionGuid.IsNullEmptyOrWhiteSpace())
                             paymentTransaction.TransactionGuid = Guid.NewGuid().ToString();

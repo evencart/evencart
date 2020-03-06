@@ -17,7 +17,7 @@ namespace EvenCart.Services.Captures
         public void OnInserted(PaymentTransaction entity)
         {
             //get the order
-            var order = _orderService.GetByGuid(entity.OrderGuid);
+            var order = entity.Order ?? _orderService.GetByGuid(entity.OrderGuid);
             if (order == null)
                 return; //do nothing, we don't have the order
 
