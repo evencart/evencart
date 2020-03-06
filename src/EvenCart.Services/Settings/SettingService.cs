@@ -88,7 +88,8 @@ namespace EvenCart.Services.Settings
                 setting = new Setting() {
                     GroupName = groupName,
                     Key = keyName,
-                    Value = keyValue
+                    Value = keyValue,
+                    StoreId = storeId
                 };
                 Insert(setting);
             }
