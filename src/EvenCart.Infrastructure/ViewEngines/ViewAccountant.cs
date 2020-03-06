@@ -283,7 +283,7 @@ namespace EvenCart.Infrastructure.ViewEngines
             foreach (var plugin in plugins)
             {
                 //in theme for each plugin
-                _viewLocations.Add(_localFileProvider.CombinePaths(themePath, "Views", plugin.SystemName));
+                _viewLocations.Add(_localFileProvider.CombinePaths(themePath, "Views", "Plugins", plugin.SystemName));
 
                 _viewLocations.Add(_localFileProvider.CombinePaths(plugin.PluginDirectory, "Views"));
             }
