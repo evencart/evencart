@@ -56,7 +56,12 @@ The Software license purchased by Licensee shall be eligible for FREE UPGRADES f
 
 WE DO NOT OFFER ANY REFUNDS FOR ANY OF THE LICENSE / PRODUCT / PLUGIN / THEME PURCHASED ON OUR WEBSITE. EvenCart is an Open Source Software and the licensee is expected to have downloaded and used the software to their satisfaction before purchasing any license.
 
+1.5 LICENSE VALIDITY
+
+Each of the Software licenses, specified in sections 1.1.1 to 1.1.4 above, purchased by Licensee is valid for 1 Year from the date of purchase of the license. This period of 1 Year is called License Term. After License Term is over, the license shall expire and shall be considered to fallback to "GNUv3 license with additional terms as specified in the file LICENSE.TXT or at https://evencart.co/license" unless renewed by Licensee for next year by paying the then license price at the time of license renewal.
+
 2. USAGE RESTRICTIONS
+
 You shall use Software in compliance with all applicable laws and not for any unlawful purpose. Without limiting the foregoing, use, display or distribution of Software together with material that is pornographic, racist, vulgar, obscene, defamatory, libelous, abusive, promoting hatred, discriminating or displaying prejudice based on religion, ethnic heritage, race, sexual orientation or age is strictly prohibited.
 
 Each licensed copy of Software may be used on one single website by one user. Use of Software means that you have loaded, installed, or run Software on a computer or similar device. If you install Software onto a multi-user/multi-store/multi-domain platform, server or network, each and every individual user and website of Software must be licensed separately. The limitation shall be overridden for the type of license purchased by / applicable to you as per section 1.1 above.
