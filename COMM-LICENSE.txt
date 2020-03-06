@@ -26,19 +26,19 @@ The terms and conditions set forth in sections 1.1.1 to 1.1.4 shall apply accord
 
 1.1.1 SINGLE DOMAIN LICENSE
 
-The Software licensed under REGULAR LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on a Single Website Domain, excluding any subdomain or other domain, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+The Software licensed under SINGLE DOMAIN LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on a Single Website Domain, excluding any subdomain or other domain, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
 
-1.1.2 UNLIMITED SUBDOMAIN LICENSE
+1.1.2 UNLIMITED SUBDOMAINS LICENSE
 
-The Software licensed under SINGLE SERVER LICENSE License grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on any number of Website Subdomains of a Single Website Domain excluding any other domain,as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+The Software licensed under UNLIMITED SUBDOMAINS LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on any number of Website Subdomains of a Single Website Domain excluding any other domain,as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
 
 1.1.3 UNLIMITED SITES FOR ONE IP ADDRESS LICENSE
 
-The Software licensed under IP LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on all the website domains having SINGLE IP ADDRESS, excluding any other IP ADDRESS and any IP ADDRESS belonging to any hosting companies OR cloud providers such as Amazon Web Services, Microsoft Azure, CloudFlare CDN and similar, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+The Software licensed under UNLIMITED SITES FOR ONE IP ADDRESS LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on all the website domains having SINGLE IP ADDRESS, excluding any other IP ADDRESS and any IP ADDRESS belonging to any hosting companies OR cloud providers such as Amazon Web Services, Microsoft Azure, CloudFlare CDN and similar, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
 
 1.1.4 UNLIMITED SITES LICENSE
 
-The Software licensed under ENTERPRISE LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, however you like to use it as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+The Software licensed under UNLIMITED SITES LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, however you like to use it as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
 
 1.2 SOFTWARE SUPPORT
 
