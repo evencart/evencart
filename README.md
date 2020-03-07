@@ -16,7 +16,7 @@ EvenCart is dual licensed under the following licenses. You can use the software
 ### Resources
 
 - [EvenCart Offical Website](https://evencart.co)
-- [Live Demo](https://demo.evencart.com/)
+- [Live Demo](http://demo.evencart.com/)
 - [Documentation](https://docs.evencart.com)
 - [Discussion Forums](https://evencart.co/forums)
 - [Blog](https://evencart.co/blog)
