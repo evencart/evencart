@@ -37,11 +37,7 @@ namespace EvenCart.Areas.Administration.Controllers
     [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
     public class PluginsController : FoundationAdminController
     {
-#if DEBUG
-        private const string MarketPluginUrl = "http://localhost:52886/samples/plugins.json";
-#else
-        private const string MarketPluginUrl = "https://www.evencart.com/api/market";
-#endif
+        private const string MarketPluginUrl = "https://evencart.co/api/market";
         private readonly IModelMapper _modelMapper;
         private readonly IPluginAccountant _pluginAccountant;
         private readonly IDataSerializer _dataSerializer;

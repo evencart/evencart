@@ -25,7 +25,7 @@ namespace EvenCart.Areas.Administration.Components
     [ViewComponent(Name = "EvenCartUpdates")]
     public class UpdatesComponent : FoundationComponent
     {
-        private const string UpdatesFetchUrl = "https://www.evencart.com/api/feed";
+        private const string UpdatesFetchUrl = "https://evencart.co/api/feed";
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
         private readonly ISettingService _settingService;
