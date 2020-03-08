@@ -138,16 +138,6 @@ namespace EvenCart.Infrastructure.Extensions
                 RequestPath = new PathString($"/bundles")
             });
 
-#if DEBUG
-            //bundles directory
-            var samplesDir = Path.Combine(hostingEnvironment.WebRootPath, "samples");
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(samplesDir),
-                RequestPath = new PathString($"/samples")
-            });
-#endif
-
             //get all the theme's directories, they'll be used for static files
             var themesDir = Path.Combine(hostingEnvironment.ContentRootPath, "Content", "Themes");
             var allThemes = Directory.GetDirectories(themesDir);
