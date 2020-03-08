@@ -41,7 +41,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     var keyValuePairs = (Dictionary<string, string>) valueAsArray[1];
                     var componentParameters = GetComponentParameters(keyValuePairs, parameters);
                     viewComponentManager.InvokeViewComponent(componentName, componentParameters, out string _, out object model, out string _, true);
-                    MergeModel(parameters, model, componentName, componentIndexOnPage, out string _);
+                    MergeModel(parameters, model, componentName, componentIndexOnPage, out string _, out string _);
                 }
                 return inputContent;
             }
@@ -64,14 +64,14 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     readFile.AddChild(ReadFile.From(viewPath));
 
                 //merge models
-                MergeModel(parameters, model, componentName, componentIndexOnPage, out string assignString);
+                MergeModel(parameters, model, componentName, componentIndexOnPage, out var assignString, out var resetAssignString);
                 if (!WebHelper.IsAjaxRequest(ApplicationEngine.CurrentHttpContext.Request))
                     //add keyvaluepairs as meta along with the index
                     readFile.AddMeta(componentName, new object[] { componentIndexOnPage, keyValuePairs}, nameof(ComponentExpander));
                 var match = componentMatch.Result("$0");
                 //replace only first occurance of the pattern result
-                readFile.Content = readFile.Content.ReplaceFirstOccurance(match, assignString + componentContent);
-                inputContent = inputContent.ReplaceFirstOccurance(match, assignString + componentContent);
+                readFile.Content = readFile.Content.ReplaceFirstOccurance(match, assignString + componentContent + resetAssignString);
+                inputContent = inputContent.ReplaceFirstOccurance(match, assignString + componentContent + resetAssignString);
 
                 //next component
                 componentIndexOnPage++;
@@ -79,11 +79,12 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
             return inputContent;
         }
 
-        private static void MergeModel(object originalModel, object modelToMerge, string componentName, int componentIndexOnPage, out string assignString)
+        private static void MergeModel(object originalModel, object modelToMerge, string componentName, int componentIndexOnPage, out string assignString, out string resetAssignString)
         {
             //add to model
             var objects = originalModel as IDictionary<string, object>;
             var assignBuilder = new StringBuilder();
+            var resetAssignBuilder = new StringBuilder();
             if (objects != null)
             {
                 if (modelToMerge is IDictionary<string, object>)
@@ -100,6 +101,8 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                         }
                         assignBuilder.AppendFormat(AssignFormat, m.Key, key);
                         assignBuilder.AppendLine();
+                        resetAssignBuilder.AppendFormat(AssignFormat, m.Key, string.Empty);
+                        resetAssignBuilder.AppendLine();
                     }
                 }
                 else
@@ -111,9 +114,11 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     else
                         objects.Add($"{key}", modelToMerge);
                     assignBuilder.AppendFormat(AssignFormat, componentName, key);
+                    resetAssignBuilder.AppendFormat(AssignFormat, componentName, string.Empty);
                 }
             }
             assignString = assignBuilder.ToString();
+            resetAssignString = resetAssignBuilder.ToString();
         }
 
         private object ExtractObject(object originalModel, string objectPath)
