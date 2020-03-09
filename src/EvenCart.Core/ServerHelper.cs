@@ -47,7 +47,7 @@ namespace EvenCart.Core
                 return relativePath;
             var hostingEnvironment = hostingEnv ?? DependencyResolver.Resolve<IHostingEnvironment>();
             return relativePath.Replace("~",
-                isWebRootPath ? hostingEnvironment.WebRootPath : hostingEnvironment.ContentRootPath).Replace("/", "\\");
+                isWebRootPath ? hostingEnvironment.WebRootPath : hostingEnvironment.ContentRootPath); //.Replace("/", "\\");
         }
     }
 }

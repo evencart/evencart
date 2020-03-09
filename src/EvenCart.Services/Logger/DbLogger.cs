@@ -10,8 +10,10 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using EvenCart.Core;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Logs;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
@@ -22,7 +24,12 @@ namespace EvenCart.Services.Logger
     {
         public override void Log<T>(LogLevel logLevel, string message, Exception exception = null, User user = null)
         {
-
+            //db logger can't work if there is no db
+            if (!DatabaseManager.IsDatabaseInstalled())
+            {
+                Debug.WriteLine(message);
+                return;
+            }
             if (!ShouldLog(logLevel)) //can we log this message
                 return;
 

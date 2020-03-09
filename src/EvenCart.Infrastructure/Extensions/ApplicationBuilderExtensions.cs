@@ -131,7 +131,7 @@ namespace EvenCart.Infrastructure.Extensions
             });
 
             //bundles directory
-            var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "Bundles");
+            var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "bundles");
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(bundleDir),

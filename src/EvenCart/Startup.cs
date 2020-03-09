@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using EvenCart.Infrastructure;
 using EvenCart.Swagger;
@@ -36,9 +37,12 @@ namespace EvenCart
                 c.SwaggerDoc("v1", new Info { Title = "EvenCart Api Documentation", Version = ApplicationConfig.ApiVersion });
                 c.CustomSchemaIds(x => x.FullName);
                 c.ResolveConflictingActions(x => x.First());
-                c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
-                c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Infrastructure.xml", true);
-                c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Data.xml", true);
+                if (File.Exists($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml"))
+                {
+                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
+                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Infrastructure.xml", true);
+                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Data.xml", true);
+                }
                 c.SwaggerGeneratorOptions.DocInclusionPredicate = (s, description) => description.ActionDescriptor.AttributeRouteInfo?.Name?.StartsWith("api_") ?? false;
                 c.ParameterFilter<SwaggerCommonFilter>();
                 c.DocumentFilter<SwaggerCommonFilter>();
