@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Compile Remove="Entity\MediaEntities\EntityMedia.cs" />
+    <Compile Remove="Entity\Shop\StoreCatalog.cs" />
     <Compile Remove="Entity\Users\Group.cs" />
     <Compile Remove="Entity\Users\UserGroup.cs" />
   </ItemGroup>

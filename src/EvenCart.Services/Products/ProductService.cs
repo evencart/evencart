@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,20 +36,22 @@ namespace EvenCart.Services.Products
         private readonly IEventPublisherService _eventPublisherService;
         private readonly ISearchQueryParserService _searchQueryParserService;
         private readonly IWarehouseInventoryService _warehouseInventoryService;
-        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService)
+        private readonly IProductCatalogService _productCatalogService;
+        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService, IProductCatalogService productCatalogService)
         {
             _eventPublisherService = eventPublisherService;
             _searchQueryParserService = searchQueryParserService;
             _warehouseInventoryService = warehouseInventoryService;
+            _productCatalogService = productCatalogService;
         }
 
         public IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
             out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
             out Dictionary<int, string> availableVendors, out Dictionary<string, List<string>> availableFilters,
-            string searchText = null, string filterExpression = null, bool? published = true,
+            string searchText = null, string filterExpression = null, bool? published = true, int? storeId = null,
             IList<string> tags = null,
             IList<int> manufacturerIds = null,
-            IList<int> vendorIds = null, IList<int> categoryIds = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null,
+            IList<int> vendorIds = null, IList<int> catalogIds = null, IList<int> categoryIds = null, IList<int> roleIds = null, bool ignoreRoles = false, decimal? fromPrice = null,
             decimal? toPrice = null, Expression<Func<Product, object>> orderByExpression = null,
             SortOrder sortOrder = SortOrder.Descending, int page = 1, int count = Int32.MaxValue)
         {
@@ -87,6 +100,24 @@ namespace EvenCart.Services.Products
                         .Select(x => x.ProductId).ToList();
                     query = query.Where(x => productIds.Contains(x.Id));
                 }
+            }
+            query = query
+                .Join<ProductCatalog>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<Catalog>("CatalogId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<Product, Catalog>());
+
+            if (catalogIds != null && catalogIds.Any())
+            {
+
+                Expression<Func<Catalog, bool>> catalogWhereExpression = catalog => catalogIds.Contains(catalog.Id);
+                query = query.Where(catalogWhereExpression);
+            }
+            if (storeId.HasValue)
+            {
+                Expression<Func<EntityStore, bool>> storeWhereExpression = store => store.StoreId == storeId;
+                query = query.Join<EntityStore>("Id", "EntityId", joinType: JoinType.LeftOuter,
+                    additionalExpression: (product, store) => store.EntityName == nameof(Catalog))
+                    .Where(storeWhereExpression);
             }
 
             if (!ignoreRoles)
@@ -531,7 +562,10 @@ namespace EvenCart.Services.Products
                 .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<EntityRole>("Id", "EntityId", SourceColumn.Parent, joinType: JoinType.LeftOuter, additionalExpression: ((product, role) => role.EntityName == nameof(Product)))
+                .Join<ProductCatalog>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<Catalog>("CatalogId", "Id", joinType: JoinType.LeftOuter)
                 .Where(seoMetaWhere)
+                .Relate(RelationTypes.OneToMany<Product, Catalog>())
                 .Relate(RelationTypes.OneToMany<Product, Media>())
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
                 .Relate(RelationTypes.OneToMany<Product, WarehouseInventory>())
@@ -558,7 +592,10 @@ namespace EvenCart.Services.Products
                 .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<EntityTag>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter, (product1, tag) => tag.EntityName == nameof(Product))
+                .Join<ProductCatalog>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                .Join<Catalog>("CatalogId", "Id", joinType: JoinType.LeftOuter)
                 .Where(seoMetaWhere)
+                .Relate(RelationTypes.OneToMany<Product, Catalog>())
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
                 .Relate<ProductCategory>((product1, category) =>
                 {
@@ -997,6 +1034,34 @@ namespace EvenCart.Services.Products
                 .Relate(Product.WithCountry())
                 .SelectNested()
                 .ToList();
+        }
+
+        public void SetProductCatalogs(int productId, IList<int> catalogIds)
+        {
+            if (catalogIds == null)
+                catalogIds = new List<int>();
+            //get the saved product catalogs
+            var productCatalogs =  _productCatalogService.Get(x => x.ProductId == productId).ToList();
+            //to delete
+            var toInsertIds = catalogIds.Where(x => productCatalogs.All(y => y.CatalogId != x));
+            var toDeleteIds = productCatalogs.Select(x => x.CatalogId).Except(catalogIds).ToList();
+            Transaction.Initiate(transaction =>
+            {
+                foreach (var id in toInsertIds)
+                {
+                    _productCatalogService.Insert(new ProductCatalog()
+                    {
+                        CatalogId = id,
+                        ProductId = productId
+                    }, transaction);
+                }
+
+                if (toDeleteIds.Any())
+                {
+                    _productCatalogService.Delete(x => toDeleteIds.Contains(x.CatalogId) && x.ProductId == productId);
+                }
+            });
+
         }
     }
 }

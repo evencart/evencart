@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Linq;
 using System.Reflection;
 using DryIoc;
@@ -163,7 +174,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 .Where(type => type.GetInterfaces()
                     .Any(x => x.IsAssignableTo(typeof(IFoundationEvent))));// which implementing some interface(s)
             //all consumers which are not interfaces
-            registrar.RegisterMany(allConsumerTypes, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
+            registrar.RegisterMany(allConsumerTypes);
 
             //components
             //find all event consumer types
@@ -179,10 +190,10 @@ namespace EvenCart.Infrastructure.DependencyContainer
                 var type = settingType;
                 registrar.RegisterDelegate(type, resolver =>
                 {
-                    var instance = (ISettingGroup)Activator.CreateInstance(type);
-                    resolver.Resolve<ISettingService>().LoadSettings(instance);
-                    return instance;
-                }, reuse: Reuse.Singleton);
+                    var storeId = ApplicationEngine.CurrentStore?.Id ?? 0;
+                    return resolver.Resolve<ISettingService>().GetSettings(type, storeId);
+                 
+                }, reuse: Reuse.Transient);
 
             }
 

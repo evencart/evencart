@@ -1,4 +1,14 @@
-﻿
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
 namespace EvenCart.Infrastructure.Routing
 {
     public static class AdminRouteNames
@@ -303,5 +313,16 @@ namespace EvenCart.Infrastructure.Routing
 
         public const string InstallSampleData = Prefix + "InstallSampleData";
         public const string GetEntityTagsSuggestions = Prefix + "GetEntityTagsSuggestions";
+
+        public const string StoresList = Prefix + "StoresList";
+        public const string GetStore = Prefix + "GetStore";
+        public const string DeleteStore = Prefix + "DeleteStore";
+        public const string SaveStore = Prefix + "SaveStore";
+        public const string CloneStore = Prefix + "CloneStore";
+
+        public const string CatalogsList = Prefix + "CatalogsList";
+        public const string GetCatalog = Prefix + "GetCatalog";
+        public const string DeleteCatalog = Prefix + "DeleteCatalog";
+        public const string SaveCatalog = Prefix + "SaveCatalog";
     }
 }

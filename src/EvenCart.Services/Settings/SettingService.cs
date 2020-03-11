@@ -1,5 +1,17 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Linq;
+using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
 using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
@@ -15,13 +27,15 @@ namespace EvenCart.Services.Settings
     {
         private readonly IDataSerializer _dataSerializer;
         private readonly ILogger _logger;
-        public SettingService(IDataSerializer dataSerializer, ILogger logger)
+        private readonly ICacheProvider _cacheProvider;
+        public SettingService(IDataSerializer dataSerializer, ILogger logger, ICacheProvider cacheProvider)
         {
             _dataSerializer = dataSerializer;
             _logger = logger;
+            _cacheProvider = cacheProvider;
         }
 
-        public Setting Get<T>(string keyName) where T : ISettingGroup
+        public Setting Get<T>(string keyName, int storeId) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
             var settings = Repository.Where(x => x.Key == keyName);
@@ -31,18 +45,18 @@ namespace EvenCart.Services.Settings
             return settings.SelectSingle();
         }
 
-        public void Save<T>(string keyName, string keyValue) where T : ISettingGroup
+        public void Save<T>(string keyName, string keyValue, int storeId) where T : ISettingGroup
         {
-            Save(typeof(T), keyName, keyValue);
+            Save(typeof(T), keyName, keyValue, storeId);
           
         }
 
-        public void Save<T>(T settings) where T : ISettingGroup
+        public void Save<T>(T settings, int storeId) where T : ISettingGroup
         {
-            Save(typeof(T), settings);
+            Save(typeof(T), settings, storeId);
         }
 
-        public void Save(Type settingType, object settings)
+        public void Save(Type settingType, object settings, int storeId)
         {
             var propertyFields = settingType.GetProperties();
             foreach (var property in propertyFields)
@@ -59,11 +73,11 @@ namespace EvenCart.Services.Settings
                     value = valueObj != null ? valueObj.ToString() : "";
                 }
                 //save the property
-                Save(settingType, propertyName, value);
+                Save(settingType, propertyName, value, storeId);
             }
         }
 
-        public void Save(Type settingType, string keyName, string keyValue)
+        public void Save(Type settingType, string keyName, string keyValue, int storeId)
         {
             var groupName = settingType.Name;
 
@@ -74,7 +88,8 @@ namespace EvenCart.Services.Settings
                 setting = new Setting() {
                     GroupName = groupName,
                     Key = keyName,
-                    Value = keyValue
+                    Value = keyValue,
+                    StoreId = storeId
                 };
                 Insert(setting);
             }
@@ -85,33 +100,48 @@ namespace EvenCart.Services.Settings
             }
         }
 
-        public T GetSettings<T>() where T : ISettingGroup
+        public T GetSettings<T>(int storeId) where T : ISettingGroup
         {
             //create a new settings object
             var settingsObj = Activator.CreateInstance<T>();
 
-            FurnishInstance(settingsObj);
+            FurnishInstance(settingsObj, storeId);
 
             return settingsObj;
         }
 
-        public void LoadSettings<T>(T settingsObject) where T : ISettingGroup
+        public object GetSettings(Type settingType, int storeId)
         {
-            FurnishInstance(settingsObject);
+            if (typeof(IGlobalSettingGroup).IsAssignableFrom(settingType))
+                storeId = 0; //no matter what storeId is , if it's global setting, it's 0
+
+            var settingCacheKey = $"{settingType.FullName}-{storeId}";
+            return _cacheProvider.Get(settingCacheKey, () =>
+            {
+                //create a new settings object
+                var settingsObj = Activator.CreateInstance(settingType);
+                FurnishInstance(settingsObj, storeId);
+
+                return settingsObj;
+            }, int.MaxValue);
+        }
+        public void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup
+        {
+            FurnishInstance(settingsObject, storeId);
         }
 
-        public void DeleteSettings<T>() where T : ISettingGroup
+        public void DeleteSettings<T>(int storeId) where T : ISettingGroup
         {
             var groupName = typeof(T).Name;
-            Delete(x => x.GroupName == groupName);
+            Delete(x => x.GroupName == groupName && x.StoreId == storeId);
         }
 
-        private void FurnishInstance<T>(T settingsInstance) where T : ISettingGroup
+        private void FurnishInstance(object settingsInstance, int storeId)
         {
             var settingInstanceType = settingsInstance.GetType();
             //each setting group will have some properties. We'll loop through these using reflection
             var propertyFields = settingInstanceType.GetProperties();
-            var allSettings = Repository.Where(x => x.GroupName == settingInstanceType.Name).Select().ToList();
+            var allSettings = Repository.Where(x => x.GroupName == settingInstanceType.Name && x.StoreId == storeId).Select().ToList();
             foreach (var property in propertyFields)
             {
                 var propertyName = property.Name;
@@ -130,9 +160,7 @@ namespace EvenCart.Services.Settings
                     }
                     catch(Exception ex)
                     {
-                        _logger.Log<Setting>(LogLevel.Error,
-                            $"Invalid value '{savedSettingEntity.Value}' for setting '{settingInstanceType.Name}.{property.Name}'",
-                            ex);
+                        //keep default value
                     }
                    
                 }

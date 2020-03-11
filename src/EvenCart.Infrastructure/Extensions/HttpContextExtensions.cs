@@ -1,6 +1,18 @@
-﻿using System.Collections.Generic;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.Collections.Generic;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Pages;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Breadcrumbs;
@@ -19,6 +31,7 @@ namespace EvenCart.Infrastructure.Extensions
         private const string ApiTokenKey = "ApiTokenKey";
         private const string IsTokenAuthenticatedKey = "IsTokenAuthenticated";
         private const string CurrentAffiliateKey = "CurrentAffiliateKey";
+        private const string CurrentStoreKey = "CurrentStoreKey";
 
         public static void SetCurrentCurrency(this HttpContext httpContext, Currency currency)
         {
@@ -103,6 +116,16 @@ namespace EvenCart.Infrastructure.Extensions
         public static string GetReferer(this HttpContext httpContext)
         {
             return httpContext.Request.Headers["Referer"];
+        }
+
+        public static Store GetCurrentStore(this HttpContext httpContext)
+        {
+            return (Store) httpContext.Items[CurrentStoreKey];
+        }
+
+        public static void SetCurrentStore(this HttpContext httpContext, Store store)
+        {
+            httpContext.Items[CurrentStoreKey] = store;
         }
     }
 }

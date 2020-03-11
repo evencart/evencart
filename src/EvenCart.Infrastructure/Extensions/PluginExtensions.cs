@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
@@ -35,7 +46,7 @@ namespace EvenCart.Infrastructure.Extensions
             if (save)
             {
                 var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(pluginSettings);
+                settingService.Save(pluginSettings, 0);
             }
         }
 
@@ -52,8 +63,18 @@ namespace EvenCart.Infrastructure.Extensions
                 };
                 pluginStatus.Add(ps);
             }
-            ps.Active = active;
             ps.Installed = installed;
+            var storeId = ApplicationEngine.CurrentStore.Id;
+            ps.ActiveStoreIds = ps.ActiveStoreIds ?? new List<int>();
+            if (active)
+            {               
+                if (!ps.ActiveStoreIds.Contains(storeId))
+                    ps.ActiveStoreIds.Add(storeId);
+            }
+            else
+            {
+                ps.ActiveStoreIds.Remove(storeId);
+            }
             pluginSettings.SetSitePlugins(pluginStatus, true);
         }
 
@@ -62,12 +83,12 @@ namespace EvenCart.Infrastructure.Extensions
             var siteWidgets = pluginSettings.SiteWidgets;
             if (siteWidgets.IsNullEmptyOrWhiteSpace())
                 return new List<WidgetStatus>();
-
+            var storeId = ApplicationEngine.CurrentStore.Id;
             var dataSerializer = DependencyResolver.Resolve<IDataSerializer>();
-            var widgets = dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets);
+            var widgets = dataSerializer.DeserializeAs<IList<WidgetStatus>>(siteWidgets).Where(x => x.StoreId == storeId);
             if (activeOnly)
             {
-                var sitePlugins = pluginSettings.GetSitePlugins().Where(x => x.Active).Select(x => x.PluginSystemName);
+                var sitePlugins = pluginSettings.GetSitePlugins().Where(x => x.ActiveStoreIds.Contains(storeId)).Select(x => x.PluginSystemName);
                 widgets = widgets.Where(x => x.PluginSystemName == ApplicationConfig.InbuiltWidgetPluginName || sitePlugins.Contains(x.PluginSystemName)).ToList();
             }
             return widgets.OrderBy(x => x.DisplayOrder).ToList();
@@ -85,7 +106,8 @@ namespace EvenCart.Infrastructure.Extensions
                 PluginSystemName = pluginSystemName,
                 ZoneName = zoneName,
                 DisplayOrder = zoneWidgetCount,
-                Id = widgetId
+                Id = widgetId,
+                StoreId = ApplicationEngine.CurrentStore.Id
             });
 
             pluginSettings.SaveWidgets(siteWidgets, true);
@@ -100,7 +122,7 @@ namespace EvenCart.Infrastructure.Extensions
             if (save)
             {
                 var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(pluginSettings);
+                settingService.Save(pluginSettings, ApplicationEngine.CurrentStore.Id);
             }
         }
 
@@ -136,7 +158,7 @@ namespace EvenCart.Infrastructure.Extensions
             {
                 var ps = pluginStatus.FirstOrDefault(x => x.PluginSystemName == pluginInfo.SystemName);
                 pluginInfo.Installed = ps?.Installed ?? false;
-                pluginInfo.Active = ps?.Active ?? false;
+                pluginInfo.ActiveStoreIds = ps?.ActiveStoreIds ?? new List<int>();
             }
 
             return pluginInfos;

@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.IO;
 using System.Linq;
 using DryIoc;
@@ -11,6 +22,7 @@ using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
@@ -41,7 +53,7 @@ namespace EvenCart.Infrastructure
         public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
         {
             //register singletons
-            services.AddGlobalSingletons();
+            services.AddGlobalSingletons(hostingEnvironment);
 
             if (!IsTestEnv(hostingEnvironment))
             {
@@ -107,11 +119,14 @@ namespace EvenCart.Infrastructure
 
             if (DatabaseManager.IsDatabaseInstalled())
             {
-                //https redirection
-                app.UseHttps();
-
                 //ip filtering
                 app.UseIpFilter();
+
+                //store loader
+                app.UseStoreLoader();
+                
+                //https redirection
+                app.UseHttps();
 
                 //use response pages
                 app.UseStatusPages();
@@ -130,17 +145,19 @@ namespace EvenCart.Infrastructure
 
                 //recaptcha
                 app.UseRecaptcha();
+
+                //add any middlewares from plugins
+                var availablePlugins = PluginLoader.GetAvailablePlugins();
+                foreach (var ap in availablePlugins.Where(x => x.ActiveStoreIds != null && x.ActiveStoreIds.Any()))
+                {
+                    ap.Startup?.Configure(app);
+                }
+
             }
             
 #endif
             app.UseResponseCompression();
 
-            //add any middlewares from plugins
-            var availablePlugins = PluginLoader.GetAvailablePlugins();
-            foreach (var ap in availablePlugins.Where(x => x.Active))
-            {
-                ap.Startup?.Configure(app);
-            }
 
             //use mvc
             app.UseMvc(builder =>
@@ -220,6 +237,8 @@ namespace EvenCart.Infrastructure
         public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
 
         public static User CurrentAffiliate => CurrentHttpContext.GetCurrentAffiliate();
+
+        public static Store CurrentStore => CurrentHttpContext?.GetCurrentStore();
 
         public static string CurrentLanguageCultureCode => "en-US";
 

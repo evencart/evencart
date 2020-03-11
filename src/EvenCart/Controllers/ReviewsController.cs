@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Payments;
@@ -87,7 +98,7 @@ namespace EvenCart.Controllers
             {
                 //is this a valid product?
                 var product = _productService.Get(reviewModel.ProductId);
-                if (!product.IsPublic())
+                if (!product.IsPublic(CurrentStore.Id))
                     return R.Fail.With("error", T("Invalid product details provided")).Result;
 
             }
@@ -159,7 +170,7 @@ namespace EvenCart.Controllers
         {
             //check if the product is valid
             var product = _productService.Get(productId);
-            if (!product.IsPublic())
+            if (!product.IsPublic(CurrentStore.Id))
                 return NotFound();
             var currentUser = ApplicationEngine.CurrentUser;
             var review = reviewId > 0 ? _reviewService.Get(reviewId) : new Review()
@@ -177,7 +188,7 @@ namespace EvenCart.Controllers
             if (_catalogSettings.AllowReviewsForStorePurchaseOnly)
             {
                 //check if user has purchased anything here
-                var orders = _orderService.GetOrders(out int _, userId: currentUser.Id,
+                var orders = _orderService.GetOrders(out int _, userId: currentUser.Id, storeId: CurrentStore.Id,
                     paymentStatus: new List<PaymentStatus>() {PaymentStatus.Complete},
                     orderStatus: new List<OrderStatus>() {OrderStatus.Complete});
                 if (orders.SelectMany(x => x.OrderItems).All(y => y.ProductId != productId))
@@ -224,7 +235,7 @@ namespace EvenCart.Controllers
         {
             //check if the product is valid
             var product = _productService.Get(reviewSearchModel.ProductId);
-            if (!product.IsPublic())
+            if (!product.IsPublic(CurrentStore.Id))
                 return NotFound();
 
             IList<Review> reviews;
@@ -361,7 +372,7 @@ namespace EvenCart.Controllers
                 PaymentStatus.Complete, PaymentStatus.Refunded
             };
             //get the user's orders
-            var orders = _orderService.GetOrders(out int _, userId: CurrentUser.Id, orderStatus: allowedOrderStatus,
+            var orders = _orderService.GetOrders(out int _, userId: CurrentUser.Id, storeId: CurrentStore.Id, orderStatus: allowedOrderStatus,
                 paymentStatus: allowedPaymentStatus);
             var orderItems = orders.SelectMany(x => x.OrderItems);
             var reviewedOrders = _reviewService.Get(x => x.UserId == CurrentUser.Id).ToList();

@@ -1,0 +1,62 @@
+﻿<form action='{% route api_SaveStore %}' method="post" id="store-editor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Store Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Name" for="store-name" %}
+                        {% control text name="name" value="{{storeObject.name}}" %}
+                    </div>
+                    {% if storeObject.id > 0 %}
+                    <div class="form-group">
+                        {% control checkbox name="live" value="storeObject.live" text=@t"Live" %}
+                    </div>
+                    {% else %}
+                    <input type="hidden" name="clone" value="true"/>
+                    <div class="form-group">
+                        {% control label text=@t"Store Store" for="store-name" %}
+                        <div class="panel-help">
+                            {{"Select the store whose settings should be copied into new store."}}
+                        </div>
+                        {% control select name="sourceStoreId" value="" items="availableStores" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Domain" for="store-name" %}
+                        <div class="panel-help">
+                            {{"The domain of the new store. It must start with // without any protocol information. e.g. //www.xyz.com"}}
+                        </div>
+                        {% control text name="domain" value="" %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{storeObject.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Store" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("store-editor-form",
+        {
+            onSuccess: function() {
+                hidePopup("edit-store-popup");
+            }
+        });
+
+</script>

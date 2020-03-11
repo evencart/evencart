@@ -1,4 +1,15 @@
-﻿using System.IO;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.IO;
 using System.Net;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
@@ -120,22 +131,12 @@ namespace EvenCart.Infrastructure.Extensions
             });
 
             //bundles directory
-            var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "Bundles");
+            var bundleDir = Path.Combine(hostingEnvironment.WebRootPath, "bundles");
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(bundleDir),
                 RequestPath = new PathString($"/bundles")
             });
-
-#if DEBUG
-            //bundles directory
-            var samplesDir = Path.Combine(hostingEnvironment.WebRootPath, "samples");
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(samplesDir),
-                RequestPath = new PathString($"/samples")
-            });
-#endif
 
             //get all the theme's directories, they'll be used for static files
             var themesDir = Path.Combine(hostingEnvironment.ContentRootPath, "Content", "Themes");
@@ -201,6 +202,11 @@ namespace EvenCart.Infrastructure.Extensions
         public static void UseAffiliateTracking(this IApplicationBuilder app)
         {
             app.UseMiddleware<AffiliateTrackingMiddleware>();
+        }
+
+        public static void UseStoreLoader(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<StoreLoaderMiddleware>();
         }
 
     }

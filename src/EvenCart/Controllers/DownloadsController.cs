@@ -1,4 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
@@ -35,7 +46,7 @@ namespace EvenCart.Controllers
             if (download.RequirePurchase)
             {
                 //find the orders of the user
-                var orders = _orderService.GetOrders(out _, userId: CurrentUser.Id,
+                var orders = _orderService.GetOrders(out _, userId: CurrentUser.Id, storeId: CurrentStore.Id,
                     productIds: new List<int>() {download.ProductId},
                     paymentStatus: new List<PaymentStatus>() {PaymentStatus.Complete}).ToList();
                 if (!orders.Any())

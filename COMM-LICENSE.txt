@@ -1,0 +1,147 @@
+Copyright(c) Sojatia Infocrafts Private Limited
+
+EvenCart Proprietary License
+*** END USER LICENSE AGREEMENT ***
+
+IMPORTANT: PLEASE READ THIS LICENSE CAREFULLY BEFORE DOWNLOADING ANY SOFTWARE, DOCUMENTATION OR OTHER MATERIALS MADE AVAILABLE FROM THIS WEBSITE. BY DOWNLOADING, USING THE SOFTWARE OR DOCUMENTATION CONTAINING THIS SOFTWARE, YOU AGREE THAT THIS END USER LICENSE AGREEMENT (EULA) IS A LEGALLY BINDING AND VALID CONTRACT AND AGREE TO BE BOUND BY IT. YOU AGREE TO ABIDE BY THE INTELLECTUAL PROPERTY LAWS AND ALL OF THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THIS AGREEMENT, PLEASE DO NOT DOWNLOAD THE SOFTWARE.
+
+TERMS & DEFINITIONS
+
+Software / EvenCart Software – EvenCart Software and Source Code made available from this website or GitHub Repository.
+
+Owner / Licensor / EvenCart / Original Authors -  shall mean Sojatia Infocrafts Private Limited, the sole owner of this site and all the products, tools, scripts, images, or any other product made available on this website.
+
+End User / Licensee / Customer / You – shall mean you or the company you represent and are authorized to bind.
+
+Vendor - shall mean users/companies selling or listing their plugins or themes on Licensor's website.
+
+Website – shall mean the domain and the website where the Software is installed and used. It does not include the subdomains or any other domain or website.
+
+1. LICENSE
+Subject to the terms of this Agreement, Licensor grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation in accordance with this Agreement and any other written agreement with Licensor. Licensor does not transfer the title of any of the downloaded or purchased product to you; the license granted to you is not a sale. This agreement is a binding legal agreement between Licensor and the purchasers or users of the Software and tools provided on the website.
+
+1.1 TYPES OF LICENSES
+
+The terms and conditions set forth in sections 1.1.1 to 1.1.4 shall apply according to the licensed purchased by you / applicable to you. The terms applied in one section doesn’t apply to any other section.
+
+1.1.1 SINGLE DOMAIN LICENSE
+
+The Software licensed under SINGLE DOMAIN LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on a Single Website Domain, excluding any subdomain or other domain, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+
+1.1.2 UNLIMITED SUBDOMAINS LICENSE
+
+The Software licensed under UNLIMITED SUBDOMAINS LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on any number of Website Subdomains of a Single Website Domain excluding any other domain,as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+
+1.1.3 UNLIMITED SITES FOR ONE IP ADDRESS LICENSE
+
+The Software licensed under UNLIMITED SITES FOR ONE IP ADDRESS LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, on all the website domains having SINGLE IP ADDRESS, excluding any other IP ADDRESS and any IP ADDRESS belonging to any hosting companies OR cloud providers such as Amazon Web Services, Microsoft Azure, CloudFlare CDN and similar, as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+
+1.1.4 UNLIMITED SITES LICENSE
+
+The Software licensed under UNLIMITED SITES LICENSE grants to you a limited, non-exclusive, non-transferable license, without right to sub-license, to install and use the Software downloaded and any accompanying documentation, however you like to use it as long as the resultant work is not distributed/sold/released as a direct competitor to EvenCart eCommerce Software, by strictly adhering to the terms and conditions set forth in this document.
+
+1.2 SOFTWARE SUPPORT
+
+The Software License does not entitle the Licensee any support unless explicitly agreed upon in written by Licensor. The Licensee may however opt for additional support by paying additional support fee as negotiated with Licensor.
+
+Any Plugin / Theme purchased from our website shall follow the same support terms unless explictly specified on the Plugin / Theme Product Page.
+
+The support inquiries shall always be online support channels. No telephonic support shall be provided. All support inquiries should only be related to the Software offered on this website. Support inquiries related to the software / plugins / themes developed by other companies/vendors/users may go unanswered.
+
+1.3 SOFTWARE UPDATES
+
+The Software license purchased by Licensee shall be eligible for FREE UPGRADES for lifetime unless the terms of the license is changed by Original Authors. In case the terms of the license are changed, the Licensee shall be eligible to use the FREE UPGRADES till releases prior to the change of the terms.
+
+1.4 REFUNDS
+
+WE DO NOT OFFER ANY REFUNDS FOR ANY OF THE LICENSE / PRODUCT / PLUGIN / THEME PURCHASED ON OUR WEBSITE. EvenCart is an Open Source Software and the licensee is expected to have downloaded and used the software to their satisfaction before purchasing any license.
+
+1.5 LICENSE VALIDITY
+
+Each of the Software licenses, specified in sections 1.1.1 to 1.1.4 above, purchased by Licensee is valid for 1 Year from the date of purchase of the license. This period of 1 Year is called License Term. After License Term is over, the license shall expire and shall be considered to fallback to "GNUv3 license with additional terms as specified in the file LICENSE.TXT or at https://evencart.co/license" unless renewed by Licensee for next year by paying the then license price at the time of license renewal.
+
+2. USAGE RESTRICTIONS
+
+You shall use Software in compliance with all applicable laws and not for any unlawful purpose. Without limiting the foregoing, use, display or distribution of Software together with material that is pornographic, racist, vulgar, obscene, defamatory, libelous, abusive, promoting hatred, discriminating or displaying prejudice based on religion, ethnic heritage, race, sexual orientation or age is strictly prohibited.
+
+Each licensed copy of Software may be used on one single website by one user. Use of Software means that you have loaded, installed, or run Software on a computer or similar device. If you install Software onto a multi-user/multi-store/multi-domain platform, server or network, each and every individual user and website of Software must be licensed separately. The limitation shall be overridden for the type of license purchased by / applicable to you as per section 1.1 above.
+
+You may make copies of Software for backup purposes, providing you only have one copy installed on one website. Other websites may not use the same copy of Software. The assignment, sublicense, networking, sale, or distribution of copies of Software are strictly forbidden without the prior written consent of Licensor. It is a violation of this agreement to assign, sell, share, loan, rent, lease, borrow, network or transfer the use of Software and Software License. If any person other than yourself uses Software registered in your name, regardless of whether it is at the same time or different times, then this agreement is being violated and you are responsible for that violation!
+
+3. DISTRIBUTION
+The Software downloaded from Licensor, modified or unmodified and the license herein granted shall not be copied, shared, distributed, re-sold, offered for re-sale, transferred or sub-licensed in whole or in part on a diskette, CD, Website or any other medium without prior written permission of Licensor.
+
+4. USER AGREEMENT
+4.1 USE
+
+Your license to use Software is limited to the type of license as per section 1.1 purchased by / applied to you. You shall not allow others to use, copy or evaluate copies of Software.
+
+4.2 COPYRIGHT RESTRICTION
+
+The Software downloaded from this website contains copyrighted material, trade secrets and other proprietary material. You shall not, and shall not attempt to, modify, reverse engineer, disassemble or decompile Software. Nor can you create any derivative works or other works that are based upon or derived from Software in whole or in part.
+
+Licensor's name, logo and graphics file that represents Software shall not be used in any way to promote products developed with Software. Licensor retains sole and exclusive ownership of all right, title and interest in and to Software and all Intellectual Property rights relating thereto.
+
+Copyright law and international copyright treaty provisions protect all parts of Software, products and services. No program, code, part, image, audio sample, or text may be copied or used in any way by you except as intended within the bounds of the type of license purchased by / applied to you. All rights not expressly granted hereunder are reserved for Licensor.
+
+4.3 LIMITATION OF RESPONSIBILITY & LIMITATION OF LIABILITY
+
+You will indemnify, hold harmless, and defend Licensor, its employees, agents, vendors and distributors against any and all claims, proceedings, demand and costs resulting from or in any way connected with your use of Licensor's Software.
+
+In no event (including, without limitation, in the event of negligence) will Licensor , its employees, agents, vendors or distributors be liable for any consequential, incidental, indirect, special or punitive damages whatsoever (including, without limitation, damages for loss of profits, loss of use, business interruption, loss of information or data, or pecuniary loss), in connection with or arising out of or related to this Agreement, Software or the use or inability to use Software or the furnishing, performance or use of any other matters hereunder whether based upon contract, tort or any other theory including negligence.
+
+Licensor's entire liability, without exception, is limited to the customers' reimbursement of the purchase price of the Software (maximum being the lesser of the amount paid by you and the suggested retail price as listed by Licensor) minus the payment gateway and processing charges incurred in exchange for destruction of all the copies of the software, cease the use of software and associated documentation, registration papers and manuals, and all materials that constitute a transfer of license from the customer back to Licensor. The existence of more than one claim will not enlarge or extend this limit.
+
+4.4 WARRANTIES
+
+Except as expressly stated in writing, Licensor makes no representation or warranties in respect of this Software and expressly excludes all other warranties, expressed or implied, oral or written, including, without limitation, any implied warranties of merchantable quality or fitness for a particular purpose.
+
+4.5 GOVERNING LAW
+
+This Agreement shall be governed by the law of Indore, Madhya Pradesh, India applicable therein. You hereby irrevocably attorn and submit to the non-exclusive jurisdiction of the courts of Indore, Madhya Pradesh,India therefrom. If any provision shall be considered unlawful, void or otherwise unenforceable, then that provision shall be deemed severable from this License and not affect the validity and enforceability of any other provisions.
+
+4.6 TERMINATION
+
+Any failure to comply with the terms and conditions of this Agreement will result in automatic and immediate termination of this license. Upon termination of this license granted herein for any reason, you agree to immediately cease use of Software and destroy all copies of Software supplied under this Agreement. The financial obligations incurred by you shall survive the expiration or termination of this license.
+
+5. ELECTRONIC DELIVERY
+All Software and license files shall be delivered by electronic means unless otherwise specified on the applicable invoice or at the time of purchase. Software shall be deemed delivered when it is made available for download by you.
+
+6. CONSENT OF USE OF DATA
+You agree that Licensor may collect and use information gathered in any manner as part of the product support services provided to you, if any, related to Software. Licensor may also use this information to provide notices to you which may be of use or interest to you.
+
+6. MISCELLANEOUS
+6.1 ENTIRE AGREEMENT
+
+This Agreement sets forth our entire agreement with respect to the Software and the subject matter hereof and supersedes all prior and contemporaneous understandings and agreements whether written or oral.
+
+6.2 AMENDMENT
+
+Licensor reserves the right, in its sole discretion, to amend this Agreement from time. Amendments to this Agreement can be read at https://evencart.co/commercial-license
+
+6.3 ASSIGNMENT
+
+You may not assign this Agreement or any of its rights under this Agreement without the prior written consent of Licensor and any attempted assignment without such consent shall be void.
+
+6.4 EXPORT COMPLIANCE
+
+You agree to comply with all applicable laws and regulations, including laws, regulations, orders or other restrictions on export, re-export or redistribution of software.
+
+6.5 ATTORNEY'S FEE AND COSTS
+
+The prevailing party in any action to enforce this Agreement will be entitled to recover its attorneys' fees and costs in connection with such action. 
+
+6.6 SEVERABILITY
+
+If any provision of this Agreement is held by a court of competent jurisdiction to be invalid, illegal, or unenforceable, the remainder of this Agreement will remain in full force and effect.
+
+6.7 WAIVER
+
+Failure or neglect by either party to enforce at any time any of the provisions of this licence Agreement shall not be construed or deemed to be a waiver of that party's rights under this Agreement.
+
+6.8 HEADINGS
+
+The headings of sections and paragraphs of this Agreement are for convenience of reference only and are not intended to restrict, affect or be of any weight in the interpretation or construction of the provisions of such sections or paragraphs.
+
+7. CONTACT
+If you have any questions about this EULA, or if you want to contact Licensor for any reason, please send your query to enquiry@apexol.com

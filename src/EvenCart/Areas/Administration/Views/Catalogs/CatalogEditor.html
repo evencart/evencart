@@ -1,0 +1,48 @@
+﻿<form action='{% route api_SaveCatalog %}' method="post" id="catalog-editor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Catalog Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Name" for="catalog-name" %}
+                        {% control text name="name" value="{{catalog.name}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Available in stores" %}
+                        <div class="panel-help">
+                            {{"Select the stores in which this catalog is available. The products from this catalog will only be available in the selected stores."}}
+                        </div>
+                        {% partial "Stores/AvailableStoresSelector" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{catalog.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Catalog" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("catalog-editor-form",
+        {
+            onSuccess: function() {
+                hidePopup("edit-catalog-popup");
+            }
+        });
+
+</script>

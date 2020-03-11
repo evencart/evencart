@@ -1,4 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,11 +37,7 @@ namespace EvenCart.Areas.Administration.Controllers
     [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
     public class PluginsController : FoundationAdminController
     {
-#if DEBUG
-        private const string MarketPluginUrl = "http://localhost:52886/samples/plugins.json";
-#else
-        private const string MarketPluginUrl = "https://www.evencart.com/api/market";
-#endif
+        private const string MarketPluginUrl = "https://evencart.co/api/market";
         private readonly IModelMapper _modelMapper;
         private readonly IPluginAccountant _pluginAccountant;
         private readonly IDataSerializer _dataSerializer;
@@ -52,6 +59,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var pluginModels = plugins.Select(x =>
             {
                 var pluginInfo = _modelMapper.Map<PluginInfoModel>(x);
+                pluginInfo.Active = x.ActiveStoreIds.Contains(CurrentStore.Id);
                 pluginInfo.ConfigurationUrl = x.ConfigurationUrl;
                 return pluginInfo;
             }).OrderBy(x => x.Name).ToList();
@@ -175,11 +183,11 @@ namespace EvenCart.Areas.Administration.Controllers
                 _pluginAccountant.UninstallPlugin(plugin);
             }
 
-            if (pluginInfoModel.Active && !plugin.Active)
+            if (pluginInfoModel.Active && !plugin.ActiveStoreIds.Contains(CurrentStore.Id))
             {
                 _pluginAccountant.ActivatePlugin(plugin);
             }
-            else if (!pluginInfoModel.Active && plugin.Active)
+            else if (!pluginInfoModel.Active && plugin.ActiveStoreIds.Contains(CurrentStore.Id))
             {
                 _pluginAccountant.DeactivatePlugin(plugin);
             }

@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,13 +41,17 @@ namespace EvenCart.Services.Purchases
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Order> GetOrders(out int totalResults, string productName = null, int? userId = null, IList<int> orderIds = null, IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = int.MaxValue)
+        public IEnumerable<Order> GetOrders(out int totalResults, string productName = null, int? userId = null, int? storeId = null, IList<int> orderIds = null, IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = int.MaxValue)
         {
             var query = Repository;
             //check one by one for each filter
             if (userId.HasValue)
             {
                 query = query.Where(x => x.UserId == userId);
+            }
+            if (storeId.HasValue)
+            {
+                query = query.Where(x => x.StoreId == storeId);
             }
             if (orderIds != null && orderIds.Any())
             {
@@ -106,7 +121,7 @@ namespace EvenCart.Services.Purchases
             return orders;
         }
 
-        public IEnumerable<Order> GetOrdersMinimal(out int totalResults, string productName = null, int? userId = null, IList<int> orderIds = null,
+        public IEnumerable<Order> GetOrdersMinimal(out int totalResults, string productName = null, int? userId = null, int? storeId = null, IList<int> orderIds = null,
             IList<int> productIds = null, IList<OrderStatus> orderStatus = null, IList<PaymentStatus> paymentStatus = null, IList<int> vendorIds = null,
             DateTime? startDate = null, DateTime? endDate = null, int page = 1, int count = Int32.MaxValue)
         {
@@ -115,6 +130,10 @@ namespace EvenCart.Services.Purchases
             if (userId.HasValue)
             {
                 query = query.Where(x => x.UserId == userId);
+            }
+            if(storeId.HasValue)
+            {
+                query = query.Where(x => x.StoreId == storeId);
             }
             if (orderIds != null && orderIds.Any())
             {
@@ -198,7 +217,7 @@ namespace EvenCart.Services.Purchases
                 .FirstOrDefault();
         }
 
-        public Dictionary<OrderStatus, int> GetOrderCountsByStatus()
+        public Dictionary<OrderStatus, int> GetOrderCountsByStatus(int? storeId = null)
         {
             var tableName = DotEntityDb.GetTableNameForType<Order>();
             var enclosedTableName = DotEntityDb.Provider.SafeEnclose(tableName);
@@ -207,7 +226,8 @@ namespace EvenCart.Services.Purchases
             {
                 orderStatusCounts.Add(status, 0);
             }
-            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} GROUP BY OrderStatus", null))
+
+            using (var result = EntitySet.Query($"SELECT OrderStatus, COUNT(*) AS OrderCount FROM {enclosedTableName} WHERE StoreId=@storeId GROUP BY OrderStatus", new { storeId = storeId }))
             {
                 var totals = result.SelectAllAs<OrderStatusTotal>().ToList();
                 foreach (var t in totals)

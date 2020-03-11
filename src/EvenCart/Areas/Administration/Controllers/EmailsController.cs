@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
@@ -7,6 +18,7 @@ using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure;
 using EvenCart.Services.Emails;
 using EvenCart.Services.Security;
 using EvenCart.Services.Serializers;
@@ -185,7 +197,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 //mark all the others as non default
                 _emailSenderSettings.DefaultEmailAccountId = emailAccount.Id;
-                _settingService.Save(_emailSenderSettings);
+                _settingService.Save(_emailSenderSettings, CurrentStore.Id);
             }
             return R.Success.Result;
         }

@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Plugins;
@@ -35,7 +46,7 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<MenuWidgetSettings>(widgetId);
             var menu = _menuService.Get(widgetSettings.MenuId);
-            if (menu == null)
+            if (menu == null || menu.Stores == null || menu.Stores.All(x => x.Id != CurrentStore.Id))
                 return R.Success.ComponentResult;
             var widgetNavigation = NavigationObject.GetNavigation(menu.MenuItems, widgetId, _categoryService.GetFullCategoryTree());
             return R.Success.With("title", widgetSettings.Title)

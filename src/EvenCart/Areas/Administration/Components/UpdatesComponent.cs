@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Specialized;
 using EvenCart.Areas.Administration.Models.Updates;
 using EvenCart.Data.Entity.Settings;
@@ -14,7 +25,7 @@ namespace EvenCart.Areas.Administration.Components
     [ViewComponent(Name = "EvenCartUpdates")]
     public class UpdatesComponent : FoundationComponent
     {
-        private const string UpdatesFetchUrl = "https://www.evencart.com/api/feed";
+        private const string UpdatesFetchUrl = "https://evencart.co/api/feed";
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
         private readonly ISettingService _settingService;
@@ -51,7 +62,7 @@ namespace EvenCart.Areas.Administration.Components
                             return R.Fail.ComponentResult;
                         _systemSettings.LatestUpdatesFetched = _dataSerializer.Serialize(updates);
                         _systemSettings.LatestFetchedOn = DateTime.UtcNow;
-                        _settingService.Save(_systemSettings);
+                        _settingService.Save(_systemSettings, CurrentStore.Id);
                     }
                    
                 }

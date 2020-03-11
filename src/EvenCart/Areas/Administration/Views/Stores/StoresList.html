@@ -1,0 +1,107 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Stores" active_menu="StoresList" parent_active_menu="StoresList" %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Stores" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editStore(0)">{{"Add store" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-condensed table-hover">
+                    <thead style="display: none">
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="live" data-formatter="live">{{"Live" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{stores | scriptJson : 'initData'}}
+                <script type="text/javascript">
+                   
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                stores: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            navigation: 3,
+                            selection: false,
+                            url: '{% route api_StoresList %}',
+                            responseObject: "stores",
+                            formatters: {
+                                "live": function(column, row) {
+                                    return gridFormatters.binary(column, row, "live");
+                                },
+                                "commands": function(column, row) {
+                                    return "<button class=\"btn btn-sm btn-secondary command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='editStore(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-edit\"></span></button> " + 
+                                        "<button class=\"btn btn-sm btn-danger command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='deleteStore(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-trash-2\"></span></button> ";;
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup" id="edit-store-popup">
+</div>
+
+<script type="text/javascript">
+
+    var editStore = function(id) {
+        jQuery("#edit-store-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-store-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Store was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route GetStore storeId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-store-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteStore = function(id) {
+        confirm('{{"Are you sure you wish to delete this store?" | t}}',
+            function() {
+                var url = '{% route api_DeleteStore %}';
+                post({
+                    url: url,
+                    data: {
+                        storeId: id
+                    },
+                    done: function () {
+                        reloadGrid("grid-selection");
+                        notify("success", '{{"Store was deleted successfully" | t}}');
+                    }
+                });
+            });
+        
+        
+    }
+</script>

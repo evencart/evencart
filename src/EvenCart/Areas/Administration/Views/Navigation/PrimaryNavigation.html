@@ -18,6 +18,7 @@
 
 <!--Catalog-->
 {% primary_navigation title=@t"Catalog" systemName="ProductsList" groupId="store" capability="Product.View" %}
+{% secondary_navigation url="{% route Admin.CatalogsList %}" title=@t"Catalogs" parent="ProductsList" systemName="CatalogsList" capability="Catalog.Manage" %}
 {% secondary_navigation url="{% route Admin.ProductsList %}" title=@t"All Products" parent="ProductsList" systemName="ProductsList" %}
 {% secondary_navigation url="{% route Admin.CategoriesList %}" title=@t"Categories" parent="ProductsList" systemName="CategoriesList" capability="Category.View" %}
 {% secondary_navigation url="{% route Admin.AvailableAttributesList%}" title=@t"Attributes" parent="ProductsList" systemName="AvailableAttributesList" capability="AvailableAttribute.Manage" %}
@@ -100,6 +101,10 @@
 
 {% secondary_navigation url="{% route Admin.EmailMessagesList %}" iconClass="rbicon-chevron-left" title=@t"Back to emails" groupId="EmailMessageEdit" %}
 {% secondary_navigation url="{% route Admin.GetEmailMessage emailMessageId="{{emailMessageId}}" %}" title=@t"Edit Email Message" systemName="GetEmailMessage" groupId="EmailMessageEdit" %}
+
+<!--Stores-->
+{% primary_navigation title=@t"Stores" systemName="StoresList" groupId="masters" capability="Store.Manage" %}
+{% secondary_navigation url="{% route Admin.StoresList %}" title=@t"All Stores" systemName="StoresList" parent="StoresList" %}
 
 <!--Warehouses-->
 {% primary_navigation title=@t"Warehouses" systemName="WarehouseList" groupId="masters" capability="Warehouse.Manage" %}

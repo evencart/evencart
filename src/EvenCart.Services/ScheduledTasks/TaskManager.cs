@@ -1,4 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Infrastructure;
 using FluentScheduler;
@@ -29,8 +40,6 @@ namespace EvenCart.Services.ScheduledTasks
             var scheduledTasks = _scheduledTaskService.Get(x => true).ToList();
             //first sync available tasks and database tasks
             UpdateTasksInDatabase(availableTasks, scheduledTasks);
-            if (!scheduledTasks.Any(x => x.Enabled))
-                return;
             var registry = new Registry();
             //add each enabled task to the scheduler
             foreach (var sTask in scheduledTasks.Where(x => x.Enabled))
@@ -44,6 +53,8 @@ namespace EvenCart.Services.ScheduledTasks
                 //schedule the task
                 registry.Schedule(() =>
                 {
+                    if (!sTask.Enabled)
+                        return;
                     ScheduledTaskHelper.RunScheduledTask(sTask, task, _scheduledTaskService, _logger);
                 }).ToRunEvery(sTask.Seconds).Seconds();
             }

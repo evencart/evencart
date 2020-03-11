@@ -1,0 +1,24 @@
+Copyright(c) Sojatia Infocrafts Private Limited
+
+EvenCart is an Open Source Software that is dual licensed to allow you to choose a license that best suits your requirements.
+
+GPLv3 (GNU General Public License Version 3) with Additional Terms
+EvenCart is licensed under the terms of the GPLv3 (GNU General Public License Version 3) license with additional terms listed below according to section 7 of GPLv3 (GNU General Public License Version 3) license. Please see http://www.gnu.org/licenses/gpl-3.0.html for the license text.
+
+# Additional Terms
+In addition to the terms listed by GPLv3 (GNU General Public License Version 3) license, the following additional terms must be agreed to use the software. If you are using this software, it is implied that you agree to these additional terms.
+
+1. All copies of the Software in Executable and Source Code form must, as a form of attribution to the original author, include on each user interface screen "Powered by EvenCart" clickable link or "Powered by EvenCart (https://evencart.co)" text wherever putting a clickable link is not feasible. The link should be clearly visible on each of the user interface screens and should be placed in the same position across all the user interface screens. Clicking on the link should redirect the user to https://evencart.co website. 
+
+If EvenCart software is only used as an API Software (also known as Headless eCommerce) AND is only being consumed by another website, web application or mobile application, each such application as a form of attribution to the original author, include on each user interface screen "Powered by EvenCart" clickable link or "Powered by EvenCart (https://evencart.co)" text wherever putting a clickable link is not feasible. Clicking on the link should redirect the user to https://evencart.co website. 
+
+2. You may create a larger work that contains part or all of the EvenCart Source Code and distribute that work under terms of your choice, so long as that work complies with the Additional Term # 1 above. This obligation shall apply to any work that contains part or all of the EvenCart Source Code.
+
+3. All the plugins and themes that can be loaded via Officially Released Version of EvenCart Software are not considered a Derivative by EvenCart Authors and can be distributed under the terms of choice of the Plugin and Theme author (Third Party). EvenCart Authors or the company Sojatia Infocrafts Private Limited DO NOT PROVIDE ANY KIND OF WARRANTIES EITHER EXPRESS OR IMPLIED FOR ANY SUCH THIRD PARTY PLUGINS AND THEMES.
+
+4. Unless agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+
+EvenCart Proprietary License
+EvenCart is also licensed under the terms of EvenCart Proprietary License. This allows you to integrate EvenCart in your proprietary software without worrying about disclosing the source code of your proprietary software, which is required if you choose to use the software under GPLv3 license.
+You can read the terms of EvenCart Proprietary License in COMM-LICENSE.TXT file or at https://evencart.co/license/commercial-license

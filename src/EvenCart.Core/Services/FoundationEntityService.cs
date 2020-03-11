@@ -1,8 +1,21 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
+using DryIoc;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
@@ -112,7 +125,11 @@ namespace EvenCart.Core.Services
 
         public virtual IEnumerable<T> Get(Expression<Func<T, bool>> @where, int page = 1, int count = int.MaxValue)
         {
-            return EntitySet<T>.Where(where).OrderBy(x => x.Id).Select(page, count);
+            var query = EntitySet<T>.Where(where).OrderBy(x => x.Id);
+            query = _eventPublisherService.Filter(query);
+            if (typeof(T).IsAssignableTo(typeof(IStoreEntity)))
+                return query.SelectNested(page, count);
+            return query.Select(page, count);
         }
 
         public static IEnumerable<T> Get(Expression<Func<T, bool>> @where)
@@ -124,12 +141,20 @@ namespace EvenCart.Core.Services
         {
             if (orderBy == null)
                 orderBy = x => x.Id;
-            return EntitySet<T>.Where(where).OrderBy(orderBy, rowOrder).SelectWithTotalMatches(out totalResults, page, count);
+            var query = EntitySet<T>.Where(where).OrderBy(orderBy, rowOrder);
+            query = _eventPublisherService.Filter(query);
+            if (typeof(T).IsAssignableTo(typeof(IStoreEntity)))
+                return query.SelectNestedWithTotalMatches(out totalResults, page, count);
+            return query.SelectWithTotalMatches(out totalResults, page, count);
         }
 
         public virtual T FirstOrDefault(Expression<Func<T, bool>> @where)
         {
-            return EntitySet<T>.Where(where).SelectSingle();
+            var query = EntitySet<T>.Where(where);
+            query = _eventPublisherService.Filter(query);
+            if (typeof(T).IsAssignableTo(typeof(IStoreEntity)))
+                return query.SelectNested().FirstOrDefault();
+            return query.SelectSingle();
         }
 
         public virtual IEnumerable<T> Query(string query, object parameters = null)

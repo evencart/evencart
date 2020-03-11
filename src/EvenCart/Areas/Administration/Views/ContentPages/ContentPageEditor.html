@@ -28,7 +28,7 @@
             {% control hidden name="id" value="{{contentPage.id}}" %}
             <div class="save-button-container">
                 {% if contentPage.id > 0 %}
-                <a class="btn btn-sm btn-warning" target="_blank" href='{% route Admin.PreviewPage id="{{contentPage.id}}" %}'>
+                <a class="btn btn-sm btn-warning" target="_blank" href='{% route PreviewPage id="{{contentPage.id}}" %}'>
                     <i class="rbicon rbicon-external-link"></i>
                     {{"Preview" | t}}
                 </a>
@@ -63,6 +63,13 @@
                         {% control select name="ParentId" items="availablePages" value="contentPage.parentId"  %}
                     </div>
                     {% endif %}
+                    <div class="form-group">
+                        {% control label text=@t"Available in stores" %}
+                        <div class="panel-help">
+                            {{"Select the stores in which this page is available."}}
+                        </div>
+                        {% partial "Stores/AvailableStoresSelector" %}
+                    </div>
                 </div>
             </div>
             {% assign seoMeta = contentPage.seoMeta %}

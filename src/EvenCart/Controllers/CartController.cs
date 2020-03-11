@@ -1,4 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -73,7 +84,7 @@ namespace EvenCart.Controllers
 
             //first get the product
             var product = _productService.Get(cartItemModel.ProductId);
-            if (product == null || !product.IsPublic())
+            if (product == null || !product.IsPublic(CurrentStore.Id))
                 return R.Fail.Result;
             if (product.RequireLoginToPurchase && CurrentUser.IsVisitor())
                 return R.Fail.WithError(ErrorCodes.RequiresAuthenticatedUser, T("Please login to purchase this product.")).Result;
@@ -153,7 +164,7 @@ namespace EvenCart.Controllers
 
 
                         var attributeNames = cartItemModel.Attributes.Select(x => x.Name).ToList();
-                        var attributeIds = product.ProductAttributes?.Where(x => attributeNames.Contains(x.Label))
+                        var attributeIds = product.ProductAttributes?.Where(x => x.InputFieldType.RequireValues() && attributeNames.Contains(x.Label))
                             .Select(x => x.Id)
                             .ToList() ?? new List<int>();
 

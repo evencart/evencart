@@ -4,7 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
-    <Version>1.0.10</Version>
+    <Version>1.1.0</Version>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -64,9 +65,13 @@
    
     <None Remove="App_Data\Install\EmailTemplates\Vendor.Rejected.html" />
    
+    <None Remove="App_Data\Install\license.txt" />
+   
     <None Remove="App_Data\Security\.gitkeep" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributeEditor.html" />
     <None Remove="Areas\Administration\Views\AvailableAttributes\AttributesList.html" />
+    <None Remove="Areas\Administration\Views\Catalogs\CatalogEditor.html" />
+    <None Remove="Areas\Administration\Views\Catalogs\CatalogsList.html" />
     <None Remove="Areas\Administration\Views\Categories\CategoriesList.html" />
     <None Remove="Areas\Administration\Views\Categories\CategoryEditor.html" />
     <None Remove="Areas\Administration\Views\Components\EvenCartUpdates\Default.html" />
@@ -160,6 +165,7 @@
     <None Remove="Areas\Administration\Views\Products\InventoryList.Variants.html" />
     <None Remove="Areas\Administration\Views\Products\ProductAttributeEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductAttributesList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductEditor.CatalogPanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.CategoryPanel.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductEditor.ImagePanel.html" />
@@ -207,6 +213,9 @@
     <None Remove="Areas\Administration\Views\Settings\Index.Tax.html" />
     <None Remove="Areas\Administration\Views\Settings\Index.Url.html" />
     <None Remove="Areas\Administration\Views\Settings\Index.User.html" />
+    <None Remove="Areas\Administration\Views\Stores\AvailableStoresSelector.html" />
+    <None Remove="Areas\Administration\Views\Stores\StoreEditor.html" />
+    <None Remove="Areas\Administration\Views\Stores\StoresList.html" />
     <None Remove="Areas\Administration\Views\System\About.html" />
     <None Remove="Areas\Administration\Views\System\InstallSampleData.html" />
     <None Remove="Areas\Administration\Views\Taxes\TaxEditor.html" />
@@ -464,6 +473,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Install\EmailTemplates\User.Registered.Admin.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Install\license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Security\.gitkeep">
@@ -754,6 +766,9 @@
     <Content Include="Areas\Administration\Views\Products\ProductAttributesList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductEditor.CatalogPanel.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Products\ProductEditor.RolesPanel.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -896,6 +911,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Settings\Index.User.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Catalogs\CatalogEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Catalogs\CatalogsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Stores\AvailableStoresSelector.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Stores\StoreEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Stores\StoresList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\System\InstallSampleData.html">
@@ -1576,7 +1606,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="MySqlConnector" Version="0.53.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />

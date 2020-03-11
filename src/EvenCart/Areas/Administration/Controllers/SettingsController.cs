@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Settings;
@@ -184,7 +195,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var cryptedKey = _cryptographyService.GetMd5Hash(sharedKey);
             var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
             securitySettings.SharedVerificationKey = cryptedKey;
-            _settingService.Save(securitySettings);
+            _settingService.Save(securitySettings, CurrentStore.Id);
             return R.Success.With("key", sharedKey).Result;
         }
 
@@ -287,11 +298,11 @@ namespace EvenCart.Areas.Administration.Controllers
         private void SaveSetting(SettingsModel settingsModel)
         {
             var settingType = settingsModel.GetType();
-            if (_settingsMap.TryGetValue(settingType, out Type targetType))
+            if (_settingsMap.TryGetValue(settingType, out var targetType))
             {
                 var resolvedSettings = DependencyResolver.Resolve(targetType);
                 _modelMapper.MapType(targetType, settingsModel, resolvedSettings);
-                _settingService.Save(targetType, resolvedSettings);
+                _settingService.Save(targetType, resolvedSettings, CurrentStore.Id);
             }
         }
         #endregion

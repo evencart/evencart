@@ -1,10 +1,22 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
 using EvenCart.Core.Services;
+using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Navigation;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Extensions;
@@ -13,6 +25,13 @@ namespace EvenCart.Services.Navigation
 {
     public class MenuService : FoundationEntityService<Menu>, IMenuService
     {
+        private readonly IEventPublisherService _eventPublisherService;
+
+        public MenuService(IEventPublisherService eventPublisherService)
+        {
+            _eventPublisherService = eventPublisherService;
+        }
+
         public override Menu Get(int id)
         {
             var menu = GetByWhere(x => x.Id == id).SelectNested().FirstOrDefault();
@@ -41,7 +60,7 @@ namespace EvenCart.Services.Navigation
         private IEntitySet<Menu> GetByWhere(Expression<Func<Menu, bool>> @where)
         {
             Expression<Func<MenuItem, object>> orderBy = x => x.DisplayOrder;
-            return Repository
+            return _eventPublisherService.Filter(Repository
                 .Join<MenuItem>("Id", "MenuId", joinType: JoinType.LeftOuter)
                 .Join<SeoMeta>("SeoMetaId", "Id", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<Menu, MenuItem>())
@@ -54,7 +73,7 @@ namespace EvenCart.Services.Navigation
                     }
                 })
                 .Where(where)
-                .OrderBy(orderBy, RowOrder.Ascending);
+                .OrderBy(orderBy, RowOrder.Ascending));
 
         }
     }

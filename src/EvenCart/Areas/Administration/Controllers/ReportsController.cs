@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Orders;
 using EvenCart.Areas.Administration.Factories.Reports;
@@ -72,7 +83,7 @@ namespace EvenCart.Areas.Administration.Controllers
             searchModel = searchModel ?? new OrderReportSearchModel();
             searchModel.EndDate = searchModel.EndDate ?? DateTime.UtcNow;
             searchModel.StartDate = searchModel.StartDate ?? searchModel.EndDate.Value.AddDays(-29);
-            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase,
+            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase, storeId: CurrentStore.Id,
                 orderStatus: searchModel.OrderStatus, paymentStatus: searchModel.PaymentStatus,
                 startDate: searchModel.StartDate, endDate: searchModel.EndDate).ToList();
 
@@ -94,7 +105,7 @@ namespace EvenCart.Areas.Administration.Controllers
             searchModel = searchModel ?? new OrderReportSearchModel();
             searchModel.EndDate = searchModel.EndDate ?? DateTime.UtcNow;
             searchModel.StartDate = searchModel.StartDate ?? DateTime.UtcNow.AddDays(-29);
-            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase,
+            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase, storeId: CurrentStore.Id,
                 orderStatus: searchModel.OrderStatus, paymentStatus: searchModel.PaymentStatus,
                 startDate: searchModel.StartDate, endDate: searchModel.EndDate).ToList();
 
@@ -115,7 +126,7 @@ namespace EvenCart.Areas.Administration.Controllers
             searchModel = searchModel ?? new ProductReportSearchModel();
             searchModel.EndDate = searchModel.EndDate ?? DateTime.UtcNow;
             searchModel.StartDate = searchModel.StartDate ?? DateTime.UtcNow.AddDays(-29);
-            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase, startDate: searchModel.StartDate, endDate: searchModel.EndDate).ToList();
+            var orders = _orderService.GetOrders(out _, searchModel.SearchPhrase, storeId: CurrentStore.Id, startDate: searchModel.StartDate, endDate: searchModel.EndDate).ToList();
 
             var models =
                 _reportModelFactory.CreateProductOrderReportModels(out int totalResults, orders, searchModel.Current, searchModel.RowCount);
@@ -135,7 +146,7 @@ namespace EvenCart.Areas.Administration.Controllers
         public IActionResult TotalsReport()
         {
             var response = R.Success;
-            var orderCounts = _orderService.GetOrderCountsByStatus();
+            var orderCounts = _orderService.GetOrderCountsByStatus(CurrentStore.Id);
             var model = new TotalsReportModel
             {
                 TotalUsers = _userService.Count(x => !x.Deleted),
@@ -164,7 +175,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualGet("recent-orders", Name = AdminRouteNames.RecentOrdersReport)]
         public IActionResult RecentOrdersReport()
         {
-            var recentOrders = _orderService.GetOrders(out int _, count: 5);
+            var recentOrders = _orderService.GetOrders(out int _, storeId: CurrentStore.Id, count: 5);
             var orderModels = recentOrders.Select(_orderModelFactory.Create).ToList();
             return R.Success.With("orders", orderModels).Result;
         }
@@ -191,7 +202,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualGet("bestsellers", Name = AdminRouteNames.BestSellersReport)]
         public IActionResult BestSellersReport()
         {
-            var orders = _orderService.GetOrders(out _, startDate: DateTime.UtcNow.AddDays(-365), count: 5).ToList();
+            var orders = _orderService.GetOrders(out _, storeId: CurrentStore.Id, startDate: DateTime.UtcNow.AddDays(-365), count: 5).ToList();
             var models =
                 _reportModelFactory.CreateProductOrderReportModels(out _, orders, 1, 5);
             return R.Success.With("products", models).Result;

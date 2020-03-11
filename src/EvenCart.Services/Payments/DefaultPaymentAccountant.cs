@@ -1,4 +1,15 @@
-﻿using System;
+﻿#region License
+// Copyright (c) Sojatia Infocrafts Private Limited.
+// The following code is part of EvenCart eCommerce Software (https://evencart.co) Dual Licensed under the terms of
+// 
+// 1. GNU GPLv3 with additional terms (available to read at https://evencart.co/license)
+// 2. EvenCart Proprietary License (available to read at https://evencart.co/license/commercial-license).
+// 
+// You can select one of the above two licenses according to your requirements. The usage of this code is
+// subject to the terms of the license chosen by you.
+#endregion
+
+using System;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
@@ -47,7 +58,8 @@ namespace EvenCart.Services.Payments
                 UserIpAddress = order.UserIpAddress,
                 TransactionAmount = result.TransactionAmount,
                 TransactionGuid = result.TransactionGuid,
-                TransactionCurrencyCode = result.TransactionCurrencyCode
+                TransactionCurrencyCode = result.TransactionCurrencyCode,
+                Order = order
             };
             if (paymentTransaction.TransactionGuid.IsNullEmptyOrWhiteSpace())
                 paymentTransaction.TransactionGuid = Guid.NewGuid().ToString();
@@ -55,16 +67,11 @@ namespace EvenCart.Services.Payments
             paymentTransaction.SetTransactionCodes(result.ResponseParameters);
             //save this
             _paymentTransactionService.Insert(paymentTransaction);
-       
-           
-            if (order.CurrencyCode != result.TransactionCurrencyCode || order.PaymentStatus != result.NewStatus)
+
+
+            if (result.IsSubscription && result.NewStatus == PaymentStatus.Complete && !order.IsSubscriptionActive)
             {
-                //update order
-                if (result.TransactionCurrencyCode != null)
-                    order.CurrencyCode = result.TransactionCurrencyCode;
-                if (result.IsSubscription && result.NewStatus == PaymentStatus.Complete)
-                    order.IsSubscriptionActive = true;
-                order.PaymentStatus = result.NewStatus;
+                order.IsSubscriptionActive = true;
                 _orderService.Update(order);
             }
 
@@ -97,7 +104,8 @@ namespace EvenCart.Services.Payments
                             UserIpAddress = order.UserIpAddress,
                             TransactionAmount = order.StoreCreditAmount,
                             TransactionGuid = Guid.NewGuid().ToString(),
-                            TransactionCurrencyCode = order.CurrencyCode
+                            TransactionCurrencyCode = order.CurrencyCode,
+                            Order = order
                         };
                         if (paymentTransaction.TransactionGuid.IsNullEmptyOrWhiteSpace())
                             paymentTransaction.TransactionGuid = Guid.NewGuid().ToString();
