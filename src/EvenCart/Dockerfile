@@ -18,13 +18,9 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY ["EvenCart/EvenCart.csproj", "EvenCart/"]
-COPY ["EvenCart.Infrastructure/EvenCart.Infrastructure.csproj", "EvenCart.Infrastructure/"]
-COPY ["EvenCart.Data/EvenCart.Data.csproj", "EvenCart.Data/"]
-COPY ["EvenCart.Core/EvenCart.Core.csproj", "EvenCart.Core/"]
-COPY ["EvenCart.Services/EvenCart.Services.csproj", "EvenCart.Services/"]
+COPY [".", "EvenCart/"]
 RUN dotnet restore "EvenCart/EvenCart.csproj"
-COPY . .
+
 WORKDIR "/src/EvenCart"
 RUN dotnet build "EvenCart.csproj" -c Release -o /app/build
 
