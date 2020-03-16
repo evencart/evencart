@@ -18,19 +18,13 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY [".", "EvenCart/"]
+COPY ./src ./
+
 RUN dotnet restore "EvenCart/EvenCart.csproj"
+RUN dotnet build "EvenCart/EvenCart.csproj" -c Release -o /app/build
+RUN dotnet publish "EvenCart/EvenCart.csproj" -c Release -o /app/publish
 
-WORKDIR "/src/EvenCart"
-RUN dotnet build "EvenCart.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "EvenCart.csproj" -c Release -o /app/publish
-
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS final
-
-
-
+FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "EvenCart.dll"]
