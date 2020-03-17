@@ -29,6 +29,7 @@ using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Models.Purchases;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EvenCart.Controllers
 {
@@ -364,6 +365,7 @@ namespace EvenCart.Controllers
         /// </summary>
         /// <response code="200">The <see cref="CartImplementation">wishlist</see> object</response>
         [DualGet("~/account/wishlist", Name = RouteNames.AccountWishlist)]
+        [Authorize]
         public IActionResult WishList()
         {
             var wishList = new CartObject(true).GetObject();
