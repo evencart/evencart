@@ -13,6 +13,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using EvenCart.Core.Infrastructure;
@@ -37,7 +38,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Converters;
 
 namespace EvenCart.Infrastructure.Extensions
 {
@@ -119,6 +119,7 @@ namespace EvenCart.Infrastructure.Extensions
         {
             var mvcBuilder = services.AddMvc(options =>
                 {
+                    options.EnableEndpointRouting = false;
 #if !DEBUGWS
                     if (DatabaseManager.IsDatabaseInstalled())
                     {
@@ -131,9 +132,10 @@ namespace EvenCart.Infrastructure.Extensions
 #endif
 
                 })
+                .AddNewtonsoftJson()
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
                 //load plugins
                 .AddAppPlugins(hostingEnvironment)
@@ -142,8 +144,8 @@ namespace EvenCart.Infrastructure.Extensions
                     options.ViewEngines.Clear();
                     options.ViewEngines.Add(new DefaultAppViewEngine());
                 })
-                //sets compatibility to 2.1
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                //sets compatibility to 3.0
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 //add controllers as services
                 .AddControllersAsServices();
             return mvcBuilder;
@@ -201,6 +203,10 @@ namespace EvenCart.Infrastructure.Extensions
 
         public static IServiceCollection AddHtmlToPdfConverter(this IServiceCollection services)
         {
+#if DEBUGWS
+            return services;
+#endif
+
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddScoped<IPdfConverter, PdfConverter>();
 
@@ -208,11 +214,11 @@ namespace EvenCart.Infrastructure.Extensions
             var projectRootFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dll");
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (ApplicationEngine.IsLinuxRuntime())
             {
                 path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.so");
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (ApplicationEngine.IsOSXRuntime())
             {
                 path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dylib");
             }

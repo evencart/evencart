@@ -35,7 +35,7 @@ namespace EvenCart.Controllers
         /// <summary>
         /// Returns the list of connected accounts to the logged in user
         /// </summary>
-        /// <response>A list of <see cref="ConnectedAccountModel">connected accounts</see> as 'connectedAccounts'</response>
+        /// <response code="200">A list of <see cref="ConnectedAccountModel">connected accounts</see> as 'connectedAccounts'</response>
         [DualGet("~/account/connected-accounts", Name = RouteNames.AccountConnectedAccounts)]
         public IActionResult ConnectedAccountsList()
         {

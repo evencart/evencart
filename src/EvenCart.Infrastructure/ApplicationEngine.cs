@@ -41,6 +41,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.InteropServices;
 #if !DEBUGWS
 using EvenCart.Infrastructure.Routing;
 #endif
@@ -89,8 +90,7 @@ namespace EvenCart.Infrastructure
             //fire up dependency injector
             var container = new Container();
             var serviceProvider = container
-                .WithDependencyInjectionAdapter(services,
-                    throwIfUnresolved: type => type.Name.EndsWith("Controller"))
+                .WithDependencyInjectionAdapter(services)
                 .ConfigureServiceProvider<CompositionRoot>();
 
             //set dependency resolver for core functions
@@ -110,7 +110,13 @@ namespace EvenCart.Infrastructure
             }
             //error logger
             app.UseErrorLogger();
-
+#if DEBUGWS
+            if (DatabaseManager.IsDatabaseInstalled())
+            {
+                //store loader
+                app.UseStoreLoader();
+            }
+#endif
 #if !DEBUGWS
             app.CheckInstallation();
 
@@ -156,7 +162,7 @@ namespace EvenCart.Infrastructure
             }
             
 #endif
-            app.UseResponseCompression();
+                app.UseResponseCompression();
 
 
             //use mvc
@@ -228,6 +234,22 @@ namespace EvenCart.Infrastructure
             _hostingEnvironment = _hostingEnvironment ?? hostingEnvironment;
             return _hostingEnvironment.IsEnvironment(ApplicationConfig.TestEnvironmentName);
         }
+
+        public static bool IsWindowsRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
+
+        public static bool IsLinuxRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        }
+
+        public static bool IsOSXRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        }
+
         #endregion
 
         public static HttpContext CurrentHttpContext => DependencyResolver.Resolve<IHttpContextAccessor>().HttpContext;

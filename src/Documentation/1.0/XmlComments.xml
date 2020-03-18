@@ -854,7 +854,7 @@
             Gets the consents(if any) required to complete the registration
             </summary>
             <param name="requestModel"></param>
-            <response>A list of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see></response>
+            <response code="200">A list of <see cref="T:EvenCart.Models.Gdpr.ConsentModel">consents</see></response>
         </member>
         <member name="M:EvenCart.Controllers.AuthenticationController.Logout">
             <summary>
@@ -974,7 +974,7 @@
             <summary>
             Returns the list of connected accounts to the logged in user
             </summary>
-            <response>A list of <see cref="T:EvenCart.Models.ConnectedAccounts.ConnectedAccountModel">connected accounts</see> as 'connectedAccounts'</response>
+            <response code="200">A list of <see cref="T:EvenCart.Models.ConnectedAccounts.ConnectedAccountModel">connected accounts</see> as 'connectedAccounts'</response>
         </member>
         <member name="M:EvenCart.Controllers.ConnectedAccountsController.DeleteConnectedAccount(System.Int32)">
             <summary>

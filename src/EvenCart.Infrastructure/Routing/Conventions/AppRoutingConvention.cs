@@ -113,7 +113,9 @@ namespace EvenCart.Infrastructure.Routing.Conventions
         private IList<PluginInfo> _activePlugins;
         public void Apply(ControllerModel controller)
         {
-            
+#if DEBUGWS
+            return;
+#endif
             if (typeof(FoundationPluginController).IsAssignableFrom(controller.ControllerType))
             {
                 _activePlugins = _activePlugins ?? DependencyResolver.Resolve<IPluginAccountant>().GetActivePlugins();

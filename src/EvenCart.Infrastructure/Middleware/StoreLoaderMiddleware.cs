@@ -30,14 +30,11 @@ namespace EvenCart.Infrastructure.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            if (DatabaseManager.IsDatabaseInstalled())
-            {
-                var requestDomain = context.Request.Host.Value;
-                var store = _storeService.GetByDomain(requestDomain);
-                if (store == null)
-                    return;
-                context.SetCurrentStore(store);
-            }
+            var requestDomain = context.Request.Host.Value;
+            var store = _storeService.GetByDomain(requestDomain);
+            if (store == null)
+                return;
+            context.SetCurrentStore(store);
             await _next.Invoke(context);
         }
     }

@@ -13,12 +13,18 @@ using System;
 using System.Collections;
 using System.Linq;
 using EvenCart.Core.Infrastructure.Utils;
+using EvenCart.Data.Extensions;
+using FastExpressionCompiler.LightExpression;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using OperationType = Microsoft.OpenApi.Models.OperationType;
 
 namespace EvenCart.Swagger
 {
-    public class SwaggerCommonFilter : IParameterFilter,IDocumentFilter, IOperationFilter, ISchemaFilter
+    public class SwaggerCommonFilter : IParameterFilter,IDocumentFilter, IOperationFilter
     {
         private bool IsDotLiquidType(Type type)
         {
@@ -26,7 +32,7 @@ namespace EvenCart.Swagger
         }
 
         private const string ExcludeKey = "__EXCLUDE__";
-        public void Apply(IParameter parameter, ParameterFilterContext context)
+        public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
         {
             if (context.PropertyInfo == null)
                 return;
@@ -39,41 +45,31 @@ namespace EvenCart.Swagger
             if (typeof(IEnumerable).IsAssignableFrom(context.PropertyInfo.PropertyType) && context.PropertyInfo.PropertyType.IsGenericType)
             {
                 var genericType = context.PropertyInfo.PropertyType.GenericTypeArguments[0];
-                parameter.Extensions.Add("targetType", genericType.FullName);
+                //parameter.Extensions.Add("targetType", );
             }
-            
          }
 
-        public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context)
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             ////remove all the definitions which are not specific to evencart
             //foreach (var definition in swaggerDoc.Definitions.Where(x => !x.Key.StartsWith("EvenCart.")).ToList())
             //{
             //    swaggerDoc.Definitions.Remove(definition);
             //}
-
+            var operationTypes = Enum.GetValues(typeof(OperationType)).Cast<OperationType>().ToList();
             foreach (var (pathKey, pathItem) in swaggerDoc.Paths)
             {
-                if (pathItem.Get != null)
-                    pathItem.Get.Parameters =
-                        pathItem.Get.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
-                if (pathItem.Post != null)
-                    pathItem.Post.Parameters =
-                        pathItem.Post.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
-                if (pathItem.Put != null)
-                    pathItem.Put.Parameters =
-                        pathItem.Put.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
-                if (pathItem.Patch != null)
-                    pathItem.Patch.Parameters =
-                        pathItem.Patch.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
-                if (pathItem.Delete != null)
-                    pathItem.Delete.Parameters =
-                        pathItem.Delete.Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
+                foreach (var operationType in operationTypes)
+                {
+                    if (pathItem.Operations.ContainsKey(operationType))
+                        pathItem.Operations[operationType].Parameters =
+                            pathItem.Operations[operationType].Parameters.Where(x => !x.Name.StartsWith(ExcludeKey)).ToList();
+                }
             }
             
         }
 
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             foreach (var response in operation.Responses)
             {
@@ -83,15 +79,8 @@ namespace EvenCart.Swagger
                     continue;
                 var types = TypeFinder.GetByNames(crefTypes);
                 foreach (var type in types)
-                    context.SchemaRegistry.GetOrRegister(type);
+                    context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
             }
-           
-            operation.Produces.Add("application/json");
-        }
-
-        public void Apply(Schema schema, SchemaFilterContext context)
-        {
-            
         }
     }
 }

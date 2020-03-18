@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <UserSecretsId>73f5d53c-eb15-46f3-8fa0-02d5ff43401a</UserSecretsId>
     <Version>1.1.0</Version>
@@ -1446,6 +1446,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="App_Data\database.config" />
     <None Include="Content\Themes\Default\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1608,14 +1609,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="MySqlConnector" Version="0.53.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="MySqlConnector" Version="0.62.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.1.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1631,7 +1630,7 @@
 
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
-    <Exec Command="dotnet C:\Users\apexol\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output ..\Documentation\1.0\swagger.json $(OutputPath)\$(AssemblyName).dll v1" />
+    <Exec Command="dotnet swagger tofile --output $(SolutionDir)Documentation\1.0\swagger.json $(OutputPath)$(AssemblyName).dll v1" />
   </Target>
 
 </Project>
