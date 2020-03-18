@@ -89,8 +89,7 @@ namespace EvenCart.Infrastructure
             //fire up dependency injector
             var container = new Container();
             var serviceProvider = container
-                .WithDependencyInjectionAdapter(services,
-                    throwIfUnresolved: type => type.Name.EndsWith("Controller"))
+                .WithDependencyInjectionAdapter(services)
                 .ConfigureServiceProvider<CompositionRoot>();
 
             //set dependency resolver for core functions
@@ -110,7 +109,13 @@ namespace EvenCart.Infrastructure
             }
             //error logger
             app.UseErrorLogger();
-
+#if DEBUGWS
+            if (DatabaseManager.IsDatabaseInstalled())
+            {
+                //store loader
+                app.UseStoreLoader();
+            }
+#endif
 #if !DEBUGWS
             app.CheckInstallation();
 
@@ -156,7 +161,7 @@ namespace EvenCart.Infrastructure
             }
             
 #endif
-            app.UseResponseCompression();
+                app.UseResponseCompression();
 
 
             //use mvc

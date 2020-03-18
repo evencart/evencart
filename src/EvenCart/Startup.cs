@@ -17,7 +17,7 @@ using EvenCart.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
 namespace EvenCart
 {
@@ -34,9 +34,10 @@ namespace EvenCart
             //swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "EvenCart Api Documentation", Version = ApplicationConfig.ApiVersion });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvenCart Api Documentation", Version = ApplicationConfig.ApiVersion });
                 c.CustomSchemaIds(x => x.FullName);
                 c.ResolveConflictingActions(x => x.First());
+                
                 if (File.Exists($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml"))
                 {
                     c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
@@ -47,7 +48,6 @@ namespace EvenCart
                 c.ParameterFilter<SwaggerCommonFilter>();
                 c.DocumentFilter<SwaggerCommonFilter>();
                 c.OperationFilter<SwaggerCommonFilter>();
-                c.SchemaFilter<SwaggerCommonFilter>();
             });
 
             return ApplicationEngine.ConfigureServices(services, _hostingEnvironment);

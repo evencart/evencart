@@ -204,7 +204,7 @@ namespace EvenCart.Controllers
         /// Gets the consents(if any) required to complete the registration
         /// </summary>
         /// <param name="requestModel"></param>
-        /// <response>A list of <see cref="ConsentModel">consents</see></response>
+        /// <response code="200">A list of <see cref="ConsentModel">consents</see></response>
         [DualGet("register", Name = RouteNames.Register)]
         public IActionResult Register(RegisterRequestModel requestModel)
         {

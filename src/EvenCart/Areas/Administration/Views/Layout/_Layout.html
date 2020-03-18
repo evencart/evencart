@@ -39,8 +39,8 @@
                     </div>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% route Admin.Home %}" target="_blank">{{"Public Store" | t}}</a>
-                    <a class="dropdown-item" href="{% route Admin.Logout %}">{{"Logout" | t}}</a>
+                    <a class="dropdown-item" href="{% route Home %}" target="_blank">{{"Public Store" | t}}</a>
+                    <a class="dropdown-item" href="{% route Logout %}">{{"Logout" | t}}</a>
                     <div class="dropdown-divider"></div>
                     <h6 class="dropdown-header">{{"Maintenance" | t}}</h6>
                     <form method="post" action="{% route api_Admin.PurgeCache %}" id="form-purge-cache">
