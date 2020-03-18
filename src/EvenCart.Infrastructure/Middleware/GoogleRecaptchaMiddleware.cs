@@ -30,12 +30,10 @@ namespace EvenCart.Infrastructure.Middleware
         const string VerificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}";
 
         private readonly RequestDelegate _next;
-        private readonly SecuritySettings _securitySettings;
         private readonly IpAddressAccessRegister _accessRegister;
-        public GoogleRecaptchaMiddleware(RequestDelegate next, SecuritySettings securitySettings)
+        public GoogleRecaptchaMiddleware(RequestDelegate next)
         {
             _next = next;
-            _securitySettings = securitySettings;
             _accessRegister = new IpAddressAccessRegister();
         }
 
@@ -64,11 +62,11 @@ namespace EvenCart.Infrastructure.Middleware
             var ipAllowed = _accessRegister.RecordRequest();
             if (!ipAllowed)
                 return true;
-
+            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
             //trigger captcha if honeypot is trapped
-            var honeyPotKey = _securitySettings.HoneypotFieldName;
+            var honeyPotKey = securitySettings.HoneypotFieldName;
             var isBotSubmission = context.Request.Form.Any(x => x.Key == honeyPotKey && !x.Value.FirstOrDefault().IsNullEmptyOrWhiteSpace());
-            return isBotSubmission && _securitySettings.EnableCaptcha;
+            return isBotSubmission && securitySettings.EnableCaptcha;
         }
 
         private bool ValidateCaptcha(HttpContext context)
@@ -78,9 +76,9 @@ namespace EvenCart.Infrastructure.Middleware
             var captchaResponse = context.Request.Form["g-recaptcha-response"].FirstOrDefault();
             if (captchaResponse.IsNullEmptyOrWhiteSpace())
                 return false;
-
+            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
             var requestProvider = DependencyResolver.Resolve<IRequestProvider>();
-            var response = requestProvider.Get<dynamic>(string.Format(VerificationUrl, _securitySettings.SiteSecret, captchaResponse));
+            var response = requestProvider.Get<dynamic>(string.Format(VerificationUrl, securitySettings.SiteSecret, captchaResponse));
             return response != null && response.success == "true";
         }
     }
