@@ -1,10 +1,3 @@
-### Next Release
+# Change Log
 
-#### Features
-
-1. Upgraded EvenCart to .NET Core 3.1
-2. EvenCart can now run on Linux
-
-#### Bug Fixes
-
-1. Require login for wishlist access.
+Please visit the [Change Log](https://docs.evencart.com/change-log/) page to track the growth.
