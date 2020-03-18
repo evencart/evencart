@@ -79,7 +79,8 @@ namespace EvenCart.Infrastructure.ViewEngines
         {
             if (!viewName.EndsWith(ViewExtension))
                 viewName = viewName + ViewExtension;
-            viewName = viewName.Replace("/", "\\");
+            if (ApplicationEngine.IsWindowsRuntime())
+                viewName = viewName.Replace("/", "\\");
             return viewName;
         }
 

@@ -41,6 +41,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.InteropServices;
 #if !DEBUGWS
 using EvenCart.Infrastructure.Routing;
 #endif
@@ -233,6 +234,22 @@ namespace EvenCart.Infrastructure
             _hostingEnvironment = _hostingEnvironment ?? hostingEnvironment;
             return _hostingEnvironment.IsEnvironment(ApplicationConfig.TestEnvironmentName);
         }
+
+        public static bool IsWindowsRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
+
+        public static bool IsLinuxRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+        }
+
+        public static bool IsOSXRuntime()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        }
+
         #endregion
 
         public static HttpContext CurrentHttpContext => DependencyResolver.Resolve<IHttpContextAccessor>().HttpContext;

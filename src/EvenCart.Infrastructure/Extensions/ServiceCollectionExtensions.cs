@@ -214,11 +214,11 @@ namespace EvenCart.Infrastructure.Extensions
             var projectRootFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dll");
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (ApplicationEngine.IsLinuxRuntime())
             {
                 path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.so");
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (ApplicationEngine.IsOSXRuntime())
             {
                 path = Path.Combine(projectRootFolder, "NativeLibs", RuntimeInformation.ProcessArchitecture.ToString(), "libwkhtmltox.dylib");
             }
