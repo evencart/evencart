@@ -69,7 +69,7 @@ namespace EvenCart.Controllers
         /// </summary>
         /// <param name="contentPageId">The id of the page to retrieve.</param>
         /// <response code="200">The <see cref="ContentPageModel">contentPage</see> object.</response>
-        [DualGet("contentpages/{contentPageId}", Name = RouteNames.SinglePage, OnlyApi = true)]
+        [DualGet("{contentPageId}", Name = RouteNames.SinglePage, OnlyApi = true)]
         public IActionResult IndexApi(int contentPageId)
         {
             return Index(contentPageId);
