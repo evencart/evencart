@@ -147,15 +147,6 @@ namespace EvenCart.Infrastructure.DependencyContainer
             //all providers which are not interfaces
             registrar.RegisterMany<ICurrencyRateProvider>(allCurrencyProviders, type => type.FullName);
 
-            //find all the event captures
-            var allEventCaptures = allTypes
-                .Where(type => type.GetInterfaces()
-                    .Any(x => x.IsAssignableTo(typeof(IEventCapture))));// which implementing some interface(s)
-            
-            //registrar.RegisterMany<IEventCapture>();
-            //all consumers which are not interfaces
-            registrar.RegisterMany<IEventCapture>(allEventCaptures, type => type.FullName);
-
             //services
             //to register services, we need to get all types from services assembly and register each of them;
             var serviceAssembly = asm.First(x => x.FullName.Contains("EvenCart.Services,"));
