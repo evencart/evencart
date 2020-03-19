@@ -158,6 +158,36 @@
             Adds additional routes for api access
             </summary>
         </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualGetAttribute.OnlyApi">
+            <summary>
+            Specifies if the route should be available only as an API endpoint
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualGetAttribute.OnlyNonApi">
+            <summary>
+            Specifies if the route should be available only as a non-API endpoint.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualGetAttribute.AvailableInHeadlessMode">
+            <summary>
+            Specifies if route should be available in headless mode. This is checked if the route is NON Api Route
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualPostAttribute.OnlyApi">
+            <summary>
+            Specifies if the route should be available only as an API endpoint
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualPostAttribute.OnlyNonApi">
+            <summary>
+            Specifies if the route should be available only as a non-API endpoint.
+            </summary>
+        </member>
+        <member name="P:EvenCart.Infrastructure.Routing.DualPostAttribute.AvailableInHeadlessMode">
+            <summary>
+            Specifies if route should be available in headless mode. This is checked if the route is NON Api Route
+            </summary>
+        </member>
         <member name="P:EvenCart.Infrastructure.Routing.DynamicRouteAttribute.SettingName">
             <summary>
             The setting name under UrlSettings group that contains the dynamic route template

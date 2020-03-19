@@ -19,7 +19,17 @@ namespace EvenCart.Infrastructure.Routing
         {
             
         }
-
+        /// <summary>
+        /// Specifies if the route should be available only as an API endpoint
+        /// </summary>
         public bool OnlyApi { get; set; }
+        /// <summary>
+        /// Specifies if the route should be available only as a non-API endpoint.
+        /// </summary>
+        public bool OnlyNonApi { get; set; }
+        /// <summary>
+        /// Specifies if route should be available in headless mode. This is checked if the route is NON Api Route
+        /// </summary>
+        public bool AvailableInHeadlessMode { get; set; }
     }
 }

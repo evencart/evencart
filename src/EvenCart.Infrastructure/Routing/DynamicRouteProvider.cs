@@ -43,6 +43,9 @@ namespace EvenCart.Infrastructure.Routing
 
         public virtual VirtualPathData GetVirtualPathData(IRouter router, VirtualPathContext context)
         {
+            if (DynamicRoutes == null || !DynamicRoutes.Any())
+                return null;
+
             var categoryPath = "";
             var seName = "";
             var id = "0";

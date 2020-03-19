@@ -32,6 +32,19 @@
       
             </div>
         </div>
+        <div class="panel">
+            <div class="panel-title">
+                {{"Headless Mode" | t}}
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    {% control checkbox name="headlessMode" text=@t"Enable Headless Mode" value="settings.headlessMode"%}
+                    <div class="panel-help">
+                        {{"Enabling headless mode will disable all the public store page urls except Login page. The entire website interaction will be through API endpoints only. Some plugins may stop functioning as expected. The feature requires a restart to get activated." | t}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-4">
         <div class="panel">

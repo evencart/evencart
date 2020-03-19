@@ -21,7 +21,7 @@ namespace EvenCart.Controllers
 {
     public class HomeController : FoundationController
     {
-        [HttpGet("~/", Name = RouteNames.Home)]
+        [DualGet("~/", Name = RouteNames.Home, OnlyNonApi = true, AvailableInHeadlessMode = true)]
         public async Task<IActionResult> Index()
         {
             return R.Success.Result;

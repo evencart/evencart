@@ -47,5 +47,7 @@ namespace EvenCart.Areas.Administration.Models.Settings
         public string DefaultMetaDescription { get; set; }
 
         public string ActiveTheme { get; set; }
+
+        public bool HeadlessMode { get; set; }
     }
 }

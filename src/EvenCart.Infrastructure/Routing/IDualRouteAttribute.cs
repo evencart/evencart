@@ -14,5 +14,9 @@ namespace EvenCart.Infrastructure.Routing
     public interface IDualRouteAttribute
     {
         bool OnlyApi { get; set; }
+
+        bool OnlyNonApi { get; set; }
+
+        bool AvailableInHeadlessMode { get; set; }
     }
 }

@@ -20,6 +20,7 @@ using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Plugins;
+using EvenCart.Services.Products;
 using EvenCart.Services.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -42,6 +43,15 @@ namespace EvenCart.Infrastructure.Routing.Conventions
             {
                 area = "/" + ((AreaAttribute)areaAttribute).RouteValue;
             }
+
+            var generalSettings = DependencyResolver.Resolve<GeneralSettings>();
+            var goHeadless = generalSettings.HeadlessMode && area.IsNullEmptyOrWhiteSpace();
+            //if go headless is true, we'll need to make sure that there is only one store. otherwise we'll have to load all the routes normally, so that other stores don't break
+            if (goHeadless)
+            {
+                var storeCount = DependencyResolver.Resolve<IStoreService>().Count(x => x.Live && !x.Deleted);
+                goHeadless = storeCount == 1;
+            }
             foreach (var ar in attributeRoutes)
             {
                 if (!action.Properties.ContainsKey("RouteName"))
@@ -49,8 +59,14 @@ namespace EvenCart.Infrastructure.Routing.Conventions
                 if (ar.AttributeRouteModel.Attribute is IDualRouteAttribute)
                 {
                     var dualRouteAttribute = (IDualRouteAttribute)ar.AttributeRouteModel.Attribute;
-                    if (dualRouteAttribute.OnlyApi)
+                    if (dualRouteAttribute.OnlyNonApi || (goHeadless && dualRouteAttribute.AvailableInHeadlessMode))
                     {
+                        //this route should only be available as a NON API Mode, so continue
+                        continue;
+                    }
+                    if (dualRouteAttribute.OnlyApi || goHeadless)
+                    {
+                        //update the current one
                         var currentTemplate = ar.AttributeRouteModel.Template;
                         if (currentTemplate.StartsWith("~/"))
                             ar.AttributeRouteModel.Template =
@@ -79,6 +95,11 @@ namespace EvenCart.Infrastructure.Routing.Conventions
 #if DEBUGWS
     continue;
 #endif
+                    if (goHeadless)
+                    {
+                        action.Selectors.Clear();
+                        continue;
+                    }
                     var dynamicRoute = (DynamicRouteAttribute) ar.AttributeRouteModel.Attribute;
                     var template = dynamicRoute.DynamicTemplate;
                     if (template.IsNullEmptyOrWhiteSpace())
@@ -103,6 +124,13 @@ namespace EvenCart.Infrastructure.Routing.Conventions
                         SeoEntityName = dynamicRoute.SeoEntityName,
                         ParameterName = dynamicRoute.ParameterName
                     });
+                }
+                else
+                {
+                    if (goHeadless)
+                    {
+                        action.Selectors.Clear();
+                    }
                 }
             }
         

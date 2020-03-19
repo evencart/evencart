@@ -73,7 +73,7 @@ namespace EvenCart.Controllers
             _affiliateSettings = affiliateSettings;
         }
 
-        [HttpGet("login", Name = RouteNames.Login)]
+        [DualGet("login", Name = RouteNames.Login, OnlyNonApi = true, AvailableInHeadlessMode = true)]
         public IActionResult Login()
         {
             //if already logged in, redirect to home
@@ -240,9 +240,11 @@ namespace EvenCart.Controllers
         /// Logs the current user out. Valid only for cookie authentication
         /// </summary>
         /// <response code="200">A success response object</response>
-        [DualGet("logout", Name = RouteNames.Logout)]
+        [DualGet("logout", Name = RouteNames.Logout, AvailableInHeadlessMode = true, OnlyNonApi = true)]
         public IActionResult Logout()
         {
+            if (CurrentUser == null)
+                return Redirect(Url.RouteUrl(RouteNames.Home));
             //gather some data before signing out
             var currentUserId = CurrentUser.Id;
             var imitation = CurrentUser.IsImitator(out _);

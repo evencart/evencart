@@ -134,6 +134,9 @@ namespace EvenCart.Infrastructure
                 //https redirection
                 app.UseHttps();
 
+                //headless mode tracker
+                app.UseHeadlessChecker();
+
                 //use response pages
                 app.UseStatusPages();
 

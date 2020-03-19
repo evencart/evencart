@@ -37,6 +37,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
 
         public string AffiliateUrl { get; set; }
 
+        public string AffiliateCode { get; set; }
+
         public IList<SelectListItem> Categories { get; set; }
 
         public bool WishlistEnabled { get; set; }

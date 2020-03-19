@@ -209,5 +209,9 @@ namespace EvenCart.Infrastructure.Extensions
             app.UseMiddleware<StoreLoaderMiddleware>();
         }
 
+        public static void UseHeadlessChecker(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<HeadlessModeCheckerMiddleware>();
+        }
     }
 }

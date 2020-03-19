@@ -89,7 +89,11 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             var currentUser = ApplicationEngine.CurrentUser;
             if (affiliateSettings.EnableAffiliates && currentUser.IsActiveAffiliate())
             {
-                store.AffiliateUrl = store.CurrentPage == RouteNames.SingleProduct ? currentUser.GetAffiliateUrl(store.CurrentUrl) : currentUser.GetAffiliateUrl();
+                if (!generalSettings.HeadlessMode)
+                {
+                    store.AffiliateUrl = store.CurrentPage == RouteNames.SingleProduct ? currentUser.GetAffiliateUrl(store.CurrentUrl) : currentUser.GetAffiliateUrl();
+                }
+                store.AffiliateCode = currentUser.Guid.ToString();
             }
             if (!ApplicationEngine.CurrentHttpContext.IsTokenAuthenticated() && gdprSettings.ShowCookiePopup && !currentUser.IsAdministrator())
             {
