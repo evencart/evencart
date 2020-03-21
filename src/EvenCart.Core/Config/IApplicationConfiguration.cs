@@ -9,21 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Areas.Administration.Models.Catalog;
-using EvenCart.Data.Entity.Shop;
-
-
-namespace EvenCart.Areas.Administration.Factories.Catalogs
+namespace EvenCart.Core.Config
 {
-    public class CatalogModelFactory : ICatalogModelFactory
+    public interface IApplicationConfiguration
     {
-        public CatalogModel Create(Catalog entity)
-        {
-            return new CatalogModel()
-            {
-                Name = entity.Name,
-                Id = entity.Id
-            };
-        }
+        string GetSetting(string settingName);
+
+        void SetSetting(string settingName, string value);
     }
 }

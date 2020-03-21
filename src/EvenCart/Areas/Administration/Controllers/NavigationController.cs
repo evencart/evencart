@@ -24,7 +24,6 @@ using EvenCart.Data.Extensions;
 using EvenCart.Services.Navigation;
 using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
-using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;

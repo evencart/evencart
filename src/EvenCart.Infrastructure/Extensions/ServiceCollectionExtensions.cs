@@ -17,6 +17,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Database;
@@ -37,9 +38,11 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
+using StackExchange.Redis;
 
 namespace EvenCart.Infrastructure.Extensions
 {
@@ -229,6 +232,22 @@ namespace EvenCart.Infrastructure.Extensions
             }
 
             context.LoadUnmanagedLibrary(path);
+
+            return services;
+        }
+
+        public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
+        {
+            var cacheProvider = configuration[ApplicationConfig.AppSettingsCacheProvider];
+            switch (cacheProvider)
+            {
+                case "redis":
+                    services.AddDistributedRedisCache(options =>
+                    {
+                        options.ConfigurationOptions = ConfigurationOptions.Parse(configuration["redisConfig"]);   
+                    });
+                    break;
+            }
 
             return services;
         }

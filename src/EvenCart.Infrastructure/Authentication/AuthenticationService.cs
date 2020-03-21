@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using EvenCart.Core;
+using EvenCart.Core.Config;
 using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;

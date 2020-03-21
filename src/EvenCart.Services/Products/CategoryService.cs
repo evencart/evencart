@@ -25,12 +25,6 @@ namespace EvenCart.Services.Products
     public class CategoryService : FoundationEntityService<Category>, ICategoryService
     {
         private const string CategoryTreeCacheKey = "CATEGORY_TREE";
-        private readonly ICacheProvider _cacheProvider;
-
-        public CategoryService(ICacheProvider cacheProvider)
-        {
-            _cacheProvider = cacheProvider;
-        }
 
         public override Category Get(int id)
         {
@@ -45,7 +39,7 @@ namespace EvenCart.Services.Products
 
         public IList<Category> GetFullCategoryTree()
         {
-            return _cacheProvider.Get<IList<Category>>(CategoryTreeCacheKey, () =>
+            return CacheProvider.Get<IList<Category>>(CategoryTreeCacheKey, () =>
             {
                 Expression<Func<SeoMeta, bool>> nameWhere = (meta) => meta.EntityName == "Category";
                 var allCategories = Repository.Join<SeoMeta>("Id", "EntityId", joinType: JoinType.LeftOuter)

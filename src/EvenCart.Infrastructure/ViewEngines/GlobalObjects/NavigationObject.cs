@@ -42,9 +42,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 
         public static IList<NavigationImplementation> GetNavigation(IList<MenuItem> menuItems, string navigationName, IList<Category> categories)
         {
-            var cacheProvider = DependencyResolver.Resolve<ICacheProvider>();
             var cacheKey = $"NAVIGATION_{navigationName}";
-            return cacheProvider.Get(cacheKey, () => GetNavigationImpl(menuItems, 0, categories));
+            return CacheProviders.PrimaryProvider.Get(cacheKey, () => GetNavigationImpl(menuItems, 0, categories));
         }
         ///Making this method static so we can use the same method in MenuWidget.
         /// todo: is there a better way of doing this? may be move this to a helper function

@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using EvenCart.Core.Config;
 using EvenCart.Core.Exception;
 using EvenCart.Data.Enum;
 

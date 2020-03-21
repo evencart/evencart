@@ -11,10 +11,9 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Services.Serializers;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Infrastructure.Middleware

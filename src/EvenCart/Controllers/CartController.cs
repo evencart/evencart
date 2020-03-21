@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -20,7 +21,6 @@ using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
 using EvenCart.Services.Purchases;
-using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc;

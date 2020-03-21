@@ -33,6 +33,7 @@ using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Authentication;
 using EvenCart.Infrastructure.Bundle;
 using EvenCart.Infrastructure.Caching;
+using EvenCart.Infrastructure.Config;
 using EvenCart.Infrastructure.Database;
 using EvenCart.Infrastructure.Emails;
 using EvenCart.Infrastructure.Localization;
@@ -55,10 +56,32 @@ namespace EvenCart.Infrastructure.DependencyContainer
     {
         public void RegisterDependencies(IRegistrator registrar)
         {
+            var asm = AssemblyLoader.GetAppDomainAssemblies();
+            var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
+            {
+                try
+                {
+                    return x.GetTypes();
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    return new Type[0];
+                }
+            })
+                .Where(x => x.IsPublic && !x.IsAbstract).ToList();
+
             // settings register for access across app
             registrar.Register<IDatabaseSettings, DatabaseSettings>(reuse: Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
+            registrar.Register<IApplicationConfiguration, ApplicationConfiguration>(reuse: Reuse.Singleton);
+
             //caching
-            registrar.Register<ICacheProvider, MemoryCacheProvider>(reuse: Reuse.Singleton);
+            var cacheProviders = allTypes
+                .Where(type => type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(ICacheProvider))));// which implementing some interface(s)
+            //all providers which are not interfaces
+            registrar.RegisterMany<ICacheProvider>(cacheProviders, type => type.FullName, Reuse.Singleton);
+
+            //registrar.Register<ICacheProvider, RedisCacheProvider>(reuse: Reuse.Singleton);
             registrar.Register<ICacheAccountant, CacheAccountant>(reuse: Reuse.Transient);
             //events
             registrar.Register<IEventPublisherService, EventPublisherService>(reuse: Reuse.Singleton);
@@ -97,19 +120,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
             registrar.Register<IInterceptorService, InterceptorService>(reuse: Reuse.Singleton);
             //conection accountant
             registrar.Register<IConnectionAccountant, ConnectionAccountant>(Reuse.Transient);
-            var asm = AssemblyLoader.GetAppDomainAssemblies();
-            var allTypes = asm.Where(x => !x.IsDynamic).SelectMany(x =>
-                {
-                    try
-                    {
-                        return x.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException)
-                    {
-                        return new Type[0];
-                    }
-                })
-                .Where(x => x.IsPublic && !x.IsAbstract).ToList();
+
 
             //find all the model factories
             var allModelFactories = allTypes
@@ -117,7 +128,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
                                    .Any(x => x.IsAssignableTo(typeof(IModelFactory))));// which implementing some interface(s)
             //all consumers which are not interfaces
             registrar.RegisterMany(allModelFactories);
-            
+
             //capability providers
             var allCapabilityProviderTypes = allTypes
                 .Where(type => type.GetInterfaces()
@@ -179,12 +190,12 @@ namespace EvenCart.Infrastructure.DependencyContainer
             foreach (var settingType in allSettingTypes)
             {
                 var type = settingType;
-                registrar.RegisterDelegate(type, resolver =>
-                {
-                    var storeId = ApplicationEngine.CurrentStore?.Id ?? 0;
-                    return resolver.Resolve<ISettingService>().GetSettings(type, storeId);
-                 
-                }, reuse: Reuse.Transient);
+                registrar.Use(type, context => SettingsFactory.GetSetting(type));
+                //registrar.RegisterDelegate(type, resolver =>
+                //{
+                //    var x = resolver.Resolve<ISettingService>().GetSettings(type, ApplicationEngine.CurrentStore?.Id ?? 0);
+                //    return x;
+                //}, reuse: Reuse.Transient);
 
             }
 
@@ -200,7 +211,7 @@ namespace EvenCart.Infrastructure.DependencyContainer
 
         public void RegisterDependenciesIfActive(IRegistrator registrar)
         {
-            
+
         }
 
         public int Priority { get; }

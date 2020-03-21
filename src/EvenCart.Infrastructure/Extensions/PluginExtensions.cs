@@ -12,14 +12,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
 using Newtonsoft.Json;

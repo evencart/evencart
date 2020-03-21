@@ -13,7 +13,7 @@ using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Threading.Tasks;
-using EvenCart.Services.Serializers;
+using EvenCart.Core.Data;
 
 namespace EvenCart.Services.HttpServices
 {

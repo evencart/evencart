@@ -9,26 +9,18 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
+using System;
 using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Extensions;
+using EvenCart.Services.Settings;
 
-namespace EvenCart
+namespace EvenCart.Infrastructure.DependencyContainer
 {
-    public static class DataSerializationExtensions
+    public static class SettingsFactory
     {
-        public static string ToJson(this object obj, bool camelCase = true)
+        public static object GetSetting(Type type)
         {
-            var serializer = DependencyResolver.Resolve<IDataSerializer>();
-            return serializer.Serialize(obj, camelCase);
-        }
-
-        public static T To<T>(this string jsonStr)
-        {
-            if (jsonStr.IsNullEmptyOrWhiteSpace())
-                return default(T);
-            var serializer = DependencyResolver.Resolve<IDataSerializer>();
-            return serializer.DeserializeAs<T>(jsonStr);
+            var obj = DependencyResolver.Resolve<ISettingService>().GetSettings(type, ApplicationEngine.CurrentStore?.Id ?? 0);
+            return obj;
         }
     }
 }

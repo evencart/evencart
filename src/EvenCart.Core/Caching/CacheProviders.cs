@@ -9,12 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-namespace EvenCart.Services.Security
+namespace EvenCart.Core.Caching
 {
-    public interface IApplicationConfiguration
+    public static class CacheProviders
     {
-        string GetSetting(string settingName);
+        public static ICacheProvider RequestProvider { get; set; }
 
-        void SetSetting(string settingName, string value);
+        public static ICacheProvider PrimaryProvider { get; set; }
     }
 }

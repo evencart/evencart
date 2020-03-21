@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using EvenCart.Core.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;

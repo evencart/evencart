@@ -11,7 +11,7 @@
 
 using System;
 
-namespace EvenCart.Services.Serializers
+namespace EvenCart.Core.Data
 {
     public interface IDataSerializer
     {

@@ -30,7 +30,11 @@ namespace EvenCart.Services.Settings
 
         T GetSettings<T>(int storeId) where T : ISettingGroup;
 
+        T GetSettings<T>(Func<int> getStore) where T : ISettingGroup;
+
         object GetSettings(Type settingType, int storeId);
+
+        object GetSettings(Type settingType, Func<int> getStore);
 
         void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup;
 

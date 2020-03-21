@@ -13,12 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DotEntity;
+using EvenCart.Core.Data;
 using EvenCart.Core.DataStructures;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Subscriptions;
 using EvenCart.Data.Entity.Users;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Subscriptions
 {

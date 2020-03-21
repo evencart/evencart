@@ -13,12 +13,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using EvenCart.Core.Infrastructure.Utils;
-using EvenCart.Data.Extensions;
-using FastExpressionCompiler.LightExpression;
-using Microsoft.AspNetCore.JsonPatch.Operations;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using OperationType = Microsoft.OpenApi.Models.OperationType;
 

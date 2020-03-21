@@ -12,8 +12,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.Localization
 {

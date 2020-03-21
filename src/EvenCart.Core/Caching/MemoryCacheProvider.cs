@@ -26,6 +26,11 @@ namespace EvenCart.Core.Caching
             return (T) _cache.Get(cacheKey);
         }
 
+        public override object Get(string cacheKey, Type type)
+        {
+            return _cache.Get(cacheKey);
+        }
+
         public override bool IsSet(string cacheKey)
         {
             return _cache.Get(cacheKey) != null;

@@ -10,7 +10,6 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Areas.Administration.Models.Store;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;

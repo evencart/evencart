@@ -12,12 +12,12 @@
 using System.Collections.Generic;
 using System.IO;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.Theming
 {

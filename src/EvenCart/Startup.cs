@@ -16,6 +16,7 @@ using EvenCart.Infrastructure;
 using EvenCart.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -24,9 +25,11 @@ namespace EvenCart
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        public Startup(IHostingEnvironment hostingEnvironment)
+        private readonly IConfiguration _configuration;
+        public Startup(IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _hostingEnvironment = hostingEnvironment;
+            _configuration = configuration;
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -50,7 +53,7 @@ namespace EvenCart
                 c.OperationFilter<SwaggerCommonFilter>();
             });
 
-            return ApplicationEngine.ConfigureServices(services, _hostingEnvironment);
+            return ApplicationEngine.ConfigureServices(services, _hostingEnvironment, _configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

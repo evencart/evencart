@@ -14,6 +14,7 @@ using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Settings;

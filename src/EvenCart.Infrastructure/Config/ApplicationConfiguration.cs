@@ -9,9 +9,10 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Core.Config;
 using Microsoft.Extensions.Configuration;
 
-namespace EvenCart.Services.Security
+namespace EvenCart.Infrastructure.Config
 {
     public class ApplicationConfiguration : IApplicationConfiguration
     {

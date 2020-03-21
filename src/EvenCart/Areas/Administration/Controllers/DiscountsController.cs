@@ -12,12 +12,12 @@
 using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Promotions;
+using EvenCart.Core.Data;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
