@@ -18,6 +18,7 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Core.Data;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
@@ -39,7 +40,6 @@ using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Pdf;
 using EvenCart.Services.Products;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 

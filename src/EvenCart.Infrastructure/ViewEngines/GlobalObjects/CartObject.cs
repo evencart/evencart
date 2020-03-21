@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
@@ -22,7 +23,6 @@ using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
 {

@@ -9,12 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-namespace EvenCart.Services.Security
-{
-    public interface IApplicationConfiguration
-    {
-        string GetSetting(string settingName);
+using System;
 
-        void SetSetting(string settingName, string value);
+namespace EvenCart.Core.Data
+{
+    public interface IDataSerializer
+    {
+        string Serialize(object obj, bool camelCase = true);
+
+        T DeserializeAs<T>(string serializedData);
+
+        object Deserialize(string serializedData, Type targetType);
     }
 }

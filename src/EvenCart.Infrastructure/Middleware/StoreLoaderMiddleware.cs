@@ -10,8 +10,6 @@
 #endregion
 
 using System.Threading.Tasks;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Http;

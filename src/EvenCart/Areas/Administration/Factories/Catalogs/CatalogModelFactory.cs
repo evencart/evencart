@@ -9,9 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Linq;
 using EvenCart.Areas.Administration.Models.Catalog;
-using EvenCart.Areas.Administration.Models.Store;
 using EvenCart.Data.Entity.Shop;
 
 

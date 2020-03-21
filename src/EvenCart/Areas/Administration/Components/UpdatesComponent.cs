@@ -12,11 +12,11 @@
 using System;
 using System.Collections.Specialized;
 using EvenCart.Areas.Administration.Models.Updates;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Services.HttpServices;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Settings;
 using Microsoft.AspNetCore.Mvc;
 

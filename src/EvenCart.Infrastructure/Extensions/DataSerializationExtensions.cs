@@ -9,9 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart
 {

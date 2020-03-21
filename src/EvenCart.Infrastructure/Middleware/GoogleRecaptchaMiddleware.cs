@@ -15,12 +15,12 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Services.HttpServices;
-using EvenCart.Services.Serializers;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Infrastructure.Middleware

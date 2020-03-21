@@ -14,8 +14,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Formatter
 {

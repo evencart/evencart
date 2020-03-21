@@ -12,12 +12,12 @@
 using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.ScheduledTasks;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Entity.ScheduledTasks;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.ScheduledTasks;
-using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;

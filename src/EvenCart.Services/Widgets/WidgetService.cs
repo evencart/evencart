@@ -10,8 +10,8 @@
 #endregion
 
 using System;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Settings;
 
 namespace EvenCart.Services.Widgets

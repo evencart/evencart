@@ -12,11 +12,11 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Vendors;
+using EvenCart.Core.Data;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Events;
 using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Serializers;
 using EvenCart.Services.Users;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;

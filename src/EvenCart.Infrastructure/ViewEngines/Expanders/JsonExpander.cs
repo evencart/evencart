@@ -11,9 +11,9 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {

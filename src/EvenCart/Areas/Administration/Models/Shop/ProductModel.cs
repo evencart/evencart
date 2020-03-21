@@ -11,7 +11,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Areas.Administration.Models.Catalog;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Data.Entity.Shop;

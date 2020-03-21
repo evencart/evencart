@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
@@ -21,7 +22,6 @@ using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Orders;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Factories.Orders
 {

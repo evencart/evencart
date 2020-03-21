@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Config;
+using EvenCart.Core.Data;
 using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;

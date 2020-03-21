@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Infrastructure.Utils;
@@ -24,7 +25,6 @@ using EvenCart.Services.Plugins;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Services.Logger;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Infrastructure.Plugins
 {
