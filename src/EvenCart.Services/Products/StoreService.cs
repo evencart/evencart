@@ -21,17 +21,15 @@ namespace EvenCart.Services.Products
     public class StoreService : FoundationEntityService<Store>, IStoreService
     {
         private readonly ISettingService _settingService;
-        private readonly ICacheProvider _cacheProvider;
-        public StoreService(ISettingService settingService, ICacheProvider cacheProvider)
+        public StoreService(ISettingService settingService)
         {
             _settingService = settingService;
-            _cacheProvider = cacheProvider;
         }
 
         public Store GetByDomain(string domain)
         {
             var storeDomainKey = $"STORE_{domain}";
-            return _cacheProvider.Get<Store>(storeDomainKey, () =>
+            return CacheProvider.Get<Store>(storeDomainKey, () =>
             {
                 //find a general setting with this domain
                 if (!domain.StartsWith("//"))

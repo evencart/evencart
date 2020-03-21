@@ -9,12 +9,18 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-namespace EvenCart.Infrastructure.Caching
-{
-    public interface ICacheAccountant
-    {
-        void PurgeCache();
+using System;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Services.Settings;
 
-        void InitProviders();
+namespace EvenCart.Infrastructure.DependencyContainer
+{
+    public static class SettingsFactory
+    {
+        public static object GetSetting(Type type)
+        {
+            var obj = DependencyResolver.Resolve<ISettingService>().GetSettings(type, ApplicationEngine.CurrentStore?.Id ?? 0);
+            return obj;
+        }
     }
 }

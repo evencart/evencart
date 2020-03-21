@@ -17,9 +17,10 @@ namespace EvenCart.Core.Caching
     {
         protected TCache _cache;
 
-        protected FoundationCacheProvider()
+        protected FoundationCacheProvider(bool delayedInit = false)
         {
-            _cache = InitializeCacheProvider();
+            if (!delayedInit)
+                _cache = InitializeCacheProvider();
         }
 
         protected abstract TCache InitializeCacheProvider();
@@ -31,6 +32,8 @@ namespace EvenCart.Core.Caching
         }
 
         public abstract T Get<T>(string cacheKey);
+
+        public abstract object Get(string cacheKey, Type type);
 
         public abstract bool IsSet(string cacheKey);
 

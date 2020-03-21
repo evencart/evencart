@@ -18,9 +18,7 @@ using EvenCart.Core.Extensions;
 using EvenCart.Core.Infrastructure.Utils;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Enum;
 using EvenCart.Services.Logger;
-using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.Settings
 {
@@ -28,12 +26,10 @@ namespace EvenCart.Services.Settings
     {
         private readonly IDataSerializer _dataSerializer;
         private readonly ILogger _logger;
-        private readonly ICacheProvider _cacheProvider;
-        public SettingService(IDataSerializer dataSerializer, ILogger logger, ICacheProvider cacheProvider)
+        public SettingService(IDataSerializer dataSerializer, ILogger logger)
         {
             _dataSerializer = dataSerializer;
             _logger = logger;
-            _cacheProvider = cacheProvider;
         }
 
         public Setting Get<T>(string keyName, int storeId) where T : ISettingGroup
@@ -103,12 +99,12 @@ namespace EvenCart.Services.Settings
 
         public T GetSettings<T>(int storeId) where T : ISettingGroup
         {
-            //create a new settings object
-            var settingsObj = Activator.CreateInstance<T>();
+            return (T) GetSettings(typeof(T), storeId);
+        }
 
-            FurnishInstance(settingsObj, storeId);
-
-            return settingsObj;
+        public T GetSettings<T>(Func<int> getStore) where T: ISettingGroup
+        {
+            return GetSettings<T>(getStore());
         }
 
         public object GetSettings(Type settingType, int storeId)
@@ -117,7 +113,7 @@ namespace EvenCart.Services.Settings
                 storeId = 0; //no matter what storeId is , if it's global setting, it's 0
 
             var settingCacheKey = $"{settingType.FullName}-{storeId}";
-            return _cacheProvider.Get(settingCacheKey, () =>
+            return CacheProvider.Get(settingCacheKey, settingType, () =>
             {
                 //create a new settings object
                 var settingsObj = Activator.CreateInstance(settingType);
@@ -126,6 +122,12 @@ namespace EvenCart.Services.Settings
                 return settingsObj;
             }, int.MaxValue);
         }
+
+        public object GetSettings(Type settingType, Func<int> getStore)
+        {
+            return GetSettings(settingType, getStore());
+        }
+
         public void LoadSettings<T>(T settingsObject, int storeId) where T : ISettingGroup
         {
             FurnishInstance(settingsObject, storeId);

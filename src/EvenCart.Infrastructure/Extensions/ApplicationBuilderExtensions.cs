@@ -11,9 +11,11 @@
 
 using System.IO;
 using System.Net;
+using EvenCart.Core.Caching;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Tasks;
 using EvenCart.Data.Database;
+using EvenCart.Infrastructure.Caching;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.Middleware;
@@ -212,6 +214,11 @@ namespace EvenCart.Infrastructure.Extensions
         public static void UseHeadlessChecker(this IApplicationBuilder app)
         {
             app.UseMiddleware<HeadlessModeCheckerMiddleware>();
+        }
+
+        public static void InitializeCacheProviders(this IApplicationBuilder app)
+        {
+            DependencyResolver.Resolve<ICacheAccountant>().InitProviders();
         }
     }
 }

@@ -9,12 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-namespace EvenCart.Infrastructure.Caching
+namespace EvenCart.Core.Caching
 {
-    public interface ICacheAccountant
+    public static class CacheProviders
     {
-        void PurgeCache();
+        public static ICacheProvider RequestProvider { get; set; }
 
-        void InitProviders();
+        public static ICacheProvider PrimaryProvider { get; set; }
     }
 }

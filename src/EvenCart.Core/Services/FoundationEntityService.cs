@@ -26,7 +26,7 @@ namespace EvenCart.Core.Services
     public abstract class FoundationEntityService<T> : IFoundationEntityService<T> where T : FoundationEntity
     {
         private readonly IEventPublisherService _eventPublisherService;
-        private readonly ICacheProvider _cacheProvider;
+        protected readonly ICacheProvider CacheProvider;
 
         protected IEntitySet<T> Repository => RepositoryExplorer<T>();
 
@@ -37,7 +37,7 @@ namespace EvenCart.Core.Services
 
         protected FoundationEntityService()
         {
-            _cacheProvider = DependencyResolver.Resolve<ICacheProvider>(); ;
+            CacheProvider = CacheProviders.PrimaryProvider;
             //resolve publisher manually
             _eventPublisherService = DependencyResolver.Resolve<IEventPublisherService>();
         }
@@ -117,7 +117,7 @@ namespace EvenCart.Core.Services
         public virtual T Get(int id)
         {
             var cacheKey = $"GET_{typeof(T).Name}_{id}";
-            return _cacheProvider.Get(cacheKey, () =>
+            return CacheProvider.Get(cacheKey, () =>
             {
                 return FirstOrDefault(x => x.Id == id);
             });

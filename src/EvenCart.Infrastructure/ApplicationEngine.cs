@@ -42,6 +42,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Configuration;
 #if !DEBUGWS
 using EvenCart.Infrastructure.Routing;
 #endif
@@ -51,7 +52,7 @@ namespace EvenCart.Infrastructure
     public static class ApplicationEngine
     {
         #region Initialization
-        public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment)
+        public static IServiceProvider ConfigureServices(IServiceCollection services, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             //register singletons
             services.AddGlobalSingletons(hostingEnvironment);
@@ -64,6 +65,9 @@ namespace EvenCart.Infrastructure
                 services.AddDataProtection()
                     .PersistKeysToFileSystem(
                         new DirectoryInfo(ApplicationConfig.SecureDataDirectory));
+
+                //caching
+                services.AddCaching(configuration);
 
                 //antiforgery
                 services.AddAntiforgeryTokens();
@@ -122,6 +126,9 @@ namespace EvenCart.Infrastructure
 
             //use static files
             app.UseStaticFiles(_hostingEnvironment);
+
+            //cache providers
+            app.InitializeCacheProviders();
 
             if (DatabaseManager.IsDatabaseInstalled())
             {

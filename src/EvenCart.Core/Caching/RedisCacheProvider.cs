@@ -9,45 +9,95 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System;
+using System.Linq;
+using System.Net;
+using EvenCart.Core.Data;
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
+
 namespace EvenCart.Core.Caching
 {
-    //todo: implement redis cache provider
-    public class RedisCacheProvider : FoundationCacheProvider<object>
+    public sealed class RedisCacheProvider : FoundationCacheProvider<IDatabase>
     {
-        private readonly RequestCacheProvider _requestCacheProvider;
-        public RedisCacheProvider(RequestCacheProvider requestCacheProvider)
+        private readonly IDataSerializer _dataSerializer;
+        private readonly IConfiguration _applicationConfiguration;
+        public RedisCacheProvider(IDataSerializer dataSerializer, IConfiguration applicationConfiguration) : base(true)
         {
-            _requestCacheProvider = requestCacheProvider;
+            _dataSerializer = dataSerializer;
+            _applicationConfiguration = applicationConfiguration;
+            _cache = InitializeCacheProvider();
         }
 
-        protected override object InitializeCacheProvider()
+        protected override IDatabase InitializeCacheProvider()
         {
-            throw new System.NotImplementedException();
+            return GetConnection().GetDatabase();
         }
 
         public override T Get<T>(string cacheKey)
         {
-            throw new System.NotImplementedException();
+            return (T) Get(cacheKey, typeof(T));
+        }
+
+        public override object Get(string cacheKey, Type type)
+        {
+            var serialized = _cache.StringGet(cacheKey);
+            return _dataSerializer.Deserialize(serialized, type);
         }
 
         public override bool IsSet(string cacheKey)
         {
-            throw new System.NotImplementedException();
+            return _cache.KeyExists(cacheKey);
         }
 
         public override void Set<T>(string cacheKey, T cacheData, int expiration = 60)
         {
-            throw new System.NotImplementedException();
+            var serialized = _dataSerializer.Serialize(cacheData);
+            _cache.StringSet(cacheKey, serialized, TimeSpan.FromMinutes(expiration));
         }
 
         public override void Remove(string cacheKey)
         {
-            throw new System.NotImplementedException();
+            _cache.KeyDelete(cacheKey);
         }
 
         public override void Clear()
         {
-            throw new System.NotImplementedException();
+            var cache = _cache;
+            var endPoints = cache.Multiplexer.GetEndPoints();
+            
+            foreach (var endpoint in endPoints)
+            {
+                var keys = GetEndpointKeys(endpoint, cache);
+                foreach (var key in keys)
+                {
+                    cache.KeyDelete(key);
+                }
+            }
         }
+
+        #region Helpers
+
+        private ConnectionMultiplexer _connectionMultiplexer;
+        private ConnectionMultiplexer GetConnection()
+        {
+            var connectionString = _applicationConfiguration["redisConfig"];
+            if (_connectionMultiplexer == null || !_connectionMultiplexer.IsConnected)
+            {
+                var oldCm = _connectionMultiplexer;
+                _connectionMultiplexer = ConnectionMultiplexer.Connect(ConfigurationOptions.Parse(connectionString));
+                oldCm?.Dispose();
+            }
+            return _connectionMultiplexer;
+        }
+
+        private RedisKey[] GetEndpointKeys(EndPoint endpoint, IDatabase db)
+        {
+            var server = db.Multiplexer.GetServer(endpoint);
+            return server.Keys().ToArray();
+        }
+
+        #endregion
+        
     }
 }

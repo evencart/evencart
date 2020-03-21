@@ -10,6 +10,7 @@
 #endregion
 
 using EvenCart.Core;
+using EvenCart.Core.Config;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Data.Database;
@@ -96,6 +97,7 @@ namespace EvenCart.Controllers
             _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionKey, _cryptographyService.GetRandomPassword(32));
             _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionSalt, _cryptographyService.GetRandomPassword(32));
             _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsApiSecret, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsCacheProvider, "default");
 
             //then feed the data
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,

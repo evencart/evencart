@@ -24,6 +24,14 @@ namespace EvenCart.Core.Caching
         T Get<T>(string cacheKey);
 
         /// <summary>
+        /// Gets the cached item with specified cache key
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cacheKey"></param>
+        /// <returns></returns>
+        object Get(string cacheKey, Type type);
+
+        /// <summary>
         /// Checks if the particular cache key is set in the cache
         /// </summary>
         /// <param name="cacheKey"></param>

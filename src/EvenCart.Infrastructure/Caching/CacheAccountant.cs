@@ -10,6 +10,8 @@
 #endregion
 
 using EvenCart.Core.Caching;
+using EvenCart.Core.Config;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Infrastructure.Theming;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Infrastructure.ViewEngines.Expanders;
@@ -18,26 +20,50 @@ namespace EvenCart.Infrastructure.Caching
 {
     public class CacheAccountant : ICacheAccountant
     {
-        private readonly ICacheProvider _cacheProvider;
         private readonly IThemeProvider _themeProvider;
         private readonly IViewAccountant _viewAccountant;
-        public CacheAccountant(ICacheProvider cacheProvider, IThemeProvider themeProvider, IViewAccountant viewAccountant)
+        private readonly IApplicationConfiguration _applicationConfiguration;
+        public CacheAccountant(IThemeProvider themeProvider, IViewAccountant viewAccountant, IApplicationConfiguration applicationConfiguration)
         {
-            _cacheProvider = cacheProvider;
             _themeProvider = themeProvider;
             _viewAccountant = viewAccountant;
+            _applicationConfiguration = applicationConfiguration;
         }
 
         public void PurgeCache()
         {
             //clear the provider cache
-            _cacheProvider.Clear();
+            CacheProviders.PrimaryProvider.Clear();
             //clear the view cache
             ReadFile.PurgeCache();
             //clear the active theme template cache
             _themeProvider.ResetActiveTheme();
             //clear view location caches
             _viewAccountant.ClearCachedViews();
+        }
+
+        public void InitProviders()
+        {
+            if(CacheProviders.PrimaryProvider == null)
+            {
+                switch (_applicationConfiguration.GetSetting(ApplicationConfig.AppSettingsCacheProvider))
+                {
+                    case "redis":
+                        CacheProviders.PrimaryProvider =
+                            DependencyResolver.Resolve<ICacheProvider>(serviceKey: typeof(RedisCacheProvider).FullName);
+                        break;
+                    case "default":
+                        CacheProviders.PrimaryProvider =
+                            DependencyResolver.Resolve<ICacheProvider>(serviceKey: typeof(MemoryCacheProvider).FullName);
+                        break;
+                }
+               
+            }
+
+            if (CacheProviders.RequestProvider == null)
+            {
+                CacheProviders.RequestProvider = DependencyResolver.Resolve<ICacheProvider>(serviceKey: typeof(RequestCacheProvider).FullName);
+            }
         }
     }
 }

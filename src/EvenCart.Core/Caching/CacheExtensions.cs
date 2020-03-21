@@ -17,14 +17,26 @@ namespace EvenCart.Core.Caching
     {
         public static T Get<T>(this ICacheProvider cacheProvider, string cacheKey, Func<T> retrieveFunc, int expiration = 60)
         {
+            return (T) Get(cacheProvider, cacheKey, typeof(T), () => retrieveFunc(), expiration);
+        }
+
+        public static object Get(this ICacheProvider cacheProvider, string cacheKey, Type type, Func<object> retrieveFunc, int expiration = 60)
+        {
+            //check if it's available in memory cache
+            if (CacheProviders.RequestProvider != null && CacheProviders.RequestProvider.IsSet(cacheKey))
+                return CacheProviders.RequestProvider.Get(cacheKey, type);
+
             if (cacheProvider.IsSet(cacheKey))
-                return cacheProvider.Get<T>(cacheKey);
+                return cacheProvider.Get(cacheKey, type);
 
             //retrive the value
             var tValue = retrieveFunc();
 
             //set this value
             cacheProvider.Set(cacheKey, tValue, expiration);
+            if (CacheProviders.RequestProvider != null)
+                //save the same value in request cache if it's again requested in the same request
+                CacheProviders.RequestProvider.Set(cacheKey, tValue, int.MaxValue);
             return tValue;
         }
     }
