@@ -107,6 +107,19 @@ var initCountryState = function (countryElementId, stateElementId, otherStateCon
     countryElement.trigger("change");
 };
 
+var getMediaDetails = function(url, callback) {
+    var fetchUrl = "https://noembed.com/embed?nowrap=on&url=" + url;
+    jQuery.get({
+        url: fetchUrl,
+        success: function(res) {
+            callback(res.html, res.thumbnail_url);
+        },
+        error: function(res) {
+            callback(url, url);
+        }
+    })
+};
+
 jQuery.urlParam = function (name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results)

@@ -24,6 +24,7 @@ using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
+using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
@@ -149,7 +150,14 @@ namespace EvenCart.Areas.Administration.Controllers
                 model.Media = x.MediaItems?.Select(y =>
                                   {
                                       var mediaModel = _modelMapper.Map<MediaModel>(y);
-                                      mediaModel.ThumbnailUrl = _mediaAccountant.GetPictureUrl(y, 100, 100);
+                                      if (mediaModel.MediaType != MediaType.Url)
+                                      {
+                                          mediaModel.ThumbnailUrl = _mediaAccountant.GetPictureUrl(y, 100, 100);
+                                          mediaModel.ImageUrl = _mediaAccountant.GetPictureUrl(y);
+                                      }
+                                      else
+                                          mediaModel.MetaData =
+                                              _dataSerializer.DeserializeAs<EmbeddedMediaModel>(y.MetaData);
                                       return mediaModel;
                                   })
                                   .ToList() ?? new List<MediaModel>()
@@ -182,8 +190,18 @@ namespace EvenCart.Areas.Administration.Controllers
             productModel.Media = product.MediaItems?.Select(x =>
                 {
                     var model = _modelMapper.Map<MediaModel>(x);
-                    model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(x, ApplicationConfig.AdminThumbnailWidth,
-                        ApplicationConfig.AdminThumbnailHeight);
+                    if(x.MediaType == MediaType.Url)
+                    {
+                        model.ImageUrl = x.LocalPath;
+                        model.MetaData = _dataSerializer.DeserializeAs<EmbeddedMediaModel>(x.MetaData);
+                    }
+                    else
+                    {
+                        model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(x, ApplicationConfig.AdminThumbnailWidth,
+                            ApplicationConfig.AdminThumbnailHeight);
+                        model.ImageUrl = _mediaAccountant.GetPictureUrl(x);
+                    }
+
                     return model;
                 })
                 .OrderBy(x => x.DisplayOrder)

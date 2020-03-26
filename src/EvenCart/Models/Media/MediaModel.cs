@@ -9,6 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Data.Enum;
 using EvenCart.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Media
@@ -28,5 +29,9 @@ namespace EvenCart.Models.Media
         public string Url { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public MediaType MediaType { get; set; }
+
+        public EmbeddedMediaModel MetaData { get; set; }
     }
 }

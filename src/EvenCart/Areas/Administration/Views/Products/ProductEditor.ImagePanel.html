@@ -6,6 +6,10 @@
             <span>{{"Add Image" | t}}</span>
             <input id="imageFile" type="file" name="mediaFile" />
         </span>
+        <a class="btn btn-sm btn-default float-right" onclick="editMediaUrl()">
+            <i class="rbicon-link"></i>
+            <span>{{"Add From Url" | t}}</span>
+        </a>
     </div>
     <div class="panel-body" id="file-dragger">
         <div id="image-container"></div>
@@ -20,7 +24,9 @@
         {% endunless %}
         <script id="image-block-template" type="text/html">
             <div class="image-block" id="image-block-media_id">
-                <img src="image_url" />
+                <a href="target_url" target="_blank">
+                    <img src="image_url" width="100" />
+                </a>                
                 <input type="hidden" data-type="id" name="media[index].id" value="media_id" />
                 <input type="hidden" data-type="displayorder" name="media[index].displayorder" value="media_displayorder" />
                 <a href="javascript:void(null);" onclick="deleteMedia(media_id)">
@@ -57,7 +63,12 @@
                 addMedia({
                     id: "{{media.id}}",
                     thumbnailUrl: "{{media.thumbnailUrl}}",
-                    displayOrder: "{{media.displayOrder}}"
+                    displayOrder: "{{media.displayOrder}}",
+                    mediaType: "{{media.mediaType}}",
+                    metaData: {
+                        thumbnailUrl: "{{media.metaData.thumbnailUrl}}"
+                    },
+                    targetUrl: "{{media.metaData.url}}" == "" ? "{{media.imageUrl}}" : "{{media.metaData.url}}"
                 });
                 /*{% endfor %}*/
 
@@ -80,10 +91,16 @@
             var addMedia = function(media) {
                 var imageBlock = jQuery("#image-block-template").html();
                 var index = jQuery("#image-container .image-block").length;
-                imageBlock = imageBlock.replaceAll("image_url", media.thumbnailUrl);
+               
                 imageBlock = imageBlock.replaceAll("index", index);
                 imageBlock = imageBlock.replaceAll("media_id", media.id);
                 imageBlock = imageBlock.replaceAll("media_displayorder", media.displayOrder);
+                imageBlock = imageBlock.replaceAll("target_url", media.targetUrl);
+                if (media.mediaType == "Url") {
+                    imageBlock = imageBlock.replaceAll("image_url", media.metaData.thumbnailUrl);
+                } else {
+                    imageBlock = imageBlock.replaceAll("image_url", media.thumbnailUrl);
+                }
                 jQuery("#image-container").append(imageBlock);
             }
 
@@ -110,3 +127,77 @@
         </script>
     </div>
 </div>
+<div class="popup" id="add-url">
+    <div class="panel">
+        <div class="panel-title">
+            {{"Url Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Url" for="url" %}
+                        {% control text id="url" name="url" value="" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="entityName" value="Product" %}
+                    {% control hidden name="entityId" value="{{product.id}}" %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="saveUrl()">{{"Save Url" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var editMediaUrl = function () {
+        showAsPopup("add-url",
+            false,
+            function (result, data) {
+                if (result == "ok") {
+                    addMedia(data);
+                    //update sortable
+                    displayOrderSortable({
+                        container: "image-container",
+                        itemSelector: ".image-block",
+                        refresh: true
+                    });
+                }
+            });
+    };
+
+    var saveUrl = function() {
+        post({
+            url: "{% route api_Admin.UploadMediaUrl %}",
+            data: {
+                url: jQuery("#url").val(),
+                entityId: "{{product.id}}",
+                entityName: "product"
+            },
+            done: function (response) {
+                if (response.success)
+                    var media = response.media;
+                    hidePopup("add-url", "ok",
+                        {
+                            id: media.id,
+                            thumbnailUrl: media.thumbnailUrl,
+                            displayOrder: media.displayOrder,
+                            mediaType: media.mediaType,
+                            metaData: {
+                                thumbnailUrl:media.metaData.thumbnailUrl
+                            },
+                            targetUrl: media.metaData ? media.metaData.url : media.imageUrl
+                        });
+            }
+        });
+    }
+</script>

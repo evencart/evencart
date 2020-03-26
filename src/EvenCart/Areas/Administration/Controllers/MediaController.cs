@@ -9,10 +9,15 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Media;
+using EvenCart.Core.Data;
 using EvenCart.Core.Services;
 using EvenCart.Data.Constants;
+using EvenCart.Data.Entity.MediaEntities;
+using EvenCart.Data.Enum;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.MediaServices;
 using EvenCart.Services.Products;
 using EvenCart.Infrastructure;
@@ -35,7 +40,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IUserService _userService;
-        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService, ICategoryService categoryService, IUserService userService)
+        private readonly IEmbeddedUrlProviderService _embeddedUrlProviderService;
+        private readonly IDataSerializer _dataSerializer;
+        public MediaController(IMediaAccountant mediaAccountant, IMediaService mediaService, IModelMapper modelMapper, IProductService productService, ICategoryService categoryService, IUserService userService, IEmbeddedUrlProviderService embeddedUrlProviderService, IDataSerializer dataSerializer)
         {
             _mediaAccountant = mediaAccountant;
             _mediaService = mediaService;
@@ -43,6 +50,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _productService = productService;
             _categoryService = categoryService;
             _userService = userService;
+            _embeddedUrlProviderService = embeddedUrlProviderService;
+            _dataSerializer = dataSerializer;
         }
 
         [DualPost("upload", Name = AdminRouteNames.UploadMedia, OnlyApi = true)]
@@ -62,27 +71,7 @@ namespace EvenCart.Areas.Administration.Controllers
             //link media if we can
             if (mediaModel.EntityId > 0)
             {
-                switch (mediaModel.EntityName)
-                {
-                    case "product":
-                        if (_productService.Count(x => x.Id == mediaModel.EntityId) > 0)
-                        {
-                            _productService.LinkMediaWithProduct(media.Id, mediaModel.EntityId);
-                        }
-                        break;
-                    case "category":
-                        if (_categoryService.Count(x => x.Id == mediaModel.EntityId) > 0)
-                        {
-                            _categoryService.Update(new {MediaId = media.Id}, x => x.Id == mediaModel.EntityId, null);
-                        }
-                        break;
-                    case "user":
-                        if (_userService.Count(x => x.Id == mediaModel.EntityId) > 0)
-                        {
-                            _userService.Update(new { ProfilePictureId = media.Id }, x => x.Id == mediaModel.EntityId, null);
-                        }
-                        break;
-                }
+                LinkMediaWithEntity(mediaModel.EntityName, mediaModel.EntityId, media);
             }
             //model
             var model = _modelMapper.Map<MediaModel>(media);
@@ -105,7 +94,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 foreach (var model in validMediaModels)
                 {
-                    _mediaService.Update(new {DisplayOrder = model.DisplayOrder}, m => m.Id == model.Id,
+                    _mediaService.Update(new { DisplayOrder = model.DisplayOrder }, m => m.Id == model.Id,
                         transaction);
                 }
             });
@@ -121,5 +110,62 @@ namespace EvenCart.Areas.Administration.Controllers
             _mediaService.Delete(media);
             return R.Success.Result;
         }
+
+        [DualPost("url", Name = AdminRouteNames.UploadMediaUrl, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.UploadMedia)]
+        [ValidateModelState(ModelType = typeof(MediaUrlModel))]
+        public IActionResult UploadMediaUrl(MediaUrlModel mediaModel)
+        {
+            //fetch the meta data
+            var embeddedMedia = _embeddedUrlProviderService.GetEmbeddedMedia(mediaModel.Url);
+            if (embeddedMedia == null)
+                return R.Fail.Result;
+            var media = new Media()
+            {
+                LocalPath = mediaModel.Url,
+                CreatedOn = DateTime.UtcNow,
+                UserId = 0,
+                MediaType = MediaType.Url,
+                MetaData = _dataSerializer.Serialize(embeddedMedia)
+            };
+            //save it
+            _mediaService.Insert(media);
+            //link
+            LinkMediaWithEntity(mediaModel.EntityName, mediaModel.EntityId, media);
+
+            var model = _modelMapper.Map<MediaModel>(media);
+            model.MetaData = _modelMapper.Map<EmbeddedMediaModel>(embeddedMedia);
+            return R.Success.With("media", model).Result;
+        }
+
+        #region Helpers
+
+        private void LinkMediaWithEntity(string entityName, int entityId, Media media)
+        {
+            if (entityName.IsNullEmptyOrWhiteSpace() || entityId == 0)
+                return;
+            switch (entityName)
+            {
+                case "product":
+                    if (_productService.Count(x => x.Id == entityId) > 0)
+                    {
+                        _productService.LinkMediaWithProduct(media.Id, entityId);
+                    }
+                    break;
+                case "category":
+                    if (_categoryService.Count(x => x.Id == entityId) > 0)
+                    {
+                        _categoryService.Update(new { MediaId = media.Id }, x => x.Id == entityId, null);
+                    }
+                    break;
+                case "user":
+                    if (_userService.Count(x => x.Id == entityId) > 0)
+                    {
+                        _userService.Update(new { ProfilePictureId = media.Id }, x => x.Id == entityId, null);
+                    }
+                    break;
+            }
+        }
+        #endregion
     }
 }

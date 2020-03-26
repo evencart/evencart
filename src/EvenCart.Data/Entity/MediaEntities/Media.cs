@@ -39,5 +39,7 @@ namespace EvenCart.Data.Entity.MediaEntities
         public int UserId { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public string MetaData { get; set; }
     }
 }

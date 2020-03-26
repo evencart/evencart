@@ -1619,8 +1619,10 @@ a.meanmenu-reveal i {
   text-align: center;
   margin-bottom: 40px;
   height: 300px; }
+  .pro-large-img .product-large-image {
+    height: 100%; }
 
-.pro-large-img img {
+.pro-large-img img, .pro-large-img iframe {
   max-width: 100%;
   max-height: 100%; }
 
@@ -1632,7 +1634,18 @@ a.meanmenu-reveal i {
   padding: 0 5px; }
 
 .pro-thumb-img-slider a {
-  display: block; }
+  display: block;
+  position: relative; }
+  .pro-thumb-img-slider a span {
+    position: absolute;
+    top: 32%;
+    left: 36%;
+    color: #fff;
+    background: #555;
+    padding: 1px 8px;
+    border-radius: 3px; }
+  .pro-thumb-img-slider a:hover span {
+    background: #000; }
 
 .pro-thumb-img-slider a img {
   width: 100%; }

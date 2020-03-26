@@ -7,22 +7,43 @@
             <!-- Single Product Images -->
             <div class="col-md-5 col-sm-6 col-xs-12 mb-40">
                 <div class="mb-10 tab-pane">
-                    <div class="pro-large-img"><img alt="" id="product-detail-image" /></div>
+                    <div class="pro-large-img">
+                        {% for media in product.media %}
+                        <div id="product-detail-image-{{media.id}}" class="product-large-image" style="display: none;">
+                            {% if media.mediaType == "Url" %}
+                            {{media.metaData.html}}
+                            {% else %}
+                            <img alt="" src="{{media.url}}" />
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
                 </div>
                 <!-- Single Product Thumbnail Slider -->
                 <div class="pro-thumb-img-slider">
                     {% for media in product.media %}
                     <div>
-                        <a href="#pro-large-img-{{forloop.index}}" class="product-thumb-link" data-url="{{media.url}}" data-toggle="tab"><img src="{{media.thumbnailUrl}}" alt="" /></a>
+                        {% if media.mediaType == "Url" %}
+                        <a href="#pro-large-img-{{forloop.index}}" class="product-thumb-link" data-url="{{media.url}}" data-id="{{media.id}}" data-toggle="tab">
+                            <span>
+                                <i class="fa fa-play"></i>
+                            </span>
+                            <img src="{{media.metaData.thumbnailUrl}}" alt=""/>
+                        </a>
+                        {% else %}
+                        <a href="#pro-large-img-{{forloop.index}}" class="product-thumb-link" data-url="{{media.url}}" data-id="{{media.id}}" data-toggle="tab"><img src="{{media.thumbnailUrl}}" alt="" /></a>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
                 <script type="text/javascript">
                     ready(function() {
                         jQuery(".product-thumb-link").on("click",
-                            function(e) {
-                                var imageUrl = jQuery(this).data("url");
-                                jQuery("#product-detail-image").attr("src", imageUrl);
+                            function (e) {
+                                jQuery(".product-large-image").hide();
+                                var id = jQuery(this).data("id");
+                                jQuery("#product-detail-image-" + id).show();
                             });
                         jQuery(".product-thumb-link:first").trigger("click");
                     });

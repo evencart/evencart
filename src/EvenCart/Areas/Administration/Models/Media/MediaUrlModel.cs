@@ -9,28 +9,23 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.MediaEntities;
-using EvenCart.Data.Enum;
 using EvenCart.Infrastructure.Mvc.Models;
+using EvenCart.Infrastructure.Mvc.Validator;
+using FluentValidation;
 
 namespace EvenCart.Areas.Administration.Models.Media
 {
-    public class MediaModel : FoundationEntityModel
+    public class MediaUrlModel : FoundationModel, IRequiresValidations<MediaUrlModel>
     {
-        public string Description { get; set; }
+        public string Url { get; set; }
 
-        public string AlternativeText { get; set; }
+        public int EntityId { get; set; }
 
-        public string ThumbnailUrl { get; set; }
+        public string EntityName { get; set; }
 
-        public string ImageUrl { get; set; }
-
-        public string MimeType { get; set; }
-
-        public int DisplayOrder { get; set; }
-
-        public MediaType MediaType { get; set; }
-
-        public EmbeddedMediaModel MetaData { get; set; }
+        public void SetupValidationRules(ModelValidator<MediaUrlModel> v)
+        {
+            v.RuleFor(x => x.Url).NotEmpty();
+        }
     }
 }

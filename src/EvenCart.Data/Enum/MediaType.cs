@@ -19,6 +19,7 @@ namespace EvenCart.Data.Enum
         Pdf,
         Powerpoint,
         Word,
-        Binary
+        Binary,
+        Url
     }
 }

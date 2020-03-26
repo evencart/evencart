@@ -10,27 +10,11 @@
 #endregion
 
 using EvenCart.Data.Entity.MediaEntities;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
 
-namespace EvenCart.Areas.Administration.Models.Media
+namespace EvenCart.Services.MediaServices
 {
-    public class MediaModel : FoundationEntityModel
+    public interface IEmbeddedUrlProviderService
     {
-        public string Description { get; set; }
-
-        public string AlternativeText { get; set; }
-
-        public string ThumbnailUrl { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public string MimeType { get; set; }
-
-        public int DisplayOrder { get; set; }
-
-        public MediaType MediaType { get; set; }
-
-        public EmbeddedMediaModel MetaData { get; set; }
+        EmbeddedMedia GetEmbeddedMedia(string url);
     }
 }

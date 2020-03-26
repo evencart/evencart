@@ -29,6 +29,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string GetProduct = Prefix + "GetProduct";
 
         public const string UploadMedia = Prefix + "UploadMedia";
+        public const string UploadMediaUrl = Prefix + "UploadMediaUrl";
         public const string UpdateMediaDisplayOrder = Prefix + "UpdateMediaDisplayOrder";
         public const string DeleteMedia = Prefix + "DeleteMedia";
 

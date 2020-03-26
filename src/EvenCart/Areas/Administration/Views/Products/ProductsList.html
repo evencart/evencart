@@ -61,7 +61,7 @@
                                     return gridFormatters.binary(column, row, column.id);
                                 },
                                 "name": function(column, row) {
-                                    return "<img width='50px' src='" + row.media[0].thumbnailUrl + "' /> " + row.name;
+                                    return "<img width='50px' src='" + (row.media[0].mediaType == "Url" ?  row.media[0].metaData.thumbnailUrl : row.media[0].thumbnailUrl) + "' /> " + row.name;
                                 },
                                 "commands": function (column, row) {
                                     return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +

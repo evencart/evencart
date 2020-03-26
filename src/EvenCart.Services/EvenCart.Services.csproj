@@ -34,6 +34,8 @@
 
   <ItemGroup>
     <Compile Include="Configuration\XmlConfigurationFileService.cs" />
+    <Compile Include="MediaServices\EmbeddedUrlProviderService.cs" />
+    <Compile Include="MediaServices\IEmbeddedUrlProviderService.cs" />
     <Compile Include="MediaServices\IMediaService.cs" />
     <Compile Include="MediaServices\IProductMediaService.cs" />
     <Compile Include="MediaServices\MediaService.cs" />

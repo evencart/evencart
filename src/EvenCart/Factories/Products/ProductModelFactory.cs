@@ -11,9 +11,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 using EvenCart.Services.Products;
@@ -41,8 +43,8 @@ namespace EvenCart.Factories.Products
         private readonly IPriceAccountant _priceAccountant;
         private readonly TaxSettings _taxSettings;
         private readonly IRoundingService _roundingService;
-
-        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings, IRoundingService roundingService)
+        private readonly IDataSerializer _dataSerializer;
+        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings, IRoundingService roundingService, IDataSerializer dataSerializer)
         {
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
@@ -50,6 +52,7 @@ namespace EvenCart.Factories.Products
             _priceAccountant = priceAccountant;
             _taxSettings = taxSettings;
             _roundingService = roundingService;
+            _dataSerializer = dataSerializer;
         }
 
         public ProductModel Create(Product product)
@@ -61,9 +64,16 @@ namespace EvenCart.Factories.Products
             var mediaModels = product.MediaItems?.OrderBy(x => x.DisplayOrder).Select(y =>
             {
                 var mediaModel = _modelMapper.Map<MediaModel>(y);
-                mediaModel.ThumbnailUrl =
-                    _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
-                mediaModel.Url = _mediaAccountant.GetPictureUrl(y, 0, 0, true);
+                if (mediaModel.MediaType != MediaType.Url)
+                {
+                    mediaModel.ThumbnailUrl =
+                        _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
+                    mediaModel.Url = _mediaAccountant.GetPictureUrl(y, 0, 0, true);
+                }
+                else
+                {
+                    mediaModel.MetaData = _dataSerializer.DeserializeAs<EmbeddedMediaModel>(y.MetaData);
+                }
                 return mediaModel;
             }).ToList() ?? new List<MediaModel>()
             {
@@ -72,7 +82,6 @@ namespace EvenCart.Factories.Products
                     ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
                         ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
                     Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
-
                 }
             };
 

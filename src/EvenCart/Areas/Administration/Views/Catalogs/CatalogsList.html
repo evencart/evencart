@@ -76,7 +76,7 @@
                     notify("success", '{{"Catalog was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetCatalog catalogId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetCatalog catalogId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {

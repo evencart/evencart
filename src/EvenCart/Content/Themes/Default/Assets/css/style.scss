@@ -1995,12 +1995,16 @@ a.meanmenu-reveal i {
 .pro-large-img {
     text-align: center;
     margin-bottom: 40px;
-    height:300px;
+    height: 300px;
+    .product-large-image
+        {
+        height: 100%;
+    }
 }
 
-.pro-large-img img {
+.pro-large-img img, .pro-large-img iframe {
     max-width: 100%;
-    max-height:100%;
+    max-height: 100%;
 }
 /*-- Product Thumbnail Image Slider --*/
 .pro-thumb-img-slider {
@@ -2013,6 +2017,20 @@ a.meanmenu-reveal i {
 
 .pro-thumb-img-slider a {
     display: block;
+    position: relative;
+
+    span {
+        position: absolute;
+        top: 32%;
+        left: 36%;
+        color: #fff;
+        background: #555;
+        padding: 1px 8px;
+        border-radius: 3px;
+    }
+    &:hover span{
+        background:#000;
+    }
 }
 
 .pro-thumb-img-slider a img {
