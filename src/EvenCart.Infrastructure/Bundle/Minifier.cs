@@ -9,6 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System;
 using System.Text.RegularExpressions;
 using EvenCart.Data.Extensions;
 
@@ -20,6 +21,7 @@ namespace EvenCart.Infrastructure.Bundle
         private static readonly Regex ScriptTagsRegex = new Regex(@"<script[^>]*>[\w|\t|\r|\W]*?</script>", RegexOptions.Compiled);
         private static readonly Regex TagsRegex = new Regex(@"(?<=[^])\t{2,}|(?<=[>])\s{2,}(?=[<])|(?<=[>])\s{2,11}(?=[<])", RegexOptions.Compiled);
         private static readonly Regex BodyRegex = new Regex(@"</body>", RegexOptions.Compiled);
+        private static readonly Regex CommentRegex = new Regex("<!--[^>]*-->", RegexOptions.Compiled);
 
         private const string IgnoreReplacement = "[IGNORE_SCRIPT]";
 
@@ -28,6 +30,8 @@ namespace EvenCart.Infrastructure.Bundle
             if (html.IsNullEmptyOrWhiteSpace())
                 return html;
 
+            //remove the html comments
+            html = CommentRegex.Replace(html, string.Empty);
             var scriptMatchesToIgnore = IgnoreScriptTagsRegex.Matches(html);
             html = IgnoreScriptTagsRegex.Replace(html, IgnoreReplacement);
 
