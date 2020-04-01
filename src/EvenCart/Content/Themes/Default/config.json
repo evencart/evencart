@@ -18,6 +18,7 @@
     "footer-two": "Footer Column Two",
     "footer-three": "Footer Column Three",
     "footer-four": "Footer Column Four",
-    "footer": "Footer"
+    "footer": "Footer",
+    "product-details-close":  "After Product Details" 
   }
 }

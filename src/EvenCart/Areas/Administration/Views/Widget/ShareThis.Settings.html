@@ -1,0 +1,35 @@
+﻿{% layout "_WidgetLayout" %}
+<form action="" method="post">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Configure Share This" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Title" for="title" %}
+                        {% control text id="name" name="title" value="{{settings.title}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Share This Property Id" for="title" %}
+                        <div class="panel-help">
+                            {{"The ShareThis property Id. You can get your property id by visiting" | t}} <a href="https://platform.sharethis.com/settings">ShareThis</a> {{"website" | t}}
+                        </div>
+                        {% control text name="propertyId" value="{{settings.propertyId}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox id="sticky" name="sticky" text=@t"Sticky Widget" value="{{settings.sticky}}" %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="save-button-container">
+        {% control xsrf %}
+        <input type="hidden" name="id" value="{{widgetId}}"/>
+        <button type="submit" class="btn btn-sm btn-success">{{"Save Widget" | t}}</button>
+    </div>
+</form>

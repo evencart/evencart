@@ -51,7 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="App_Data\database.config" />
     <Content Remove="Content\Themes\Default\config.json" />
   </ItemGroup>
 
@@ -249,6 +248,7 @@
     <None Remove="Areas\Administration\Views\Widget\Menu.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\ProductCarousel.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\RawHtml.Settings.html" />
+    <None Remove="Areas\Administration\Views\Widget\ShareThis.Settings.html" />
     <None Remove="Areas\Administration\Views\Widget\SocialIcons.Settings.html" />
     <None Remove="Content\Themes\Default\Assets\css\animate.min.css" />
     <None Remove="Content\Themes\Default\Assets\css\bootstrap.min.css" />
@@ -309,6 +309,7 @@
     <None Remove="Content\Themes\Default\Views\Components\PriceFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\ProductCarousel\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\RawHtml\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\ShareThis\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\SocialIcons\Default.html" />
     <None Remove="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html" />
     <None Remove="Content\Themes\Default\Views\ContentPages\Index.html" />
@@ -1011,6 +1012,9 @@
     <Content Include="Areas\Administration\Views\Warehouse\WarehouseList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Administration\Views\Widget\ShareThis.Settings.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Areas\Administration\Views\Widget\SocialIcons.Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1124,6 +1128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\ShareThis\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\ConnectedAccounts\ConnectedAccountsList.html">
@@ -1446,7 +1453,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="App_Data\database.config" />
     <None Include="Content\Themes\Default\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
