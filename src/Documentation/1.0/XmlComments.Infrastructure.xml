@@ -88,14 +88,6 @@
             <param name="customResponse">The response object</param>
             <returns></returns>
         </member>
-        <member name="M:EvenCart.Infrastructure.Mvc.CustomResponseExtensions.WithParams(EvenCart.Infrastructure.Mvc.CustomResponse,System.Object)">
-            <summary>
-            Adds available input types to current response
-            </summary>
-            <param name="customResponse">The response object</param>
-            <param name="paramsModel"></param>
-            <returns></returns>
-        </member>
         <member name="M:EvenCart.Infrastructure.Mvc.FoundationController.RaiseEvent(System.Enum,System.Object[])">
             <summary>
             Raises a named event so other services and plugins can capture

@@ -78,7 +78,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 PluginSystemName = x.PluginSystemName,
                 WidgetName = x.WidgetDisplayName,
                 WidgetSystemName = x.WidgetSystemName,
-                WidgetZones = x.WidgetZones
+                WidgetZones = x.WidgetZones?.OrderBy(y => y).ToList()
             });
             widgetModels = widgetModels.OrderBy(x => x.PluginName).ToList();
             var availableWidgetNames = widgetModels.Select(x => x.WidgetSystemName);
@@ -113,13 +113,14 @@ namespace EvenCart.Areas.Administration.Controllers
             var zones = ApplicationEngine.ActiveTheme.WidgetZones.Select(x => new ZoneModel() {
                 Name = x.Value,
                 SystemName = x.Key
-            })
+            }).OrderBy(x => x.Name)
                 .ToList();
 
             return R.Success
                 .With("availableWidgets", widgetModels)
                 .With("activeWidgets", activeWidgets)
                 .With("zones", zones)
+                .WithParams(null)
                 .Result;
         }
 

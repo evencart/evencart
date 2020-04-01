@@ -48,21 +48,41 @@
     </div>
     <div class="col-md-8">
         <div class="panel panel-primary">
-            {% for zone in zones %}
             <div class="panel-title">
-                {{zone.name}}
+                <select id="widget-zone-selector">
+                    {% for zone in zones %}
+                    <option value="{{zone.systemName}}">
+                        {{zone.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <script type="text/javascript">
+                    ready(function() {
+                        jQuery("#widget-zone-selector").change(function() {
+                            var zonePanelId = "#zone-" + jQuery(this).val() + "-widgets";
+                            jQuery(".zone-body").hide();
+                            jQuery(zonePanelId).show();
+                        });
+
+                        var currentZone = "{{requestParams.widgetZone}}";
+                        if (currentZone != "")
+                            jQuery("#widget-zone-selector").val(currentZone);
+                        jQuery("#widget-zone-selector").trigger("change");
+                    })
+                </script>
             </div>
-            <div class="panel-body" id="zone-{{zone.systemName}}-widgets">
+            {% for zone in zones %}
+            <div class="panel-body zone-body" id="zone-{{zone.systemName}}-widgets" style="display: none;">
                 {% for activeWidget in activeWidgets %}
                 {% if activeWidget.zoneName == zone.systemName %}
                 {% for widget in activeWidget.widgets %}
                 <div>
                     {{widget.widgetName}}
-                    <input type="hidden" name="widgetModels[{{forloop.index0}}].widgetSystemName" value="{{widget.widgetSystemName}}" />
-                    <input type="hidden" name="widgetModels[{{forloop.index0}}].pluginSystemName" value="{{widget.pluginSystemName}}" />
-                    <input type="hidden" name="widgetModels[{{forloop.index0}}].displayOrder" value="{{widget.displayOrder}}" data-type="displayorder" />
-                    <input type="hidden" name="widgetModels[{{forloop.index0}}].id" value="{{widget.id}}" />
-                  
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].widgetSystemName" value="{{widget.widgetSystemName}}"/>
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].pluginSystemName" value="{{widget.pluginSystemName}}"/>
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].displayOrder" value="{{widget.displayOrder}}" data-type="displayorder"/>
+                    <input type="hidden" name="widgetModels[{{forloop.index0}}].id" value="{{widget.id}}"/>
+
                     <a onclick="deleteWidget('{{widget.id}}')" class="clickable float-right">
                         <span class="rbicon rbicon-trash-2"></span>
                     </a>
@@ -90,11 +110,11 @@
                     });
                 });
             </script>
+
             {% endfor %}
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     var addWidgetToZone = function(pluginName, widgetName, zoneName) {
         post({
@@ -105,7 +125,8 @@
                 zoneName: zoneName
             },
             done: function() {
-                window.location.reload();
+                var widgetsUrl = '{% route Admin.WidgetsList %}' + "?widgetZone=" + zoneName;
+                window.location.href = widgetsUrl;
             }
         });
     }
