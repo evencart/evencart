@@ -97,6 +97,9 @@ namespace EvenCart.Infrastructure.Mvc
 
         public static IActionResult GetResult(CustomResponse r)
         {
+            //always add the request queries
+            r.WithRequestParams();
+
             var expandoDict = (IDictionary<string, object>)r._expandoObject;
             var allValues = expandoDict.Values.Where(x => x != null && !x.GetType().IsPrimitive);
             foreach (var value in allValues)

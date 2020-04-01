@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Shop;
@@ -84,15 +85,21 @@ namespace EvenCart.Infrastructure.Mvc
             return customResponse.With("inputTypes", SelectListHelper.GetInputTypes());
         }
 
-        /// <summary>
-        /// Adds available input types to current response
-        /// </summary>
-        /// <param name="customResponse">The response object</param>
-        /// <param name="paramsModel"></param>
-        /// <returns></returns>
+      
         public static CustomResponse WithParams(this CustomResponse customResponse, object paramsModel)
         {
             return customResponse.With("params", paramsModel);
+        }
+
+        public static CustomResponse WithRequestParams(this CustomResponse customResponse)
+        {
+            var httpContext = ApplicationEngine.CurrentHttpContext;
+            if (httpContext.Request.Query?.Any() ?? false)
+            {
+                return customResponse.With("requestParams",
+                    httpContext.Request.Query.ToDictionary(x => x.Key, x => x.Value));
+            }
+            return customResponse;
         }
 
         public static CustomResponse WithAvailableShipmentStatusTypes(this CustomResponse customResponse)
