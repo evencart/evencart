@@ -13,6 +13,7 @@ using System;
 using System.Collections.Specialized;
 using EvenCart.Areas.Administration.Models.Updates;
 using EvenCart.Core;
+using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
