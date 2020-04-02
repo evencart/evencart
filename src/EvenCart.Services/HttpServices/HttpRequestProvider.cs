@@ -16,6 +16,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using EvenCart.Core.Data;
 using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.HttpServices
