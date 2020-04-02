@@ -27,7 +27,7 @@ namespace EvenCart.Areas.Administration.Components
     [ViewComponent(Name = "EvenCartUpdates")]
     public class UpdatesComponent : FoundationComponent
     {
-        private const string UpdatesFetchUrl = "https://evencart.co/api/feed?domain={0}&version={1}";
+        private const string UpdatesFetchUrl = "https://evencart.co/api/feed";
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
         private readonly ISettingService _settingService;
@@ -52,12 +52,12 @@ namespace EvenCart.Areas.Administration.Components
                 if (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace() || DateTime.UtcNow.Subtract(_systemSettings.LatestFetchedOn).TotalHours >=
                     _systemSettings.UpdateFetchIntervalInHours)
                 {
-                    var domain = _generalSettings.StoreDomain;
                     //we need to
-                    updates = _requestProvider.Get<UpdatesResponseModel>(string.Format(UpdatesFetchUrl, domain, AppVersionEvaluator.Version), new NameValueCollection()
+                    updates = _requestProvider.Get<UpdatesResponseModel>(UpdatesFetchUrl, new NameValueCollection()
                     {
-                        { "storeDomain", _generalSettings.StoreDomain },
-                        { "storeName", _generalSettings.StoreName }
+                        { "domain", _generalSettings.StoreDomain },
+                        { "storeName", _generalSettings.StoreName },
+                        { "version", AppVersionEvaluator.Version }
                     });
                     if (updates != null)
                     {
