@@ -11,9 +11,12 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using EvenCart.Core.Data;
+using System.Web;
+using EvenCart.Services.Serializers;
 
 namespace EvenCart.Services.HttpServices
 {
@@ -85,7 +88,12 @@ namespace EvenCart.Services.HttpServices
                             //add parameters
                             if (!url.Contains('?'))
                                 url += "?";
-                            url += parameters.ToString();
+                            if (parameters is NameValueCollection collection)
+                            {
+                                url += ToQueryString(collection);
+                            }
+                            else
+                                url += parameters.ToString();
                         }
                         resBytes = await webClient.DownloadDataTaskAsync(url);
                     }
@@ -114,6 +122,29 @@ namespace EvenCart.Services.HttpServices
                 }
             }
 
+        }
+
+        public static string ToQueryString(NameValueCollection collection)
+        {
+            if (collection == null) return string.Empty;
+
+            var sb = new StringBuilder();
+
+            foreach (string key in collection.Keys)
+            {
+                if (string.IsNullOrWhiteSpace(key)) continue;
+
+                string[] values = collection.GetValues(key);
+                if (values == null) continue;
+
+                foreach (string value in values)
+                {
+                    sb.AppendFormat("{0}={1}", Uri.EscapeDataString(key), Uri.EscapeDataString(value));
+                    sb.Append("&");
+                }
+            }
+
+            return sb.ToString();
         }
         #endregion
     }
