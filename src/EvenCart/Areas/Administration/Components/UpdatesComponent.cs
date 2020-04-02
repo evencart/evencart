@@ -12,11 +12,12 @@
 using System;
 using System.Collections.Specialized;
 using EvenCart.Areas.Administration.Models.Updates;
-using EvenCart.Core.Data;
+using EvenCart.Core;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Services.HttpServices;
+using EvenCart.Services.Serializers;
 using EvenCart.Services.Settings;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace EvenCart.Areas.Administration.Components
     [ViewComponent(Name = "EvenCartUpdates")]
     public class UpdatesComponent : FoundationComponent
     {
-        private const string UpdatesFetchUrl = "https://evencart.co/api/feed";
+        private const string UpdatesFetchUrl = "https://evencart.co/api/feed?domain={0}&version={1}";
         private readonly IRequestProvider _requestProvider;
         private readonly SystemSettings _systemSettings;
         private readonly ISettingService _settingService;
@@ -50,8 +51,9 @@ namespace EvenCart.Areas.Administration.Components
                 if (_systemSettings.LatestUpdatesFetched.IsNullEmptyOrWhiteSpace() || DateTime.UtcNow.Subtract(_systemSettings.LatestFetchedOn).TotalHours >=
                     _systemSettings.UpdateFetchIntervalInHours)
                 {
+                    var domain = _generalSettings.StoreDomain;
                     //we need to
-                    updates = _requestProvider.Get<UpdatesResponseModel>(UpdatesFetchUrl, new NameValueCollection()
+                    updates = _requestProvider.Get<UpdatesResponseModel>(string.Format(UpdatesFetchUrl, domain, AppVersionEvaluator.Version), new NameValueCollection()
                     {
                         { "storeDomain", _generalSettings.StoreDomain },
                         { "storeName", _generalSettings.StoreName }
