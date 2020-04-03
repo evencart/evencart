@@ -3,39 +3,39 @@ EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"
 SET IDENTITY_INSERT [Category] ON 
 
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Computers & Accessories', NULL, 0, NULL, 10, 0, 1)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Computers & Accessories', NULL, 0, NULL, 10, 0, 1)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Laptops', NULL, 0, NULL, 1, 0, 2)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Laptops', NULL, 0, NULL, 1, 0, 2)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Mobiles & Accessories', NULL, 0, NULL, 10, 0, 3)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Mobiles & Accessories', NULL, 0, NULL, 10, 0, 3)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Mobiles', NULL, 0, NULL, 3, 0, 4)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Mobiles', NULL, 0, NULL, 3, 0, 4)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Apple Mobiles', NULL, 0, NULL, 4, 0, 5)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Apple Mobiles', NULL, 0, NULL, 4, 0, 5)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Printers', NULL, 0, NULL, 1, 0, 6)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Printers', NULL, 0, NULL, 1, 0, 6)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Accessories', NULL, 0, NULL, 6, 0, 7)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Accessories', NULL, 0, NULL, 6, 0, 7)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Smart Watches', NULL, 0, NULL, 10, 0, 8)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Smart Watches', NULL, 0, NULL, 10, 0, 8)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Storage', NULL, 0, NULL, 1, 0, 9)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Storage', NULL, 0, NULL, 1, 0, 9)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Technology', NULL, 0, NULL, 0, 0, 10)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Technology', NULL, 0, NULL, 0, 0, 10)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Electronics', NULL, 0, NULL, 0, 0, 11)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Electronics', NULL, 0, NULL, 0, 0, 11)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Televisions', NULL, 0, NULL, 11, 0, 12)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Televisions', NULL, 0, NULL, 11, 0, 12)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Software', NULL, 0, NULL, 0, 0, 13)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Software', NULL, 0, NULL, 0, 0, 13)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Security', NULL, 0, NULL, 13, 0, 14)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Security', NULL, 0, NULL, 13, 0, 14)
 
-INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentCategoryId], [MediaId], [Id]) VALUES (N'Utilities', NULL, 0, NULL, 13, 0, 15)
+INSERT [Category] ([Name], [Description], [DisplayOrder], [TaxId], [ParentId], [MediaId], [Id]) VALUES (N'Utilities', NULL, 0, NULL, 13, 0, 15)
 
 SET IDENTITY_INSERT [Category] OFF
 
-SET IDENTITY_INSERT [Product] ON 
+SET IDENTITY_INSERT [Product] ON
 
 
 INSERT [Product] ([Name], [Summary], [Description], [IsShippable], [IsDownloadable], [IsFeatured], [IsVisibleIndividually], [TrackInventory], [CanOrderWhenOutOfStock], [ComparePrice], [Price], [Sku], [Gtin], [Mpn], [MinimumPurchaseQuantity], [MaximumPurchaseQuantity], [CreatedOn], [UpdatedOn], [ParentProductId], [DisplayOrder], [ChargeTaxes], [Published], [Deleted], [ManufacturerId], [TaxId], [HasVariants], [ReviewsDisabled], [PopularityIndex], [PackageWeight], [PackageWeightUnit], [PackageWidth], [PackageWidthUnit], [PackageHeight], [PackageHeightUnit], [PackageLength], [PackageLengthUnit], [AdditionalShippingCharge], [IndividuallyShipped], [AllowReturns], [DaysForReturn], [Id], [ProductType], [ProductSaleType], [SubscriptionCycle], [CycleCount], [TrialDays], [RequireLoginToPurchase], [RequireLoginToViewPrice]) VALUES (N'HP 15 Core i3 7th gen 15.6-inch Laptop', N'<p><span style="font-size: 14.4px;">Designed for long-lasting performance, this stylishly designed HP laptop has a long-lasting battery that keeps you connected, entertained, and productive all day. Speed through tasks, or sit back and socialize - with the latest processors and a rich Full HD display. Do it all, all day.</span></p>', N'<p><span style="font-size: 14.4px;">Processor: 7th Gen Intel Core i3-7100U processor, 2.4GHz base processor speed, 2 cores, 3MB cache</span></p><p><span style="font-size: 14.4px;">Operating System: Pre-loaded Windows 10 Home with lifetime validity</span></p><p><span style="font-size: 14.4px;">Display: 15.6-inch Full HD (1920x1080) WLED display, Display Features: Diagonal FHD SVA Anti-Glare WLED-backlit Display</span></p><p></p><ul><li><span style="font-size: 14.4px;">Memory &amp; Storage: 4GB DDR4 RAM Intel HD Graphics 620 | Storage: 1TB HDD, HDD Speed(RPM): 5400 RPM</span></li><li>Design &amp; battery: Multi-touch gesture support | Thin and light design | Laptop weight: 2.2 kg | Average battery life = 7 hours, HP Fast Charge battery, Battery: 3 Cell, Li-Ion, Power Supply: 41 W AC Adapter W</li><li>Warranty: This genuine HP laptop comes with a 1-year domestic warranty from HP covering manufacturing defects and not covering physical damage. For more details, see Warranty section below</li><li>Preinstalled Software: Windows 10 Home | In the Box: Laptop with included battery and charger Ports &amp; CD drive: 1 HDMI, 2 USB 3.0, 1 USB 2.0, 1 Audio-output | With CD drive Other features: Anti Glare Display</li></ul><p></p>', 1, 0, 0, 0, 0, 0, CAST(650.00000 AS Numeric(18, 5)), CAST(449.00000 AS Numeric(18, 5)), N'15-DA0326TU', NULL, NULL, 1, 1, CAST(N'2019-07-02T12:06:46.667' AS DateTime), CAST(N'2019-11-19T11:53:52.597' AS DateTime), NULL, 0, 0, 1, 0, 1, NULL, 1, 0, 0, CAST(0.00000 AS Numeric(18, 5)), 1, CAST(0.00000 AS Numeric(18, 5)), 1, CAST(0.00000 AS Numeric(18, 5)), 1, CAST(0.00000 AS Numeric(18, 5)), 1, CAST(0.00000 AS Numeric(18, 5)), 0, 0, 0, 2, 0, 0, 0, 0, NULL, 0, 0)
@@ -334,37 +334,37 @@ SET IDENTITY_INSERT [Menu] OFF
 SET IDENTITY_INSERT [MenuItem] ON 
 
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Laptops', 4, NULL, 0, NULL, 0, 1)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Laptops', 4, NULL, 0, NULL, 0, 1)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Mobiles', 8, NULL, 1, NULL, 0, 2)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Mobiles', 8, NULL, 1, NULL, 0, 2)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Printers', 11, NULL, 2, NULL, 0, 3)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Printers', 11, NULL, 2, NULL, 0, 3)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Storage', 18, NULL, 3, NULL, 0, 4)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Storage', 18, NULL, 3, NULL, 0, 4)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Televisions', 23, NULL, 4, NULL, 0, 5)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Televisions', 23, NULL, 4, NULL, 0, 5)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 3, N'Accessories', 14, NULL, 0, NULL, 0, 6)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 3, N'Accessories', 14, NULL, 0, NULL, 0, 6)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Software', 26, NULL, 5, NULL, 0, 7)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (1, 0, N'Software', 26, NULL, 5, NULL, 0, 7)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'About us', 30, NULL, 1, NULL, 0, 8)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'About us', 30, NULL, 1, NULL, 0, 8)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Contact Us', 31, NULL, 2, NULL, 0, 9)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Contact Us', 31, NULL, 2, NULL, 0, 9)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Privacy Policy', 32, NULL, 3, NULL, 0, 10)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Privacy Policy', 32, NULL, 3, NULL, 0, 10)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Terms & Conditions', 33, NULL, 4, NULL, 0, 11)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (2, 0, N'Terms & Conditions', 33, NULL, 4, NULL, 0, 11)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Orders', NULL, N'/account/orders', 1, NULL, 0, 12)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Orders', NULL, N'/account/orders', 1, NULL, 0, 12)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Profile', NULL, N'/account', 0, NULL, 0, 13)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Profile', NULL, N'/account', 0, NULL, 0, 13)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Privacy', NULL, N'/account/privacy', 2, NULL, 0, 14)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'Privacy', NULL, N'/account/privacy', 2, NULL, 0, 14)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'My Cart', NULL, N'/cart', 4, NULL, 0, 15)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'My Cart', NULL, N'/cart', 4, NULL, 0, 15)
 
-INSERT [MenuItem] ([MenuId], [ParentMenuItemId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'My Wishlist', NULL, N'/account/wishlist', 5, NULL, 0, 16)
+INSERT [MenuItem] ([MenuId], [ParentId], [Name], [SeoMetaId], [Url], [DisplayOrder], [CssClass], [IsGroup], [Id]) VALUES (3, 0, N'My Wishlist', NULL, N'/account/wishlist', 5, NULL, 0, 16)
 
 SET IDENTITY_INSERT [MenuItem] OFF
 
