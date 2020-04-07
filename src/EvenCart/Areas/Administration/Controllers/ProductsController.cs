@@ -141,7 +141,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 out decimal availableToPrice, out Dictionary<int, string> availableManufacturers,
                 out Dictionary<int, string> availableVendors,
                 out Dictionary<string, List<string>> availableFilters, parameters.SearchPhrase, null, parameters.Published, storeId: null, parameters.Tags,
-                parameters.ManufacturerIds, parameters.VendorIds, catalogIds: null, categoryids: parameters.CategoryIds, null, true, null, null, orderByExpression,
+                parameters.ManufacturerIds, parameters.VendorIds, catalogIds: parameters.CatalogIds, categoryids: parameters.CategoryIds, null, true, null, null, orderByExpression,
                 parameters.SortOrder, parameters.Current,
                 parameters.RowCount);
             var productsModel = products.Select(x =>

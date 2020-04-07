@@ -29,5 +29,7 @@ namespace EvenCart.Areas.Administration.Models.Shop
         public bool? Published { get; set; }
 
         public string[] Tags { get; set; }
+
+        public int[] CatalogIds { get; set; }
     }
 }

@@ -9,11 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System.Linq;
 using EvenCart.Areas.Administration.Models.Dialog;
+using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Services.Common;
+using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -31,6 +36,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var title = "";
             var displayField = "name";
             var routeName = "";
+            object parameters = null;
             switch (model.ResponseObjectName)
             {
                 case "categories":
@@ -41,6 +47,14 @@ namespace EvenCart.Areas.Administration.Controllers
                 case "products":
                     routeName = AdminRouteNames.ProductsList;
                     title = T("Products");
+                    //get catalogs for current store
+                    var catalogIds = DependencyResolver.Resolve<IEntityStoreService>().Get(x =>
+                            x.EntityName == nameof(Catalog) && x.StoreId == CurrentStore.Id).Select(x => x.EntityId)
+                        .ToList();
+                    parameters = new
+                    {
+                        catalogIds = catalogIds
+                    };
                     break;
                 case "users":
                     routeName = AdminRouteNames.UsersList;
@@ -69,7 +83,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 default:
                     return NotFound();
             }
-            model.ApiUrl = Url.RouteUrl($"{ApplicationConfig.ApiEndpointName}_{routeName}");
+            model.ApiUrl = Url.RouteUrl($"{ApplicationConfig.ApiEndpointName}_{routeName}", parameters);
             model.UiUrl = Url.RouteUrl($"{routeName}");
             model.DialogTitle = title;
             model.DisplayField = displayField;
