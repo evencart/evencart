@@ -33,6 +33,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public override bool Equals(object obj)
         {
+            if (obj == null || obj.GetType() != typeof(ProductVariantAttribute))
+                return false;
             var objAsVariantAttribute = (ProductVariantAttribute) obj;
             return objAsVariantAttribute.ProductAttributeId == this.ProductAttributeId &&
                    objAsVariantAttribute.ProductAttributeValueId == this.ProductAttributeValueId;

@@ -325,5 +325,11 @@ namespace EvenCart.Infrastructure.Routing
         public const string GetCatalog = Prefix + "GetCatalog";
         public const string DeleteCatalog = Prefix + "DeleteCatalog";
         public const string SaveCatalog = Prefix + "SaveCatalog";
+
+        public const string ExportEditor = Prefix + "ExportEditor";
+        public const string ImportEditor = Prefix + "ImportEditor";
+        public const string DataTransferExport = Prefix + "DataTransferExport";
+        public const string DataTransferImport = Prefix + "DataTransferImport";
+
     }
 }

@@ -35,6 +35,7 @@ using EvenCart.Infrastructure.Bundle;
 using EvenCart.Infrastructure.Caching;
 using EvenCart.Infrastructure.Config;
 using EvenCart.Infrastructure.Database;
+using EvenCart.Infrastructure.DataTransfer;
 using EvenCart.Infrastructure.Emails;
 using EvenCart.Infrastructure.Localization;
 using EvenCart.Infrastructure.MediaServices;
@@ -157,6 +158,14 @@ namespace EvenCart.Infrastructure.DependencyContainer
                                    .Any(x => x.IsAssignableTo(typeof(ICurrencyRateProvider))));// which implementing some interface(s)
             //all providers which are not interfaces
             registrar.RegisterMany<ICurrencyRateProvider>(allCurrencyProviders, type => type.FullName);
+
+            //currency providers
+            var dataTransferProviders = allTypes
+                .Where(type => type.IsPublic && // get public types 
+                               type.GetInterfaces()
+                                   .Any(x => x.IsAssignableTo(typeof(IDataTransferProvider))));// which implementing some interface(s)
+            //all providers which are not interfaces
+            registrar.RegisterMany<IDataTransferProvider>(dataTransferProviders, type => type.FullName);
 
             //services
             //to register services, we need to get all types from services assembly and register each of them;

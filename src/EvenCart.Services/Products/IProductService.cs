@@ -49,6 +49,8 @@ namespace EvenCart.Services.Products
 
         IList<Product> GetProducts(IList<int> ids, bool withReviews = false);
 
+        IList<Product> GetProducts(bool withCategories, bool withSpecifications, bool withAttributes, bool withMedia, bool withVendors, bool withManufacturers, int page = 1, int count = int.MaxValue);
+
         void PopulateReviewSummary(IList<Product> products);
 
         void UpdatePopularityIndex(bool increment = true, params int[] productIds);
