@@ -31,8 +31,11 @@ namespace EvenCart.Infrastructure.Consumers
         {
             if (!(entity is ISeoEntity))
                 return;
+            //is there a property to for seometa
+            var property = typeof(T).GetProperties().FirstOrDefault(x => x.PropertyType == typeof(SeoMeta) && x.CanWrite);
+
             var name = ((ISeoEntity) entity).Name;
-            var seoMeta = new SeoMeta()
+            var seoMeta = (property != null ? (SeoMeta) property.GetValue(entity) : null) ?? new SeoMeta()
             {
                 EntityId = entity.Id,
                 EntityName = typeof(T).Name,
@@ -40,10 +43,8 @@ namespace EvenCart.Infrastructure.Consumers
                 Slug = CommonHelper.GenerateSlug(name),
                 PageTitle = name
             };
-            _seoMetaService.Insert(seoMeta);
+            _seoMetaService.InsertOrUpdate(seoMeta);
 
-            //is there a property to for seometa
-            var property = typeof(T).GetProperties().FirstOrDefault(x => x.PropertyType == typeof(SeoMeta) && x.CanWrite);
             if (property != null)
             {
                 property.SetValue(entity, seoMeta);
