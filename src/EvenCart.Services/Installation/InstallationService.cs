@@ -336,9 +336,8 @@ namespace EvenCart.Services.Installation
         private void SeedDefaultUser(string email, string password)
         {
             var userRegistrationService = DependencyResolver.Resolve<IUserRegistrationService>();
-            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
 
-            var registrationResult = userRegistrationService.Register(email, password, securitySettings.DefaultPasswordStorageFormat);
+            var registrationResult = userRegistrationService.Register(email, password, PasswordFormat.Sha1Hashed);
             if (registrationResult == UserRegistrationStatus.Success)
             {
                 //add roles
