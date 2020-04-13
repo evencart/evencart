@@ -46,6 +46,11 @@ namespace EvenCart.Services.Tests
         {
             return DependencyResolver.Resolve<T>();
         }
+
+        public T Resolve<T>(string serviceKey)
+        {
+            return DependencyResolver.Resolve<T>(serviceKey);
+        }
     }
 
     public class TestConfiguration : IConfiguration

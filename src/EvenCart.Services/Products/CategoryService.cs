@@ -57,6 +57,28 @@ namespace EvenCart.Services.Products
             });
         }
 
+        public void InsertTree(Category category)
+        {
+            if (category.Parent != null && category.Children != null && category.Children.Any())
+            {
+                throw new Exception("A category tree to insert should only have parent or children");
+            }
+            if (category.Parent != null)
+            {
+                InsertTree(category.Parent);
+                category.ParentId = category.Parent.Id;
+            }
+            Insert(category);
+            if (category.Children != null && category.Children.Any())
+            {
+                foreach (var child in category.Children)
+                {
+                    child.ParentId = category.Id;
+                    InsertTree(child);
+                }
+            }
+        }
+
         private void MakeTree(Category parentCategory, IList<Category> categories)
         {
             parentCategory.Children = categories.Where(x => x.ParentId == parentCategory.Id).ToList();

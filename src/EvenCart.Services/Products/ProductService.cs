@@ -37,12 +37,14 @@ namespace EvenCart.Services.Products
         private readonly ISearchQueryParserService _searchQueryParserService;
         private readonly IWarehouseInventoryService _warehouseInventoryService;
         private readonly IProductCatalogService _productCatalogService;
-        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService, IProductCatalogService productCatalogService)
+        private readonly ICategoryService _categoryService;
+        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService, IProductCatalogService productCatalogService, ICategoryService categoryService)
         {
             _eventPublisherService = eventPublisherService;
             _searchQueryParserService = searchQueryParserService;
             _warehouseInventoryService = warehouseInventoryService;
             _productCatalogService = productCatalogService;
+            _categoryService = categoryService;
         }
 
         public IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
@@ -580,16 +582,26 @@ namespace EvenCart.Services.Products
         public IList<Product> GetProducts(bool withCategories, bool withSpecifications, bool withAttributes, bool withMedia, bool withVendors, bool withManufacturers, int page = 1, int count = int.MaxValue)
         {
             var query = Repository
+                .Where(x => !x.Deleted)
                 .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter,
                     (product, meta) => meta.EntityName == nameof(Product))
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>());
            
             if (withCategories)
             {
+                var allCategories = _categoryService.GetFullCategoryTree();
                 query.Join<ProductCategory>("Id", "ProductId", joinType: JoinType.LeftOuter)
-                    .Join<Category>("CategoryId", "id", joinType: JoinType.LeftOuter)
-                    .Relate(RelationTypes.OneToMany<Product, ProductCategory>())
-                    .Relate(RelationTypes.OneToMany<Product, Category>());
+                    .Relate<ProductCategory>((product, productCategory) =>
+                        {
+                            product.ProductCategories ??= new List<ProductCategory>();
+                            if (!product.ProductCategories.Contains(productCategory))
+                                product.ProductCategories.Add(productCategory);
+
+                            product.Categories ??= new List<Category>();
+                            var category = allCategories.First(x => x.Id == productCategory.CategoryId);
+                            if(!product.Categories.Contains(category))
+                                product.Categories.Add(category);
+                        });
 
             }
             if (withAttributes)
@@ -616,8 +628,11 @@ namespace EvenCart.Services.Products
                                 variant.ProductVariantAttributes.Add(attribute);
                         }
                     })
-                    .Relate<ProductAttribute>((product, attribute) =>
-                    {
+                    .Relate(RelationTypes.OneToMany<Product, ProductAttribute>((product, attribute) => {
+                        product.ProductAttributes ??= new List<ProductAttribute>();
+                        if (!product.ProductAttributes.Contains(attribute))
+                            product.ProductAttributes.Add(attribute);
+
                         foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
                             x.ProductVariantAttributes))
                         {
@@ -626,9 +641,15 @@ namespace EvenCart.Services.Products
                                 variantAttribute.ProductAttribute = attribute;
                             }
                         }
-                    })
+                    }))
                     .Relate<ProductAttributeValue>((product, attributeValue) =>
                     {
+                        foreach (var attribute in product.ProductAttributes.Where(x => x.Id == attributeValue.ProductAttributeId))
+                        {
+                            attribute.ProductAttributeValues ??= new List<ProductAttributeValue>();
+                           if(!attribute.ProductAttributeValues.Contains(attributeValue))
+                               attribute.ProductAttributeValues.Add(attributeValue);
+                        }
                         foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
                             x.ProductVariantAttributes)
                         )
@@ -641,9 +662,14 @@ namespace EvenCart.Services.Products
                     })
                     .Relate<AvailableAttribute>((product, attribute) =>
                     {
+                        product.ProductAttributes.ForEach(productAttribute =>
+                        {
+                            if (productAttribute.AvailableAttributeId == attribute.Id)
+                                productAttribute.AvailableAttribute = attribute;
+                        });
+
                         foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
-                            x.ProductVariantAttributes)
-                        )
+                            x.ProductVariantAttributes))
                         {
                             if (variantAttribute.ProductAttribute.AvailableAttributeId == attribute.Id)
                             {
@@ -655,9 +681,18 @@ namespace EvenCart.Services.Products
                     })
                     .Relate<AvailableAttributeValue>((product, attributeValue) =>
                     {
+                        var availableAttributes = product.ProductAttributes.Select(x => x.AvailableAttribute).ToList();
+                        foreach (var availableAttribute in availableAttributes)
+                        {
+                            availableAttribute.AvailableAttributeValues ??= new List<AvailableAttributeValue>();
+                            if (availableAttribute.Id == attributeValue.AvailableAttributeId)
+                            {
+                                if(!availableAttribute.AvailableAttributeValues.Contains(attributeValue))
+                                    availableAttribute.AvailableAttributeValues.Add(attributeValue);
+                            }
+                        }
                         foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
-                            x.ProductVariantAttributes)
-                        )
+                            x.ProductVariantAttributes))
                         {
                             if (variantAttribute.ProductAttributeValue.AvailableAttributeValueId == attributeValue.Id)
                             {
@@ -682,6 +717,7 @@ namespace EvenCart.Services.Products
             {
                 query.Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                     .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToMany<Product, ProductVendor>())
                     .Relate(RelationTypes.OneToMany<Product, Vendor>());
             }
 

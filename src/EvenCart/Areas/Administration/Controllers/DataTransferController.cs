@@ -11,71 +11,137 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.DataTransfer;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.DataTransfer;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
+using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Services.MediaServices;
 using EvenCart.Services.Products;
+using EvenCart.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
+    /// <summary>
+    /// Provides import/export of site data
+    /// </summary>
     public class DataTransferController : FoundationAdminController
     {
-        private readonly IProductService _productService;
-        public DataTransferController(IProductService productService)
+        private static string[] Exportables = new[] {nameof(Product), nameof(User), nameof(Category)};
+
+        private readonly IDataTransferManager _dataTransferManager;
+        public DataTransferController(IDataTransferManager dataTransferManager)
         {
-            _productService = productService;
+            _dataTransferManager = dataTransferManager;
         }
 
-        [HttpGet("export", Name = AdminRouteNames.DataTransferExport)]
-        [ValidateModelState(ModelType = typeof(ExportRequestModel))]
-        public IActionResult Export(ExportRequestModel exportRequest)
+        /// <summary>
+        /// Renders export editor page
+        /// </summary>
+        /// <param name="entityName">The name of entity to export</param>
+        /// <param name="success">Specifies if the last operation was successful</param>
+        /// <param name="importCount">The number of successfully inserted entities.</param>
+        /// <response code="200">The export editor page with entityName</response>
+        [HttpGet("", Name = AdminRouteNames.DataTransfer)]
+        public IActionResult DataTransferEditor(string entityName, bool success, int importedCount)
         {
-            IDataTransferProvider dataTransferProvider;
-            dataTransferProvider = DependencyResolver.Resolve<IDataTransferProvider>(exportRequest.Output == "json" ? typeof(JsonProvider).FullName : typeof(ExcelProvider).FullName);
+            var availableExportableEntities = SelectListHelper.GetSelectItemList(Exportables, entityName);
+            return R.Success
+                .With("availableExportableEntities", availableExportableEntities)
+                .With("entityName", entityName)
+                .With("importedCount", importedCount)
+                .With("importSuccess", success).Result;
+        }
 
+        /// <summary>
+        /// Exports the requested data in the output format
+        /// </summary>
+        /// <param name="exportRequest"></param>
+        /// <response code="200">The data file in the output format</response>
+        [HttpPost("export", Name = AdminRouteNames.DataTransferExport)]
+        [ValidateModelState(ModelType = typeof(ExportRequestModel))]
+        public IActionResult ExportEditor(ExportRequestModel exportRequest)
+        {
+            IDataTransferProvider dataTransferProvider = null;
+            var outputType = "";
+            var fileName = $"{exportRequest.EntityName}-{DateTime.UtcNow.Date.ToString(CultureInfo.InvariantCulture)}";
+            switch (exportRequest.Output)
+            {
+                case "json":
+                    dataTransferProvider =
+                        DependencyResolver.Resolve<IDataTransferProvider>(typeof(JsonProvider).FullName);
+                    outputType = "application/json";
+                    fileName += ".json";
+                    break;
+                case "excel":
+                    dataTransferProvider =
+                        DependencyResolver.Resolve<IDataTransferProvider>(typeof(ExcelProvider).FullName);
+                    outputType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    fileName += ".xlsx";
+                    break;
+                default:
+                    return BadRequest();
+            }
+
+            DataTransferChunk chunk = null;
             switch (exportRequest.EntityName)
             {
                 case nameof(Product):
-                    var products = _productService.GetProducts(true, true, true, true, true, true);
-                    var chunk = dataTransferProvider.GetTransferChunks(products);
-                    var fileName = $"products-{DateTime.UtcNow.Date.ToString(CultureInfo.InvariantCulture)}.xlsx";
-                    return File(chunk.Bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-
+                    chunk = _dataTransferManager.Export<Product>(dataTransferProvider);
+                    return File(chunk.Bytes, outputType, fileName);
+                case nameof(Category):
+                    chunk = _dataTransferManager.Export<Category>(dataTransferProvider);
+                    return File(chunk.Bytes, outputType, fileName);
+                case nameof(Data.Entity.Users.User):
+                    chunk = _dataTransferManager.Export<User>(dataTransferProvider);
+                    return File(chunk.Bytes, outputType, fileName);
             }
 
             return BadRequest();
         }
 
-        [DualGet("import", Name = AdminRouteNames.DataTransferImport)]
-        public IActionResult ImportEditor()
-        {
-            return R.Success.Result;
-        }
-
-        [DualPost("import", Name = AdminRouteNames.DataTransferImport, OnlyApi = true)]
+        /// <summary>
+        /// Parses and Imports a data file
+        /// </summary>
+        /// <param name="importRequest"></param>
+        /// <returns></returns>
+        [HttpPost("import", Name = AdminRouteNames.DataTransferImport)]
         [ValidateModelState(ModelType = typeof(ImportRequestModel))]
         public async Task<IActionResult> Import(ImportRequestModel importRequest)
         {
+            if (!Exportables.Contains(importRequest.EntityName))
+                return NotFound();
 
-            IDataTransferProvider dataTransferProvider;
-            dataTransferProvider = DependencyResolver.Resolve<IDataTransferProvider>(importRequest.Input == "json" ? typeof(JsonProvider).FullName : typeof(ExcelProvider).FullName);
+            var dataTransferProvider = DependencyResolver.Resolve<IDataTransferProvider>(importRequest.Input == "json" ? typeof(JsonProvider).FullName : typeof(ExcelProvider).FullName);
             var dataChunk = new DataTransferChunk()
             {
                 Bytes = await importRequest.ImportFile.GetBytesAsync()
             };
+            var count = 0;
             switch (importRequest.EntityName)
             {
                 case nameof(Product):
-                    var products = dataTransferProvider.GetProducts(dataChunk);
-                    break;
-
+                    count = _dataTransferManager.Import<Product>(dataChunk, dataTransferProvider);
+                    return RedirectToRoute(AdminRouteNames.DataTransfer,
+                        new {entityName = importRequest.EntityName, success = true, importedCount = count});
+                case nameof(User):
+                    count = _dataTransferManager.Import<User>(dataChunk, dataTransferProvider);
+                    return RedirectToRoute(AdminRouteNames.DataTransfer,
+                        new { entityName = importRequest.EntityName, success = true, importedCount = count });
+                case nameof(Category):
+                    count = _dataTransferManager.Import<Category>(dataChunk, dataTransferProvider);
+                    return RedirectToRoute(AdminRouteNames.DataTransfer,
+                        new { entityName = importRequest.EntityName, success = true, importedCount = count });
             }
             return BadRequest();
         }

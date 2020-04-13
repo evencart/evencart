@@ -15,6 +15,8 @@ using EvenCart.Core;
 using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EvenCart.Infrastructure.DataTransfer
 {
@@ -52,38 +54,52 @@ namespace EvenCart.Infrastructure.DataTransfer
 
         public IList<Product> GetProducts(DataTransferChunk chunk)
         {
-            var json = GetJsonObject(chunk.Bytes);
-            return (IList<Product>)json;
+            var products = GetJsonObject<IList<Product>>(chunk.Bytes);
+            
+            return products;
         }
 
         public IList<Category> GetCategories(DataTransferChunk chunk)
         {
-            var json = GetJsonObject(chunk.Bytes);
-            return (IList<Category>)json;
+            var json = GetJsonObject<IList<Category>>(chunk.Bytes);
+            return json;
         }
 
         public IList<User> GetUsers(DataTransferChunk chunk)
         {
-            var json = GetJsonObject(chunk.Bytes);
-            return (IList<User>) json;
+            var json = GetJsonObject<IList<User>>(chunk.Bytes);
+            return json;
         }
 
-        private byte[] GetJsonBytes(object obj)
+        private byte[] GetJsonBytes<T>(T obj)
         {
-            var json = _dataSerializer.Serialize(new
+            var json = JsonConvert.SerializeObject(new JsonDbExport<T>
             {
-                version = AppVersionEvaluator.Version,
+                Version = AppVersionEvaluator.Version,
                 Data = obj
+            }, Formatting.Indented, new JsonSerializerSettings()
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
             });
             var jsonBytes = Encoding.UTF8.GetBytes(json);
             return jsonBytes;
         }
 
-        private object GetJsonObject(byte[] bytes)
+        private T GetJsonObject<T>(byte[] bytes)
         {
             var json = Encoding.UTF8.GetString(bytes);
-            var deserialized = _dataSerializer.DeserializeAs<dynamic>(json);
+            var deserialized = JsonConvert.DeserializeObject<JsonDbExport<T>>(json, new JsonSerializerSettings()
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
             return deserialized.Data;
+        }
+
+        private class JsonDbExport<T>
+        {
+            public string Version { get; set; }
+
+            public T Data { get; set; }
         }
     }
 }

@@ -15,12 +15,24 @@ using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Areas.Administration.Models.DataTransfer
 {
+    /// <summary>
+    /// Represents the import request
+    /// </summary>
     public class ImportRequestModel : IRequiresValidations<ImportRequestModel>
     {
+        /// <summary>
+        /// The name of entity to be imported
+        /// </summary>
         public string EntityName { get; set; }
 
+        /// <summary>
+        /// The file which will be imported
+        /// </summary>
         public IFormFile ImportFile { get; set; }
 
+        /// <summary>
+        /// The input file format. Can be either json or excel.
+        /// </summary>
         public string Input { get; set; }
 
         public void SetupValidationRules(ModelValidator<ImportRequestModel> v)

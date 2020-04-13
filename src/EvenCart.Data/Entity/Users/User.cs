@@ -89,6 +89,8 @@ namespace EvenCart.Data.Entity.Users
         public DateTime? AffiliateFirstActivationDate { get; set; }
 
         #region Virtual Properties
+        public virtual IList<UserRole> UserRoles { get; set; }
+
         public virtual IList<Role> Roles { get; set; }
 
         public virtual IList<Capability> Capabilities { get; set; }

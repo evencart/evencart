@@ -112,6 +112,16 @@ namespace EvenCart.Infrastructure.Helpers
             return selectList;
         }
 
+        public static List<SelectListItem> GetSelectItemList(IList<string> list, string value = null)
+        {
+            return list.Select(x => new SelectListItem()
+            {
+                Value = x,
+                Text = x,
+                Selected = x == value
+            }).ToList();
+        }
+
         public static List<SelectListItem> GetSelectItemList<T>(IList<T> restrictToList = null) where T : IConvertible
         {
             //so we are good to go

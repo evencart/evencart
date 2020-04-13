@@ -21,6 +21,7 @@ using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
+using EvenCart.Services.Products;
 using Npoi.Mapper;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -29,6 +30,7 @@ namespace EvenCart.Infrastructure.DataTransfer
 {
     public class ExcelProvider : IDataTransferProvider
     {
+        const string DateFormat = "yyyy/MM/dd";
         public DataTransferChunk GetTransferChunks(IList<Product> products)
         {
             IWorkbook workbook = new XSSFWorkbook();
@@ -38,12 +40,16 @@ namespace EvenCart.Infrastructure.DataTransfer
 
         public DataTransferChunk GetTransferChunks(IList<Category> categories)
         {
-            throw new System.NotImplementedException();
+            IWorkbook workbook = new XSSFWorkbook();
+            FillSheet(workbook, typeof(Category), categories);
+            return GetChunk(workbook);
         }
 
         public DataTransferChunk GetTransferChunks(IList<User> users)
         {
-            throw new System.NotImplementedException();
+            IWorkbook workbook = new XSSFWorkbook();
+            FillSheet(workbook, typeof(User), users);
+            return GetChunk(workbook);
         }
 
         public IList<Product> GetProducts(DataTransferChunk chunk)
@@ -87,6 +93,8 @@ namespace EvenCart.Infrastructure.DataTransfer
 
                 var manufacturers = ReadSheet<Manufacturer>(mapper);
 
+                var productVariantAttributes = ReadSheet<ProductVariantAttribute>(mapper);
+
                 availableAttributes.ForEach(attribute =>
                     {
                         attribute.AvailableAttributeValues = availableAttributeValues?
@@ -111,16 +119,44 @@ namespace EvenCart.Infrastructure.DataTransfer
                   
                     attribute.ProductAttributeValues = productAttributeValues
                         .Where(x => x.ProductAttributeId == attribute.Id).ToList();
+                    attribute.ProductAttributeValues.ForEach(value =>
+                        {
+                            value.AvailableAttributeValue =
+                                availableAttributeValues.First(x => x.Id == value.AvailableAttributeValueId);
+                        });
 
                 });
 
+                productVariants.ForEach(variant =>
+                {
+                    variant.ProductVariantAttributes = productVariantAttributes
+                        .Where(x => x.ProductVariantId == variant.Id).ToList();
+                    variant.ProductVariantAttributes.ForEach(attribute =>
+                        {
+                            attribute.ProductAttribute =
+                                productAttributes.FirstOrDefault(x => x.Id == attribute.ProductAttributeId);
+                            attribute.ProductAttributeValue =
+                                productAttributeValues.FirstOrDefault(x => x.Id == attribute.ProductAttributeValueId);
+                        });
+                });
+
+                categories.ForEach(category =>
+                {
+                    if (category.ParentId != 0)
+                    {
+                        category.Parent = categories.First(x => x.Id == category.ParentId);
+                    }
+                });
+              
                 products.ForEach(product =>
                     {
                         product.SeoMeta = seoMetas.FirstOrDefault(x =>
                             x.EntityId == product.Id && x.EntityName == nameof(Product));
 
                         product.Manufacturer = manufacturers.FirstOrDefault(x => x.Id == product.ManufacturerId);
-
+                        if (product.Manufacturer != null)
+                            product.Manufacturer.SeoMeta = seoMetas.FirstOrDefault(x =>
+                                x.EntityId == product.Manufacturer.Id && x.EntityName == nameof(Manufacturer));
                         var pcIds = productCategories?.Where(x => x.ProductId == product.Id).Select(x => x.CategoryId);
                         if (pcIds != null)
                         {
@@ -144,6 +180,7 @@ namespace EvenCart.Infrastructure.DataTransfer
                             product.Vendors = vendors?.Where(x => pvIds.Contains(x.Id)).ToList();
 
                         product.ProductVariants = productVariants?.Where(x => x.ProductId == product.Id).ToList();
+                        
                     });
                 return products;
             }
@@ -151,12 +188,45 @@ namespace EvenCart.Infrastructure.DataTransfer
 
         public IList<Category> GetCategories(DataTransferChunk chunk)
         {
-            throw new System.NotImplementedException();
+            using (var memoryStream = new MemoryStream(chunk.Bytes))
+            {
+                IWorkbook workbook = new XSSFWorkbook(memoryStream);
+                var mapper = new Mapper(workbook);
+                var categories = ReadSheet<Category>(mapper);
+                return categories;
+            }
         }
 
         public IList<User> GetUsers(DataTransferChunk chunk)
         {
-            throw new System.NotImplementedException();
+            using (var memoryStream = new MemoryStream(chunk.Bytes))
+            {
+                IWorkbook workbook = new XSSFWorkbook(memoryStream);
+                var mapper = new Mapper(workbook);
+                mapper.Format<User>(DateFormat, user => user.LastActivityDate);
+                mapper.Format<User>(DateFormat, user => user.LastLoginDate);
+                mapper.Format<User>(DateFormat, user => user.AffiliateFirstActivationDate);
+                mapper.Format<User>(DateFormat, user => user.LastActivityDate);
+                mapper.Format<User>(DateFormat, user => user.CreatedOn);
+                mapper.Format<User>(DateFormat, user => user.UpdatedOn);
+                mapper.Format<User>(DateFormat, user => user.FirstActivationDate);
+                var users = ReadSheet<User>(mapper);
+                var userRoles = ReadSheet<UserRole>(mapper);
+                var roles = ReadSheet<Role>(mapper);
+
+                users.ForEach(user =>
+                {
+                    user.UserRoles = userRoles.Where(x => x.UserId == user.Id).ToList();
+                    var userRoleIds = user.UserRoles.Select(x => x.RoleId).ToList();
+                    user.Roles = roles.Where(x => userRoleIds.Contains(x.Id)).ToList();
+                    user.UserRoles.ForEach(userRole =>
+                    {
+                        userRole.User = user;
+                        userRole.Role = user.Roles.FirstOrDefault(x => x.Id == userRole.Id);
+                    });
+                });
+                return users;
+            }
         }
 
         private readonly IList<object> writtenObjects = new List<object>();
@@ -165,7 +235,7 @@ namespace EvenCart.Infrastructure.DataTransfer
             if (entities == null)
                 return null;
             //get db properties
-            var dbProperties = type.GetProperties().Where(x => x.PropertyType.IsPrimitive()).ToArray();
+            var dbProperties = type.GetProperties().Where(x => x.PropertyType.IsPrimitive() && x.PropertyType != typeof(Guid)).ToArray();
             //and the virtual properties
             var virtualProperties = type.GetProperties().Where(x => !x.PropertyType.IsPrimitive()).ToArray();
             //create a product work sheet
@@ -185,15 +255,16 @@ namespace EvenCart.Infrastructure.DataTransfer
 
             var enumerable = entities as object[] ?? entities.Cast<object>().ToArray();
             var enumerator = enumerable.GetEnumerator();
-            var itemIndex = writtenObjects.Count(x => x.GetType() == type);
+            
             while (enumerator.MoveNext())
             {
                 var entity = enumerator.Current;
                 if (writtenObjects.Contains(entity))
                     continue;
+                
+                CreateRow(entity, sheet, sheet.LastRowNum + 1, dbProperties);
                 writtenObjects.Add(entity);
-                CreateRow(entity, sheet, itemIndex++, dbProperties);
-
+             
                 foreach (var vp in virtualProperties)
                 {
                     var propertyType = vp.PropertyType;
@@ -216,7 +287,7 @@ namespace EvenCart.Infrastructure.DataTransfer
 
         private IRow CreateRow(object entity, ISheet sheet, int index, PropertyInfo[] dbProperties)
         {
-            var newRow = sheet.CreateRow(index + 1);
+            var newRow = sheet.CreateRow(index);
             for (var cellIndex = 0; cellIndex < dbProperties.Length; cellIndex++)
             {
                 var rowCell = newRow.CreateCell(cellIndex);
@@ -228,7 +299,8 @@ namespace EvenCart.Infrastructure.DataTransfer
 
         private IList<T> ReadSheet<T>(Mapper mapper) where T : class
         {
-            return mapper.Take<T>(typeof(T).Name).Select(x => x.Value).ToList();
+            var rowInfos = mapper.Take<T>(typeof(T).Name);
+            return rowInfos.Select(x => x.Value).ToList();
         }
 
         private object CreateObject(IRow row, Type type, Dictionary<string, int> headingIndices, PropertyInfo[] dbProperties)
@@ -278,7 +350,7 @@ namespace EvenCart.Infrastructure.DataTransfer
             }
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                cell.SetCellValue((DateTime) value);
+                cell.SetCellValue(((DateTime)value).ToString(DateFormat));
             }
             else if (type == typeof(bool) || type == typeof(bool?))
             {

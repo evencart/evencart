@@ -1,7 +1,0 @@
-﻿<form action='{% route api_Admin.DataTransferImport %}' method="post" id="import-editor-form" enctype="multipart/form-data">
-    {% control xsrf %}
-    <input type="file" name="importFile"/>
-    <input type="hidden" name="entityName" value="Product"/>
-    <input type="hidden" name="input" value="excel"/>
-    <button type="submit" value="Submit">Submit</button>   
-</form>

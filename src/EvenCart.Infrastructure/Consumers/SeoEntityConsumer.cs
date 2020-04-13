@@ -37,12 +37,12 @@ namespace EvenCart.Infrastructure.Consumers
             var name = ((ISeoEntity) entity).Name;
             var seoMeta = (property != null ? (SeoMeta) property.GetValue(entity) : null) ?? new SeoMeta()
             {
-                EntityId = entity.Id,
                 EntityName = typeof(T).Name,
                 LanguageCultureCode = ApplicationEngine.CurrentLanguageCultureCode,
                 Slug = CommonHelper.GenerateSlug(name),
                 PageTitle = name
             };
+            seoMeta.EntityId = entity.Id;
             _seoMetaService.InsertOrUpdate(seoMeta);
 
             if (property != null)

@@ -165,7 +165,8 @@ namespace EvenCart.Infrastructure.DependencyContainer
                                type.GetInterfaces()
                                    .Any(x => x.IsAssignableTo(typeof(IDataTransferProvider))));// which implementing some interface(s)
             //all providers which are not interfaces
-            registrar.RegisterMany<IDataTransferProvider>(dataTransferProviders, type => type.FullName);
+            registrar.RegisterMany<IDataTransferProvider>(dataTransferProviders, type => type.FullName, Reuse.Transient);
+            registrar.Register<IDataTransferManager, DataTransferManager>();
 
             //services
             //to register services, we need to get all types from services assembly and register each of them;

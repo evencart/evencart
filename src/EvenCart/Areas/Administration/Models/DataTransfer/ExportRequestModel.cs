@@ -15,12 +15,24 @@ using FluentValidation;
 
 namespace EvenCart.Areas.Administration.Models.DataTransfer
 {
+    /// <summary>
+    /// Represents an export request
+    /// </summary>
     public class ExportRequestModel : FoundationModel, IRequiresValidations<ExportRequestModel>
     {
+        /// <summary>
+        /// The name of entity to export
+        /// </summary>
         public string EntityName { get; set; }
 
+        /// <summary>
+        /// The entity ids if any specific entities to be exported
+        /// </summary>
         public int[] EntityIds { get; set; }
 
+        /// <summary>
+        /// The output format. Can be either json or excel.
+        /// </summary>
         public string Output { get; set; }
         
         public void SetupValidationRules(ModelValidator<ExportRequestModel> v)

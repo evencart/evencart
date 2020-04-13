@@ -49,6 +49,7 @@ namespace EvenCart.Services.Users
                 .Where(x => !x.Deleted)
                 .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
+                .Relate(RelationTypes.OneToMany<User, UserRole>())
                 .Relate(RelationTypes.OneToMany<User, Role>());
 
             if (!searchText.IsNullEmptyOrWhiteSpace())

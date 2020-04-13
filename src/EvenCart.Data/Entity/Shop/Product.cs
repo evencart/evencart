@@ -129,6 +129,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public virtual Manufacturer Manufacturer { get; set; }
 
+        public virtual IList<ProductVendor> ProductVendors { get; set; }
+
         public virtual IList<Vendor> Vendors { get; set; }
 
         public virtual IList<Media> MediaItems { get; set; }

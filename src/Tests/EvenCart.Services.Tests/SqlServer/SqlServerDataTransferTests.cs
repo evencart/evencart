@@ -9,16 +9,17 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Collections.Generic;
-using EvenCart.Core.Services;
-using EvenCart.Data.Entity.Shop;
+using EvenCart.Services.Tests.DataTransfer;
+using NUnit.Framework;
 
-namespace EvenCart.Services.Products
+namespace EvenCart.Services.Tests.SqlServer
 {
-    public interface ICategoryService : IFoundationEntityService<Category>
+    [TestFixture]
+    public class SqlServerDataTransferTests : DataTransferTests
     {
-        IList<Category> GetFullCategoryTree();
-
-        void InsertTree(Category category);
+        public SqlServerDataTransferTests()
+        {
+            TestDbInit.MySql(MySqlConnectionString);
+        }
     }
 }
