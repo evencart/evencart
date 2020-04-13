@@ -121,15 +121,21 @@ namespace EvenCart.Data.Entity.Shop
 
         #region Virtual Properties
 
+        public virtual IList<ProductCategory> ProductCategories { get; set; }
+
         public virtual IList<Category> Categories { get; set; }
 
         public virtual IList<ProductAttribute> ProductAttributes { get; set; }
 
         public virtual Manufacturer Manufacturer { get; set; }
 
+        public virtual IList<ProductVendor> ProductVendors { get; set; }
+
         public virtual IList<Vendor> Vendors { get; set; }
 
         public virtual IList<Media> MediaItems { get; set; }
+
+        public virtual IList<ProductMedia> ProductMediaItems { get; set; }
 
         public virtual SeoMeta SeoMeta { get; set; }
 

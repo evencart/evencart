@@ -105,6 +105,34 @@
             Allows store admins to view dashboard summaries
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Controllers.DataTransferController">
+            <summary>
+            Provides import/export of site data
+            </summary>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.DataTransferController.DataTransferEditor(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Renders export editor page
+            </summary>
+            <param name="entityName">The name of entity to export</param>
+            <param name="success">Specifies if the last operation was successful</param>
+            <param name="importCount">The number of successfully inserted entities.</param>
+            <response code="200">The export editor page with entityName</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.DataTransferController.ExportEditor(EvenCart.Areas.Administration.Models.DataTransfer.ExportRequestModel)">
+            <summary>
+            Exports the requested data in the output format
+            </summary>
+            <param name="exportRequest"></param>
+            <response code="200">The data file in the output format</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.DataTransferController.Import(EvenCart.Areas.Administration.Models.DataTransfer.ImportRequestModel)">
+            <summary>
+            Parses and Imports a data file
+            </summary>
+            <param name="importRequest"></param>
+            <returns></returns>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Controllers.LogsController">
             <summary>
             Allows to view and delete activity logs
@@ -333,6 +361,46 @@
         <member name="T:EvenCart.Areas.Administration.Models.Common.CustomLabelSearchModel">
             <summary>
             The custom label search object
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.DataTransfer.ExportRequestModel">
+            <summary>
+            Represents an export request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ExportRequestModel.EntityName">
+            <summary>
+            The name of entity to export
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ExportRequestModel.EntityIds">
+            <summary>
+            The entity ids if any specific entities to be exported
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ExportRequestModel.Output">
+            <summary>
+            The output format. Can be either json or excel.
+            </summary>
+        </member>
+        <member name="T:EvenCart.Areas.Administration.Models.DataTransfer.ImportRequestModel">
+            <summary>
+            Represents the import request
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ImportRequestModel.EntityName">
+            <summary>
+            The name of entity to be imported
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ImportRequestModel.ImportFile">
+            <summary>
+            The file which will be imported
+            </summary>
+        </member>
+        <member name="P:EvenCart.Areas.Administration.Models.DataTransfer.ImportRequestModel.Input">
+            <summary>
+            The input file format. Can be either json or excel.
             </summary>
         </member>
         <member name="T:EvenCart.Areas.Administration.Models.Orders.OrderFulfillmentEditorModel">

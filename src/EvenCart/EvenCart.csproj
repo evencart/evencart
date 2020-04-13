@@ -111,6 +111,7 @@
     <None Remove="Areas\Administration\Views\Dashboard\Index.RecentUsers.html" />
     <None Remove="Areas\Administration\Views\Dashboard\Index.Totals.html" />
     <None Remove="Areas\Administration\Views\Dashboard\Index.UsersChart.html" />
+    <None Remove="Areas\Administration\Views\DataTransfer\DataTransferEditor.html" />
     <None Remove="Areas\Administration\Views\Dialog\Selector.html" />
     <None Remove="Areas\Administration\Views\Discounts\DiscountEditor.html" />
     <None Remove="Areas\Administration\Views\Discounts\DiscountsList.html" />
@@ -605,6 +606,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Dashboard\Index.UsersChart.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\DataTransfer\DataTransferEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Dialog\Selector.html">

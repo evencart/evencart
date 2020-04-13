@@ -65,5 +65,15 @@ namespace EvenCart.Data.Extensions
             }
             return source.Concat(result.SelectManyRecursive(selector));
         }
+
+        public static void ForEach<T>(this ICollection<T> source, Action<T> action)
+        {
+            if (source == null || action == null)
+                return;
+
+            foreach (var t in source)
+                action(t);
+
+        }
     }
 }

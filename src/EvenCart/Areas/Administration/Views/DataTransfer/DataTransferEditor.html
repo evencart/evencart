@@ -1,0 +1,63 @@
+﻿{% layout "_Layout"%}
+{% global page_title=@t"Import/Export Manager" active_menu="DataTransfer" parent_active_menu="System" %}
+{% if importSuccess %}
+<div class="alert alert-info">
+    {{"The operation completed successfully. Total items imported: " | t}}{{importedCount}}
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-6">
+        <form action='{% route Admin.DataTransferExport %}' method="post" id="export-editor-form" enctype="multipart/form-data">
+            {% control xsrf %}
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Export" | t}}
+                    <button type="submit" class="btn btn-sm btn-primary float-right">{{"Export" | t}}</button>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Export Type" %}
+                        {% control select name="entityName" items="availableExportableEntities" value="entityName" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Output As" %}
+                        <select class="form-control" name="output">
+                            <option value="excel">{{"Excel" | t}}</option>
+                            <option value="json">{{"Json" | t}}</option>
+                        </select>
+                        {% control hidden name="entityName" value="{{entityName}}" %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-6">
+        <form action='{% route Admin.DataTransferImport %}' method="post" id="import-editor-form" enctype="multipart/form-data">
+            {% control xsrf %}
+            <div class="panel">
+                <div class="panel-title">
+                    {{"Import" | t}}
+                    <button type="submit" class="btn btn-sm btn-primary float-right">{{"Import" | t}}</button>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {% control label text=@t"Import Type" %}
+                        {% control select name="entityName" items="availableExportableEntities" value="entityName" required="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Input Type" %}
+                        <select class="form-control" name="input">
+                            <option value="excel">{{"Excel" | t}}</option>
+                            <option value="json">{{"Json" | t}}</option>
+                        </select>
+                        {% control hidden name="entityName" value="{{entityName}}" %}
+                    </div>
+                    <div class="form-group">
+                        {% control label text=@t"Import File" %}
+                        <input type="file" name="importFile" required="required" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

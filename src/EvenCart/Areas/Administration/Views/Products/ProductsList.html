@@ -6,7 +6,9 @@
         <div class="panel">
             <div class="panel-title">
                 {{"Products" | t}}
-                <a class="btn btn-sm btn-primary float-right" href='{% route Admin.GetProduct productId="0" %}'>{{"Add new product" | t}}</a>
+                <a class="btn btn-sm btn-primary float-right" href='{% route Admin.DataTransfer entityName="Product" %}'>{{"Import/Export Products" | t}}</a>
+                <a class="btn btn-sm btn-primary float-right margin-r-5" href='{% route Admin.GetProduct productId="0" %}'>{{"Add new product" | t}}</a>
+
             </div>
             <div class="panel-body no-padding">
                 <table id="grid-selection" class="table table-condensed table-hover">

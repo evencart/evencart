@@ -10,15 +10,23 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Data.Entity.Users;
 
-namespace EvenCart.Services.Products
+namespace EvenCart.Infrastructure.DataTransfer
 {
-    public interface ICategoryService : IFoundationEntityService<Category>
+    public interface IDataTransferProvider
     {
-        IList<Category> GetFullCategoryTree();
+        DataTransferChunk GetTransferChunks(IList<Product> products);
 
-        void InsertTree(Category category);
+        DataTransferChunk GetTransferChunks(IList<Category> categories);
+
+        DataTransferChunk GetTransferChunks(IList<User> users);
+
+        IList<Product> GetProducts(DataTransferChunk chunk);
+
+        IList<Category> GetCategories(DataTransferChunk chunk);
+
+        IList<User> GetUsers(DataTransferChunk chunk);
     }
 }

@@ -30,6 +30,7 @@ namespace EvenCart.Services.Products
             return query.Join<AvailableAttributeValue>("Id", "AvailableAttributeId", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<AvailableAttribute, AvailableAttributeValue>())
                 .OrderBy(x => x.Name)
+                .OrderBy(x => x.Id)
                 .SelectNestedWithTotalMatches(out totalResults, page, count);
         }
 

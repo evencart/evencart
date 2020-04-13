@@ -82,32 +82,32 @@ namespace EvenCart.Services.Tests.Products
             {
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 1,
+                    AvailableAttributeId = availableAttributes[0].Id,
                     Value = "S"
                 },
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 1,
+                    AvailableAttributeId = availableAttributes[0].Id,
                     Value = "M"
                 },
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 1,
+                    AvailableAttributeId = availableAttributes[0].Id,
                     Value = "L"
                 },
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 2,
+                    AvailableAttributeId = availableAttributes[1].Id,
                     Value = "Red"
                 },
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 2,
+                    AvailableAttributeId = availableAttributes[1].Id,
                     Value = "Green"
                 },
                 new AvailableAttributeValue()
                 {
-                    AvailableAttributeId = 2,
+                    AvailableAttributeId = availableAttributes[1].Id,
                     Value = "Blue"
                 },
             };

@@ -9,16 +9,10 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Collections.Generic;
-using EvenCart.Core.Services;
-using EvenCart.Data.Entity.Shop;
-
-namespace EvenCart.Services.Products
+namespace EvenCart.Infrastructure.DataTransfer
 {
-    public interface ICategoryService : IFoundationEntityService<Category>
+    public class DataTransferChunk
     {
-        IList<Category> GetFullCategoryTree();
-
-        void InsertTree(Category category);
+        public byte[] Bytes { get; set; }
     }
 }

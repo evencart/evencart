@@ -37,12 +37,14 @@ namespace EvenCart.Services.Products
         private readonly ISearchQueryParserService _searchQueryParserService;
         private readonly IWarehouseInventoryService _warehouseInventoryService;
         private readonly IProductCatalogService _productCatalogService;
-        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService, IProductCatalogService productCatalogService)
+        private readonly ICategoryService _categoryService;
+        public ProductService(IEventPublisherService eventPublisherService, ISearchQueryParserService searchQueryParserService, IWarehouseInventoryService warehouseInventoryService, IProductCatalogService productCatalogService, ICategoryService categoryService)
         {
             _eventPublisherService = eventPublisherService;
             _searchQueryParserService = searchQueryParserService;
             _warehouseInventoryService = warehouseInventoryService;
             _productCatalogService = productCatalogService;
+            _categoryService = categoryService;
         }
 
         public IList<Product> GetProducts(out int totalResults, out decimal availableFromPrice,
@@ -575,6 +577,200 @@ namespace EvenCart.Services.Products
             if (withReviews)
                 PopulateReviewSummary(products);
             return products;
+        }
+
+        public IList<Product> GetProducts(bool withCategories, bool withSpecifications, bool withAttributes, bool withMedia, bool withVendors, bool withManufacturers, int page = 1, int count = int.MaxValue)
+        {
+            var query = Repository
+                .Where(x => !x.Deleted)
+                .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter,
+                    (product, meta) => meta.EntityName == nameof(Product))
+                .Relate(RelationTypes.OneToOne<Product, SeoMeta>());
+           
+            if (withCategories)
+            {
+                var allCategories = _categoryService.GetFullCategoryTree();
+                query.Join<ProductCategory>("Id", "ProductId", joinType: JoinType.LeftOuter)
+                    .Relate<ProductCategory>((product, productCategory) =>
+                        {
+                            product.ProductCategories ??= new List<ProductCategory>();
+                            if (!product.ProductCategories.Contains(productCategory))
+                                product.ProductCategories.Add(productCategory);
+
+                            product.Categories ??= new List<Category>();
+                            var category = allCategories.First(x => x.Id == productCategory.CategoryId);
+                            if(!product.Categories.Contains(category))
+                                product.Categories.Add(category);
+                        });
+
+            }
+            if (withAttributes)
+            {
+                query.Join<ProductVariant>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
+                    .Join<ProductVariantAttribute>("Id", "ProductVariantId", joinType: JoinType.LeftOuter)
+                    .Join<ProductAttribute>("ProductAttributeId", "Id", typeof(ProductVariantAttribute),
+                        JoinType.LeftOuter)
+                    .Join<ProductAttributeValue>("ProductAttributeValueId", "Id", typeof(ProductVariantAttribute),
+                        joinType: JoinType.LeftOuter)
+                    .Join<AvailableAttribute>("AvailableAttributeId", "Id", typeof(ProductAttribute),
+                        joinType: JoinType.LeftOuter)
+                    .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", typeof(ProductAttributeValue),
+                        joinType: JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToMany<Product, ProductVariant>())
+                    .Relate<ProductVariantAttribute>((product, attribute) =>
+                    {
+                        var variant = product.ProductVariants.FirstOrDefault(x => x.Id == attribute.ProductVariantId);
+                        if (variant != null)
+                        {
+                            attribute.ProductVariant = variant;
+                            variant.ProductVariantAttributes ??= new List<ProductVariantAttribute>();
+                            if (!variant.ProductVariantAttributes.Contains(attribute))
+                                variant.ProductVariantAttributes.Add(attribute);
+                        }
+                    })
+                    .Relate(RelationTypes.OneToMany<Product, ProductAttribute>((product, attribute) => {
+                        product.ProductAttributes ??= new List<ProductAttribute>();
+                        if (!product.ProductAttributes.Contains(attribute))
+                            product.ProductAttributes.Add(attribute);
+
+                        foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
+                            x.ProductVariantAttributes))
+                        {
+                            if (variantAttribute.ProductAttributeId == attribute.Id)
+                            {
+                                variantAttribute.ProductAttribute = attribute;
+                            }
+                        }
+                    }))
+                    .Relate<ProductAttributeValue>((product, attributeValue) =>
+                    {
+                        foreach (var attribute in product.ProductAttributes.Where(x => x.Id == attributeValue.ProductAttributeId))
+                        {
+                            attribute.ProductAttributeValues ??= new List<ProductAttributeValue>();
+                           if(!attribute.ProductAttributeValues.Contains(attributeValue))
+                               attribute.ProductAttributeValues.Add(attributeValue);
+                        }
+                        foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
+                            x.ProductVariantAttributes)
+                        )
+                        {
+                            if (variantAttribute.ProductAttributeValueId == attributeValue.Id)
+                            {
+                                variantAttribute.ProductAttributeValue = attributeValue;
+                            }
+                        }
+                    })
+                    .Relate<AvailableAttribute>((product, attribute) =>
+                    {
+                        product.ProductAttributes.ForEach(productAttribute =>
+                        {
+                            if (productAttribute.AvailableAttributeId == attribute.Id)
+                                productAttribute.AvailableAttribute = attribute;
+                        });
+
+                        foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
+                            x.ProductVariantAttributes))
+                        {
+                            if (variantAttribute.ProductAttribute.AvailableAttributeId == attribute.Id)
+                            {
+                                variantAttribute.ProductAttribute.AvailableAttribute = attribute;
+                                if (variantAttribute.ProductAttribute.Label.IsNullEmptyOrWhiteSpace())
+                                    variantAttribute.ProductAttribute.Label = attribute.Name;
+                            }
+                        }
+                    })
+                    .Relate<AvailableAttributeValue>((product, attributeValue) =>
+                    {
+                        var availableAttributes = product.ProductAttributes.Select(x => x.AvailableAttribute).ToList();
+                        foreach (var availableAttribute in availableAttributes)
+                        {
+                            availableAttribute.AvailableAttributeValues ??= new List<AvailableAttributeValue>();
+                            if (availableAttribute.Id == attributeValue.AvailableAttributeId)
+                            {
+                                if(!availableAttribute.AvailableAttributeValues.Contains(attributeValue))
+                                    availableAttribute.AvailableAttributeValues.Add(attributeValue);
+                            }
+                        }
+                        foreach (var variantAttribute in product.ProductVariants.SelectMany(x =>
+                            x.ProductVariantAttributes))
+                        {
+                            if (variantAttribute.ProductAttributeValue.AvailableAttributeValueId == attributeValue.Id)
+                            {
+                                variantAttribute.ProductAttributeValue.AvailableAttributeValue = attributeValue;
+                                if (variantAttribute.ProductAttributeValue.Label.IsNullEmptyOrWhiteSpace())
+                                    variantAttribute.ProductAttributeValue.Label = attributeValue.Value;
+                            }
+                        }
+                    });
+            }
+
+           
+            if (withMedia)
+            {
+                query.Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
+                    .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToMany<Product, ProductMedia>())
+                    .Relate(RelationTypes.OneToMany<Product, Media>());
+            }
+
+            if (withVendors)
+            {
+                query.Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
+                    .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToMany<Product, ProductVendor>())
+                    .Relate(RelationTypes.OneToMany<Product, Vendor>());
+            }
+
+            if (withManufacturers)
+            {
+                query.Join<Manufacturer>("ManufacturerId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToOne<Product, Manufacturer>());
+            }
+
+            var products = query.SelectNested(page, count).ToList();
+            var productIds = products.Select(x => x.Id).ToList();
+            if (withSpecifications)
+            {
+                RepositoryExplorer<ProductSpecification>()
+                    .Join<ProductSpecificationValue>("Id", "ProductSpecificationId", joinType: JoinType.LeftOuter)
+                    .Join<AvailableAttributeValue>("AvailableAttributeValueId", "Id", joinType: JoinType.LeftOuter)
+                    .Join<AvailableAttribute>("AvailableAttributeId", "Id", joinType: JoinType.LeftOuter)
+                    .Join<ProductSpecificationGroup>("ProductSpecificationGroupId", "Id", typeof(ProductSpecification),
+                        joinType: JoinType.LeftOuter)
+                    .Relate(RelationTypes.OneToMany<ProductSpecification, ProductSpecificationValue>())
+                    .Relate<ProductSpecificationGroup>((productSpecification, group) =>
+                    {
+                        productSpecification.ProductSpecificationGroup = group;
+                    })
+                    .Relate<AvailableAttribute>((productSpecification, attribute) =>
+                    {
+                        productSpecification.AvailableAttribute = attribute;
+                        if (productSpecification.Label.IsNullEmptyOrWhiteSpace())
+                        {
+                            productSpecification.Label = attribute.Name;
+                        }
+
+                        attribute.AvailableAttributeValues =
+                            attribute.AvailableAttributeValues ?? new List<AvailableAttributeValue>();
+                    })
+                    .Relate<AvailableAttributeValue>((productSpecification, attributeValue) =>
+                    {
+                        var psv = productSpecification.ProductSpecificationValues.FirstOrDefault(x =>
+                            x.AvailableAttributeValueId == attributeValue.Id);
+                        if (psv != null)
+                        {
+                            psv.AvailableAttributeValue = attributeValue;
+                            psv.Label = psv.Label ?? attributeValue.Value;
+                        }
+
+                        if (!productSpecification.AvailableAttribute.AvailableAttributeValues.Contains(attributeValue))
+                            productSpecification.AvailableAttribute.AvailableAttributeValues.Add(attributeValue);
+                    })
+                    .Where(x => productIds.Contains(x.ProductId));
+            };
+
+            return products;
+
         }
 
         public override Product Get(int id)
