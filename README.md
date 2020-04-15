@@ -6,6 +6,10 @@
 
 EvenCart is a **headless** open source ecommerce software built on top of ASP.NET Core, [dotEntity](https://dotentity.net) and Liquid.
 
+### Change Log
+
+The change log including confirmed upcoming features, bug fixes and improvements can be tracked from [change log](https://docs.evencart.com/change-log/) page.
+
 ### Technology Stack
 
 Framework - **.NET Core 3.1**
