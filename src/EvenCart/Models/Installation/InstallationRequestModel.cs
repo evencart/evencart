@@ -43,6 +43,8 @@ namespace EvenCart.Models.Installation
 
         public string ProviderName { get; set; }
 
+        public bool InstallSampleData { get; set; }
+
         public void SetupValidationRules(ModelValidator<InstallationRequestModel> v)
         {
             v.RuleFor(x => x.AdminEmail).NotEmpty().EmailAddress();

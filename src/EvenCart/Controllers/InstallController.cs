@@ -103,6 +103,11 @@ namespace EvenCart.Controllers
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,
                 "//" + ApplicationEngine.CurrentHttpContext.Request.Host.Value, model.StoreName);
 
+            if (model.InstallSampleData)
+            {
+                var installPackage = ServerHelper.MapPath("~/App_Data/Install/SampleData/Default/Default.zip");
+                _installationService.InstallSamplePackage(installPackage);
+            }
             //restart the app
             ServerHelper.RestartApplication();
 

@@ -121,9 +121,6 @@ namespace EvenCart.Services.Installation
                     {
                     }
                 }
-
-                //delete the temporary directory
-                _localFileProvider.DeleteDirectory(tempDirectory, true);
                 return true;
             }
             catch (Exception ex)
@@ -133,6 +130,7 @@ namespace EvenCart.Services.Installation
             }
             finally
             {
+                //delete the temporary directory
                 _localFileProvider.DeleteDirectory(tempDirectory, true);
             }
         }
