@@ -79,6 +79,7 @@ namespace EvenCart.Services.Users
             if (where != null)
                 query = query.Where(where);
             query = query.OrderBy(orderBy, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+            query.OrderBy(x => x.Id);
             return query.SelectNestedWithTotalMatches(out totalMatches, page, count).ToList();
         }
 
