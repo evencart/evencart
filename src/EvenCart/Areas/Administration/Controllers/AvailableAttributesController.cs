@@ -77,7 +77,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             if (attributeId <= 0)
             {
-                return R.Fail.Result;
+                return R.Success.With("suggestions", null).Result;
             }
             var attributes = _availableAttributeValueService.Get(x => x.AvailableAttributeId == attributeId);
             var model = new List<AutocompleteModel>();
