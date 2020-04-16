@@ -91,7 +91,7 @@
                 post({
                     url: "{% route api_Admin.DeleteCategory %}",
                     data: {
-                      productAttributeId: id
+                      categoryId: id
                     },
                     done: function(response) {
                         if (response.success) {
