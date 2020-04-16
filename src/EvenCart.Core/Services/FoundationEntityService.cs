@@ -74,6 +74,10 @@ namespace EvenCart.Core.Services
                 {
                     EntitySet<T>.Delete(entity, transaction.Value);
                 }
+
+                var cacheKey = $"GET_{typeof(T).Name}_{entity.Id}";
+                //clear cache
+                _cacheProvider.Remove(cacheKey);
             }
             //publish the event so they can be handled
             _eventPublisherService.Publish(entity, EventType.Delete);
