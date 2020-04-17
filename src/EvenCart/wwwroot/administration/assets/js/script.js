@@ -328,7 +328,10 @@ var inputTypeahead = function(options) {
             itemRemoved: function(evt) {},
             itemAdded: function(evt) {},
             data: [],
-            stringTags: false
+            stringTags: false,
+            newAdditionId: function(q) {
+                return q;
+            }
         },
         options);
 
@@ -372,7 +375,7 @@ var inputTypeahead = function(options) {
                 matches.push(q);
             } else {
                 matches.push({
-                    id: q,
+                    id: options.newAdditionId(q),
                     text: q
                 });
             }
