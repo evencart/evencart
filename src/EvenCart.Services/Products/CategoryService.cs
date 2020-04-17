@@ -43,6 +43,12 @@ namespace EvenCart.Services.Products
             CacheProvider.Remove(CategoryTreeCacheKey);
         }
 
+        public override void Insert(Category entity, Transaction transaction = null)
+        {
+            base.Insert(entity, transaction);
+            CacheProvider.Remove(CategoryTreeCacheKey);
+        }
+
         public IList<Category> GetFullCategoryTree()
         {
             return CacheProvider.Get<IList<Category>>(CategoryTreeCacheKey, () =>
