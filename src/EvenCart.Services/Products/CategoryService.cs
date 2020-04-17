@@ -40,7 +40,7 @@ namespace EvenCart.Services.Products
         public override void Delete(Category entity, Transaction transaction = null)
         {
             base.Delete(entity, transaction);
-            _cacheProvider.Remove(CategoryTreeCacheKey);
+            CacheProvider.Remove(CategoryTreeCacheKey);
         }
 
         public IList<Category> GetFullCategoryTree()
