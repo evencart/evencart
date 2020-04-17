@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using EvenCart.Core.Services;
+using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 
 namespace EvenCart.Services.Users
@@ -24,6 +25,8 @@ namespace EvenCart.Services.Users
         void AddVendorProduct(int vendorId, int productId);
 
         void RemoveVendorProduct(int vendorId, int productId);
+
+        ProductVendor GetVendorProduct(int vendorProductId);
 
         IList<Vendor> GetVendorsByProductIds(int[] productIds);
 

@@ -16,6 +16,7 @@ using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Media;
 using EvenCart.Models.Reviews;
+using EvenCart.Models.Vendors;
 
 namespace EvenCart.Models.Products
 {
@@ -110,5 +111,7 @@ namespace EvenCart.Models.Products
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
 
         public IList<ProductSpecificationGroupModel> ProductSpecificationGroups { get; set; }
+
+        public IList<VendorMiniModel> Vendors { get; set; }
     }
 }

@@ -19,6 +19,7 @@ using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
+using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Areas.Administration.Models.Warehouse;
 using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure.Providers;
@@ -28,6 +29,7 @@ using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
+using EvenCart.Factories.Vendors;
 using EvenCart.Services.MediaServices;
 using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
@@ -76,7 +78,9 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IEntityRoleService _entityRoleService;
         private readonly IEntityTagService _entityTagService;
         private readonly ICatalogService _catalogService;
-        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService, IEntityTagService entityTagService, ICatalogService catalogService)
+        private readonly IVendorService _vendorService;
+        private readonly IVendorModelFactory _vendorModelFactory;
+        public ProductsController(IProductService productService, IModelMapper modelMapper, IMediaService mediaService, IMediaAccountant mediaAccountant, ICategoryAccountant categoryAccountant, ICategoryService categoryService, IProductAttributeService productAttributeService, IProductVariantService productVariantService, IAvailableAttributeValueService availableAttributeValueService, IAvailableAttributeService availableAttributeService, IProductAttributeValueService productAttributeValueService, IDataSerializer dataSerializer, IManufacturerService manufacturerService, IProductSpecificationService productSpecificationService, IProductSpecificationValueService productSpecificationValueService, IProductSpecificationGroupService productSpecificationGroupService, IProductRelationService productRelationService, ISeoMetaService seoMetaService, IWarehouseService warehouseService, IWarehouseInventoryService warehouseInventoryService, IDownloadService downloadService, IDownloadModelFactory downloadModelFactory, ILocalFileProvider localFileProvider, IRoleService roleService, IEntityRoleService entityRoleService, IEntityTagService entityTagService, ICatalogService catalogService, IVendorService vendorService, IVendorModelFactory vendorModelFactory)
         {
             _productService = productService;
             _modelMapper = modelMapper;
@@ -105,6 +109,8 @@ namespace EvenCart.Areas.Administration.Controllers
             _entityRoleService = entityRoleService;
             _entityTagService = entityTagService;
             _catalogService = catalogService;
+            _vendorService = vendorService;
+            _vendorModelFactory = vendorModelFactory;
         }
 
 
@@ -323,6 +329,11 @@ namespace EvenCart.Areas.Administration.Controllers
             }
             //catalog ids
             _productService.SetProductCatalogs(product.Id, model.CatalogIds);
+            if (model.VendorIds != null)
+            {
+                foreach (var vendorId in model.VendorIds)
+                    _vendorService.AddVendorProduct(vendorId, product.Id);
+            }
             //update seo
             _seoMetaService.UpdateSeoMetaForEntity(product, model.SeoMeta);
             return R.Success.With("productId", product.Id).Result;
@@ -339,6 +350,95 @@ namespace EvenCart.Areas.Administration.Controllers
             return R.Success.Result;
         }
         #endregion
+
+        #region Product Vendors
+        /// <summary>
+        /// Get the product vendors list
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <response code="200">A list of <see cref="VendorModel">vendor</see> objects as 'vendors'</response>
+        [DualGet("{productId}/vendors", Name = AdminRouteNames.ProductVendorsList)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult ProductVendorsList(int productId)
+        {
+            if (productId == 0)
+                return R.Fail.WithError(ErrorCodes.ParentEntityMustBeNonZero).Result;
+
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+            var vendors = _vendorService.GetVendorsByProductIds(new[] {productId});
+            var models = vendors.Select(_vendorModelFactory.Create).ToList();
+            var r = R.Success.With("vendors", models)
+                .With("productId", productId)
+                .WithGridResponse(models.Count, 1, models.Count);
+            return r.Result;
+        }
+
+        /// <summary>
+        /// Gets a product vendor with specific productvendor id
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <param name="productVendorId">The id of the download</param>
+        /// <response code="200">A <see cref="VendorModel">vendor</see> object as 'vendor'</response>
+        [DualGet("{productId}/vendor/{productVendorId}", Name = AdminRouteNames.GetProductVendor)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult ProductVendorEditor(int productId, int productVendorId)
+        {
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+            var vendorProduct = productVendorId > 0 ? _vendorService.GetVendorProduct(productVendorId) : null;
+            if (vendorProduct != null && productId != vendorProduct.ProductId)
+                return NotFound();
+
+            var vendorId = vendorProduct?.VendorId ?? 0;
+            //get available vendors
+            var vendors = _vendorService.Get(x => true).OrderBy(x => x.Name).ToList();
+            var availableVendors = SelectListHelper.GetSelectItemList(vendors, x => x.Id, x => x.Name);
+            var r = R.Success.With("productId", productId).With("vendorId", vendorId).With("availableVendors", availableVendors);
+          
+            return r.Result;
+        }
+
+        /// <summary>
+        /// Saves a product vendor
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <response code="200">A success response object on success.</response>
+        [DualPost("{productId}/vendors", Name = AdminRouteNames.SaveProductVendor, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        [ValidateModelState(ModelType = typeof(ProductVendorModel))]
+        public IActionResult SaveProductVendor(ProductVendorModel requestModel)
+        {
+            var productId = requestModel.ProductId;
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+            _vendorService.AddVendorProduct(requestModel.VendorId, requestModel.ProductId);
+            return R.Success.Result;
+        }
+
+        /// <summary>
+        /// Saves a product vendor
+        /// </summary>
+        /// <param name="productId">The id of the product</param>
+        /// <param name="vendorId">The id of the vendor</param>
+        /// <response code="200">A success response object on success.</response>
+        [DualPost("{productId}/vendors/delete", Name = AdminRouteNames.DeleteProductVendor, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult DeleteProductVendor(int productId, int vendorId)
+        {
+            var product = productId > 0 ? _productService.Get(productId) : null;
+            if (product == null)
+                return NotFound();
+
+           _vendorService.RemoveVendorProduct(vendorId, productId);
+           return R.Success.Result;
+        }
+
+        #endregion
+
 
         #region Product Attributes
         [DualGet("{productId}/attributes", Name = AdminRouteNames.ProductAttributesList)]
@@ -1158,6 +1258,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 r.With("availableVariants", selectItemList);
             }
 
+            product.UpdatedOn = DateTime.UtcNow;
             return r.Result;
         }
 

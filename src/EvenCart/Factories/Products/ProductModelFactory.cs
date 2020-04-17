@@ -25,6 +25,7 @@ using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Media;
 using EvenCart.Models.Reviews;
+using EvenCart.Models.Vendors;
 using EvenCart.Services.Extensions;
 using DownloadModel = EvenCart.Models.Products.DownloadModel;
 using ProductAttributeModel = EvenCart.Models.Products.ProductAttributeModel;
@@ -178,7 +179,12 @@ namespace EvenCart.Factories.Products
                 var targetCurrency = ApplicationEngine.CurrentCurrency;
                 productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
             }
-          
+
+            if (product.Vendors != null)
+            {
+                productModel.Vendors = product.Vendors.Select(x => new VendorMiniModel() {Name = x.Name, Id = x.Id})
+                    .ToList();
+            }
             return productModel;
         }
 

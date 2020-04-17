@@ -27,6 +27,7 @@
 {% secondary_navigation url="{% route Admin.ProductsList %}" title=@t"Back to products" iconClass="rbicon-chevron-left" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.GetProduct productId="{{productId}}" %}" title=@t"Basic Info" systemName="GetProduct" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.DownloadList productId="{{productId}}" %}" title=@t"Downloads" systemName="DownloadsList" groupId="ProductEdit" %}
+{% secondary_navigation url="{% route Admin.ProductVendorsList productId="{{productId}}" %}" title=@t"Vendors" systemName="ProductVendorsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.ProductAttributesList productId="{{productId}}" %}" title=@t"Attributes" systemName="ProductAttributesList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.ProductVariantsList productId="{{productId}}" %}" title=@t"Variants" systemName="ProductVariantsList" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.InventoryList productId="{{productId}}" %}" title=@t"Inventory" systemName="InventoryList" groupId="ProductEdit" %}
@@ -35,6 +36,7 @@
 {% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="crosssell" %}" title=@t"Cross Sell" systemName="CrossSell" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="upsell" %}" title=@t"Up Sell" systemName="UpSell" groupId="ProductEdit" %}
 {% secondary_navigation url="{% route Admin.ProductRelationsList productId="{{productId}}" relationType="frequentlyboughttogether" %}" title=@t"Bought Together" systemName="FbtProducts" groupId="ProductEdit" %}
+
 
 <!--Users-->
 {% primary_navigation title=@t"Users" systemName="UsersList" groupId="store" capability="User.View" %}

@@ -181,6 +181,8 @@
     <None Remove="Areas\Administration\Views\Products\ProductSpecsList.html" />
     <None Remove="Areas\Administration\Views\Products\ProductVariantEditor.html" />
     <None Remove="Areas\Administration\Views\Products\ProductVariantsList.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductVendorEditor.html" />
+    <None Remove="Areas\Administration\Views\Products\ProductVendorsList.html" />
     <None Remove="Areas\Administration\Views\Reports\BestSellersReport.html" />
     <None Remove="Areas\Administration\Views\Reports\OrdersChartReport.html" />
     <None Remove="Areas\Administration\Views\Reports\OrdersReport.FilterPanel.html" />
@@ -753,6 +755,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Plugins\WidgetsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductVendorEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\ProductVendorsList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\InventoryList.Products.html">

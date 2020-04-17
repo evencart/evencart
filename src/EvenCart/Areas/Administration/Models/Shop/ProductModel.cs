@@ -129,6 +129,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public IList<int> CatalogIds { get; set; }
 
+        public IList<int> VendorIds { get; set; }
+
         public void SetupValidationRules(ModelValidator<ProductModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();

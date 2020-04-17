@@ -1,0 +1,117 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Product Vendors" active_menu="ProductVendorsList" parent_active_menu="ProductVendorsList" menu_group="ProductEdit" %}
+{% if errorCode == "PARENT_ID_MUST_NONZERO" %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">{{"Product must be saved first to access this page" | t}}</div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Vendors" | t}}
+                <button onclick="editVendor(0)" class="btn btn-primary btn-sm float-right">
+                    {{"Add Vendor" | t}}
+                </button>
+                <div class="panel-help no-margin">
+                    {{"Associate vendors with the products in case it's a marketplace." | t}}
+                </div>
+            </div>
+            <div class="panel-body no-padding">
+                <div class="form-group">
+                    <table id="grid-vendors" class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                                <th data-column-id="name">{{"Name" | t }}</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                                <th data-column-id="hiddenItems" data-formatter="hiddenFields" style="display: none;" data-sortable="false"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{vendors | scriptJson : 'initData'}}
+<script type="text/javascript">
+    ready(function () {
+        generateGrid({
+            element: "grid-vendors",
+            initialData: {
+                vendors: initData,
+                current: parseInt("{{current}}"),
+                total: parseInt("{{total}}"),
+                rowCount: parseInt("{{rowCount}}")
+            },
+            method: "GET",
+            url: '{% route api_Admin.ProductVendorsList productId="{{productId}}" %}',
+            responseObject: "vendors",
+            selection: false,
+            navigation: 1,
+            columnSelection: false,
+            formatters: {
+                "commands": function (column, row) {
+                    return "<button class=\"btn btn-secondary btn-sm command-edit\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='editVendor(" +
+                        row.id +
+                        ")'><span class=\"rbicon-edit\"></span></button> " +
+                        "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
+                        row.id +
+                        "\" onclick='deleteVendor(" + row.id + ")'><span class=\"rbicon-trash-2\"></span></button>";
+                }
+            }
+        });
+    });
+
+
+    var editVendor = function (id) {
+        jQuery("#edit-vendor-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-vendor-popup",
+            true,
+            function (result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-vendors');
+                    notify("success", '{{"Vendor was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route Admin.GetProductVendor productId="{{productId}}" productVendorId="%id%" %}'.replaceAll("%id%", id);
+        loadPage(url, true,
+            null,
+            function (response) {
+                jQuery("#edit-vendor-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteVendor = function (id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this vendor from this product?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: '{% route api_Admin.DeleteProductVendor productId="%id%" %}'.replace("%id%", "{{productId}}"),
+                    data: {
+                        vendorId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-vendors');
+                            notify("success", '{{"Vendor was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+
+</script>
+{% endif %}
+
+<div class="popup" id="edit-vendor-popup">
+</div>

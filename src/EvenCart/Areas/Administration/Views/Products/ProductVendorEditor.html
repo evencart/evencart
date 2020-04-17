@@ -1,0 +1,41 @@
+﻿<form action='{% route api_Admin.SaveProductVendor productId="{{productId}}" %}' method="post" id="add-vendor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Vendor Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Vendor" %}
+                        {% control select id="product-vendors" name="vendorId" items="availableVendors" value="vendorId" required="true" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{productId}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Vendor" | t}}</button>
+                    <button class="btn btn-sm btn-secondary close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("add-vendor-form",
+        {
+            onSuccess: function () {
+                hidePopup("edit-vendor-popup");
+            }
+        });
+   
+</script>

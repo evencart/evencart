@@ -172,6 +172,36 @@
             <param name="searchModel">The <see cref="T:EvenCart.Areas.Administration.Models.Plugins.PluginsSearchModel">search</see> object for plugins</param>
             <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Plugins.PluginInfoModel">plugin</see> objects as 'plugins'</response>
         </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.ProductVendorsList(System.Int32)">
+            <summary>
+            Get the product vendors list
+            </summary>
+            <param name="productId">The id of the product</param>
+            <response code="200">A list of <see cref="T:EvenCart.Areas.Administration.Models.Vendors.VendorModel">vendor</see> objects as 'vendors'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.ProductVendorEditor(System.Int32,System.Int32)">
+            <summary>
+            Gets a product vendor with specific productvendor id
+            </summary>
+            <param name="productId">The id of the product</param>
+            <param name="productVendorId">The id of the download</param>
+            <response code="200">A <see cref="T:EvenCart.Areas.Administration.Models.Vendors.VendorModel">vendor</see> object as 'vendor'</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.SaveProductVendor(EvenCart.Areas.Administration.Models.Shop.ProductVendorModel)">
+            <summary>
+            Saves a product vendor
+            </summary>
+            <param name="requestModel"></param>
+            <response code="200">A success response object on success.</response>
+        </member>
+        <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.DeleteProductVendor(System.Int32,System.Int32)">
+            <summary>
+            Saves a product vendor
+            </summary>
+            <param name="productId">The id of the product</param>
+            <param name="vendorId">The id of the vendor</param>
+            <response code="200">A success response object on success.</response>
+        </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.ProductsController.InventoryList(System.Int32)">
             <summary>
             Gets the inventory details for a product

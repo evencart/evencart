@@ -54,9 +54,15 @@ namespace EvenCart.Services.Users
             EntitySet<ProductVendor>.Delete(x => x.ProductId == productId && x.VendorId == vendorId);
         }
 
+        public ProductVendor GetVendorProduct(int vendorProductId)
+        {
+            return EntitySet<ProductVendor>.Where(x => x.Id == vendorProductId).SelectSingle();
+        }
+
         public IList<Vendor> GetVendorsByProductIds(int[] productIds)
         {
-            Expression<Func<ProductVendor, bool>> where = vendor => productIds.Contains(vendor.ProductId);
+            var idsAsList = productIds.ToList();
+            Expression<Func<ProductVendor, bool>> where = vendor => idsAsList.Contains(vendor.ProductId);
             return Repository
                 .Join<ProductVendor>("Id", "VendorId", joinType: JoinType.LeftOuter)
                 .Where(where)
