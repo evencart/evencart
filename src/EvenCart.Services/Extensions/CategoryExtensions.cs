@@ -38,5 +38,12 @@ namespace EvenCart.Services.Extensions
             categoryPath = categoryPath.TrimEnd('/');
             return categoryPath;
         }
+
+        public static bool IsSaleDisabled(this Category category)
+        {
+            if (category == null)
+                return false;
+            return category.DisableSale || IsSaleDisabled(category.Parent);
+        }
     }
 }

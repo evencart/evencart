@@ -12,6 +12,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Core.Data;
+using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
@@ -45,8 +46,8 @@ namespace EvenCart.Controllers
         private readonly IProductVariantService _productVariantService;
         private readonly ICartItemService _cartItemService;
         private readonly OrderSettings _orderSettings;
-
-        public CartController(ICartService cartService, IDataSerializer dataSerializer, IProductService productService, IProductVariantService productVariantService, ICartItemService cartItemService, OrderSettings orderSettings)
+        private readonly ICategoryService _categoryService;
+        public CartController(ICartService cartService, IDataSerializer dataSerializer, IProductService productService, IProductVariantService productVariantService, ICartItemService cartItemService, OrderSettings orderSettings, ICategoryService categoryService)
         {
             _cartService = cartService;
             _dataSerializer = dataSerializer;
@@ -54,6 +55,7 @@ namespace EvenCart.Controllers
             _productVariantService = productVariantService;
             _cartItemService = cartItemService;
             _orderSettings = orderSettings;
+            _categoryService = categoryService;
         }
 
         [HttpGet("", Name = RouteNames.Cart)]
@@ -89,6 +91,18 @@ namespace EvenCart.Controllers
                 return R.Fail.Result;
             if (product.RequireLoginToPurchase && CurrentUser.IsVisitor())
                 return R.Fail.WithError(ErrorCodes.RequiresAuthenticatedUser, T("Please login to purchase this product.")).Result;
+            //check if sale is allowed
+            var categories = product.Categories;
+            if (categories?.Any() ?? false)
+            {
+                var categoryTree = _categoryService.GetFullCategoryTree();
+                var productCategoryIds = categories.Select(x => x.Id).ToList();
+                categories = categoryTree.Where(x => productCategoryIds.Contains(x.Id)).ToList();
+            }
+            if (product.DisableSale || (categories?.Any(x => x.IsSaleDisabled()) ?? false))
+            {
+                return R.Fail.WithError(ErrorCodes.SaleNotAllowed, T("Product is not available for purchase.")).Result;
+            }
             //check appropriate attributes if not wishlist
             ProductVariant variant = null;
             IActionResult validationResult = null;
@@ -194,6 +208,10 @@ namespace EvenCart.Controllers
                             return true;
                         });
 
+                        if (variant?.DisableSale ?? false)
+                        {
+                            return R.Fail.WithError(ErrorCodes.SaleNotAllowed, T("Product is not available for purchase.")).Result;
+                        }
                         //is the variant available?
                         ValidateVariantQuantity(cartItemModel.Quantity, variant, out validationResult);
                         if (validationResult != null)

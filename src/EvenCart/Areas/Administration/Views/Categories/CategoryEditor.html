@@ -23,6 +23,12 @@
                         {% control label text=@t"Description" for="description" %}
                         {% control wyswyg id="description" name="description" placeholder=@t"Description" value="{{category.description}}" %}
                     </div>
+                    <div class="form-group">
+                        {% control checkbox name="disableSale" value="category.disableSale" text=@t"Disable Sale" %}
+                        <div class="panel-help">
+                            {{"Check to disable sale of products from this category. That means products will be available to view but sale will not be allowed." | t}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

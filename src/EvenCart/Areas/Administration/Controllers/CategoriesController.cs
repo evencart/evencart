@@ -125,7 +125,8 @@ namespace EvenCart.Areas.Administration.Controllers
                 var category = new Category() {
                     Name = categoryModel.Name,
                     ParentId = categoryModel.ParentId,
-                    Description = categoryModel.Description
+                    Description = categoryModel.Description,
+                    DisableSale = categoryModel.DisableSale
                 };
                 _categoryService.Insert(category);
             }
@@ -143,6 +144,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 category.Name = categoryModel.Name;
                 category.Description = categoryModel.Description;
                 category.ParentId = categoryModel.ParentId;
+                category.DisableSale = categoryModel.DisableSale;
                 _categoryService.Update(category);
             }
             return R.Success.Result;

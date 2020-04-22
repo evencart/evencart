@@ -250,7 +250,7 @@ namespace EvenCart.Services.Products
                         }
                         else
                         {
-                            if (!product.Published || product.Deleted)
+                            if (!product.Published || product.Deleted || product.DisableSale)
                             {
                                 //remove from cart because product shouldn't be visible
                                 _cartService.RemoveFromCart(ci.Id, transaction);
@@ -290,7 +290,7 @@ namespace EvenCart.Services.Products
                             var basePrice =  GetAutoDiscountedPriceForUser(product, variant, cart.User, ci.Quantity, ref discountCoupons, out decimal discount);
                             if (product.HasVariants && ci.ProductVariantId > 0)
                             {
-                                if (variant == null || (variant.TrackInventory && !variant.IsAvailableInStock(product)))
+                                if (variant == null || variant.DisableSale || (variant.TrackInventory && !variant.IsAvailableInStock(product)))
                                     //remove from cart because we can't find the variant or it's out of stock
                                     _cartService.RemoveFromCart(ci.Id, transaction);
                                 else

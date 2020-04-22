@@ -9,18 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-namespace EvenCart.Infrastructure.Mvc
+using EvenCart.Infrastructure.Mvc.Models;
+
+namespace EvenCart.Models.Categories
 {
-    public static class ErrorCodes
+    public class CategoryModel : FoundationModel
     {
-        public const string ParentEntityMustBeNonZero = "PARENT_ID_MUST_NONZERO";
+        public string Name { get; set; }
 
-        public const string CaptchaValidationRequired = "CAPTCHA_VALIDATION_REQUIRED";
-
-        public const string AntiForgeryValidationFailed = "ANTIFORGERY_VALIDATION_FAILED";
-
-        public const string RequiresAuthenticatedUser = "REQUIRES_USER_AUTHENTICATION";
-
-        public const string SaleNotAllowed = "SALE_NOT_ALLOWED";
+        public bool DisableSale { get; set; }
     }
 }

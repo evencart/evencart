@@ -104,6 +104,8 @@ namespace EvenCart.Models.Products
 
         public bool RequireLoginToViewPrice { get; set; }
 
+        public bool DisableSale { get; set; }
+
         public ReviewSummaryModel ReviewSummary { get; set; }
 
         public IList<MediaModel> Media { get; set; }

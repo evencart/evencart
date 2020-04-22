@@ -37,6 +37,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public int ProductId { get; set; }
 
+        public bool DisableSale { get; set; }
+
         public void SetupValidationRules(ModelValidator<ProductVariantModel> v)
         {
             v.RuleFor(x => x.Attributes)

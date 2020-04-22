@@ -31,6 +31,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public int MediaId { get; set; }
 
+        public bool DisableSale { get; set; }
+
         public void SetupValidationRules(ModelValidator<CategoryModel> v)
         {
             v.RuleFor(x => x.Name).NotEmpty();

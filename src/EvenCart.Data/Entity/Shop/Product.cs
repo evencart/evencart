@@ -119,6 +119,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public bool RestrictedToRoles { get; set; }
 
+        public bool DisableSale { get; set; }
+
         #region Virtual Properties
 
         public virtual IList<ProductCategory> ProductCategories { get; set; }

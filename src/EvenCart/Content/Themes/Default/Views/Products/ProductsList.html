@@ -26,7 +26,12 @@
             </div>
             <div class="col-lg-9 col-12">
                 {% partial "Common/Breadcrumb" %}
-                <div class="row">
+                <div class="row">                    
+                    {% if category.disableSale %}
+                    <div class="alert alert-danger">
+                        {{"The products in this category are currently not available for sale."}}
+                    </div>
+                    {% endif %}
                     {% if products.size > 0 %}
                     <div class="col-12">
                         <h3>{{pageTitle}}</h3>

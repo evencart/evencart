@@ -31,6 +31,7 @@ using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Infrastructure.Routing;
+using EvenCart.Models.Categories;
 using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
 using Microsoft.AspNetCore.Mvc;
@@ -230,6 +231,7 @@ namespace EvenCart.Controllers
             searchModel.Count = _catalogSettings.NumberOfProductsPerPage;
 
             IList<int> categoryIds = null;
+            CategoryModel categoryModel = null;
             if (searchModel.CategoryId.HasValue && searchModel.CategoryId.Value > 0)
             {
                 categoryIds = new List<int>()
@@ -238,6 +240,14 @@ namespace EvenCart.Controllers
                 };
                 var fullCategoryTree = _categoryService.GetFullCategoryTree();
                 var currentCategory = fullCategoryTree.FirstOrDefault(x => x.Id == searchModel.CategoryId.Value);
+                if (currentCategory != null)
+                {
+                    categoryModel = new CategoryModel()
+                    {
+                        Name = currentCategory.Name,
+                        DisableSale = currentCategory.DisableSale
+                    };
+                }
                 //set breadcrumb
                 BreadcrumbHelper.SetCategoryBreadcrumb(currentCategory, fullCategoryTree);
 
@@ -315,6 +325,7 @@ namespace EvenCart.Controllers
                 viewName = "ProductsList";
 
             return R.Success.With("products", productModels)
+                .With("category", categoryModel)
                 .WithParams(searchModel)
                 .WithGridResponse(totalResults, searchModel.Page, searchModel.Count, searchModel.SortColumn, searchModel.SortOrder)
                 .WithView(viewName)

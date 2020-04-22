@@ -34,6 +34,8 @@ namespace EvenCart.Data.Entity.Shop
 
         public int MediaId { get; set; }
 
+        public bool DisableSale { get; set; }
+
         #region Virtual Properties
         public virtual IList<ProductVariantAttribute> ProductVariantAttributes { get; set; }
 

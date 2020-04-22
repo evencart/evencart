@@ -682,7 +682,7 @@ namespace EvenCart.Areas.Administration.Controllers
             currentVariant.CanOrderWhenOutOfStock = variantModel.CanOrderWhenOutOfStock;
             currentVariant.TrackInventory = variantModel.TrackInventory;
             currentVariant.MediaId = variantModel.MediaId;
-
+            currentVariant.DisableSale = variantModel.DisableSale;
 
             if (variant.Id > 0)
             {
