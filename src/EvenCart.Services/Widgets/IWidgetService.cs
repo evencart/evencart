@@ -17,7 +17,7 @@ namespace EvenCart.Services.Widgets
     {
         T LoadWidgetSettings<T>(string widgetId);
 
-        void SaveWidgetSetting<T>(string widgetId, T settings);
+        void SaveWidgetSetting<T>(string widgetId, T settings, int storeId);
 
         object LoadWidgetSettings(string widgetId, Type type);
     }

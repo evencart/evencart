@@ -11,6 +11,7 @@
 
 using System.Linq;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Infrastructure;
 using EvenCart.Services.Widgets;
 using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Mvc;
@@ -62,7 +63,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualPost("configure", Name = AdminRouteNames.SaveWidgetSettings)]
         public IActionResult ConfigureWidgetSettings(WidgetSettingsModel widgetSettingsModel)
         {
-            _widgetService.SaveWidgetSetting(widgetSettingsModel.Id, widgetSettingsModel);
+            _widgetService.SaveWidgetSetting(widgetSettingsModel.Id, widgetSettingsModel, ApplicationEngine.CurrentStore.Id);
             return ConfigureWidget(widgetSettingsModel.Id);
         }
     }

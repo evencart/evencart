@@ -37,7 +37,7 @@ namespace EvenCart.Services.Widgets
             return _dataSerializer.DeserializeAs<T>(setting.Value);
         }
 
-        public void SaveWidgetSetting<T>(string widgetId, T settings)
+        public void SaveWidgetSetting<T>(string widgetId, T settings, int storeId)
         {
             var widgetSettingName = string.Format(WidgetSettingKey, widgetId);
             var setting = _settingService.FirstOrDefault(x => x.Key == widgetSettingName);
@@ -45,7 +45,8 @@ namespace EvenCart.Services.Widgets
                 setting = new Setting()
                 {
                     Key = widgetSettingName,
-                    GroupName = "WidgetSettings"
+                    GroupName = "WidgetSettings",
+                    StoreId = storeId
                 };
             setting.Value = _dataSerializer.Serialize(settings);
 

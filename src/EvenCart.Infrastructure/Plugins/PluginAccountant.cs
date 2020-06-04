@@ -108,7 +108,7 @@ namespace EvenCart.Infrastructure.Plugins
         public IList<WidgetInfo> GetAvailableWidgets()
         {
             var storeId = ApplicationEngine.CurrentStore.Id;
-            var plugins = GetAvailablePlugins(true).Where(x => x.ActiveStoreIds.Contains(storeId)).ToList();
+            var plugins = GetAvailablePlugins(true).Where(x => x.ActiveStoreIds == null || x.ActiveStoreIds.Contains(storeId)).ToList();
             var widgetInfos = plugins.Where(x => x.Installed && x.ActiveStoreIds.Contains(storeId)).SelectMany(x =>
             {
                 return x.Widgets.Select(y => new WidgetInfo()
