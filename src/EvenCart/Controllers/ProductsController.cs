@@ -373,7 +373,8 @@ namespace EvenCart.Controllers
         public IActionResult DownloadUploadFile(string guid)
         {
             var upload = _uploadService.FirstOrDefault(x => x.Guid == guid);
-            if (upload == null || upload.UserId != CurrentUser.Id)
+            if (upload == null ||
+                (upload.UserId != CurrentUser.Id && !CurrentUser.Can(CapabilitySystemNames.ViewOrder)))
                 return NotFound();
             return File(upload.FileBytes, upload.FileType, $"{upload.UserId}.{upload.Guid}.{upload.FileExtension}");
         }
