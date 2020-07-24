@@ -64,7 +64,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 Theme = new ThemeImplementation()
                 {
                     Name = generalSettings.ActiveTheme,
-                    Url = WebHelper.GetUrlFromPath("/default", generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),
+                    Url = WebHelper.GetUrlFromPath("/" + generalSettings.ActiveTheme, generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),
                 },
                 LogoUrl = logoUrl,
                 FaviconUrl = faviconUrl,
