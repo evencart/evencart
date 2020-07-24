@@ -124,5 +124,7 @@ namespace EvenCart.Data.Constants
         public const string ManageStores = "Store.Manage";
 
         public const string ManageCatalog = "Catalog.Manage";
+
+        public const string ManageLanguage = "Language.Manage";
     }
 }

@@ -9,22 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
+using EvenCart.Areas.Administration.Models.Cultures;
+using EvenCart.Data.Entity.Cultures;
+using EvenCart.Infrastructure.Mvc.ModelFactories;
 
-namespace EvenCart.Data.Entity.Cultures
+namespace EvenCart.Areas.Administration.Factories.Cultures
 {
-    public class Language : FoundationEntity
+    public interface ILanguageModelFactory : IModelFactory<Language, LanguageModel>
     {
-        public string Name { get; set; }
-
-        public string CultureCode { get; set; }
-
-        public bool PrimaryLanguage { get; set; }
-
-        public bool Published { get; set; }
-
-        public bool Rtl { get; set; }
-
-        public string Flag { get; set; }
+        
     }
 }

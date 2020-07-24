@@ -38,7 +38,7 @@ namespace EvenCart.Infrastructure.Consumers
             var seoMeta = (property != null ? (SeoMeta) property.GetValue(entity) : null) ?? new SeoMeta()
             {
                 EntityName = typeof(T).Name,
-                LanguageCultureCode = ApplicationEngine.CurrentLanguageCultureCode,
+                LanguageCultureCode = ApplicationEngine.CurrentLanguage.CultureCode,
                 Slug = CommonHelper.GenerateSlug(name),
                 PageTitle = name
             };

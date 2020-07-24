@@ -9,12 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Core.Data;
 using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Cultures;
 
 namespace EvenCart.Services.Cultures
 {
-    public interface ITranslationService : IFoundationEntityService<Translation>
+    public interface ITranslationService : IFoundationEntityService<TranslationData>
     {
         
     }

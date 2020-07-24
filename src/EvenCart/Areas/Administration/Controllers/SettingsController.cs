@@ -272,6 +272,11 @@ namespace EvenCart.Areas.Administration.Controllers
                     var currenciesSelectList = SelectListHelper.GetSelectItemListWithAction(currencies, x => x.Id, x => $"{x.Name} ({x.IsoCode})");
                     result.With("availableCurrencies", currenciesSelectList);
 
+                    var languageService = DependencyResolver.Resolve<ILanguageService>();
+                    var languages = languageService.Get(x => x.Published).ToList();
+                    var languagesSelectList = SelectListHelper.GetSelectItemList(languages, x => x.CultureCode, x => x.Name);
+                    result.With("availableLanguages", languagesSelectList);
+
                     result.WithCatalogPaginationTypes();
                     break;
                 case "gdpr":

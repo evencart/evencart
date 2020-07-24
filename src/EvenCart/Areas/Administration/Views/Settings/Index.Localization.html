@@ -18,6 +18,14 @@
             {% control label text=@t"Default Display Currency" for="primaryCurrencyId" %}
             {% control select name="primaryCurrencyId" value="settings.primaryCurrencyId" items="availableCurrencies" %}
         </div>
-
+        {% if availableLanguages.size > 1 %}
+        <div class="form-group">
+            {% control checkbox text=@t"Allow users to change language" name="allowUserToSelectLanguage" value="settings.allowUserToSelectLanguage" %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            {% control label text=@t"Default Language" for="defaultLanguage" %}
+            {% control select name="defaultLanguage" value="settings.defaultLanguage" items="availableLanguages" %}
+        </div>
     </div>
 </div>

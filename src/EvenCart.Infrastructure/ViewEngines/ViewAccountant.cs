@@ -296,7 +296,7 @@ namespace EvenCart.Infrastructure.ViewEngines
 
         private CachedViewKey GetCachedViewKey(string viewPath, string area)
         {
-            return CachedViewKey.Get(viewPath, ApplicationEngine.CurrentLanguageCultureCode, area);
+            return CachedViewKey.Get(viewPath, ApplicationEngine.CurrentLanguage.CultureCode, area);
         }
 
         private Hash GetTemplateHash(object parameters = null)

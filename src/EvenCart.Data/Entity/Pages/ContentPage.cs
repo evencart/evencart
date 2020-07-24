@@ -19,10 +19,12 @@ namespace EvenCart.Data.Entity.Pages
 {
     public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>, IStoreEntity, IMultilingualEntity
     {
+        [MultilingualField]
         public string Name { get; set; }
 
         public int UserId { get; set; }
 
+        [MultilingualField]
         public string Content { get; set; }
 
         public bool Published { get; set; }
@@ -43,9 +45,12 @@ namespace EvenCart.Data.Entity.Pages
 
         public int ParentId { get; set; }
 
-        public virtual string TranslationGuid { get; set; }
+        public string TranslationGuid { get; set; }
 
         #region Virtual Properties
+        
+        public virtual IList<TranslationData> Translations { get; set; }
+
         public virtual SeoMeta SeoMeta { get; set; }
 
         public virtual User User { get; set; }

@@ -26,5 +26,16 @@ namespace EvenCart.Infrastructure.Mvc.Models
                 return _formatterObject;
             }
         }
+
+        private DynamicFormatterObject _translationObject;
+
+        public DynamicFormatterObject Translations
+        {
+            get
+            {
+                _translationObject = _translationObject ?? new DynamicFormatterObject();
+                return _translationObject;
+            }
+        }
     }
 }

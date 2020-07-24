@@ -9,10 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System.Collections.Generic;
+
 namespace EvenCart.Core.Data
 {
     public interface IMultilingualEntity
     {
         string TranslationGuid { get; set; }
+
+        IList<TranslationData> Translations { get; set; }
     }
 }

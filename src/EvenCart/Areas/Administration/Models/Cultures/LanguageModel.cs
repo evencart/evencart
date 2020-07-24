@@ -9,22 +9,33 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
+using EvenCart.Infrastructure.Mvc.Models;
+using EvenCart.Infrastructure.Mvc.Validator;
+using FluentValidation;
 
-namespace EvenCart.Data.Entity.Cultures
+namespace EvenCart.Areas.Administration.Models.Cultures
 {
-    public class Language : FoundationEntity
+    public class LanguageModel : FoundationEntityModel, IRequiresValidations<LanguageModel>
     {
         public string Name { get; set; }
 
         public string CultureCode { get; set; }
-
-        public bool PrimaryLanguage { get; set; }
 
         public bool Published { get; set; }
 
         public bool Rtl { get; set; }
 
         public string Flag { get; set; }
+
+        public bool PrimaryLanguage { get; set; }
+
+        public string FlagUrl { get; set; }
+
+        public void SetupValidationRules(ModelValidator<LanguageModel> v)
+        {
+            v.RuleFor(x => x.Name).NotEmpty();
+            v.RuleFor(x => x.CultureCode).NotEmpty();
+            v.RuleFor(x => x.Flag).NotEmpty();
+        }
     }
 }

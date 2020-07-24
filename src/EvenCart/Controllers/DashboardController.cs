@@ -58,5 +58,22 @@ namespace EvenCart.Controllers
             _userService.Update(ApplicationEngine.CurrentUser);
             return R.Success.Result;
         }
+        /// <summary>
+        /// Sets the active language for user
+        /// </summary>
+        /// <param name="languageCulture">The culture of the language</param>
+        /// <response code="200">A success response object</response>
+        [DualPost("set-active-language", Name = RouteNames.SetActiveLanguage, OnlyApi = true)]
+        public IActionResult SetActiveLanguage(string languageCulture)
+        {
+            if (string.IsNullOrWhiteSpace(languageCulture))
+                return BadRequest();
+            if (ApplicationEngine.CurrentUser == null)
+                ApplicationEngine.GuestSignIn();
+
+            ApplicationEngine.CurrentUser.ActiveLanguageCulture = languageCulture;
+            _userService.Update(ApplicationEngine.CurrentUser);
+            return R.Success.Result;
+        }
     }
 }

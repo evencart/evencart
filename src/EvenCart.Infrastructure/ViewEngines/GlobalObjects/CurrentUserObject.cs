@@ -38,7 +38,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
             if (currentUserImpl.Name.IsNullEmptyOrWhiteSpace())
                 currentUserImpl.Name = currentUserImpl.Email ??
                                        (LocalizationHelper.Localize("Imitated User # ",
-                                           ApplicationEngine.CurrentLanguageCultureCode) + currentUser?.Id);
+                                           ApplicationEngine.CurrentLanguage.CultureCode) + currentUser?.Id);
             if (currentUserImpl.FirstName.IsNullEmptyOrWhiteSpace())
                 currentUserImpl.FirstName = currentUserImpl.Name;
 

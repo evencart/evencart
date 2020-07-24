@@ -39,7 +39,7 @@ namespace EvenCart.Factories.Reviews
             if (model.DisplayName.IsNullEmptyOrWhiteSpace())
             {
                 model.DisplayName =
-                    LocalizationHelper.Localize("Store Customer", ApplicationEngine.CurrentLanguageCultureCode);
+                    LocalizationHelper.Localize("Store Customer", ApplicationEngine.CurrentLanguage.CultureCode);
             }
 
             if (review.Product != null)

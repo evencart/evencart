@@ -1,0 +1,111 @@
+﻿{% layout "_Layout" %}
+{% global page_title=@t"Languages" active_menu="LanguagesList" parent_active_menu="LanguagesList" %}
+
+<div class="row">
+    <div class="col-md-12 col-offset-2">
+        <div class="panel">
+            <div class="panel-title">
+                {{"Languages" | t}} <button class="btn btn-sm btn-primary float-right" onclick="editLanguage(0)">{{"Add new language" | t}}</button>
+            </div>
+            <div class="panel-body no-padding">
+                <table id="grid-selection" class="table table-hover table-condensed no-margin">
+                    <thead>
+                    <tr>
+                        <th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" style="display: none">ID</th>
+                        <th data-column-id="name">{{"Name" | t}}</th>
+                        <th data-column-id="cultureCode">{{"Culture" | t}}</th>
+                        <th data-column-id="rtl" data-formatter="binary">{{"RTL" | t}}</th>
+                        <th data-column-id="published" data-formatter="binary">{{"Published" | t}}</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false"></th>
+                    </tr>
+                    </thead>
+                </table>
+                {{languages | scriptJson : 'initData'}}
+                <script type="text/javascript">
+                    ready(function() {
+                        generateGrid({
+                            element: "grid-selection",
+                            initialData: {
+                                languages: initData,
+                                current: parseInt("{{current}}"),
+                                total: parseInt("{{total}}"),
+                                rowCount: parseInt("{{rowCount}}")
+                            },
+                            method: "GET",
+                            url: '{% route api_Admin.LanguagesList %}',
+                            responseObject: "languages",
+                            selection: false,
+                            navigation: 3,
+                            columnSelection: false,
+                            formatters: {
+                                binary: function(column, row) {
+                                    return gridFormatters.binary(column, row);
+                                },
+                                "commands": function(column, row) {
+                                    return "<button type='button' class='btn btn-secondary btn-sm command-edit' data-row-id='" +
+                                        row.id +
+                                        "' onclick='editLanguage(" +
+                                        row.id +
+                                        ")'><span class='rbicon-edit'></span></button> " +
+                                        "<button type='button' class='btn btn-danger btn-sm command-preview' data-row-id='" +
+                                        row.id +
+                                        "' onclick='deleteLanguage(" +
+                                        row.id +
+                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                }
+                            }
+                        });
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup" id="edit-language-popup" style="max-width: 600px">
+</div>
+
+<script type="text/javascript">
+
+    var editLanguage = function(id) {
+        jQuery("#edit-language-popup").html("{{'Please wait...'}}");
+        var centerPopup = showAsPopup("edit-language-popup",
+            true,
+            function(result) {
+                if (result == "ok") {
+                    //reload the grid
+                    reloadGrid('grid-selection');
+                    notify("success", '{{"Language was saved successfully" | t}}');
+                }
+            });
+        var url = '{% route Admin.GetLanguage languageId="?" %}'.replaceAll("?", id);
+        loadPage(url, true,
+            null,
+            function(response) {
+                jQuery("#edit-language-popup").html(response);
+                centerPopup();
+            });
+    }
+
+    var deleteLanguage = function(id) {
+        var msg =
+            '{{ "Are you sure you wish to delete this language?" | t}}';
+        confirm(msg,
+            function() {
+                post({
+                    url: "{% route api_Admin.DeleteLanguage %}",
+                    data: {
+                      languageId: id
+                    },
+                    done: function(response) {
+                        if (response.success) {
+                            reloadGrid('grid-selection');
+                            notify("success", '{{"Language was deleted successfully" | t}}');
+                        }
+                    }
+                });
+            });
+    }
+</script>

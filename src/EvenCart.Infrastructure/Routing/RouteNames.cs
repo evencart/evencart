@@ -73,6 +73,7 @@ namespace EvenCart.Infrastructure.Routing
         public const string SingleAddress = "SingleAddress";
         public const string CountryStates = "CountryStates";
         public const string SetActiveCurrency = "SetActiveCurrency";
+        public const string SetActiveLanguage = "SetActiveLanguage";
         public const string SaveGdprPreferences = "SaveGdprPreferences";
         public const string Error = "Error";
         public const string KeepAlive = "KeepAlive";

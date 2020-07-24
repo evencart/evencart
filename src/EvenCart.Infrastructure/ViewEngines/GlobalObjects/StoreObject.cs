@@ -56,7 +56,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 ? mediaAccountant.GetPictureUrl(generalSettings.FaviconId)
                 : ApplicationEngine.MapUrl(ApplicationConfig.DefaultFaviconUrl, true);
             var categoryDefaultName =
-                LocalizationHelper.Localize("All Categories", ApplicationEngine.CurrentLanguageCultureCode);
+                LocalizationHelper.Localize("All Categories", ApplicationEngine.CurrentLanguage.CultureCode);
             var store = new StoreImplementation()
             {
                 Url = WebHelper.GetUrlFromPath("/", generalSettings.StoreDomain, urlSettings.GetUrlProtocol()),

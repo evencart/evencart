@@ -274,19 +274,35 @@ namespace EvenCart.Infrastructure
         public static Store CurrentStore => CurrentHttpContext?.GetCurrentStore();
 
         private static IList<Language> _publishedLanguages;
-        public static IList<Language> PublishedLanguages
+        public static IList<Language> AllLanguages
         {
             get
             {
                 if (_publishedLanguages != null)
                     return _publishedLanguages;
-                _publishedLanguages = DependencyResolver.Resolve<ILanguageService>().Get(x => x.Published).ToList();
+                _publishedLanguages = DependencyResolver.Resolve<ILanguageService>().Get(x => true).ToList();
                 return _publishedLanguages;
             }
         }
 
-        public static string CurrentLanguageCultureCode => "en-US";
+        public static Language CurrentLanguage
+        {
+            get
+            {
+                var language = CurrentHttpContext.GetCurrentLanguage();
+                if (language != null && language.Published)
+                    return language;
+                var currentLanguage = CurrentUser?.ActiveLanguageCulture ?? DependencyResolver.Resolve<LocalizationSettings>().DefaultLanguage;
+                var languageService = DependencyResolver.Resolve<ILanguageService>();
+                if (!currentLanguage.IsNullEmptyOrWhiteSpace())
+                    language = languageService.FirstOrDefault(x => x.CultureCode == currentLanguage);
 
+                if (language == null || !language.Published)
+                    language = languageService.FirstOrDefault(x => x.Published);
+                CurrentHttpContext.SetCurrentLanguage(language);
+                return language;
+            }
+        }
         public static Currency CurrentCurrency
         {
             get

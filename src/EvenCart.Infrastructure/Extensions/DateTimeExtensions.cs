@@ -64,7 +64,7 @@ namespace EvenCart.Infrastructure.Extensions
             if (onlyDatePart)
                 dateTime = dateTime.Date;
             var formatterService = DependencyResolver.Resolve<IFormatterService>();
-            return formatterService.FormatDateTime(dateTime, ApplicationEngine.CurrentLanguageCultureCode, onlyDatePart);
+            return formatterService.FormatDateTime(dateTime, ApplicationEngine.CurrentLanguage.CultureCode, onlyDatePart);
         }
     }
 }

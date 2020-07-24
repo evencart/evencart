@@ -130,7 +130,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                     if (pSplit[1].StartsWith("@t"))
                     {
                         //the value needs a translation
-                        pSplit[1] = _localizer.Localize(pSplit[1].Substring(2).Trim('"'));
+                        pSplit[1] = "{{" + $"{pSplit[1].Substring(2)}".Replace("\"", "'") + " | t}}"; //_localizer.Localize(pSplit[1].Substring(2).Trim('"'), ApplicationEngine.CurrentLanguage.CultureCode);
                     }
                     else
                         pSplit[1] = pSplit[1].Trim('"');

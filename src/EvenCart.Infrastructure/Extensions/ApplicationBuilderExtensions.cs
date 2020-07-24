@@ -10,6 +10,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Net;
 using EvenCart.Core.Caching;
 using EvenCart.Core.Infrastructure;
@@ -90,7 +91,10 @@ namespace EvenCart.Infrastructure.Extensions
         public static void LoadLocalizations(this IApplicationBuilder app)
         {
             var localizer = DependencyResolver.Resolve<ILocalizer>();
-            localizer.LoadLanguage("en-US");
+            //get the languages first
+            var publishedLanguages = ApplicationEngine.AllLanguages.Where(x => x.Published);
+            foreach (var language in publishedLanguages)
+                localizer.LoadLanguage(language.CultureCode);
         }
 
         public static void RunScheduledTasks(this IApplicationBuilder app)

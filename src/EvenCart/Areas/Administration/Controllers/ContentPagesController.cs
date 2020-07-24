@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Extensions;
+using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Core.Data;
@@ -23,10 +24,12 @@ using EvenCart.Data.Extensions;
 using EvenCart.Services.Pages;
 using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
+using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Infrastructure.Security.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +74,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 .WithParams(parameters)
                 .Result;
         }
-
+      
         [DualGet("{contentPageId}", Name = AdminRouteNames.GetContentPage)]
         [CapabilityRequired(CapabilitySystemNames.EditContentPage)]
         public IActionResult ContentPageEditor(int contentPageId)
@@ -80,6 +83,9 @@ namespace EvenCart.Areas.Administration.Controllers
             if (contentPage == null)
                 return NotFound();
             var model = PrepareModel(contentPage);
+            //add translations
+            TranslationHelper.PopulateTranslations(model, contentPage);
+         
             //get all pages to make a tree
             var availablePages = _contentPageService.Get(x => x.Id != contentPageId).ToList().GetWithParentTree();
             var contentPageModels =

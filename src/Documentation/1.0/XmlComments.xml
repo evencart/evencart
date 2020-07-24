@@ -1117,6 +1117,13 @@
             <param name="currencyId">The id of the currency</param>
             <response code="200">A success response object</response>
         </member>
+        <member name="M:EvenCart.Controllers.DashboardController.SetActiveLanguage(System.String)">
+            <summary>
+            Sets the active language for user
+            </summary>
+            <param name="languageCulture">The culture of the language</param>
+            <response code="200">A success response object</response>
+        </member>
         <member name="T:EvenCart.Controllers.GdprController">
             <summary>
             Allows to manage GDPR settings for the authenticated user

@@ -9,11 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
-
-namespace EvenCart.Data.Entity.Cultures
+namespace EvenCart.Core.Data
 {
-    public class Translation : FoundationEntity
+    public class TranslationData : FoundationEntity
     {
         public string Guid { get; set; }
 
@@ -22,6 +20,5 @@ namespace EvenCart.Data.Entity.Cultures
         public string Content { get; set; }
 
         public string CultureCode { get; set; }
-
     }
 }

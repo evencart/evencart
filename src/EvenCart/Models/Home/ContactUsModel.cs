@@ -38,14 +38,14 @@ namespace EvenCart.Models.Home
                 context.MessageFormatter.AppendArgument("MinLength", 10);
                 return x.Trim().Length > 10;
             }).WithMessage(LocalizationHelper.Localize("{{PropertyName}} should be at least {{MinLength}} characters long",
-                ApplicationEngine.CurrentLanguageCultureCode));
+                ApplicationEngine.CurrentLanguage.CultureCode));
 
             v.RuleFor(x => x.Description).Must((rootObject, x, context) =>
             {
                 context.MessageFormatter.AppendArgument("MinLength", 30);
                 return x.Trim().Length > 30;
             }).WithMessage(LocalizationHelper.Localize("{{PropertyName}} should be at least {{MinLength}} characters long",
-                ApplicationEngine.CurrentLanguageCultureCode));
+                ApplicationEngine.CurrentLanguage.CultureCode));
         }
     }
 }

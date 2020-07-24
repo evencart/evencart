@@ -334,5 +334,10 @@ namespace EvenCart.Infrastructure.Routing
         public const string DataTransferExport = Prefix + "DataTransferExport";
         public const string DataTransferImport = Prefix + "DataTransferImport";
 
+        public const string LanguagesList = Prefix + "LanguagesList";
+        public const string GetLanguage = Prefix + "GetLanguage";
+        public const string SaveLanguage = Prefix + "SaveLanguage";
+        public const string DeleteLanguage = Prefix + "DeleteLanguage";
+
     }
 }

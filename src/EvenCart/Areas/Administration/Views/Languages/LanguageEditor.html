@@ -1,0 +1,80 @@
+﻿<form action="{% route api_Admin.SaveLanguage %}" method="post" id="language-editor-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Language Editor" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {% control label text=@t"Language Name" for="language-name" %}
+                        <div class="panel-help">
+                            {{"The name of language as shown to the customers." | t}}
+                        </div>
+                        {% control text id="language-name" name="name" placeholder=@t"e.g. English" value="{{language.name}}" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Locale" for="cultureCode" %}
+                        <div class="panel-help">
+                            {{"Specifies the culture code for the language." | t}}
+                        </div>
+                        {% control select id="cultureCode" name="cultureCode" value="language.cultureCode" items="cultures" %}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {% control label text=@t"Flag" for="flag" %}
+                        <div class="panel-help">
+                            {{"The display flag of the language to the customer." | t}}
+                        </div>
+                        {% control select id="flag" name="flag" value="language.flag" items="countryFlags" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="panel-help">
+                            {{"Check if this language is the primary language of the store. This should be the language in which content of the store were written if it was not a multi-lingual store." | t}}
+                        </div>
+                        {% control checkbox id="primary-language" text=@t"Primary Language" name="primaryLanguage" value="language.primaryLanguage" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control checkbox id="rtl" text=@t"RTL" name="rtl" value="language.rtl" %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control checkbox id="published" text=@t"Published" name="published" value="language.published" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="id" value="{{language.id}}" %}
+                    <button type="submit" class="btn btn-sm btn-primary">{{"Save Language" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    initAjaxForm("language-editor-form",
+        {
+            onSuccess: function() {
+                hidePopup("edit-language-popup");
+            }
+        });
+
+</script>

@@ -43,6 +43,16 @@ namespace EvenCart.Infrastructure.Extensions
             return (Currency)httpContext.Items[CurrentCurrencyKey];
         }
 
+        public static void SetCurrentLanguage(this HttpContext httpContext, Language language)
+        {
+            httpContext.Items[CurrentLanguageKey] = language;
+        }
+
+        public static Language GetCurrentLanguage(this HttpContext httpContext)
+        {
+            return (Language)httpContext.Items[CurrentLanguageKey];
+        }
+
         public static void SetCurrentUser(this HttpContext httpContext, User user, bool isTokenValidation = false)
         {
             httpContext.Items[CurrentUserKey] = user;
@@ -63,7 +73,7 @@ namespace EvenCart.Infrastructure.Extensions
                 {
                     new BreadcrumbNode()
                     {
-                        DisplayText = LocalizationHelper.Localize("Home", ApplicationEngine.CurrentLanguageCultureCode),
+                        DisplayText = LocalizationHelper.Localize("Home", ApplicationEngine.CurrentLanguage.CultureCode),
                         Url = ApplicationEngine.RouteUrl(RouteNames.Home, absoluteUrl: true)
                     }
                 };

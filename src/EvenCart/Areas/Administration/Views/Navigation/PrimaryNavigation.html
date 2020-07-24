@@ -124,6 +124,8 @@
 
 {% primary_navigation title=@t"Currencies" systemName="CurrenciesList" groupId="masters" capability="Currency.Manage" %}
 {% secondary_navigation url="{% route Admin.CurrenciesList %}" title=@t"All Currencies" systemName="CurrenciesList" parent="CurrenciesList" %}
+{% primary_navigation title=@t"Languages" systemName="LanguagesList" groupId="masters" capability="Language.Manage" %}
+{% secondary_navigation url="{% route Admin.LanguagesList %}" title=@t"All Languages" systemName="LanguagesList" parent="LanguagesList" %}
 
 <!--Taxes-->
 {% primary_navigation title=@t"Taxes" systemName="TaxesList" groupId="masters" capability="Tax.Manage" %}

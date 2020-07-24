@@ -15,6 +15,7 @@ using System.Linq;
 using DotLiquid;
 using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure;
+using EvenCart.Data.Extensions;
 
 namespace EvenCart.Infrastructure.Mvc.Formatters
 {
@@ -43,7 +44,17 @@ namespace EvenCart.Infrastructure.Mvc.Formatters
                 _properties.Add(name, value);
 
             }
-
+        }
+        public T Get<T>(string name)
+        {
+            if (_properties.ContainsKey(name))
+            {
+                return (T) _properties[name];
+            }
+            else
+            {
+                return default(T);
+            }
         }
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -69,11 +80,12 @@ namespace EvenCart.Infrastructure.Mvc.Formatters
 
         public object ToLiquid()
         {
+            return Hash.FromDictionary(_properties.ToDictionary(x => x.Key.ToCamelCase(), x => x.Value));
             var serializer = DependencyResolver.Resolve<IDataSerializer>();
             //first get a anonymous type that matches the keys in the dictionary
             var dynamicType = RuntimeTypeBuilder.GetDynamicType(_properties.Keys);
             //todo: To make things work for now, we serialize and deserialize to convert dictionary to target type
-            var obj = serializer.Deserialize(serializer.Serialize(_properties), dynamicType);
+            dynamic obj = serializer.Deserialize(serializer.Serialize(_properties), dynamicType);
             return new DropProxy(obj, _properties.Keys.ToArray());
         }
     }

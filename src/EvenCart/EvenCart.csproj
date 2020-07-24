@@ -102,6 +102,8 @@
     <None Remove="Areas\Administration\Views\Countries\StatesList.html" />
     <None Remove="Areas\Administration\Views\Cultures\CurrenciesList.html" />
     <None Remove="Areas\Administration\Views\Cultures\CurrencyEditor.html" />
+    <None Remove="Areas\Administration\Views\Cultures\LanguageEditor.html" />
+    <None Remove="Areas\Administration\Views\Cultures\LanguagesList.html" />
     <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelEditor.html" />
     <None Remove="Areas\Administration\Views\CustomLabels\CustomLabelsList.html" />
     <None Remove="Areas\Administration\Views\Dashboard\Index.BestSellers.html" />
@@ -303,6 +305,7 @@
     <None Remove="Content\Themes\Default\Views\Components\AttributeFilter\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CartSection\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CategoryFilter\Default.html" />
+    <None Remove="Content\Themes\Default\Views\Components\LanguageSelector\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CurrencySelector\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\CustomHtml\Default.html" />
     <None Remove="Content\Themes\Default\Views\Components\Menu\Default.html" />
@@ -575,6 +578,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Countries\StatesList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Languages\LanguageEditor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Languages\LanguagesList.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Cultures\CurrenciesList.html">
@@ -1140,6 +1149,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Authentication\VerifyEmail.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\Default\Views\Components\LanguageSelector\Default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Themes\Default\Views\Components\ShareThis\Default.html">

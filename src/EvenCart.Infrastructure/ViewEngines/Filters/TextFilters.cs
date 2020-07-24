@@ -27,7 +27,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Filters
         public static string T(string input)
         {
             var localizer = DependencyResolver.Resolve<ILocalizer>();
-            return localizer.Localize(input);
+            return localizer.Localize(input, ApplicationEngine.CurrentLanguage.CultureCode);
         }
 
         public static string Pluralize(Context context, int input, string singular, string plural)

@@ -15,6 +15,7 @@ using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Pages;
 using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.ModelFactories;
@@ -50,6 +51,11 @@ namespace EvenCart.Controllers
             var contentPage = _contentPageService.Get(id);
             if (contentPage == null || (!contentPage.Published && !CurrentUser.IsAdministrator()))
                 return NotFound();
+            if (!ApplicationEngine.CurrentLanguage.PrimaryLanguage)
+            {
+                //we need translations
+                contentPage.PopulateTranslationsFromDb(ApplicationEngine.CurrentLanguage.CultureCode, true);
+            }
             var contentPageModel = _modelMapper.Map<ContentPageModel>(contentPage);
             SeoMetaHelper.SetSeoData(contentPageModel.Name);
             var r = R.Success.With("contentPage", contentPageModel).With("contentPageId", contentPage.Id)

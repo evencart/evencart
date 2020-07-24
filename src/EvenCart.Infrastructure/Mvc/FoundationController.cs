@@ -89,9 +89,9 @@ namespace EvenCart.Infrastructure.Mvc
         {
             HttpContext.AppendToBreadcrumb(new BreadcrumbNode()
             {
-                DisplayText = localize ? T(displayText, ApplicationEngine.CurrentLanguageCultureCode) : displayText,
+                DisplayText = localize ? T(displayText, ApplicationEngine.CurrentLanguage.CultureCode) : displayText,
                 Url = url,
-                Description = localize ? T(description, ApplicationEngine.CurrentLanguageCultureCode) : description
+                Description = localize ? T(description, ApplicationEngine.CurrentLanguage.CultureCode) : description
             });
         }
 

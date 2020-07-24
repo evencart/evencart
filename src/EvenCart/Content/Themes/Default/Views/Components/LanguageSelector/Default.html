@@ -1,0 +1,45 @@
+﻿{% if languages.size > 1 %}
+<div class="header-selector float-right">
+    <div class="selector-menu dropdown">
+        <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="language-info">
+                <img src="{{activeLanguage.flagUrl}}" class="margin-r-5" width="20px" />
+                {{activeLanguage.languageName}}
+                <i class="fa fa-angle-down"></i>
+            </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <ul class="account-navigation">
+                {% for language in languages %}
+                <li>
+                    <a class="clickable" onclick="setLanguage('{{language.cultureCode}}')">
+                        <img src="{{language.flagUrl}}" class="margin-r-5" width="20px"/>
+                        {{language.languageName}}
+                    </a>
+                </li>
+                {% endfor %}
+               
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form action="{% route api_SetActiveLanguage %}" method="post" id="form-language-selector">
+    {% control xsrf %}
+    <input type="hidden" name="languageCulture" id="language-selector" />
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("form-language-selector",
+            {
+                onSuccess: function() {
+                   window.location.reload();
+                }
+            });
+    });
+    var setLanguage = function(id) {
+        jQuery("#language-selector").val(id);
+        jQuery("#form-language-selector").submit();
+    }
+</script>
+{% endif %}

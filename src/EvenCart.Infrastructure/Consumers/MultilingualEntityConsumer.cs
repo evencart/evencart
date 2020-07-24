@@ -11,14 +11,16 @@
 
 using System.Linq;
 using EvenCart.Core.Data;
+using EvenCart.Core.Services;
 using EvenCart.Core.Services.Events;
+using EvenCart.Infrastructure.Extensions;
 using EvenCart.Services.Cultures;
 
 namespace EvenCart.Infrastructure.Consumers
 {
     public class MultilingualEntityConsumer<T> : IFoundationEntityInserted<T>, IFoundationEntityUpdated<T>, IFoundationEntityDeleted<T> where T : FoundationEntity
     {
-        private const string FieldFormat = "translation.{0}.{1}"; //e.g. translation.en-US.title
+       
         private readonly ITranslationService _translationService;
         private readonly ILanguageService _languageService;
 
@@ -32,13 +34,9 @@ namespace EvenCart.Infrastructure.Consumers
         {
             if (entity is IMultilingualEntity mEntity)
             {
-                var multilingualFields = typeof(T).GetProperties()
-                    .Where(x => x.IsDefined(typeof(MultilingualFieldAttribute), false)).ToList();
-                ////var publishedLanguages = 
-                foreach (var mF in multilingualFields)
-                {
-                    
-                }
+                mEntity.PopulateTranslationsFromForm();
+                var translationData = mEntity.Translations;
+                _translationService.Insert(translationData.ToArray());
             }
         }
 
@@ -46,15 +44,26 @@ namespace EvenCart.Infrastructure.Consumers
         {
             if (entity is IMultilingualEntity mEntity)
             {
-
+                //first load original translations
+                mEntity.PopulateTranslationsFromDb();
+                //overwrite with the new translations
+                mEntity.PopulateTranslationsFromForm();
+                var translationData = mEntity.Translations;
+                Transaction.Initiate(transaction =>
+                {
+                    foreach (var td in translationData)
+                    {
+                        _translationService.InsertOrUpdate(td, transaction);
+                    }
+                });
             }
         }
 
         public void OnDeleted(T entity)
         {
-            if (entity is IMultilingualEntity mEntity)
+            if (entity is IMultilingualEntity mEntity && !(entity is ISoftDeletable))
             {
-
+                _translationService.Delete(x => x.Guid == mEntity.TranslationGuid);
             }
         }
     }
