@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DryIoc;
@@ -271,6 +272,18 @@ namespace EvenCart.Infrastructure
         public static User CurrentAffiliate => CurrentHttpContext.GetCurrentAffiliate();
 
         public static Store CurrentStore => CurrentHttpContext?.GetCurrentStore();
+
+        private static IList<Language> _publishedLanguages;
+        public static IList<Language> PublishedLanguages
+        {
+            get
+            {
+                if (_publishedLanguages != null)
+                    return _publishedLanguages;
+                _publishedLanguages = DependencyResolver.Resolve<ILanguageService>().Get(x => x.Published).ToList();
+                return _publishedLanguages;
+            }
+        }
 
         public static string CurrentLanguageCultureCode => "en-US";
 

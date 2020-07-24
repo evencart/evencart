@@ -17,7 +17,7 @@ using EvenCart.Data.Entity.Users;
 
 namespace EvenCart.Data.Entity.Pages
 {
-    public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>, IStoreEntity
+    public class ContentPage : FoundationEntity, ISeoEntity, IAllowsParent<ContentPage>, IStoreEntity, IMultilingualEntity
     {
         public string Name { get; set; }
 
@@ -42,6 +42,8 @@ namespace EvenCart.Data.Entity.Pages
         public string Template { get; set; }
 
         public int ParentId { get; set; }
+
+        public virtual string TranslationGuid { get; set; }
 
         #region Virtual Properties
         public virtual SeoMeta SeoMeta { get; set; }
