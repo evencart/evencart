@@ -82,6 +82,11 @@ namespace EvenCart.Services.Installation
             //seed currency
             SeedCurrency();
 
+            //seed catalog
+            SeedCatalog();
+
+            //seed language
+            SeedLanguages();
             //seed notification events
             //SeedNotificationEvents();
             SeedCountries();
@@ -357,6 +362,31 @@ namespace EvenCart.Services.Installation
             {
                 throw new EvenCartException("Installation failed");
             }
+        }
+
+        private void SeedLanguages()
+        {
+            var languageService = DependencyResolver.Resolve<ILanguageService>();
+            languageService.Insert(new Language()
+            {
+                CultureCode = "en-IN",
+                Name = "English",
+                PrimaryLanguage = true,
+                Published = true,
+                Flag = "in.png",
+                Rtl = true
+            });
+        }
+
+        private void SeedCatalog()
+        {
+            var catalogService = DependencyResolver.Resolve<ICatalogService>();
+            catalogService.Insert(new Catalog()
+            {
+                IsCountrySpecific = false,
+                Name = "Primary Catalog",
+                StoreIds = new List<int>() { 1 }
+            });
         }
 
         /// <summary>
