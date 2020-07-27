@@ -26,21 +26,30 @@ namespace EvenCart.Data.Versions
             Db.CreateTable<Language>(transaction);
             Db.CreateTable<TranslationData>(transaction);
             Db.AddColumn<ContentPage, string>(nameof(ContentPage.TranslationGuid), String.Empty, transaction);
-            foreach (var page in EntitySet<ContentPage>.Select())
+            try
             {
-                page.TranslationGuid = Guid.NewGuid().ToString();
-                EntitySet<ContentPage>.Update(page, transaction);
-            }
+                foreach (var page in EntitySet<ContentPage>.Select())
+                {
+                    page.TranslationGuid = Guid.NewGuid().ToString();
+                    EntitySet<ContentPage>.Update(page, transaction);
+                }
 
-            EntitySet<Language>.Insert(new Language()
+                EntitySet<Language>.Insert(new Language()
+                {
+                    CultureCode = "en-IN",
+                    Flag = "in.png",
+                    Name = "English (IN)",
+                    PrimaryLanguage = true,
+                    Published = true,
+                    Rtl = false
+                }, transaction);
+
+            }
+            catch
             {
-                CultureCode = "en-IN",
-                Flag = "in.png",
-                Name = "English (IN)",
-                PrimaryLanguage = true,
-                Published = true,
-                Rtl = false
-            }, transaction);
+                //do nothing..
+            }
+           
         }
 
         public void Downgrade(IDotEntityTransaction transaction)

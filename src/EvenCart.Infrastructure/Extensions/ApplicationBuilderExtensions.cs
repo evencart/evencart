@@ -90,6 +90,8 @@ namespace EvenCart.Infrastructure.Extensions
 
         public static void LoadLocalizations(this IApplicationBuilder app)
         {
+            if (!DatabaseManager.IsDatabaseInstalled())
+                return;
             var localizer = DependencyResolver.Resolve<ILocalizer>();
             //get the languages first
             var publishedLanguages = ApplicationEngine.AllLanguages.Where(x => x.Published);

@@ -300,6 +300,17 @@ namespace EvenCart.Infrastructure
                 if (language == null || !language.Published)
                     language = languageService.FirstOrDefault(x => x.Published);
                 CurrentHttpContext.SetCurrentLanguage(language);
+                if(language == null)
+                {
+                    language = new Language()
+                    {
+                        CultureCode = "en-IN",
+                        Name = "English",
+                        PrimaryLanguage = true,
+                        Published = true,
+                        Rtl = false
+                    };
+                }
                 return language;
             }
         }

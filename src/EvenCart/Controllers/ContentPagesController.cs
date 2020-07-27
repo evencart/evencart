@@ -48,6 +48,8 @@ namespace EvenCart.Controllers
         [DynamicRoute(Name = RouteNames.SinglePage, SettingName = nameof(UrlSettings.ContentPageUrlTemplate), SeoEntityName = nameof(ContentPage))]
         public IActionResult Index(int id)
         {
+            if (id <= 0)
+                return NotFound();
             var contentPage = _contentPageService.Get(id);
             if (contentPage == null || (!contentPage.Published && !CurrentUser.IsAdministrator()))
                 return NotFound();
