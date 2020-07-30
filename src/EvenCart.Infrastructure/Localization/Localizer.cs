@@ -36,7 +36,7 @@ namespace EvenCart.Infrastructure.Localization
                 return key;
             }
             var matchedResource = collection.FirstOrDefault(x => x.CultureLanguageCode == languageCode);
-            return matchedResource == null ? key : matchedResource.Value;
+            return matchedResource == null || matchedResource.Value == null ? key : matchedResource.Value;
         }
 
         public void LoadLanguage(string languageCode)
