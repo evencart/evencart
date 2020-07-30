@@ -83,7 +83,8 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects
                 SoftwareTitle = ApplicationConfig.AppName,
                 HoneypotFieldName = securitySettings.HoneypotFieldName,
                 VendorSignupEnabled = vendorSettings.EnableVendorSignup,
-                VendorsEnabled = vendorSettings.EnableVendorSignup
+                VendorsEnabled = vendorSettings.EnableVendorSignup,
+                ActiveLanguageCode = ApplicationEngine.CurrentLanguage.CultureCode
             };
 
             var currentUser = ApplicationEngine.CurrentUser;

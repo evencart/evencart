@@ -74,5 +74,7 @@ namespace EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations
         public bool VendorSignupEnabled { get; set; }
 
         public bool VendorsEnabled { get; set; }
+
+        public string ActiveLanguageCode { get; set; }
     }
 }

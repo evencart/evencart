@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Services.Widgets;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Models;
@@ -37,6 +39,8 @@ namespace EvenCart.Areas.Administration.Components.Widgets
                 return R.Success.ComponentResult;
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<CustomHtmlWidgetSettings>(widgetId);
+            if(!widgetSettings.Language.IsNullEmptyOrWhiteSpace() && widgetSettings.Language != ApplicationEngine.CurrentLanguage.CultureCode)
+                return R.Success.ComponentResult;
             string formattedContent = null;
             if (!widgetSettings.CustomFormat.IsNullEmptyOrWhiteSpace())
             {
@@ -66,10 +70,15 @@ namespace EvenCart.Areas.Administration.Components.Widgets
         public object GetViewObject(object settings)
         {
             var widgetSettings = settings as CustomHtmlWidgetSettings;
+            var availableLanguages =
+                SelectListHelper.GetSelectItemList(ApplicationEngine.AllLanguages, x => x.CultureCode, x => x.Name);
+
             return new {
                 title = widgetSettings?.Title,
                 content = widgetSettings?.Content,
-                customFormat = widgetSettings?.CustomFormat
+                customFormat = widgetSettings?.CustomFormat,
+                language = widgetSettings?.Language,
+                availableLanguages = availableLanguages
             };
         }
 
@@ -80,6 +89,8 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             public string Content { get; set; }
 
             public string CustomFormat { get; set; }
+
+            public string Language { get; set; }
         }
     }
 }
