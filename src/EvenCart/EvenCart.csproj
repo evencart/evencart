@@ -1466,6 +1466,7 @@
     <Content Include="wwwroot\content\Uploads\Serves\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="wwwroot\content\Uploads\_Default.jpg" />
   </ItemGroup>
 
   <ItemGroup>
