@@ -76,6 +76,9 @@ namespace EvenCart.Services.Settings
 
         public void Save(Type settingType, string keyName, string keyValue, int storeId)
         {
+            if (typeof(IGlobalSettingGroup).IsAssignableFrom(settingType))
+                storeId = 0; //no matter what storeId is , if it's global setting, it's 0
+
             var groupName = settingType.Name;
 
             //check if setting exist

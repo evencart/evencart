@@ -570,7 +570,7 @@ namespace EvenCart.Services.Installation
             {
                 SitePlugins = "[]",
                 SiteWidgets = "[]"
-            }, primaryStore.Id);
+            }, 0);
 
             settingService.Save(new AffiliateSettings()
             {
