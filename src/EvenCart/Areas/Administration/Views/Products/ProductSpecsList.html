@@ -127,7 +127,7 @@
                                         specs += valueItem.attributeValue + " " + label;
                                         specs += "<a class='clickable' onclick='deleteSpecValue(" +
                                             valueItem.id +
-                                            ")'><span class='rbicon-trash-2'></span></a>";
+                                            ",{{psl.productSpecificationGroup.id}})'><span class='rbicon-trash-2'></span></a>";
                                         specs += "</span>";
                                     });
                                     return specs;
@@ -142,7 +142,7 @@
                                         row.id +
                                         "' onclick='deleteSpec(" +
                                         row.id +
-                                        ")'><span class='rbicon-trash-2'></span></button>";
+                                        ", {{psl.productSpecificationGroup.id}})'><span class='rbicon-trash-2'></span></button>";
                                 },
                                 "hiddenFields": function (column, row, index) {
                                     return "<input type='hidden' data-type='displayorder' name='specifications[" + index + "].displayOrder' value='" + row.displayOrder + "' />" +
@@ -182,7 +182,7 @@
             function(result) {
                 if (result == "ok") {
                     //reload the grid
-                    reloadGrid('grid-selection');
+                    reloadGrid('grid-selection-' + groupId);
                     notify("success", '{{"Specification was saved successfully" | t}}');
                 }
             });
@@ -206,7 +206,7 @@
             function(result) {
                 if (result == "ok") {
                     //reload the grid
-                    reloadGrid('grid-selection');
+                    reloadGrid('grid-selection-' + id);
                     notify("success", '{{"Group was saved successfully" | t}}');
                 }
             });
@@ -219,7 +219,7 @@
             });
     }
 
-    var deleteSpec = function(id) {
+    var deleteSpec = function(id, groupId) {
         var msg =
             '{{ "Are you sure you wish to continue?" | t}}';
         confirm(msg,
@@ -231,7 +231,7 @@
                     },
                     done: function(response) {
                         if (response.success) {
-                            reloadGrid('grid-selection');
+                            reloadGrid('grid-selection-' + groupId);
                             notify("success", '{{"Specification was deleted successfully" | t}}');
                         }
                     }
@@ -239,7 +239,7 @@
             });
     }
 
-    var deleteSpecValue = function(id) {
+    var deleteSpecValue = function(id, groupId) {
         var msg =
             '{{ "Are you sure you wish to delete this value?" | t}}';
         return confirm(msg,
@@ -251,7 +251,7 @@
                     },
                     done: function(response) {
                         if (response.success) {
-                            reloadGrid('grid-selection');
+                            reloadGrid('grid-selection-' + groupId);
                             notify("success", '{{"Value was deleted successfully" | t}}');
                         }
                     }
