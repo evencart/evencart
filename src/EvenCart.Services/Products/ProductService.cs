@@ -775,22 +775,20 @@ namespace EvenCart.Services.Products
 
         public override Product Get(int id)
         {
-            Expression<Func<SeoMeta, bool>> seoMetaWhere = meta => meta.EntityName == nameof(Product);
             var product = Repository.Where(x => x.Id == id)
                 .Join<WarehouseInventory>("Id", "ProductId", joinType: JoinType.LeftOuter)
                 .Join<Warehouse>("WarehouseId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductCategory>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Category>("CategoryId", "Id", joinType: JoinType.LeftOuter)
                 .Join<ProductMedia>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
-                .Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
+                //.Join<Media>("MediaId", "Id", joinType: JoinType.LeftOuter)
                 .Join<Manufacturer>("ManufacturerId", "Id", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<ProductVendor>("Id", "ProductId", SourceColumn.Parent, JoinType.LeftOuter)
                 .Join<Vendor>("VendorId", "Id", SourceColumn.Chained, JoinType.LeftOuter)
-                .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter)
+                .Join<SeoMeta>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter, (product1, meta) => meta.EntityName == nameof(Product))
                 .Join<EntityTag>("Id", "EntityId", SourceColumn.Parent, JoinType.LeftOuter, (product1, tag) => tag.EntityName == nameof(Product))
                 .Join<ProductCatalog>("Id", "ProductId", SourceColumn.Parent, joinType: JoinType.LeftOuter)
                 .Join<Catalog>("CatalogId", "Id", joinType: JoinType.LeftOuter)
-                .Where(seoMetaWhere)
                 .Relate(RelationTypes.OneToMany<Product, Catalog>())
                 .Relate(RelationTypes.OneToOne<Product, SeoMeta>())
                 .Relate<ProductCategory>((product1, category) =>
@@ -812,7 +810,7 @@ namespace EvenCart.Services.Products
                     if (dictionary.ContainsKey(category.Id))
                         category.DisplayOrder = dictionary[category.Id];
                 }))
-                .Relate(RelationTypes.OneToMany<Product, Media>())
+                .Relate(RelationTypes.OneToMany<Product, ProductMedia>())
                 .Relate(RelationTypes.OneToOne<Product, Manufacturer>())
                 .Relate(RelationTypes.OneToMany<Product, Vendor>())
                 .Relate<WarehouseInventory>((p, inventory) =>
@@ -847,6 +845,13 @@ namespace EvenCart.Services.Products
                 .FirstOrDefault();
             if (product != null)
             {
+                //get media
+                var mediaIds = product.ProductMediaItems?.Select(x => x.MediaId).ToList();
+                if (mediaIds != null)
+                {
+                    product.MediaItems = RepositoryExplorer<Media>().Where(x => mediaIds.Contains(x.Id)).Select()
+                        .ToList();
+                }
                 if (product.RestrictedToRoles)
                 {
                     product.EntityRoles = RepositoryExplorer<EntityRole>()
@@ -898,6 +903,9 @@ namespace EvenCart.Services.Products
                     .Relate<ProductSpecificationGroup>((productSpecification, group) =>
                     {
                         productSpecification.ProductSpecificationGroup = group;
+                        group.ProductSpecifications = group.ProductSpecifications ?? new List<ProductSpecification>();
+                        if (!group.ProductSpecifications.Contains(productSpecification))
+                            group.ProductSpecifications.Add(productSpecification);
                     })
                     .Relate<AvailableAttribute>((productSpecification, attribute) =>
                     {
