@@ -43,6 +43,26 @@
                         }
 
                     }
+                    var duplicateProduct = function(id) {
+                        jQuery("#product-duplicate").html("{{'Please wait...'}}");
+                        var centerPopup = showAsPopup("product-duplicate",
+                            true,
+                            function(result) {
+                                if (result == "ok") {
+                                    //reload the grid
+                                    reloadGrid('grid-selection');
+                                    notify("success", '{{"Product was duplicated successfully" | t}}');
+                                }
+                            });
+                        var url = '{% route Admin.DuplicateProductEditor productId="%id%" %}'.replace("%id%", id);
+                        loadPage(url, true,
+                            null,
+                            function(response) {
+                                jQuery("#product-duplicate").html(response);
+                                centerPopup();
+                            });
+                    }
+
                     ready(function() {
 
                         generateGrid({
@@ -62,8 +82,9 @@
                                 "binary": function(column, row) {
                                     return gridFormatters.binary(column, row, column.id);
                                 },
-                                "name": function(column, row) {
-                                    var str = "<img width='50px' src='" + (row.media[0].mediaType == "Url" ? row.media[0].metaData.thumbnailUrl : row.media[0].thumbnailUrl) + "' /> " + row.name;
+                                "name": function (column, row) {
+                                    var url = '{% route Admin.GetProduct productId="product_id" %}'.replace("product_id", row.id);
+                                    var str = "<a href='" + url + "'>" + "<img width='50px' src='" + (row.media[0].mediaType == "Url" ? row.media[0].metaData.thumbnailUrl : row.media[0].thumbnailUrl) + "' /> " + row.name + "</a>";
                                     if (row.disableSale) {
                                         str += " <span class='badge badge-danger'>{{'SALE DISABLED' | t}}</span>";
                                     }
@@ -75,6 +96,11 @@
                                         "\" onclick='editProduct(" +
                                         row.id +
                                         ")'><span class=\"rbicon-edit\"></span></button> " +
+                                        "<button class=\"btn btn-warning btn-sm command-edit\" data-row-id=\"" +
+                                        row.id +
+                                        "\" onclick='duplicateProduct(" +
+                                        row.id +
+                                        ")'><span class=\"rbicon-clipboard\"></span></button> " +
                                         "<button class=\"btn btn-danger btn-sm command-preview\" data-row-id=\"" +
                                         row.id +
                                         "\" onclick='deleteProduct(" +
@@ -90,4 +116,4 @@
         </div>
     </div>
 </div>
-
+<div class="popup" id="product-duplicate"></div>

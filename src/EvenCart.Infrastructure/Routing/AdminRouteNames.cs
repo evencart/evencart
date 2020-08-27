@@ -31,6 +31,8 @@ namespace EvenCart.Infrastructure.Routing
         public const string GetProductVendor = Prefix + "GetProductVendor";
         public const string SaveProductVendor = Prefix + "SaveProductVendor";
         public const string DeleteProductVendor = Prefix + "DeleteProductVendor";
+        public const string DuplicateProductEditor = Prefix + "DuplicateProductEditor";
+        public const string DuplicateProduct = Prefix + "DuplicateProduct";
 
         public const string UploadMedia = Prefix + "UploadMedia";
         public const string UploadMediaUrl = Prefix + "UploadMediaUrl";

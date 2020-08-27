@@ -164,6 +164,7 @@
     <None Remove="Areas\Administration\Views\Plugins\WidgetsList.html" />
     <None Remove="Areas\Administration\Views\Products\DownloadEditor.html" />
     <None Remove="Areas\Administration\Views\Products\DownloadList.html" />
+    <None Remove="Areas\Administration\Views\Products\DuplicateProductEditor.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.Products.html" />
     <None Remove="Areas\Administration\Views\Products\InventoryList.Variants.html" />
@@ -764,6 +765,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Plugins\WidgetsList.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\Administration\Views\Products\DuplicateProductEditor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\Administration\Views\Products\ProductVendorEditor.html">

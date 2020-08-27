@@ -713,6 +713,11 @@
             A single value for the attribute
             </summary>
         </member>
+        <member name="T:EvenCart.Areas.Administration.Models.Shop.DuplicateProductModel">
+            <summary>
+            Represents a duplicate product model
+            </summary>
+        </member>
         <member name="T:EvenCart.Areas.Administration.Models.System.AboutModel">
             <summary>
             Represents a system and software information object

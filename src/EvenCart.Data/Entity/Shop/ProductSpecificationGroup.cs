@@ -9,6 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using System.Collections.Generic;
 using EvenCart.Core.Data;
 
 namespace EvenCart.Data.Entity.Shop
@@ -20,5 +21,9 @@ namespace EvenCart.Data.Entity.Shop
         public int DisplayOrder { get; set; }
 
         public int ProductId { get; set; }
+
+        #region VirtualProperties
+        public virtual IList<ProductSpecification> ProductSpecifications { get; set; }
+        #endregion
     }
 }

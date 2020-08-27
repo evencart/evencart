@@ -21,6 +21,7 @@ using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Areas.Administration.Models.Warehouse;
+using EvenCart.Core;
 using EvenCart.Core.Data;
 using EvenCart.Core.Infrastructure.Providers;
 using EvenCart.Core.Services;
@@ -349,6 +350,203 @@ namespace EvenCart.Areas.Administration.Controllers
             _productService.Delete(product);
             return R.Success.Result;
         }
+
+        [HttpGet("{productId}/duplicate", Name = AdminRouteNames.DuplicateProductEditor)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        public IActionResult DuplicateProductEditor(int productId)
+        {
+            return R.Success.With("productId", productId).Result;
+        }
+
+        [DualPost("duplicate", Name = AdminRouteNames.DuplicateProduct, OnlyApi = true)]
+        [CapabilityRequired(CapabilitySystemNames.EditProduct)]
+        [ValidateModelState(ModelType = typeof(DuplicateProductModel))]
+        public IActionResult DuplicateProduct(DuplicateProductModel duplicateModel)
+        {
+            var originalProduct = _productService.Get(duplicateModel.ProductId);
+            if (originalProduct == null)
+                return NotFound();
+
+            var newProduct = ObjectHelper.Clone(originalProduct);
+            newProduct.Id = 0;
+            newProduct.Sku = string.Empty;
+            newProduct.SeoMeta = null;
+            newProduct.CreatedOn = DateTime.UtcNow;
+            newProduct.UpdatedOn = DateTime.UtcNow;
+            newProduct.Name = duplicateModel.Name;
+            _productService.Insert(newProduct);
+
+            //tags copy
+            if (newProduct.Tags != null)
+                _entityTagService.SetEntityTags<Product>(newProduct.Id, newProduct.Tags.ToArray());
+            //roles copy
+            if (newProduct.RestrictedToRoles)
+            {
+                _entityRoleService.SetEntityRoles<Product>(newProduct.Id,
+                    newProduct.EntityRoles.Select(x => x.RoleId).ToList());
+            }
+
+            if (originalProduct.Catalogs != null)
+                //catalog copy
+                _productService.SetProductCatalogs(newProduct.Id, originalProduct.Catalogs.Select(x => x.Id).ToArray());
+
+            if (duplicateModel.DuplicateCategories)
+            {
+                foreach (var pc in originalProduct.Categories)
+                {
+                    _productService.LinkCategoryWithProduct(pc.Id, newProduct.Id, pc.DisplayOrder);
+                }
+            }
+
+            if (duplicateModel.DuplicateSpecificationAttributes)
+            {
+                //specification group
+                var specificationGroups = newProduct.ProductSpecifications.Select(x => x.ProductSpecificationGroup).Distinct();
+                foreach (var ps in newProduct.ProductSpecifications.Where(x => x.ProductSpecificationGroupId == 0))
+                {
+                    ps.Id = 0;
+                    ps.ProductId = newProduct.Id;
+                    _productSpecificationService.Insert(ps);
+                    foreach (var psv in ps.ProductSpecificationValues)
+                    {
+                        psv.ProductSpecificationId = ps.Id;
+                        psv.Id = 0;
+                        _productSpecificationValueService.Insert(psv);
+                    }
+                }
+                foreach (var sg in specificationGroups)
+                {
+                    var sgId = 0;
+                    if (sg != null)
+                    {
+                        sg.Id = 0;
+                        sg.ProductId = newProduct.Id;
+                        _productSpecificationGroupService.Insert(sg);
+                        sgId = sg.Id;
+
+                        foreach (var ps in sg.ProductSpecifications)
+                        {
+                            ps.ProductSpecificationGroupId = sgId;
+                            ps.Id = 0;
+                            _productSpecificationService.Insert(ps);
+                            foreach (var psv in ps.ProductSpecificationValues)
+                            {
+                                psv.ProductSpecificationId = ps.Id;
+                                psv.Id = 0;
+                                _productSpecificationValueService.Insert(psv);
+                            }
+                        }
+                    }
+                }
+            }
+            var productAttributeMapping = new Dictionary<int, int>();
+            var productAttributeValueMapping = new Dictionary<int, int>();
+            var variantMapping = new Dictionary<int, int>();
+            if (duplicateModel.DuplicateProductAttributes)
+            {
+             
+                foreach (var pa in newProduct.ProductAttributes)
+                {
+                    var originalPaId = pa.Id;
+                    if (!productAttributeMapping.ContainsKey(originalPaId))
+                        productAttributeMapping.Add(originalPaId, 0);
+
+                    pa.Id = 0;
+                    pa.ProductId = newProduct.Id;
+                    var productAttributeValues = pa.ProductAttributeValues;
+                    pa.ProductAttributeValues = null;
+                    _productAttributeService.Insert(pa);
+                    //store the new id
+                    productAttributeMapping[originalPaId] = pa.Id;
+
+                    foreach (var pav in productAttributeValues)
+                    {
+                        var originalPavId = pav.Id;
+                        if (!productAttributeValueMapping.ContainsKey(originalPavId))
+                            productAttributeValueMapping.Add(originalPavId, 0);
+
+                        pav.Id = 0;
+                        pav.ProductAttributeId = pa.Id;
+                        _productAttributeValueService.Insert(pav);
+                        //store the new id
+                        productAttributeValueMapping[originalPavId] = pav.Id;
+                    }
+                }
+                if (duplicateModel.DuplicateVariants)
+                {
+                    var variants = _productVariantService.GetByProductId(originalProduct.Id);
+                    foreach(var variant in variants)
+                    {
+                        var originalVariantId = variant.Id;
+                        if (!variantMapping.ContainsKey(originalVariantId))
+                            variantMapping.Add(originalVariantId, 0);
+
+                        variant.Id = 0;
+                        variant.ProductId = newProduct.Id;
+                        variant.Sku = "";
+                        foreach (var va in variant.ProductVariantAttributes)
+                        {
+                            va.Id = 0;
+                            va.ProductAttributeId = productAttributeMapping[va.ProductAttributeId]; //change the attribute ids
+                            va.ProductAttributeValueId = productAttributeValueMapping[va.ProductAttributeValueId];
+                            va.ProductVariantId = va.Id;
+                        }
+                        _productVariantService.AddVariant(newProduct, variant);
+                        variantMapping[originalVariantId] = variant.Id;
+                    }
+                }
+            }
+          
+            if (duplicateModel.DuplicateInventory)
+            {
+                var inventories = _warehouseInventoryService.GetByProduct(originalProduct.Id);
+                foreach (var wi in inventories)
+                {
+                    wi.Id = 0;
+                    wi.ProductId = newProduct.Id;
+                    wi.TotalQuantity = wi.TotalQuantity - wi.ReservedQuantity;//avoid reserved quantity from duplication
+                    wi.ReservedQuantity = 0;
+                    if (wi.ProductVariantId.HasValue)
+                    {
+                        wi.ProductVariantId = variantMapping[wi.ProductVariantId.Value];
+                    }
+                    _warehouseInventoryService.Insert(wi);
+                }
+            }
+            if (duplicateModel.DuplicateDownloads)
+            {
+                var downloads = _downloadService.Get(x => x.ProductId == originalProduct.Id);
+                foreach (var download in downloads)
+                {
+                    download.Id = 0;
+                    download.ProductId = newProduct.Id;
+                    if (download.ProductVariantId > 0)
+                    {
+                        download.ProductVariantId = variantMapping[download.ProductVariantId];
+                    }
+                    _downloadService.Insert(download);
+                }
+            }
+
+            if (duplicateModel.DuplicateMedia)
+            {
+                foreach (var media in newProduct.MediaItems)
+                {
+                    media.Id = 0;
+                    _mediaService.Insert(media);
+                    _productService.LinkMediaWithProduct(media.Id, newProduct.Id);
+                }
+            }
+          
+            if (duplicateModel.DuplicateVendors && newProduct.Vendors != null)
+            {
+                foreach (var pv in newProduct.Vendors)
+                    _vendorService.AddVendorProduct(pv.Id, newProduct.Id);
+            }
+
+            return R.Success.With("newProductId", newProduct.Id).Result;
+        }
+
         #endregion
 
         #region Product Vendors

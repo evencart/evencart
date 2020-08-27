@@ -1,0 +1,84 @@
+﻿<form action="{% route api_Admin.DuplicateProduct %}" method="post" id="duplicate-form">
+    {% control xsrf %}
+    <div class="panel">
+        <div class="panel-title">
+            {{"Duplicate Product" | t}}
+            <a class="popup-close float-right">
+                <span class="rbicon-x"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {% control label text=@t"Duplicate Product Name" for="duplicate-product-name" %}
+                        {% control text id="duplicate-product-name" name="name" value="" required="true" %}
+                    </div>
+                    <p>
+                        <strong>
+                            {{"Check components which should be copied into new product."}}
+                        </strong>
+                    </p>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateProductAttributes" text=@t"Product Attributes" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateSpecificationAttributes" text=@t"Specification Attributes" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateCategories" text=@t"Categories" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateMedia" text=@t"Media" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateVariants" text=@t"Product Variants" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateInventory" text=@t"Inventory" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateDownloads" text=@t"Downloads" value="true" %}
+                    </div>
+                    <div class="form-group">
+                        {% control checkbox name="duplicateVendors" text=@t"Vendors" value="true" %}
+                    </div>                   
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="popup-actions text-center">
+                    {% control hidden name="productId" value="{{productId}}" %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="duplicate()">{{"Duplicate" | t}}</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="duplicate(true);">{{"Duplicate & Edit" | t}}</button>
+                    <button class="btn btn-secondary btn-sm close-popup" type="reset">{{"Cancel" | t}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    var fastEdit = false;
+    initAjaxForm("duplicate-form",
+        {
+            onSuccess: function (response) {
+                if (fastEdit) {
+                    var url = '{% route Admin.GetProduct productId="product_id" %}';
+                    url = url.replace("product_id", response.newProductId);
+                    navigate(url);
+
+                } else {
+                    hidePopup("product-duplicate");
+                }
+            }
+        }); 
+    var duplicate = function(withEdit) {
+        if (withEdit) {
+            fastEdit = true;
+        }
+        jQuery("#duplicate-form").submit();
+    }
+</script>
