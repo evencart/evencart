@@ -73,7 +73,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             //find the active widgets
             var availableWidgets = _pluginAccountant.GetAvailableWidgets();
-            var widgetModels = availableWidgets.Where(x => !x.SkipDragging).Select(x => new WidgetModel() {
+            var widgetModels = availableWidgets.Select(x => new WidgetModel() {
                 PluginName = x.PluginName,
                 PluginSystemName = x.PluginSystemName,
                 WidgetName = x.WidgetDisplayName,
