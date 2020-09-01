@@ -101,7 +101,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
                         }
                         assignBuilder.AppendFormat(AssignFormat, m.Key, key);
                         assignBuilder.AppendLine();
-                        resetAssignBuilder.AppendFormat(AssignFormat, m.Key, string.Empty);
+                        resetAssignBuilder.AppendFormat(AssignFormat, m.Key, "nil");
                         resetAssignBuilder.AppendLine();
                     }
                 }
