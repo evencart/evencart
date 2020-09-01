@@ -40,16 +40,16 @@
                             </select>
                             {% else %}
                             <select class="form-control" name="Consents[{{index}}].ConsentStatus">
-                                <option value="Denied" {% if consent.consentStatus= ="Denied" %}selected{% endif %}>
+                                <option value="Denied" {% if consent.consentStatus == "Denied" %}selected{% endif %}>
                                     {{"No" | t}}
                                 </option>
-                                <option value="Accepted" {% if consent.consentStatus= ="Accepted" %}selected{% endif %}>
+                                <option value="Accepted" {% if consent.consentStatus == "Accepted" %}selected{% endif %}>
                                     {{"Yes" | t}}
                                 </option>
                             </select>
                             {% endif %}
                             <input type="hidden" name="Consents[{{index}}].Id" value="{{consent.id}}" />
-                            {% increment index %}
+                            {% capture _ %}{% increment index %}{% endcapture %}
                         </td>
                     </tr>
                     {% endfor %}
