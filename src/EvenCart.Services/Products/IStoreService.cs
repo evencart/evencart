@@ -16,7 +16,7 @@ namespace EvenCart.Services.Products
 {
     public interface IStoreService : IFoundationEntityService<Store>
     {
-        Store GetByDomain(string domain);
+        Store GetByDomain(string domain, bool strictMatch = false);
 
         Store CloneStore(Store store, string newStoreName, string domain);
     }

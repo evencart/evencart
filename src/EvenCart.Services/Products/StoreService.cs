@@ -26,18 +26,37 @@ namespace EvenCart.Services.Products
             _settingService = settingService;
         }
 
-        public Store GetByDomain(string domain)
+        public Store GetByDomain(string domain, bool strictMatch = false)
         {
             var storeDomainKey = $"STORE_{domain}";
             return CacheProvider.Get<Store>(storeDomainKey, () =>
             {
+                if (!strictMatch && domain.StartsWith("//"))
+                {
+                    domain = domain.Substring("//".Length);
+                }
+                var additionalMatch = !strictMatch && !domain.StartsWith("www.") ? $"www.{domain}" : domain.Substring("www.".Length);
                 //find a general setting with this domain
                 if (!domain.StartsWith("//"))
+                {
                     domain = $"//{domain}";
-
-                var setting = _settingService.FirstOrDefault(x =>
+                    additionalMatch = $"//{additionalMatch}";
+                }
+                
+                Setting setting = null;
+                if (!strictMatch)
+                {
+                   setting = _settingService.FirstOrDefault(x =>
+                   x.GroupName == nameof(GeneralSettings) && x.Key == nameof(GeneralSettings.StoreDomain) &&
+                   (x.Value == domain || x.Value == additionalMatch));
+                }
+                else
+                {
+                    setting = _settingService.FirstOrDefault(x =>
                     x.GroupName == nameof(GeneralSettings) && x.Key == nameof(GeneralSettings.StoreDomain) &&
                     x.Value == domain);
+                }
+                
                 if (setting == null)
                     return null;
 
