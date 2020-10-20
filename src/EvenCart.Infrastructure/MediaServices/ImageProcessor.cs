@@ -40,7 +40,7 @@ namespace EvenCart.Infrastructure.MediaServices
                         Size = new Size(width, height),
                         Mode = ResizeMode.Pad
                     })
-                    .BackgroundColor(Rgba32.White));
+                    .BackgroundColor(Rgba32.Transparent));
                 
                 IImageEncoder encoder = null;
                 switch (imageFormat.Name) {
