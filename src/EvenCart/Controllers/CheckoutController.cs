@@ -811,20 +811,25 @@ namespace EvenCart.Controllers
                 var productsThatShouldBeShippedIndividually =
                     warehouseProducts.Where(x => x.Item1.IndividuallyShipped).ToList();
 
-                var shippingOptions = shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress);
-                var models = shippingOptions.Select(x =>
+                var shippingOptions = productsThatCanBeShippedTogether.Any() ? shipmentHandler.GetAvailableOptions(productsThatCanBeShippedTogether, shipper, cart.ShippingAddress) : null;
+                List<ShippingOptionModel> models;
+                if (shippingOptions != null)
                 {
-                    var xModel = _modelMapper.Map<ShippingOptionModel>(x);
-                    xModel.WarehouseId = warehousePair.Key.Id;
-                    return xModel;
-                }).ToList();
+                    models = shippingOptions.Select(x =>
+                    {
+                        var xModel = _modelMapper.Map<ShippingOptionModel>(x);
+                        xModel.WarehouseId = warehousePair.Key.Id;
+                        return xModel;
+                    }).ToList();
 
-                shippingOptionModels.Add(new WarehouseShippingOptionModel()
-                {
-                    WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
-                    ShippingOptions = models,
-                    WarehouseId = warehousePair.Key.Id
-                });
+                    shippingOptionModels.Add(new WarehouseShippingOptionModel()
+                    {
+                        WarehouseAddress = _modelMapper.Map<AddressInfoModel>(shipper),
+                        ShippingOptions = models,
+                        WarehouseId = warehousePair.Key.Id
+                    });
+                }
+             
                 foreach (var p in productsThatShouldBeShippedIndividually)
                 {
                     shippingOptions = shipmentHandler.GetAvailableOptions(new List<(Product, int)>() { p }, shipper, cart.ShippingAddress);
