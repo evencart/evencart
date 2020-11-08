@@ -225,5 +225,17 @@ namespace EvenCart.Services.Security
             return code.ToString();
 
         }
+
+        public string GetSha512Hash(string plainText)
+        {
+            var managedHashInstance = SHA512.Create();
+            var hashBytes = managedHashInstance.ComputeHash(Encoding.UTF8.GetBytes(plainText));
+            StringBuilder result = new StringBuilder();
+            foreach (var t in hashBytes)
+            {
+                result.Append(t.ToString("X2").ToLower());
+            }
+            return result.ToString();
+        }
     }
 }

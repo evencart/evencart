@@ -80,5 +80,10 @@ namespace EvenCart.Services.Security
         /// <summary>
         /// Gets a random numeric code of specified length
         string GetNumericCode(int length);
+
+        /// <summary>
+        /// Gets SHA512 has of the provided text
+        /// </summary>
+        string GetSha512Hash(string plainText);
     }
 }
