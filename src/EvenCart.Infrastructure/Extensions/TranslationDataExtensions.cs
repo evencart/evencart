@@ -52,6 +52,8 @@ namespace EvenCart.Infrastructure.Extensions
                     tData.Content = item.Value.ToString();
                     tData.Guid = entity.TranslationGuid;
                     tData.CultureCode = cultureCode;
+                    if (tData.Guid.IsNullEmptyOrWhiteSpace())
+                        tData.Guid = Guid.NewGuid().ToString();
                 }
             }
         }
