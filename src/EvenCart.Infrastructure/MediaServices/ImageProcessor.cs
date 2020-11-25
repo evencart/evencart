@@ -18,7 +18,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 
 namespace EvenCart.Infrastructure.MediaServices
 {
@@ -29,7 +28,7 @@ namespace EvenCart.Infrastructure.MediaServices
             using (var image = Image.Load(imageBytes, out IImageFormat imageFormat))
             using (var outStream = new MemoryStream())
             {
-                
+
                 if (width == 0)
                     width = image.Width;
                 if (height == 0)
@@ -40,10 +39,11 @@ namespace EvenCart.Infrastructure.MediaServices
                         Size = new Size(width, height),
                         Mode = ResizeMode.Pad
                     })
-                    .BackgroundColor(Rgba32.Transparent));
-                
+                    .BackgroundColor(imageFormat.Name == "PNG" ? new Rgba32(255, 255, 255, 0) : new Rgba32(255, 255, 255)));
+
                 IImageEncoder encoder = null;
-                switch (imageFormat.Name) {
+                switch (imageFormat.Name)
+                {
                     case "PNG":
                         encoder = new PngEncoder();
                         break;
