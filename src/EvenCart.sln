@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.TwoCheckout", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.CashOnDelivery", "..\plugins\Payments.CashOnDelivery\Payments.CashOnDelivery.csproj", "{2000ACF9-D393-486C-9B18-28A70545EF7B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PayU", "..\plugins\Payments.PayU\Payments.PayU.csproj", "{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +238,14 @@ Global
 		{2000ACF9-D393-486C-9B18-28A70545EF7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2000ACF9-D393-486C-9B18-28A70545EF7B}.ReleaseForDemo|Any CPU.ActiveCfg = ReleaseForDemo|Any CPU
 		{2000ACF9-D393-486C-9B18-28A70545EF7B}.ReleaseForDemo|Any CPU.Build.0 = ReleaseForDemo|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.DebugWithSwagger|Any CPU.ActiveCfg = DebugWithSwagger|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.DebugWithSwagger|Any CPU.Build.0 = DebugWithSwagger|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.ReleaseForDemo|Any CPU.ActiveCfg = ReleaseForDemo|Any CPU
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE}.ReleaseForDemo|Any CPU.Build.0 = ReleaseForDemo|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -258,6 +268,7 @@ Global
 		{479DDF77-13A1-44F3-9AF4-13D34CCBB6C0} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{2BFE6907-35CC-4A2B-A5EA-7B64FDE397DA} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 		{2000ACF9-D393-486C-9B18-28A70545EF7B} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
+		{352BE605-0ECD-43D2-A9D2-33823B7D3DCE} = {FADC9182-0E32-4883-833C-081EC75BA5F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {646273F8-A252-4654-8A29-F5380A2FCDB0}
