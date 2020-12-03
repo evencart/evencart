@@ -206,10 +206,15 @@ namespace EvenCart.Infrastructure.ViewEngines
             return string.Empty;
         }
 
-        public Dictionary<string, object> GetCompiledViews(bool splitted = false, string area = null)
+        public Dictionary<string, object> GetCompiledViews(bool splitted = false, string area = null, string context = null)
         {
             var dictionary = new Dictionary<string, object>();
-            var groupedTemplates = _parsedTemplateCache.GroupBy(x => x.Key.Context);
+            var templateCache = _parsedTemplateCache.AsEnumerable();
+            if (context != null)
+                templateCache = _parsedTemplateCache.Where(x =>
+                    x.Key.Context.Equals(context, StringComparison.InvariantCultureIgnoreCase));
+
+            var groupedTemplates = templateCache.GroupBy(x => x.Key.Context);
             foreach (var gt in groupedTemplates)
             {
                 if (!dictionary.ContainsKey(gt.Key))
@@ -241,7 +246,7 @@ namespace EvenCart.Infrastructure.ViewEngines
                     continue;
                 GetView(themeViewPath, viewPath, area);
             }
-            return GetCompiledViews(splitted, area);
+            return GetCompiledViews(splitted, area, controller);
         }
 
         public void ClearCachedViews()
