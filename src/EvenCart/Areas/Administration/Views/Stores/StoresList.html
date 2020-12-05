@@ -33,7 +33,7 @@
                             method: "GET",
                             navigation: 3,
                             selection: false,
-                            url: '{% route api_StoresList %}',
+                            url: '{% route api_Admin.StoresList %}',
                             responseObject: "stores",
                             formatters: {
                                 "live": function(column, row) {
@@ -77,7 +77,7 @@
                     notify("success", '{{"Store was saved successfully" | t}}');
                 }
             });
-        var url = '{% route GetStore storeId="%id%" %}'.replaceAll("%id%", id);
+        var url = '{% route Admin.GetStore storeId="%id%" %}'.replaceAll("%id%", id);
         loadPage(url, true,
             null,
             function(response) {
