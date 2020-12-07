@@ -1,10 +1,10 @@
 ﻿<div class="form-group">
     {% control label text=@t"From Order Date" %}
-    {% control datetime id="fromDate" %}
+    {% control datetime id="fromDate" value="searchParams.fromDate" %}
 </div>
 <div class="form-group">
     {% control label text=@t"To Order Date" %}
-    {% control datetime id="toDate" %}
+    {% control datetime id="toDate" value="searchParams.toDate" %}
 </div>
 <script type="text/javascript">
     ready(function() {
