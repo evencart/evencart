@@ -10,7 +10,9 @@
 #endregion
 
 using System.Threading.Tasks;
+using EvenCart.Data.Constants;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using Microsoft.AspNetCore.Http;
 
@@ -30,7 +32,7 @@ namespace EvenCart.Infrastructure.Middleware
         {
             var requestDomain = context.Request.Host.Value;
             var store = _storeService.GetByDomain(requestDomain);
-            if (store == null)
+            if (store == null || (!store.Live && !ApplicationEngine.CurrentUser.Can(CapabilitySystemNames.AccessAdministration)))
                 return;
             context.SetCurrentStore(store);
             await _next.Invoke(context);
