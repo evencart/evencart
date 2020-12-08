@@ -11,11 +11,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Extensions;
+using EvenCart.Infrastructure.Helpers;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
@@ -161,6 +163,14 @@ namespace EvenCart.Infrastructure.Mvc
                     {
                         valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), ((DateTime)fpValue).ToFormattedString(false));
                     }
+                    else if (typeof(Enum).IsAssignableFrom(fp.PropertyType))
+                    {
+                        var field = fpValue.GetType().GetField(fpValue.ToString());
+                        //get description of the enum
+                        var attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute))
+                            as DescriptionAttribute;
+                        valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), attribute?.Description ?? fpValue);
+                    }
                     else
                     {
                         valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), ((decimal)fpValue).ToCurrency(currency));
@@ -190,6 +200,7 @@ namespace EvenCart.Infrastructure.Mvc
             var properties = allProperties.Where(x =>
                 typeof(DateTime).IsAssignableFrom(x.PropertyType) ||
                 typeof(DateTime?).IsAssignableFrom(x.PropertyType) ||
+                typeof(Enum).IsAssignableFrom(x.PropertyType) ||
                 propertyNames.Contains(x.Name)).ToList();
             if (attribute != null && !attribute.CurrencyCodeProperty.IsNullEmptyOrWhiteSpace())
             {
