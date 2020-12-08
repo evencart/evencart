@@ -30,7 +30,7 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
 
         private List<ReadFile> Parents { get; } = new List<ReadFile>();
 
-        private Dictionary<string, List<object>> Meta { get; set; }
+        private ConcurrentDictionary<string, List<object>> Meta { get; set; }
 
         private bool IsDirty { get; set; }
 
@@ -57,18 +57,18 @@ namespace EvenCart.Infrastructure.ViewEngines.Expanders
         public void AddMeta(string key, object value, string context)
         {
             key = $"{context}.{key}";
-            Meta = Meta ?? new Dictionary<string, List<object>>();
+            Meta = Meta ?? new ConcurrentDictionary<string, List<object>>();
             if (Meta.ContainsKey(key))
                 Meta[key].Add(value);
             else
             {
-                Meta.Add(key, new List<object>() { value });
+                Meta.TryAdd(key, new List<object>() { value });
             }
         }
 
         public IEnumerable<KeyValuePair<string, object>> GetMeta(string context)
         {
-            Meta = Meta ?? new Dictionary<string, List<object>>();
+            Meta = Meta ?? new ConcurrentDictionary<string, List<object>>();
             foreach (var kp in Meta)
             {
                 if (kp.Key.StartsWith($"{context}."))
