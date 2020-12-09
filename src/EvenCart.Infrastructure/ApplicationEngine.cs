@@ -163,6 +163,8 @@ namespace EvenCart.Infrastructure
                 //recaptcha
                 app.UseRecaptcha();
 
+                app.UseForcedPasswordReset();
+
                 //add any middlewares from plugins
                 var availablePlugins = PluginLoader.GetAvailablePlugins();
                 foreach (var ap in availablePlugins.Where(x => x.ActiveStoreIds != null && x.ActiveStoreIds.Any()))

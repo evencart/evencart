@@ -222,6 +222,12 @@ namespace EvenCart.Infrastructure.Extensions
         {
             app.UseMiddleware<HeadlessModeCheckerMiddleware>();
         }
+        
+        public static void UseForcedPasswordReset(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<RequirePasswordChangeMiddleware>();
+        }
+
 
         public static void InitializeCacheProviders(this IApplicationBuilder app)
         {
