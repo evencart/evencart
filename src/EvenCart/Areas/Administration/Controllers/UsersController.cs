@@ -215,7 +215,8 @@ namespace EvenCart.Areas.Administration.Controllers
                if (!userModel.Password.IsNullEmptyOrWhiteSpace())
                {
                    _userRegistrationService.UpdatePassword(user.Id, userModel.Password, ApplicationConfig.DefaultPasswordFormat);
-               }
+                   RaiseEvent(NamedEvent.PasswordReset, user, userModel.Password);
+                }
             }
 
             //get the role ids
