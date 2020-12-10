@@ -26,5 +26,8 @@ namespace EvenCart.Areas.Administration.Models.Dialog
         public string DialogTitle { get; set; }
 
         public string DisplayField { get; set; }
+
+        public string RequestExtraData { get; set; }
+
     }
 }

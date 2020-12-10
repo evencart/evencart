@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th data-column-id="id" data-identifier="true" data-visible="false" style="display: none">ID</th>
-                            <th data-column-id="{{selector.displayField}}">{{"Name" | t}}</th>
+                            <th data-column-id="{{selector.displayField}}" data-formatter="name">{{"Name" | t}}</th>
                             {% if type == "products" %}
                             <th data-column-id="priceFormatted">{{"Price" | t}}</th>
                             {% endif %}
@@ -28,13 +28,23 @@
                             method: "GET",
                             url: '{{selector.apiUrl}}',
                             responseObject: "{{selector.responseObjectName}}",
-                            selection: "{{selector.multiSelect}}" === "true",
+                            selection: true,
                             navigation: 3,
                             columnSelection: false,
                             keepSelection: true,
+                            data: function() {
+                                return JSON.parse('{{selector.requestExtraData}}');
+                            },
                             formatters: {
+                                "name": function (c, r) {
+                                    // {% if type == "users" %}
+                                    return (r.name || "") + " (" + r.email + ")";
+                                    // {% endif %}}
+                                },
                                 "selector-commands": function (column, row) {
-                                  
+                                    if ("{{selector.multiSelect}}" != "true") {
+                                        return '<button onclick="selectId(' + row.id + ');closeDialog();" class="btn btn-sm btn-primary">Select</button>';
+                                    }
                                 }
                             }
                         });
@@ -57,8 +67,13 @@
 
 
 <script type="text/javascript">
-    jQuery("#btnSelectorSelect").click(function () {
-
+    var selectId = function (id) {
+        var selectedRows = getGridSelections("grid-selector");
+        if (selectedRows.length == 0)
+            $("#grid-selector").bootgrid("select", [id]);
+    }
+    var closeDialog = function() {
         hidePopup("popup-selector", "ok", getGridSelections("grid-selector"));
-    });
+    }
+    jQuery("#btnSelectorSelect").click(closeDialog);
 </script>
