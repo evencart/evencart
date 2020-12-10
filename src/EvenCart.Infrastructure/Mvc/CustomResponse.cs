@@ -166,10 +166,13 @@ namespace EvenCart.Infrastructure.Mvc
                     else if (typeof(Enum).IsAssignableFrom(fp.PropertyType))
                     {
                         var field = fpValue.GetType().GetField(fpValue.ToString());
-                        //get description of the enum
-                        var attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute))
-                            as DescriptionAttribute;
-                        valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), attribute?.Description ?? fpValue);
+                        if (field != null)
+                        {
+                            //get description of the enum
+                            var attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute))
+                                as DescriptionAttribute;
+                            valueAsFm.Formatted.Set(fp.Name.ToCamelCase(), attribute?.Description ?? fpValue);
+                        }
                     }
                     else
                     {
