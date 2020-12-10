@@ -196,6 +196,11 @@ namespace EvenCart.Controllers
             //delete the user code now
             _userCodeService.Delete(x => x.UserId == userCode.UserId && x.CodeType == UserCodeType.PasswordReset);
 
+            if (CurrentUser.RequirePasswordChange)
+            {
+                CurrentUser.RequirePasswordChange = false;
+                _userService.Update(CurrentUser);
+            }
             RaiseEvent(NamedEvent.PasswordReset, userCode.User);
             return R.Success.Result;
         }
