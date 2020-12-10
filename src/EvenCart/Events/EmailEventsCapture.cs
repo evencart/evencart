@@ -179,9 +179,12 @@ namespace EvenCart.Events
                     if (_emailSenderSettings.PasswordChangedEmailEnabled)
                     {
                         var user = (User)eventData[0];
+                        var password = "";
+                        if (eventData.Length > 1)
+                            password = eventName[1].ToString();
                         var userInfo = user.ToUserInfo();
                         var userModel = _userModelFactory.Create(user);
-                        var model = R.With("user", userModel).Result;
+                        var model = R.With("user", userModel).With("password", password).Result;
                         _emailSender.SendEmail(EmailTemplateNames.PasswordChangedMessage, userInfo, model);
                     }
                     break;
