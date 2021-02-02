@@ -362,7 +362,7 @@ namespace EvenCart.Infrastructure
 
         public static LoginStatus SignIn(string email, string name, bool rememberMe, bool tokenAuth = false)
         {
-            if (CurrentUser != null && !CurrentUser.IsVisitor())
+            if (CurrentUser != null && !CurrentUser.IsVisitor() && tokenAuth == CurrentHttpContext.IsTokenAuthenticated())
                 return LoginStatus.Success; //user is already logged in
 
             var isVisitor = CurrentUser != null && CurrentUser.IsVisitor();
