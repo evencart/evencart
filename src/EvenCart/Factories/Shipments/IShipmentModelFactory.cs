@@ -10,8 +10,8 @@
 #endregion
 
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Shipments;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Factories.Shipments
 {

@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Emails
 {
-    public class EmailTemplateModel : FoundationEntityModel, IRequiresValidations<EmailTemplateModel>
+    public class EmailTemplateModel : GenesisEntityModel, IRequiresValidations<EmailTemplateModel>
     {
         public string TemplateName { get; set; }
 

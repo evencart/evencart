@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
     /// <summary>
     /// Represents an individual shipping option of a shipment handler
     /// </summary>
-    public class ShippingOptionModel : FoundationModel
+    public class ShippingOptionModel : GenesisModel
     {
         /// <summary>
         /// The id of the option

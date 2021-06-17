@@ -11,13 +11,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class ProductVariantModel : FoundationEntityModel, IRequiresValidations<ProductVariantModel>
+    public class ProductVariantModel : GenesisEntityModel, IRequiresValidations<ProductVariantModel>
     {
         public IList<ProductAttributeModel> Attributes { get; set; }
 

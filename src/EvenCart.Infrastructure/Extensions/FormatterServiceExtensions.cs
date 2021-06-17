@@ -9,7 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Formatter;
 

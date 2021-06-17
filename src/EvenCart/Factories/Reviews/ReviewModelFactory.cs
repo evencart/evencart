@@ -11,12 +11,12 @@
 
 using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Reviews;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Factories.Reviews
 {
@@ -39,7 +39,7 @@ namespace EvenCart.Factories.Reviews
             if (model.DisplayName.IsNullEmptyOrWhiteSpace())
             {
                 model.DisplayName =
-                    LocalizationHelper.Localize("Store Customer", ApplicationEngine.CurrentLanguage.CultureCode);
+                    LocalizationHelper.Localize("Store Customer", GenesisEngine.Instance.CurrentLanguage.CultureCode);
             }
 
             if (review.Product != null)

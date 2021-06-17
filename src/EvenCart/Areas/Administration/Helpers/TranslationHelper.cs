@@ -12,21 +12,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis;
+using Genesis.Data;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Helpers
 {
     public static class TranslationHelper
     {
-        public static void PopulateTranslations(FoundationModel model, IMultilingualEntity entity)
+        public static void PopulateTranslations(GenesisModel model, IMultilingualEntity entity)
         {
             var multilingualFields = entity.GetType().GetProperties()
                 .Where(x => x.IsDefined(typeof(MultilingualFieldAttribute), false)).ToList();
-            var languages = ApplicationEngine.AllLanguages.Where(x => !x.PrimaryLanguage);
+            var languages = GenesisEngine.Instance.AllLanguages.Where(x => !x.PrimaryLanguage);
             entity.PopulateTranslationsFromDb();
             foreach (var field in multilingualFields)
             {

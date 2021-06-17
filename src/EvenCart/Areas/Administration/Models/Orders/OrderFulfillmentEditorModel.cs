@@ -11,14 +11,14 @@
 
 using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Warehouse;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
     /// <summary>
     /// Represents order fulfillment details of an order
     /// </summary>
-    public class OrderFulfillmentEditorModel : FoundationModel
+    public class OrderFulfillmentEditorModel : GenesisModel
     {
         /// <summary>
         /// The <see cref="WarehouseModel">warehouse</see> of the fulfillment
@@ -32,7 +32,7 @@ namespace EvenCart.Areas.Administration.Models.Orders
         /// <summary>
         /// The single order item fulfillment object
         /// </summary>
-        public class OrderItemFulfillmentModel : FoundationModel
+        public class OrderItemFulfillmentModel : GenesisModel
         {
             /// <summary>
             /// A single <see cref="OrderItemModel">order item</see> object

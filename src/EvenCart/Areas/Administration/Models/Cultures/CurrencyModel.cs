@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Areas.Administration.Models.Cultures
 {
-    public class CurrencyModel : FoundationEntityModel, IRequiresValidations<CurrencyModel>
+    public class CurrencyModel : GenesisEntityModel, IRequiresValidations<CurrencyModel>
     {
         public string Name { get; set; }
 

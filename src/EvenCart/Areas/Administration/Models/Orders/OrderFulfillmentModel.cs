@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
     /// <summary>
     /// The order fulfillment object
     /// </summary>
-    public class OrderFulfillmentModel : FoundationModel
+    public class OrderFulfillmentModel : GenesisModel
     {
         /// <summary>
         /// The id of the order item

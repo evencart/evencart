@@ -9,8 +9,8 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Users;
 using EvenCart.Models.Vendors;
+using Genesis.Modules.Vendors;
 
 namespace EvenCart.Factories.Vendors
 {

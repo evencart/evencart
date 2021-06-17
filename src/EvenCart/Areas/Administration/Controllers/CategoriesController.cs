@@ -14,25 +14,24 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Common;
 using EvenCart.Areas.Administration.Models.Shop;
-using EvenCart.Core.Data;
-using EvenCart.Core.Extensions;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class CategoriesController : FoundationAdminController
+    public class CategoriesController : GenesisAdminController
     {
         private readonly ICategoryService _categoryService;
         private readonly ICategoryAccountant _categoryAccountant;

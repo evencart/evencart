@@ -16,21 +16,22 @@ using System.Linq.Expressions;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Factories.Catalogs;
 using EvenCart.Areas.Administration.Models.Catalog;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.Products;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Stores;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class CatalogsController : FoundationAdminController
+    public class CatalogsController : GenesisAdminController
     {
         private readonly ICatalogService _catalogService;
         private readonly IModelMapper _modelMapper;

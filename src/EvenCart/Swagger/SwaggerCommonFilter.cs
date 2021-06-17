@@ -12,7 +12,7 @@
 using System;
 using System.Collections;
 using System.Linq;
-using EvenCart.Core.Infrastructure.Utils;
+using Genesis.Infrastructure.Types;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using OperationType = Microsoft.OpenApi.Models.OperationType;

@@ -13,16 +13,16 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Extensions;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
-    public class DownloadsController : FoundationController
+    public class DownloadsController : GenesisController
     {
         private readonly IDownloadService _downloadService;
         private readonly IOrderService _orderService;

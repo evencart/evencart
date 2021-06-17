@@ -11,8 +11,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core;
-using EvenCart.Core.Infrastructure;
+using Genesis;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Extensions;

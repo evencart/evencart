@@ -10,7 +10,7 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.System;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.System
 {

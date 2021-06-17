@@ -1,9 +1,8 @@
 ﻿using System;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Users;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
-using EvenCart.Services.Users;
+using Genesis.Modules.Users;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Purchases

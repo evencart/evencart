@@ -10,12 +10,12 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Models.Reports
 {
-    public class TaxReportModel : FoundationModel
+    public class TaxReportModel : GenesisModel
     {
         public decimal TotalTax { get; set; }
 

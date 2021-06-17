@@ -10,13 +10,13 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "CartSection")]
-    public class CartSectionComponent : FoundationComponent
+    public class CartSectionComponent : GenesisComponent
     {
         public override IViewComponentResult Invoke(object data = null)
         {

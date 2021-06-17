@@ -12,17 +12,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Services.Search;
-using EvenCart.Infrastructure.Mvc;
 using EvenCart.Models.Components;
 using EvenCart.Models.Products;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "AttributeFilter")]
-    public class AttributeFilterComponent : FoundationComponent
+    public class AttributeFilterComponent : GenesisComponent
     {
         private readonly ISearchQueryParserService _searchQueryParserService;
         public AttributeFilterComponent(ISearchQueryParserService searchQueryParserService)

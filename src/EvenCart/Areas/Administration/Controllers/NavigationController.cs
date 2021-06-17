@@ -14,28 +14,25 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Navigation;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
-using EvenCart.Core.Extensions;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Navigation;
-using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Navigation;
-using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Navigation;
+using Genesis.Modules.Web;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class NavigationController : FoundationAdminController
+    public class NavigationController : GenesisAdminController
     {
         private readonly IMenuService _menuService;
         private readonly IMenuItemService _menuItemService;
@@ -150,18 +147,18 @@ namespace EvenCart.Areas.Administration.Controllers
                 //    switch (x.SeoMeta.EntityName)
                 //    {
                 //        case nameof(Product):
-                //            itemModel.Url = ApplicationEngine.RouteUrl(RouteNames.SingleProduct,
+                //            itemModel.Url = GenesisEngine.Instance.RouteUrl(RouteNames.SingleProduct,
                 //                new {seName = x.SeoMeta.Slug});
                 //            itemModel.SeoMetaTargetName = _productService.FirstOrDefault(y => y.Id == entityId)?.Name ?? "NA";
                 //            break;
                 //        case nameof(Category):
-                //            itemModel.Url = ApplicationEngine.RouteUrl(RouteNames.ProductsPage,
+                //            itemModel.Url = GenesisEngine.Instance.RouteUrl(RouteNames.ProductsPage,
                 //                new { categoryId = x.SeoMeta.EntityId });
                 //            itemModel.SeoMetaTargetName =
                 //                _categoryService.FirstOrDefault(y => y.Id == entityId)?.Name ?? "NA";
                 //            break;
                 //        case nameof(ContentPage):
-                //            itemModel.Url = ApplicationEngine.RouteUrl(RouteNames.SinglePage,
+                //            itemModel.Url = GenesisEngine.Instance.RouteUrl(RouteNames.SinglePage,
                 //                new { id = x.SeoMeta.EntityId });
                 //            itemModel.SeoMetaTargetName =
                 //                _contentPageService.FirstOrDefault(y => y.Id == entityId)?.Name ?? "NA";
@@ -191,7 +188,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var model = _modelMapper.Map<MenuItemModel>(menuItem);
             if (menuItem.SeoMeta != null)
             {
-                model.Url = SeoMetaHelper.GetUrl(menuItem.SeoMeta);
+                model.Url = Genesis.Modules.Web.SeoMetaHelper.GetUrl(menuItem.SeoMeta);
                 var entityId = menuItem.SeoMeta.EntityId;
                 switch (menuItem.SeoMeta.EntityName)
                 {

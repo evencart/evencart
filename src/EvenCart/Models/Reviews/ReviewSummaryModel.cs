@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Reviews
 {
-    public class ReviewSummaryModel : FoundationModel
+    public class ReviewSummaryModel : GenesisModel
     {
         public decimal AverageRating { get; set; }
 

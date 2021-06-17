@@ -12,27 +12,24 @@
 using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Media;
-using EvenCart.Core.Data;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.MediaEntities;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.MediaServices;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
+using Genesis.Modules.MediaServices;
+using Genesis.Modules.Users;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class MediaController : FoundationAdminController
+    public class MediaController : GenesisAdminController
     {
         private readonly IMediaAccountant _mediaAccountant;
         private readonly IMediaService _mediaService;
@@ -75,8 +72,8 @@ namespace EvenCart.Areas.Administration.Controllers
             }
             //model
             var model = _modelMapper.Map<MediaModel>(media);
-            model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationConfig.AdminThumbnailWidth,
-                ApplicationConfig.AdminThumbnailHeight);
+            model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, Engine.StaticConfig.AdminThumbnailWidth,
+                Engine.StaticConfig.AdminThumbnailHeight);
             model.ImageUrl = _mediaAccountant.GetPictureUrl(media);
             return R.Success.With("media", model).Result;
         }

@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Models.Checkout
 {
-    public class PaymentMethodModel : FoundationModel, IRequiresValidations<PaymentMethodModel>
+    public class PaymentMethodModel : GenesisModel, IRequiresValidations<PaymentMethodModel>
     {
         /// <summary>
         /// The payment method system name

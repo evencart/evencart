@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "VendorFilter")]
-    public class VendorFilterComponent : FoundationComponent
+    public class VendorFilterComponent : GenesisComponent
     {
         public override IViewComponentResult Invoke(object data = null)
         {

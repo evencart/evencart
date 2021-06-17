@@ -10,12 +10,12 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Meta;
 
 namespace EvenCart.Models.Products
 {
-    public class ProductAttributeModel : FoundationEntityModel
+    public class ProductAttributeModel : GenesisEntityModel
     {
         /// <summary>
         /// The name of attribute

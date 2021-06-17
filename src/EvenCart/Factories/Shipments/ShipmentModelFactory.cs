@@ -12,9 +12,9 @@
 using System.Linq;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Models.Shipments;
-using EvenCart.Services.Formatter;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Factories.Shipments
 {

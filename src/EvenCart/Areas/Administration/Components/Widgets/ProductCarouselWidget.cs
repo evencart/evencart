@@ -14,21 +14,21 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Shop;
-using EvenCart.Core.Plugins;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
-using EvenCart.Services.Widgets;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Services.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.MediaServices;
+using Genesis.Modules.Pluggable;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class ProductCarouselWidget : FoundationComponent, IWidget
+    public class ProductCarouselWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "ProductCarousel";
         private readonly IWidgetService _widgetService;

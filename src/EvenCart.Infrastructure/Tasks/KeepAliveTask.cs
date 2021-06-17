@@ -10,7 +10,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using EvenCart.Core.Tasks;
+using Genesis.Tasks;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.HttpServices;

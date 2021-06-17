@@ -10,11 +10,11 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Orders
 {
-    public class OrderSearchModel : FoundationModel
+    public class OrderSearchModel : GenesisModel
     {
         /// <summary>
         /// The start date to search the orders from. Defaults to 6 months old

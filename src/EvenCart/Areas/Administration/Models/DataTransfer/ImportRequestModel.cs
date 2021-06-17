@@ -9,8 +9,8 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Validator;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Areas.Administration.Models.DataTransfer

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Modules\Installation\" />
+    <Folder Include="Modules\Meta\Filters\" />
+    <Folder Include="Modules\Settings\Services\" />
+    <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Genesis.App" Version="1.0.9.1" />
+    <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="Npoi.Mapper" Version="3.4.0" />
+  </ItemGroup>
+
+</Project>

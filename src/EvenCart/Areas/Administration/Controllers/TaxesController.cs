@@ -11,21 +11,22 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Taxes;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Taxes;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Taxes;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class TaxesController : FoundationAdminController
+    public class TaxesController : GenesisAdminController
     {
         private readonly ITaxService _taxService;
         private readonly ITaxRateService _taxRateService;

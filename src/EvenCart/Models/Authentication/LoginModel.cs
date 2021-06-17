@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Authentication
 {
-    public class LoginModel : FoundationModel, IRequiresValidations<LoginModel>
+    public class LoginModel : GenesisModel, IRequiresValidations<LoginModel>
     {
         /// <summary>
         /// The email of the user

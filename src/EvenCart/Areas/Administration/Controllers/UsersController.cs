@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Factories.Addresses;
@@ -19,25 +20,21 @@ using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
 using EvenCart.Events;
-using EvenCart.Services.Addresses;
-using EvenCart.Services.Formatter;
-using EvenCart.Services.Purchases;
-using EvenCart.Services.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Genesis.Mvc;
+using EvenCart.Services.Orders;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.MediaServices;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -45,7 +42,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Allows admins to manage users
     /// </summary>
-    public class UsersController : FoundationAdminController
+    public class UsersController : GenesisAdminController
     {
         private readonly IUserService _userService;
         private readonly IModelMapper _modelMapper;
@@ -206,7 +203,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 user.CreatedOn = DateTime.UtcNow;
                 user.UpdatedOn = DateTime.UtcNow;
                 user.Password = userModel.Password;
-                _userRegistrationService.Register(user, ApplicationConfig.DefaultPasswordFormat);
+                _userRegistrationService.Register(user, Engine.StaticConfig.DefaultPasswordFormat);
             }
             else
             {
@@ -214,7 +211,7 @@ namespace EvenCart.Areas.Administration.Controllers
                //update password if so
                if (!userModel.Password.IsNullEmptyOrWhiteSpace())
                {
-                   _userRegistrationService.UpdatePassword(user.Id, userModel.Password, ApplicationConfig.DefaultPasswordFormat);
+                   _userRegistrationService.UpdatePassword(user.Id, userModel.Password, Engine.StaticConfig.DefaultPasswordFormat);
                    RaiseEvent(NamedEvent.PasswordReset, user, userModel.Password);
                 }
             }
@@ -373,8 +370,8 @@ namespace EvenCart.Areas.Administration.Controllers
 
             if (userId < 0 || _userService.Count(x => x.Id == userId) == 0)
                 return NotFound();
-            var mediaAccountant = DependencyResolver.Resolve<IMediaAccountant>();
-            var formatterService = DependencyResolver.Resolve<IFormatterService>();
+            var mediaAccountant = D.Resolve<IMediaAccountant>();
+            var formatterService = D.Resolve<IFormatterService>();
             var cart = _cartService.GetCart(userId);
             var models = cart.CartItems.Select(x =>
             {
@@ -389,7 +386,7 @@ namespace EvenCart.Areas.Administration.Controllers
                     Discount = x.Discount,
                     Tax = x.Tax,
                     TaxPercent = x.TaxPercent,
-                    ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(), ApplicationEngine.ActiveTheme.CartItemImageSize, true),
+                    ImageUrl = mediaAccountant.GetPictureUrl(x.Product.MediaItems?.FirstOrDefault(), Engine.ActiveTheme.CartItemImageSize, true),
                     Slug = x.Product.SeoMeta.Slug,
                     AttributeText = formatterService.FormatProductAttributes(x.AttributeJson)
                 };
@@ -483,7 +480,7 @@ namespace EvenCart.Areas.Administration.Controllers
             User user;
             if (userId <= 0 || (user = _userService.FirstOrDefault(x => x.Id == userId)) == null)
                 return NotFound();
-            if (ApplicationEngine.ImitationModeSignIn(user.Email) == LoginStatus.Success)
+            if (Engine.ImitationModeSignIn(user.Email) == LoginStatus.Success)
                 return RedirectToRoute(RouteNames.Home);
             return R.Fail.WithView("Imitate").Result;
         }
@@ -558,7 +555,7 @@ namespace EvenCart.Areas.Administration.Controllers
             }
 
             var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, UserCodeType.RegistrationInvitation);
-            var invitationLink = ApplicationEngine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code}, true);
+            var invitationLink = Engine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code}, true);
             RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
             return R.Success.Result;
         }

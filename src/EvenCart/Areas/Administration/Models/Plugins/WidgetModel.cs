@@ -10,13 +10,13 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Plugins
 {
-    public class WidgetModel : FoundationModel, IRequiresValidations<WidgetModel>
+    public class WidgetModel : GenesisModel, IRequiresValidations<WidgetModel>
     {
         public string ZoneName { get; set; }
 

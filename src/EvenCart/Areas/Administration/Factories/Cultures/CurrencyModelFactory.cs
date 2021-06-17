@@ -10,24 +10,26 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Cultures;
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Areas.Administration.Factories.Cultures
 {
     public class CurrencyModelFactory : ICurrencyModelFactory
     {
         private readonly IModelMapper _modelMapper;
-        public CurrencyModelFactory(IModelMapper modelMapper)
+        private readonly IGenesisEngine GenesisEngine;
+        public CurrencyModelFactory(IModelMapper modelMapper, IGenesisEngine genesisEngine)
         {
             _modelMapper = modelMapper;
+            GenesisEngine = genesisEngine;
         }
 
         public CurrencyModel Create(Currency entity)
         {
             var model = _modelMapper.Map<CurrencyModel>(entity);
-            model.FlagUrl = ApplicationEngine.MapUrl($"~/common/flags/{entity.Flag}");
+            model.FlagUrl = GenesisEngine.MapUrl($"~/common/flags/{entity.Flag}");
             return model;
         }
     }

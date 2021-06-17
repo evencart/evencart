@@ -1,5 +1,4 @@
-﻿using EvenCart.Data.Entity.Cultures;
-using EvenCart.Services.Formatter;
+﻿using Genesis.Modules.Localization;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Formatters

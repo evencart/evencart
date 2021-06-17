@@ -11,16 +11,16 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Services.Widgets;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Pluggable;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class ShareThisWidget : FoundationComponent, IWidget
+    public class ShareThisWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "ShareThis";
         private readonly IWidgetService _widgetService;

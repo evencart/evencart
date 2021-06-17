@@ -12,13 +12,13 @@
 using System;
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Promotions;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Promotions
 {
-    public class DiscountModel : FoundationEntityModel, IRequiresValidations<DiscountModel>
+    public class DiscountModel : GenesisEntityModel, IRequiresValidations<DiscountModel>
     {
         public string Name { get; set; }
 

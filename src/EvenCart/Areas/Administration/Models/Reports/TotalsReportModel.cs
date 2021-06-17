@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Reports
 {
     /// <summary>
     /// Contains information about various totals
     /// </summary>
-    public class TotalsReportModel : FoundationModel
+    public class TotalsReportModel : GenesisModel
     {
         /// <summary>
         /// The total users in the store

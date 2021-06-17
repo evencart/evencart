@@ -14,29 +14,30 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Settings;
 using EvenCart.Areas.Administration.Models.Themes;
-using EvenCart.Core.Config;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Cultures;
-using EvenCart.Services.Navigation;
-using EvenCart.Services.Settings;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Taxes;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Infrastructure.Theming;
-using EvenCart.Services.Gdpr;
-using EvenCart.Services.Security;
+using Genesis;
+using Genesis.Config;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Infrastructure.Theming;
+using Genesis.Modules.Gdpr;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Navigation;
+using Genesis.Modules.Security;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
+using UrlSettings = EvenCart.Data.Entity.Settings.UrlSettings;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class SettingsController : FoundationAdminController
+    public class SettingsController : GenesisAdminController
     {
         private readonly Dictionary<Type, Type> _settingsMap = new Dictionary<Type, Type>()
         {
@@ -193,7 +194,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 sharedKey = _cryptographyService.GetRandomPassword(50);
 
             var cryptedKey = _cryptographyService.GetMd5Hash(sharedKey);
-            var securitySettings = DependencyResolver.Resolve<SecuritySettings>();
+            var securitySettings = D.Resolve<SecuritySettings>();
             securitySettings.SharedVerificationKey = cryptedKey;
             _settingService.Save(securitySettings, CurrentStore.Id);
             return R.Success.With("key", sharedKey).Result;
@@ -208,9 +209,9 @@ namespace EvenCart.Areas.Administration.Controllers
             switch (settingType)
             {
                 case "general":
-                    settings = DependencyResolver.Resolve<GeneralSettings>();
+                    settings = D.Resolve<GeneralSettings>();
                     model = _modelMapper.Map<GeneralSettingsModel>(settings);
-                    var menuService = DependencyResolver.Resolve<IMenuService>();
+                    var menuService = D.Resolve<IMenuService>();
 
                     var menus = menuService.Get(x => true).ToList();
                     var menuSelectList = SelectListHelper.GetSelectItemList(menus, x => x.Id, x => x.Name);
@@ -229,50 +230,50 @@ namespace EvenCart.Areas.Administration.Controllers
                     result.With("availableThemes", themes);
                     break;
                 case "order":
-                    settings = DependencyResolver.Resolve<OrderSettings>();
+                    settings = D.Resolve<OrderSettings>();
                     result.WithAvailableOrderStatusTypes();
                     model = _modelMapper.Map<OrderSettingsModel>(settings);
                     break;
                 case "user":
-                    settings = DependencyResolver.Resolve<UserSettings>();
+                    settings = D.Resolve<UserSettings>();
                     model = _modelMapper.Map<UserSettingsModel>(settings);
                     result.WithRegistrationModes();
                     break;
                 case "url":
-                    settings = DependencyResolver.Resolve<UrlSettings>();
+                    settings = D.Resolve<UrlSettings>();
                     model = _modelMapper.Map<UrlSettingsModel>(settings);
                     break;
                 case "media":
-                    settings = DependencyResolver.Resolve<MediaSettings>();
+                    settings = D.Resolve<MediaSettings>();
                     model = _modelMapper.Map<MediaSettingsModel>(settings);
                     break;
                 case "tax":
-                    settings = DependencyResolver.Resolve<TaxSettings>();
-                    var taxService = DependencyResolver.Resolve<ITaxService>();
+                    settings = D.Resolve<TaxSettings>();
+                    var taxService = D.Resolve<ITaxService>();
                     var taxes = taxService.Get(x => true).ToList();
                     var taxesSelectList = SelectListHelper.GetSelectItemList(taxes, x => x.Id, x => x.Name);
                     model = _modelMapper.Map<TaxSettingsModel>(settings);
                     result.With("availableTaxes", taxesSelectList);
                     break;
                 case "email":
-                    settings = DependencyResolver.Resolve<EmailSenderSettings>();
+                    settings = D.Resolve<EmailSenderSettings>();
                     model = _modelMapper.Map<EmailSettingsModel>(settings);
                     result.WithEmailAccounts();
                     break;
                 case "catalog":
-                    settings = DependencyResolver.Resolve<CatalogSettings>();
+                    settings = D.Resolve<CatalogSettings>();
                     model = _modelMapper.Map<CatalogSettingsModel>(settings);
                     result.WithCatalogPaginationTypes();
                     break;
                 case "localization":
-                    settings = DependencyResolver.Resolve<LocalizationSettings>();
+                    settings = D.Resolve<LocalizationSettings>();
                     model = _modelMapper.Map<LocalizationSettingsModel>(settings);
-                    var currencyService = DependencyResolver.Resolve<ICurrencyService>();
+                    var currencyService = D.Resolve<ICurrencyService>();
                     var currencies = currencyService.Get(x => x.Published).ToList();
                     var currenciesSelectList = SelectListHelper.GetSelectItemListWithAction(currencies, x => x.Id, x => $"{x.Name} ({x.IsoCode})");
                     result.With("availableCurrencies", currenciesSelectList);
 
-                    var languageService = DependencyResolver.Resolve<ILanguageService>();
+                    var languageService = D.Resolve<ILanguageService>();
                     var languages = languageService.Get(x => x.Published).ToList();
                     var languagesSelectList = SelectListHelper.GetSelectItemList(languages, x => x.CultureCode, x => x.Name);
                     result.With("availableLanguages", languagesSelectList);
@@ -280,19 +281,19 @@ namespace EvenCart.Areas.Administration.Controllers
                     result.WithCatalogPaginationTypes();
                     break;
                 case "gdpr":
-                    settings = DependencyResolver.Resolve<GdprSettings>();
+                    settings = D.Resolve<GdprSettings>();
                     model = _modelMapper.Map<GdprSettingsModel>(settings);
-                    var consentGroupService = DependencyResolver.Resolve<IConsentGroupService>();
+                    var consentGroupService = D.Resolve<IConsentGroupService>();
                     var consentGroups = consentGroupService.Get(x => true).ToList();
                     var groupSelectList = SelectListHelper.GetSelectItemList(consentGroups, x => x.Id, x => x.Name);
                     result.With("availableConsentGroups", groupSelectList);
                     break;
                 case "security":
-                    settings = DependencyResolver.Resolve<SecuritySettings>();
+                    settings = D.Resolve<SecuritySettings>();
                     model = _modelMapper.Map<SecuritySettingsModel>(settings);
                     break;
                 case "affiliate":
-                    settings = DependencyResolver.Resolve<AffiliateSettings>();
+                    settings = D.Resolve<AffiliateSettings>();
                     model = _modelMapper.Map<AffiliateSettingsModel>(settings);
                     break;
             }
@@ -305,7 +306,7 @@ namespace EvenCart.Areas.Administration.Controllers
             var settingType = settingsModel.GetType();
             if (_settingsMap.TryGetValue(settingType, out var targetType))
             {
-                var resolvedSettings = DependencyResolver.Resolve(targetType);
+                var resolvedSettings = D.Resolve(targetType);
                 _modelMapper.MapType(targetType, settingsModel, resolvedSettings);
                 _settingService.Save(targetType, resolvedSettings, CurrentStore.Id);
             }

@@ -9,8 +9,8 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
+using Genesis.Data;
+using Genesis.Infrastructure;
 using EvenCart.Data.Extensions;
 
 namespace EvenCart

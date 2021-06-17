@@ -12,23 +12,21 @@
 using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.ScheduledTasks;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Tasks;
-using EvenCart.Data.Entity.ScheduledTasks;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.ScheduledTasks;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Helpers;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Tasks;
+using Genesis.Modules.Data;
+using Genesis.Modules.Logging;
+using Genesis.Modules.Tasks;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class ScheduledTasksController : FoundationAdminController
+    public class ScheduledTasksController : GenesisAdminController
     {
         private readonly IScheduledTaskService _scheduledTaskService;
         private readonly IModelMapper _modelMapper;
@@ -86,7 +84,7 @@ namespace EvenCart.Areas.Administration.Controllers
             if (scheduledTaskSystemName.IsNullEmptyOrWhiteSpace())
                 return BadRequest();
             var scheduledTask = _scheduledTaskService.FirstOrDefault(x => x.SystemName == scheduledTaskSystemName);
-            var iTask = DependencyResolver.Resolve<ITask>(scheduledTaskSystemName);
+            var iTask = D.Resolve<ITask>(scheduledTaskSystemName);
             try
             {
                 ScheduledTaskHelper.RunScheduledTask(scheduledTask, iTask, _scheduledTaskService, _logger, false);

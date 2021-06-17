@@ -12,18 +12,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Plugins;
-using EvenCart.Services.Gdpr;
-using EvenCart.Services.Widgets;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Gdpr;
+using Genesis.Modules.Pluggable;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class RawHtmlWidget : FoundationComponent, IWidget
+    public class RawHtmlWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "RawHtml";
         private readonly IWidgetService _widgetService;

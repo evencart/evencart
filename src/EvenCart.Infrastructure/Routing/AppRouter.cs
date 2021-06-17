@@ -10,7 +10,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 
 namespace EvenCart.Infrastructure.Routing

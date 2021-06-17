@@ -11,9 +11,9 @@
 
 using System.Linq;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Models.Orders;
-using EvenCart.Services.Formatter;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Factories.Orders
 {

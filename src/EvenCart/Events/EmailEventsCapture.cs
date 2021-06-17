@@ -11,18 +11,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Services.Events;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Emails;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Services.Emails;
-using EvenCart.Services.Extensions;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Shipments;
 using EvenCart.Factories.Users;
+using Genesis.Modules.Emails;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
+using Genesis.Services.Events;
 
 namespace EvenCart.Events
 {

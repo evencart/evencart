@@ -11,8 +11,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
+using Genesis.Data;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;

@@ -11,16 +11,15 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Media;
 using EvenCart.Models.Reviews;
 using EvenCart.Models.Vendors;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Models.Products
 {
-    public class ProductModel : FoundationEntityModel
+    public class ProductModel : GenesisEntityModel
     {
         public string Name { get; set; }
 

@@ -11,7 +11,7 @@
 
 using EvenCart.Areas.Administration.Models.Catalog;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.Catalogs
 {

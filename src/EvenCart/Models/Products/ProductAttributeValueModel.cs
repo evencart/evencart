@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Products
 {
-    public class ProductAttributeValueModel : FoundationModel
+    public class ProductAttributeValueModel : GenesisModel
     {
         /// <summary>
         /// The name of attribute value

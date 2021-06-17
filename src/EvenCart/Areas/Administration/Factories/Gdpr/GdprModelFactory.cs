@@ -10,8 +10,8 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Gdpr;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Gdpr;
 
 namespace EvenCart.Areas.Administration.Factories.Gdpr
 {

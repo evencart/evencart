@@ -10,8 +10,9 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Cultures;
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Infrastructure;
+using Genesis;
+using Genesis.Infrastructure;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Areas.Administration.Factories.Cultures
 {
@@ -19,6 +20,7 @@ namespace EvenCart.Areas.Administration.Factories.Cultures
     {
         public LanguageModel Create(Language entity)
         {
+            var engine = D.Resolve<IGenesisEngine>();
             return new LanguageModel(){
                 CultureCode = entity.CultureCode,
                 Flag = entity.Flag,
@@ -27,7 +29,7 @@ namespace EvenCart.Areas.Administration.Factories.Cultures
                 Published = entity.Published,
                 Rtl = entity.Rtl,
                 Id = entity.Id,
-                FlagUrl = ApplicationEngine.MapUrl($"~/common/flags/{entity.Flag}")
+                FlagUrl = engine.MapUrl($"~/common/flags/{entity.Flag}")
         };
         }
     }

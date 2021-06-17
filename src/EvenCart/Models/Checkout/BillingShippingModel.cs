@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using EvenCart.Models.Addresses;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Checkout
 {
-    public class BillingShippingModel : FoundationModel, IRequiresValidations<BillingShippingModel>
+    public class BillingShippingModel : GenesisModel, IRequiresValidations<BillingShippingModel>
     {
         /// <summary>
         /// Set to true to use a different shipping address than the billing address

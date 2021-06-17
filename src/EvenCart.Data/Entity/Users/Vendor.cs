@@ -10,7 +10,7 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Core.Data;
+using Genesis.Data;
 using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;

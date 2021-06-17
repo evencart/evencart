@@ -9,15 +9,15 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Infrastructure.Mvc;
 using EvenCart.Models.Components;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "GoogleRecaptcha")]
-    public class GoogleRecaptchaComponent : FoundationComponent
+    public class GoogleRecaptchaComponent : GenesisComponent
     {
         private readonly SecuritySettings _securitySettings;
         public GoogleRecaptchaComponent(SecuritySettings securitySettings)

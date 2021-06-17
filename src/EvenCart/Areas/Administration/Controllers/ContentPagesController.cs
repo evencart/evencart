@@ -10,33 +10,26 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Users;
-using EvenCart.Core.Data;
-using EvenCart.Core.Extensions;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Pages;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Pages;
-using EvenCart.Services.Serializers;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class ContentPagesController : FoundationAdminController
+    public class ContentPagesController : GenesisAdminController
     {
         private readonly IContentPageService _contentPageService;
         private readonly IModelMapper _modelMapper;
@@ -118,7 +111,7 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 contentPage.CreatedOn = DateTime.UtcNow;
                 contentPage.PublishedOn = model.PublishedOn == default(DateTime) ? DateTime.UtcNow : model.PublishedOn;
-                contentPage.UserId = ApplicationEngine.CurrentUser.Id;
+                contentPage.UserId = CurrentUser.Id;
             }
             contentPage.UpdatedOn = DateTime.UtcNow;
             contentPage.ParentId = model.ParentId;

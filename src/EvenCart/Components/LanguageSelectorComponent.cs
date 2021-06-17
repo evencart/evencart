@@ -11,16 +11,15 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Cultures;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Services.Cultures;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "LanguageSelector")]
-    public class LanguageSelectorComponent : FoundationComponent
+    public class LanguageSelectorComponent : GenesisComponent
     {
         private readonly ILanguageService _languageService;
         private readonly ILanguageModelFactory _languageModelFactory;
@@ -37,12 +36,12 @@ namespace EvenCart.Components
             if (!_localizationSettings.AllowUserToSelectLanguage)
                 return R.Success.ComponentResult;
 
-            var languages = ApplicationEngine.AllLanguages.Where(x => x.Published).ToList();
+            var languages = Engine.AllLanguages.Where(x => x.Published).ToList();
             if (languages.Count < 2)
                 return R.Success.ComponentResult; // no need to display the box at all if there are none or one language
 
             var models = languages.Select(_languageModelFactory.Create).ToList();
-            var activeLanguage = _languageModelFactory.Create(ApplicationEngine.CurrentLanguage);
+            var activeLanguage = _languageModelFactory.Create(Engine.CurrentLanguage);
             return R.Success.With("languages", models).With("activeLanguage", activeLanguage).ComponentResult;
         }
     }

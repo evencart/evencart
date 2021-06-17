@@ -9,12 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
-    public class CartItemModel : FoundationModel
+    public class CartItemModel : GenesisModel
     {
         public string ProductName { get; set; }
 

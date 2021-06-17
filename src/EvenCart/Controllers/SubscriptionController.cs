@@ -9,12 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Subscriptions;
-using EvenCart.Services.Subscriptions;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -22,7 +22,7 @@ namespace EvenCart.Controllers
     /// <summary>
     /// Manages subscriptions for a user
     /// </summary>
-    public class SubscriptionController : FoundationController
+    public class SubscriptionController : GenesisController
     {
         private readonly ISubscriptionService _subscriptionService;
         public SubscriptionController(ISubscriptionService subscriptionService)

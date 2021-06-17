@@ -10,14 +10,14 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Data.Entity.Users;
 using EvenCart.Events;
 using EvenCart.Factories.Vendors;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Models.Vendors;
-using EvenCart.Services.Users;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Vendors;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +25,7 @@ namespace EvenCart.Controllers
 {
     [Route("~/vendors")]
     [Authorize]
-    public class VendorsController : FoundationController
+    public class VendorsController : GenesisController
     {
         private readonly IVendorService _vendorService;
         private readonly IVendorModelFactory _vendorModelFactory;

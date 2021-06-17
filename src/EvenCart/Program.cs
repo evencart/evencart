@@ -9,6 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Genesis;
+using Genesis;
+using Genesis.Infrastructure;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
@@ -18,6 +21,7 @@ namespace EvenCart
     {
         public static void Main(string[] args)
         {
+            GenesisApp.Initialize(new StaticConfig(), new EvenCartDependencyContainer(), new DbVersionProvider());
             CreateWebHostBuilder(args).Build().Run();
         }
 

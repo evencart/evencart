@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Services.Seo;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
-    public class SitemapController : FoundationController
+    public class SitemapController : GenesisController
     {
         private readonly ISitemapGenerator _sitemapGenerator;
         public SitemapController(ISitemapGenerator sitemapGenerator)

@@ -10,14 +10,14 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Checkout
 {
     /// <summary>
     /// Represents a shipping information model
     /// </summary>
-    public class ShippingInfoModel : FoundationModel
+    public class ShippingInfoModel : GenesisModel
     {
         /// <summary>
         /// The <see cref="ShippingMethodModel">shippingMethod</see> to be used. Ignore if not applicable.

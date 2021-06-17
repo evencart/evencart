@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Installation
 {
-    public class InstallationRequestModel : FoundationModel, IRequiresValidations<InstallationRequestModel>
+    public class InstallationRequestModel : GenesisModel, IRequiresValidations<InstallationRequestModel>
     {
         public string ConnectionString { get; set; }
 

@@ -11,19 +11,18 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Navigation;
 using EvenCart.Services.Products;
-using EvenCart.Services.Widgets;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Services.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Navigation;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Users;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class NewsletterSubscriptionWidget : FoundationComponent, IWidget
+    public class NewsletterSubscriptionWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "NewsletterSubscription";
         private readonly IWidgetService _widgetService;
@@ -37,9 +36,9 @@ namespace EvenCart.Areas.Administration.Components.Widgets
             var dataAsDict = data as Dictionary<string, object>;
             if (dataAsDict == null)
                 return R.Success.ComponentResult;
-            var isLoggedIn = !ApplicationEngine.CurrentUser.IsVisitor();
+            var isLoggedIn = !Engine.CurrentUser.IsVisitor();
             return R.Success.With("isLoggedIn", isLoggedIn)
-                .With("subscriptionGuid", ApplicationConfig.NewsletterSubscriptionGuid).ComponentResult;
+                .With("subscriptionGuid", Engine.StaticConfig.NewsletterSubscriptionGuid).ComponentResult;
         }
 
         public string DisplayName { get; } = "Newsletter Subscription Form";

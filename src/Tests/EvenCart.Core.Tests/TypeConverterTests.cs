@@ -1,6 +1,6 @@
 ﻿using System;
-using EvenCart.Core.Infrastructure.Utils;
-using EvenCart.Data.Extensions;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Types;
 using NUnit.Framework;
 
 namespace EvenCart.Common.Tests

@@ -11,13 +11,13 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "Pagination")]
-    public class PaginationComponent : FoundationComponent
+    public class PaginationComponent : GenesisComponent
     {
         private const int MaxVisiblePages = 10;
 

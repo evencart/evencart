@@ -13,15 +13,15 @@ using System;
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Shipments;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
 using UserModel = EvenCart.Models.Users.UserModel;
 
 namespace EvenCart.Models.Orders
 {
-    public class OrderModel : FoundationEntityModel
+    public class OrderModel : GenesisEntityModel
     {
         /// <summary>
         /// The displayable order number

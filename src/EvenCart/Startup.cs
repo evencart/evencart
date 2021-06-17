@@ -12,8 +12,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using EvenCart.Infrastructure;
+using EvenCart.Genesis;
 using EvenCart.Swagger;
+using Genesis;
+using Genesis.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +28,8 @@ namespace EvenCart
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
+        private IGenesisEngine _appEngine;
+
         public Startup(IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -34,18 +38,20 @@ namespace EvenCart
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            _appEngine = GenesisApp.Current.ConfigureEngine<ApplicationEngine>(services, _hostingEnvironment, _configuration);
+            var applicationConfig = GenesisApp.Current.ApplicationConfig;
             //swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvenCart Api Documentation", Version = ApplicationConfig.ApiVersion });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvenCart Api Documentation", Version = applicationConfig.ApiVersion });
                 c.CustomSchemaIds(x => x.FullName);
                 c.ResolveConflictingActions(x => x.First());
                 
-                if (File.Exists($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml"))
+                if (File.Exists($"../Documentation/{applicationConfig.ApiVersion}/XmlComments.xml"))
                 {
-                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.xml", true);
-                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Infrastructure.xml", true);
-                    c.IncludeXmlComments($"../Documentation/{ApplicationConfig.ApiVersion}/XmlComments.Data.xml", true);
+                    c.IncludeXmlComments($"../Documentation/{applicationConfig.ApiVersion}/XmlComments.xml", true);
+                    c.IncludeXmlComments($"../Documentation/{applicationConfig.ApiVersion}/XmlComments.Infrastructure.xml", true);
+                    c.IncludeXmlComments($"../Documentation/{applicationConfig.ApiVersion}/XmlComments.Data.xml", true);
                 }
                 c.SwaggerGeneratorOptions.DocInclusionPredicate = (s, description) => description.ActionDescriptor.AttributeRouteInfo?.Name?.StartsWith("api_") ?? false;
                 c.ParameterFilter<SwaggerCommonFilter>();
@@ -53,7 +59,7 @@ namespace EvenCart
                 c.OperationFilter<SwaggerCommonFilter>();
             });
 
-            return ApplicationEngine.ConfigureServices(services, _hostingEnvironment, _configuration);
+            return _appEngine.ConfigureServices(services, _hostingEnvironment, _configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -62,7 +68,7 @@ namespace EvenCart
             app.UseSwagger();
 #endif
 
-            ApplicationEngine.Configure(app, env);
+            _appEngine.ConfigureApp(app, env);
         }
     }
 }

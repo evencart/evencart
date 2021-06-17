@@ -10,7 +10,7 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Common;
-using EvenCart.Data.Entity.Common;
+using Genesis.Modules.Meta;
 
 namespace EvenCart.Areas.Administration.Factories.Common
 {

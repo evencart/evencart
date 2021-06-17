@@ -14,16 +14,16 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Media;
 using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class ProductModel : FoundationEntityModel, IRequiresValidations<ProductModel>
+    public class ProductModel : GenesisEntityModel, IRequiresValidations<ProductModel>
     {
         public string Name { get; set; }
 

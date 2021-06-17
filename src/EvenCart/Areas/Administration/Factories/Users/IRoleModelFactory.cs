@@ -10,8 +10,8 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Users;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Areas.Administration.Factories.Users
 {

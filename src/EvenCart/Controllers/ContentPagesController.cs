@@ -9,18 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Pages;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Pages;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Users;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -28,7 +24,7 @@ namespace EvenCart.Controllers
     /// <summary>
     /// Allows users to get the content pages
     /// </summary>
-    public class ContentPagesController : FoundationController
+    public class ContentPagesController : GenesisController
     {
         private readonly IContentPageService _contentPageService;
         private readonly IModelMapper _modelMapper;
@@ -41,7 +37,7 @@ namespace EvenCart.Controllers
         [HttpGet("page-preview/{id}", Name = RouteNames.PreviewPage)]
         public IActionResult Preview(int id)
         {
-            var url = ApplicationEngine.RouteUrl(RouteNames.SinglePage, new { id = id });
+            var url = Engine.RouteUrl(RouteNames.SinglePage, new { id = id });
             return Redirect(url);
         }
 
@@ -53,10 +49,10 @@ namespace EvenCart.Controllers
             var contentPage = _contentPageService.Get(id);
             if (contentPage == null || (!contentPage.Published && !CurrentUser.IsAdministrator()))
                 return NotFound();
-            if (!ApplicationEngine.CurrentLanguage.PrimaryLanguage)
+            if (!Engine.CurrentLanguage.PrimaryLanguage)
             {
                 //we need translations
-                contentPage.PopulateTranslationsFromDb(ApplicationEngine.CurrentLanguage.CultureCode, true);
+                contentPage.PopulateTranslationsFromDb(Engine.CurrentLanguage.CultureCode, true);
             }
             var contentPageModel = _modelMapper.Map<ContentPageModel>(contentPage);
             SeoMetaHelper.SetSeoData(contentPageModel.Name);
@@ -65,7 +61,7 @@ namespace EvenCart.Controllers
             if (!contentPage.Template.IsNullEmptyOrWhiteSpace())
             {
                 //get the template
-                var template = ApplicationEngine.ActiveTheme.GetTemplatePath(contentPage.Template);
+                var template = Engine.ActiveTheme.GetTemplatePath(contentPage.Template);
                 if (!template.IsNullEmptyOrWhiteSpace())
                     r.WithView(template);
             }

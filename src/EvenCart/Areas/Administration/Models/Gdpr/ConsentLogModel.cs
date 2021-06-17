@@ -10,16 +10,16 @@
 #endregion
 
 using System;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Gdpr;
 
 namespace EvenCart.Areas.Administration.Models.Gdpr
 {
-    public class ConsentLogModel : FoundationModel
+    public class ConsentLogModel : GenesisModel
     {
         public string ConsentTitle { get; set; }
 
-        public ActivityType ActivityType { get; set; }
+        public GdprActivityType ActivityType { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

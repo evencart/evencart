@@ -1,6 +1,6 @@
 ﻿using DotEntity;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure.Utils;
+using Genesis.Data;
+using Genesis.Infrastructure.Types;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests
@@ -11,7 +11,7 @@ namespace EvenCart.Services.Tests
         public void All_Entities_Versioned_Succeeds()
         {
             //first get all the entities 
-            var classTypes = TypeFinder.ClassesOfType<FoundationEntity>();
+            var classTypes = TypeFinder.ClassesOfType<GenesisEntity>();
             foreach (var c in classTypes)
             {
                 var entitySetType = typeof(EntitySet<>).MakeGenericType(c);

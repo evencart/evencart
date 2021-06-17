@@ -11,14 +11,14 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Logger;
-using EvenCart.Data.Constants;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Logging;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -26,7 +26,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Allows to view and delete activity logs
     /// </summary>
-    public class LogsController : FoundationAdminController
+    public class LogsController : GenesisAdminController
     {
         private readonly ILoggerEntityService _loggerEntityService;
         private readonly IModelMapper _modelMapper;

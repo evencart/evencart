@@ -10,13 +10,13 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.ScheduledTasks
 {
-    public class ScheduledTaskModel : FoundationEntityModel, IRequiresValidations<ScheduledTaskModel>
+    public class ScheduledTaskModel : GenesisEntityModel, IRequiresValidations<ScheduledTaskModel>
     {
         public string Name { get; set; }
 

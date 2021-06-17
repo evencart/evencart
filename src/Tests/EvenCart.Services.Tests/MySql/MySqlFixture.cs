@@ -1,10 +1,10 @@
-﻿using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Data.Database;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
+﻿using EvenCart.Genesis;
 using EvenCart.Services.Installation;
+using Genesis;
+using Genesis.Database;
+using Genesis.Infrastructure.IO;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Web;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.MySql
@@ -16,11 +16,11 @@ namespace EvenCart.Services.Tests.MySql
         public void OnetimeSetup()
         {
             TestDbInit.MySql(BaseTest.MySqlConnectionString);
-            var installationService = new InstallationService(TestDbInit.DbSettings, DependencyResolver.Resolve<ILocalFileProvider>());
+            var installationService = new InstallationService(TestDbInit.DbSettings, D.Resolve<ILocalFileProvider>());
             installationService.Install();
             installationService.FillRequiredSeedData("admin@store.com", "@#$%^&*", "localhost", "Test Store");
             //set the current store to 1
-            ApplicationEngine.CurrentHttpContext.SetCurrentStore(new Store() {Id = 1});
+            GenesisEngine.Instance.CurrentHttpContext.SetCurrentStore(new Store() {Id = 1});
         }
 
         [OneTimeTearDown]

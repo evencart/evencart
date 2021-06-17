@@ -11,22 +11,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Formatter;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Media;
 using EvenCart.Models.Reviews;
 using EvenCart.Models.Vendors;
-using EvenCart.Services.Extensions;
+using Genesis.Extensions;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
+using Genesis.Modules.MediaServices;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using DownloadModel = EvenCart.Models.Products.DownloadModel;
 using ProductAttributeModel = EvenCart.Models.Products.ProductAttributeModel;
 using ProductAttributeValueModel = EvenCart.Models.Products.ProductAttributeValueModel;
@@ -45,7 +46,8 @@ namespace EvenCart.Factories.Products
         private readonly TaxSettings _taxSettings;
         private readonly IRoundingService _roundingService;
         private readonly IDataSerializer _dataSerializer;
-        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings, IRoundingService roundingService, IDataSerializer dataSerializer)
+        private readonly IGenesisEngine GenesisEngine;
+        public ProductModelFactory(IModelMapper modelMapper, IMediaAccountant mediaAccountant, CatalogSettings catalogSettings, IPriceAccountant priceAccountant, TaxSettings taxSettings, IRoundingService roundingService, IDataSerializer dataSerializer, IGenesisEngine genesisEngine)
         {
             _modelMapper = modelMapper;
             _mediaAccountant = mediaAccountant;
@@ -54,6 +56,7 @@ namespace EvenCart.Factories.Products
             _taxSettings = taxSettings;
             _roundingService = roundingService;
             _dataSerializer = dataSerializer;
+            GenesisEngine = genesisEngine;
         }
 
         public ProductModel Create(Product product)
@@ -68,7 +71,7 @@ namespace EvenCart.Factories.Products
                 if (mediaModel.MediaType != MediaType.Url)
                 {
                     mediaModel.ThumbnailUrl =
-                        _mediaAccountant.GetPictureUrl(y, ApplicationEngine.ActiveTheme.ProductBoxImageSize, true);
+                        _mediaAccountant.GetPictureUrl(y, GenesisEngine.ActiveTheme.ProductBoxImageSize, true);
                     mediaModel.Url = _mediaAccountant.GetPictureUrl(y, 0, 0, true);
                 }
                 else
@@ -81,7 +84,7 @@ namespace EvenCart.Factories.Products
                 new MediaModel()
                 {
                     ThumbnailUrl = _mediaAccountant.GetPictureUrl(null,
-                        ApplicationEngine.ActiveTheme.ProductBoxImageSize, true),
+                        GenesisEngine.ActiveTheme.ProductBoxImageSize, true),
                     Url = _mediaAccountant.GetPictureUrl(null, 0, 0, true)
                 }
             };
@@ -150,7 +153,7 @@ namespace EvenCart.Factories.Products
             {
                 product.ReviewSummary = null;
             }
-            if (productModel.RequireLoginToViewPrice && ApplicationEngine.CurrentUser.IsVisitor())
+            if (productModel.RequireLoginToViewPrice && GenesisEngine.CurrentUser.IsVisitor())
             {
                 productModel.Price = 0;
                 productModel.ComparePrice = null;
@@ -159,7 +162,7 @@ namespace EvenCart.Factories.Products
             {
                 IList<DiscountCoupon> coupons = null;
                 //any autodiscounted price
-                var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, null, ApplicationEngine.CurrentUser, 1, ref coupons, out decimal discount);
+                var price = _priceAccountant.GetAutoDiscountedPriceForUser(product, null, GenesisEngine.CurrentUser, 1, ref coupons, out decimal discount);
                 if (price < product.Price)
                 {
                     productModel.ComparePrice = product.Price;
@@ -176,7 +179,7 @@ namespace EvenCart.Factories.Products
                     productModel.Price = priceWithoutTax + tax;
 
                 //change display prices to current currency
-                var targetCurrency = ApplicationEngine.CurrentCurrency;
+                var targetCurrency = GenesisEngine.CurrentCurrency;
                 productModel.Price = _priceAccountant.ConvertCurrency(productModel.Price, targetCurrency);
             }
 
@@ -194,7 +197,7 @@ namespace EvenCart.Factories.Products
             {
                 Description = download.Description,
                 Title = download.Title,
-                DownloadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadFile, new {guid = download.Guid}),
+                DownloadUrl = GenesisEngine.RouteUrl(RouteNames.DownloadFile, new {guid = download.Guid}),
                 FileType = download.FileType,
                 Published = download.Published,
                 DisplayOrder = download.DisplayOrder

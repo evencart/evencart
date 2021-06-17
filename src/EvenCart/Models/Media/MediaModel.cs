@@ -9,12 +9,12 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.MediaServices;
 
 namespace EvenCart.Models.Media
 {
-    public class MediaModel : FoundationEntityModel
+    public class MediaModel : GenesisEntityModel
     {
         public string Description { get; set; }
 

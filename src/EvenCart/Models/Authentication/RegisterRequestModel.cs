@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Authentication
 {
-    public class RegisterRequestModel : FoundationModel
+    public class RegisterRequestModel : GenesisModel
     {
         /// <summary>
         /// The invite code if any for the request.

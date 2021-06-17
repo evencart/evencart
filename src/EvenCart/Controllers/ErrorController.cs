@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
     [Route("error")]
-    public class ErrorController : FoundationController
+    public class ErrorController : GenesisController
     {
         [HttpGet]
         public IActionResult Index(int? statusCode = null)

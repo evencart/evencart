@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Countries
 {
-    public class StateOrProvinceModel : FoundationEntityModel
+    public class StateOrProvinceModel : GenesisEntityModel
     {
         /// <summary>
         /// The country id of the state

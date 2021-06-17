@@ -11,19 +11,18 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Widgets;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Pluggable;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class CustomHtmlWidget : FoundationComponent, IWidget
+    public class CustomHtmlWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "CustomHtml";
         private readonly IWidgetService _widgetService;
@@ -39,7 +38,7 @@ namespace EvenCart.Areas.Administration.Components.Widgets
                 return R.Success.ComponentResult;
             var widgetId = dataAsDict["id"].ToString();
             var widgetSettings = _widgetService.LoadWidgetSettings<CustomHtmlWidgetSettings>(widgetId);
-            if(!widgetSettings.Language.IsNullEmptyOrWhiteSpace() && widgetSettings.Language != ApplicationEngine.CurrentLanguage.CultureCode)
+            if(!widgetSettings.Language.IsNullEmptyOrWhiteSpace() && widgetSettings.Language != Engine.CurrentLanguage.CultureCode)
                 return R.Success.ComponentResult;
             string formattedContent = null;
             if (!widgetSettings.CustomFormat.IsNullEmptyOrWhiteSpace())
@@ -71,7 +70,7 @@ namespace EvenCart.Areas.Administration.Components.Widgets
         {
             var widgetSettings = settings as CustomHtmlWidgetSettings;
             var availableLanguages =
-                SelectListHelper.GetSelectItemList(ApplicationEngine.AllLanguages, x => x.CultureCode, x => x.Name);
+                SelectListHelper.GetSelectItemList(Engine.AllLanguages, x => x.CultureCode, x => x.Name);
 
             return new {
                 title = widgetSettings?.Title,

@@ -11,19 +11,17 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Dialog;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Common;
-using EvenCart.Services.Products;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Meta;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class DialogController : FoundationAdminController
+    public class DialogController : GenesisAdminController
     {
         [HttpGet("selector", Name = AdminRouteNames.SelectorDialog)]
         public IActionResult Selector([FromQuery] DialogModel dialogModel)
@@ -48,7 +46,7 @@ namespace EvenCart.Areas.Administration.Controllers
                     routeName = AdminRouteNames.ProductsList;
                     title = T("Products");
                     //get catalogs for current store
-                    var catalogIds = DependencyResolver.Resolve<IEntityStoreService>().Get(x =>
+                    var catalogIds = D.Resolve<IEntityStoreService>().Get(x =>
                             x.EntityName == nameof(Catalog) && x.StoreId == CurrentStore.Id).Select(x => x.EntityId)
                         .ToList();
                     parameters = new
@@ -83,7 +81,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 default:
                     return NotFound();
             }
-            model.ApiUrl = Url.RouteUrl($"{ApplicationConfig.ApiEndpointName}_{routeName}", parameters);
+            model.ApiUrl = Url.RouteUrl($"{Engine.StaticConfig.ApiEndpointName}_{routeName}", parameters);
             model.UiUrl = Url.RouteUrl($"{routeName}");
             model.DialogTitle = title;
             model.DisplayField = displayField;

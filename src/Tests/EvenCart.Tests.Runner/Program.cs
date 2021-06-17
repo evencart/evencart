@@ -9,7 +9,6 @@ namespace EvenCart.Tests.Runner
         static void Main(string[] args)
         {
             new AutoRun(typeof(BaseTest).Assembly).Execute(args);
-            new AutoRun(typeof(StringTests).Assembly).Execute(args);
         }
     }
 }

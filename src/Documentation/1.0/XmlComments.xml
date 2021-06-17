@@ -76,7 +76,7 @@
             Gets a single custom label
             </summary>
             <param name="customLabelId">The id of custom label</param>
-            <param name="labelType">The type of <see cref="T:EvenCart.Data.Entity.Common.CustomLabelType">label</see></param>
+            <param name="labelType">The type of <see cref="T:Genesis.Modules.Meta.CustomLabelType">label</see></param>
             <response code="200">The <see cref="T:EvenCart.Areas.Administration.Models.Common.CustomLabelModel">custom label</see> object as 'customLabel'</response>
         </member>
         <member name="M:EvenCart.Areas.Administration.Controllers.CustomLabelsController.SaveCustomLabel(EvenCart.Areas.Administration.Models.Common.CustomLabelModel)">
@@ -380,7 +380,7 @@
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Common.CustomLabelModel.LabelType">
             <summary>
-            The <see cref="T:EvenCart.Data.Entity.Common.CustomLabelType">label type</see>
+            The <see cref="T:Genesis.Modules.Meta.CustomLabelType">label type</see>
             </summary>
         </member>
         <member name="P:EvenCart.Areas.Administration.Models.Common.CustomLabelModel.DisplayOrder">
@@ -1016,7 +1016,7 @@
             <summary>
             Gets the wishlist of the authenticated user
             </summary>
-            <response code="200">The <see cref="T:EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations.CartImplementation">wishlist</see> object</response>
+            <response code="200">The <see cref="T:Genesis.ViewEngines.GlobalObjects.Implementations.CartImplementation">wishlist</see> object</response>
         </member>
         <member name="T:EvenCart.Controllers.CheckoutController">
             <summary>
@@ -1218,7 +1218,7 @@
         </member>
         <member name="M:EvenCart.Controllers.ProductsController.UploadFile(EvenCart.Models.Products.UploadFileModel)">
             <summary>
-            Uploads a file for a product. The product must have at least one <see cref="F:EvenCart.Data.Enum.InputFieldType.FileUpload"/> attribute to accept uploaded file.
+            Uploads a file for a product. The product must have at least one <see cref="F:Genesis.Modules.Meta.InputFieldType.FileUpload"/> attribute to accept uploaded file.
             </summary>
             <param name="uploadFileModel"></param>
             <response code="200">The url of the file as 'url' and the unique id of the file as 'guid'</response>

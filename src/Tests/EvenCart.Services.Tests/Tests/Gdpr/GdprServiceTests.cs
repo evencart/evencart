@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Services.Gdpr;
-using EvenCart.Services.Users;
+using Genesis.Modules.Gdpr;
+using Genesis.Modules.Users;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Gdpr

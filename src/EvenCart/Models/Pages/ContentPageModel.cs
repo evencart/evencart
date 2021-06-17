@@ -10,13 +10,13 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Users;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Pages
 {
-    public class ContentPageModel : FoundationModel
+    public class ContentPageModel : GenesisModel
     {
         public string Name { get; set; }
 

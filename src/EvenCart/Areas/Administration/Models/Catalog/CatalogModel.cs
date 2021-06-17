@@ -10,13 +10,13 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Catalog
 {
-    public class CatalogModel : FoundationEntityModel, IRequiresValidations<CatalogModel>
+    public class CatalogModel : GenesisEntityModel, IRequiresValidations<CatalogModel>
     {
         public string Name { get; set; }
 

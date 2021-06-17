@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Gdpr
 {
-    public class ConsentModel : FoundationEntityModel, IRequiresValidations<ConsentModel>
+    public class ConsentModel : GenesisEntityModel, IRequiresValidations<ConsentModel>
     {
         public string Title { get; set; }
 

@@ -12,37 +12,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Addresses;
-using EvenCart.Services.Extensions;
 using EvenCart.Services.Helpers;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Services.Purchases;
-using EvenCart.Services.Users;
 using EvenCart.Events;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Checkout;
-using EvenCart.Services.Logger;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
-using EvenCart.Services.Security;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Logging;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Security;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
+using EvenCart.Genesis.Mvc;
 
 namespace EvenCart.Controllers
 {
@@ -50,7 +49,7 @@ namespace EvenCart.Controllers
     /// Allows authenticated users to perform checkout activities
     /// </summary>
     [Route("checkout")]
-    public class CheckoutController : FoundationController
+    public class CheckoutController : GenesisController
     {
         private readonly IPaymentProcessor _paymentProcessor;
         private readonly IPaymentAccountant _paymentAccountant;
@@ -99,7 +98,7 @@ namespace EvenCart.Controllers
         {
             if (!CanCheckout(out Cart cart))
                 return RedirectToRoute(RouteNames.Home);
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             //get addresses for current user
             var addresses = _addressService.Get(x => x.EntityId == currentUser.Id && x.EntityName == nameof(User));
             var addressModels = addresses.Select(x =>
@@ -128,7 +127,7 @@ namespace EvenCart.Controllers
             if (!CanCheckout(out Cart cart))
                 return R.Fail.Result;
 
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             //validations first before inserting anything
             if (requestModel.BillingAddress.Id > 0)
             {
@@ -248,7 +247,7 @@ namespace EvenCart.Controllers
                 .Where(x => x.LoadPluginInstance<IShipmentHandlerPlugin>().IsMethodAvailable(cart)).ToList();
             if (!shippingHandlers.Any())
             {
-                cart.ShippingMethodName = ApplicationConfig.UnavailableMethodName;
+                cart.ShippingMethodName = Engine.StaticConfig.UnavailableMethodName;
                 _cartService.Update(cart);
                 //there are no shipping handlers, may be it's being manually handled by store owner
                 return RedirectToRoute(RouteNames.CheckoutPayment);
@@ -387,7 +386,7 @@ namespace EvenCart.Controllers
             if (!paymentHandlers.Any())
             {
                 //redirect to confirm page...payment must be handled offline
-                cart.PaymentMethodName = ApplicationConfig.UnavailableMethodName;
+                cart.PaymentMethodName = Engine.StaticConfig.UnavailableMethodName;
                 _cartService.Update(cart);
                 return RedirectToRoute(RouteNames.CheckoutConfirm);
             }
@@ -423,7 +422,7 @@ namespace EvenCart.Controllers
                 })
                 .ToList();
             //get if there are store credits available
-            GetAvailableStoreCredits(out var availableStoreCredits, out var availableStoreCreditAmount, ApplicationEngine.CurrentCurrency, cart);
+            GetAvailableStoreCredits(out var availableStoreCredits, out var availableStoreCreditAmount, Engine.CurrentCurrency, cart);
 
             //if order guid is set, it means a payment transaction has failed in previous attempt
             //we can use this identifier to skip confirmation page for subsequent attempt
@@ -506,7 +505,7 @@ namespace EvenCart.Controllers
                 if (requestModel.UseStoreCredits)
                 {
                     //do we have available credit
-                    GetAvailableStoreCredits(out _, out creditAmount, ApplicationEngine.BaseCurrency, null);
+                    GetAvailableStoreCredits(out _, out creditAmount, Engine.BaseCurrency, null);
                 }
                 //process the payment immediately
                 ProcessPayment(order, creditAmount, formAsDictionary.ToDictionary(x => x.Key, x => (object)x.Value), out response);
@@ -583,7 +582,7 @@ namespace EvenCart.Controllers
             }
          
 
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             var order = new Order()
             {
                 PaymentMethodName = cart.PaymentMethodName,
@@ -603,9 +602,9 @@ namespace EvenCart.Controllers
                 ShippingMethodFee = cart.ShippingFee,
                 Tax = cart.CartItems.Sum(x => x.Tax),
                 UserIpAddress = WebHelper.GetClientIpAddress(),
-                CurrencyCode = ApplicationEngine.BaseCurrency.IsoCode,
+                CurrencyCode = Engine.BaseCurrency.IsoCode,
                 Subtotal = cart.FinalAmount - cart.CartItems.Sum(x => x.Tax),
-                ExchangeRate = ApplicationEngine.BaseCurrency.ExchangeRate,
+                ExchangeRate = Engine.BaseCurrency.ExchangeRate,
                 DisableReturns = cart.CartItems.All(x => !x.Product.AllowReturns),
                 User = currentUser,
                 IsSubscription = CartHelper.IsSubscriptionCart(cart),
@@ -649,7 +648,7 @@ namespace EvenCart.Controllers
             var creditAmount = 0m;
             if (cart.UseStoreCredits)
             {
-                GetAvailableStoreCredits(out var credits, out creditAmount, ApplicationEngine.BaseCurrency, cart);
+                GetAvailableStoreCredits(out var credits, out creditAmount, Engine.BaseCurrency, cart);
                 if (credits > 0 && _affiliateSettings.MinimumStoreCreditsToAllowPurchases <= credits)
                 {
                     order.UsedStoreCredits = true;
@@ -669,7 +668,7 @@ namespace EvenCart.Controllers
 
             CustomResponse response = null;
            
-            if (cart.PaymentMethodName != ApplicationConfig.UnavailableMethodName && !ProcessPayment(order, creditAmount, paymentMethodData, out response))
+            if (cart.PaymentMethodName != Engine.StaticConfig.UnavailableMethodName && !ProcessPayment(order, creditAmount, paymentMethodData, out response))
             {
                 return response.With("orderGuid", order.Guid).Result;
             }
@@ -687,7 +686,7 @@ namespace EvenCart.Controllers
                 //assign registered role to the user
                 _roleService.SetUserRoles(currentUser.Id, new[] { roleId });
 
-                ApplicationEngine.SignIn(currentUser.Email, null, false);
+                Engine.SignIn(currentUser.Email, null, false);
             }
 
             response = response ?? R.Success;
@@ -698,7 +697,7 @@ namespace EvenCart.Controllers
         public IActionResult Complete(string orderGuid)
         {
             var order = _orderService.GetByGuid(orderGuid);
-            if (order == null || order.UserId != ApplicationEngine.CurrentUser.Id)
+            if (order == null || order.UserId != Engine.CurrentUser.Id)
                 return NotFound();
             //initialize downloads
             _downloadService.InitializeDownloads(order);
@@ -711,7 +710,7 @@ namespace EvenCart.Controllers
         public IActionResult Failed(string orderGuid)
         {
             var order = _orderService.GetByGuid(orderGuid);
-            if (order == null || order.UserId != ApplicationEngine.CurrentUser.Id)
+            if (order == null || order.UserId != Engine.CurrentUser.Id)
                 return NotFound();
             return R.Success.With("orderGuid", orderGuid).With("orderNumber", order.OrderNumber).Result;
         }
@@ -720,7 +719,7 @@ namespace EvenCart.Controllers
 
         private bool CanCheckout(out Cart cart)
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             cart = _cartService.GetCart(currentUser.Id);
             //refresh the cart
             CartHelper.RefreshCart(cart);

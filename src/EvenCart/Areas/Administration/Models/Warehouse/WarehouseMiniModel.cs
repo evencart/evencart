@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Warehouse
 {
     /// <summary>
     /// Represents a minimal warehouse object
     /// </summary>
-    public class WarehouseMiniModel : FoundationEntityModel
+    public class WarehouseMiniModel : GenesisEntityModel
     {
         /// <summary>
         /// The name of the warehouse.

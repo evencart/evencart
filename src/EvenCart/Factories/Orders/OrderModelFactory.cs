@@ -11,17 +11,16 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
 using EvenCart.Factories.Shipments;
-using EvenCart.Services.Formatter;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Addresses;
 using EvenCart.Models.Orders;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Factories.Orders
 {

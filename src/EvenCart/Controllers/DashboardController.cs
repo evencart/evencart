@@ -9,11 +9,10 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Services.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.ViewEngines;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Users;
+using Genesis.Routing;
+using Genesis.ViewEngines;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -22,7 +21,7 @@ namespace EvenCart.Controllers
     /// Allows user to set global preferences
     /// </summary>
     [Route("")]
-    public class DashboardController : FoundationController
+    public class DashboardController : GenesisController
     {
         private readonly IViewAccountant _viewAccountant;
         private readonly IUserService _userService;
@@ -51,11 +50,11 @@ namespace EvenCart.Controllers
         [DualPost("set-active-currency", Name = RouteNames.SetActiveCurrency, OnlyApi = true)]
         public IActionResult SetActiveCurrency(int currencyId)
         {
-            if (ApplicationEngine.CurrentUser == null)
-                ApplicationEngine.GuestSignIn();
+            if (Engine.CurrentUser == null)
+                Engine.GuestSignIn();
 
-            ApplicationEngine.CurrentUser.ActiveCurrencyId = currencyId;
-            _userService.Update(ApplicationEngine.CurrentUser);
+            Engine.CurrentUser.ActiveCurrencyId = currencyId;
+            _userService.Update(Engine.CurrentUser);
             return R.Success.Result;
         }
         /// <summary>
@@ -68,11 +67,11 @@ namespace EvenCart.Controllers
         {
             if (string.IsNullOrWhiteSpace(languageCulture))
                 return BadRequest();
-            if (ApplicationEngine.CurrentUser == null)
-                ApplicationEngine.GuestSignIn();
+            if (Engine.CurrentUser == null)
+                Engine.GuestSignIn();
 
-            ApplicationEngine.CurrentUser.ActiveLanguageCulture = languageCulture;
-            _userService.Update(ApplicationEngine.CurrentUser);
+            Engine.CurrentUser.ActiveLanguageCulture = languageCulture;
+            _userService.Update(Engine.CurrentUser);
             return R.Success.Result;
         }
     }

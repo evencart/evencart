@@ -9,11 +9,10 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.ViewEngines;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Routing;
+using Genesis.ViewEngines;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -21,7 +20,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Allows store admins to view dashboard summaries
     /// </summary>
-    public class DashboardController : FoundationAdminController
+    public class DashboardController : GenesisAdminController
     {
         private readonly IViewAccountant _viewAccountant;
         public DashboardController(IViewAccountant viewAccountant)
@@ -39,7 +38,7 @@ namespace EvenCart.Areas.Administration.Controllers
         {
             if (context.IsNullEmptyOrWhiteSpace())
                 return R.Success.With("templates", null).Result;
-            var templates = _viewAccountant.CompileAllViews(context, ApplicationConfig.AdminAreaName);
+            var templates = _viewAccountant.CompileAllViews(context, Engine.StaticConfig.AdminAreaName);
             return R.Success.With("templates", templates).Result;
         }
     }

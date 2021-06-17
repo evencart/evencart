@@ -9,18 +9,18 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
-using EvenCart.Services.Extensions;
 using FluentValidation;
+using Genesis;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Models.Subscriptions
 {
     /// <summary>
     /// Represents a single subscription 
     /// </summary>
-    public class SubscriptionModel : FoundationModel, IRequiresValidations<SubscriptionModel>
+    public class SubscriptionModel : GenesisModel, IRequiresValidations<SubscriptionModel>
     {
         public string SubscriptionGuid { get; set; }
 
@@ -31,7 +31,7 @@ namespace EvenCart.Models.Subscriptions
         public void SetupValidationRules(ModelValidator<SubscriptionModel> v)
         {
             v.RuleFor(x => x.SubscriptionGuid).NotEmpty();
-            v.RuleFor(x => x.Email).NotEmpty().EmailAddress().When(x => ApplicationEngine.CurrentUser.IsVisitor());
+            v.RuleFor(x => x.Email).NotEmpty().EmailAddress().When(x => GenesisEngine.Instance.CurrentUser.IsVisitor());
         }
     }
 }

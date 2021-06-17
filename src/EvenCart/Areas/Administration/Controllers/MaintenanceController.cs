@@ -9,19 +9,17 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core;
-using EvenCart.Data.Constants;
-using EvenCart.Infrastructure.Caching;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Caching;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Logging;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class MaintenanceController : FoundationAdminController
+    public class MaintenanceController : GenesisAdminController
     {
         private readonly ICacheAccountant _cacheAccountant;
         private readonly ILogger _logger;

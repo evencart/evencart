@@ -13,8 +13,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Providers;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using EvenCart.Core.Infrastructure;
+using Genesis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
@@ -44,12 +44,12 @@ namespace EvenCart.Services.Tests
 
         public T Resolve<T>()
         {
-            return DependencyResolver.Resolve<T>();
+            return D.Resolve<T>();
         }
 
         public T Resolve<T>(string serviceKey)
         {
-            return DependencyResolver.Resolve<T>(serviceKey);
+            return D.Resolve<T>(serviceKey);
         }
     }
 

@@ -17,19 +17,18 @@ using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Services.Extensions;
+using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
 using EvenCart.Services.Reviews;
 using EvenCart.Factories.Products;
 using EvenCart.Factories.Reviews;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
+using EvenCart.Services.Orders;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,7 +37,7 @@ namespace EvenCart.Controllers
     /// <summary>
     /// Allows authenticated users to view and post reviews
     /// </summary>
-    public class ReviewsController : FoundationController
+    public class ReviewsController : GenesisController
     {
         private readonly IReviewService _reviewService;
         private readonly IOrderService _orderService;
@@ -70,7 +69,7 @@ namespace EvenCart.Controllers
             if (!_catalogSettings.EnableReviews)
                 return NotFound();
 
-            var userId = ApplicationEngine.CurrentUser.Id;
+            var userId = CurrentUser.Id;
             var verifiedPurchase = false;
             if (_catalogSettings.AllowReviewsForStorePurchaseOnly)
             {
@@ -172,7 +171,7 @@ namespace EvenCart.Controllers
             var product = _productService.Get(productId);
             if (!product.IsPublic(CurrentStore.Id))
                 return NotFound();
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             var review = reviewId > 0 ? _reviewService.Get(reviewId) : new Review()
             {
                 ProductId =  productId,
@@ -180,7 +179,7 @@ namespace EvenCart.Controllers
             };
             if (review == null || review.ProductId != productId)
                 return NotFound();
-            if (review.UserId != ApplicationEngine.CurrentUser.Id || (review.Id > 0 && !_catalogSettings.AllowReviewModification))
+            if (review.UserId != CurrentUser.Id || (review.Id > 0 && !_catalogSettings.AllowReviewModification))
                 return NotFound();
 
             var response = R.Success;

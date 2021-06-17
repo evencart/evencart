@@ -10,11 +10,11 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Users
 {
-    public class StoreCreditModel : FoundationModel
+    public class StoreCreditModel : GenesisModel
     {
         public decimal Credit { get; set; }
 

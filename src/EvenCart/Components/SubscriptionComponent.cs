@@ -11,18 +11,16 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Subscriptions;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "Subscription")]
-    public class SubscriptionComponent : FoundationComponent
+    public class SubscriptionComponent : GenesisComponent
     {
         private readonly ISubscriptionService _subscriptionService;
         public SubscriptionComponent(ISubscriptionService subscriptionService)
@@ -43,12 +41,12 @@ namespace EvenCart.Components
                 throw new Exception("The subscription guid must be a valid subscription id");
             if (!_subscriptionService.GetAvailableSubscriptionRegistrars().ContainsKey(subscriptionGuidAsStr))
                 throw new Exception("The subscription guid must be a valid subscription id");
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
 
             var isSubscribed = !currentUser.IsVisitor() && _subscriptionService.IsSubscribed(currentUser.Id, subscriptionGuidAsStr, subData);
             var url = isSubscribed
-                ? ApplicationEngine.RouteUrl("api_" + RouteNames.DeleteSubscription)
-                : ApplicationEngine.RouteUrl("api_" + RouteNames.SaveSubscription);
+                ? Engine.RouteUrl("api_" + RouteNames.DeleteSubscription)
+                : Engine.RouteUrl("api_" + RouteNames.SaveSubscription);
 
             return R.Success
                 .With("subscriptionGuid", subscriptionGuidAsStr)

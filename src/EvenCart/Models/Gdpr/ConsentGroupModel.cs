@@ -10,11 +10,11 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Gdpr
 {
-    public class ConsentGroupModel : FoundationEntityModel
+    public class ConsentGroupModel : GenesisEntityModel
     {
         /// <summary>
         /// The name of consent group

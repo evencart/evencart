@@ -10,10 +10,9 @@
 #endregion
 
 using EvenCart.Factories.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Users;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +23,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Route("account")]
     [Authorize]
-    public class AccountController : FoundationController
+    public class AccountController : GenesisController
     {
 
         private readonly IUserModelFactory _userModelFactory;
@@ -40,7 +39,7 @@ namespace EvenCart.Controllers
         [DualGet("", Name = RouteNames.AccountProfile)]
         public IActionResult Profile()
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             var userModel = _userModelFactory.Create(currentUser);
             return R.Success.With("user", userModel).WithTimezones().Result;
         }

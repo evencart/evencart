@@ -11,11 +11,11 @@
 
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Shipments
 {
-    public class ShipmentModel : FoundationEntityModel
+    public class ShipmentModel : GenesisEntityModel
     {
         public string TrackingNumber { get; set; }
 

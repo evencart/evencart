@@ -10,8 +10,8 @@
 #endregion
 
 using EvenCart.Data.Entity.Reviews;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Reviews;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Factories.Reviews
 {

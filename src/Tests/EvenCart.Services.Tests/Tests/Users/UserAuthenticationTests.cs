@@ -1,5 +1,4 @@
-﻿using EvenCart.Data.Enum;
-using EvenCart.Services.Users;
+﻿using Genesis.Modules.Users;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Users

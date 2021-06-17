@@ -10,9 +10,9 @@
 #endregion
 
 using System;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Services.Events;
-using EvenCart.Core.Services.Interceptor;
+using Genesis.Infrastructure;
+using Genesis.Services.Events;
+using Genesis.Services.Interceptor;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Infrastructure.Extensions;

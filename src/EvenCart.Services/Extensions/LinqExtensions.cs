@@ -13,8 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using EvenCart.Data.Enum;
-using EvenCart.Services.Helpers;
+using Genesis.Helpers;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Services.Extensions
 {

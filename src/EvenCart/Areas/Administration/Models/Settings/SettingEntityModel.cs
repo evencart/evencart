@@ -10,11 +10,11 @@
 #endregion
 
 using System.ComponentModel.DataAnnotations;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Settings
 {
-    public class SettingEntityModel : FoundationEntityModel
+    public class SettingEntityModel : GenesisEntityModel
     {
         [Required]
         public string GroupName { get; set; }

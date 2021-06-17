@@ -29,53 +29,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Mvc\UI\Extensions\**" />
-    <Compile Remove="Mvc\Validator\**" />
-    <Compile Remove="Security\**" />
-    <EmbeddedResource Remove="Mvc\UI\Extensions\**" />
-    <EmbeddedResource Remove="Mvc\Validator\**" />
-    <EmbeddedResource Remove="Security\**" />
-    <None Remove="Mvc\UI\Extensions\**" />
-    <None Remove="Mvc\Validator\**" />
-    <None Remove="Security\**" />
+    <Compile Remove="Bundle\**" />
+    <Compile Remove="Config\**" />
+    <Compile Remove="DataTransfer\**" />
+    <Compile Remove="Extensions\**" />
+    <Compile Remove="Localization\**" />
+    <Compile Remove="MediaServices\**" />
+    <Compile Remove="Mvc\**" />
+    <Compile Remove="Routing\**" />
+    <Compile Remove="Theming\**" />
+    <Compile Remove="ViewEngines\**" />
+    <EmbeddedResource Remove="Bundle\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <EmbeddedResource Remove="DataTransfer\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <EmbeddedResource Remove="Localization\**" />
+    <EmbeddedResource Remove="MediaServices\**" />
+    <EmbeddedResource Remove="Mvc\**" />
+    <EmbeddedResource Remove="Routing\**" />
+    <EmbeddedResource Remove="Theming\**" />
+    <EmbeddedResource Remove="ViewEngines\**" />
+    <None Remove="Bundle\**" />
+    <None Remove="Config\**" />
+    <None Remove="DataTransfer\**" />
+    <None Remove="Extensions\**" />
+    <None Remove="Localization\**" />
+    <None Remove="MediaServices\**" />
+    <None Remove="Mvc\**" />
+    <None Remove="Routing\**" />
+    <None Remove="Theming\**" />
+    <None Remove="ViewEngines\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Authentication\ApiAuthenticationHandler.cs" />
-    <Compile Remove="Mvc\Formatters\ExtraFieldFormatter.cs" />
-    <Compile Remove="Mvc\Formatters\PatchFormatter.cs" />
-    <Compile Remove="Mvc\FoundationWidget.cs" />
-    <Compile Remove="Mvc\Models\FoundationExtraFieldModel.cs" />
-    <Compile Remove="Mvc\Models\FoundationModelBinder.cs" />
-    <Compile Remove="Mvc\Models\WithExtraFieldsModel.cs" />
-    <Compile Remove="Mvc\UI\IPageGenerator.cs" />
-    <Compile Remove="Mvc\UI\PageGenerator.cs" />
-    <Compile Remove="Mvc\UI\Resource.cs" />
-    <Compile Remove="Mvc\UI\ResourcePlacementType.cs" />
-    <Compile Remove="Mvc\UI\ResourceRegistrationType.cs" />
     <Compile Remove="Plugins\DefaultPaymentModule.cs" />
-    <Compile Remove="Routing\Conventions\AppActionDiscoveryConvention.cs" />
-    <Compile Remove="Routing\GenericRoute.cs" />
     <Compile Remove="Social\OAuthProvider.cs" />
-    <Compile Remove="ViewEngines\F1SuiteRazorProviderViewEngine.cs" />
-    <Compile Remove="ViewEngines\Filters\Filter.cs" />
-    <Compile Remove="ViewEngines\Filters\TranslateFilter.cs" />
+    <Compile Remove="Tasks\KeepAliveTask.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="DependencyContainer\DependencyContainer.cs~RFf994d2.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Mvc\Validator\ModelValidator.cs" />
-    <Compile Include="Mvc\Validator\IRequiresValidations.cs" />
-    <Compile Include="Security\Attributes\AuthorizeAdministratorAttribute.cs" />
-    <Compile Include="Security\Attributes\CapabilityRequiredAttribute.cs" />
-    <Compile Include="Security\Attributes\RejectForImitatorAttribute.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mvc\Formatters\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -95,9 +88,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\Genesis\Genesis.csproj" />
     <ProjectReference Include="..\EvenCart.Data\EvenCart.Data.csproj" />
     <ProjectReference Include="..\EvenCart.Services\EvenCart.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Caching\" />
+    <Folder Include="Consumers\" />
+    <Folder Include="DependencyContainer\" />
+    <Folder Include="Emails\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Newsletters\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="Tasks\" />
   </ItemGroup>
 
 </Project>

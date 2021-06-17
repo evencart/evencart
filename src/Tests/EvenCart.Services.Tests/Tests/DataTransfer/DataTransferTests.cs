@@ -13,10 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure.DataTransfer;
 using EvenCart.Services.Products;
-using EvenCart.Services.Users;
+using Genesis.Modules.DataTransfer;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.DataTransfer
@@ -54,7 +54,7 @@ namespace EvenCart.Services.Tests.DataTransfer
         public void ExcelProvider_Works()
         {
             InsertProducts(typeof(ExcelProvider).Name);
-            var provider = Resolve<IDataTransferProvider>(typeof(ExcelProvider).FullName);
+            var provider = Resolve<IDataTransferProvider<Product>>(typeof(ExcelProvider).FullName);
             RunTests(provider);
         }
 
@@ -62,11 +62,11 @@ namespace EvenCart.Services.Tests.DataTransfer
         public void JsonProvider_Works()
         {
             InsertProducts(typeof(JsonProvider).Name);
-            var provider = Resolve<IDataTransferProvider>(typeof(JsonProvider).FullName);
+            var provider = Resolve<IDataTransferProvider<Product>>(typeof(JsonProvider).FullName);
             RunTests(provider);
         }
 
-        private void RunTests(IDataTransferProvider provider)
+        private void RunTests(IDataTransferProvider<Product> provider)
         {
             var providerName = provider.GetType().Name;
             //products

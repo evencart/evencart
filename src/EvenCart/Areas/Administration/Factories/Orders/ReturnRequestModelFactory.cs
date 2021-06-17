@@ -13,8 +13,8 @@ using System.Linq;
 using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Services.Formatter;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {

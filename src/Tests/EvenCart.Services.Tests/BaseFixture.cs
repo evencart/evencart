@@ -1,9 +1,9 @@
 ﻿using System;
-using EvenCart.Core.Caching;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Data.Database;
-using EvenCart.Infrastructure;
+using EvenCart.Genesis;
+using Genesis;
+using Genesis.Caching;
+using Genesis.Database;
+using Genesis.Infrastructure.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +26,7 @@ namespace EvenCart.Services.Tests
                 .Returns("Hosting:UnitTestEnvironment");
 
             hostingEnvironment.Setup(x => x.EnvironmentName)
-                .Returns(ApplicationConfig.TestEnvironmentName);
+                .Returns(GenesisApp.Current.ApplicationConfig.TestEnvironmentName);
 
             hostingEnvironment.Setup(x => x.ContentRootPath)
                 .Returns(AppDomain.CurrentDomain.BaseDirectory);
@@ -44,10 +44,10 @@ namespace EvenCart.Services.Tests
             serviceCollection.AddSingleton<IHttpContextAccessor>(provider => httpContextAccessor.Object);
             serviceCollection.AddSingleton<IConfiguration>(configuration);
             serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());
-            ApplicationEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object, configuration);
+            GenesisEngine.Instance.ConfigureServices(serviceCollection, hostingEnvironment.Object, configuration);
             //set the cache providers
             CacheProviders.PrimaryProvider =
-                DependencyResolver.Resolve<ICacheProvider>(typeof(MemoryCacheProvider).FullName);
+                D.Resolve<ICacheProvider>(typeof(MemoryCacheProvider).FullName);
         }
     }
 }

@@ -11,13 +11,13 @@
 
 using System;
 using System.Linq;
-using EvenCart.Core.Services.Events;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Users;
+using Genesis.Infrastructure;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Users;
+using Genesis.Services.Events;
 
 namespace EvenCart.Events
 {
@@ -26,11 +26,13 @@ namespace EvenCart.Events
         private readonly AffiliateSettings _affiliateSettings;
         private readonly IStoreCreditService _storeCreditService;
         private readonly OrderSettings _orderSettings;
-        public AffiliateEventsCapture(AffiliateSettings affiliateSettings, IStoreCreditService storeCreditService, OrderSettings orderSettings)
+        private readonly IGenesisEngine _appEngine;
+        public AffiliateEventsCapture(AffiliateSettings affiliateSettings, IStoreCreditService storeCreditService, OrderSettings orderSettings, IGenesisEngine appEngine)
         {
             _affiliateSettings = affiliateSettings;
             _storeCreditService = storeCreditService;
             _orderSettings = orderSettings;
+            _appEngine = appEngine;
         }
 
         public void Capture(string eventName, object[] eventData = null)
@@ -74,7 +76,7 @@ namespace EvenCart.Events
                         ? order.OrderTotal - order.Tax
                         : order.OrderTotal;
                     var affiliateAmount = _affiliateSettings.GetAffiliateAmount(amount);
-                    var affiliateUserId = ApplicationEngine.CurrentAffiliate?.Id ?? 0;
+                    var affiliateUserId = _appEngine.CurrentAffiliate?.Id ?? 0;
                     
                     if (affiliateUserId > 0)
                     {

@@ -14,10 +14,10 @@ using System.Linq;
 using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Services.Formatter;
 using EvenCart.Services.Helpers;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {

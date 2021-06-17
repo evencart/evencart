@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EvenCart.Data\EvenCart.Data.csproj" />
+    <ProjectReference Include="..\..\EvenCart.Genesis\EvenCart.Genesis.csproj" />
   </ItemGroup>
 
 </Project>

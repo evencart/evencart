@@ -10,13 +10,14 @@
 #endregion
 
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
     [FormatAsCurrencies(nameof(Price), nameof(TotalPrice), nameof(LineTotal), nameof(Tax))]
-    public class OrderItemModel : FoundationEntityModel
+    public class OrderItemModel : GenesisEntityModel
     {
         public int ProductId { get; set; }
 

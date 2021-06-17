@@ -10,7 +10,7 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Data.Enum;
+using Genesis.Modules.Users;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Models.Settings

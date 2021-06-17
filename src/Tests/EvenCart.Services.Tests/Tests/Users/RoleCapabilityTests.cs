@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Modules.Users;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Users

@@ -10,8 +10,8 @@
 #endregion
 
 using System;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Meta;
 
 namespace EvenCart.Areas.Administration.Models.Reports
 {

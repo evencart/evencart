@@ -10,11 +10,11 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
-    public class InvitationRequestModel : FoundationEntityModel
+    public class InvitationRequestModel : GenesisEntityModel
     {
         /// <summary>
         /// The email which sent the request

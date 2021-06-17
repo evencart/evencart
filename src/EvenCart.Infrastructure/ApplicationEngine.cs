@@ -9,43 +9,19 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DryIoc;
-using DryIoc.Microsoft.DependencyInjection;
-using EvenCart.Core;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Plugins;
-using EvenCart.Core.Services;
-using EvenCart.Data.Database;
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Authentication;
-using EvenCart.Services.Cultures;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Purchases;
-using EvenCart.Infrastructure.DependencyContainer;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Theming;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.InteropServices;
-using Microsoft.Extensions.Configuration;
+using Genesis;
+using Genesis.Plugins;
+using Genesis.Services;
+using Genesis.Database;
+using Genesis.Infrastructure.DependencyManager;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Users;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 #if !DEBUGWS
-using EvenCart.Infrastructure.Routing;
+
 #endif
 
 namespace EvenCart.Infrastructure
@@ -265,15 +241,7 @@ namespace EvenCart.Infrastructure
 
         #endregion
 
-        public static HttpContext CurrentHttpContext => DependencyResolver.Resolve<IHttpContextAccessor>().HttpContext;
-
-        public static User CurrentUser => DependencyResolver.Resolve<IAppAuthenticationService>().GetCurrentUser();
-
-        public static ThemeInfo ActiveTheme => DependencyResolver.Resolve<IThemeProvider>().GetActiveTheme();
-
-        public static User CurrentAffiliate => CurrentHttpContext.GetCurrentAffiliate();
-
-        public static Store CurrentStore => CurrentHttpContext?.GetCurrentStore();
+        public static Store CurrentStore => GenesisEngine.CurrentHttpContext?.GetCurrentStore();
 
         private static IList<Language> _publishedLanguages;
         public static IList<Language> AllLanguages

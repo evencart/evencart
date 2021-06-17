@@ -1,0 +1,9 @@
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.AssemblyInfoInputs.cache
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.AssemblyInfo.cs
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.csproj.CoreCompileInputs.cache
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\bin\Debug\netcoreapp3.1\EvenCart.Genesis.deps.json
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\bin\Debug\netcoreapp3.1\EvenCart.Genesis.dll
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\bin\Debug\netcoreapp3.1\EvenCart.Genesis.pdb
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.dll
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.pdb
+F:\SourceRepositories\RoastedMarketplace\src\EvenCart.Genesis\obj\Debug\netcoreapp3.1\EvenCart.Genesis.csprojAssemblyReference.cache

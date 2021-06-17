@@ -9,16 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.DataTransfer
 {
     /// <summary>
     /// Represents an export request
     /// </summary>
-    public class ExportRequestModel : FoundationModel, IRequiresValidations<ExportRequestModel>
+    public class ExportRequestModel : GenesisModel, IRequiresValidations<ExportRequestModel>
     {
         /// <summary>
         /// The name of entity to export

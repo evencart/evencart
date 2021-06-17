@@ -9,9 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Collections.Generic;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Infrastructure.DataTransfer
 {

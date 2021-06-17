@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Manufacturers
 {
-    public class ManufacturerModel : FoundationEntityModel, IRequiresValidations<ManufacturerModel>
+    public class ManufacturerModel : GenesisEntityModel, IRequiresValidations<ManufacturerModel>
     {
         public string Name { get; set; }
         public void SetupValidationRules(ModelValidator<ManufacturerModel> v)

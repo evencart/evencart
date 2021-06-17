@@ -10,14 +10,13 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Services.Addresses;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Models.Addresses;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Addresses;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,7 +28,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Route("addresses")]
     [Authorize]
-    public class AddressesController : FoundationController
+    public class AddressesController : GenesisController
     {
         private readonly IAddressService _addressService;
         private readonly IModelMapper _modelMapper;
@@ -47,7 +46,7 @@ namespace EvenCart.Controllers
         [ValidateModelState(ModelType = typeof(AddressInfoModel))]
         public IActionResult SaveAddress(AddressInfoModel addressModel)
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
             //get the address first
             var address = addressModel.Id > 0 ? _addressService.Get(addressModel.Id) : new Address()
             {
@@ -69,7 +68,7 @@ namespace EvenCart.Controllers
         [DualPost("{addressId}", Name = RouteNames.DeleteAddress, OnlyApi = true)]
         public IActionResult DeleteAddress(int addressId)
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
             //get the address first
             var address = addressId > 0 ? _addressService.Get(addressId) : null;
             if (address?.EntityName != nameof(User) || address.EntityId != currentUser.Id)
@@ -85,7 +84,7 @@ namespace EvenCart.Controllers
         [DualGet("~/account/addresses", Name = RouteNames.AccountAddresses)]
         public IActionResult Addresses()
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
             var addresses = _addressService.Get(x => x.EntityId == currentUser.Id && x.EntityName == nameof(User)).ToList();
             var models = addresses.Select(x =>
             {
@@ -105,14 +104,14 @@ namespace EvenCart.Controllers
         [DualGet("{addressId}", Name = RouteNames.SingleAddress)]
         public IActionResult AddressEditor(int addressId)
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
             //find address
             var address = addressId > 0 ? _addressService.Get(addressId) : new Address()
             {
                 EntityId = currentUser.Id
             };
             //only allow if current user can edit this address
-            if (address == null || address.EntityId != ApplicationEngine.CurrentUser.Id)
+            if (address == null || address.EntityId != Engine.CurrentUser.Id)
                 return NotFound();
             var model = _modelMapper.Map<AddressInfoModel>(address);
             //set breadcrumb nodes

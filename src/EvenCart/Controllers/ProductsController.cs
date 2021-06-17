@@ -14,34 +14,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using EvenCart.Areas.Administration.Extensions;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Reviews;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Categories;
 using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.IO;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Data;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
+using UrlSettings = EvenCart.Data.Entity.Settings.UrlSettings;
 
 namespace EvenCart.Controllers
 {
     /// <summary>
     /// Allows user to get catalog data such as products
     /// </summary>
-    public class ProductsController : FoundationController
+    public class ProductsController : GenesisController
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
@@ -80,7 +82,7 @@ namespace EvenCart.Controllers
         [HttpGet("product-preview/{id}", Name = RouteNames.PreviewProduct)]
         public IActionResult Preview(int id)
         {
-            var url = ApplicationEngine.RouteUrl(RouteNames.SingleProduct, new {id = id});
+            var url = Engine.RouteUrl(RouteNames.SingleProduct, new {id = id});
             return Redirect(url);
         }
 
@@ -131,7 +133,7 @@ namespace EvenCart.Controllers
                         price = _priceAccountant
                             .ConvertCurrency(
                                 (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax),
-                                ApplicationEngine.CurrentCurrency).ToCurrency(),
+                                Engine.CurrentCurrency).ToCurrency(),
                         isAvailable = !variant.TrackInventory ||
                                       (variant.TrackInventory && variant.IsAvailableInStock(product)),
                         sku = !variant.Sku.IsNullEmptyOrWhiteSpace() ? variant.Sku : product.Sku,
@@ -350,7 +352,7 @@ namespace EvenCart.Controllers
                 return R.Fail.With("error", T("The product doesn't accept any uploads")).Result;
 
             //guest signin if user is not signed in
-            ApplicationEngine.GuestSignIn();
+            Engine.GuestSignIn();
             var fileBytes = uploadFileModel.MediaFile.GetBytesAsync().Result;
             var upload = new Upload()
             {
@@ -361,7 +363,7 @@ namespace EvenCart.Controllers
                 Guid = Guid.NewGuid().ToString()
             };
             _uploadService.Insert(upload);
-            var downloadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadUploadFile, new {guid = upload.Guid});
+            var downloadUrl = Engine.RouteUrl(RouteNames.DownloadUploadFile, new {guid = upload.Guid});
             return R.Success.With("guid", upload.Guid).With("url", downloadUrl).Result;
         }
 

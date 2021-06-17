@@ -12,23 +12,23 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Vendors;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Users;
 using EvenCart.Events;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Users;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Extensions;
+using EvenCart.Genesis.Mvc;
+using Genesis;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class VendorsController : FoundationAdminController
+    public class VendorsController : GenesisAdminController
     {
         private readonly IVendorService _vendorService;
         private readonly IModelMapper _modelMapper;

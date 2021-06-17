@@ -14,15 +14,14 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
-using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Services.Formatter;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Services.Payments;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {

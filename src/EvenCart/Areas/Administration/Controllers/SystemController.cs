@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Factories.System;
 using EvenCart.Areas.Administration.Models.System;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Installation;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Installation;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -24,7 +24,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Allows admin to retrieve system information
     /// </summary>
-    public class SystemController : FoundationAdminController
+    public class SystemController : GenesisAdminController
     {
         private readonly IAboutModelFactory _aboutModelFactory;
         private readonly IInstallationService _installationService;

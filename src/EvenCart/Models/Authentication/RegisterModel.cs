@@ -11,14 +11,14 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using EvenCart.Models.Gdpr;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Authentication
 {
-    public class RegisterModel : FoundationModel, IRequiresValidations<RegisterModel>
+    public class RegisterModel : GenesisModel, IRequiresValidations<RegisterModel>
     {
         /// <summary>
         /// The email of new user

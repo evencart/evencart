@@ -13,15 +13,14 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Common;
 using EvenCart.Areas.Administration.Models.Common;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Common;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Common;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Meta;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -29,7 +28,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Custom labels are reusable text labels available for various operations such as cancellation, returns, product tags etc.
     /// </summary>
-    public class CustomLabelsController : FoundationAdminController
+    public class CustomLabelsController : GenesisAdminController
     {
         private readonly ICustomLabelService _customLabelService;
         private readonly ICustomLabelModelFactory _customLabelModelFactory;
