@@ -9,23 +9,15 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Linq;
-using DotEntity.Versioning;
-using EvenCart.Data.Versions;
-using Genesis;
-using Genesis.App.Helpers;
+using Genesis.Exceptions;
 
-namespace EvenCart.Genesis
+namespace EvenCart.Genesis.Exceptions
 {
-    public class DbVersionProvider : IDbVersionProvider
+    public class EvenCartException : GenesisException
     {
-        public IDatabaseVersion[] GetDatabaseVersions()
+        public EvenCartException(string message) : base(message)
         {
-            return DbVersionProviderHelper.Merge(new GenesisCoreVersionProvider(), new GenesisAppVersionProvider())
-                .Concat(new IDatabaseVersion[]
-                {
-                    new ECVersion1()
-                }).ToArray();
+
         }
     }
 }

@@ -20,6 +20,7 @@ using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
+using EvenCart.Genesis.Exceptions;
 using Genesis.Modules.Emails;
 using EvenCart.Services.Products;
 using Genesis.Database;

@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Payments;
-using Genesis.Exceptions;
+using EvenCart.Genesis.Exceptions;
 
 namespace EvenCart.Services.Extensions
 {

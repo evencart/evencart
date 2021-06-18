@@ -3,6 +3,7 @@ using EvenCart.Genesis;
 using Genesis;
 using Genesis.Caching;
 using Genesis.Database;
+using Genesis.Infrastructure;
 using Genesis.Infrastructure.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,9 +16,15 @@ namespace EvenCart.Services.Tests
 
     public abstract class BaseFixture
     {
-       
+        static BaseFixture()
+        {
+            GenesisApp.Initialize(new StaticConfig(), new EvenCartDependencyContainer(), new DbVersionProvider());
+        }
+
         protected BaseFixture()
         {
+
+
             var serviceCollection = new ServiceCollection();
             //mock the hosting env
             var hostingEnvironment = new Mock<IHostingEnvironment>();
@@ -37,6 +44,7 @@ namespace EvenCart.Services.Tests
             //mock httpcontext
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
             var httpContext = new DefaultHttpContext();
+            
             httpContextAccessor.Setup(accessor => accessor.HttpContext).Returns(httpContext);
 
             var configuration = new TestConfiguration();
@@ -44,7 +52,11 @@ namespace EvenCart.Services.Tests
             serviceCollection.AddSingleton<IHttpContextAccessor>(provider => httpContextAccessor.Object);
             serviceCollection.AddSingleton<IConfiguration>(configuration);
             serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());
-            GenesisEngine.Instance.ConfigureServices(serviceCollection, hostingEnvironment.Object, configuration);
+
+
+            var appEngine = GenesisApp.Current.ConfigureEngine<ApplicationEngine>(serviceCollection, hostingEnvironment.Object, configuration);
+            httpContext.RequestServices = appEngine.ConfigureServices(serviceCollection, hostingEnvironment.Object, configuration);
+
             //set the cache providers
             CacheProviders.PrimaryProvider =
                 D.Resolve<ICacheProvider>(typeof(MemoryCacheProvider).FullName);

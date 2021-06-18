@@ -42,9 +42,6 @@ namespace EvenCart.Data.Entity.Shop
         public virtual Media Media { get; set; }
 
         public virtual SeoMeta SeoMeta { get; set; }
-
-        [Obsolete("The property is obsolete. Use ParentId instead.")]
-        public virtual int ParentCategoryId { get; set; }
         #endregion
     }
 }

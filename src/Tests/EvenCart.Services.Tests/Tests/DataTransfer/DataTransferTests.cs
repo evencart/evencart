@@ -53,16 +53,16 @@ namespace EvenCart.Services.Tests.DataTransfer
         [Test]
         public void ExcelProvider_Works()
         {
-            InsertProducts(typeof(ExcelProvider).Name);
-            var provider = Resolve<IDataTransferProvider<Product>>(typeof(ExcelProvider).FullName);
+            InsertProducts(nameof(ExcelProvider));
+            var provider = (IDataTransferProvider<Product>) Resolve<IDataTransferProvider>(typeof(ExcelProvider).FullName);
             RunTests(provider);
         }
 
         [Test]
         public void JsonProvider_Works()
         {
-            InsertProducts(typeof(JsonProvider).Name);
-            var provider = Resolve<IDataTransferProvider<Product>>(typeof(JsonProvider).FullName);
+            InsertProducts(nameof(JsonProvider));
+            var provider = (IDataTransferProvider<Product>) Resolve<IDataTransferProvider>(typeof(JsonProvider).FullName);
             RunTests(provider);
         }
 

@@ -1,5 +1,4 @@
-﻿using EvenCart.Common.Tests;
-using EvenCart.Services.Tests;
+﻿using EvenCart.Services.Tests;
 using NUnitLite;
 
 namespace EvenCart.Tests.Runner
