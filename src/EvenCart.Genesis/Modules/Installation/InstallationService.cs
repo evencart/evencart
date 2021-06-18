@@ -158,7 +158,8 @@ namespace EvenCart.Services.Installation
             var storeService = D.Resolve<IStoreService>();
             var store = new Store()
             {
-                Name = storeName
+                Name = storeName,
+                Live = true
             };
             storeService.Insert(store);
             return store;
