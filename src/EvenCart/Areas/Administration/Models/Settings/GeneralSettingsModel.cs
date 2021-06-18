@@ -9,8 +9,8 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
+using Genesis;
+using Genesis.MediaServices;
 
 namespace EvenCart.Areas.Administration.Models.Settings
 {
@@ -24,11 +24,11 @@ namespace EvenCart.Areas.Administration.Models.Settings
 
         public int LogoId { get; set; }
 
-        public string LogoUrl => DependencyResolver.Resolve<IMediaAccountant>().GetPictureUrl(LogoId);
+        public string LogoUrl => D.Resolve<IMediaAccountant>().GetPictureUrl(LogoId);
 
         public int FaviconId { get; set; }
 
-        public string FaviconUrl => DependencyResolver.Resolve<IMediaAccountant>().GetPictureUrl(FaviconId);
+        public string FaviconUrl => D.Resolve<IMediaAccountant>().GetPictureUrl(FaviconId);
 
         public bool EnableBreadcrumbs { get; set; }
 

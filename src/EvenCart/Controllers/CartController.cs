@@ -11,24 +11,24 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
-using EvenCart.Core.Extensions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
-using EvenCart.Services.Purchases;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
-using EvenCart.Infrastructure.ViewEngines.GlobalObjects.Implementations;
 using EvenCart.Models.Purchases;
+using EvenCart.Services.Orders;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Data;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
+using Genesis.Modules.Web;
+using Genesis.Routing;
+using Genesis.ViewEngines.GlobalObjects;
+using Genesis.ViewEngines.GlobalObjects.Implementations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
@@ -38,7 +38,7 @@ namespace EvenCart.Controllers
     /// Allows authenticated user to manage cart
     /// </summary>
     [Route("Cart")]
-    public class CartController : FoundationController
+    public class CartController : GenesisController
     {
         private readonly ICartService _cartService;
         private readonly IDataSerializer _dataSerializer;
@@ -74,13 +74,13 @@ namespace EvenCart.Controllers
             //check if we need to redirect user to login page. This will happen in the following cases.
             //1. Either user is trying to add to his wishlist
             //2. Order settings don't allow guest checkout
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = CurrentUser;
             if (currentUser == null || currentUser.IsVisitor())
             {
                 if (cartItemModel.IsWishlist || !_orderSettings.AllowGuestCheckout)
                 {
-                    var loginUrl = ApplicationEngine.RouteUrl(RouteNames.Login,
-                        new {ReturnUrl = ApplicationEngine.CurrentHttpContext.GetReferer()});
+                    var loginUrl = Engine.RouteUrl(RouteNames.Login,
+                        new {ReturnUrl = Engine.CurrentHttpContext.GetReferer()});
                     return R.Redirect(loginUrl).Result;
                 }
             }
@@ -139,7 +139,7 @@ namespace EvenCart.Controllers
                             {
                                 //put a download link so it'll be included everywhere
                                 var uploadUid = ca.SelectedValues.FirstOrDefault()?.Name;
-                                var uploadUrl = ApplicationEngine.RouteUrl(RouteNames.DownloadUploadFile,
+                                var uploadUrl = Engine.RouteUrl(RouteNames.DownloadUploadFile,
                                     new {guid = uploadUid});
                                 var link = $"<a href='{uploadUrl}' target='_blank' style='display: inline;font-size: 0.8em;'>[Download]</a>";
                                 ca.SelectedValues[0].Name = link;
@@ -231,8 +231,8 @@ namespace EvenCart.Controllers
             }
 
             //guest signin if user is not signed in
-            ApplicationEngine.GuestSignIn();
-            currentUser = ApplicationEngine.CurrentUser;
+            Engine.GuestSignIn();
+            currentUser = CurrentUser;
 
             //find if there is already an existing product added
             var cart = cartItemModel.IsWishlist
@@ -255,11 +255,11 @@ namespace EvenCart.Controllers
                 };
                 if (cartItemModel.IsWishlist)
                 {
-                    _cartService.AddToWishlist(ApplicationEngine.CurrentUser.Id, cartItem);
+                    _cartService.AddToWishlist(CurrentUser.Id, cartItem);
                 }
                 else
                 {
-                    _cartService.AddToCart(ApplicationEngine.CurrentUser.Id, cartItem);
+                    _cartService.AddToCart(CurrentUser.Id, cartItem);
                 }
             }
             else
@@ -273,7 +273,7 @@ namespace EvenCart.Controllers
                 }
                 //we can, increment and save
                 cartItem.Quantity = cartItem.Quantity + cartItemModel.Quantity;
-                _cartService.UpdateCart(ApplicationEngine.CurrentUser.Id, cartItem);
+                _cartService.UpdateCart(CurrentUser.Id, cartItem);
             }
             //reset shipping details
             if (cart.ShippingMethodName.IsNullEmptyOrWhiteSpace())
@@ -300,7 +300,7 @@ namespace EvenCart.Controllers
             if (!cartModel.DiscountCoupon.IsNullEmptyOrWhiteSpace())
             {
                 var discountStatus =
-                    _cartService.SetDiscountCoupon(ApplicationEngine.CurrentUser.Id, cartModel.DiscountCoupon);
+                    _cartService.SetDiscountCoupon(CurrentUser.Id, cartModel.DiscountCoupon);
                 if (discountStatus == DiscountApplicationStatus.Success)
                 {
                     return R.Success.Result;
@@ -312,7 +312,7 @@ namespace EvenCart.Controllers
             }
             else if (cartModel.RemoveCoupon)
             {
-                _cartService.ClearDiscountCoupon(ApplicationEngine.CurrentUser.Id);
+                _cartService.ClearDiscountCoupon(CurrentUser.Id);
                 return R.Success.Result;
             }
             if (!cartModel.GiftCode.IsNullEmptyOrWhiteSpace())
@@ -323,8 +323,8 @@ namespace EvenCart.Controllers
             {
                 //get the cart
                 var cart = cartModel.IsWishlist
-                    ? _cartService.GetWishlist(ApplicationEngine.CurrentUser.Id)
-                    : _cartService.GetCart(ApplicationEngine.CurrentUser.Id);
+                    ? _cartService.GetWishlist(CurrentUser.Id)
+                    : _cartService.GetCart(CurrentUser.Id);
                 var cartItem = cart.CartItems.FirstOrDefault(x => x.Id == cartModel.CartItemId.Value);
                 if (cartItem == null)
                     return R.Fail.Result;

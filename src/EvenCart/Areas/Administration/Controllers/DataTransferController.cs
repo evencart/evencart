@@ -15,19 +15,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.DataTransfer;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.DataTransfer;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.MediaServices;
-using EvenCart.Services.Products;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.DataTransfer;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -35,7 +30,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Provides import/export of site data
     /// </summary>
-    public class DataTransferController : FoundationAdminController
+    public class DataTransferController : GenesisAdminController
     {
         private static string[] Exportables = new[] {nameof(Product), nameof(User), nameof(Category)};
 
@@ -79,13 +74,13 @@ namespace EvenCart.Areas.Administration.Controllers
             {
                 case "json":
                     dataTransferProvider =
-                        DependencyResolver.Resolve<IDataTransferProvider>(typeof(JsonProvider).FullName);
+                        D.Resolve<IDataTransferProvider>(typeof(JsonProvider).FullName);
                     outputType = "application/json";
                     fileName += ".json";
                     break;
                 case "excel":
                     dataTransferProvider =
-                        DependencyResolver.Resolve<IDataTransferProvider>(typeof(ExcelProvider).FullName);
+                        D.Resolve<IDataTransferProvider>(typeof(ExcelProvider).FullName);
                     outputType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     fileName += ".xlsx";
                     break;
@@ -97,13 +92,13 @@ namespace EvenCart.Areas.Administration.Controllers
             switch (exportRequest.EntityName)
             {
                 case nameof(Product):
-                    chunk = _dataTransferManager.Export<Product>(dataTransferProvider);
+                    chunk = _dataTransferManager.Export<Product>((IDataTransferProvider<Product>) dataTransferProvider);
                     return File(chunk.Bytes, outputType, fileName);
                 case nameof(Category):
-                    chunk = _dataTransferManager.Export<Category>(dataTransferProvider);
+                    chunk = _dataTransferManager.Export<Category>((IDataTransferProvider<Category>)dataTransferProvider);
                     return File(chunk.Bytes, outputType, fileName);
-                case nameof(Data.Entity.Users.User):
-                    chunk = _dataTransferManager.Export<User>(dataTransferProvider);
+                case nameof(User):
+                    chunk = _dataTransferManager.Export<User>((IDataTransferProvider<User>)dataTransferProvider);
                     return File(chunk.Bytes, outputType, fileName);
             }
 
@@ -122,7 +117,7 @@ namespace EvenCart.Areas.Administration.Controllers
             if (!Exportables.Contains(importRequest.EntityName))
                 return NotFound();
 
-            var dataTransferProvider = DependencyResolver.Resolve<IDataTransferProvider>(importRequest.Input == "json" ? typeof(JsonProvider).FullName : typeof(ExcelProvider).FullName);
+            var dataTransferProvider = D.Resolve<IDataTransferProvider>(importRequest.Input == "json" ? typeof(JsonProvider).FullName : typeof(ExcelProvider).FullName);
             var dataChunk = new DataTransferChunk()
             {
                 Bytes = await importRequest.ImportFile.GetBytesAsync()
@@ -131,15 +126,15 @@ namespace EvenCart.Areas.Administration.Controllers
             switch (importRequest.EntityName)
             {
                 case nameof(Product):
-                    count = _dataTransferManager.Import<Product>(dataChunk, dataTransferProvider);
+                    count = _dataTransferManager.Import<Product>(dataChunk, (IDataTransferProvider<Product>) dataTransferProvider);
                     return RedirectToRoute(AdminRouteNames.DataTransfer,
                         new {entityName = importRequest.EntityName, success = true, importedCount = count});
                 case nameof(User):
-                    count = _dataTransferManager.Import<User>(dataChunk, dataTransferProvider);
+                    count = _dataTransferManager.Import<User>(dataChunk, (IDataTransferProvider<User>) dataTransferProvider);
                     return RedirectToRoute(AdminRouteNames.DataTransfer,
                         new { entityName = importRequest.EntityName, success = true, importedCount = count });
                 case nameof(Category):
-                    count = _dataTransferManager.Import<Category>(dataChunk, dataTransferProvider);
+                    count = _dataTransferManager.Import<Category>(dataChunk, (IDataTransferProvider<Category>) dataTransferProvider);
                     return RedirectToRoute(AdminRouteNames.DataTransfer,
                         new { entityName = importRequest.EntityName, success = true, importedCount = count });
             }

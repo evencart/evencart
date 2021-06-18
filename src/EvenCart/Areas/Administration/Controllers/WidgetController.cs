@@ -10,19 +10,16 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Widgets;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Infrastructure.Routing;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class WidgetController : FoundationAdminController
+    public class WidgetController : GenesisAdminController
     {
         private readonly IWidgetService _widgetService;
         private readonly PluginSettings _pluginSettings;
@@ -63,7 +60,7 @@ namespace EvenCart.Areas.Administration.Controllers
         [DualPost("configure", Name = AdminRouteNames.SaveWidgetSettings)]
         public IActionResult ConfigureWidgetSettings(WidgetSettingsModel widgetSettingsModel)
         {
-            _widgetService.SaveWidgetSetting(widgetSettingsModel.Id, widgetSettingsModel, ApplicationEngine.CurrentStore.Id);
+            _widgetService.SaveWidgetSetting(widgetSettingsModel.Id, widgetSettingsModel, Engine.CurrentStore.Id);
             return ConfigureWidget(widgetSettingsModel.Id);
         }
     }

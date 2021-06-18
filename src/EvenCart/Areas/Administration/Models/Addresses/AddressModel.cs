@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Addresses;
 
 namespace EvenCart.Areas.Administration.Models.Addresses
 {
-    public class AddressModel : FoundationEntityModel, IRequiresValidations<AddressModel>
+    public class AddressModel : GenesisEntityModel, IRequiresValidations<AddressModel>
     {
         public int UserId { get; set; }
 

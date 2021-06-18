@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Checkout
 {
-    public class ShippingMethodModel : FoundationModel
+    public class ShippingMethodModel : GenesisModel
     {
         public string SystemName { get; set; }
 

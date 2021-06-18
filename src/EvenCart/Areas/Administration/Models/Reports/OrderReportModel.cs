@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Models.Reports
 {
     [FormatAsCurrencies(nameof(TotalAmount), CurrencyCodeProperty = nameof(CurrencyCode))]
-    public class OrderReportModel : FoundationModel
+    public class OrderReportModel : GenesisModel
     {
         public decimal TotalAmount { get; set; }
 

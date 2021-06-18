@@ -10,13 +10,13 @@
 #endregion
 
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class DownloadModel : FoundationEntityModel, IRequiresValidations<DownloadModel>
+    public class DownloadModel : GenesisEntityModel, IRequiresValidations<DownloadModel>
     {
         public string Guid { get; set; }
 

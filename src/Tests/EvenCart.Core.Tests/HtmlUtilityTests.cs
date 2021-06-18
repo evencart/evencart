@@ -1,4 +1,4 @@
-﻿using EvenCart.Data.Helpers;
+﻿using Genesis.Helpers;
 using NUnit.Framework;
 
 namespace EvenCart.Common.Tests

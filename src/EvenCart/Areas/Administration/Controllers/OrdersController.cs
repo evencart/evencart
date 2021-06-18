@@ -18,34 +18,35 @@ using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Helpers;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Shop;
-using EvenCart.Core.Data;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
-using EvenCart.Services.Formatter;
-using EvenCart.Services.Purchases;
 using EvenCart.Services.Shipping;
 using EvenCart.Events;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Helpers;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Payments;
-using EvenCart.Services.Pdf;
+using EvenCart.Services.Plugins;
 using EvenCart.Services.Products;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Pdf;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class OrdersController : FoundationAdminController
+    public class OrdersController : GenesisAdminController
     {
         private readonly IOrderService _orderService;
         private readonly IFormatterService _formatterService;

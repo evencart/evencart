@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
-    public class CapabilityModel : FoundationEntityModel
+    public class CapabilityModel : GenesisEntityModel
     {
         public string Name { get; set; }
 

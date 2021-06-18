@@ -1,8 +1,8 @@
-﻿using EvenCart.Data.Entity.Settings;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Services.Products;
-using EvenCart.Services.Settings;
+﻿using EvenCart.Genesis;
+using Genesis;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
+using Genesis.Modules.Web;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Stores
@@ -21,7 +21,7 @@ namespace EvenCart.Services.Tests.Stores
         [Test]
         public void Store_Cloning_Succeeds()
         {
-            var currentStore = ApplicationEngine.CurrentStore;
+            var currentStore = GenesisEngine.Instance.CurrentStore;
             var generalSettings = Resolve<GeneralSettings>();
             var defaultPageTitle = "Test Store Title";
             generalSettings.DefaultPageTitle = defaultPageTitle;
@@ -37,11 +37,11 @@ namespace EvenCart.Services.Tests.Stores
             _settingService.Save(generalSettings, currentStore.Id);
 
             //set the active store to current store
-            ApplicationEngine.CurrentHttpContext.SetCurrentStore(newStore);
+            GenesisEngine.Instance.CurrentHttpContext.SetCurrentStore(newStore);
             generalSettings = Resolve<GeneralSettings>();
             Assert.AreEqual(defaultPageTitle, generalSettings.DefaultPageTitle); //same title as the original store
 
-            ApplicationEngine.CurrentHttpContext.SetCurrentStore(currentStore);
+            GenesisEngine.Instance.CurrentHttpContext.SetCurrentStore(currentStore);
             generalSettings = Resolve<GeneralSettings>();
             Assert.AreEqual("Changed Title", generalSettings.DefaultPageTitle);
 

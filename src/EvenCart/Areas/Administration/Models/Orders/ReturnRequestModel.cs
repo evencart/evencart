@@ -11,13 +11,13 @@
 
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
-    public class ReturnRequestModel : FoundationEntityModel, IRequiresValidations<ReturnRequestModel>
+    public class ReturnRequestModel : GenesisEntityModel, IRequiresValidations<ReturnRequestModel>
     {
         public ReturnRequestStatus ReturnRequestStatus { get; set; }
 

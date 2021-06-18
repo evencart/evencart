@@ -17,24 +17,25 @@ using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Areas.Administration.Models.Users;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using EvenCart.Genesis.Mvc;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
+using SortOrder = System.Data.SqlClient.SortOrder;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
     [CapabilityRequired(CapabilitySystemNames.ManageReports)]
-    public class ReportsController : FoundationAdminController
+    public class ReportsController : GenesisAdminController
     {
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;

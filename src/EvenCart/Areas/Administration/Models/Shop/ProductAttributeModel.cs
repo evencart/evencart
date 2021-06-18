@@ -11,17 +11,18 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Meta;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class ProductAttributeModel : FoundationEntityModel, IRequiresValidations<ProductAttributeModel>
+    public class ProductAttributeModel : GenesisEntityModel, IRequiresValidations<ProductAttributeModel>
     {
         public string Name { get; set; }
 

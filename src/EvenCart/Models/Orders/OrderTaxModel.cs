@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Orders
 {
     /// <summary>
     /// Represents a unique tax for a single order
     /// </summary>
-    public class OrderTaxModel : FoundationModel
+    public class OrderTaxModel : GenesisModel
     {
         public string TaxName { get; set; }
 

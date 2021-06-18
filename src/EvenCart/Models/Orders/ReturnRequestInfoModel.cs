@@ -10,11 +10,11 @@
 #endregion
 
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Orders
 {
-    public class ReturnRequestInfoModel : FoundationEntityModel
+    public class ReturnRequestInfoModel : GenesisEntityModel
     {
         public ReturnRequestStatus ReturnRequestStatus { get; set; }
 

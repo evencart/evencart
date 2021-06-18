@@ -11,8 +11,8 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
+using Genesis.Data;
+using Genesis.Infrastructure;
 using EvenCart.Data.Extensions;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders

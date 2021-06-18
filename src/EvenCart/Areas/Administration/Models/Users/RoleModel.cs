@@ -10,14 +10,14 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
-    public class RoleModel : FoundationEntityModel, IRequiresValidations<RoleModel>
+    public class RoleModel : GenesisEntityModel, IRequiresValidations<RoleModel>
     {
         public string Name { get; set; }
 

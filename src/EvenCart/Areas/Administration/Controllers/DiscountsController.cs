@@ -12,24 +12,25 @@
 using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Promotions;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Promotions;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
-using EvenCart.Services.Users;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class DiscountsController : FoundationAdminController
+    public class DiscountsController : GenesisAdminController
     {
         private readonly IDiscountCouponService _discountCouponService;
         private readonly IModelMapper _modelMapper;

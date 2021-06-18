@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Services.Addresses;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
+using Genesis.Modules.Addresses;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Purchases

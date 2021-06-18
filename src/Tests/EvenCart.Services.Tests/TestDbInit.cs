@@ -1,5 +1,5 @@
-﻿using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Database;
+﻿using Genesis;
+using Genesis.Database;
 
 namespace EvenCart.Services.Tests
 {
@@ -19,7 +19,7 @@ namespace EvenCart.Services.Tests
         public static void Db(string connectionString, string providerName)
         {
             //seed data
-            DbSettings = DependencyResolver.Resolve<IDatabaseSettings>() as TestDatabaseSettings;
+            DbSettings = D.Resolve<IDatabaseSettings>() as TestDatabaseSettings;
             DbSettings.SetSettings(connectionString, providerName);
         }
         public class TestDatabaseSettings : IDatabaseSettings

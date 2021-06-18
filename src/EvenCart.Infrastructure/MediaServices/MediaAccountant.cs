@@ -11,9 +11,9 @@
 
 using System;
 using System.IO;
-using EvenCart.Core;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
+using Genesis;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Providers;
 using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Helpers;
 using EvenCart.Services.MediaServices;

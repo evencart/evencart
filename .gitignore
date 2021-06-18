@@ -50,3 +50,5 @@ src/Tests/EvenCart.Tests.Runner/obj/
 src/Plugins/Shipping.Shippo/bin/
 src/Plugins/Shipping.Shippo/obj/
 src/EvenCart/App_Data/database.config
+src/EvenCart.Genesis/bin/
+src/EvenCart.Genesis/obj/

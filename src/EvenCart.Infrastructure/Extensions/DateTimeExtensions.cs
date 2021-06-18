@@ -11,7 +11,7 @@
 
 using System;
 using System.Globalization;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;

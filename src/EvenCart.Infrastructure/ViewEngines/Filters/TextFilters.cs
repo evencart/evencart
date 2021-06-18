@@ -11,9 +11,9 @@
 
 using System;
 using DotLiquid;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
+using Genesis;
+using Genesis.Data;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Helpers;
 using EvenCart.Infrastructure.Extensions;

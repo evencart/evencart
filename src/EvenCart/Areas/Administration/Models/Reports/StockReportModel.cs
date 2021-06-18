@@ -10,11 +10,11 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Reports
 {
-    public class StockReportModel : FoundationModel
+    public class StockReportModel : GenesisModel
     {
         public string ProductName { get; set; }
 
@@ -30,7 +30,7 @@ namespace EvenCart.Areas.Administration.Models.Reports
 
         public IList<VariantStockReportModel> Variants { get; set; }
 
-        public class VariantStockReportModel : FoundationModel
+        public class VariantStockReportModel : GenesisModel
         {
             public string AttributeText { get; set; }
 

@@ -12,20 +12,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Plugins;
-using EvenCart.Services.Navigation;
 using EvenCart.Services.Products;
-using EvenCart.Services.Widgets;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.ViewEngines.GlobalObjects;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Navigation;
+using Genesis.Modules.Pluggable;
+using Genesis.Plugins;
+using Genesis.ViewEngines.GlobalObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components.Widgets
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class MenuWidget : FoundationComponent, IWidget
+    public class MenuWidget : GenesisComponent, IWidget
     {
         private const string WidgetSystemName = "Menu";
         private readonly IWidgetService _widgetService;

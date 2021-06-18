@@ -11,17 +11,17 @@
 
 using System.Linq;
 using DotEntity.Enumerations;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Users;
-using EvenCart.Services.Users;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Stores;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
     [Authorize]
-    public class StoreCreditsController : FoundationController
+    public class StoreCreditsController : GenesisController
     {
         private readonly IStoreCreditService _storeCreditService;
         public StoreCreditsController(IStoreCreditService storeCreditService)

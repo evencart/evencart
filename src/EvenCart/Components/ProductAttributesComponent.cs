@@ -11,21 +11,21 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Data;
+using Genesis.Modules.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "ProductAttributes")]
-    public class ProductAttributesComponent : FoundationComponent
+    public class ProductAttributesComponent : GenesisComponent
     {
         private readonly IProductService _productService;
         private readonly IProductModelFactory _productModelFactory;
@@ -76,7 +76,7 @@ namespace EvenCart.Components
                         price = _priceAccountant
                             .ConvertCurrency(
                                 (_taxSettings.DisplayProductPricesWithoutTax ? priceWithoutTax : priceWithoutTax + tax),
-                                ApplicationEngine.CurrentCurrency).ToCurrency(),
+                                Engine.CurrentCurrency).ToCurrency(),
                         isAvailable = !variant.TrackInventory ||
                                       (variant.TrackInventory && variant.IsAvailableInStock(product)),
                         sku = !variant.Sku.IsNullEmptyOrWhiteSpace() ? variant.Sku : product.Sku,

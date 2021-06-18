@@ -13,8 +13,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using DotLiquid;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
+using Genesis.Data;
+using Genesis.Infrastructure;
 using EvenCart.Data.Extensions;
 
 namespace EvenCart.Infrastructure.Mvc.Formatters

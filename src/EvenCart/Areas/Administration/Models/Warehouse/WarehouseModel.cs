@@ -10,13 +10,13 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Addresses;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Warehouse
 {
-    public class WarehouseModel : FoundationEntityModel, IRequiresValidations<WarehouseModel>
+    public class WarehouseModel : GenesisEntityModel, IRequiresValidations<WarehouseModel>
     {
         /// <summary>
         /// The address details of the warehouse

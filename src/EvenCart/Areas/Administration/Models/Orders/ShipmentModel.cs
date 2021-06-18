@@ -11,13 +11,13 @@
 
 using System.Collections.Generic;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
-    public class ShipmentModel : FoundationEntityModel, IRequiresValidations<ShipmentModel>
+    public class ShipmentModel : GenesisEntityModel, IRequiresValidations<ShipmentModel>
     {
         public int OrderId { get; set; }
 

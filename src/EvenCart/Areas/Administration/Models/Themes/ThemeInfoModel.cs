@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Themes
 {
-    public class ThemeInfoModel : FoundationModel
+    public class ThemeInfoModel : GenesisModel
     {
         public string Name { get; set; }
 

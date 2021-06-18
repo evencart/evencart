@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EvenCart.Areas.Administration.Models.System;
-using EvenCart.Core.Infrastructure.Utils;
+using Genesis.Infrastructure.Types;
 
 namespace EvenCart.Areas.Administration.Factories.System
 {

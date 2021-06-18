@@ -10,14 +10,14 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.System
 {
     /// <summary>
     /// Represents a system and software information object
     /// </summary>
-    public class AboutModel : FoundationModel
+    public class AboutModel : GenesisModel
     {
         public string OperatingSystemName { get; set; }
 

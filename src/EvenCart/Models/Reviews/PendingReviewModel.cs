@@ -10,12 +10,12 @@
 #endregion
 
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Products;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Reviews
 {
-    public class PendingReviewModel : FoundationModel
+    public class PendingReviewModel : GenesisModel
     {
         public string OrderNumber { get; set; }
 

@@ -11,7 +11,7 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Core.Data;
+using Genesis.Data;
 using EvenCart.Data.Entity.EntityProperties;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Interfaces;

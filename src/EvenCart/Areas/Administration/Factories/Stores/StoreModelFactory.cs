@@ -10,9 +10,8 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Store;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Services.Settings;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Stores;
 
 namespace EvenCart.Areas.Administration.Factories.Stores
 {

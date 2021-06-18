@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Orders;
 using EvenCart.Areas.Administration.Factories.Warehouses;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.ViewEngines;
+using Genesis;
+using Genesis.ViewEngines;
 using IOrderModelFactory = EvenCart.Factories.Orders.IOrderModelFactory;
 
 namespace EvenCart.Areas.Administration.Helpers
@@ -24,8 +24,8 @@ namespace EvenCart.Areas.Administration.Helpers
     {
         public static string GetInvoice(Order order)
         {
-            var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
-            var orderModelFactory = DependencyResolver.Resolve<IOrderModelFactory>();
+            var viewAccountant = D.Resolve<IViewAccountant>();
+            var orderModelFactory = D.Resolve<IOrderModelFactory>();
             var invoiceViewPath = viewAccountant.GetThemeViewPath("Orders/Invoice", true);
 
             var model = orderModelFactory.Create(order);
@@ -36,12 +36,12 @@ namespace EvenCart.Areas.Administration.Helpers
 
         public static string GetPackingSlip(Shipment shipment)
         {
-            var viewAccountant = DependencyResolver.Resolve<IViewAccountant>();
-            var shipmentModelFactory = DependencyResolver.Resolve<IShipmentModelFactory>();
-            var orderModelFactory = DependencyResolver.Resolve<IOrderModelFactory>();
+            var viewAccountant = D.Resolve<IViewAccountant>();
+            var shipmentModelFactory = D.Resolve<IShipmentModelFactory>();
+            var orderModelFactory = D.Resolve<IOrderModelFactory>();
             var invoiceViewPath = viewAccountant.GetThemeViewPath("Orders/PackingSlip", true);
 
-            var warehouseFactory = DependencyResolver.Resolve<IWarehouseModelFactory>();
+            var warehouseFactory = D.Resolve<IWarehouseModelFactory>();
             var warehouseModel = warehouseFactory.Create(shipment.Warehouse);
 
             var shipmentModel = shipmentModelFactory.Create(shipment);

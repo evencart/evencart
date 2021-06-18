@@ -10,7 +10,7 @@
 #endregion
 
 using DotLiquid;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.ViewEngines;
 

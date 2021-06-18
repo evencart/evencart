@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Plugins
 {
-    public class MarketPluginInfoModel : FoundationModel
+    public class MarketPluginInfoModel : GenesisModel
     {
         public string Name { get; set; }
 

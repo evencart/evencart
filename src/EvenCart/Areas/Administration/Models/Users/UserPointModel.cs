@@ -10,13 +10,13 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
-    public class UserPointModel : FoundationEntityModel, IRequiresValidations<UserPointModel>
+    public class UserPointModel : GenesisEntityModel, IRequiresValidations<UserPointModel>
     {
         public int UserId { get; set; }
 

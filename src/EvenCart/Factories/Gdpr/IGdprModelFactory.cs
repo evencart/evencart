@@ -9,9 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Gdpr;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Gdpr;
 
 namespace EvenCart.Factories.Gdpr
 {

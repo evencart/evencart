@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Vendors;
 
 namespace EvenCart.Areas.Administration.Models.Vendors
 {
-    public class VendorModel : FoundationEntityModel, IRequiresValidations<VendorModel>
+    public class VendorModel : GenesisEntityModel, IRequiresValidations<VendorModel>
     {
         public string Name { get; set; }
 

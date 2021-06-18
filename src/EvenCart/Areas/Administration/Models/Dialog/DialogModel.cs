@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Dialog
 {
-    public class DialogModel : FoundationModel
+    public class DialogModel : GenesisModel
     {
         public string EntityName { get; set; }
 

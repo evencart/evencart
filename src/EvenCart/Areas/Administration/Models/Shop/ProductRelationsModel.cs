@@ -12,13 +12,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class ProductRelationsModel : FoundationModel, IRequiresValidations<ProductRelationsModel>
+    public class ProductRelationsModel : GenesisModel, IRequiresValidations<ProductRelationsModel>
     {
         public int ProductId { get; set; }
 

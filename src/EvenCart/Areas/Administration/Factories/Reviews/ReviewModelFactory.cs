@@ -12,11 +12,11 @@
 using EvenCart.Areas.Administration.Models.Reviews;
 using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Extensions;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Areas.Administration.Factories.Reviews
 {
@@ -25,11 +25,13 @@ namespace EvenCart.Areas.Administration.Factories.Reviews
         private readonly IModelMapper _modelMapper;
         private readonly CatalogSettings _catalogSettings;
         private readonly IProductModelFactory _productModelFactory;
-        public ReviewModelFactory(IModelMapper modelMapper, CatalogSettings catalogSettings, IProductModelFactory productModelFactory)
+        private readonly IGenesisEngine _applicationEngine;
+        public ReviewModelFactory(IModelMapper modelMapper, CatalogSettings catalogSettings, IProductModelFactory productModelFactory, IGenesisEngine applicationEngine)
         {
             _modelMapper = modelMapper;
             _catalogSettings = catalogSettings;
             _productModelFactory = productModelFactory;
+            _applicationEngine = applicationEngine;
         }
 
         public ReviewModel Create(Review review)
@@ -39,7 +41,7 @@ namespace EvenCart.Areas.Administration.Factories.Reviews
             if (model.DisplayName.IsNullEmptyOrWhiteSpace())
             {
                 model.DisplayName =
-                    LocalizationHelper.Localize("Store Customer", ApplicationEngine.CurrentLanguage.CultureCode);
+                    LocalizationHelper.Localize("Store Customer", _applicationEngine.CurrentLanguage.CultureCode);
             }
 
             if (review.Product != null)

@@ -10,12 +10,12 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Users
 {
-    public class UserMiniModel : FoundationEntityModel
+    public class UserMiniModel : GenesisEntityModel
     {
         public string Name { get; set; }
 

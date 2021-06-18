@@ -13,23 +13,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvenCart.Areas.Administration.Helpers;
-using EvenCart.Core.Services;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Events;
-using EvenCart.Services.Purchases;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Products;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Orders;
 using EvenCart.Models.Products;
-using EvenCart.Services.Common;
-using EvenCart.Services.Pdf;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
 using EvenCart.Services.Shipping;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Pdf;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +40,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Authorize]
     [Route("orders")]
-    public class OrdersController : FoundationController
+    public class OrdersController : GenesisController
     {
         private const string CancellationReasonLabel = "cancellationReason";
         private const string ReturnReasonLabel = "returnReason";

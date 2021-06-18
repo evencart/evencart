@@ -11,27 +11,22 @@
 
 using System;
 using System.Linq;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Authentication;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Gdpr;
-using EvenCart.Services.Security;
-using EvenCart.Services.Users;
 using EvenCart.Events;
 using EvenCart.Factories.Gdpr;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Infrastructure.Routing;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Models.Authentication;
 using EvenCart.Models.Gdpr;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Gdpr;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Security;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -39,7 +34,7 @@ namespace EvenCart.Controllers
     /// <summary>
     /// Provides authentication related services including registration, login, password recovery etc.
     /// </summary>
-    public class AuthenticationController : FoundationController
+    public class AuthenticationController : GenesisController
     {
         private readonly IAppAuthenticationService _appAuthenticationService;
         private readonly UserSettings _userSettings;
@@ -81,7 +76,7 @@ namespace EvenCart.Controllers
                 return RedirectToRoute(RouteNames.Home);
             //are there any active login methods available 
             var otherLoginMethodsAvailable =
-                DependencyResolver.Resolve<IPluginAccountant>().GetActiveWidgetCount(widgetZone: "login") > 0;
+                D.Resolve<IPluginAccountant>().GetActiveWidgetCount(widgetZone: "login") > 0;
             return R.Success.With("otherLoginsAvailable", otherLoginMethodsAvailable).Result;
         }
 
@@ -97,9 +92,9 @@ namespace EvenCart.Controllers
             if (!ShouldSignIn(loginModel.Email, loginModel.Password, out User user))
                 return R.Fail.With("message", T("Invalid email or password provided")).Result;
 
-            var loginStatus = ApplicationEngine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe, loginModel.Token);
+            var loginStatus = Engine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe, loginModel.Token);
             //get api token if it was requested
-            var token = ApplicationEngine.CurrentHttpContext.GetApiToken();
+            var token = Engine.CurrentHttpContext.GetApiToken();
             if (loginStatus == LoginStatus.Success)
                 return R.Success.With("token", token).Result;
 
@@ -110,10 +105,10 @@ namespace EvenCart.Controllers
         public IActionResult ForgotPassword(string code = null)
         {
             var response = R;
-            if (code != null || ApplicationEngine.CurrentUser != null)
+            if (code != null || Engine.CurrentUser != null)
             {
                 UserCode userCode = null;
-                if (ApplicationEngine.CurrentUser.IsVisitor())
+                if (Engine.CurrentUser.IsVisitor())
                 {
                     //verify if it's a valid code
                     userCode = _userCodeService.GetUserCode(code, UserCodeType.PasswordReset);
@@ -123,7 +118,7 @@ namespace EvenCart.Controllers
                     }
                 }
 
-                var userId = userCode?.UserId ?? ApplicationEngine.CurrentUser.Id;
+                var userId = userCode?.UserId ?? Engine.CurrentUser.Id;
                 response.Success.With("validCode", true);
                 //regenerate the code so the same can't be used again
                 userCode = _userCodeService.GetUserCode(userId, UserCodeType.PasswordReset);
@@ -148,7 +143,7 @@ namespace EvenCart.Controllers
 
             //generate user code
             var userCode = _userCodeService.GetUserCode(user.Id, UserCodeType.PasswordReset);
-            var passwordResetUrl = ApplicationEngine.RouteUrl(RouteNames.ForgotPassword, new { code = userCode.Code }, true);
+            var passwordResetUrl = Engine.RouteUrl(RouteNames.ForgotPassword, new { code = userCode.Code }, true);
             RaiseEvent(NamedEvent.PasswordResetRequested, user, passwordResetUrl);
             return R.Success.Result;
         }
@@ -169,10 +164,10 @@ namespace EvenCart.Controllers
             }
 
             //check if current password needs to be checked
-            if (ApplicationEngine.CurrentUser.IsRegistered())
+            if (Engine.CurrentUser.IsRegistered())
             {
                 //we do
-                if (!ShouldSignIn(ApplicationEngine.CurrentUser, changeModel.CurrentPassword))
+                if (!ShouldSignIn(Engine.CurrentUser, changeModel.CurrentPassword))
                 {
                     return R.Fail.With("error", T("The current password is invalid")).Result;
                 }
@@ -345,13 +340,13 @@ namespace EvenCart.Controllers
                     if (!_userSettings.UseNumericCodeForActivationEmail)
                     {
                         verificationLink =
-                            ApplicationEngine.RouteUrl(RouteNames.VerifyEmail, new { code = verificationCode }, true);
+                            Engine.RouteUrl(RouteNames.VerifyEmail, new { code = verificationCode }, true);
                     }
                 }
             }
 
             //do we have any affiliate?
-            var affiliate = ApplicationEngine.CurrentAffiliate;
+            var affiliate = Engine.CurrentAffiliate;
             if (affiliate != null)
             {
                 user.ReferrerId = affiliate.Id;
@@ -451,9 +446,9 @@ namespace EvenCart.Controllers
             _userCodeService.Delete(userCode);
             RaiseEvent(NamedEvent.UserActivated, userCode.User);
             //and signin the current user
-            var loginStatus = ApplicationEngine.SignIn(userCode.User.Email, userCode.User.Name, false, verificationModel.Token);
+            var loginStatus = Engine.SignIn(userCode.User.Email, userCode.User.Name, false, verificationModel.Token);
             //get api token if it was requested
-            var token = ApplicationEngine.CurrentHttpContext.GetApiToken();
+            var token = Engine.CurrentHttpContext.GetApiToken();
             if (loginStatus == LoginStatus.Success)
                 return R.Success.With("token", token).Result;
 

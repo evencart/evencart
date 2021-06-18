@@ -10,14 +10,14 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Updates
 {
     /// <summary>
     /// Represents a news object
     /// </summary>
-    public class UpdateModel : FoundationModel
+    public class UpdateModel : GenesisModel
     {
         /// <summary>
         /// The title of the update

@@ -9,23 +9,21 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core;
-using EvenCart.Core.Config;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Data.Database;
-using EvenCart.Services.Installation;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Installation;
-using EvenCart.Services.Security;
+using Genesis;
+using Genesis.Config;
+using Genesis.Database;
+using Genesis.Infrastructure.IO;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Installation;
+using Genesis.Modules.Security;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
-    public class InstallController : FoundationController
+    public class InstallController : GenesisController
     {
         private readonly IInstallationService _installationService;
         private readonly IApplicationConfiguration _applicationConfiguration;
@@ -42,7 +40,7 @@ namespace EvenCart.Controllers
         [HttpGet("install", Name = RouteNames.Install)]
         public IActionResult Index()
         {
-            var databaseSettings = DependencyResolver.Resolve<IDatabaseSettings>();
+            var databaseSettings = D.Resolve<IDatabaseSettings>();
             var areTableInstalled = DatabaseManager.IsDatabaseInstalled(databaseSettings);
 
             if (areTableInstalled)
@@ -57,7 +55,7 @@ namespace EvenCart.Controllers
         [ValidateModelState(ModelType = typeof(InstallationRequestModel))]
         public IActionResult Install(InstallationRequestModel model)
         {
-            var databaseSettings = DependencyResolver.Resolve<IDatabaseSettings>();
+            var databaseSettings = D.Resolve<IDatabaseSettings>();
             var areTableInstalled = DatabaseManager.IsDatabaseInstalled(databaseSettings);
 
             if (areTableInstalled)
@@ -94,14 +92,14 @@ namespace EvenCart.Controllers
             _installationService.Install();
 
             //save app settings
-            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionKey, _cryptographyService.GetRandomPassword(32));
-            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsEncryptionSalt, _cryptographyService.GetRandomPassword(32));
-            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsApiSecret, _cryptographyService.GetRandomPassword(32));
-            _applicationConfiguration.SetSetting(ApplicationConfig.AppSettingsCacheProvider, "default");
+            _applicationConfiguration.SetSetting(Engine.StaticConfig.AppSettingsEncryptionKey, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(Engine.StaticConfig.AppSettingsEncryptionSalt, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(Engine.StaticConfig.AppSettingsApiSecret, _cryptographyService.GetRandomPassword(32));
+            _applicationConfiguration.SetSetting(Engine.StaticConfig.AppSettingsCacheProvider, "default");
 
             //then feed the data
             _installationService.FillRequiredSeedData(model.AdminEmail, model.Password,
-                "//" + ApplicationEngine.CurrentHttpContext.Request.Host.Value, model.StoreName);
+                "//" + Engine.CurrentHttpContext.Request.Host.Value, model.StoreName);
 
             if (model.InstallSampleData)
             {

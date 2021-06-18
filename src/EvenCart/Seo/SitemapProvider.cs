@@ -11,23 +11,29 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Extensions;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Pages;
 using EvenCart.Services.Products;
-using EvenCart.Services.Seo;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure;
+using Genesis.Modules.Web;
+using Genesis.Routing;
 
 namespace EvenCart.Seo
 {
     public class SitemapProvider : ISitemapProvider
     {
+        private readonly IGenesisEngine _applicationEngine;
+
+        public SitemapProvider(IGenesisEngine applicationEngine)
+        {
+            _applicationEngine = applicationEngine;
+        }
+
         public IList<string> GetUrls()
         {
             var urls = new List<string>()
             {
-                ApplicationEngine.RouteUrl(RouteNames.Home, null, true)
+                GenesisEngine.Instance.RouteUrl(RouteNames.Home, null, true)
             };
 
             //product urls
@@ -40,18 +46,18 @@ namespace EvenCart.Seo
 
         private IEnumerable<string> AddProductUrls()
         {
-            var productService = DependencyResolver.Resolve<IProductService>();
+            var productService = D.Resolve<IProductService>();
             var productUrls = productService.Get(x => x.Published && !x.Deleted).Select(x =>
-                ApplicationEngine.RouteUrl(RouteNames.SingleProduct, new {seName = x.SeoMeta.Slug, id = x.Id}, true));
+                GenesisEngine.Instance.RouteUrl(RouteNames.SingleProduct, new {seName = x.SeoMeta.Slug, id = x.Id}, true));
 
             return productUrls;
         }
 
         private IEnumerable<string> AddContentPageUrls()
         {
-            var contentPageService = DependencyResolver.Resolve<IContentPageService>();
+            var contentPageService = D.Resolve<IContentPageService>();
             var urls = contentPageService.Get(x => x.Published).ToList().GetWithParentTree().Select(x =>
-                ApplicationEngine.RouteUrl(RouteNames.SinglePage,
+                GenesisEngine.Instance.RouteUrl(RouteNames.SinglePage,
                     new {seName = x.SeoMeta.Slug, id = x.Id}, true));
 
             return urls;

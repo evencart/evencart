@@ -9,7 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Enum;
+using Genesis.Modules.Logging;
 
 namespace EvenCart.Areas.Administration.Models.Settings
 {

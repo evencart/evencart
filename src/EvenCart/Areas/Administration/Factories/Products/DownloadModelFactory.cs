@@ -12,25 +12,27 @@
 using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
+using Genesis;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Routing;
 
 namespace EvenCart.Areas.Administration.Factories.Products
 {
     public class DownloadModelFactory : IDownloadModelFactory
     {
         private readonly IModelMapper _modelMapper;
-
-        public DownloadModelFactory(IModelMapper modelMapper)
+        private readonly IGenesisEngine _applicationEngine;
+        public DownloadModelFactory(IModelMapper modelMapper, IGenesisEngine applicationEngine)
         {
             _modelMapper = modelMapper;
+            _applicationEngine = applicationEngine;
         }
 
         public DownloadModel Create(Download entity)
         {
             var model = _modelMapper.Map<DownloadModel>(entity);
-            model.DownloadUrl = ApplicationEngine.RouteUrl(AdminRouteNames.AdminDownloadFile, new { id = entity.Id });
+            model.DownloadUrl = GenesisEngine.Instance.RouteUrl(AdminRouteNames.AdminDownloadFile, new { id = entity.Id });
             return model;
         }
 
@@ -42,7 +44,7 @@ namespace EvenCart.Areas.Administration.Factories.Products
                 Description = download.Description,
                 Active = itemDownload?.Active ?? download.DownloadActivationType != DownloadActivationType.Manual,
                 DownloadCount = itemDownload?.DownloadCount ?? 0,
-                DownloadUrl = ApplicationEngine.RouteUrl(AdminRouteNames.AdminDownloadFile, new { id = download.Id }),
+                DownloadUrl = GenesisEngine.Instance.RouteUrl(AdminRouteNames.AdminDownloadFile, new { id = download.Id }),
                 ItemDownloadId = itemDownload?.Id ?? 0,
                 DownloadId = download.Id
             };

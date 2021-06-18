@@ -11,16 +11,15 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Cultures;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Services.Cultures;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "CurrencySelector")]
-    public class CurrencySelectorComponent : FoundationComponent
+    public class CurrencySelectorComponent : GenesisComponent
     {
         private readonly ICurrencyService _currencyService;
         private readonly ICurrencyModelFactory _currencyModelFactory;
@@ -42,7 +41,7 @@ namespace EvenCart.Components
                 return R.Success.ComponentResult; // no need to display the box at all if there are none or one currency
 
             var models = currencies.Select(_currencyModelFactory.Create).ToList();
-            var activeCurrency = _currencyModelFactory.Create(ApplicationEngine.CurrentCurrency);
+            var activeCurrency = _currencyModelFactory.Create(Engine.CurrentCurrency);
             return R.Success.With("currencies", models).With("activeCurrency", activeCurrency).ComponentResult;
         }
     }

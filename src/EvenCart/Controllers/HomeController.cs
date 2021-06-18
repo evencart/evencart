@@ -11,15 +11,15 @@
 
 using System.Threading.Tasks;
 using EvenCart.Events;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Home;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
-    public class HomeController : FoundationController
+    public class HomeController : GenesisController
     {
         [DualGet("~/", Name = RouteNames.Home, OnlyNonApi = true, AvailableInHeadlessMode = true)]
         public async Task<IActionResult> Index()

@@ -10,13 +10,13 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Navigation
 {
-    public class CreateMenuItemModel : FoundationModel, IRequiresValidations<CreateMenuItemModel>
+    public class CreateMenuItemModel : GenesisModel, IRequiresValidations<CreateMenuItemModel>
     {
         public IList<int> CategoryIds { get; set; }
 

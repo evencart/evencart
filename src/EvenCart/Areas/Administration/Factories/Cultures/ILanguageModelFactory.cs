@@ -10,8 +10,8 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Cultures;
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Areas.Administration.Factories.Cultures
 {

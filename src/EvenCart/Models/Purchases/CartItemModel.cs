@@ -10,12 +10,12 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Products;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Purchases
 {
-    public class CartItemModel : FoundationModel
+    public class CartItemModel : GenesisModel
     {
         /// <summary>
         /// The id of product to be added

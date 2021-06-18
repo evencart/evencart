@@ -10,11 +10,11 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Products
 {
-    public class ProductSpecificationModel : FoundationModel
+    public class ProductSpecificationModel : GenesisModel
     {
         public string Name { get; set; }
 

@@ -12,20 +12,19 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Cultures;
 using EvenCart.Areas.Administration.Models.Cultures;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Cultures;
-using EvenCart.Services.Cultures;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class CulturesController : FoundationAdminController
+    public class CulturesController : GenesisAdminController
     {
         private readonly ICurrencyService _currencyService;
         private readonly IModelMapper _modelMapper;

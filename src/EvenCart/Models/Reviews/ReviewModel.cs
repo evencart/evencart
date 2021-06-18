@@ -10,15 +10,15 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using EvenCart.Models.Products;
 using FluentValidation;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Reviews
 {
-    public class ReviewModel : FoundationEntityModel, IRequiresValidations<ReviewModel>
+    public class ReviewModel : GenesisEntityModel, IRequiresValidations<ReviewModel>
     {
         /// <summary>
         /// The rating value between 1 and 5

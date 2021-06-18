@@ -9,15 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Extensions;
-using EvenCart.Services.Logger;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Logging;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
 {
-    public class KeepAliveController : FoundationController
+    public class KeepAliveController : GenesisController
     {
         private readonly ILogger _logger;
 

@@ -10,7 +10,7 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Core.Infrastructure.Utils;
+using Genesis.Infrastructure.Utils;
 using EvenCart.Infrastructure.Routing;
 
 namespace EvenCart.Infrastructure.Mvc.UI

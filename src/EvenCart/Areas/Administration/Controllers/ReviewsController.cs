@@ -12,18 +12,18 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Reviews;
 using EvenCart.Areas.Administration.Models.Reviews;
-using EvenCart.Data.Constants;
 using EvenCart.Data.Entity.Reviews;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Services.Reviews;
+using Genesis;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class ReviewsController : FoundationAdminController
+    public class ReviewsController : GenesisAdminController
     {
         private readonly IReviewService _reviewService;
         private readonly IReviewModelFactory _reviewModelFactory;

@@ -14,17 +14,16 @@ using System.Linq;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Components;
 using EvenCart.Models.Products;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "CategoryFilter")]
-    public class CategoryFilterComponent : FoundationComponent
+    public class CategoryFilterComponent : GenesisComponent
     {
         private readonly ICategoryService _categoryService;
         public CategoryFilterComponent(ICategoryService categoryService)
@@ -83,7 +82,7 @@ namespace EvenCart.Components
         {
             var categoryFilterModel = new CategoryFilterModel() {
                 Name = category.Name,
-                Url = ApplicationEngine.RouteUrl(RouteNames.ProductsPage,
+                Url = Engine.RouteUrl(RouteNames.ProductsPage,
                     new {
                         seName = category.SeoMeta.Slug,
                         categoryPath = category.GetCategoryPath()

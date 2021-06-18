@@ -11,8 +11,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Caching;
-using EvenCart.Core.Infrastructure;
+using Genesis.Caching;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Navigation;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;

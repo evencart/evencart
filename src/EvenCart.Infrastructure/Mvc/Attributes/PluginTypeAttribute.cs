@@ -10,7 +10,7 @@
 #endregion
 
 using System;
-using EvenCart.Core.Plugins;
+using Genesis.Plugins;
 
 namespace EvenCart.Infrastructure.Mvc.Attributes
 {

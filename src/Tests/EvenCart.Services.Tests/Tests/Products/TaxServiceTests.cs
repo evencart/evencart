@@ -1,15 +1,13 @@
 ﻿using System;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Taxes;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Addresses;
 using EvenCart.Services.Products;
-using EvenCart.Services.Settings;
 using EvenCart.Services.Taxes;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Products
@@ -89,7 +87,7 @@ namespace EvenCart.Services.Tests.Products
             _taxRateService.Insert(_taxRates);
 
             _taxSettings.DefaultTaxRate = 1;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
 
             var user = new User()
             {

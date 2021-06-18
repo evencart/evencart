@@ -11,13 +11,13 @@
 
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
-    public class SaveOrderModel : FoundationEntityModel, IRequiresValidations<SaveOrderModel>
+    public class SaveOrderModel : GenesisEntityModel, IRequiresValidations<SaveOrderModel>
     {
         public string ShippingMethodName { get; set; }
 

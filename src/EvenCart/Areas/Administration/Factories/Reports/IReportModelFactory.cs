@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Areas.Administration.Factories.Reports
 {

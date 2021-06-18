@@ -10,7 +10,7 @@
 #endregion
 
 using Microsoft.AspNetCore.Routing;
-using RouteData = EvenCart.Core.Infrastructure.Routing.RouteData;
+using RouteData = Genesis.Infrastructure.Routing.RouteData;
 
 namespace EvenCart.Infrastructure.Routing
 {

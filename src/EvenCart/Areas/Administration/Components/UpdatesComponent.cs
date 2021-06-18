@@ -12,20 +12,18 @@
 using System;
 using System.Collections.Specialized;
 using EvenCart.Areas.Administration.Models.Updates;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Services.HttpServices;
-using EvenCart.Services.Serializers;
-using EvenCart.Services.Settings;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Data;
+using Genesis.Modules.Http;
+using Genesis.Modules.Settings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Components
 {
     [ViewComponent(Name = "EvenCartUpdates")]
-    public class UpdatesComponent : FoundationComponent
+    public class UpdatesComponent : GenesisComponent
     {
         private const string UpdatesFetchUrl = "https://evencart.co/api/feed";
         private readonly IRequestProvider _requestProvider;

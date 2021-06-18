@@ -12,9 +12,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Routing;
-using EvenCart.Core.Plugins;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Routing;
+using Genesis.Plugins;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Mvc;

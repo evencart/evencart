@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Extensions;
+using Genesis.Extensions;
 using EvenCart.Data.Entity.Pages;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Extensions;
@@ -23,7 +23,7 @@ using EvenCart.Infrastructure.Routing.Extensions;
 using EvenCart.Infrastructure.Routing.Parsers;
 using EvenCart.Services.Extensions;
 using Microsoft.AspNetCore.Routing;
-using RouteData = EvenCart.Core.Infrastructure.Routing.RouteData;
+using RouteData = Genesis.Infrastructure.Routing.RouteData;
 
 namespace EvenCart.Infrastructure.Routing
 {

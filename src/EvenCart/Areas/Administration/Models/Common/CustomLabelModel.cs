@@ -9,17 +9,17 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Common;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Meta;
 
 namespace EvenCart.Areas.Administration.Models.Common
 {
     /// <summary>
     /// Represents a custom label
     /// </summary>
-    public class CustomLabelModel : FoundationEntityModel, IRequiresValidations<CustomLabelModel>
+    public class CustomLabelModel : GenesisEntityModel, IRequiresValidations<CustomLabelModel>
     {
         /// <summary>
         /// The text of the label

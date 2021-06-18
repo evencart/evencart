@@ -15,24 +15,45 @@
 
   <ItemGroup>
     <Compile Remove="Entity\ExtraFields\**" />
+    <Compile Remove="Entity\Users\**" />
+    <Compile Remove="Interfaces\**" />
     <EmbeddedResource Remove="Entity\ExtraFields\**" />
+    <EmbeddedResource Remove="Entity\Users\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
     <None Remove="Entity\ExtraFields\**" />
+    <None Remove="Entity\Users\**" />
+    <None Remove="Interfaces\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Entity\MediaEntities\EntityMedia.cs" />
     <Compile Remove="Entity\Shop\StoreCatalog.cs" />
-    <Compile Remove="Entity\Users\Group.cs" />
-    <Compile Remove="Entity\Users\UserGroup.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.22" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Constants\" />
+    <Folder Include="Entity\Addresses\" />
+    <Folder Include="Entity\Common\" />
+    <Folder Include="Entity\Logs\" />
+    <Folder Include="Entity\MediaEntities\" />
+    <Folder Include="Entity\Navigation\" />
+    <Folder Include="Entity\Notifications\" />
+    <Folder Include="Entity\Pages\" />
+    <Folder Include="Entity\Payments\" />
+    <Folder Include="Entity\Promotions\" />
+    <Folder Include="Entity\Purchases\" />
+    <Folder Include="Entity\Reviews\" />
+    <Folder Include="Entity\ScheduledTasks\" />
+    <Folder Include="Entity\Settings\" />
+    <Folder Include="Entity\Shop\" />
+    <Folder Include="Entity\Subscriptions\" />
+    <Folder Include="Entity\Taxes\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EvenCart.Core\EvenCart.Core.csproj" />
+    <ProjectReference Include="..\..\..\Genesis.NET\Genesis.NET\Genesis\Genesis.csproj" />
   </ItemGroup>
 
 </Project>

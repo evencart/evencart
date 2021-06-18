@@ -12,9 +12,9 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using EvenCart.Core.Caching;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Tasks;
+using Genesis.Caching;
+using Genesis.Infrastructure;
+using Genesis.Tasks;
 using EvenCart.Data.Database;
 using EvenCart.Infrastructure.Caching;
 using EvenCart.Infrastructure.Helpers;

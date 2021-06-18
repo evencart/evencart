@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 
 namespace EvenCart.Areas.Administration.Factories.Orders
 {

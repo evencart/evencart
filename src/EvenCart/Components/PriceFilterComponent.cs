@@ -10,16 +10,16 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
 using EvenCart.Models.Components;
 using EvenCart.Models.Products;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Components
 {
     [ViewComponent(Name = "PriceFilter")]
-    public class PriceFilterComponent : FoundationComponent
+    public class PriceFilterComponent : GenesisComponent
     {
         public override IViewComponentResult Invoke(object data = null)
         {

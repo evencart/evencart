@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.ConnectedAccounts
 {
-    public class ConnectedAccountModel : FoundationEntityModel
+    public class ConnectedAccountModel : GenesisEntityModel
     {
         public string ProviderName { get; set; }
     }

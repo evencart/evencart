@@ -13,28 +13,23 @@ using System;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Emails;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Emails;
-using EvenCart.Services.Security;
-using EvenCart.Services.Serializers;
-using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Emails;
+using Genesis.Modules.Security;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class EmailsController : FoundationAdminController
+    public class EmailsController : GenesisAdminController
     {
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly IEmailAccountService _emailAccountService;

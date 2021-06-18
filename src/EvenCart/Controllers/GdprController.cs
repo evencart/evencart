@@ -12,15 +12,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Data.Entity.Gdpr;
-using EvenCart.Services.Gdpr;
 using EvenCart.Factories.Gdpr;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
 using EvenCart.Models.Gdpr;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Gdpr;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +29,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Authorize]
     [Route("gdpr")]
-    public class GdprController : FoundationController
+    public class GdprController : GenesisController
     {
         private readonly IGdprService _gdprService;
         private readonly IConsentService _consentService;
@@ -84,7 +82,7 @@ namespace EvenCart.Controllers
             if (consents.Any())
             {
                 //if user is not logged in, guest signin
-                ApplicationEngine.GuestSignIn();
+                Engine.GuestSignIn();
                 var consentDictionary = consents.Where(x => x.Id != 0).ToDictionary(x => x.Id, x => x.ConsentStatus);
                 _gdprService.SetUserConsents(CurrentUser.Id, consentDictionary);
             }
@@ -93,7 +91,7 @@ namespace EvenCart.Controllers
                 if (CurrentUser == null)
                 {
                     //there were no consents, so just create a cookie to track
-                    CookieHelper.SetResponseCookie(ApplicationConfig.ConsentCookieName, Guid.NewGuid().ToString(), false);
+                    CookieHelper.SetResponseCookie(Engine.StaticConfig.ConsentCookieName, Guid.NewGuid().ToString(), false);
                 }
 
             }

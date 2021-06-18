@@ -10,10 +10,10 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.ConnectedAccounts;
-using EvenCart.Services.Social;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +24,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Authorize]
     [Route("connected-accounts")]
-    public class ConnectedAccountsController : FoundationController
+    public class ConnectedAccountsController : GenesisController
     {
         private readonly IConnectedAccountService _connectedAccountService;
 

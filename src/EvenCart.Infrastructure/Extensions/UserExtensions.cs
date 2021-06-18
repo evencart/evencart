@@ -11,7 +11,7 @@
 
 using System;
 using System.Web;
-using EvenCart.Core.Extensions;
+using Genesis.Extensions;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.Routing;

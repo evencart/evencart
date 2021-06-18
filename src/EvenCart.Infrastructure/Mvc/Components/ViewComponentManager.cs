@@ -12,8 +12,8 @@
 using System;
 using System.IO;
 using System.Text.Encodings.Web;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Providers;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure.ViewEngines;
 using EvenCart.Infrastructure.ViewEngines.Expanders;

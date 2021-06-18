@@ -10,9 +10,8 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -21,7 +20,7 @@ namespace EvenCart.Controllers
     /// Manages component operations for the website
     /// </summary>
     [Route("component")]
-    public class ComponentController : FoundationController
+    public class ComponentController : GenesisController
     {
         /// <summary>
         /// Renders the component with provided component name
@@ -32,7 +31,7 @@ namespace EvenCart.Controllers
         public IActionResult Index(string componentName)
         {
             //pass any additional data as model to the view
-            var model = ApplicationEngine.CurrentHttpContext.Request.Form?.ToDictionary(x => x.Key, x =>
+            var model = Engine.CurrentHttpContext.Request.Form?.ToDictionary(x => x.Key, x =>
             {
                 if (x.Value.Count == 1)
                     return (object) x.Value[0];

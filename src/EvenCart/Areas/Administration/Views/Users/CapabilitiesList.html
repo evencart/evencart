@@ -8,6 +8,7 @@
 </div>
 {% else %}
 <form action='{% route api_Admin.SaveCapabilities userId="{{userId}}" %}' id="form-capabilities">
+    {% control xsrf %}
     <div class="row">
         <div class="col-md-6">
             <div class="panel">
@@ -26,7 +27,7 @@
                     {% for c in capabilities %}
                     <label>
                         <label>
-                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            <input type="checkbox" checked="checked" disabled="disabled"/>
                             {{c.name}}
                         </label>
                     </label>
@@ -53,7 +54,7 @@
                     {% for c in availableCapabilities %}
                     <div>
                         <label>
-                            <input type="checkbox" {% if c.active %}checked{% endif %} name="capabilityIds[]" value="{{c.id}}" />
+                            <input type="checkbox" {% if c.active %}checked{% endif %} name="capabilityIds[]" value="{{c.id}}"/>
                             {{c.name}}
                         </label>
                     </div>

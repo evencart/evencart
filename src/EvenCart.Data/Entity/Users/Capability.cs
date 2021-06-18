@@ -9,7 +9,7 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Core.Data;
+using Genesis.Data;
 
 namespace EvenCart.Data.Entity.Users
 {

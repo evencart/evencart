@@ -10,12 +10,12 @@
 #endregion
 
 using System;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Logging;
 
 namespace EvenCart.Areas.Administration.Models.Logger
 {
-    public class LogModel : FoundationEntityModel
+    public class LogModel : GenesisEntityModel
     {
         public LogLevel LogLevel { get; set; }
 

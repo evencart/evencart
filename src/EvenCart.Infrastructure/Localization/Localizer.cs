@@ -11,9 +11,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure.Providers;
+using Genesis;
+using Genesis.Data;
+using Genesis.Infrastructure.Providers;
 
 namespace EvenCart.Infrastructure.Localization
 {

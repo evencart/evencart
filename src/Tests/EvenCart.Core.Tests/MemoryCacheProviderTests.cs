@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using EvenCart.Core.Caching;
+using Genesis.Caching;
 using NUnit.Framework;
 
 namespace EvenCart.Common.Tests

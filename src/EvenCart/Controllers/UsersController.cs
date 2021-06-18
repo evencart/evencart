@@ -9,17 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Services.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Media;
 using EvenCart.Models.Users;
-using EvenCart.Services.MediaServices;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.MediaServices;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +29,7 @@ namespace EvenCart.Controllers
     /// </summary>
     [Route("users")]
     [Authorize]
-    public class UsersController : FoundationController
+    public class UsersController : GenesisController
     {
         private readonly IUserService _userService;
         private readonly IMediaAccountant _mediaAccountant;
@@ -57,7 +56,7 @@ namespace EvenCart.Controllers
         [DualPost("", Name = RouteNames.SaveUser, OnlyApi = true)]
         public IActionResult SaveUser(UserModel userModel)
         {
-            var currentUser = ApplicationEngine.CurrentUser;
+            var currentUser = Engine.CurrentUser;
             //set the updated fields
             currentUser.FirstName = userModel.FirstName;
             currentUser.LastName = userModel.LastName;
@@ -95,7 +94,7 @@ namespace EvenCart.Controllers
             _userService.Update(new { ProfilePictureId = media.Id }, x => x.Id == CurrentUser.Id, null);
 
             var model = _modelMapper.Map<MediaModel>(media);
-            model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(media, Engine.ActiveTheme.UserProfileImageSize, true);
             model.ImageUrl = _mediaAccountant.GetPictureUrl(media);
             return R.Success.With("media", model).Result;
         }

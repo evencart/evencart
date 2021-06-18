@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Data.Entity.Common;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Services.Addresses;
-using EvenCart.Services.Common;
 using EvenCart.Services.Products;
-using EvenCart.Services.Users;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Vendors;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Products

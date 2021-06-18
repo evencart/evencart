@@ -21,36 +21,36 @@ using EvenCart.Areas.Administration.Models.Pages;
 using EvenCart.Areas.Administration.Models.Shop;
 using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Areas.Administration.Models.Warehouse;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure.Providers;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.MediaEntities;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Factories.Vendors;
-using EvenCart.Services.MediaServices;
-using EvenCart.Services.Pages;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Products;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Common;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Infrastructure.IO;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
+using Genesis.Modules.MediaServices;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
+using Genesis.Modules.Web;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class ProductsController : FoundationAdminController
+    public class ProductsController : GenesisAdminController
     {
         private readonly IProductService _productService;
         private readonly IModelMapper _modelMapper;
@@ -204,8 +204,8 @@ namespace EvenCart.Areas.Administration.Controllers
                     }
                     else
                     {
-                        model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(x, ApplicationConfig.AdminThumbnailWidth,
-                            ApplicationConfig.AdminThumbnailHeight);
+                        model.ThumbnailUrl = _mediaAccountant.GetPictureUrl(x, Engine.StaticConfig.AdminThumbnailWidth,
+                            Engine.StaticConfig.AdminThumbnailHeight);
                         model.ImageUrl = _mediaAccountant.GetPictureUrl(x);
                     }
 

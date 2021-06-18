@@ -11,12 +11,12 @@
 
 using System;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Modules.Data;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
-    public class PaymentTransactionModel : FoundationEntityModel
+    public class PaymentTransactionModel : GenesisEntityModel
     {
         public string TransactionGuid { get; set; }
 

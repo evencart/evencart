@@ -10,16 +10,15 @@
 #endregion
 
 using EvenCart.Areas.Administration.Models.Pages;
-using EvenCart.Core.Data;
-using EvenCart.Data.Entity.Pages;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Pages;
+using Genesis.Data;
+using Genesis.Extensions;
+using Genesis.Modules.Web;
 
 namespace EvenCart.Areas.Administration.Extensions
 {
     public static class SeoMetaExtensions
     {
-        public static void UpdateSeoMetaForEntity<T>(this ISeoMetaService seoMetaService, T entity, SeoMetaModel seoMetaModel) where T : FoundationEntity
+        public static void UpdateSeoMetaForEntity<T>(this ISeoMetaService seoMetaService, T entity, SeoMetaModel seoMetaModel) where T : GenesisEntity
         {
             var seoMeta = seoMetaService.FirstOrDefault(
                 x => x.EntityId == entity.Id && x.EntityName == typeof(T).Name);

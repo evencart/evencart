@@ -11,10 +11,10 @@
 
 using System.Collections.Generic;
 using System.IO;
-using EvenCart.Core;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Infrastructure.Providers;
+using Genesis;
+using Genesis.Data;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Providers;
 using EvenCart.Data.Database;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Extensions;

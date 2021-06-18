@@ -10,14 +10,14 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Warehouse
 {
     /// <summary>
     /// The inventory information object
     /// </summary>
-    public class WarehouseProductInventoryModel : FoundationEntityModel
+    public class WarehouseProductInventoryModel : GenesisEntityModel
     {
         /// <summary>
         /// A collection of <see cref="InventoryModel">variant inventory</see> objects
@@ -32,7 +32,7 @@ namespace EvenCart.Areas.Administration.Models.Warehouse
         /// <summary>
         /// The inventory object
         /// </summary>
-        public class InventoryModel : FoundationEntityModel
+        public class InventoryModel : GenesisEntityModel
         {
             /// <summary>
             /// The warehouse id

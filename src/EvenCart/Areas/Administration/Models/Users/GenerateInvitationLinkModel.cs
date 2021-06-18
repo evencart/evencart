@@ -9,16 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Users
 {
     /// <summary>
     /// The parameters for invitation
     /// </summary>
-    public class GenerateInvitationLinkModel : FoundationModel, IRequiresValidations<GenerateInvitationLinkModel>
+    public class GenerateInvitationLinkModel : GenesisModel, IRequiresValidations<GenerateInvitationLinkModel>
     {
         /// <summary>
         /// The email address to which invite link needs to be sent

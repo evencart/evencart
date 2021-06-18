@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Warehouse
 {
     /// <summary>
     /// The inventory object
     /// </summary>
-    public class InventoryModel : FoundationModel
+    public class InventoryModel : GenesisModel
     {
         /// <summary>
         /// The identifier for a single item. Can be a product id or variant id depending on if the product has variants

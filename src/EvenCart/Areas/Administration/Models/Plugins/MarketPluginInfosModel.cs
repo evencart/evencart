@@ -10,11 +10,11 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Plugins
 {
-    public class MarketPluginInfosModel : FoundationModel
+    public class MarketPluginInfosModel : GenesisModel
     {
         public int Current { get; set; }
 

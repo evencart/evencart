@@ -9,16 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Models.Addresses;
 using System.Collections.Generic;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Checkout
 {
     /// <summary>
     /// Represents shipping options grouped by warehouse
     /// </summary>
-    public class WarehouseShippingOptionModel : FoundationModel
+    public class WarehouseShippingOptionModel : GenesisModel
     {
         /// <summary>
         /// The id of the warehouse

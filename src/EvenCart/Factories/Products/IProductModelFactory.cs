@@ -10,7 +10,7 @@
 #endregion
 
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc.ModelFactories;
 using DownloadModel = EvenCart.Models.Products.DownloadModel;
 using ProductModel = EvenCart.Models.Products.ProductModel;
 

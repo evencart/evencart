@@ -10,13 +10,13 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Models.Authentication
 {
-    public class PasswordChangeModel : FoundationModel, IRequiresValidations<PasswordChangeModel>
+    public class PasswordChangeModel : GenesisModel, IRequiresValidations<PasswordChangeModel>
     {
         /// <summary>
         /// The current password of the user. Ignore if a valid code parameter is being passed

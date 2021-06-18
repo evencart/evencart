@@ -13,8 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EvenCart.Core;
-using EvenCart.Core.Infrastructure;
+using Genesis;
+using Genesis.Infrastructure;
 using EvenCart.Data.Extensions;
 
 namespace EvenCart.Infrastructure.ViewEngines.Expanders

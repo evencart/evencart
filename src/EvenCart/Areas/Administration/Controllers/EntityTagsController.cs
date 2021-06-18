@@ -10,15 +10,15 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Common;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Modules.Meta;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
-    public class EntityTagsController : FoundationAdminController
+    public class EntityTagsController : GenesisAdminController
     {
         private readonly IEntityTagService _entityTagService;
 

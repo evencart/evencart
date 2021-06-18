@@ -12,18 +12,18 @@
 using System.Linq;
 using EvenCart.Areas.Administration.Factories.Warehouses;
 using EvenCart.Areas.Administration.Models.Warehouse;
-using EvenCart.Core.Services;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.Addresses;
+using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Products;
+using Genesis;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Addresses;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
@@ -31,7 +31,7 @@ namespace EvenCart.Areas.Administration.Controllers
     /// <summary>
     /// Allows store admin to manage warehouses
     /// </summary>
-    public class WarehouseController : FoundationAdminController
+    public class WarehouseController : GenesisAdminController
     {
         private readonly IWarehouseService _warehouseService;
         private readonly IWarehouseModelFactory _warehouseModelFactory;

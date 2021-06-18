@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Orders
 {
     /// <summary>
     /// Represents a single return item
     /// </summary>
-    public class ReturnItemModel : FoundationModel
+    public class ReturnItemModel : GenesisModel
     {
         /// <summary>
         /// The order item corresponding to the return

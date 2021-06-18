@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure;
 using EvenCart.Data.Entity.Cultures;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;

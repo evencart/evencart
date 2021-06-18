@@ -11,11 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Emails
 {
-    public class EmailMessageModel : FoundationEntityModel
+    public class EmailMessageModel : GenesisEntityModel
     {
         public IList<string> Tos { get; set; }
 

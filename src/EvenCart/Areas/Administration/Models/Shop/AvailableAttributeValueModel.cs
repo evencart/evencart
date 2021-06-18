@@ -9,11 +9,11 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Shop
 {
-    public class AvailableAttributeValueModel : FoundationEntityModel
+    public class AvailableAttributeValueModel : GenesisEntityModel
     {
         /// <summary>
         /// A single value for the attribute

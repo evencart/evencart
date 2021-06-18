@@ -11,14 +11,14 @@
 
 using System.Collections.Generic;
 using EvenCart.Areas.Administration.Models.Warehouse;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Areas.Administration.Models.Orders
 {
     /// <summary>
     /// The order fulfillment group object
     /// </summary>
-    public class OrderFulfillmentListModel : FoundationModel
+    public class OrderFulfillmentListModel : GenesisModel
     {
         /// <summary>
         /// The <see cref="WarehouseModel">warehouse</see> in this fulfillment

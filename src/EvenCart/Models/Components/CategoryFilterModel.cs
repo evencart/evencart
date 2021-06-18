@@ -10,11 +10,11 @@
 #endregion
 
 using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 
 namespace EvenCart.Models.Components
 {
-    public class CategoryFilterModel : FoundationEntityModel
+    public class CategoryFilterModel : GenesisEntityModel
     {
         public string Name { get; set; }
 

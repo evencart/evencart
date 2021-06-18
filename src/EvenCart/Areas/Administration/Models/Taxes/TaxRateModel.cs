@@ -9,13 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Taxes
 {
-    public class TaxRateModel : FoundationEntityModel, IRequiresValidations<TaxRateModel>
+    public class TaxRateModel : GenesisEntityModel, IRequiresValidations<TaxRateModel>
     {
         public int TaxId { get; set; }
 

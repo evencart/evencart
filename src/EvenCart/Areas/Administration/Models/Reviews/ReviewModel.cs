@@ -10,13 +10,13 @@
 #endregion
 
 using System;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace EvenCart.Areas.Administration.Models.Reviews
 {
-    public class ReviewModel : FoundationEntityModel, IRequiresValidations<ReviewModel>
+    public class ReviewModel : GenesisEntityModel, IRequiresValidations<ReviewModel>
     {
         public int Rating { get; set; }
 

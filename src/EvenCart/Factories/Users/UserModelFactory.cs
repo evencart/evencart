@@ -9,14 +9,13 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Data.Entity.MediaEntities;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using EvenCart.Models.Users;
-using EvenCart.Services.MediaServices;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.MediaServices;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Factories.Users
 {
@@ -26,12 +25,14 @@ namespace EvenCart.Factories.Users
         private readonly UserSettings _userSettings;
         private readonly IMediaAccountant _mediaAccountant;
         private readonly IMediaService _mediaService;
-        public UserModelFactory(IModelMapper modelMapper, UserSettings userSettings, IMediaAccountant mediaAccountant, IMediaService mediaService)
+        private readonly IGenesisEngine _applicationEngine;
+        public UserModelFactory(IModelMapper modelMapper, UserSettings userSettings, IMediaAccountant mediaAccountant, IMediaService mediaService, IGenesisEngine applicationEngine)
         {
             _modelMapper = modelMapper;
             _userSettings = userSettings;
             _mediaAccountant = mediaAccountant;
             _mediaService = mediaService;
+            _applicationEngine = applicationEngine;
         }
 
         public UserModel Create(User user)
@@ -44,7 +45,7 @@ namespace EvenCart.Factories.Users
             {
                 media = _mediaService.Get(user.ProfilePictureId.Value);
             }
-            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, _applicationEngine.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
 
@@ -62,7 +63,7 @@ namespace EvenCart.Factories.Users
             {
                 media = _mediaService.Get(user.ProfilePictureId.Value);
             }
-            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, ApplicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, _applicationEngine.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
     }

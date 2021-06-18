@@ -9,14 +9,14 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Areas.Administration.Models.System
 {
-    public class SampleDataModel : FoundationModel, IRequiresValidations<SampleDataModel>
+    public class SampleDataModel : GenesisModel, IRequiresValidations<SampleDataModel>
     {
         public IFormFile MediaFile { get; set; }
 

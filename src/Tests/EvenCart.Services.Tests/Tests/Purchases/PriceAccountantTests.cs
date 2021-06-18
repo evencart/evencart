@@ -4,13 +4,13 @@ using EvenCart.Data.Entity.Promotions;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Infrastructure;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
-using EvenCart.Services.Purchases;
-using EvenCart.Services.Settings;
-using EvenCart.Services.Users;
+using Genesis;
+using Genesis.Modules.Settings;
+using Genesis.Modules.Users;
+using Genesis.Modules.Vendors;
 using NUnit.Framework;
 
 namespace EvenCart.Services.Tests.Purchases
@@ -543,7 +543,7 @@ namespace EvenCart.Services.Tests.Purchases
             });
             //update tax rate
             _taxSettings.DefaultTaxRate = 10;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
             var cart = _cartService.GetCart(_registeredUser.Id);
             _priceAccountant.RefreshCartParameters(cart);
 
@@ -588,7 +588,7 @@ namespace EvenCart.Services.Tests.Purchases
 
             //update tax rate
             _taxSettings.DefaultTaxRate = 10;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
             var cart = _cartService.GetCart(_registeredUser.Id);
             _priceAccountant.RefreshCartParameters(cart);
             _cartService.SetDiscountCoupon(_registeredUser.Id, "validcoupon");
@@ -604,7 +604,7 @@ namespace EvenCart.Services.Tests.Purchases
         public void Manual_Discount_Product_Succeeds()
         {
             _taxSettings.DefaultTaxRate = 0;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
 
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
@@ -699,7 +699,7 @@ namespace EvenCart.Services.Tests.Purchases
         public void Manual_Discount_Role_Succeeds()
         {
             _taxSettings.DefaultTaxRate = 0;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
 
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
@@ -785,7 +785,7 @@ namespace EvenCart.Services.Tests.Purchases
         public void Manual_Discount_User_Succeeds()
         {
             _taxSettings.DefaultTaxRate = 0;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
 
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);
@@ -918,7 +918,7 @@ namespace EvenCart.Services.Tests.Purchases
         public void Manual_Discount_Vendor_Succeeds()
         {
             _taxSettings.DefaultTaxRate = 0;
-            _settingService.Save(_taxSettings, ApplicationEngine.CurrentStore.Id);
+            _settingService.Save(_taxSettings, GenesisEngine.Instance.CurrentStore.Id);
 
             _autoCoupon.Enabled = false;
             _discountCouponService.Update(_autoCoupon);

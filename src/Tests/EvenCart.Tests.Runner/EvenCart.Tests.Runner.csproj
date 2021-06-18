@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EvenCart.Core.Tests\EvenCart.Common.Tests.csproj" />
     <ProjectReference Include="..\EvenCart.Services.Tests\EvenCart.Services.Tests.csproj" />
   </ItemGroup>
 

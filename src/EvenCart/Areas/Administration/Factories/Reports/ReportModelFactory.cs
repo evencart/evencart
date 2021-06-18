@@ -14,10 +14,10 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Services.Helpers;
+using Genesis.Extensions;
+using Genesis.Helpers;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
 
 namespace EvenCart.Areas.Administration.Factories.Reports
 {

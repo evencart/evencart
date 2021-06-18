@@ -1,5 +1,5 @@
 ﻿using System;
-using EvenCart.Data.Extensions;
+using Genesis.Extensions;
 using NUnit.Framework;
 
 namespace EvenCart.Common.Tests

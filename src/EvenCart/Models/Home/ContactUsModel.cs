@@ -9,15 +9,16 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis;
+using Genesis.Infrastructure;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
+using Genesis.Modules.Localization;
 
 namespace EvenCart.Models.Home
 {
-    public class ContactUsModel : FoundationModel, IRequiresValidations<ContactUsModel>
+    public class ContactUsModel : GenesisModel, IRequiresValidations<ContactUsModel>
     {
         public string Name { get; set; }
 
@@ -31,6 +32,7 @@ namespace EvenCart.Models.Home
 
         public void SetupValidationRules(ModelValidator<ContactUsModel> v)
         {
+            var engine = D.Resolve<IGenesisEngine>();
             v.RuleFor(x => x.Name).NotEmpty();
             v.RuleFor(x => x.Email).EmailAddress().NotEmpty();
             v.RuleFor(x => x.Subject).Must((rootObject, x, context) =>
@@ -38,14 +40,14 @@ namespace EvenCart.Models.Home
                 context.MessageFormatter.AppendArgument("MinLength", 10);
                 return x.Trim().Length > 10;
             }).WithMessage(LocalizationHelper.Localize("{{PropertyName}} should be at least {{MinLength}} characters long",
-                ApplicationEngine.CurrentLanguage.CultureCode));
+                engine.CurrentLanguage.CultureCode));
 
             v.RuleFor(x => x.Description).Must((rootObject, x, context) =>
             {
                 context.MessageFormatter.AppendArgument("MinLength", 30);
                 return x.Trim().Length > 30;
             }).WithMessage(LocalizationHelper.Localize("{{PropertyName}} should be at least {{MinLength}} characters long",
-                ApplicationEngine.CurrentLanguage.CultureCode));
+                engine.CurrentLanguage.CultureCode));
         }
     }
 }

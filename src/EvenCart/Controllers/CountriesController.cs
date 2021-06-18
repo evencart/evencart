@@ -10,12 +10,11 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Services.Addresses;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Models.Countries;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Modules.Addresses;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Controllers
@@ -24,7 +23,7 @@ namespace EvenCart.Controllers
     /// Allows to retrieve list of available countries and states from store database
     /// </summary>
     [Route("countries")]
-    public class CountriesController : FoundationController
+    public class CountriesController : GenesisController
     {
         private readonly ICountryService _countryService;
         private readonly IStateOrProvinceService _stateOrProvinceService;

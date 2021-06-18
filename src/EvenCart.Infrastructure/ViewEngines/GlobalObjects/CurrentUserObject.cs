@@ -10,7 +10,7 @@
 #endregion
 
 using System.Linq;
-using EvenCart.Core.Extensions;
+using Genesis.Extensions;
 using EvenCart.Data.Constants;
 using EvenCart.Data.Extensions;
 using EvenCart.Services.Extensions;

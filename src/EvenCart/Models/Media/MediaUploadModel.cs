@@ -9,9 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
 using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 using Microsoft.AspNetCore.Http;
 
 namespace EvenCart.Models.Media
@@ -19,7 +19,7 @@ namespace EvenCart.Models.Media
     /// <summary>
     /// Represents an uploaded media file
     /// </summary>
-    public class MediaUploadModel : FoundationModel, IRequiresValidations<MediaUploadModel>
+    public class MediaUploadModel : GenesisModel, IRequiresValidations<MediaUploadModel>
     {
         /// <summary>
         /// The file object

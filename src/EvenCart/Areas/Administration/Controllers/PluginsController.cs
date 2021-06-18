@@ -15,27 +15,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Areas.Administration.Extensions;
 using EvenCart.Areas.Administration.Models.Plugins;
-using EvenCart.Core.Data;
-using EvenCart.Data.Constants;
-using EvenCart.Data.Database;
-using EvenCart.Data.Entity.Settings;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
-using EvenCart.Services.HttpServices;
 using EvenCart.Services.Plugins;
+using Genesis;
+using Genesis.Database;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Modules.Data;
+using Genesis.Modules.Http;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenCart.Areas.Administration.Controllers
 {
     [CapabilityRequired(CapabilitySystemNames.ManagePlugins)]
-    public class PluginsController : FoundationAdminController
+    public class PluginsController : GenesisAdminController
     {
         private const string MarketPluginUrl = "https://evencart.co/api/market";
         private readonly IModelMapper _modelMapper;
@@ -101,7 +99,7 @@ namespace EvenCart.Areas.Administration.Controllers
                             };
                             if (widgetModel.HasConfiguration)
                             {
-                                widgetModel.ConfigurationUrl = widget?.ConfigurationUrl ?? ApplicationEngine.RouteUrl(AdminRouteNames.GetWidgetSettings, new {id = y.Id});
+                                widgetModel.ConfigurationUrl = widget?.ConfigurationUrl ?? Engine.RouteUrl(AdminRouteNames.GetWidgetSettings, new {id = y.Id});
                             }
                             return widgetModel;
                         })
@@ -110,7 +108,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 .ToList();
 
             //available zones
-            var zones = ApplicationEngine.ActiveTheme.WidgetZones.Select(x => new ZoneModel() {
+            var zones = Engine.ActiveTheme.WidgetZones.Select(x => new ZoneModel() {
                 Name = x.Value,
                 SystemName = x.Key
             }).OrderBy(x => x.Name)
@@ -133,7 +131,7 @@ namespace EvenCart.Areas.Administration.Controllers
                                   x.WidgetSystemName == widgetModel.WidgetSystemName))
                 return R.Fail.With("error", T("Widget not found")).Result;
 
-            if (!ApplicationEngine.ActiveTheme.WidgetZones.ContainsKey(widgetModel.ZoneName))
+            if (!Engine.ActiveTheme.WidgetZones.ContainsKey(widgetModel.ZoneName))
                 return R.Fail.With("error", T("Zone not found")).Result;
 
             _pluginSettings.AddWidget(widgetModel.WidgetSystemName, widgetModel.PluginSystemName, widgetModel.ZoneName);
