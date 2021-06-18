@@ -47,10 +47,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payments.PayU", "..\plugins
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvenCart.Genesis", "EvenCart.Genesis\EvenCart.Genesis.csproj", "{21F7FAED-0941-4D27-A5CE-2BF6C116D9EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genesis", "..\..\Genesis.NET\Genesis.NET\src\Genesis\Genesis.csproj", "{6B3BB2BB-9317-456C-83E2-5232E2184C0A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genesis.App", "..\..\Genesis.NET\Genesis.NET\src\Genesis.App\Genesis.App.csproj", "{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -210,22 +206,6 @@ Global
 		{21F7FAED-0941-4D27-A5CE-2BF6C116D9EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21F7FAED-0941-4D27-A5CE-2BF6C116D9EC}.ReleaseForDemo|Any CPU.ActiveCfg = Release|Any CPU
 		{21F7FAED-0941-4D27-A5CE-2BF6C116D9EC}.ReleaseForDemo|Any CPU.Build.0 = Release|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.DebugWithSwagger|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.DebugWithSwagger|Any CPU.Build.0 = Debug|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.ReleaseForDemo|Any CPU.ActiveCfg = Release|Any CPU
-		{6B3BB2BB-9317-456C-83E2-5232E2184C0A}.ReleaseForDemo|Any CPU.Build.0 = Release|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.DebugWithSwagger|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.DebugWithSwagger|Any CPU.Build.0 = Debug|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.ReleaseForDemo|Any CPU.ActiveCfg = Release|Any CPU
-		{9A5A5AA9-CCBD-41EE-8016-62F2E48E967A}.ReleaseForDemo|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
