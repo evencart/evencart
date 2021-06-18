@@ -27,7 +27,7 @@ namespace EvenCart.Services.Tests
 
             var serviceCollection = new ServiceCollection();
             //mock the hosting env
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
+            var hostingEnvironment = new Mock<IWebHostEnvironment>();
 
             hostingEnvironment.Setup(x => x.ApplicationName)
                 .Returns("Hosting:UnitTestEnvironment");
@@ -48,7 +48,7 @@ namespace EvenCart.Services.Tests
             httpContextAccessor.Setup(accessor => accessor.HttpContext).Returns(httpContext);
 
             var configuration = new TestConfiguration();
-            serviceCollection.AddSingleton<IHostingEnvironment>(provider => hostingEnvironment.Object);
+            serviceCollection.AddSingleton<IWebHostEnvironment>(provider => hostingEnvironment.Object);
             serviceCollection.AddSingleton<IHttpContextAccessor>(provider => httpContextAccessor.Object);
             serviceCollection.AddSingleton<IConfiguration>(configuration);
             serviceCollection.AddSingleton<IDatabaseSettings>(new TestDbInit.TestDatabaseSettings());

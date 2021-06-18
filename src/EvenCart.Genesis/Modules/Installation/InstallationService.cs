@@ -172,7 +172,7 @@ namespace EvenCart.Services.Installation
             var addressService = D.Resolve<IAddressService>();
             var localFileProvider = D.Resolve<ILocalFileProvider>();
             //read sql file and execute it
-            var sqlFilePath = ServerHelper.MapPath("~/App_Data/Install/country-state.sql");
+            var sqlFilePath = ServerHelper.MapPath($"~/App_Data/Install/{_databaseSettings.ProviderName}.country-state.sql");
             var countryId = 0;
             if (localFileProvider.FileExists(sqlFilePath))
             {

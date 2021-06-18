@@ -26,11 +26,11 @@ namespace EvenCart
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
         private IGenesisEngine _appEngine;
 
-        public Startup(IHostingEnvironment hostingEnvironment, IConfiguration configuration)
+        public Startup(IWebHostEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
@@ -62,7 +62,7 @@ namespace EvenCart
             return _appEngine.ConfigureServices(services, _hostingEnvironment, _configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 #if DEBUG || DEBUGWS
             app.UseSwagger();
