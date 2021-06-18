@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Genesis.App" Version="1.0.9.4" />
+    <PackageReference Include="Genesis.App" Version="1.0.9.5" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="Npoi.Mapper" Version="3.4.0" />
   </ItemGroup>
