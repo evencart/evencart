@@ -14,7 +14,6 @@ using System.Linq;
 using EvenCart.Services.Products;
 using Genesis;
 using Genesis.Extensions;
-using Genesis.Infrastructure;
 using Genesis.Modules.Web;
 using Genesis.Routing;
 
@@ -22,11 +21,9 @@ namespace EvenCart.Seo
 {
     public class SitemapProvider : ISitemapProvider
     {
-        private readonly IGenesisEngine _applicationEngine;
 
-        public SitemapProvider(IGenesisEngine applicationEngine)
+        public SitemapProvider()
         {
-            _applicationEngine = applicationEngine;
         }
 
         public IList<string> GetUrls()
