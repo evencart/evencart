@@ -22,12 +22,12 @@ namespace EvenCart.Genesis
     {
         public override IApplicationConfig StaticConfig => GenesisApp.Current.ApplicationConfig;
 
-        public override LoginStatus SignIn(string email, string name, bool rememberMe, bool tokenAuth = false)
+        public override LoginStatus SignIn(string email, string name, string lastName, bool rememberMe, bool tokenAuth = false)
         {
             var isVisitor = CurrentUser != null && CurrentUser.IsVisitor();
             var visitorId = isVisitor ? CurrentUser.Id : 0;
 
-            var status = base.SignIn(email, name, rememberMe, tokenAuth);
+            var status = base.SignIn(email, name, lastName, rememberMe, tokenAuth);
             //if we are here, the login was successful. If already logged in user was a visitor, we'll move the cart items 
             //from old user to new user
             if (status == LoginStatus.Success && isVisitor)

@@ -12,6 +12,7 @@
 using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Factories.Products;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Models.Reviews;
 using Genesis;
 using Genesis.Extensions;
@@ -35,7 +36,7 @@ namespace EvenCart.Factories.Reviews
         public ReviewModel Create(Review review)
         {
             var model = _modelMapper.Map<ReviewModel>(review);
-            model.DisplayName = review.Private ? _catalogSettings.DisplayNameForPrivateReviews : review.User?.Name;
+            model.DisplayName = review.Private ? _catalogSettings.DisplayNameForPrivateReviews : review.User?.GetProfile().Name;
             if (model.DisplayName.IsNullEmptyOrWhiteSpace())
             {
                 model.DisplayName =

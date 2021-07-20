@@ -21,6 +21,7 @@ using EvenCart.Data.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Reviews;
 using EvenCart.Factories.Products;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Models.Categories;
 using EvenCart.Models.Products;
 using EvenCart.Models.Reviews;
@@ -175,7 +176,7 @@ namespace EvenCart.Controllers
                     var reviewModels = reviews.Select(x =>
                     {
                         var model = _modelMapper.Map<ReviewModel>(x);
-                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User?.Name;
+                        model.DisplayName = x.Private ? _catalogSettings.DisplayNameForPrivateReviews : x.User?.GetProfile().Name;
                         if (model.DisplayName.IsNullEmptyOrWhiteSpace())
                         {
                             model.DisplayName = T("Store Customer");

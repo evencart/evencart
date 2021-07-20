@@ -11,6 +11,7 @@
 
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Users;
+using EvenCart.Genesis.Modules.Users;
 using Genesis.Extensions;
 using Genesis.Infrastructure.Mvc.ModelFactories;
 using Genesis.Modules.Stores;
@@ -49,7 +50,7 @@ namespace EvenCart.Areas.Administration.Factories.Users
         {
             var model = new UserMiniModel()
             {
-                Name = entity.Name,
+                Name = entity.GetProfile().Name,
                 Id = entity.Id
             };
             if (model.Name.IsNullEmptyOrWhiteSpace())

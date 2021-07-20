@@ -686,7 +686,7 @@ namespace EvenCart.Controllers
                 //assign registered role to the user
                 _roleService.SetUserRoles(currentUser.Id, new[] { roleId });
 
-                Engine.SignIn(currentUser.Email, null, false);
+                Engine.SignIn(currentUser.Email, null, null, false);
             }
 
             response = response ?? R.Success;

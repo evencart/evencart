@@ -9,24 +9,23 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Linq;
-using DotEntity.Versioning;
-using EvenCart.Data.Versions;
 using Genesis;
-using Genesis.App.Helpers;
+using Genesis.Modules.Emails;
+using Genesis.Modules.Users;
 
-namespace EvenCart.Genesis
+namespace EvenCart.Genesis.Modules.Users
 {
-    public class DbVersionProvider : IDbVersionProvider
+    public static class UserExtensions
     {
-        public IDatabaseVersion[] GetDatabaseVersions()
+        public static EmailMessage.UserInfo ToUserInfo(this User user)
         {
-            return DbVersionProviderHelper.Merge(new GenesisCoreVersionProvider(), new GenesisAppVersionProvider())
-                .Concat(new IDatabaseVersion[]
-                {
-                    new ECVersion1(),
-                    new ECVersion2(),
-                }).ToArray();
+            return new EmailMessage.UserInfo(user.GetProfile().Name, user.Email);
+        }
+
+        public static UserProfile GetProfile(this User user)
+        {
+            user.Tag ??= D.Resolve<IUserProfileService>().GetUserProfile(user.Id);
+            return (UserProfile)user.Tag;
         }
     }
 }

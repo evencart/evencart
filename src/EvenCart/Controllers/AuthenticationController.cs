@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using EvenCart.Events;
 using EvenCart.Factories.Gdpr;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Genesis.Mvc;
 using EvenCart.Models.Authentication;
 using EvenCart.Models.Gdpr;
@@ -92,13 +93,13 @@ namespace EvenCart.Controllers
             if (!ShouldSignIn(loginModel.Email, loginModel.Password, out User user))
                 return R.Fail.With("message", T("Invalid email or password provided")).Result;
 
-            var loginStatus = Engine.SignIn(loginModel.Email, user.Name, loginModel.RememberMe, loginModel.Token);
+            var loginStatus = GenesisEngine.Instance.SignIn(loginModel.Email, "", "", loginModel.RememberMe, loginModel.Token);
             //get api token if it was requested
-            var token = Engine.CurrentHttpContext.GetApiToken();
+            var token = GenesisEngine.Instance.CurrentHttpContext.GetApiToken();
             if (loginStatus == LoginStatus.Success)
                 return R.Success.With("token", token).Result;
 
-            return R.Fail.With("message", T("An error occured while login")).Result;
+            return R.Fail.With("message", T("An error occurred while login")).Result;
         }
 
         [HttpGet("password-reset", Name = RouteNames.ForgotPassword)]
@@ -111,7 +112,7 @@ namespace EvenCart.Controllers
                 if (Engine.CurrentUser.IsVisitor())
                 {
                     //verify if it's a valid code
-                    userCode = _userCodeService.GetUserCode(code, UserCodeType.PasswordReset);
+                    userCode = _userCodeService.GetUserCode(code, (int) UserCodeType.PasswordReset);
                     if (!IsCodeValid(userCode))
                     {
                         return response.Fail.With("expired", true).Result;
@@ -121,7 +122,7 @@ namespace EvenCart.Controllers
                 var userId = userCode?.UserId ?? Engine.CurrentUser.Id;
                 response.Success.With("validCode", true);
                 //regenerate the code so the same can't be used again
-                userCode = _userCodeService.GetUserCode(userId, UserCodeType.PasswordReset);
+                userCode = _userCodeService.GetUserCode(userId, (int) UserCodeType.PasswordReset);
                 response.Success.With("code", userCode.Code);
             }
             return response.Result;
@@ -142,7 +143,7 @@ namespace EvenCart.Controllers
                 return R.Fail.With("error", T("There is no account associated with this email address")).Result;
 
             //generate user code
-            var userCode = _userCodeService.GetUserCode(user.Id, UserCodeType.PasswordReset);
+            var userCode = _userCodeService.GetUserCode(user.Id, (int) UserCodeType.PasswordReset);
             var passwordResetUrl = Engine.RouteUrl(RouteNames.ForgotPassword, new { code = userCode.Code }, true);
             RaiseEvent(NamedEvent.PasswordResetRequested, user, passwordResetUrl);
             return R.Success.Result;
@@ -157,7 +158,7 @@ namespace EvenCart.Controllers
         [ValidateModelState(ModelType = typeof(PasswordChangeModel))]
         public IActionResult ChangePassword(PasswordChangeModel changeModel)
         {
-            var userCode = _userCodeService.GetUserCode(changeModel.Code, UserCodeType.PasswordReset);
+            var userCode = _userCodeService.GetUserCode(changeModel.Code, (int) UserCodeType.PasswordReset);
             if (!IsCodeValid(userCode))
             {
                 return R.Fail.With("expired", true).Result;
@@ -189,7 +190,8 @@ namespace EvenCart.Controllers
                 _securitySettings.DefaultPasswordStorageFormat);
 
             //delete the user code now
-            _userCodeService.Delete(x => x.UserId == userCode.UserId && x.CodeType == UserCodeType.PasswordReset);
+            var pwdReset = (int)UserCodeType.PasswordReset;
+            _userCodeService.Delete(x => x.UserId == userCode.UserId && x.CodeType == pwdReset);
 
             if (CurrentUser.RequirePasswordChange)
             {
@@ -219,7 +221,7 @@ namespace EvenCart.Controllers
             {
                 if (inviteCode.IsNullEmptyOrWhiteSpace())
                     return R.Fail.With("registrationDisabled", true).With("allowInvites", true).Result;
-                var userCode = _userCodeService.GetUserCode(inviteCode, UserCodeType.RegistrationInvitation);
+                var userCode = _userCodeService.GetUserCode(inviteCode, (int) UserCodeType.RegistrationInvitation);
                 if(!IsCodeValid(userCode))
                     return R.Fail.With("registrationDisabled", true).With("allowInvites", true).Result;
 
@@ -277,7 +279,7 @@ namespace EvenCart.Controllers
             {
                 if (inviteCode.IsNullEmptyOrWhiteSpace())
                     return R.Fail.With("error", T("Registrations are allowed only by invitation")).Result;
-                userCode = _userCodeService.GetUserCode(inviteCode, UserCodeType.RegistrationInvitation);
+                userCode = _userCodeService.GetUserCode(inviteCode, (int) UserCodeType.RegistrationInvitation);
                 if (userCode.Email != registerModel.Email || !IsCodeValid(userCode))
                     return R.Fail.With("error", T("Registrations are allowed only by invitation")).Result;
 
@@ -334,7 +336,7 @@ namespace EvenCart.Controllers
                 //if there was no invite code, the email needs to be verified (if the admin wants so)
                 if (_userSettings.UserRegistrationDefaultMode == RegistrationMode.WithActivationEmail)
                 {
-                    userCode = _userCodeService.GetUserCode(user.Id, _userSettings.UseNumericCodeForActivationEmail ? UserCodeType.EmailOtp : UserCodeType.EmailVerification);
+                    userCode = _userCodeService.GetUserCode(user.Id, _userSettings.UseNumericCodeForActivationEmail ? (int) UserCodeType.EmailOtp : (int) UserCodeType.EmailVerification);
                     var verificationCode = userCode.Code;
                     verificationLink = verificationCode;
                     if (!_userSettings.UseNumericCodeForActivationEmail)
@@ -413,7 +415,7 @@ namespace EvenCart.Controllers
         {
             if (code.IsNullEmptyOrWhiteSpace())
                 return RedirectToRoute(RouteNames.Home);
-            var userCode = _userCodeService.GetUserCode(code, UserCodeType.EmailVerification);
+            var userCode = _userCodeService.GetUserCode(code, (int) UserCodeType.EmailVerification);
             if (!IsCodeValid(userCode))
                 return RedirectToRoute(RouteNames.Home);
             //activate the user
@@ -434,7 +436,7 @@ namespace EvenCart.Controllers
         [ValidateModelState(ModelType = typeof(EmailVerificationModel))]
         public IActionResult VerifyEmail(EmailVerificationModel verificationModel)
         {
-            var userCode = _userCodeService.GetUserCode(verificationModel.Code, UserCodeType.EmailOtp);
+            var userCode = _userCodeService.GetUserCode(verificationModel.Code, (int) UserCodeType.EmailOtp);
             if (userCode == null || userCode.User.Email != verificationModel.Email || !IsCodeValid(userCode) || verificationModel.Code != userCode.Code)
             {
                 return R.Fail.With("error", T("The code is invalid or expired")).Result;
@@ -446,7 +448,8 @@ namespace EvenCart.Controllers
             _userCodeService.Delete(userCode);
             RaiseEvent(NamedEvent.UserActivated, userCode.User);
             //and signin the current user
-            var loginStatus = Engine.SignIn(userCode.User.Email, userCode.User.Name, false, verificationModel.Token);
+            var profile = userCode.User.GetProfile();
+            var loginStatus = Engine.SignIn(userCode.User.Email, profile.FirstName, profile.LastName, false, verificationModel.Token);
             //get api token if it was requested
             var token = Engine.CurrentHttpContext.GetApiToken();
             if (loginStatus == LoginStatus.Success)
@@ -482,22 +485,22 @@ namespace EvenCart.Controllers
                 return false;
             }
 
-            if (userCode.CodeType == UserCodeType.PasswordReset)
+            if (userCode.CodeType == (int) UserCodeType.PasswordReset)
                 return _securitySettings.PasswordResetLinkExpirationHours <= 0 ||
                        DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
                        _securitySettings.PasswordResetLinkExpirationHours;
 
-            if (userCode.CodeType == UserCodeType.RegistrationInvitation)
+            if (userCode.CodeType == (int)UserCodeType.RegistrationInvitation)
                 return _securitySettings.InviteLinkExpirationHours <= 0 ||
                        DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
                        _securitySettings.InviteLinkExpirationHours;
 
-            if (userCode.CodeType == UserCodeType.EmailVerification)
+            if (userCode.CodeType == (int)UserCodeType.EmailVerification)
                 return _securitySettings.EmailVerificationLinkExpirationHours <= 0 ||
                        DateTime.UtcNow.Subtract(userCode.CreatedOn).Hours <=
                        _securitySettings.EmailVerificationLinkExpirationHours;
 
-            if (userCode.CodeType == UserCodeType.EmailOtp)
+            if (userCode.CodeType == (int) UserCodeType.EmailOtp)
                 return _securitySettings.EmailVerificationCodeExpirationMinutes <= 0 ||
                        DateTime.UtcNow.Subtract(userCode.CreatedOn).Minutes <=
                        _securitySettings.EmailVerificationCodeExpirationMinutes;

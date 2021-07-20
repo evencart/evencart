@@ -15,6 +15,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using DotEntity;
 using DotEntity.Enumerations;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Services.Orders;
 using EvenCart.Services.Reviews;
 using Genesis.Extensions;
@@ -33,13 +34,15 @@ namespace Genesis.Modules.Users
         private readonly IReviewService _reviewService;
         private readonly IPreviousPasswordService _previousPasswordService;
         private readonly IEmailService _emailService;
-        public EvenCartUserService(IAddressService addressService, IOrderService orderService, IReviewService reviewService, IPreviousPasswordService previousPasswordService, IEmailService emailService) : base(previousPasswordService)
+        private readonly IUserProfileService _userProfileService;
+        public EvenCartUserService(IAddressService addressService, IOrderService orderService, IReviewService reviewService, IPreviousPasswordService previousPasswordService, IEmailService emailService, IUserProfileService userProfileService) : base(previousPasswordService)
         {
             _addressService = addressService;
             _orderService = orderService;
             _reviewService = reviewService;
             _previousPasswordService = previousPasswordService;
             _emailService = emailService;
+            _userProfileService = userProfileService;
         }
 
         public IList<User> GetUsers(string searchText, int[] restrictToRoles, Expression<Func<User, object>> orderBy, SortOrder sortOrder, int page, int count, out int totalMatches, bool negateRoleRestriction = false, Expression<Func<User, bool>> where = null)
@@ -48,16 +51,19 @@ namespace Genesis.Modules.Users
                 .Where(x => !x.Deleted)
                 .Join<UserRole>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Join<Role>("RoleId", "Id", joinType: JoinType.LeftOuter)
+                .Join<UserProfile>("Id", "UserId", joinType: JoinType.LeftOuter)
                 .Relate(RelationTypes.OneToMany<User, UserRole>())
                 .Relate(RelationTypes.OneToMany<User, Role>());
 
             if (!searchText.IsNullEmptyOrWhiteSpace())
             {
                 searchText = searchText.Trim();
-                query = query.Where(x => x.FirstName.Contains(searchText) ||
-                                         x.LastName.Contains(searchText) ||
-                                         x.LastLoginIpAddress.Contains(searchText) ||
-                                         x.Email.Contains(searchText));
+
+                Expression<Func<User, UserProfile, bool>> nameWhere = (user, profile) =>
+                    user.LastLoginIpAddress.Contains(searchText) ||
+                    user.Email.Contains(searchText) || profile.FirstName.Contains(searchText) ||
+                    profile.LastName.Contains(searchText);
+                query = query.Where(nameWhere);
             }
 
             if (restrictToRoles != null && restrictToRoles.Any())
@@ -73,11 +79,14 @@ namespace Genesis.Modules.Users
                 query = query.Where(roleWhere);
             }
 
-            if (orderBy == null)
-                orderBy = x => x.Name;
             if (where != null)
                 query = query.Where(where);
-            query = query.OrderBy(orderBy, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+
+            if (orderBy == null)
+            {
+                Expression<Func<UserProfile, object>> profileOrder = profile => profile.Name;
+                query = query.OrderBy(profileOrder, sortOrder == SortOrder.Ascending ? RowOrder.Ascending : RowOrder.Descending);
+            }
             query.OrderBy(x => x.Id);
             return query.SelectNestedWithTotalMatches(out totalMatches, page, count).ToList();
         }
@@ -102,17 +111,13 @@ namespace Genesis.Modules.Users
                 user.Deleted = true;
                 //randomize email
                 user.Email = HtmlUtility.GetRandomEmail();
-                user.FirstName = string.Empty;
-                user.LastName = string.Empty;
-                user.Name = string.Empty;
                 user.Active = false;
-                user.CompanyName = string.Empty;
                 user.LastLoginIpAddress = string.Empty;
-                user.MobileNumber = string.Empty;
-                user.Remarks = string.Empty;
                 user.ReferrerId = 0;
-                user.NewslettersEnabled = false;
                 Update(user, transaction);
+
+                //delete user profile
+                _userProfileService.Delete(x => x.UserId == userId, transaction);
 
                 //delete sent emails
                 _emailService.Delete(

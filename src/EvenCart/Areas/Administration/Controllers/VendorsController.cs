@@ -13,6 +13,7 @@ using System.Linq;
 using EvenCart.Areas.Administration.Factories.Users;
 using EvenCart.Areas.Administration.Models.Vendors;
 using EvenCart.Events;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Genesis.Mvc;
 using Genesis;
 using Genesis.Helpers;
@@ -91,7 +92,7 @@ namespace EvenCart.Areas.Administration.Controllers
                         {
                             foreach (var user in vendor.Users)
                             {
-                                _roleService.SetUserRole(user.Id, SystemRoleNames.Vendor);
+                                _roleService.SetUserRole(user.Id, ECRoleNames.Vendor);
                             }
                         }
                         RaiseEvent(NamedEvent.VendorActivated, CurrentUser, vendor);

@@ -10,7 +10,6 @@
 #endregion
 
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 using Genesis.Data;
 using EvenCart.Data.Entity.Shop;
@@ -20,6 +19,7 @@ using Genesis.Extensions;
 using Genesis.Infrastructure.Mvc.ModelFactories;
 using Genesis.Modules.Logging;
 using Genesis.Modules.MediaServices;
+using Genesis.Modules.Meta;
 using Genesis.Modules.Users;
 using Genesis.Modules.Vendors;
 

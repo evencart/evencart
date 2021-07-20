@@ -11,6 +11,7 @@
 
 using EvenCart.Models.Media;
 using EvenCart.Models.Users;
+using Genesis;
 using Genesis.Infrastructure.Mvc;
 using Genesis.Infrastructure.Mvc.Attributes;
 using Genesis.Infrastructure.Mvc.ModelFactories;
@@ -37,7 +38,8 @@ namespace EvenCart.Controllers
         private readonly IMediaService _mediaService;
         private readonly IModelMapper _modelMapper;
         private readonly AffiliateSettings _affiliateSettings;
-        public UsersController(IUserService userService, IMediaAccountant mediaAccountant, UserSettings userSettings, IMediaService mediaService, IModelMapper modelMapper, AffiliateSettings affiliateSettings)
+        private readonly IUserProfileService _userProfileService;
+        public UsersController(IUserService userService, IMediaAccountant mediaAccountant, UserSettings userSettings, IMediaService mediaService, IModelMapper modelMapper, AffiliateSettings affiliateSettings, IUserProfileService userProfileService)
         {
             _userService = userService;
             _mediaAccountant = mediaAccountant;
@@ -45,6 +47,7 @@ namespace EvenCart.Controllers
             _mediaService = mediaService;
             _modelMapper = modelMapper;
             _affiliateSettings = affiliateSettings;
+            _userProfileService = userProfileService;
         }
 
         /// <summary>
@@ -56,17 +59,20 @@ namespace EvenCart.Controllers
         [DualPost("", Name = RouteNames.SaveUser, OnlyApi = true)]
         public IActionResult SaveUser(UserModel userModel)
         {
-            var currentUser = Engine.CurrentUser;
-            //set the updated fields
-            currentUser.FirstName = userModel.FirstName;
-            currentUser.LastName = userModel.LastName;
-            currentUser.Name = $"{currentUser.FirstName} {currentUser.LastName}";
-            currentUser.CompanyName = userModel.CompanyName;
-            currentUser.DateOfBirth = userModel.DateOfBirth;
-            currentUser.MobileNumber = userModel.MobileNumber;
-            currentUser.TimeZoneId = userModel.TimeZoneId;
-            _userService.Update(currentUser);
+            var currentUser = GenesisEngine.Instance.CurrentUser;
 
+            var profile = _userProfileService.GetUserProfile(currentUser.Id);
+            //set the updated fields
+            profile.FirstName = userModel.FirstName;
+            profile.LastName = userModel.LastName;
+            profile.Name = $"{profile.FirstName} {profile.LastName}";
+            profile.CompanyName = userModel.CompanyName;
+            profile.DateOfBirth = userModel.DateOfBirth;
+            profile.MobileNumber = userModel.MobileNumber;
+            currentUser.TimeZoneId = userModel.TimeZoneId;
+
+            _userService.Update(currentUser);
+            _userProfileService.Update(profile);
             return R.Success.Result;
         }
 

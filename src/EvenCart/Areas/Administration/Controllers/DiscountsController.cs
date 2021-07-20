@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using EvenCart.Areas.Administration.Models.Promotions;
 using EvenCart.Data.Entity.Promotions;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Products;
 using EvenCart.Services.Promotions;
@@ -137,7 +138,7 @@ namespace EvenCart.Areas.Administration.Controllers
                             break;
                         var users = _userService.Get(x => userIds.Contains(x.Id));
                         discountModel.RestrictionValues = users.Select(x => new RestrictionValueModel() {
-                                Name = $"{x.Name} ({x.Email})",
+                                Name = $"{x.GetProfile().Name} ({x.Email})",
                                 RestrictionIdentifier = x.Id.ToString()
                             })
                             .ToList();

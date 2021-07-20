@@ -9,24 +9,20 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Linq;
-using DotEntity.Versioning;
-using EvenCart.Data.Versions;
-using Genesis;
-using Genesis.App.Helpers;
+using Genesis.Modules.Users;
 
-namespace EvenCart.Genesis
+namespace EvenCart.Genesis.Modules.Users.Extensions
 {
-    public class DbVersionProvider : IDbVersionProvider
+    public static class UserCapabilityExtensions
     {
-        public IDatabaseVersion[] GetDatabaseVersions()
+        public static bool IsAdvisor(this User user)
         {
-            return DbVersionProviderHelper.Merge(new GenesisCoreVersionProvider(), new GenesisAppVersionProvider())
-                .Concat(new IDatabaseVersion[]
-                {
-                    new ECVersion1(),
-                    new ECVersion2(),
-                }).ToArray();
+            return user.Is(RoleNames.Advisor);
+        }
+
+        public static bool IsManager(this User user)
+        {
+            return user.Is(RoleNames.Manager);
         }
     }
 }

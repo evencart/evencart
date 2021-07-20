@@ -13,8 +13,9 @@ using EvenCart.Areas.Administration.Models.Reviews;
 using EvenCart.Data.Entity.Reviews;
 using EvenCart.Data.Entity.Settings;
 using EvenCart.Factories.Products;
+using EvenCart.Genesis.Modules.Users;
+using Genesis;
 using Genesis.Extensions;
-using Genesis.Infrastructure;
 using Genesis.Infrastructure.Mvc.ModelFactories;
 using Genesis.Modules.Localization;
 
@@ -25,30 +26,28 @@ namespace EvenCart.Areas.Administration.Factories.Reviews
         private readonly IModelMapper _modelMapper;
         private readonly CatalogSettings _catalogSettings;
         private readonly IProductModelFactory _productModelFactory;
-        private readonly IGenesisEngine _applicationEngine;
-        public ReviewModelFactory(IModelMapper modelMapper, CatalogSettings catalogSettings, IProductModelFactory productModelFactory, IGenesisEngine applicationEngine)
+        public ReviewModelFactory(IModelMapper modelMapper, CatalogSettings catalogSettings, IProductModelFactory productModelFactory)
         {
             _modelMapper = modelMapper;
             _catalogSettings = catalogSettings;
             _productModelFactory = productModelFactory;
-            _applicationEngine = applicationEngine;
         }
 
         public ReviewModel Create(Review review)
         {
             var model = _modelMapper.Map<ReviewModel>(review);
-            model.DisplayName = review.Private ? _catalogSettings.DisplayNameForPrivateReviews : review.User?.Name;
+            model.DisplayName = review.Private ? _catalogSettings.DisplayNameForPrivateReviews : review.User?.GetProfile().Name;
             if (model.DisplayName.IsNullEmptyOrWhiteSpace())
             {
                 model.DisplayName =
-                    LocalizationHelper.Localize("Store Customer", _applicationEngine.CurrentLanguage.CultureCode);
+                    LocalizationHelper.Localize("Store Customer", GenesisEngine.Instance.CurrentLanguage.CultureCode);
             }
 
             if (review.Product != null)
                 model.ProductName = review.Product.Name;
 
             if (review.User != null)
-                model.UserName = review.User.Name;
+                model.UserName = review.User.GetProfile().Name;
             return model;
         }
     }

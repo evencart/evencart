@@ -10,10 +10,11 @@
     <Folder Include="Modules\Settings\Services\" />
     <Folder Include="Data\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Modules\Users\Constants\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Genesis.App" Version="1.1.0" />
+    <PackageReference Include="Genesis.App" Version="1.2.5" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="Npoi.Mapper" Version="3.4.0" />
   </ItemGroup>

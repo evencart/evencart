@@ -21,6 +21,8 @@ using EvenCart.Data.Entity.Settings;
 using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Enum;
 using EvenCart.Genesis.Exceptions;
+using EvenCart.Genesis.Modules.Emails.Constants;
+using EvenCart.Genesis.Modules.Users;
 using Genesis.Modules.Emails;
 using EvenCart.Services.Products;
 using Genesis.Database;
@@ -229,21 +231,21 @@ namespace EvenCart.Services.Installation
                     }
                 },
                 {
-                    SystemRoleNames.Vendor, new Role()
+                    ECRoleNames.Vendor, new Role()
                     {
-                        Name = SystemRoleNames.Vendor,
+                        Name = ECRoleNames.Vendor,
                         IsSystemRole = true,
                         IsActive = true,
-                        SystemName = SystemRoleNames.Vendor
+                        SystemName = ECRoleNames.Vendor
                     }
                 },
                 {
-                    SystemRoleNames.Manager, new Role()
+                    ECRoleNames.Manager, new Role()
                     {
-                        Name = SystemRoleNames.Manager,
+                        Name = ECRoleNames.Manager,
                         IsSystemRole = true,
                         IsActive = true,
-                        SystemName = SystemRoleNames.Manager
+                        SystemName = ECRoleNames.Manager
                     }
                 },
                 {
@@ -351,9 +353,6 @@ namespace EvenCart.Services.Installation
                 if (user != null)
                 {
                     roleService.SetUserRoles(user.Id, new[] { 1 });
-                    user.FirstName = "Administrator";
-                    user.LastName = "";
-                    user.Name = $"{user.FirstName} {user.LastName}".Trim();
                 }
 
             }

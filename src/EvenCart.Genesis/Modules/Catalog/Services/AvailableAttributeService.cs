@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotEntity;
 using DotEntity.Enumerations;
 using Genesis.Services;
 using EvenCart.Data.Entity.Shop;

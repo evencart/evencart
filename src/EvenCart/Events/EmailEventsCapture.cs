@@ -15,6 +15,8 @@ using EvenCart.Data.Entity.Purchases;
 using EvenCart.Factories.Orders;
 using EvenCart.Factories.Shipments;
 using EvenCart.Factories.Users;
+using EvenCart.Genesis.Modules.Emails.Constants;
+using EvenCart.Genesis.Modules.Users;
 using Genesis.Modules.Emails;
 using Genesis.Modules.Settings;
 using Genesis.Modules.Users;

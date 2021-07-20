@@ -9,24 +9,15 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
-using System.Linq;
-using DotEntity.Versioning;
-using EvenCart.Data.Versions;
-using Genesis;
-using Genesis.App.Helpers;
-
-namespace EvenCart.Genesis
+namespace EvenCart.Genesis.Modules.Users
 {
-    public class DbVersionProvider : IDbVersionProvider
+    public class RoleNames
     {
-        public IDatabaseVersion[] GetDatabaseVersions()
-        {
-            return DbVersionProviderHelper.Merge(new GenesisCoreVersionProvider(), new GenesisAppVersionProvider())
-                .Concat(new IDatabaseVersion[]
-                {
-                    new ECVersion1(),
-                    new ECVersion2(),
-                }).ToArray();
-        }
+        public const string Advisor = "Advisor";
+
+        public const string Manager = "Manager";
+
+        public const string Vendor = "Vendor";
+
     }
 }

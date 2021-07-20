@@ -9,7 +9,9 @@
 // subject to the terms of the license chosen by you.
 #endregion
 
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Models.Users;
+using Genesis;
 using Genesis.Infrastructure;
 using Genesis.Infrastructure.Mvc.ModelFactories;
 using Genesis.MediaServices;
@@ -41,29 +43,31 @@ namespace EvenCart.Factories.Users
             model.CanChangeProfilePicture = _userSettings.AreProfilePicturesEnabled;
 
             Media media = null;
-            if (user.ProfilePictureId.HasValue && user.ProfilePictureId > 0)
+            var userProfile = user.GetProfile();
+            if (userProfile.ProfilePictureId.HasValue && userProfile.ProfilePictureId > 0)
             {
-                media = _mediaService.Get(user.ProfilePictureId.Value);
+                media = _mediaService.Get(userProfile.ProfilePictureId.Value);
             }
-            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, _applicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, GenesisEngine.Instance.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
 
         public UserMiniModel CreateMini(User user)
         {
+            var userProfile = user.GetProfile();
             var model = new UserMiniModel()
             {
-                Name = user.Name,
+                Name = userProfile.Name,
                 Id = user.Id,
                 Points = user.Points,
                 CreatedOn = user.CreatedOn
             };
             Media media = null;
-            if (user.ProfilePictureId.HasValue && user.ProfilePictureId > 0)
+            if (userProfile.ProfilePictureId.HasValue && userProfile.ProfilePictureId > 0)
             {
-                media = _mediaService.Get(user.ProfilePictureId.Value);
+                media = _mediaService.Get(userProfile.ProfilePictureId.Value);
             }
-            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, _applicationEngine.ActiveTheme.UserProfileImageSize, true);
+            model.ProfilePictureUrl = _mediaAccountant.GetPictureUrl(media, GenesisEngine.Instance.ActiveTheme.UserProfileImageSize, true);
             return model;
         }
     }

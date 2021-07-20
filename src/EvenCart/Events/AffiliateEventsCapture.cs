@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Settings;
+using EvenCart.Genesis.Modules.Users;
 using Genesis.Infrastructure;
 using Genesis.Modules.Settings;
 using Genesis.Modules.Stores;
@@ -52,7 +53,7 @@ namespace EvenCart.Events
                                 CreatedOn = DateTime.UtcNow,
                                 AvailableOn = DateTime.UtcNow,
                                 Credit = _affiliateSettings.SignupCreditToAffiliate,
-                                Description = $"{user.Name} account was activated",
+                                Description = $"{user.GetProfile().Name} account was activated",
                                 UserId = user.ReferrerId
                             });
                         }
@@ -95,7 +96,7 @@ namespace EvenCart.Events
                             CreatedOn = DateTime.UtcNow,
                             AvailableOn = availableOn,
                             Credit = affiliateAmount,
-                            Description = $"Order # {order.Guid} paid by {order.User.Name}",
+                            Description = $"Order # {order.Guid} paid by {order.User.GetProfile().Name}",
                             UserId = affiliateUserId
                         });
                     }

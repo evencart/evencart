@@ -14,6 +14,7 @@ using System.Linq;
 using EvenCart.Areas.Administration.Models.Reports;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
+using EvenCart.Genesis.Modules.Users;
 using Genesis.Extensions;
 using Genesis.Helpers;
 using Genesis.Modules.Meta;
@@ -143,7 +144,7 @@ namespace EvenCart.Areas.Administration.Factories.Reports
                 orderReports.Add(new UserOrderReportModel()
                 {
                     Id = user.Id,
-                    Name = user.Name,
+                    Name = user.GetProfile().Name,
                     Email = user.Email,
                     CurrencyCode = go.Key.CurrencyCode,
                     TotalOrders = groupOrders.Count,

@@ -30,7 +30,6 @@ using Genesis.Modules.Meta;
 using Genesis.Modules.Users;
 using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
-using SortOrder = System.Data.SqlClient.SortOrder;
 
 namespace EvenCart.Areas.Administration.Controllers
 {

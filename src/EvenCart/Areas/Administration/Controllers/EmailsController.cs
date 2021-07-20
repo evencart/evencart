@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Models.Emails;
+using EvenCart.Genesis.Modules.Emails.Constants;
 using Genesis;
 using Genesis.Extensions;
 using Genesis.Helpers;

@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Areas.Administration.Factories.Addresses;
@@ -21,6 +20,7 @@ using EvenCart.Areas.Administration.Models.Addresses;
 using EvenCart.Areas.Administration.Models.Orders;
 using EvenCart.Areas.Administration.Models.Users;
 using EvenCart.Events;
+using EvenCart.Genesis.Modules.Users;
 using EvenCart.Genesis.Mvc;
 using EvenCart.Services.Orders;
 using Genesis;
@@ -32,6 +32,7 @@ using Genesis.Infrastructure.Security.Attributes;
 using Genesis.MediaServices;
 using Genesis.Modules.Addresses;
 using Genesis.Modules.Data;
+using Genesis.Modules.Meta;
 using Genesis.Modules.Stores;
 using Genesis.Modules.Users;
 using Genesis.Routing;
@@ -61,7 +62,8 @@ namespace EvenCart.Areas.Administration.Controllers
         private readonly IUserPointService _userPointService;
         private readonly IUserModelFactory _userModelFactory;
         private readonly IStoreCreditService _storeCreditService;
-        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory, IUserPointService userPointService, IUserModelFactory userModelFactory, IStoreCreditService storeCreditService)
+        private readonly IUserProfileService _userProfileService;
+        public UsersController(IUserService userService, IModelMapper modelMapper, IRoleService roleService, ICapabilityService capabilityService, IUserRegistrationService userRegistrationService, IDataSerializer dataSerializer, IAddressService addressService, IOrderService orderService, IOrderModelFactory orderModelFactory, IRoleModelFactory roleModelFactory, ICartService cartService, IUserCodeService userCodeService, IInviteRequestService inviteRequestService, IAddressModelFactory addressModelFactory, IUserPointService userPointService, IUserModelFactory userModelFactory, IStoreCreditService storeCreditService, IUserProfileService userProfileService)
         {
             _userService = userService;
             _modelMapper = modelMapper;
@@ -80,6 +82,7 @@ namespace EvenCart.Areas.Administration.Controllers
             _userPointService = userPointService;
             _userModelFactory = userModelFactory;
             _storeCreditService = storeCreditService;
+            _userProfileService = userProfileService;
         }
 
         [DualGet("", Name = AdminRouteNames.UsersList)]
@@ -174,20 +177,26 @@ namespace EvenCart.Areas.Administration.Controllers
             var user = userModel.Id > 0 ? _userService.FirstOrDefault(x => x.Id == userModel.Id) : new User();
             if (user == null)
                 return NotFound();
+            var userProfile = _userProfileService.GetUserProfile(user.Id) ?? new UserProfile();
             user.Active = userModel.Active;
-            user.CompanyName = userModel.CompanyName;
             user.Email = userModel.Email;
-            user.FirstName = userModel.FirstName;
-            user.LastName = userModel.LastName;
-            user.IsTaxExempt = userModel.IsTaxExempt;
-            user.DateOfBirth = userModel.DateOfBirth;
-            user.MobileNumber = userModel.MobileNumber;
-            user.NewslettersEnabled = userModel.NewslettersEnabled;
-            user.Remarks = userModel.Remarks;
             user.RequirePasswordChange = userModel.RequirePasswordChange;
-            user.Name = $"{user.FirstName} {user.LastName}";
             user.IsAffiliate = userModel.IsAffiliate;
             user.AffiliateActive = userModel.AffiliateActive;
+
+            _userService.Update(user);
+
+            userProfile.CompanyName = userModel.CompanyName;
+
+            userProfile.FirstName = userModel.FirstName;
+            userProfile.LastName = userModel.LastName;
+            userProfile.IsTaxExempt = userModel.IsTaxExempt;
+            userProfile.DateOfBirth = userModel.DateOfBirth;
+            userProfile.MobileNumber = userModel.MobileNumber;
+            userProfile.NewslettersEnabled = userModel.NewslettersEnabled;
+            userProfile.Remarks = userModel.Remarks;
+            userProfile.Name = $"{userProfile.FirstName} {userProfile.LastName}";
+
             var firstActivation = user.Active && user.FirstActivationDate == null;
             if (firstActivation)
             {
@@ -203,16 +212,22 @@ namespace EvenCart.Areas.Administration.Controllers
                 user.CreatedOn = DateTime.UtcNow;
                 user.UpdatedOn = DateTime.UtcNow;
                 user.Password = userModel.Password;
-                _userRegistrationService.Register(user, Engine.StaticConfig.DefaultPasswordFormat);
+                _userRegistrationService.Register(user, GenesisApp.Current.ApplicationConfig.DefaultPasswordFormat);
+                if (userProfile.Id == 0)
+                {
+                    userProfile.UserId = user.Id;
+                    _userProfileService.Insert(userProfile);
+                }
             }
             else
             {
-               _userService.Update(user);
-               //update password if so
-               if (!userModel.Password.IsNullEmptyOrWhiteSpace())
-               {
-                   _userRegistrationService.UpdatePassword(user.Id, userModel.Password, Engine.StaticConfig.DefaultPasswordFormat);
-                   RaiseEvent(NamedEvent.PasswordReset, user, userModel.Password);
+                _userService.Update(user);
+                _userProfileService.InsertOrUpdate(userProfile);
+                //update password if so
+                if (!userModel.Password.IsNullEmptyOrWhiteSpace())
+                {
+                    _userRegistrationService.UpdatePassword(user.Id, userModel.Password, GenesisApp.Current.ApplicationConfig.DefaultPasswordFormat);
+                    RaiseEvent(NamedEvent.PasswordReset, user, userModel.Password);
                 }
             }
 
@@ -554,7 +569,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 return R.Fail.With("error", T("A user with this email is already registered")).Result;
             }
 
-            var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, UserCodeType.RegistrationInvitation);
+            var userCode =  _userCodeService.GetUserCodeByEmail(generateModel.Email, (int) UserCodeType.RegistrationInvitation);
             var invitationLink = Engine.RouteUrl(RouteNames.Register, new {invitationCode = userCode.Code}, true);
             RaiseEvent(NamedEvent.Invitation, userCode, invitationLink);
             return R.Success.Result;

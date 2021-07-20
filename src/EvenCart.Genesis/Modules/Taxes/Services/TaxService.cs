@@ -12,6 +12,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using DotEntity;
 using DotEntity.Enumerations;
 using Genesis.Services;
 using EvenCart.Data.Entity.Taxes;
