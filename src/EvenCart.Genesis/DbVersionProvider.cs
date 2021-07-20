@@ -26,6 +26,7 @@ namespace EvenCart.Genesis
                 {
                     new ECVersion1(),
                     new ECVersion2(),
+                    new ECVersion3()
                 }).ToArray();
         }
     }

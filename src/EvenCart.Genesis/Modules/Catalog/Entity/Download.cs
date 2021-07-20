@@ -46,5 +46,7 @@ namespace EvenCart.Data.Entity.Shop
         public bool Published { get; set; }
 
         public string FileExtension { get; set; }
+
+        public int DownloadCount { get; set; }
     }
 }

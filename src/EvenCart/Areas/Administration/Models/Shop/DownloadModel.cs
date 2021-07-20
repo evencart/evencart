@@ -44,6 +44,8 @@ namespace EvenCart.Areas.Administration.Models.Shop
 
         public DownloadActivationType DownloadActivationType { get; set; }
 
+        public int DownloadCount { get; set; }
+
         public bool Published { get; set; }
 
         public void SetupValidationRules(ModelValidator<DownloadModel> v)

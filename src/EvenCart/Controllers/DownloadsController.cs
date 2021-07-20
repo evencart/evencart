@@ -76,6 +76,9 @@ namespace EvenCart.Controllers
                 orderItemDownload.DownloadCount++;
                 _orderItemDownloadService.InsertOrUpdate(orderItemDownload);
             }
+
+            download.DownloadCount++;
+            _downloadService.Update(download);
             
             return File(download.FileBytes, download.FileType, $"{download.Title}{download.FileExtension}");
         }

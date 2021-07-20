@@ -1485,6 +1485,7 @@ namespace EvenCart.Areas.Administration.Controllers
                 };
             }
             var fileBytes = uploadModel.MediaFile.GetBytesAsync().Result;
+            download.DownloadCount = 0;
             download.FileBytes = fileBytes;
             download.FileType = uploadModel.MediaFile.ContentType;
             download.FileExtension = _localFileProvider.GetExtension(uploadModel.MediaFile.FileName);
