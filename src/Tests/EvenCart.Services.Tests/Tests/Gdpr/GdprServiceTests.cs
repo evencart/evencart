@@ -27,7 +27,6 @@ namespace EvenCart.Services.Tests.Gdpr
         {
             var user = new User()
             {
-                Name = "Test User",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow,
                 LastLoginDate = null,

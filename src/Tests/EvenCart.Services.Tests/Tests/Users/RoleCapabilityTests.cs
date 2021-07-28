@@ -52,7 +52,6 @@ namespace EvenCart.Services.Tests.Users
 
             var user = new User()
             {
-                Name = "Test User",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow,
                 LastLoginDate = null,

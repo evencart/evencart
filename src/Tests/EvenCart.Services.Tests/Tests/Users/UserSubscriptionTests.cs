@@ -22,7 +22,6 @@ namespace EvenCart.Services.Tests.Users
         {
             var user1 = new User()
             {
-                Name = "Test User 1",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow,
                 LastLoginDate = null,
@@ -33,7 +32,6 @@ namespace EvenCart.Services.Tests.Users
 
             var user2 = new User()
             {
-                Name = "Test User 1",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow,
                 LastLoginDate = null,
